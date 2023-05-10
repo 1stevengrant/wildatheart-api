@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Mail\Fires\New;
 use App\Mail\Fires\Posted;
 use App\Models\Fire;
 use App\Models\State;
