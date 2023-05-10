@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Mail\Fires\New;
+use App\Mail\Fires\Posted;
 use App\Models\Fire;
 use App\Models\State;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class CreateFire extends Component
@@ -63,9 +66,10 @@ class CreateFire extends Component
             'zip' => 'required|digits:5',
             'date' => 'required|date|after:today',
             'time' => 'required',
+            'attendeeLimit' => 'required|numeric|min:1',
         ]);
 
-        Fire::create([
+        $fire = Fire::create([
             'description' => $this->description,
             'phone' => $this->phone,
             'address' => $this->address,
@@ -74,11 +78,15 @@ class CreateFire extends Component
             'zip' => $this->zip,
             'date' => $this->date,
             'time' => $this->time,
+            'attendee_limit' => $this->attendeeLimit,
         ]);
 
         $this->submitted = true;
         $this->reset();
 
+        $this->dispatchBrowserEvent('notify', 'Fire created successfully! 🔥🔥🔥');
+
+        Mail::to(config('mail.to.address'))->send(new Posted($fire));
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

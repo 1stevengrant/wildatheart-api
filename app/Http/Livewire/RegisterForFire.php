@@ -46,6 +46,8 @@ class RegisterForFire extends Modal
             'phone' => $this->phone,
         ]);
 
+        $this->emit('registeredForFire');
+
         $this->close();
 
         $this->dispatchBrowserEvent('notify', 'You have registered 🥳');

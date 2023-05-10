@@ -10,6 +10,10 @@ use Livewire\Component;
 
 class AttendFire extends Component
 {
+    protected $listeners = [
+        'registeredForFire' => '$refresh',
+    ];
+
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $fires = Fire::query()->future()->orderBy('state')->orderBy('date')->get();
