@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54b55bf9bebb184c71db7761331bb949",
+    "content-hash": "5c7e3014a2607beb3a25aead3ce1c77d",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -4507,6 +4507,66 @@
             "time": "2023-03-04T08:57:24+00:00"
         },
         {
+            "name": "spatie/laravel-package-tools",
+            "version": "1.15.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-package-tools.git",
+                "reference": "efab1844b8826443135201c4443690f032c3d533"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/efab1844b8826443135201c4443690f032c3d533",
+                "reference": "efab1844b8826443135201c4443690f032c3d533",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.28|^10.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5",
+                "orchestra/testbench": "^7.7|^8.0",
+                "pestphp/pest": "^1.22",
+                "phpunit/phpunit": "^9.5.24",
+                "spatie/pest-plugin-test-time": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LaravelPackageTools\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Tools for creating Laravel packages",
+            "homepage": "https://github.com/spatie/laravel-package-tools",
+            "keywords": [
+                "laravel-package-tools",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-package-tools/issues",
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.15.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-04-27T08:09:01+00:00"
+        },
+        {
             "name": "spatie/laravel-ray",
             "version": "1.32.4",
             "source": {
@@ -7562,6 +7622,67 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "wire-elements/pro",
+            "version": "3.0.9",
+            "dist": {
+                "type": "zip",
+                "url": "https://wire-elements-pro.composer.sh/download/9909ecdc-91d4-43f7-946c-b4c32acee9ae/wire-elements-pro-3.0.9.zip",
+                "reference": "fe07ddbb07593ed4e8c1c4bccf5ff17c69217b3c",
+                "shasum": "9adaeae78a6d373eaa3c32010ec3df3c53b6e49d"
+            },
+            "require": {
+                "illuminate/contracts": "^8.0|^9.0|^10.0",
+                "livewire/livewire": "^v2.10.5",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.9.2"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.1",
+                "nunomaduro/collision": "^6.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "WireElements\\Pro\\WireElementsProServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "WireElements\\Pro\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "WireElements\\Pro\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Philo Hermans",
+                    "role": "Developer",
+                    "email": "support@wire-elements.dev"
+                }
+            ],
+            "description": "Beautiful components crafted with Livewire",
+            "homepage": "https://github.com/wire-elements/pro",
+            "keywords": [
+                "components",
+                "laravel",
+                "livewire",
+                "wire-elements"
+            ],
+            "time": "2023-04-28T10:51:32+00:00"
         },
         {
             "name": "zbateson/mail-mime-parser",

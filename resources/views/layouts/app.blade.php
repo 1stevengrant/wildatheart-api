@@ -11,6 +11,8 @@
 <body class="p-6">
 <x-menu/>
 {{ $slot }}
+@livewire('modal-pro')
 @livewireScripts
+@vite('resources/js/app.js')
 </body>
 </html>

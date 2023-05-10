@@ -11,12 +11,14 @@
 |
 */
 
+use App\Http\Livewire\AttendFire;
 use App\Http\Livewire\CreateFire;
 use App\Http\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
 Route::get('create', CreateFire::class)->name('create');
+Route::get('attend', AttendFire::class)->name('attend');
 
 Route::get('login', function () {
     return 'login';
