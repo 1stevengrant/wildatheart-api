@@ -23,7 +23,10 @@
                             <div>
                                 {{ $fire->description }} - {{ $fire->date }}
                             </div>
-                            <div class="my-6">
+                            <div class="my-6 flex items-center space-x-4">
+                                <div class="p-4 border border-black">
+                                    {{ $fire->remaining }} / {{ $fire->attendee_limit }} of spaces remaining
+                                </div>
                                 <button
                                     wire:click="$emit('modal.open', 'fire-more-info-modal', {'fire' : {{ $fire->id }}})"
                                     class="bg-black text-white font-semibold p-4 inline-block">

@@ -15,6 +15,15 @@
         />
 
         <x-forms.input
+            name="attendeeLimit"
+            label="Attendee Limit"
+            type="number"
+            min="1"
+            wire:model.defer="attendeeLimit"
+            :error="$errors->first('attendeeLimit')"
+        />
+
+        <x-forms.input
             name="phone"
             label="Phone"
             wire:model.defer="phone"

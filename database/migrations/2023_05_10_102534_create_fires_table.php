@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('zip');
             $table->date('date');
             $table->time('time');
+            $table->unsignedBigInteger('attendee_limit')->nullable();
             $table->timestamps();
         });
     }

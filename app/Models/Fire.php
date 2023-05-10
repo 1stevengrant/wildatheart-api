@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Builders\FireBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Fire extends Model
 {
@@ -15,5 +16,15 @@ class Fire extends Model
     public function newEloquentBuilder($query): FireBuilder
     {
         return new FireBuilder($query);
+    }
+
+    public function attendees(): HasMany
+    {
+        return $this->hasMany(Attendee::class);
+    }
+
+    public function getRemainingAttribute(): int
+    {
+        return $this->attendee_limit - $this->attendees->count();
     }
 }

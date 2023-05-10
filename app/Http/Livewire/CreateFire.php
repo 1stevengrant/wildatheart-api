@@ -31,6 +31,8 @@ class CreateFire extends Component
 
     public $states = [];
 
+    public $attendeeLimit = 50;
+
     public array $times = [];
 
     public function mount(): void

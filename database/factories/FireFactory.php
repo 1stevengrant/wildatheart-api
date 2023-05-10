@@ -25,6 +25,7 @@ class FireFactory extends Factory
             'zip' => $this->faker->postcode,
             'date' => $this->faker->dateTimeBetween('-1 year', '+1 year'),
             'time' => $this->faker->time,
+            'attendee_limit' => $this->faker->numberBetween(1, 100),
         ];
     }
 }
