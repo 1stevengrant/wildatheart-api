@@ -8,7 +8,8 @@
     @vite('resources/css/app.css')
     @livewireStyles
 </head>
-<body>
+<body class="p-6">
+<x-menu/>
 {{ $slot }}
 @livewireScripts
 </body>

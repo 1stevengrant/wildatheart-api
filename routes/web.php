@@ -11,7 +11,13 @@
 |
 */
 
+use App\Http\Livewire\CreateFire;
 use App\Http\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', Home::class);
+Route::get('/', Home::class)->name('home');
+Route::get('create', CreateFire::class)->name('create');
+
+Route::get('login', function () {
+    return 'login';
+})->name('login');
