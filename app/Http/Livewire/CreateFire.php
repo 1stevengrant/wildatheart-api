@@ -40,18 +40,7 @@ class CreateFire extends Component
     public function mount(): void
     {
         $this->states = State::all();
-        $this->generateTimeList();
-    }
-
-    public function generateTimeList(): void
-    {
-        $startTime = strtotime('00:00');
-        $endTime = strtotime('23:45');
-
-        while ($startTime <= $endTime) {
-            $this->times[] = date('H:i', $startTime);
-            $startTime += 900;
-        }
+        $this->times = generateTimeList();
     }
 
     public function handle(): void
