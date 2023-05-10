@@ -14,5 +14,6 @@
 @livewire('modal-pro')
 @livewireScripts
 @vite('resources/js/app.js')
+<x-notification/>
 </body>
 </html>

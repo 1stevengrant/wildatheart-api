@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Builders\FireBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,8 +12,8 @@ class Fire extends Model
 
     protected $guarded = ['id'];
 
-    public function scopeFuture($query)
+    public function newEloquentBuilder($query): FireBuilder
     {
-        return $query->where('date', '>=', now());
+        return new FireBuilder($query);
     }
 }

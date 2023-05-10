@@ -29,7 +29,9 @@
                                     class="bg-black text-white font-semibold p-4 inline-block">
                                     More info
                                 </button>
-                                <button class="bg-black text-white font-semibold p-4 inline-block">
+                                <button
+                                    wire:click="$emit('modal.open', 'register-for-fire', {'fire' : {{ $fire->id }}})"
+                                    class="bg-black text-white font-semibold p-4 inline-block">
                                     Register
                                 </button>
                             </div>
