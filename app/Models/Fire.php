@@ -27,4 +27,9 @@ class Fire extends Model
     {
         return $this->attendee_limit - $this->attendees->count();
     }
+
+    public function getDateAttribute($value): string
+    {
+        return $this->asDateTime($value)->format('F j, Y');
+    }
 }

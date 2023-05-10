@@ -11,17 +11,22 @@
         @endforeach
     </nav>
 
-    <div class="mt-6 space-y-4">
+    <div class="mt-6">
         @foreach($fires as $state => $stateFires)
-            <div class="border-b border-black pb-6">
-                <x-type.h2 id="{{ $state }}">
+            <div class="border-b border-black p-6 {{ $loop->odd ? 'bg-gray-100' : '' }}">
+                <x-type.h2
+                    id="{{ $state }}">
                     {{ $state }}
                 </x-type.h2>
-                <ul>
+                <ul class="mt-6">
                     @foreach($stateFires as $fire)
                         <li>
                             <div>
-                                {{ $fire->description }} - {{ $fire->date }}
+                                {{ $fire->description }}
+                                <div class="mt-3">
+                                    <span class="font-semibold">When?</span>
+                                    <span class="text-orange-600 text-lg ">{{ $fire->date }}</span>
+                                </div>
                             </div>
                             <div class="my-6 flex items-center space-x-4">
                                 <div class="p-4 border border-black">
