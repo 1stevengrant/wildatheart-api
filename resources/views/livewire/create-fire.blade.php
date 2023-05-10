@@ -1,5 +1,8 @@
 <div>
-    <h1 class="font-bold text-2xl">Host a 🔥</h1>
+
+    <x-type.h1>
+        Host a 🔥
+    </x-type.h1>
 
     <form wire:submit.prevent="handle"
           class="space-y-4 mt-6"
