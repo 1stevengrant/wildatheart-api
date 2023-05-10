@@ -42,6 +42,16 @@
                                     class="bg-black text-white font-semibold p-4 inline-block">
                                     Register
                                 </button>
+                                <button
+                                    wire:click="$emit('modal.open', 'edit-fire', {'fire' : {{ $fire->id }}})"
+                                    class="bg-black text-white font-semibold p-4 inline-block">
+                                    Edit
+                                </button>
+                                <button
+                                    wire:click="$emit('modal.open', 'delete-fire', {'fire' : {{ $fire->id }}})"
+                                    class="bg-red-600 text-white font-semibold p-4 inline-block">
+                                    Delete
+                                </button>
                             </div>
                         </li>
                     @endforeach
