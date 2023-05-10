@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Mail\Fires\Posted;
-use App\Models\Fire;
+use App\Models\CampFire;
 use App\Models\State;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -57,7 +57,7 @@ class CreateFire extends Component
             'attendeeLimit' => 'required|numeric|min:1',
         ]);
 
-        $fire = Fire::create([
+        $fire = CampFire::create([
             'description' => $this->description,
             'phone' => $this->phone,
             'address' => $this->address,

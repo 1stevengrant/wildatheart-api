@@ -4,9 +4,9 @@ namespace App\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class FireBuilder extends Builder
+class CampFireBuilder extends Builder
 {
-    public function future(): FireBuilder
+    public function future(): CampFireBuilder
     {
         return $this->where('date', '>=', now());
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Attendee;
-use App\Models\Fire;
+use App\Models\CampFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -11,7 +11,7 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class RegisterForFire extends Modal
 {
-    public Fire|int $fire;
+    public CampFire|int $fire;
 
     public string $firstName = '';
 
@@ -23,7 +23,7 @@ class RegisterForFire extends Modal
 
     public string $phone = '';
 
-    public function mount(Fire $fire): void
+    public function mount(CampFire $fire): void
     {
         $this->fire = $fire;
     }

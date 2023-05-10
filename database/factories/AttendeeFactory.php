@@ -17,7 +17,7 @@ class AttendeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'fire_id' => \App\Models\Fire::query()->inRandomOrder()->first()->id,
+            'camp_fire_id' => \App\Models\CampFire::query()->inRandomOrder()->first()->id,
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'phone' => $this->faker->phoneNumber,

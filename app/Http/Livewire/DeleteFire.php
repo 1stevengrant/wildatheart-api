@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Fire;
+use App\Models\CampFire;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use WireElements\Pro\Components\Modal\Modal;
 
 class DeleteFire extends Modal
 {
-    public int|Fire $fire;
+    public int|CampFire $fire;
 
-    public function mount(Fire $fire): void
+    public function mount(CampFire $fire): void
     {
         $this->fire = $fire;
     }
@@ -23,7 +26,7 @@ class DeleteFire extends Modal
         $this->dispatchBrowserEvent('notify', '🔥 deleted successfully!');
     }
 
-    public function render()
+    public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         return view('livewire.delete-fire');
     }

@@ -2,7 +2,7 @@
 
 namespace App\Mail\Fires;
 
-use App\Models\Fire;
+use App\Models\CampFire;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -17,7 +17,7 @@ class Posted extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public Fire $fire)
+    public function __construct(public CampFire $fire)
     {
         //
     }

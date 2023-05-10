@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Fire;
+use App\Models\CampFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -10,9 +10,9 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class FireMoreInfoModal extends Modal
 {
-    public int|Fire $fire;
+    public int|CampFire $fire;
 
-    public function mount(Fire $fire): void
+    public function mount(CampFire $fire): void
     {
         $this->fire = $fire;
     }

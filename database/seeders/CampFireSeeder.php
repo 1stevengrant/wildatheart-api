@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Fire;
+use App\Models\CampFire;
 use Illuminate\Database\Seeder;
 
-class FireSeeder extends Seeder
+class CampFireSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Fire::factory()->count(100)->create();
+        CampFire::factory()->count(100)->create();
     }
 }

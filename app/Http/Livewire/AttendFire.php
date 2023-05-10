@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Fire;
+use App\Models\CampFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -17,7 +17,7 @@ class AttendFire extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $fires = Fire::query()->future()->orderBy('state')->orderBy('date')->get();
+        $fires = CampFire::query()->future()->orderBy('state')->orderBy('date')->get();
 
         return view('livewire.attend-fire', [
             'fires' => $fires->groupBy('state'),
