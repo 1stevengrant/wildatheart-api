@@ -29,6 +29,5 @@ class GetOrCreateUser
             'sid' => $userObject->sid,
             'nonce' => $userObject->nonce,
         ]);
-
     }
 }

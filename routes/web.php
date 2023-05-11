@@ -25,4 +25,4 @@ Route::get('logout', Logout::class)->name('logout');
 
 Route::get('/', Home::class)->name('home')->middleware(['auth0.authenticate.optional']);
 Route::get('create', CreateFire::class)->name('create')->middleware(['auth0.authenticate']);
-Route::get('attend', AttendFire::class)->name('attend');
+Route::get('attend', AttendFire::class)->name('attend')->middleware(['auth0.authenticate.optional']);

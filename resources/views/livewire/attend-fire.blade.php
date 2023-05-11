@@ -30,7 +30,7 @@
                             </div>
                             <div class="my-6 flex items-center space-x-4">
                                 <div class="p-4 border border-black">
-                                    {{ $fire->remaining }} / {{ $fire->attendee_limit }} of spaces remaining
+                                    {{ $fire->spacesRemaining() }}
                                 </div>
                                 <button
                                     wire:click="$emit('modal.open', 'fire-more-info-modal', {'fire' : {{ $fire->id }}})"
@@ -42,16 +42,18 @@
                                     class="bg-black text-white font-semibold p-4 inline-block">
                                     Register
                                 </button>
-                                <button
-                                    wire:click="$emit('modal.open', 'edit-fire', {'fire' : {{ $fire->id }}})"
-                                    class="bg-black text-white font-semibold p-4 inline-block">
-                                    Edit
-                                </button>
-                                <button
-                                    wire:click="$emit('modal.open', 'delete-fire', {'fire' : {{ $fire->id }}})"
-                                    class="bg-red-600 text-white font-semibold p-4 inline-block">
-                                    Delete
-                                </button>
+                                @if($fire->isHost())
+                                    <button
+                                        wire:click="$emit('modal.open', 'edit-fire', {'fire' : {{ $fire->id }}})"
+                                        class="bg-black text-white font-semibold p-4 inline-block">
+                                        Edit
+                                    </button>
+                                    <button
+                                        wire:click="$emit('modal.open', 'delete-fire', {'fire' : {{ $fire->id }}})"
+                                        class="bg-red-600 text-white font-semibold p-4 inline-block">
+                                        Delete
+                                    </button>
+                                @endif
                             </div>
                         </li>
                     @endforeach

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('camp_fires', function (Blueprint $table) {
             $table->id();
+            $table->string('user_email')->nullable();
             $table->longText('description');
             $table->string('phone');
             $table->string('address');
