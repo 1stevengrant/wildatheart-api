@@ -8,9 +8,10 @@ use Auth0\Laravel\Contract\Model\Stateful\User as StatefulUser;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class User extends \Illuminate\Database\Eloquent\Model implements StatefulUser, AuthenticatableUser
+class User extends Model implements StatefulUser, AuthenticatableUser
 {
     use HasFactory;
     use Notifiable;
@@ -23,16 +24,7 @@ class User extends \Illuminate\Database\Eloquent\Model implements StatefulUser, 
      */
     protected $primaryKey = 'id';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'id',
-        'name',
-        'email',
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
