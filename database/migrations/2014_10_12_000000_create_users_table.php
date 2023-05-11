@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,7 +20,7 @@ return new class extends Migration
             $table->string('locale')->nullable();
             $table->boolean('email_verified')->nullable();
             $table->string('iss')->nullable();
-            $table->string('aud')->nullable();
+            $table->string('aud')->nullable()->unique()->index();
             $table->string('iat')->nullable();
             $table->string('exp')->nullable();
             $table->string('sub')->nullable();
