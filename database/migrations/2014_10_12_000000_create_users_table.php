@@ -20,10 +20,10 @@ return new class extends Migration {
             $table->string('locale')->nullable();
             $table->boolean('email_verified')->nullable();
             $table->string('iss')->nullable();
-            $table->string('aud')->nullable()->unique()->index();
+            $table->string('aud')->nullable();
             $table->string('iat')->nullable();
             $table->string('exp')->nullable();
-            $table->string('sub')->nullable();
+            $table->string('sub')->nullable()->unique();
             $table->string('sid')->nullable();
             $table->string('nonce')->nullable();
             $table->string('email')->unique();
