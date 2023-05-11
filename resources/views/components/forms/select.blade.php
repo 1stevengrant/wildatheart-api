@@ -10,6 +10,7 @@
     <x-forms.label
         label="{{ $label }}"
         for="{{ $name }}"
+        required="{{ $attributes->has('required') }}"
     />
     <div class="flex">
         <select {{ $attributes->merge(['class' => 'border border-gray-200 block mt-1 w-full p-2' .

@@ -10,6 +10,7 @@
     <x-forms.label
         label="{{ $label }}"
         for="{{ $name }}"
+        required="{{ $attributes->has('required') }}"
     />
 
     <input
