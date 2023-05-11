@@ -17,7 +17,7 @@
             placeholder="{{ $placeholder }}"
         @endif
         type="{{ $type ?? 'text' }}"
-        {{ $attributes->merge(['class' => 'p-2 border border-gray-200']) }}
+        {{ $attributes->merge(['class' => 'p-2 border border-gray-200 w-full']) }}
         id="{{ $name }}"
     />
 

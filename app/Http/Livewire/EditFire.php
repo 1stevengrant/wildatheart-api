@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\CampFire;
+use App\Models\State;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -47,10 +48,17 @@ class EditFire extends Modal
             'date' => $this->campfire->date,
             'time' => $this->campfire->time,
         ]);
+
+        $this->emit('fireUpdated');
+        $this->close();
+        $this->dispatchBrowserEvent('notify', 'Campfire updated successfully 🔥');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.edit-fire');
+        return view('livewire.edit-fire', [
+            'states' => State::all(),
+            'times' => generateTimeList(),
+        ]);
     }
 }

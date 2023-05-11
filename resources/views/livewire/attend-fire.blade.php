@@ -25,7 +25,7 @@
                                 {{ $fire->description }}
                                 <div class="mt-3">
                                     <span class="font-semibold">When?</span>
-                                    <span class="text-orange-600 text-lg ">{{ $fire->date }}</span>
+                                    <span class="text-orange-600 text-lg ">{{ prettyDate($fire->date) }}</span>
                                 </div>
                             </div>
                             <div class="my-6 flex items-center space-x-4">

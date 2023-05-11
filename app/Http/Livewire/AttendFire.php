@@ -13,6 +13,7 @@ class AttendFire extends Component
     protected $listeners = [
         'registeredForFire' => '$refresh',
         'fireDeleted' => '$refresh',
+        'fireUpdated' => '$refresh',
     ];
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

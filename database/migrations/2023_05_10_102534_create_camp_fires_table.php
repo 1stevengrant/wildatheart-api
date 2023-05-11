@@ -19,8 +19,11 @@ return new class extends Migration
             $table->string('state');
             $table->string('city');
             $table->string('zip');
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
             $table->date('date');
             $table->time('time');
+            $table->timestamp('approved_at')->nullable();
             $table->unsignedBigInteger('attendee_limit')->nullable();
             $table->timestamps();
         });

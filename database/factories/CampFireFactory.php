@@ -24,8 +24,11 @@ class CampFireFactory extends Factory
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,
             'date' => $this->faker->dateTimeBetween('-1 year', '+1 year'),
-            'time' => $this->faker->time,
+            'time' => $this->faker->randomElement(generateTimeList()),
             'attendee_limit' => $this->faker->numberBetween(1, 100),
+            'longitude' => $this->faker->longitude,
+            'latitude' => $this->faker->latitude,
+            'approved_at' => $this->faker->boolean() ? $this->faker->dateTimeBetween('-1 year', '+1 year') : null,
         ];
     }
 }

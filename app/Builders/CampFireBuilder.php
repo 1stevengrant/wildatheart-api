@@ -8,6 +8,7 @@ class CampFireBuilder extends Builder
 {
     public function future(): CampFireBuilder
     {
-        return $this->where('date', '>=', now());
+        return $this->where('date', '>=', now())
+            ->where('approved_at', '!=', null);
     }
 }
