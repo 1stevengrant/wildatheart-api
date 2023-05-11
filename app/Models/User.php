@@ -1,29 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-use Auth0\Laravel\Contract\Model\Stateful\User as StatefulUser;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableUser;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Model implements StatefulUser, AuthenticatableUser
+class User extends Authenticatable
 {
-    use HasFactory;
-    use Notifiable;
-    use Authenticatable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
-     * The primary identifier for the user.
+     * The attributes that are mass assignable.
      *
-     * @var string
+     * @var array<int, string>
      */
-    protected $primaryKey = 'id';
-
     protected $guarded = ['id'];
 
     /**
@@ -31,12 +25,18 @@ class User extends Model implements StatefulUser, AuthenticatableUser
      *
      * @var array<int, string>
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-    protected $casts = [];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
+    ];
 }

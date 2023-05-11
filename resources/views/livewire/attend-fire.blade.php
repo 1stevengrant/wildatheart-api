@@ -42,7 +42,10 @@
                                     class="bg-black text-white font-semibold p-4 inline-block">
                                     Register
                                 </button>
-                                @if($fire->isHost())
+
+
+                                @if($fire->user_id == auth()->user()->id)
+
                                     <button
                                         wire:click="$emit('modal.open', 'edit-fire', {'fire' : {{ $fire->id }}})"
                                         class="bg-black text-white font-semibold p-4 inline-block">

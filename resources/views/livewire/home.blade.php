@@ -1,3 +1,3 @@
 <div>
-    <pre><?php print_r(Auth::user()) ?></pre>
+    Home
 </div>

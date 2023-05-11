@@ -36,12 +36,12 @@ class CampFire extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_email', 'email');
+        return $this->belongsTo(User::class);
     }
 
     public function isHost(): bool
     {
-        if (auth()->check() && auth()->user()->email === $this->user_email) {
+        if (auth()->check() && auth()->user()->id === $this->user_id) {
             return true;
         }
 

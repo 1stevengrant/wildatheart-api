@@ -5,7 +5,6 @@ namespace App\Http\Livewire;
 use App\Mail\Fires\Posted;
 use App\Models\CampFire;
 use App\Models\State;
-use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -13,7 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
-class CreateFire extends Component
+class HostFire extends Component
 {
     public string $description = '';
 
@@ -45,7 +44,6 @@ class CreateFire extends Component
     {
         $this->states = State::all();
         $this->times = generateTimeList();
-        $this->userEmail = auth()->user()->email;
     }
 
     public function handle(): void
@@ -63,7 +61,7 @@ class CreateFire extends Component
         ]);
 
         $fire = CampFire::create([
-            'user_email' => $this->userEmail,
+            'user_id' => auth()->user()->id,
             'description' => $this->description,
             'phone' => $this->phone,
             'address' => $this->address,
@@ -82,7 +80,7 @@ class CreateFire extends Component
 
         Mail::to(config('mail.to.address'))->send(new Posted($fire));
 
-        app(UserService::class)->makeUserHost($fire->user_email);
+        app(UserService::class)->makeUserHost(auth()->user()->email);
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

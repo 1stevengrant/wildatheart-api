@@ -14,8 +14,15 @@ class UserService
 
     public function makeUserHost(string $email): void
     {
+        ray($email);
         $user = User::query()->where('email', '=', $email)->first();
-        $user->became_host = now();
-        $user->save();
+        $user->assignRole('host');
+    }
+
+    public function makeUserAttendee(string $email): void
+    {
+        ray($email);
+        $user = User::query()->where('email', '=', $email)->first();
+        $user->assignRole('attendee');
     }
 }

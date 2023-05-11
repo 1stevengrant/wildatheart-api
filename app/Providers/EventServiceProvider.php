@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
-use App\Listeners\GetOrCreateUser;
+use App\Listeners\UpdateLastLoginDateTime;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use SocialiteProviders\Auth0\Auth0ExtendSocialite;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,10 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         Login::class => [
-            GetOrCreateUser::class,
+            UpdateLastLoginDateTime::class,
+        ],
+        SocialiteWasCalled::class => [
+            Auth0ExtendSocialite::class.'@handle',
         ],
     ];
 

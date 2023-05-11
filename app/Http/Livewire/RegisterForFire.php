@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Mail\Fires\AttendeeRegistered;
 use App\Models\Attendee;
 use App\Models\CampFire;
+use App\Services\UserService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -59,6 +60,8 @@ class RegisterForFire extends Modal
         $this->close();
 
         $this->dispatchBrowserEvent('notify', 'You have registered 🥳');
+
+        app(UserService::class)->makeUserAttendee($this->email);
 
     }
 

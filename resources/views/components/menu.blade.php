@@ -3,9 +3,19 @@
     <a href="{{ route('create') }}" class="p-4 bg-black text-white font-semibold">Host a 🔥</a>
     <a href="{{ route('attend') }}" class="p-4 bg-black text-white font-semibold">Attend a 🔥</a>
     @if(auth()->check())
-        <a href="{{ route('logout') }}" class="p-4 bg-black text-white font-semibold">Logout</a>
+        <form method="POST"
+              class="flex"
+              action="{{ route('logout') }}">
+            @csrf
+            <a :href="route('logout')"
+               onclick="event.preventDefault();
+               this.closest('form').submit();"
+               class="p-4 bg-black text-white font-semibold">
+                Logout
+            </a>
+        </form>
     @else
-        <a href="{{ route('login') }}" class="p-4 bg-black text-white font-semibold">Login</a>
+        <a href="{{ url('login/auth0') }}" class="p-4 bg-black text-white font-semibold">Login</a>
     @endif
 
 </nav>
