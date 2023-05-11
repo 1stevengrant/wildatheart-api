@@ -2,11 +2,13 @@
 
 namespace App\Http\Livewire;
 
+use App\Mail\Fires\AttendeeRegistered;
 use App\Models\Attendee;
 use App\Models\CampFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
 use WireElements\Pro\Components\Modal\Modal;
 
 class RegisterForFire extends Modal
@@ -38,8 +40,8 @@ class RegisterForFire extends Modal
             'phone' => 'nullable',
         ]);
 
-        Attendee::create([
-            'fire_id' => $this->fire->id,
+        $attendee = Attendee::create([
+            'camp_fire_id' => $this->fire->id,
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'email' => $this->email,
@@ -47,6 +49,12 @@ class RegisterForFire extends Modal
         ]);
 
         $this->emit('registeredForFire');
+
+        Mail::to($this->fire->email)
+            ->send(new AttendeeRegistered(
+                fire: $this->fire,
+                attendee: $attendee
+            ));
 
         $this->close();
 

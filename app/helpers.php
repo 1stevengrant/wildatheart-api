@@ -16,7 +16,7 @@ if (! function_exists('generateTimeList')) {
     }
 }
 
-if (!function_exists('prettyDate')) {
+if (! function_exists('prettyDate')) {
     function prettyDate(string $date): string
     {
         return date('l, F jS, Y', strtotime($date));

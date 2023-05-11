@@ -10,4 +10,9 @@ class Attendee extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function getFullnameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }
