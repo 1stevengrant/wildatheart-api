@@ -16,12 +16,9 @@ class LoginController extends Controller
     {
         $userSocial = Socialite::driver($provider)->stateless()->user();
 
-        $users = User::where(['email' => $userSocial->getEmail()])->first();
-        if ($users) {
-            auth()->login($users);
+        $user = User::where(['email' => $userSocial->getEmail()])->first();
 
-            return redirect('/');
-        } else {
+        if (!$user) {
             $user = User::create([
                 'name' => $userSocial->getName(),
                 'given_name' => $userSocial->user['given_name'],
@@ -33,9 +30,12 @@ class LoginController extends Controller
                 'provider' => $provider,
             ]);
 
-            auth()->login($user, true);
-
-            return redirect()->route('dashboard');
         }
+        auth()->login($user, true);
+        if (session()->get('currentUrl') === route('attend')) {
+            $user->assignRole('attendee');
+            return redirect(session()->get('currentUrl'));
+        }
+        return redirect()->route('home');
     }
 }

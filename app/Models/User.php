@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -39,4 +40,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
     ];
+
+    public function attendees(): HasMany
+    {
+        return $this->hasMany(Attendee::class);
+    }
+
+    public function campFires(): HasMany
+    {
+        return $this->hasMany(CampFire::class);
+    }
+
+    public function isAttending(CampFire $fire): bool
+    {
+        return $this->attendees->contains('camp_fire_id', $fire->id);
+    }
+
+    public function getFullnameAttribute(): string
+    {
+        return "{$this->given_name} {$this->family_name}";
+    }
 }

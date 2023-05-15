@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+            UserSeeder::class,
             StateSeeder::class,
             CampFireSeeder::class,
             AttendeeSeeder::class,

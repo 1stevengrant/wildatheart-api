@@ -10,11 +10,26 @@ use Livewire\Component;
 
 class AttendFire extends Component
 {
+    public string $currentUrl;
     protected $listeners = [
         'registeredForFire' => '$refresh',
         'fireDeleted' => '$refresh',
         'fireUpdated' => '$refresh',
     ];
+
+    public function mount(): void
+    {
+        $this->currentUrl = url()->current();
+    }
+
+    public function handleAttendee($fireId)
+    {
+        session()->put('userType', 'attendee');
+        session()->put('currentUrl', $this->currentUrl);
+        session()->put('fireId', $fireId);
+
+        return redirect()->route('social.login', ['provider' => 'auth0']);
+    }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {

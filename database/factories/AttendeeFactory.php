@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,10 +19,8 @@ class AttendeeFactory extends Factory
     {
         return [
             'camp_fire_id' => \App\Models\CampFire::query()->inRandomOrder()->first()->id,
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
             'phone' => $this->faker->phoneNumber,
-            'email' => $this->faker->email,
+            'user_id' => User::factory()->create()->id,
         ];
     }
 }

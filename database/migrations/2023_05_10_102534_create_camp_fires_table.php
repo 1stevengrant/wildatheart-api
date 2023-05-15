@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('date');
             $table->time('time');
             $table->timestamp('approved_at')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
             $table->unsignedBigInteger('attendee_limit')->nullable();
             $table->timestamps();
         });

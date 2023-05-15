@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('attendees', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('camp_fire_id');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('phone')->nullable();
-            $table->string('email');
             $table->timestamps();
         });
     }

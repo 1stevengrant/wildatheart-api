@@ -4,7 +4,7 @@
 Hey there,
 {{ $attendee->fullName }} has registered for your 🔥
 
-- Email: {{ $attendee->email }}
+- Email: {{ $attendee->user->email }}
 - Phone: {{ $attendee->phone }}
 
 You have {{ $fire->remaining }} / {{ $fire->attendee_limit }} spaces remaining.

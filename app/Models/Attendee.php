@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attendee extends Model
 {
@@ -14,5 +15,10 @@ class Attendee extends Model
     public function getFullnameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
