@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Mail\Fires\Posted;
 use App\Models\CampFire;
 use App\Models\State;
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -40,10 +41,17 @@ class HostFire extends Component
 
     public $userEmail = null;
 
-    public function mount(): void
+    public function mount()
     {
         $this->states = State::all();
         $this->times = generateTimeList();
+
+        if (! auth()->check()) {
+            session()->put('userType', User::ROLE_HOST);
+            session()->put('currentUrl', url()->current());
+
+            return redirect()->route('social.login', ['provider' => 'auth0']);
+        }
     }
 
     public function handle(): void

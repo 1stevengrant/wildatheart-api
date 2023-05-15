@@ -18,7 +18,7 @@ class LoginController extends Controller
 
         $user = User::where(['email' => $userSocial->getEmail()])->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'name' => $userSocial->getName(),
                 'given_name' => $userSocial->user['given_name'],
@@ -32,10 +32,19 @@ class LoginController extends Controller
 
         }
         auth()->login($user, true);
+
         if (session()->get('currentUrl') === route('attend')) {
-            $user->assignRole('attendee');
+            $user->assignRole(User::ROLE_ATTENDEE);
+
             return redirect(session()->get('currentUrl'));
         }
+
+        if (session()->get('currentUrl') === route('host')) {
+            $user->assignRole(User::ROLE_HOST);
+
+            return redirect(session()->get('currentUrl'));
+        }
+
         return redirect()->route('home');
     }
 }

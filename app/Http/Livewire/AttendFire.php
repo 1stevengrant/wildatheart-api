@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\CampFire;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -11,6 +12,7 @@ use Livewire\Component;
 class AttendFire extends Component
 {
     public string $currentUrl;
+
     protected $listeners = [
         'registeredForFire' => '$refresh',
         'fireDeleted' => '$refresh',
@@ -24,7 +26,7 @@ class AttendFire extends Component
 
     public function handleAttendee($fireId)
     {
-        session()->put('userType', 'attendee');
+        session()->put('userType', User::ROLE_ATTENDEE);
         session()->put('currentUrl', $this->currentUrl);
         session()->put('fireId', $fireId);
 

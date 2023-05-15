@@ -7,12 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/css/app.css')
     @livewireStyles
+    @stack('head')
 </head>
 <body class="p-6">
 <x-menu/>
 {{ $slot }}
 @livewire('modal-pro')
 @livewireScripts
+@stack('scripts')
 @vite('resources/js/app.js')
 <x-notification/>
 </body>

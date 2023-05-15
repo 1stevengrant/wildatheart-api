@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,9 +18,9 @@ class RoleSeeder extends Seeder
     {
 
         DB::table('roles')->insert([
-            ['name' => 'admin', 'guard_name' => 'web'],
-            ['name' => 'host', 'guard_name' => 'web'],
-            ['name' => 'attendee', 'guard_name' => 'web'],
+            ['name' => User::ROLE_ADMIN, 'guard_name' => 'web'],
+            ['name' => User::ROLE_HOST, 'guard_name' => 'web'],
+            ['name' => User::ROLE_ATTENDEE, 'guard_name' => 'web'],
         ]);
     }
 }

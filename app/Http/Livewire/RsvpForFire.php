@@ -9,7 +9,6 @@ use App\Services\UserService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
 use WireElements\Pro\Components\Modal\Modal;
 

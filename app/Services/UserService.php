@@ -23,6 +23,6 @@ class UserService
     {
         ray($email);
         $user = User::query()->where('email', '=', $email)->first();
-        $user->assignRole('attendee');
+        $user->assignRole(User::ROLE_ATTENDEE);
     }
 }
