@@ -105,6 +105,10 @@ class CampFire extends Resource
                 ->hideFromIndex()
                 ->readonly(),
 
+            Text::make('Book Requests', 'book_request_count')
+                ->sortable()
+                ->readonly(),
+
             HasMany::make('Attendees'),
         ];
     }

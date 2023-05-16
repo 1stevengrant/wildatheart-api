@@ -28,7 +28,26 @@ class CampFireFactory extends Factory
             'attendee_limit' => $this->faker->numberBetween(1, 100),
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
-            'approved_at' => $this->faker->boolean() ? $this->faker->dateTimeBetween('-1 year', '+1 year') : null,
+            'book_request_count' => $this->faker->boolean ? $this->faker->numberBetween(1, 100) : 0,
         ];
+    }
+
+    public function private(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_private' => true,
+            ];
+        });
+    }
+
+    public function approved(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'approved_at' => now(),
+                'approved_by' => 1,
+            ];
+        });
     }
 }

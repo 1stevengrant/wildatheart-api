@@ -24,6 +24,8 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->date('date');
             $table->time('time');
+            $table->unsignedBigInteger('book_request_count')->default(0);
+            $table->boolean('is_private')->default(false);
             $table->timestamp('approved_at')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->unsignedBigInteger('attendee_limit')->nullable();

@@ -19,6 +19,10 @@ class CampFire extends Model
         'approved_at' => 'datetime',
     ];
 
+    const STATUS_APPROVED = 'approved';
+
+    const STATUS_PENDING = 'pending';
+
     public function newEloquentBuilder($query): CampFireBuilder
     {
         return new CampFireBuilder($query);
@@ -41,7 +45,7 @@ class CampFire extends Model
 
     public function spacesRemaining(): string
     {
-        return "{$this->remaining} / {$this->attendee_limit} of spaces remaining";
+        return "{$this->remaining} spaces remaining";
     }
 
     public function user(): BelongsTo
@@ -51,7 +55,7 @@ class CampFire extends Model
 
     public function isHost(): bool
     {
-        if (auth()->check() && auth()->user()->id === $this->user_id) {
+        if (auth()->check() && auth()->user()->id === $this->user->id) {
             return true;
         }
 
@@ -70,5 +74,14 @@ class CampFire extends Model
     public function getCoordinatesAttribute(): string
     {
         return $this->longitude.', '.$this->latitude;
+    }
+
+    public function isPast(): bool
+    {
+        if ($this->date < now()) {
+            return true;
+        }
+
+        return false;
     }
 }

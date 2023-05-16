@@ -16,7 +16,9 @@
             <div class="border-b border-black p-6 {{ $loop->odd ? 'bg-gray-100' : '' }}">
                 <x-type.h2
                     id="{{ $state }}">
-                    {{ $state }}
+                    <a href="{{ route('attend.state', strtolower($state)) }}">
+                        {{ $state }}
+                    </a>
                 </x-type.h2>
                 <ul class="mt-6">
                     @foreach($stateFires as $fire)

@@ -1,7 +1,7 @@
 <x-wire-elements-pro::tailwind.modal
     on-submit="handle">
     <x-slot name="title">
-        Edit 🔥 {{ $campfire->formattedDate }} at {{ $campfire->time }}
+        Edit 🔥 {{ prettyDate($campfire->date) }} at {{ prettyTime($campfire->time) }}
     </x-slot>
 
    <div class="space-y-4">

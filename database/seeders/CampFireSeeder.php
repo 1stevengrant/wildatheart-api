@@ -13,7 +13,10 @@ class CampFireSeeder extends Seeder
      */
     public function run(): void
     {
-        CampFire::factory()->count(100)->create([
+        CampFire::factory()->private()->count(5)->create([
+            'user_id' => User::inRandomOrder()->first()->id,
+        ]);
+        CampFire::factory()->approved()->count(5)->create([
             'user_id' => User::inRandomOrder()->first()->id,
         ]);
     }
