@@ -19,6 +19,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         parent::boot();
 
         Nova::footer(static fn ($request): string => Blade::render(''));
+
+        Nova::withBreadcrumbs();
     }
 
     /**
