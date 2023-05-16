@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Livewire\AttendFire;
+use App\Http\Livewire\AttendState;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\HostFire;
 use App\Http\Livewire\ViewFire;
@@ -21,5 +22,6 @@ Route::get('/', Home::class)->name('home');
 Route::get('host', HostFire::class)->name('host');
 Route::get('attend', AttendFire::class)->name('attend');
 Route::get('attend/{campFire}', ViewFire::class)->name('view.fire');
+Route::get('attend/state/{state}', AttendState::class)->name('attend.state');
 
 require __DIR__.'/auth.php';

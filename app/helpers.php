@@ -22,3 +22,10 @@ if (! function_exists('prettyDate')) {
         return date('l, F jS, Y', strtotime($date));
     }
 }
+
+if (! function_exists('prettyTime')) {
+    function prettyTime(string $time): string
+    {
+        return date('g:i A', strtotime($time));
+    }
+}

@@ -43,13 +43,8 @@
     });
 
     map.on('load', () => {
-// Add a new source from our GeoJSON data and
-// set the 'cluster' option to true. GL-JS will
-// add the point_count property to your source data.
-        map.addSource('earthquakes', {
+        map.addSource('fires', {
             type: 'geojson',
-// Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
-// from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
             data: '/api/fires',
             cluster: true,
             clusterMaxZoom: 14, // Max zoom to cluster points on
@@ -59,7 +54,7 @@
         map.addLayer({
             id: 'clusters',
             type: 'circle',
-            source: 'earthquakes',
+            source: 'fires',
             filter: ['has', 'point_count'],
             paint: {
 // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
@@ -91,7 +86,7 @@
         map.addLayer({
             id: 'cluster-count',
             type: 'symbol',
-            source: 'earthquakes',
+            source: 'fires',
             filter: ['has', 'point_count'],
             layout: {
                 'text-field': ['get', 'point_count_abbreviated'],
@@ -103,7 +98,7 @@
         map.addLayer({
             id: 'unclustered-point',
             type: 'circle',
-            source: 'earthquakes',
+            source: 'fires',
             filter: ['!', ['has', 'point_count']],
             paint: {
                 'circle-color': '#11b4da',
@@ -119,7 +114,7 @@
                 layers: ['clusters']
             });
             const clusterId = features[0].properties.cluster_id;
-            map.getSource('earthquakes').getClusterExpansionZoom(
+            map.getSource('fires').getClusterExpansionZoom(
                 clusterId,
                 (err, zoom) => {
                     if (err) return;

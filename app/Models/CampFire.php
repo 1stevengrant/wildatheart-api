@@ -66,4 +66,9 @@ class CampFire extends Model
 
         return false;
     }
+
+    public function getCoordinatesAttribute(): string
+    {
+        return $this->longitude.', '.$this->latitude;
+    }
 }
