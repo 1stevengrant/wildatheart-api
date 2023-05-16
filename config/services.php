@@ -38,4 +38,9 @@ return [
         'base_url' => env('AUTH0_DOMAIN'),
     ],
 
+    'mapbox' => [
+        'api_url' => 'https://api.mapbox.com/geocoding/v5/mapbox.places/',
+        'api_key' => env('MAPBOX_API_KEY'),
+    ],
+
 ];

@@ -21,4 +21,9 @@ class Attendee extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function campFire(): BelongsTo
+    {
+        return $this->belongsTo(CampFire::class);
+    }
 }

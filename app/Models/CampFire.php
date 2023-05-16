@@ -14,6 +14,11 @@ class CampFire extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'date' => 'date',
+        'approved_at' => 'datetime',
+    ];
+
     public function newEloquentBuilder($query): CampFireBuilder
     {
         return new CampFireBuilder($query);
@@ -29,6 +34,11 @@ class CampFire extends Model
         return $this->attendee_limit - $this->attendees->count();
     }
 
+    public function getAttendeeCountAttribute()
+    {
+        return $this->attendees->count();
+    }
+
     public function spacesRemaining(): string
     {
         return "{$this->remaining} / {$this->attendee_limit} of spaces remaining";
@@ -42,6 +52,15 @@ class CampFire extends Model
     public function isHost(): bool
     {
         if (auth()->check() && auth()->user()->id === $this->user_id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isApproved(): bool
+    {
+        if ($this->approved_at) {
             return true;
         }
 
