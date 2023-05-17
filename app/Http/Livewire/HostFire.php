@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Mail\Fires\Posted;
-use App\Models\CampFire;
 use App\Models\State;
 use App\Models\User;
 use App\Services\UserService;
@@ -31,8 +30,6 @@ class HostFire extends Component
 
     public string $time = '';
 
-    public bool $submitted = false;
-
     public bool $isPrivate = false;
 
     public $states = [];
@@ -58,6 +55,7 @@ class HostFire extends Component
 
     public function handle()
     {
+
         $this->validate([
             'description' => 'required|min:10',
             'phone' => 'required|digits:10',
@@ -71,8 +69,7 @@ class HostFire extends Component
             'isPrivate' => 'required|boolean',
         ]);
 
-        $fire = CampFire::create([
-            'user_id' => auth()->user()->id,
+        $fire = auth()->user()->campFires()->create([
             'description' => $this->description,
             'phone' => $this->phone,
             'address' => $this->address,
@@ -85,7 +82,6 @@ class HostFire extends Component
             'is_private' => $this->isPrivate,
         ]);
 
-        $this->submitted = true;
         $this->reset();
 
         $this->dispatchBrowserEvent('notify', 'Fire created successfully! 🔥🔥🔥');
