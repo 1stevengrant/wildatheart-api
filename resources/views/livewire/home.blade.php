@@ -1,9 +1,4 @@
 <div>
-    <button onclick="getLocation()">
-        Get Coordinates
-    </button>
-
-    <p id="demo"></p>
     <div id="map"></div>
 </div>
 @push('head')
@@ -16,25 +11,7 @@
 @endpush
 @push('scripts')
     <script>
-    let x = document.getElementById("demo");
-    let userLongitude = 0;
-    let userLatitude = 0;
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-    }
-
-    function showPosition(position) {
-        x.innerHTML = "Latitude: " + position.coords.latitude +
-            "<br>Longitude: " + position.coords.longitude;
-        userLongitude = position.coords.longitude;
-        userLatitude = position.coords.latitude;
-    }
-
-    mapboxgl.accessToken = 'pk.eyJ1IjoiMXN0ZXZlbmdyYW50IiwiYSI6ImNqcmx2bHVjcDBidnkzenBqYW5uaGE5YTYifQ.1ivkQGXDApuhvrgrNR6j0A';
+    mapboxgl.accessToken = '{{ config('services.mapbox.api_key') }}';
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/dark-v11',
