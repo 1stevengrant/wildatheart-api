@@ -15,12 +15,13 @@
             {{ $fire->spacesRemaining() }}
         </div>
 
-        @if(!$fire->isPast() && $fire->isApproved())
+        <a class="bg-black text-white font-semibold p-4 inline-block"
+           target="_blank"
+           href="{{route('view.fire', $fire) }}">
+            More info
+        </a>
 
-            <a class="bg-black text-white font-semibold p-4 inline-block"
-               href="{{route('view.fire', $fire) }}">
-                More info
-            </a>
+        @if(!$fire->isPast() && $fire->isApproved())
 
             @if(!$fire->isHost())
 
@@ -47,6 +48,12 @@
         @endif
 
         @if($fire->isHost())
+
+            @if($fire->isPrivate())
+                <div class="inline-block p-4 font-semibold uppercase bg-blue-600 text-white">
+                    Private
+                </div>
+            @endif
 
             @if(!$fire->isPast())
                 <button
@@ -80,7 +87,7 @@
             @endif
 
             @if(!$fire->isApproved() && !$fire->isPast())
-                <div class="inline-block p-4 font-semibold uppercase bg-yellow-400 ">
+                <div class="inline-block p-4 font-semibold uppercase bg-yellow-200 text-yellow-800">
                     Pending
                 </div>
             @endif

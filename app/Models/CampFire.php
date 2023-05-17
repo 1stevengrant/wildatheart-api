@@ -92,4 +92,13 @@ class CampFire extends Model
     {
         return route('view.fire', $this->id);
     }
+
+    public function isPrivate(): bool
+    {
+        if ($this->is_private) {
+            return true;
+        }
+
+        return false;
+    }
 }
