@@ -20,6 +20,7 @@ class CampFire extends Model
         'date' => 'date',
         'is_private' => 'boolean',
         'approved_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     const STATUS_APPROVED = 'approved';
@@ -76,7 +77,7 @@ class CampFire extends Model
 
     public function getCoordinatesAttribute(): string
     {
-        return $this->longitude.', '.$this->latitude;
+        return $this->longitude . ', ' . $this->latitude;
     }
 
     public function isPast(): bool
