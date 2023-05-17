@@ -14,7 +14,7 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class RsvpForFire extends Modal
 {
-    public CampFire|int $fire;
+    public CampFire|string $fire;
 
     public string $phone = '';
 

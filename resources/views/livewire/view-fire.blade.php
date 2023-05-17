@@ -17,7 +17,7 @@
         @auth
             @if(!auth()->user()->isAttending($fire))
                 <button
-                    wire:click="$emit('modal.open', 'rsvp-for-fire', {'fire' : {{ $fire->id }}})"
+                    wire:click="$emit('modal.open', 'rsvp-for-fire', {'fire' : '{{ $fire->id }}'})"
                     class="bg-black text-white font-semibold p-4 inline-block">
                     RSVP
                 </button>
