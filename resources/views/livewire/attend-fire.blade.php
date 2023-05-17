@@ -34,3 +34,12 @@
     </a>
 
 </div>
+
+@push('scripts')
+    <script>
+    document.addEventListener('livewire:load', function () {
+        // set page title
+        document.title = 'Attend a 🔥 | {{ config('app.name') }}';
+    });
+    </script>
+@endpush

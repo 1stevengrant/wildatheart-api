@@ -1,0 +1,57 @@
+on:
+  push:
+    branches:
+      - production
+      - develop
+    pull_request:
+      branches:
+        - develop
+        - production
+
+name: CI
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.1
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-${{ matrix.dependency-version }}-${{ matrix.os }}-${{ hashFiles('composer.json') }}
+
+      - name: Configure composer for Laravel Nova
+        run: |
+          composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+
+      - name: Install front-end dependencies
+        run: |
+          npm install
+          npm run build
+
+      - name: Run Testsuite
+        run: vendor/bin/pest tests/

@@ -11,3 +11,11 @@
         </ol>
     @endunless
 </div>
+
+@push('scripts')
+    <script>
+    document.addEventListener('livewire:load', function () {
+        document.title = 'My 🔥🔥🔥 | {{ config('app.name') }}';
+    });
+    </script>
+@endpush

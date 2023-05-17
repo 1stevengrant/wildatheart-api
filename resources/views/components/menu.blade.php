@@ -27,7 +27,7 @@
                 <a :href="route('logout')"
                    onclick="event.preventDefault();
                this.closest('form').submit();"
-                   class="p-4 bg-black text-white font-semibold">
+                   class="p-4 bg-black text-white font-semibold hover:cursor-pointer">
                     Logout
                 </a>
             </form>

@@ -121,3 +121,10 @@
         </button>
     </form>
 </div>
+@push('scripts')
+    <script>
+    document.addEventListener('livewire:load', function () {
+        document.title = 'Host a 🔥 | {{ config('app.name') }}';
+    });
+    </script>
+@endpush
