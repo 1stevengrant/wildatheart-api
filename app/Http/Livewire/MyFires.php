@@ -17,7 +17,7 @@ class MyFires extends Component
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         return view('livewire.my-fires', [
-            'fires' => auth()->user()->campFires()->orderBy('date', 'desc')->get(),
+            'fires' => auth()->user()->campFires()->orderBy('date')->get(),
         ]);
     }
 }
