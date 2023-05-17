@@ -10,7 +10,6 @@ use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
@@ -49,8 +48,6 @@ class CampFire extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make()->sortable(),
-
             BelongsTo::make('Host', 'user', User::class)
                 ->rules('required'),
 
@@ -100,6 +97,8 @@ class CampFire extends Resource
 
             Boolean::make('Approval Status', 'approved_at')
                 ->exceptOnForms(),
+
+            Boolean::make('Is Private'),
 
             DateTime::make('Approved At', 'approved_at')
                 ->hideFromIndex()
