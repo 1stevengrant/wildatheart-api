@@ -14,4 +14,4 @@ environments:
           - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
           - 'npm ci && npm run build && rm -rf node_modules'
         deploy:
-            - 'php artisan migrate:fresh --seed'
+            - 'php artisan migrate:fresh --seed --force'
