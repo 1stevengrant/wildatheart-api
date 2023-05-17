@@ -1,10 +1,10 @@
-<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-4 mb-6">
     @if(auth()->check())
         <div class="font-semibold p-4">
             👋 {{ auth()->user()->full_name }}
         </div>
     @endif
-    <nav class="flex space-x-6 mb-6">
+    <nav class="flex space-x-6">
         <a href="{{ route('home') }}" class="p-4 bg-black text-white font-semibold">Home</a>
         <a href="{{ route('host') }}" class="p-4 bg-black text-white font-semibold">Host a 🔥</a>
         <a href="{{ route('attend') }}" class="p-4 bg-black text-white font-semibold">Attend a 🔥</a>
