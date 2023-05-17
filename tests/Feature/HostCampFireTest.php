@@ -382,3 +382,36 @@ test('an unauthenticated user is redirected to login trying to access host url',
     $this->get(route('host'))
         ->assertRedirect(route('social.login', ['provider' => 'auth0']));
 });
+
+test('a new 🔥 is not approved by default', function () {
+    $attributes = [
+        'description' => 'test description for test',
+        'phone' => '0776649494',
+        'address' => '123 main street',
+        'state' => 'California',
+        'city' => 'Glasgow',
+        'zip' => '55555',
+        'date' => now()->addDay()->format('Y-m-d'),
+        'time' => '12:00:00',
+        'is_private' => 0,
+        'attendee_limit' => 16,
+    ];
+
+    livewire(HostFire::class)
+        ->set('description', $attributes['description'])
+        ->set('phone', $attributes['phone'])
+        ->set('address', $attributes['address'])
+        ->set('state', $attributes['state'])
+        ->set('city', $attributes['city'])
+        ->set('zip', $attributes['zip'])
+        ->set('date', $attributes['date'])
+        ->set('time', $attributes['time'])
+        ->set('isPrivate', $attributes['is_private'])
+        ->set('attendeeLimit', $attributes['attendee_limit'])
+        ->call('handle');
+
+    $this->assertDatabaseHas('camp_fires', array_merge(
+        $attributes,
+        ['approved_at' => null]
+    ));
+});
