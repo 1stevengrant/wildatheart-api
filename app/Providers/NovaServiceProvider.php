@@ -46,9 +46,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
-                'hello@digitalevangelist.net',
-            ]);
+            if ($user->hasRole('admin')) {
+                return true;
+            }
+
+            abort(redirect()->route('social.login', ['provider' => 'auth0']));
         });
     }
 
