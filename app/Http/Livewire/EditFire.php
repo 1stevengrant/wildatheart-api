@@ -30,6 +30,7 @@ class EditFire extends Modal
             'campfire.phone' => 'required',
             'campfire.date' => 'required',
             'campfire.time' => 'required',
+            'campfire.is_private' => 'nullable|boolean',
         ];
     }
 
@@ -47,6 +48,7 @@ class EditFire extends Modal
             'phone' => $this->campfire->phone,
             'date' => $this->campfire->date,
             'time' => $this->campfire->time,
+            'is_private' => $this->campfire->is_private,
         ]);
 
         $this->emit('fireUpdated');

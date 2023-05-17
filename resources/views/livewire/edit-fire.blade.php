@@ -85,6 +85,27 @@
                </option>
            @endforeach
        </x-forms.select>
+
+       <div class="space-y-5 hover:cursor-pointer">
+           <div class="relative flex items-start">
+               <div class="flex h-6 items-center">
+                   <input id="is_private"
+                          aria-describedby="is-private-event"
+                          name="is_private"
+                          wire:model="campfire.is_private"
+                          type="checkbox"
+                          class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-600">
+               </div>
+               <div class="ml-3 text-sm leading-6">
+                   <label for="is_private"
+                          class="font-medium text-gray-900 hover:cursor-pointer">Is Private?</label>
+                   <p id="is-private-description" class="text-gray-500">
+                       This 🔥 will not be publicly listed and can only be accessed by those with the link.
+                   </p>
+               </div>
+           </div>
+       </div>
+
    </div>
 
     <x-slot name="buttons">
