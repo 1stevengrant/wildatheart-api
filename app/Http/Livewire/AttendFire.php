@@ -35,7 +35,7 @@ class AttendFire extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        $fires = CampFire::query()->future()->orderBy('state')->orderBy('date')->get();
+        $fires = CampFire::query()->futureState()->get();
 
         return view('livewire.attend-fire', [
             'fires' => $fires->groupBy('state'),
