@@ -23,7 +23,7 @@ class CampFireFactory extends Factory
             'state' => $this->faker->state,
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,
-            'date' => $this->faker->dateTimeBetween('-1 year', '+1 year'),
+            'date' => $this->faker->dateTimeBetween('-1 month', '+1 year'),
             'time' => $this->faker->randomElement(generateTimeList()),
             'attendee_limit' => $this->faker->numberBetween(1, 100),
             'longitude' => $this->faker->longitude,
