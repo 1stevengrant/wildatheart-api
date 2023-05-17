@@ -56,7 +56,7 @@ class HostFire extends Component
         }
     }
 
-    public function handle(): void
+    public function handle()
     {
         $this->validate([
             'description' => 'required|min:10',
@@ -93,6 +93,8 @@ class HostFire extends Component
         Mail::to(config('mail.to.address'))->send(new Posted($fire));
 
         app(UserService::class)->makeUserHost(auth()->user()->email);
+
+        return redirect()->route('my.fires');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
