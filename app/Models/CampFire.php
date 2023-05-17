@@ -77,7 +77,7 @@ class CampFire extends Model
 
     public function getCoordinatesAttribute(): string
     {
-        return $this->longitude . ', ' . $this->latitude;
+        return $this->longitude.', '.$this->latitude;
     }
 
     public function isPast(): bool

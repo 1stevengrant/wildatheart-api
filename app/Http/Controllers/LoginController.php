@@ -29,8 +29,12 @@ class LoginController extends Controller
                 'provider_id' => $userSocial->getId(),
                 'provider' => $provider,
             ]);
-
         }
+
+        if ($this->checkRegisteredEmail($user->email)) {
+            $this->assignUserRoles($user);
+        }
+
         auth()->login($user, true);
 
         if (session()->get('currentUrl') === route('attend')) {
@@ -46,5 +50,25 @@ class LoginController extends Controller
         }
 
         return redirect()->route('home');
+    }
+
+    public function checkRegisteredEmail(string $email)
+    {
+        $domain = substr(strrchr($email, '@'), 1);
+
+        $whitelist = ['digitalevangelist.net', 'servant.io', 'wildatheart.org', 'ghijk.co.uk'];
+
+        if (in_array($domain, $whitelist)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function assignUserRoles(User $user)
+    {
+        $user->assignRole(User::ROLE_ADMIN);
+        $user->assignRole(User::ROLE_ATTENDEE);
+        $user->assignRole(User::ROLE_HOST);
     }
 }
