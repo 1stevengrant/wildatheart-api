@@ -3,19 +3,22 @@
 namespace App\Models;
 
 use App\Builders\CampFireBuilder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CampFire extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $guarded = ['id'];
 
     protected $casts = [
         'date' => 'date',
+        'is_private' => 'boolean',
         'approved_at' => 'datetime',
     ];
 
@@ -83,5 +86,10 @@ class CampFire extends Model
         }
 
         return false;
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('view.fire', $this->id);
     }
 }

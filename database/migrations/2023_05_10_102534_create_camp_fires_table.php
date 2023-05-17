@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('camp_fires', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('user_id')->nullable();
             $table->longText('description');
             $table->string('phone');
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->timestamp('approved_at')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->unsignedBigInteger('attendee_limit')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -12,7 +12,7 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class RequestMoreBooks extends Modal
 {
-    public int|CampFire $fire;
+    public string|CampFire $fire;
 
     public function mount(CampFire $fire): void
     {

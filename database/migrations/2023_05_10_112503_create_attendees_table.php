@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('attendees', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('camp_fire_id');
+            $table->uuid('camp_fire_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('phone')->nullable();
             $table->timestamps();

@@ -27,14 +27,14 @@
                 @auth
                     @if(!auth()->user()->isAttending($fire))
                         <button
-                            wire:click="$emit('modal.open', 'rsvp-for-fire', {'fire' : {{ $fire->id }}})"
+                            wire:click="$emit('modal.open', 'rsvp-for-fire', {'fire' : '{{ $fire->id }}'})"
                             class="bg-black text-white font-semibold p-4 inline-block">
                             RSVP
                         </button>
                     @endif
 
                 @else
-                    <button wire:click="handleAttendee({{ $fire->id }})"
+                    <button wire:click="handleAttendee('{{ $fire->id }}')"
                             class="bg-blue-600
                                     text-white
                                     font-semibold p-4
@@ -50,32 +50,34 @@
 
             @if(!$fire->isPast())
                 <button
-                    wire:click="$emit('modal.open', 'edit-fire', {'fire' : {{ $fire->id }}})"
+                    wire:click="$emit('modal.open', 'edit-fire', {'fire' : '{{ $fire->id }}'})"
                     class="bg-black text-white font-semibold p-4 inline-block">
                     Edit
                 </button>
 
                 <button
-                    wire:click="$emit('modal.open', 'delete-fire', {'fire' : {{ $fire->id }}})"
+                    wire:click="$emit('modal.open', 'delete-fire', {'fire' : '{{ $fire->id }}'})"
                     class="bg-red-600 text-white font-semibold p-4 inline-block">
                     Delete
                 </button>
             @endif
 
 
-            @if(!$fire->isPast())
+            @if(!$fire->isPast() && $fire->isApproved())
 
                 <button
-                    wire:click="$emit('modal.open', 'request-more-books', {'fire' : {{ $fire->id }}})"
+                    wire:click="$emit('modal.open', 'request-more-books', {'fire' : '{{ $fire->id }}'})"
                     class="bg-black text-white font-semibold p-4 inline-block">
                     Request More Books
                 </button>
+
+                <button
+                    wire:click="$emit('modal.open', 'attendee-list', {'fire' : '{{ $fire->id }}'})"
+                    class="bg-black text-white font-semibold p-4 inline-block">
+                    Attendee List
+                </button>
+
             @endif
-            <button
-                wire:click="$emit('modal.open', 'attendee-list', {'fire' : {{ $fire->id }}})"
-                class="bg-black text-white font-semibold p-4 inline-block">
-                Attendee List
-            </button>
 
             @if(!$fire->isApproved() && !$fire->isPast())
                 <div class="inline-block p-4 font-semibold uppercase bg-yellow-400 ">

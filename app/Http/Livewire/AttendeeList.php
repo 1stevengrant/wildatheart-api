@@ -10,7 +10,7 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class AttendeeList extends Modal
 {
-    public int|CampFire $fire;
+    public string|CampFire $fire;
 
     public function mount(CampFire $fire): void
     {

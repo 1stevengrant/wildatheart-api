@@ -11,7 +11,7 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class EditFire extends Modal
 {
-    public int|CampFire $campfire;
+    public string|CampFire $campfire;
 
     public function mount(CampFire $fire): void
     {
