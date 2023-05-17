@@ -13,12 +13,13 @@ class ApproveCampFire extends Action
 {
     use InteractsWithQueue, Queueable;
 
-    /**
-     * Perform the action on the given models.
-     *
-     * @return mixed
-     */
-    public function handle(ActionFields $fields, Collection $models)
+    public $confirmText = 'Are you sure you want to approve this campfire?';
+
+    public $name = 'Approve Campfire';
+
+    public $confirmButtonText = 'Approve';
+
+    public function handle(ActionFields $fields, Collection $models): void
     {
         foreach ($models as $model) {
             if (! $model->isApproved()) {
