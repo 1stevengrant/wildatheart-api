@@ -53,7 +53,11 @@
 @endpush
 @push('scripts')
     <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiMXN0ZXZlbmdyYW50IiwiYSI6ImNqcmx2bHVjcDBidnkzenBqYW5uaGE5YTYifQ.1ivkQGXDApuhvrgrNR6j0A';
+    document.addEventListener('livewire:load', function () {
+        document.title = '{{ '🔥 on ' . prettyDate($fire->date)  }} | {{ config('app.name') }}';
+    });
+
+    mapboxgl.accessToken = '{{ config('services.mapbox.api_key') }}';
     const geojson = {
         'type': 'FeatureCollection',
         'features': [
@@ -71,11 +75,11 @@
     };
 
     const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v12',
         center: [{{ $fire->coordinates }}],
         zoom: 10,
-        maxZoom: 10
+        maxZoom: 10,
+        container: 'map',
+        style: 'mapbox://styles/mapbox/dark-v11',
     });
 
     for (const marker of geojson.features) {
