@@ -28,19 +28,19 @@ test('My 🔥 component renders', function (): void {
 });
 
 test('user can see their list of 🔥', function () {
-   $fires = CampFire::factory()->count(3)->create([
-       'user_id' => $this->user->id
-   ]);
+    $fires = CampFire::factory()->count(3)->create([
+        'user_id' => $this->user->id,
+    ]);
 
-   livewire(MyFires::class)
-       ->assertSee($fires->first()->description)
-       ->assertSee($fires->last()->description);
+    livewire(MyFires::class)
+        ->assertSee($fires->first()->description)
+        ->assertSee($fires->last()->description);
 });
 
 test('user cannot see another users 🔥', function () {
     $otherUser = User::factory()->create();
     $fires = CampFire::factory()->count(3)->create([
-        'user_id' => $otherUser->id
+        'user_id' => $otherUser->id,
     ]);
     livewire(MyFires::class)
         ->assertDontSee($fires->first()->description)
@@ -50,7 +50,7 @@ test('user cannot see another users 🔥', function () {
 test('user cannot edit/delete 🔥 in the past', function () {
     CampFire::factory()->create([
         'user_id' => $this->user->id,
-        'date' => now()->subDay()
+        'date' => now()->subDay(),
     ]);
 
     livewire(MyFires::class)
@@ -69,7 +69,7 @@ test('user sees pending status for not approved 🔥', function () {
 test('user see edit/delete for upcoming 🔥', function () {
     CampFire::factory()->create([
         'user_id' => $this->user->id,
-        'date' => now()->addDay()
+        'date' => now()->addDay(),
     ]);
 
     livewire(MyFires::class)
