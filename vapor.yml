@@ -9,7 +9,7 @@ environments:
         queue-concurrency: 50
         storage: wildatheart-campfires
         cache: wildatheart-campfires
-        database: wildatheart-campfires
+        database: wildatheart-campfires-dev
         build:
           - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
           - 'npm ci && npm run build && rm -rf node_modules'
