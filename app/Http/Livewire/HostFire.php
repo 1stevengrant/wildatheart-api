@@ -93,6 +93,6 @@ class HostFire extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.create-fire');
+        return view('livewire.host-fire');
     }
 }
