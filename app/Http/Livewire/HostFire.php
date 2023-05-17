@@ -33,6 +33,8 @@ class HostFire extends Component
 
     public bool $submitted = false;
 
+    public bool $isPrivate = false;
+
     public $states = [];
 
     public $attendeeLimit = 50;
@@ -66,6 +68,7 @@ class HostFire extends Component
             'date' => 'required|date|after:today',
             'time' => 'required',
             'attendeeLimit' => 'required|numeric|min:1',
+            'isPrivate' => 'required|boolean',
         ]);
 
         $fire = CampFire::create([
@@ -79,6 +82,7 @@ class HostFire extends Component
             'date' => $this->date,
             'time' => $this->time,
             'attendee_limit' => $this->attendeeLimit,
+            'is_private' => $this->isPrivate,
         ]);
 
         $this->submitted = true;
