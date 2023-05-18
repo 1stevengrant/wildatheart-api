@@ -107,4 +107,13 @@ class Campfire extends Model
     {
         return $this->hasMany(BookShipment::class);
     }
+
+    public function isOverCapacity(): bool
+    {
+        if ($this->attendee_limit < $this->attendees->count()) {
+            return true;
+        }
+
+        return false;
+    }
 }
