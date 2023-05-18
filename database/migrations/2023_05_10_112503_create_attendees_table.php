@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->uuid('campfire_id');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }
