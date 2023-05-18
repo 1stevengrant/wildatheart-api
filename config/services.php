@@ -41,6 +41,7 @@ return [
     'mapbox' => [
         'api_url' => 'https://api.mapbox.com/geocoding/v5/mapbox.places/',
         'api_key' => env('MAPBOX_API_KEY'),
+        'mapbox_style' => 'mapbox://styles/mapbox/navigation-night-v1',
     ],
 
 ];

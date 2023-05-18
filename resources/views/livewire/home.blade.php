@@ -17,9 +17,10 @@
     mapboxgl.accessToken = '{{ config('services.mapbox.api_key') }}';
     const map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/dark-v11',
+        style: '{{ config('services.mapbox.mapbox_style') }}',
         center: [-103.5917, 40.6699],
         zoom: 3,
+        maxZoom: 10,
         attributionControl: false
     });
 
