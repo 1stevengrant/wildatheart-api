@@ -47,11 +47,11 @@ test('an anonymous user can rsvp to a given 🔥', function () {
     ]);
 
     $this->assertDatabaseHas('users', [
-        'email' => 'john@doe.com'
+        'email' => 'john@doe.com',
     ]);
 
     $this->assertDatabaseHas('model_has_roles', [
         'model_id' => User::where('email', 'john@doe.com')->first()->id,
-        'role_id' => 3
+        'role_id' => 3,
     ]);
 });
