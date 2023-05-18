@@ -33,6 +33,15 @@ class CampfireFactory extends Factory
         ];
     }
 
+    public function inTheFuture(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'date' => $this->faker->dateTimeBetween('+1 month', '+1 year'),
+            ];
+        });
+    }
+
     public function private(): self
     {
         return $this->state(function (array $attributes) {
