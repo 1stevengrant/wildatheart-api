@@ -11,6 +11,14 @@
         @endforeach
     </nav>
 
+    <nav class="space-x-4 space-y-4">
+        @foreach($cities as $city)
+            <a class="p-2 bg-black text-white inline-block" href="{{ route('list.city', ['city' => $city]) }}">
+                {{ $city }}
+            </a>
+        @endforeach
+    </nav>
+
     <div class="mt-6">
         @foreach($campfires as $state => $stateCampfires)
             <div class="border-b border-black p-6 {{ $loop->odd ? 'bg-gray-100' : '' }}">
@@ -38,7 +46,6 @@
 @push('scripts')
     <script>
     document.addEventListener('livewire:load', function () {
-        // set page title
         document.title = 'Attend a 🔥 | {{ config('app.name') }}';
     });
     </script>
