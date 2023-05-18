@@ -20,9 +20,9 @@ class LoginController extends Controller
 
         if (! $user) {
             $user = User::create([
-                'name' => $userSocial->getName(),
-                'given_name' => $userSocial->user['given_name'],
-                'family_name' => $userSocial->user['family_name'],
+                'name' => $userSocial->getName() ?? null,
+                'given_name' => $userSocial->user['given_name'] ?? null,
+                'family_name' => $userSocial->user['family_name'] ?? null,
                 'email_verified_at' => $userSocial->user['email_verified'] ? now() : null,
                 'email' => $userSocial->getEmail(),
                 'image' => $userSocial->user['picture'],
@@ -36,6 +36,8 @@ class LoginController extends Controller
         }
 
         auth()->login($user, true);
+
+        ray(session()->get('currentUrl'), session()->get('campfireId'));
 
         if (session()->get('currentUrl') === route('list.campfires')) {
             $user->assignRole(User::ROLE_ATTENDEE);
