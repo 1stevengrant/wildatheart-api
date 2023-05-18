@@ -45,4 +45,13 @@ test('an anonymous user can rsvp to a given 🔥', function () {
     $this->assertDatabaseHas('attendees', [
         'campfire_id' => $campfire->id,
     ]);
+
+    $this->assertDatabaseHas('users', [
+        'email' => 'john@doe.com'
+    ]);
+
+    $this->assertDatabaseHas('model_has_roles', [
+        'model_id' => User::where('email', 'john@doe.com')->first()->id,
+        'role_id' => 3
+    ]);
 });
