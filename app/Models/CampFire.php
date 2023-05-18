@@ -102,4 +102,9 @@ class CampFire extends Model
 
         return false;
     }
+
+    public function bookShipments(): HasMany
+    {
+        return $this->hasMany(BookShipment::class);
+    }
 }

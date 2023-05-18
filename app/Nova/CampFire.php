@@ -51,6 +51,9 @@ class CampFire extends Resource
             BelongsTo::make('Host', 'user', User::class)
                 ->rules('required'),
 
+            Text::make('Organization')
+                ->rules('max:255'),
+
             Trix::make('Description')
                 ->rules('required'),
 
@@ -109,6 +112,8 @@ class CampFire extends Resource
                 ->readonly(),
 
             HasMany::make('Attendees'),
+
+            HasMany::make('Book Shipments'),
         ];
     }
 
