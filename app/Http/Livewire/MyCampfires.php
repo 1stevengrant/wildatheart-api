@@ -17,7 +17,7 @@ class MyCampfires extends Component
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         return view('livewire.my-campfires', [
-            'campfires' => auth()->user()->campFires()->orderBy('date')->get(),
+            'campfires' => auth()->user()->campfires()->orderBy('date')->get(),
         ]);
     }
 }

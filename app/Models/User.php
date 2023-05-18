@@ -53,7 +53,7 @@ class User extends Authenticatable
         return $this->hasMany(Attendee::class);
     }
 
-    public function campFires(): HasMany
+    public function campfires(): HasMany
     {
         return $this->hasMany(Campfire::class);
     }
