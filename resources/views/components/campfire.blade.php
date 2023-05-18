@@ -6,6 +6,10 @@
     <div>
         {{ $campfire->description }}
         <div class="mt-3">
+            <div>
+                <span class="font-semibold">Where?</span>
+                <span class="text-orange-600 text-lg">{{ $campfire->city }}</span>
+            </div>
             <span class="font-semibold">When?</span>
             <span class="text-orange-600 text-lg ">{{ prettyDate($campfire->date) }} at {{ prettyTime($campfire->time) }}</span>
         </div>
@@ -21,31 +25,11 @@
             More info
         </a>
 
-        @if(!$campfire->isPast() && $campfire->isApproved() )
-
-            @if(!$campfire->isHost() && !$campfire->isOverCapacity())
-
-                @auth
-                    @if(!auth()->user()->isAttending($campfire))
-                        <button
-                            wire:click="$emit('modal.open', 'rsvp-for-campfire', {'campfire' : '{{ $campfire->id }}'})"
-                            class="bg-black text-white font-semibold p-4 inline-block">
-                            RSVP
-                        </button>
-                    @endif
-
-                @else
-                    <button wire:click="handleAttendee('{{ $campfire->id }}')"
-                            class="bg-blue-600
-                                    text-white
-                                    font-semibold p-4
-                                    inline-block">
-                        RSVP
-                    </button>
-                @endauth
-            @endif
-
-        @endif
+        <button
+            wire:click="$emit('modal.open', 'rsvp-campfire', {'campfire' : '{{ $campfire->id }}'})"
+            class="bg-black text-white font-semibold p-4 inline-block">
+            RSVP
+        </button>
 
         @if($campfire->isHost())
 
