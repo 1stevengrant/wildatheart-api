@@ -15,7 +15,7 @@ class LoginController extends Controller
     public function callback($provider)
     {
         $currentUrl = session()->get('currentUrl');
-        $campfireId = session()->get('campfireId');
+        $campfireId = session()->get('campfireId') ?? 'abc';
 
         $userSocial = Socialite::driver($provider)->stateless()->user();
 
