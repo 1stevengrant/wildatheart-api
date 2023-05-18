@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\Actions\HandleAttendee;
 use App\Models\Campfire;
-use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -24,13 +24,12 @@ class ListCampfires extends Component
         $this->currentUrl = url()->current();
     }
 
-    public function handleAttendee($campfireId)
+    public function handleAttendee($campfireId): void
     {
-        session()->put('userType', User::ROLE_ATTENDEE);
-        session()->put('currentUrl', $this->currentUrl);
-        session()->put('campfireId', $campfireId);
-
-        return redirect()->route('social.login', ['provider' => 'auth0']);
+        HandleAttendee::make()->handle(
+            campfireId: $campfireId,
+            currentUrl: $this->currentUrl
+        );
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
@@ -40,6 +39,7 @@ class ListCampfires extends Component
         return view('livewire.list-campfires', [
             'campfires' => $campfires->groupBy('state'),
             'states' => $campfires->pluck('state')->unique(),
+            'cities' => $campfires->pluck('city')->unique(),
         ]);
     }
 }

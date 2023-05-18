@@ -14,6 +14,9 @@ class LoginController extends Controller
 
     public function callback($provider)
     {
+        $currentUrl = session()->get('currentUrl');
+        $campfireId = session()->get('campfireId');
+
         $userSocial = Socialite::driver($provider)->stateless()->user();
 
         $user = User::where(['email' => $userSocial->getEmail()])->first();
@@ -37,18 +40,17 @@ class LoginController extends Controller
 
         auth()->login($user, true);
 
-        ray(session()->get('currentUrl'), session()->get('campfireId'));
-
-        if (session()->get('currentUrl') === route('list.campfires')) {
+        if ($currentUrl === route('view.campfire', ['campfire' => $campfireId]) ||
+            $currentUrl === route('list.campfires')) {
             $user->assignRole(User::ROLE_ATTENDEE);
 
-            return redirect(session()->get('currentUrl'));
+            return redirect($currentUrl);
         }
 
-        if (session()->get('currentUrl') === route('host')) {
+        if ($currentUrl === route('host')) {
             $user->assignRole(User::ROLE_HOST);
 
-            return redirect(session()->get('currentUrl'));
+            return redirect($currentUrl);
         }
 
         return redirect()->route('home');
