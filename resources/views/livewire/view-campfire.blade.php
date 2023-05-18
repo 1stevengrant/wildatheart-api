@@ -86,7 +86,8 @@
         zoom: 10,
         maxZoom: 10,
         container: 'map',
-        style: 'mapbox://styles/mapbox/dark-v11',
+        attributionControl: false,
+        style: '{{ config('services.mapbox.mapbox_style') }}',
     });
 
     for (const marker of geojson.features) {

@@ -13,7 +13,7 @@ class HandleAttendee
         string $campfireId,
         string $currentUrl
     ) {
-        ray($currentUrl);
+
         session()->put('userType', User::ROLE_ATTENDEE);
         session()->put('currentUrl', $currentUrl);
         session()->put('campfireId', $campfireId);
