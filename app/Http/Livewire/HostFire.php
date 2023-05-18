@@ -16,6 +16,8 @@ class HostFire extends Component
 {
     public string $description = '';
 
+    public string $organization = '';
+
     public string $phone = '';
 
     public string $address = '';
@@ -57,7 +59,8 @@ class HostFire extends Component
     {
 
         $this->validate([
-            'description' => 'required|min:10',
+            'organization' => 'nullable|min:2|string|max:255',
+            'description' => 'required|min:10|string|max:255',
             'phone' => 'required|digits:10',
             'address' => 'required|min:10',
             'state' => 'required|min:2',
@@ -70,6 +73,7 @@ class HostFire extends Component
         ]);
 
         $fire = auth()->user()->campFires()->create([
+            'organization' => $this->organization,
             'description' => $this->description,
             'phone' => $this->phone,
             'address' => $this->address,

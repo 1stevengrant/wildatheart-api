@@ -16,6 +16,13 @@
         />
 
         <x-forms.input
+            name="organization"
+            label="Organization"
+            wire:model.defer="organization"
+            :error="$errors->first('organization')"
+        />
+
+        <x-forms.input
             required
             name="attendeeLimit"
             label="Attendee Limit"

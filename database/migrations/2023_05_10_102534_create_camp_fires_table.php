@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('camp_fires', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('user_id')->nullable();
-            $table->longText('description');
+            $table->longText('description')->nullable();
+            $table->string('organization')->nullable();
             $table->string('phone');
             $table->string('address');
             $table->string('state');
