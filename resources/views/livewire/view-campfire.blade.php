@@ -1,5 +1,8 @@
 <div>
-    <x-breadcrumbs :state="$campfire->state"/>
+    <x-breadcrumbs
+        :state="$campfire->state"
+        :city="$campfire->city"/>
+
     <x-type.h1>
         {{ prettyDate($campfire->date) }} at {{ prettyTime($campfire->time) }}
     </x-type.h1>
@@ -13,26 +16,26 @@
     </div>
 
     <div class="flex items-center space-x-4">
+        @if(!$campfire->isOverCapacity())
+            @auth
+                @if(!auth()->user()->isAttending($campfire) )
+                    <button
+                        wire:click="$emit('modal.open', 'rsvp-campfire', {'campfire' : '{{ $campfire->id }}'})"
+                        class="bg-black text-white font-semibold p-4 inline-block">
+                        RSVP
+                    </button>
+                @endif
 
-        @auth
-            @if(!auth()->user()->isAttending($campfire))
-                <button
-                    wire:click="$emit('modal.open', 'rsvp-campfire', {'campfire' : '{{ $campfire->id }}'})"
-                    class="bg-black text-white font-semibold p-4 inline-block">
-                    RSVP
-                </button>
-            @endif
-
-        @else
-            <button wire:click="handleAttendee('{{ $campfire->id }}')"
-                    class="bg-blue-600
+            @else
+                <button wire:click="handleAttendee('{{ $campfire->id }}')"
+                        class="bg-blue-600
                                     text-white
                                     font-semibold p-4
                                     inline-block">
-                RSVP
-            </button>
-        @endauth
-
+                    RSVP
+                </button>
+            @endauth
+        @endif
 
     </div>
 
@@ -41,7 +44,11 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     <style>
-        #map { height: 500px; width: 100%; }
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+
         .marker {
             display: block;
             border: none;

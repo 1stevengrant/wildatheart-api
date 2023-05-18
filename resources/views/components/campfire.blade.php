@@ -21,9 +21,9 @@
             More info
         </a>
 
-        @if(!$campfire->isPast() && $campfire->isApproved())
+        @if(!$campfire->isPast() && $campfire->isApproved() )
 
-            @if(!$campfire->isHost())
+            @if(!$campfire->isHost() && !$campfire->isOverCapacity())
 
                 @auth
                     @if(!auth()->user()->isAttending($campfire))
