@@ -12,6 +12,6 @@ class AttendeeSeeder extends Seeder
      */
     public function run(): void
     {
-        Attendee::factory()->count(1000)->create();
+        Attendee::factory()->count(3)->create();
     }
 }
