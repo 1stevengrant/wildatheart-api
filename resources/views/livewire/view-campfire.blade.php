@@ -24,7 +24,7 @@
             @endif
 
         @else
-            <button wire:click="handleAttendee({{ $campfire->id }})"
+            <button wire:click="handleAttendee('{{ $campfire->id }}')"
                     class="bg-blue-600
                                     text-white
                                     font-semibold p-4
