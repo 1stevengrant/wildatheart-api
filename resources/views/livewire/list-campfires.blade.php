@@ -11,7 +11,7 @@
         @endforeach
     </nav>
 
-    <nav class="space-x-4 space-y-4">
+    <nav class="space-x-4 space-y-4 mt-4">
         @foreach($cities as $city)
             <a class="p-2 bg-black text-white inline-block" href="{{ route('list.city', ['city' => $city]) }}">
                 {{ $city }}
