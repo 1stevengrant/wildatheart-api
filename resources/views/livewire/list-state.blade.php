@@ -1,5 +1,8 @@
 <div>
-    <x-type.h1>
+    <x-breadcrumbs
+        :state="ucwords(str_replace('+', ' ', $state))" />
+
+    <x-type.h1 class="mt-4">
         {{ ucwords(str_replace('+', ' ', $state)) }}
     </x-type.h1>
     <ul class="mt-6">

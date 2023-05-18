@@ -22,6 +22,6 @@ class ListState extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.attend-state');
+        return view('livewire.list-state');
     }
 }
