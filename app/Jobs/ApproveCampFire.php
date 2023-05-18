@@ -17,22 +17,22 @@ class ApproveCampFire implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        public Campfire $campFire,
+        public Campfire $campfire,
         public User $user
     ) {
     }
 
     public function handle(): void
     {
-        $this->campFire->update([
+        $this->campfire->update([
             'approved_at' => now(),
             'approved_by' => $this->user->id,
         ]);
 
-        Mail::to($this->campFire->user->email)
-            ->send(new CampfireApproved($this->campFire));
+        Mail::to($this->campfire->user->email)
+            ->send(new CampfireApproved($this->campfire));
 
-        LookupLatitudeLongitude::dispatch($this->campFire);
+        LookupLatitudeLongitude::dispatch($this->campfire);
 
     }
 }

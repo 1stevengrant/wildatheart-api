@@ -14,17 +14,17 @@ class LookupLatitudeLongitude implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public Campfire $campFire)
+    public function __construct(public Campfire $campfire)
     {
 
     }
 
     public function handle(): void
     {
-        $street = rawurlencode($this->campFire->street);
-        $city = rawurlencode($this->campFire->city);
-        $state = rawurlencode($this->campFire->state);
-        $zip = rawurlencode($this->campFire->zip);
+        $street = rawurlencode($this->campfire->street);
+        $city = rawurlencode($this->campfire->city);
+        $state = rawurlencode($this->campfire->state);
+        $zip = rawurlencode($this->campfire->zip);
         $country = rawurlencode('US');
 
         $response = Http::get(config('services.mapbox.api_url')."{$street}%20{$city}%20{$state}%20{$zip}%20${country}.json?access_token=".config('services.mapbox.api_key'));
@@ -33,7 +33,7 @@ class LookupLatitudeLongitude implements ShouldQueue
 
         $coordinates = $body->features[0]->geometry->coordinates;
 
-        $this->campFire->update([
+        $this->campfire->update([
             'latitude' => $coordinates[1],
             'longitude' => $coordinates[0],
         ]);

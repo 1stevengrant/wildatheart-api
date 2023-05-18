@@ -24,7 +24,7 @@ class ApproveCampFire extends Action
         foreach ($models as $model) {
             if (! $model->isApproved()) {
                 \App\Jobs\ApproveCampFire::dispatch(
-                    campFire: $model,
+                    campfire: $model,
                     user: auth()->user()
                 );
             }
