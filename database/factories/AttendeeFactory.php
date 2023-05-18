@@ -19,7 +19,6 @@ class AttendeeFactory extends Factory
     {
         return [
             'campfire_id' => \App\Models\Campfire::query()->inRandomOrder()->first()->id,
-            'phone' => $this->faker->phoneNumber,
             'user_id' => User::factory()->create()->id,
         ];
     }
