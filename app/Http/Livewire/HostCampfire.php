@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Actions\UserUpdateRole;
 use App\Mail\Campfires\Posted;
 use App\Models\State;
 use App\Models\User;
-use App\Services\UserService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -69,7 +69,7 @@ class HostCampfire extends Component
             'isPrivate' => 'required|boolean',
         ]);
 
-        $campfire = auth()->user()->campFires()->create([
+        $campfire = auth()->user()->campfires()->create([
             'organization' => $this->organization,
             'phone' => $this->phone,
             'address' => $this->address,
@@ -89,7 +89,7 @@ class HostCampfire extends Component
 
         Mail::to(config('mail.to.address'))->send(new Posted($campfire));
 
-        app(UserService::class)->makeUserHost(auth()->user()->email);
+        UserUpdateRole::run(auth()->user(), User::ROLE_HOST);
 
         return redirect()->route('my.campfires');
     }
