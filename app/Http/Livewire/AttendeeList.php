@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\CampFire;
+use App\Models\Campfire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -10,11 +10,11 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class AttendeeList extends Modal
 {
-    public string|CampFire $fire;
+    public string|Campfire $campfire;
 
-    public function mount(CampFire $fire): void
+    public function mount(Campfire $campfire): void
     {
-        $this->fire = $fire;
+        $this->campfire = $campfire;
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

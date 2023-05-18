@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('book_shipments', function (Blueprint $table) {
             $table->id();
-            $table->uuid('camp_fire_id');
+            $table->uuid('campfire_id');
             $table->string('tracking_number');
             $table->longText('notes')->nullable();
             $table->timestamps();

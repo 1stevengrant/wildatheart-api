@@ -20,9 +20,9 @@ class CampFire extends Resource
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\CampFire>
+     * @var class-string<\App\Models\Campfire>
      */
-    public static $model = \App\Models\CampFire::class;
+    public static $model = \App\Models\Campfire::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

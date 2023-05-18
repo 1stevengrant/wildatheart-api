@@ -1,12 +1,12 @@
 <x-wire-elements-pro::tailwind.modal>
     <x-slot name="title">
-        🔥 Attendee List for {{ prettyDate($fire->date) }}
+        🔥 Attendee List for {{ prettyDate($campfire->date) }}
     </x-slot>
     <div class="mb-4">
-        Total Attendees: {{ $fire->attendees->count() }}
+        Total Attendees: {{ $campfire->attendees->count() }}
     </div>
     <ul role="list" class="shadow-inner divide-y divide-gray-100 overflow-y-scroll max-h-[400px]">
-        @foreach($fire->attendees as $attendee)
+        @foreach($campfire->attendees as $attendee)
             <li class="flex justify-between items-center gap-x-6 p-5">
                 <div class="flex gap-x-4">
                     <img class="h-12 w-12 flex-none rounded-full bg-gray-50"

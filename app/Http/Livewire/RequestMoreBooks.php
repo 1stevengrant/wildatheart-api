@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\Mail\Fires\MoreBooksRequested;
-use App\Models\CampFire;
+use App\Mail\Campfires\MoreBooksRequested;
+use App\Models\Campfire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -12,20 +12,20 @@ use WireElements\Pro\Components\Modal\Modal;
 
 class RequestMoreBooks extends Modal
 {
-    public string|CampFire $fire;
+    public string|Campfire $campfire;
 
-    public function mount(CampFire $fire): void
+    public function mount(Campfire $campfire): void
     {
-        $this->fire = $fire;
+        $this->campfire = $campfire;
     }
 
     public function handle(): void
     {
         Mail::to('hello@digitalevangelist.net')
-            ->send(new MoreBooksRequested(fire: $this->fire));
+            ->send(new MoreBooksRequested(campfire: $this->campfire));
 
-        $this->fire->increment('book_request_count');
-        $this->fire->save();
+        $this->campfire->increment('book_request_count');
+        $this->campfire->save();
 
         $this->close();
 

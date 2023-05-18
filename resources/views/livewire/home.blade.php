@@ -19,7 +19,8 @@
         container: 'map',
         style: 'mapbox://styles/mapbox/dark-v11',
         center: [-103.5917, 40.6699],
-        zoom: 3
+        zoom: 3,
+        attributionControl: false
     });
 
     map.on('load', () => {

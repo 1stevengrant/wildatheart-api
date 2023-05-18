@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\CampFire;
+use App\Models\Campfire;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +14,7 @@ class LookupLatitudeLongitude implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public CampFire $campFire)
+    public function __construct(public Campfire $campFire)
     {
 
     }

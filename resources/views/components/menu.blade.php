@@ -7,7 +7,7 @@
     <nav class="flex space-x-6">
         <a href="{{ route('home') }}" class="p-4 bg-black text-white font-semibold">Home</a>
         <a href="{{ route('host') }}" class="p-4 bg-black text-white font-semibold">Host a 🔥</a>
-        <a href="{{ route('attend') }}" class="p-4 bg-black text-white font-semibold">Attend a 🔥</a>
+        <a href="{{ route('list.campfires') }}" class="p-4 bg-black text-white font-semibold">Attend a 🔥</a>
         @if(auth()->check())
             @role('attendee')
 {{--            <a class="p-4 bg-black text-white font-semibold">--}}
@@ -15,7 +15,7 @@
 {{--            </a>--}}
             @endrole
             @role('host')
-            <a href="{{ route('my.fires') }}"
+            <a href="{{ route('my.campfires') }}"
                class="p-4 bg-black text-white font-semibold">
                 My Fires
             </a>

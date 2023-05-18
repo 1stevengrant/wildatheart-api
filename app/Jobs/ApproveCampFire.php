@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Mail\Fires\CampFireApproved;
-use App\Models\CampFire;
+use App\Mail\Campfires\CampfireApproved;
+use App\Models\Campfire;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,7 +17,7 @@ class ApproveCampFire implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        public CampFire $campFire,
+        public Campfire $campFire,
         public User $user
     ) {
     }
@@ -30,7 +30,7 @@ class ApproveCampFire implements ShouldQueue
         ]);
 
         Mail::to($this->campFire->user->email)
-            ->send(new CampFireApproved($this->campFire));
+            ->send(new CampfireApproved($this->campFire));
 
         LookupLatitudeLongitude::dispatch($this->campFire);
 

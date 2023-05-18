@@ -11,6 +11,6 @@ class BookShipment extends Model
 
     public function campFire(): BelongsTo
     {
-        return $this->belongsTo(CampFire::class);
+        return $this->belongsTo(Campfire::class);
     }
 }

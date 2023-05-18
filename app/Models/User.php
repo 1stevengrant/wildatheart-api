@@ -55,12 +55,12 @@ class User extends Authenticatable
 
     public function campFires(): HasMany
     {
-        return $this->hasMany(CampFire::class);
+        return $this->hasMany(Campfire::class);
     }
 
-    public function isAttending(CampFire $fire): bool
+    public function isAttending(Campfire $campfire): bool
     {
-        return $this->attendees->contains('camp_fire_id', $fire->id);
+        return $this->attendees->contains('campfire_id', $campfire->id);
     }
 
     public function getFullnameAttribute(): string

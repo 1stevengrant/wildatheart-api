@@ -37,7 +37,7 @@ class LoginController extends Controller
 
         auth()->login($user, true);
 
-        if (session()->get('currentUrl') === route('attend')) {
+        if (session()->get('currentUrl') === route('list.campfires')) {
             $user->assignRole(User::ROLE_ATTENDEE);
 
             return redirect(session()->get('currentUrl'));

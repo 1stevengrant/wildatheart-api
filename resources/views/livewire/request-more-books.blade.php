@@ -5,10 +5,10 @@
     </x-slot>
 
    <div>
-       <p>Are you sure you wish to request more books for this 🔥 on {{ prettyDate($fire->date) }}?</p>
-       @if($fire->book_request_count > 0)
+       <p>Are you sure you wish to request more books for this 🔥 on {{ prettyDate($campfire->date) }}?</p>
+       @if($campfire->book_request_count > 0)
            <p> You have
-               requested {{ $fire->book_request_count }} times already</p>
+               requested {{ $campfire->book_request_count }} times already</p>
        @endif
    </div>
 

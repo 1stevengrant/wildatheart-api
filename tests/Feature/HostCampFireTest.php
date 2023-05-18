@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Livewire\HostFire;
+use App\Http\Livewire\HostCampfire;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,14 +22,13 @@ test('the Host 🔥 page renders without error', function (): void {
 });
 
 test('Host 🔥 component renders', function (): void {
-    livewire(HostFire::class)
+    livewire(HostCampfire::class)
         ->assertStatus(200);
 });
 
 test('an authenticated user can post a new 🔥 they want to host', function () {
 
     $attributes = [
-        'description' => 'This is a test description',
         'phone' => '1234567890',
         'address' => '123 Test St',
         'state' => 'California',
@@ -42,8 +41,7 @@ test('an authenticated user can post a new 🔥 they want to host', function () 
         'user_id' => $this->user->id,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -55,41 +53,11 @@ test('an authenticated user can post a new 🔥 they want to host', function () 
         ->set('attendeeLimit', $attributes['attendee_limit'])
         ->call('handle');
 
-    $this->assertDatabaseHas('camp_fires', $attributes);
-});
-
-it('needs a description', function () {
-    $attributes = [
-        'description' => '',
-        'phone' => '1234567890',
-        'address' => '123 Test St',
-        'state' => 'California',
-        'city' => 'Test City',
-        'zip' => '55555',
-        'date' => now()->addDay()->format('Y-m-d'),
-        'time' => '12:00:00',
-        'is_private' => 0,
-        'attendee_limit' => 50,
-    ];
-
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
-        ->set('phone', $attributes['phone'])
-        ->set('address', $attributes['address'])
-        ->set('state', $attributes['state'])
-        ->set('city', $attributes['city'])
-        ->set('zip', $attributes['zip'])
-        ->set('date', $attributes['date'])
-        ->set('time', $attributes['time'])
-        ->set('isPrivate', $attributes['is_private'])
-        ->set('attendeeLimit', $attributes['attendee_limit'])
-        ->call('handle')
-        ->assertHasErrors(['description' => 'required']);
+    $this->assertDatabaseHas('campfires', $attributes);
 });
 
 it('needs a phone number', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '',
         'address' => '123 Test St',
         'state' => 'California',
@@ -101,8 +69,7 @@ it('needs a phone number', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -118,7 +85,6 @@ it('needs a phone number', function () {
 
 it('needs an address', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '',
         'state' => 'California',
@@ -130,8 +96,7 @@ it('needs an address', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -147,7 +112,6 @@ it('needs an address', function () {
 
 it('needs a state', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 Main street',
         'state' => '',
@@ -159,8 +123,7 @@ it('needs a state', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -176,7 +139,6 @@ it('needs a state', function () {
 
 it('needs a city', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 main street',
         'state' => 'California',
@@ -188,8 +150,7 @@ it('needs a city', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -205,7 +166,6 @@ it('needs a city', function () {
 
 it('needs a zip', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 main street',
         'state' => 'California',
@@ -217,8 +177,7 @@ it('needs a zip', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -234,7 +193,6 @@ it('needs a zip', function () {
 
 it('needs a date', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 main street',
         'state' => 'California',
@@ -246,8 +204,7 @@ it('needs a date', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -263,7 +220,6 @@ it('needs a date', function () {
 
 it('needs a date > today', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 main street',
         'state' => 'California',
@@ -275,8 +231,7 @@ it('needs a date > today', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -292,7 +247,6 @@ it('needs a date > today', function () {
 
 it('needs a time', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 main street',
         'state' => 'California',
@@ -304,8 +258,7 @@ it('needs a time', function () {
         'attendee_limit' => 50,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -321,7 +274,6 @@ it('needs a time', function () {
 
 it('needs an attendee limit', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 main street',
         'state' => 'California',
@@ -333,8 +285,7 @@ it('needs an attendee limit', function () {
         'attendee_limit' => '',
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -350,7 +301,6 @@ it('needs an attendee limit', function () {
 
 it('needs the attendee limit to be > 0', function () {
     $attributes = [
-        'description' => 'test description for test',
         'phone' => '0776649494',
         'address' => '123 main street',
         'state' => 'California',
@@ -362,8 +312,7 @@ it('needs the attendee limit to be > 0', function () {
         'attendee_limit' => 0,
     ];
 
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
+    livewire(HostCampfire::class)
         ->set('phone', $attributes['phone'])
         ->set('address', $attributes['address'])
         ->set('state', $attributes['state'])
@@ -381,37 +330,4 @@ test('an unauthenticated user is redirected to login trying to access host url',
     auth()->logout();
     $this->get(route('host'))
         ->assertRedirect(route('social.login', ['provider' => 'auth0']));
-});
-
-test('a new 🔥 is not approved by default', function () {
-    $attributes = [
-        'description' => 'test description for test',
-        'phone' => '0776649494',
-        'address' => '123 main street',
-        'state' => 'California',
-        'city' => 'Glasgow',
-        'zip' => '55555',
-        'date' => now()->addDay()->format('Y-m-d'),
-        'time' => '12:00:00',
-        'is_private' => 0,
-        'attendee_limit' => 16,
-    ];
-
-    livewire(HostFire::class)
-        ->set('description', $attributes['description'])
-        ->set('phone', $attributes['phone'])
-        ->set('address', $attributes['address'])
-        ->set('state', $attributes['state'])
-        ->set('city', $attributes['city'])
-        ->set('zip', $attributes['zip'])
-        ->set('date', $attributes['date'])
-        ->set('time', $attributes['time'])
-        ->set('isPrivate', $attributes['is_private'])
-        ->set('attendeeLimit', $attributes['attendee_limit'])
-        ->call('handle');
-
-    $this->assertDatabaseHas('camp_fires', array_merge(
-        $attributes,
-        ['approved_at' => null]
-    ));
 });
