@@ -19,13 +19,14 @@
 </head>
 
 <body class="p-6">
-    <x-menu />
-    {{ $slot }}
-    @livewire('modal-pro')
-    @livewireScripts
-    @stack('scripts')
-    @vite('resources/js/app.js')
-    <x-notification />
+<x-menu/>
+{{ $slot }}
+<x-footer />
+@livewire('modal-pro')
+@livewireScripts
+@stack('scripts')
+@vite('resources/js/app.js')
+<x-notification/>
 </body>
 
 </html>
