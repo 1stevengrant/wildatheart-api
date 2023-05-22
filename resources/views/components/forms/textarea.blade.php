@@ -1,0 +1,32 @@
+@props([
+    'name',
+    'label',
+    'error' => false,
+    'instruction' => false,
+    'placeholder' => false,
+])
+<div>
+    <x-forms.label
+        label="{{ $label }}"
+        for="{{ $name }}"
+        required="{{ $attributes->has('required') }}"
+    />
+
+    <textarea
+        @if($placeholder)
+            placeholder="{{ $placeholder }}"
+        @endif
+        {{ $attributes->merge(['class' => 'p-2 border border-gray-200 w-full']) }}
+        id="{{ $name }}"
+    ></textarea>
+
+    @if ($error)
+        <x-forms.error
+            :error="$error"/>
+    @endif
+
+    @if($instruction)
+        <x-forms.instruction
+            :instruction="$instruction"/>
+    @endif
+</div>
