@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Livewire\livewire;
+use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
@@ -52,6 +53,6 @@ test('an anonymous user can rsvp to a given 🔥', function () {
 
     $this->assertDatabaseHas('model_has_roles', [
         'model_id' => User::where('email', 'john@doe.com')->first()->id,
-        'role_id' => 3,
+        'role_id' => Role::where('name', User::ROLE_ATTENDEE)->first()->id,
     ]);
 });
