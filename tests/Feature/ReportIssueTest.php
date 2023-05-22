@@ -1,7 +1,7 @@
 <?php
 
-use function Pest\Livewire\livewire;
 use App\Http\Livewire\ReportIssue;
+use function Pest\Livewire\livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
@@ -70,4 +70,3 @@ it('needs the email address to be an email addres', function () {
         ->call('handle')
         ->assertHasErrors(['email' => 'email']);
 });
-
