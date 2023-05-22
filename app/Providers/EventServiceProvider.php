@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Listeners\UpdateLastLoginDateTime;
 use App\Models\Campfire;
+use App\Models\Issue;
 use App\Observers\CampfireObserver;
+use App\Observers\IssueObserver;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -50,5 +52,6 @@ class EventServiceProvider extends ServiceProvider
 
     protected $observers = [
         Campfire::class => [CampfireObserver::class],
+        Issue::class => [IssueObserver::class],
     ];
 }

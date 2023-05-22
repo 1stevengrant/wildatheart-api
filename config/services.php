@@ -44,4 +44,10 @@ return [
         'mapbox_style' => 'mapbox://styles/mapbox/navigation-night-v1',
     ],
 
+    'zendesk' => [
+        'ticket_api' => 'https://' . env('ZENDESK_SUBDOMAIN') . '.zendesk.com/api/v2/tickets.json',
+        'token' => env('ZENDESK_TOKEN'),
+        'user' => env('ZENDESK_USERNAME'),
+    ],
+
 ];
