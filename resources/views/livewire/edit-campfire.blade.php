@@ -63,29 +63,6 @@
            :error="$errors->first('campfire.zip')"
        />
 
-       <x-forms.date
-           name="date"
-           label="Date"
-           value=""
-           wire:model.defer="campfire.date"
-           :error="$errors->first('campfire.date')"
-           min="{{ now()->format('Y-m-d') }}"
-           instruction="Must be in the future and in the format dd/mm/yyyy"
-       />
-
-       <x-forms.select
-           name="time"
-           label="Time"
-           :error="$errors->first('campfire.time')"
-           wire:model.defer="campfire.time">
-           <option value="">Select a Time</option>
-           @foreach($times as $time)
-               <option value="{{ $time }}">
-                   {{ $time }}
-               </option>
-           @endforeach
-       </x-forms.select>
-
        <div class="space-y-5 hover:cursor-pointer">
            <div class="relative flex items-start">
                <div class="flex h-6 items-center">

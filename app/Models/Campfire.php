@@ -22,7 +22,7 @@ class Campfire extends Model
         'is_private' => 'boolean',
         'approved_at' => 'datetime',
         'deleted_at' => 'datetime',
-        'frequency' => CampfireFrequency::class
+        'frequency' => CampfireFrequency::class,
     ];
 
     const STATUS_APPROVED = 'approved';

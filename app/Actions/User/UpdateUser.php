@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\User;
 
 use App\Models\User;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class UserUpdate
+class UpdateUser
 {
     use AsAction;
 

@@ -41,13 +41,19 @@ return [
     'mapbox' => [
         'api_url' => 'https://api.mapbox.com/geocoding/v5/mapbox.places/',
         'api_key' => env('MAPBOX_API_KEY'),
-        'mapbox_style' => 'mapbox://styles/mapbox/navigation-night-v1',
+        'mapbox_style' => 'mapbox://styles/mapbox/dark-v11',
     ],
 
     'zendesk' => [
         'ticket_api' => 'https://'.env('ZENDESK_SUBDOMAIN').'.zendesk.com/api/v2/tickets.json',
         'token' => env('ZENDESK_TOKEN'),
         'user' => env('ZENDESK_USERNAME'),
+    ],
+
+    'salesforce' => [
+        'callback_uri' => env('SALESFORCE_CALLBACK_URI'),
+        'key' => env('SALESFORCE_KEY'),
+        'secret' => env('SALESFORCE_SECRET'),
     ],
 
 ];

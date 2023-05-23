@@ -12,5 +12,3 @@ it('sends an email when a new 🔥 is created', function () {
         return $mail->hasTo($campfire->user->email);
     });
 });
-
-

@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use App\Actions\UserCreate;
-use App\Actions\UserUpdate;
-use App\Actions\UserUpdateRole;
+use App\Actions\User\CreateUser;
+use App\Actions\User\UpdateUser;
+use App\Actions\User\UpdateUserRole;
 use App\Mail\Campfires\AttendeeRegistered;
 use App\Models\Campfire;
 use App\Models\State;
@@ -64,7 +64,7 @@ class ConnectToHost extends Modal
 
         $this->dispatchBrowserEvent('notify', 'You have registered 🥳');
 
-        UserUpdateRole::run($attendee->user, User::ROLE_ATTENDEE);
+        UpdateUserRole::run($attendee->user, User::ROLE_ATTENDEE);
 
     }
 
@@ -75,7 +75,7 @@ class ConnectToHost extends Modal
             'confirmPhone' => 'nullable|same:phone',
         ]);
 
-        UserUpdate::run(auth()->user(), [
+        UpdateUser::run(auth()->user(), [
             'phone' => $this->phone,
         ]);
 
@@ -97,7 +97,7 @@ class ConnectToHost extends Modal
             'confirmPhone' => 'required|same:phone',
         ]);
 
-        $user = UserCreate::run([
+        $user = CreateUser::run([
             'given_name' => $this->firstName,
             'family_name' => $this->lastName,
             'email' => $this->email,

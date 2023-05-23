@@ -8,7 +8,6 @@ use App\Nova\Filters\ApprovalStatus;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Number;
@@ -86,14 +85,6 @@ class CampFire extends Resource
             Text::make('Longitude')
                 ->hideFromIndex(),
 
-            Date::make('Date')
-                ->rules('required')
-                ->sortable(),
-
-            Text::make('Time')
-                ->rules('required')
-                ->hideFromIndex(),
-
             Number::make('Attendee Limit')
                 ->rules('required', 'numeric', 'min:1'),
 
@@ -121,9 +112,10 @@ class CampFire extends Resource
                 ->sortable()
                 ->readonly(),
 
+            HasMany::make('Book Shipments'),
+
             HasMany::make('Attendees'),
 
-            HasMany::make('Book Shipments'),
         ];
     }
 

@@ -72,30 +72,6 @@
             :error="$errors->first('zip')"
         />
 
-        <x-forms.date
-            name="date"
-            label="Date"
-            required
-            wire:model.defer="date"
-            :error="$errors->first('date')"
-            min="{{ now()->format('Y-m-d') }}"
-            instruction="Must be in the future and in the format dd/mm/yyyy"
-        />
-
-        <x-forms.select
-            name="time"
-            label="Time"
-            required
-            :error="$errors->first('time')"
-            wire:model.defer="time">
-            <option value="">Select a Time</option>
-            @foreach($times as $time)
-                <option value="{{ $time }}">
-                    {{ $time }}
-                </option>
-            @endforeach
-        </x-forms.select>
-
         <x-forms.select
             name="frequency"
             label="Frequency"
