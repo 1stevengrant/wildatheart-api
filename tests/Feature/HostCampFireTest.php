@@ -38,6 +38,7 @@ test('an authenticated user can post a new 🔥 they want to host', function () 
         'time' => '12:00:00',
         'is_private' => 0,
         'attendee_limit' => 50,
+        'frequency' => 'weekly',
         'user_id' => $this->user->id,
     ];
 
@@ -49,6 +50,7 @@ test('an authenticated user can post a new 🔥 they want to host', function () 
         ->set('zip', $attributes['zip'])
         ->set('date', $attributes['date'])
         ->set('time', $attributes['time'])
+        ->set('frequency', $attributes['frequency'])
         ->set('isPrivate', $attributes['is_private'])
         ->set('attendeeLimit', $attributes['attendee_limit'])
         ->call('handle');

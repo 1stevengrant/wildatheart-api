@@ -1,7 +1,7 @@
 <x-wire-elements-pro::tailwind.modal
     on-submit="handle">
     <x-slot name="title">
-        RSVP for 🔥 on {{ $campfire->date }} at {{ $campfire->time }}
+        Connect to 🔥 on {{ $campfire->date }} at {{ $campfire->time }}
     </x-slot>
 
     <div class="space-y-4">

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Livewire\RsvpCampfire;
+use App\Http\Livewire\ConnectToHost;
 use App\Models\Campfire;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
@@ -14,12 +14,12 @@ beforeEach(function (): void {
     $this->seed(RoleSeeder::class);
 });
 
-test('a known user can rsvp to a given 🔥', function () {
+test('a known user can connect to a given 🔥', function () {
     $campfire = Campfire::factory()->inTheFuture()->approved()->create();
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    livewire(RsvpCampfire::class, ['campfire' => $campfire])
+    livewire(ConnectToHost::class, ['campfire' => $campfire])
         ->call('handle');
 
     $this->assertDatabaseHas('attendees', [
@@ -28,10 +28,10 @@ test('a known user can rsvp to a given 🔥', function () {
     ]);
 });
 
-test('an anonymous user can rsvp to a given 🔥', function () {
+test('an anonymous user can connect to a given 🔥', function () {
     $campfire = Campfire::factory()->inTheFuture()->approved()->create();
 
-    livewire(RsvpCampfire::class, ['campfire' => $campfire])
+    livewire(ConnectToHost::class, ['campfire' => $campfire])
         ->set('firstName', 'John')
         ->set('lastName', 'Doe')
         ->set('email', 'john@doe.com')

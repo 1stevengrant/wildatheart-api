@@ -24,7 +24,7 @@
                        class="text-sm leading-6 text-gray-900">
                         {{ $attendee->phone }}
                     </a>
-                    <p class="mt-1 text-xs leading-5 text-gray-500">RSVP'd
+                    <p class="mt-1 text-xs leading-5 text-gray-500">Connected
                         <time datetime="2023-01-23T13:23Z">
                             {{ $attendee->created_at->diffForHumans() }}
                         </time>

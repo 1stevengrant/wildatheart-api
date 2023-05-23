@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
 use WireElements\Pro\Components\Modal\Modal;
 
-class RsvpCampfire extends Modal
+class ConnectToHost extends Modal
 {
     public Campfire|string $campfire;
 
@@ -113,6 +113,6 @@ class RsvpCampfire extends Modal
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.rsvp-campfire');
+        return view('livewire.connect-to-host');
     }
 }

@@ -81,7 +81,7 @@ test('user see edit/delete for upcoming 🔥', function () {
 });
 
 test('user can see request more books for their 🔥 if approved', function () {
-    Campfire::factory()->approved()->create([
+    Campfire::factory()->inTheFuture()->approved()->create([
         'user_id' => $this->user->id,
     ]);
     livewire(MyCampfires::class)

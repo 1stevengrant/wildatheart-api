@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Enums\CampfireFrequency;
 use App\Nova\Actions\ApproveCampFire;
 use App\Nova\Filters\ApprovalStatus;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -68,6 +70,10 @@ class CampFire extends Resource
             Text::make('City')
                 ->rules('required'),
 
+            Select::make('Frequency')
+                ->rules('required')
+                ->options(CampfireFrequency::array()),
+
             Text::make('State')
                 ->rules('required'),
 
@@ -108,6 +114,10 @@ class CampFire extends Resource
                 ->readonly(),
 
             Text::make('Book Requests', 'book_request_count')
+                ->sortable()
+                ->readonly(),
+
+            Text::make('Book Shipments Count', 'book_shipments_count')
                 ->sortable()
                 ->readonly(),
 

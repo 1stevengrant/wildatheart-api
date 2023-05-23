@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Builders\CampfireBuilder;
+use App\Enums\CampfireFrequency;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,7 @@ class Campfire extends Model
         'is_private' => 'boolean',
         'approved_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'frequency' => CampfireFrequency::class
     ];
 
     const STATUS_APPROVED = 'approved';
@@ -106,6 +108,11 @@ class Campfire extends Model
     public function bookShipments(): HasMany
     {
         return $this->hasMany(BookShipment::class);
+    }
+
+    public function getBookShipmentsCountAttribute()
+    {
+        return $this->bookShipments->count();
     }
 
     public function isOverCapacity(): bool

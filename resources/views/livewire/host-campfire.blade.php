@@ -96,6 +96,21 @@
             @endforeach
         </x-forms.select>
 
+        <x-forms.select
+            name="frequency"
+            label="Frequency"
+            required
+            :error="$errors->first('frequency')"
+            wire:model.defer="frequency">
+            <option value="">How often is this happening?</option>
+            @foreach(\App\Enums\CampfireFrequency::values() as $frequency)
+                @ray($frequency)
+                <option value="{{ $frequency }}">
+                    {{ $frequency }}
+                </option>
+            @endforeach
+        </x-forms.select>
+
         <div class="space-y-5 hover:cursor-pointer">
             <div class="relative flex items-start">
                 <div class="flex h-6 items-center">

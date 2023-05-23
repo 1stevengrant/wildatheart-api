@@ -40,6 +40,8 @@ class HostCampfire extends Component
 
     public $userEmail = null;
 
+    public string $frequency = '';
+
     public function mount()
     {
         $this->states = State::all();
@@ -67,6 +69,7 @@ class HostCampfire extends Component
             'time' => 'required',
             'attendeeLimit' => 'required|numeric|min:1',
             'isPrivate' => 'required|boolean',
+            'frequency' => 'required|string',
         ]);
 
         $campfire = auth()->user()->campfires()->create([
@@ -81,6 +84,7 @@ class HostCampfire extends Component
             'attendee_limit' => $this->attendeeLimit,
             'is_private' => $this->isPrivate,
             'approved_at' => now(),
+            'frequency' => $this->frequency,
         ]);
 
         $this->reset();

@@ -20,9 +20,9 @@
             @auth
                 @if(!auth()->user()->isAttending($campfire) )
                     <button
-                        wire:click="$emit('modal.open', 'rsvp-campfire', {'campfire' : '{{ $campfire->id }}'})"
+                        wire:click="$emit('modal.open', 'connect-to-host', {'campfire' : '{{ $campfire->id }}'})"
                         class="bg-black text-white font-semibold p-4 inline-block">
-                        RSVP
+                        Connect to Host
                     </button>
                 @endif
 
@@ -32,7 +32,7 @@
                                     text-white
                                     font-semibold p-4
                                     inline-block">
-                    RSVP
+                    Connect to Host
                 </button>
             @endauth
         @endif

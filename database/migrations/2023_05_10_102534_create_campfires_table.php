@@ -17,6 +17,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->string('organization')->nullable();
             $table->string('phone');
+            $table->string('frequency')->default('weekly');
             $table->string('address');
             $table->string('state');
             $table->string('city');
