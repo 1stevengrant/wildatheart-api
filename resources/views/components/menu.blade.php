@@ -1,6 +1,6 @@
 <nav class="hidden md:flex items-center space-x-4">
     <a class="text-white flex items-center"
-       href="{{ route('list.campfires') }}">
+       href="{{ route('home') }}">
         <x-icons.fire />
         <span class="ml-2">{{ __('Find a Fire') }}</span>
     </a>

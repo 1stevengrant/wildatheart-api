@@ -1,13 +1,12 @@
-<div class="text-white md:flex md:flex-row-reverse w-full">
+<div class="text-white md:flex md:flex-row-reverse w-full md:h-screen md:w-screen ">
     <div id="map" class="md:w-2/3 aspect-square w-full h-full" style="aspect-ratio: 1 / 1"></div>
-    <div class="h-screen md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none px-2.5
+    <div class="h-full overflow-auto md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none px-2.5
     py-1.5
     md:p-6">
         <p class="text-center md:hidden">{{ $campfireCount }} Fires</p>
 
         <div id="campfires" class="fires space-y-4 mt-1"></div>
     </div>
-
 </div>
 @push('scripts')
     <script>
@@ -88,22 +87,22 @@
              * 2. Close all other popups and display popup for clicked fire
              * 3. Highlight listing in sidebar (and remove highlight for all other listings)
              **/
-            // el.addEventListener('click', (e) => {
-            //     /* Fly to the point */
-            //     flyToCampfire(marker);
-            //     /* Close all other popups and display popup for clicked fire */
-            //     createPopUp(marker);
-            //     /* Highlight listing in sidebar */
-            //     const activeItem = document.getElementsByClassName('active');
-            //     e.stopPropagation();
-            //     if (activeItem[0]) {
-            //         activeItem[0].classList.remove('active');
-            //     }
-            //     const listing = document.getElementById(
-            //         `campfire-${marker.properties.id}`
-            //     );
-            //     listing.classList.add('active');
-            // });
+            el.addEventListener('click', (e) => {
+                /* Fly to the point */
+                flyToCampfire(marker);
+                /* Close all other popups and display popup for clicked fire */
+                createPopUp(marker);
+                /* Highlight listing in sidebar */
+                const activeItem = document.getElementsByClassName('active');
+                e.stopPropagation();
+                if (activeItem[0]) {
+                    activeItem[0].classList.remove('active');
+                }
+                const listing = document.getElementById(
+                    `campfire-${marker.properties.id}`
+                );
+                listing.classList.add('active');
+            });
         }
     }
 
@@ -144,10 +143,9 @@ alt='${campfire.properties.host}' />
              * 3. Close all other popups and display popup for clicked fire
              * 4. Highlight listing in sidebar (and remove highlight for all other listings)
              **/
-
-            detail.addEventListener('click', function () {
+            listing.addEventListener('click', function () {
                 for (const feature of campfires.features) {
-                    if (this.id === `link-${feature.properties.id}`) {
+                    if (this.id === `campfire-${feature.properties.id}`) {
                         flyToCampfire(feature);
                         createPopUp(feature);
                     }
