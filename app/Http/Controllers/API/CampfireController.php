@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Campfire;
+use Creativeorange\Gravatar\Facades\Gravatar;
 
 class CampfireController extends Controller
 {
@@ -10,25 +12,19 @@ class CampfireController extends Controller
     {
         return response()->json([
             'type' => 'FeatureCollection',
-            'crs' => [
-                'type' => 'name',
-                'properties' => [
-                    'name' => 'urn:ogc:def:crs:OGC:1.3:CRS84',
-                ],
-            ],
-            'features' => \App\Models\Campfire::query()->future()->get()->map(function ($campfire) {
+            'features' => Campfire::query()->future()->get()->map(function ($campfire) {
                 return [
                     'type' => 'Feature',
                     'properties' => [
                         'id' => $campfire->id,
-                        'date' => prettyDate($campfire->date),
-                        'time' => prettyTime($campfire->time),
-                        'description' => $campfire->description,
-                        'state' => $campfire->state,
+                        'state' => getStateAbbreviation($campfire->state),
                         'city' => $campfire->city,
                         'attendee_limit' => $campfire->attendee_limit,
                         'spaces_remaining' => $campfire->remaining,
                         'url' => route('view.campfire', $campfire->id),
+                        'host' => $campfire->user->full_name,
+                        'hostProfilePhoto' => Gravatar::get($campfire->user->email, 'campfire-profile'),
+                        'image' => url('img/campfire.png'),
                     ],
                     'geometry' => [
                         'type' => 'Point',

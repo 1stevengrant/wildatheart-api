@@ -1,0 +1,91 @@
+.campfire {
+    @apply p-3 rounded border border-grey-darker flex items-start md:hover:cursor-pointer hover:border-orange transition ease-in-out duration-200;
+}
+
+.campfire.active {
+    @apply border-orange;
+}
+
+.campfire-image {
+    @apply h-24 w-24 object-cover rounded-xl;
+}
+
+.campfire-host {
+    @apply text-[#bababa] text-xs md:text-base;
+}
+
+.campfire-host-image {
+    @apply rounded-full;
+}
+
+.campfire-marker {
+    @apply cursor-pointer h-[48px] w-[48px];
+    background-repeat: no-repeat;
+    background-image: url("https://wahfires.test/svgs/map-campfire-marker.svg");
+}
+
+.campfire-detail {
+    @apply ml-3 block;
+}
+
+/* Marker tweaks */
+.mapboxgl-popup {
+    @apply pb-[50px];
+}
+
+.mapboxgl-popup-close-button {
+    @apply hidden;
+}
+
+.mapboxgl-popup-content {
+    font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+    padding: 0 !important;
+    width: 180px;
+}
+
+.mapboxgl-popup-content h3 {
+    background: theme('colors.orange');
+    color: #fff;
+    padding: 10px;
+    border-radius: 3px 3px 0 0;
+    font-weight: 700;
+    margin: -15px 0 0;
+}
+
+.mapboxgl-popup-content h4 {
+    margin: 0;
+    padding: 10px;
+    font-weight: 400;
+    color: black;
+}
+
+.mapboxgl-popup-content a {
+    @apply outline-none;
+    margin: 0 10px 10px;
+    padding: 10px;
+    font-weight: 400;
+    color: white;
+    background: theme('colors.orange');
+    display: inline-block;
+}
+
+.mapboxgl-popup-content div {
+    padding: 10px;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+    margin-top: 15px;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+    border-bottom-color: theme('colors.orange') !important;
+}
+
+.home-marker {
+    background-image: url("https://wahfires.test/svgs/map-home-marker.svg");
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}

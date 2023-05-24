@@ -46,6 +46,10 @@ Route::get('oauth/callback', function () {
     return Redirect::to('/');
 });
 
+Route::get('faqs', function () {
+    return 'faqs';
+})->name('faqs');
+
 Route::get('test', function () {
     $response = Forrest::sobjects('Contact', [
         'method' => 'post',

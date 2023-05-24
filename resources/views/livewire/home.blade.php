@@ -1,147 +1,193 @@
-<div>
-    <div id="map"></div>
+<div class="text-white md:flex md:flex-row-reverse w-full">
+    <div id="map" class="md:w-2/3 aspect-square w-full h-full" style="aspect-ratio: 1 / 1"></div>
+    <div class="h-screen md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none px-2.5
+    py-1.5
+    md:p-6">
+        <p class="text-center md:hidden">{{ $campfireCount }} Fires</p>
+
+        <div id="campfires" class="fires space-y-4 mt-1"></div>
+    </div>
+
 </div>
-@push('head')
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
-    <style>
-        #map { width: 50%;
-            height: 500px; }
-    </style>
-@endpush
 @push('scripts')
     <script>
     document.addEventListener('livewire:load', function () {
-       document.title = '🔥🔥🔥 | {{ config('app.name') }}';
+        document.title = '🔥🔥🔥 | {{ config('app.name') }}';
     });
+
     mapboxgl.accessToken = '{{ config('services.mapbox.api_key') }}';
     const map = new mapboxgl.Map({
         container: 'map',
         style: '{{ config('services.mapbox.mapbox_style') }}',
-        center: [-103.5917, 40.6699],
-        zoom: 3,
+        center: [{{ $longitude }}, {{ $latitude }}],
+        zoom: 10,
         maxZoom: 10,
+        // scrollZoom: false,
         attributionControl: false
     });
 
+    let campfires = null;
+    getCampFires();
+
+    async function getCampFires() {
+        const response = await fetch('/api/campfires');
+        campfires = await response.json();
+    }
+
+    /**
+     * Wait until the map loads to make changes to the map.
+     */
     map.on('load', () => {
-        map.addSource('fires', {
-            type: 'geojson',
-            data: '/api/fires',
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points on
-            clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+        /**
+         * This is where your '.addLayer()' used to be, instead
+         * add only the source without styling a layer
+         */
+        map.addSource('places', {
+            'type': 'geojson',
+            'data': campfires
         });
 
-        map.addLayer({
-            id: 'clusters',
-            type: 'circle',
-            source: 'fires',
-            filter: ['has', 'point_count'],
-            paint: {
-// Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-// with three steps to implement three types of circles:
-//   * Blue, 20px circles when point count is less than 100
-//   * Yellow, 30px circles when point count is between 100 and 750
-//   * Pink, 40px circles when point count is greater than or equal to 750
-                'circle-color': [
-                    'step',
-                    ['get', 'point_count'],
-                    '#51bbd6',
-                    100,
-                    '#f1f075',
-                    750,
-                    '#f28cb1'
-                ],
-                'circle-radius': [
-                    'step',
-                    ['get', 'point_count'],
-                    20,
-                    100,
-                    30,
-                    750,
-                    40
-                ]
-            }
-        });
+        map.resize()
 
-        map.addLayer({
-            id: 'cluster-count',
-            type: 'symbol',
-            source: 'fires',
-            filter: ['has', 'point_count'],
-            layout: {
-                'text-field': ['get', 'point_count_abbreviated'],
-                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-size': 12
-            }
-        });
+        /**
+         * Add all the things to the page:
+         * - The location listings on the side of the page
+         * - The markers onto the map
+         */
+        buildCampfireList(campfires);
+        addMarkers();
+    })
 
-        map.addLayer({
-            id: 'unclustered-point',
-            type: 'circle',
-            source: 'fires',
-            filter: ['!', ['has', 'point_count']],
-            paint: {
-                'circle-color': '#11b4da',
-                'circle-radius': 4,
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#fff'
-            }
-        });
+    function addMarkers() {
 
-// inspect a cluster on click
-        map.on('click', 'clusters', (e) => {
-            const features = map.queryRenderedFeatures(e.point, {
-                layers: ['clusters']
-            });
-            const clusterId = features[0].properties.cluster_id;
-            map.getSource('fires').getClusterExpansionZoom(
-                clusterId,
-                (err, zoom) => {
-                    if (err) return;
+        const homeMarker = document.createElement('div');
+        homeMarker.className = 'home-marker';
+        new mapboxgl.Marker(homeMarker)
+            .setLngLat([{{ $longitude }}, {{ $latitude }}])
+            .addTo(map);
 
-                    map.easeTo({
-                        center: features[0].geometry.coordinates,
-                        zoom: zoom
-                    });
-                }
-            );
-        });
+        for (const marker of campfires.features) {
+            /* Create a div element for the marker. */
+            const el = document.createElement('div');
+            /* Assign a unique `id` to the marker. */
+            el.id = `campfire-marker-${marker.properties.id}`;
+            /* Assign the `marker` class to each marker for styling. */
+            el.className = 'campfire-marker';
 
-// When a click event occurs on a feature in
-// the unclustered-point layer, open a popup at
-// the location of the feature, with
-// description HTML from its properties.
-        map.on('click', 'unclustered-point', (e) => {
-            const coordinates = e.features[0].geometry.coordinates.slice();
-            const date = e.features[0].properties.date;
-            const time = e.features[0].properties.time;
-            const url = e.features[0].properties.url;
-
-
-// Ensure that if the map is zoomed out such that
-// multiple copies of the feature are visible, the
-// popup appears over the copy being pointed to.
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
-
-            new mapboxgl.Popup()
-                .setLngLat(coordinates)
-                .setHTML(
-                    `🔥 ${date} at ${time}<br><a href='${url}'>more info</a>`
-                )
+            /**
+             * Create a marker using the div element
+             * defined above and add it to the map.
+             **/
+            new mapboxgl.Marker(el, { offset: [0, -23] })
+                .setLngLat(marker.geometry.coordinates)
                 .addTo(map);
-        });
 
-        map.on('mouseenter', 'clusters', () => {
-            map.getCanvas().style.cursor = 'pointer';
+            /**
+             * Listen to the element and when it is clicked, do three things:
+             * 1. Fly to the point
+             * 2. Close all other popups and display popup for clicked fire
+             * 3. Highlight listing in sidebar (and remove highlight for all other listings)
+             **/
+            // el.addEventListener('click', (e) => {
+            //     /* Fly to the point */
+            //     flyToCampfire(marker);
+            //     /* Close all other popups and display popup for clicked fire */
+            //     createPopUp(marker);
+            //     /* Highlight listing in sidebar */
+            //     const activeItem = document.getElementsByClassName('active');
+            //     e.stopPropagation();
+            //     if (activeItem[0]) {
+            //         activeItem[0].classList.remove('active');
+            //     }
+            //     const listing = document.getElementById(
+            //         `campfire-${marker.properties.id}`
+            //     );
+            //     listing.classList.add('active');
+            // });
+        }
+    }
+
+    /**
+     * Add a listing for each fire
+     **/
+    function buildCampfireList(campfires) {
+        for (const campfire of campfires.features) {
+            /* Add a new listing section to the sidebar. */
+            const listings = document.getElementById('campfires');
+            const listing = listings.appendChild(document.createElement('div'));
+            /* Assign a unique `id` to the listing. */
+            listing.id = `campfire-${campfire.properties.id}`;
+            /* Assign the `item` class to each listing for styling. */
+            listing.className = 'campfire';
+
+            const img = listing.appendChild(document.createElement('img'));
+            img.src = campfire.properties.image;
+            img.className = 'campfire-image';
+
+            /* Add the link to the individual listing created above. */
+            const detail = listing.appendChild(document.createElement('div'));
+            detail.className = 'campfire-detail';
+            detail.id = `link-${campfire.properties.id}`;
+            detail.innerHTML = `
+            <h3 class='font-semibold md:text-lg'>${campfire.properties.city}, ${campfire.properties.state}</h3>
+<div class='flex items-center space-x-2 mt-2'>
+<img src='${campfire.properties.hostProfilePhoto}'
+class='campfire-host-image'
+alt='${campfire.properties.host}' />
+<p class='campfire-host'>Hosted by ${campfire.properties.host}</p>
+</div>`;
+
+            /**
+             * Listen to the element and when it is clicked, do four things:
+             * 1. Update the `currentFeature` to the fire associated with the clicked link
+             * 2. Fly to the point
+             * 3. Close all other popups and display popup for clicked fire
+             * 4. Highlight listing in sidebar (and remove highlight for all other listings)
+             **/
+
+            detail.addEventListener('click', function () {
+                for (const feature of campfires.features) {
+                    if (this.id === `link-${feature.properties.id}`) {
+                        flyToCampfire(feature);
+                        createPopUp(feature);
+                    }
+                }
+                const activeItem = document.getElementsByClassName('active');
+                if (activeItem[0]) {
+                    activeItem[0].classList.remove('active');
+                }
+                this.parentNode.classList.add('active');
+            });
+        }
+    }
+
+    /**
+     * Use Mapbox GL JS's `flyTo` to move the camera smoothly
+     * a given center point.
+     **/
+    function flyToCampfire(currentFeature) {
+        map.flyTo({
+            duration: 1500,
+            center: currentFeature.geometry.coordinates,
+            zoom: 15
         });
-        map.on('mouseleave', 'clusters', () => {
-            map.getCanvas().style.cursor = '';
-        });
-    });
+    }
+
+    /**
+     * Create a Mapbox GL JS `Popup`.
+     **/
+    function createPopUp(currentFeature) {
+        const popUps = document.getElementsByClassName('mapboxgl-popup');
+        if (popUps[0]) popUps[0].remove();
+        new mapboxgl.Popup({ closeOnClick: false })
+            .setLngLat(currentFeature.geometry.coordinates)
+            .setHTML(
+                `<h3>${currentFeature.properties.city}, ${currentFeature.properties.state}</h3><h4>Host:
+                ${currentFeature.properties.host}</h4><a href="${currentFeature.properties.url}">View Fire</a>`
+            )
+            .addTo(map);
+    }
+
     </script>
 
 @endpush

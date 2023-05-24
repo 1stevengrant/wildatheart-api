@@ -20,15 +20,16 @@ module.exports = {
             black: 900,
         },
         colors: {
+            transparent: "transparent",
             "transparent-orange": "rgba(214, 95, 0, 0.9)",
             "transparent-brown": "rgba(116, 54, 23, 0.9)",
-            black: "#0f1c22", //From Sketch File
+            black: "#111111", //From Sketch File
             light: "#f2f3f3",
             error: "red",
             dark: "#0f1c22",
             darker: "#081013",
             "grey-darkest": "#1d272b",
-            "grey-darker": "#606f7b",
+            "grey-darker": "#484848",
             "grey-dark": "#5C6771", // From Sketch File
             grey: "#9FA7A9",
             "grey-light": "var(--wah-grey-light)", //From Sketch File
@@ -93,5 +94,8 @@ module.exports = {
         },
         extend: {},
     },
-    plugins: [require("@tailwindcss/forms")],
+    plugins: [
+        'postcss-import',
+        require("@tailwindcss/forms")
+    ],
 };

@@ -123,4 +123,9 @@ class Campfire extends Model
 
         return false;
     }
+
+    public function host(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

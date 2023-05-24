@@ -16,10 +16,12 @@
     @vite('resources/css/app.css')
     @livewireStyles
     @stack('head')
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
 </head>
 
-<body class="p-6">
-<x-menu/>
+<body class="bg-black">
+<x-header />
 {{ $slot }}
 <x-footer />
 @livewire('modal-pro')

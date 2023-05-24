@@ -29,3 +29,14 @@ if (! function_exists('prettyTime')) {
         return date('g:i A', strtotime($time));
     }
 }
+
+if (!function_exists('getStateAbbreviation')) {
+    function getStateAbbreviation($stateName): string
+    {
+        $stateAbbreviations = \App\Models\State::all()->pluck('code', 'name')->toArray();
+
+        $stateName = ucwords(strtolower($stateName));
+
+        return $stateAbbreviations[$stateName];
+    }
+}
