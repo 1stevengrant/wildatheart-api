@@ -37,7 +37,7 @@ class SendWelcomeEmail extends Mailable implements ShouldQueue
     public function attachments(): array
     {
         return [
-            Attachment::fromPath(storage_path('app/downloads/firestarter.pdf'))
+            Attachment::fromPath(public_path('downloads/WaH-Fires_Firestarter-Manual-v2.pdf'))
                 ->as('firestarter.pdf')
                 ->withMime('application/pdf'),
         ];
