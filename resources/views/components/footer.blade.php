@@ -1,4 +1,5 @@
-<footer class="fixed bottom-0 left-0 z-50 w-full bg-black border-t border-grey-dark p-4 md:hidden">
+<footer id="footer"
+        class="fixed bottom-0 left-0 z-50 w-full bg-black border-t border-grey-dark p-4 md:hidden">
     <div class="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
         <x-footer-link
             href="{{ route('home') }}">

@@ -1,9 +1,9 @@
-<div class="text-white md:flex md:flex-row-reverse w-full md:h-screen md:w-screen ">
-    <div id="map" class="md:w-2/3 aspect-square w-full h-full md:border-l md:border-grey-darker" style="aspect-ratio: 1 /
-    1"></div>
+<div class="text-white md:flex md:flex-row-reverse w-full md:h-screen md:w-screen">
+    <div id="map" class="md:w-2/3 aspect-square w-full h-full md:border-l md:border-grey-darker"
+         style="aspect-ratio: 1 / 1"></div>
     <div class="h-full overflow-auto md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none px-2.5
     py-1.5
-    md:p-6">
+    md:p-6" id="campfires-container">
         <p class="text-center md:hidden">{{ $campfireCount }} Fires</p>
 
         <div id="campfires" class="fires space-y-4 mt-1"></div>
@@ -13,6 +13,16 @@
     <script>
     document.addEventListener('livewire:load', function () {
         document.title = '🔥🔥🔥 | {{ config('app.name') }}';
+        if (window.innerWidth < 768) {
+            const screenHeight = window.innerHeight,
+                mapBox = document.getElementById('map'),
+                mapBoxHeight = mapBox.offsetHeight,
+                footer = document.getElementById('footer'),
+                footerHeight = footer.offsetHeight,
+                campfiresContainer = document.getElementById('campfires-container')
+            campfiresContainer.style.maxHeight = `${screenHeight - mapBoxHeight}px`;
+            campfiresContainer.style.paddingBottom = `${footerHeight + 10}px`;
+        }
     });
 
     mapboxgl.accessToken = '{{ config('services.mapbox.api_key') }}';
@@ -78,7 +88,7 @@
              * Create a marker using the div element
              * defined above and add it to the map.
              **/
-            new mapboxgl.Marker(el, { offset: [0, -23] })
+            new mapboxgl.Marker(el, {offset: [0, -23]})
                 .setLngLat(marker.geometry.coordinates)
                 .addTo(map);
 
@@ -178,7 +188,7 @@ alt='${campfire.properties.host}' />
     function createPopUp(currentFeature) {
         const popUps = document.getElementsByClassName('mapboxgl-popup');
         if (popUps[0]) popUps[0].remove();
-        new mapboxgl.Popup({ closeOnClick: false })
+        new mapboxgl.Popup({closeOnClick: false})
             .setLngLat(currentFeature.geometry.coordinates)
             .setHTML(
                 `<h3>${currentFeature.properties.city}, ${currentFeature.properties.state}</h3><h4>Host:
