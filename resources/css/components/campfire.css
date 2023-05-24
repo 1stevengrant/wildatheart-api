@@ -60,13 +60,9 @@
 }
 
 .mapboxgl-popup-content a {
-    @apply outline-none;
+    @apply outline-none rounded-md inline-block text-white bg-orange;
     margin: 0 10px 10px;
     padding: 10px;
-    font-weight: 400;
-    color: white;
-    background: theme('colors.orange');
-    display: inline-block;
 }
 
 .mapboxgl-popup-content div {
