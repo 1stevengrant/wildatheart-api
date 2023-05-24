@@ -1,5 +1,6 @@
 <div class="text-white md:flex md:flex-row-reverse w-full md:h-screen md:w-screen ">
-    <div id="map" class="md:w-2/3 aspect-square w-full h-full" style="aspect-ratio: 1 / 1"></div>
+    <div id="map" class="md:w-2/3 aspect-square w-full h-full md:border-l md:border-grey-darker" style="aspect-ratio: 1 /
+    1"></div>
     <div class="h-full overflow-auto md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none px-2.5
     py-1.5
     md:p-6">

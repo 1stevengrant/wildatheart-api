@@ -20,7 +20,7 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
 </head>
 
-<body class="bg-black">
+<body class="bg-[#0B1419]">
 <x-header />
 {{ $slot }}
 <x-footer />

@@ -10,9 +10,18 @@ class CampfireController extends Controller
 {
     public function __invoke()
     {
-        return response()->json([
-            'type' => 'FeatureCollection',
-            'features' => Campfire::query()->future()->get()->map(function ($campfire) {
+        return response()->json(
+            [
+                'type' => 'FeatureCollection',
+                'features' => $this->getCampfires(),
+            ],
+        );
+    }
+
+    protected function getCampfires()
+    {
+        return cache()->remember('campfires', now()->addHour(), function () {
+            return Campfire::query()->future()->get()->map(function ($campfire) {
                 return [
                     'type' => 'Feature',
                     'properties' => [
@@ -34,7 +43,7 @@ class CampfireController extends Controller
                         ],
                     ],
                 ];
-            }),
-        ]);
+            });
+        });
     }
 }

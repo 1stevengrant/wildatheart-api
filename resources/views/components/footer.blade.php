@@ -34,5 +34,14 @@
                 </div>
             </div>
         @endauth
+        @guest
+            <x-footer-link
+                href="{{ route('faqs') }}">
+                <x-slot:icon>
+                    <x-icons.user class="w-[24px] h-[24px] text-white fill-current stroke-current"/>
+                </x-slot:icon>
+                {{ __('Login') }}
+            </x-footer-link>
+        @endguest
     </div>
 </footer>
