@@ -30,7 +30,7 @@ if (! function_exists('prettyTime')) {
     }
 }
 
-if (!function_exists('getStateAbbreviation')) {
+if (! function_exists('getStateAbbreviation')) {
     function getStateAbbreviation($stateName): string
     {
         $stateAbbreviations = \App\Models\State::all()->pluck('code', 'name')->toArray();

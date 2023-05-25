@@ -7,13 +7,14 @@ use GeoIp2\Database\Reader;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class Home extends Component
 {
     public $latitude;
+
     public $longitude;
+
     public int $campfireCount;
 
     public function mount(): void
