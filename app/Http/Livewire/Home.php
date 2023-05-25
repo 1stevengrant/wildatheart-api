@@ -24,7 +24,7 @@ class Home extends Component
 
     public function getLatitudeAndLongitude(): void
     {
-        $cityDbReader = new Reader(resource_path('location/GeoLite2-City.mmdb'));
+        $cityDbReader = new Reader(url('location/GeoLite2-City.mmdb'));
         $record = $cityDbReader->city(config('app.env') === 'local' ? '81.104.2.147' : request()->ip());
         $this->latitude = $record->location->latitude;
         $this->longitude = $record->location->longitude;

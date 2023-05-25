@@ -1,0 +1,3 @@
+.card-grid {
+    grid: auto / auto-flow max-content;
+}

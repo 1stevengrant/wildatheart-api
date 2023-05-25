@@ -2,5 +2,6 @@
 @import "tailwindcss/components";
 @import "./components/campfire.css";
 @import "./components/wep-override.css";
+@import "./components/card-grid.css";
 @import "tailwindcss/utilities";
 
