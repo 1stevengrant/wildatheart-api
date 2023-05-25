@@ -22,7 +22,7 @@
     </div>
     <div class="flex items-start">
         <x-icons.calendar/>
-        <div class="ml-[15px] leading-[24px]">
+        <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">Scheduled</p>
             <p class="text-sm text-[#6B7280]">
                 {{ $campfire->frequency->name }}
