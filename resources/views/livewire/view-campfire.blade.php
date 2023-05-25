@@ -1,44 +1,54 @@
 <div>
     <div id="map" class="h-[300px]"></div>
-    <div class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
-        <h1 class="text-3xl">{{ $campfire->city }}, {{ getStateAbbreviation($campfire->state) }}</h1>
-        <x-campfire-carousel/>
-        <x-campfire-host-info :campfire="$campfire"/>
+    <div id="campfire"
+         class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
 
-        <div class="border-t border-b border-grey-darker py-8 mt-[25px] space-y-4">
-            <div class="flex items-start">
-                <x-icons.home/>
-                <div class="ml-[24px] leading-[24px]">
-                    <p class="font-medium">Hosted at a Home</p>
-                    <p class="text-sm text-[#6B7280]">John has graciously offered up his
-                        home to host this event.</p>
-                </div>
+        <div class="container mx-auto flex space-x-8">
+            <div class="md:w-2/3">
+                <h1 class="text-3xl">{{ $campfire->city }}, {{ getStateAbbreviation($campfire->state) }}</h1>
+                <x-campfire-carousel/>
+
+                <x-campfire-host-info :campfire="$campfire"/>
+
+                <x-campfire-meta :campfire="$campfire"/>
             </div>
-            <div class="flex items-start">
-                <x-icons.event-type/>
-                <div class="ml-[24px] leading-[24px]">
-                    <p class="font-medium">Outdoor event</p>
-                    <p class="text-sm text-[#6B7280]">Ths event is slated to be an outdoor event. Please dress
-                        accordingly.</p>
-                </div>
+
+            <div class="md:w-1/3">
+                <x-campfire-cta :campfire="$campfire"/>
             </div>
-            <div class="flex items-start">
-                <x-icons.calendar/>
-                <div class="ml-[24px] leading-[24px]">
-                    <p class="font-medium">Scheduled</p>
-                    <p class="text-sm text-[#6B7280]">
-                        {{ $campfire->frequency }}
-                    </p>
-                </div>
-            </div>
+
+
         </div>
+
+
+
+
 
     </div>
 </div>
+@push('head')
+    <style>
+        #footer {
+            display: none;
+        }
+    </style>
+@endpush
 @push('scripts')
     <script>
     document.addEventListener('livewire:load', function () {
         document.title = '{{ '🔥 in ' . $campfire->city . ' ' . getStateAbbreviation($campfire->state)  }} | {{ config('app.name') }}';
+
+        if (window.innerWidth < 768) {
+            const screenHeight = window.innerHeight,
+                mapBox = document.getElementById('map'),
+                mapBoxHeight = mapBox.offsetHeight,
+                footer = document.getElementById('footer'),
+                footerHeight = footer.offsetHeight,
+                campfiresContainer = document.getElementById('campfire');
+            campfiresContainer.style.maxHeight = `${screenHeight - mapBoxHeight}px`;
+            campfiresContainer.style.paddingBottom = `${footerHeight + 10}px`;
+        }
+
     });
 
     mapboxgl.accessToken = '{{ config('services.mapbox.api_key') }}';

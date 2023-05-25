@@ -15,6 +15,8 @@ class ViewCampfire extends Component
 
     public string $currentUrl = '';
 
+    public bool $hideFooter = true;
+
     public function mount(Campfire $campfire): void
     {
         $this->campfire = $campfire;
