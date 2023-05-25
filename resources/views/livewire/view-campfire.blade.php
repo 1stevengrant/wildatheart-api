@@ -6,7 +6,7 @@
         <div class="container mx-auto">
             <div class=" md:flex md:space-x-8">
                 <div class="md:w-2/3">
-                    <h1 class="text-3xl">{{ $campfire->title() }}</h1>
+                    <h1 class="text-3xl leading-tighter mb-8">{{ $campfire->title() }}</h1>
 
                     <x-campfire-carousel/>
 
@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <div>
+            <div class="mt-12">
                 <h2 class="text-2xl">Photos of Fires Like This</h2>
 
                 <div class="grid grid-cols-2 gap-2 mt-8">
