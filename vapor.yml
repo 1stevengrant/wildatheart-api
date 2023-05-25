@@ -15,6 +15,7 @@ environments:
     deploy:
       - 'php artisan db:wipe --force'
       - 'php artisan migrate --force'
+      - 'php artisan db:seed --class=RoleSeeder --force'
       - 'php artisan app:import-campfires'
   prod:
     memory: 1024
