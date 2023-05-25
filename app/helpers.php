@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\State;
+
 if (! function_exists('generateTimeList')) {
     function generateTimeList(): array
     {
@@ -33,10 +35,19 @@ if (! function_exists('prettyTime')) {
 if (! function_exists('getStateAbbreviation')) {
     function getStateAbbreviation($stateName): string
     {
-        $stateAbbreviations = \App\Models\State::all()->pluck('code', 'name')->toArray();
+        $stateAbbreviations = State::all()->pluck('code', 'name')->toArray();
 
         $stateName = ucwords(strtolower($stateName));
 
         return $stateAbbreviations[$stateName];
+    }
+}
+
+if (! function_exists('getStateName')) {
+    function getStateName($stateCode): string
+    {
+        $stateNames = State::all()->pluck('name', 'code')->toArray();
+
+        return $stateNames[$stateCode];
     }
 }
