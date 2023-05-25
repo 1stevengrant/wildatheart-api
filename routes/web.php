@@ -2,7 +2,7 @@
 
 use App\Http\Livewire\Home;
 use App\Http\Livewire\HostCampfire;
-use App\Http\Livewire\ListCampFires;
+use App\Http\Livewire\ListCampfires;
 use App\Http\Livewire\ListCity;
 use App\Http\Livewire\ListState;
 use App\Http\Livewire\MyCampfires;
