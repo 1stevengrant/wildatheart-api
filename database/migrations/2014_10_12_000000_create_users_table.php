@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->dateTime('last_login_at')->nullable();
             $table->string('salesforce_id')->nullable();
+            $table->unsignedInteger('profile_step')->default(1)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

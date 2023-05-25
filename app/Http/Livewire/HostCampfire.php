@@ -11,12 +11,21 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class HostCampfire extends Component
 {
+    use WithFileUploads;
+
+    public int $step;
+
     public string $organization = '';
 
     public string $phone = '';
+
+    public array $photos = [];
+
+    public bool $emailUpdates = true;
 
     public string $address = '';
 
@@ -47,12 +56,19 @@ class HostCampfire extends Component
         $this->states = State::all();
         $this->times = generateTimeList();
 
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             session()->put('userType', User::ROLE_HOST);
             session()->put('currentUrl', url()->current());
 
             return redirect()->route('social.login', ['provider' => 'auth0']);
         }
+
+        $this->step = auth()->user()->profile_step;
+    }
+
+    public function handleStepOne()
+    {
+
     }
 
     public function handle()
@@ -98,6 +114,6 @@ class HostCampfire extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.host-campfire');
+        return view('livewire.host-campfire')->layout('layouts.base');
     }
 }

@@ -5,7 +5,7 @@
         <span class="ml-2">{{ __('Find a Fire') }}</span>
     </a>
     <a class="text-white flex items-center"
-       href="{{ route('list.campfires') }}">
+       href="{{ route('host') }}">
         <x-icons.hand-wave />
         <span class="ml-2">{{ __('Host a Fire') }}</span>
     </a>

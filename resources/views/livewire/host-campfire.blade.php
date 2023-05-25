@@ -1,121 +1,114 @@
-<div>
-
-    <x-type.h1>
-        Host a 🔥
-    </x-type.h1>
-
-    <form wire:submit.prevent="handle"
-          class="space-y-4 mt-6"
-    >
-
-        <x-forms.input
-            name="organization"
-            label="Organization"
-            wire:model.defer="organization"
-            :error="$errors->first('organization')"
-        />
-
-        <x-forms.input
-            required
-            name="attendeeLimit"
-            label="Attendee Limit"
-            type="number"
-            min="1"
-            wire:model.defer="attendeeLimit"
-            :error="$errors->first('attendeeLimit')"
-        />
-
-        <x-forms.input
-            name="phone"
-            required
-            label="Phone"
-            wire:model.defer="phone"
-            type="tel"
-            :error="$errors->first('phone')"
-        />
-
-        <x-forms.input
-            name="address"
-            required
-            label="Address"
-            wire:model.defer="address"
-            :error="$errors->first('address')"
-        />
-
-        <x-forms.input
-            name="city"
-            required
-            label="City"
-            wire:model.defer="city"
-            :error="$errors->first('city')"
-        />
-
-        <x-forms.select
-            name="state"
-            label="State"
-            required
-            :error="$errors->first('state')"
-            wire:model.defer="state">
-            <option value="">Select a State</option>
-            @foreach($states as $state)
-                <option value="{{ $state->name }}">
-                    {{ $state->code }}
-                </option>
-            @endforeach
-        </x-forms.select>
-
-        <x-forms.input
-            name="zip"
-            required
-            label="Zip"
-            wire:model.defer="zip"
-            :error="$errors->first('zip')"
-        />
-
-        <x-forms.select
-            name="frequency"
-            label="Frequency"
-            required
-            :error="$errors->first('frequency')"
-            wire:model.defer="frequency">
-            <option value="">How often is this happening?</option>
-            @foreach(\App\Enums\CampfireFrequency::values() as $frequency)
-                @ray($frequency)
-                <option value="{{ $frequency }}">
-                    {{ $frequency }}
-                </option>
-            @endforeach
-        </x-forms.select>
-
-        <div class="space-y-5 hover:cursor-pointer">
-            <div class="relative flex items-start">
-                <div class="flex h-6 items-center">
-                    <input id="is_private"
-                           aria-describedby="is-private-event"
-                           name="is_private"
-                           wire:model="isPrivate"
-                           type="checkbox"
-                           class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-600">
-                </div>
-                <div class="ml-3 text-sm leading-6">
-                    <label for="is_private"
-                           class="font-medium text-gray-900">Is this a private gathering?</label>
-                    <p id="comments-description" class="text-gray-500">
-                        This 🔥 will not be publicly listed and can only be accessed by those you share the link with
-                    </p>
-                </div>
+<div class="md:flex h-screen text-white relative">
+    @if($step === 1)
+        <div class="md:w-1/2 mt-8 px-8">
+            <div class="grid grid-cols-3 gap-2 top-8 left-8 w-full">
+                <div class="h-3 border border-white rounded-full "></div>
+                <div class="h-3  border border-white rounded-full "></div>
+                <div class="h-3  border border-white rounded-full "></div>
             </div>
-        </div>
 
-        <button class="p-4 bg-black text-white font-semibold">
-            Create Your 🔥
-        </button>
-    </form>
+            <form wire:submit.prevent="handleStepOne">
+
+                <h1 class="text-[39px] leading-[44px]">Congrats! Just a few more questions.</h1>
+
+                <p>One of the most important aspects of our Fires are the hosts that commit to them. </p>
+
+                <x-forms.input
+                    name="phone"
+                    id="phone"
+                    instruction="Your phone number will only be used for epic memes and cat photos."
+                    label="Phone Number"/>
+
+                <div class="flex items-center space-x-4 "
+                     x-data="dropFileComponent()">
+                    <div
+                        class="py-6 w-[134px] h-[134px] rounded-full flex flex-col justify-center items-center bg-[#D9D9D9]
+                flex-shrink-0"
+                        x-bind:class="droppingFile ? 'bg-gray-400 border-gray-500' : 'border-gray-500 bg-gray-200'"
+                        x-on:drop="droppingFile = false"
+                        x-on:drop.prevent="handleFileDrop($event)"
+                        x-on:dragover.prevent="droppingFile = true"
+                        x-on:dragleave.prevent="droppingFile = false">
+                        <x-icons.camera/>
+                        <div class="mt-1" wire:loading.flex wire.target="photos">
+                            <x-icons.spinner/>
+                            <div>Processing Files</div>
+                        </div>
+                    </div>
+                    <div class="text-sm">
+                        <p class="font-semibold text-[#B8B6B6]">Profile Photo</p>
+                        <p class="mt-2 text-[#B8B6B6]">Your photo will only be used to help your community identify your
+                            fire.
+                            WaH will never
+                            use your
+                            photo for anything other than your Fire page.</p>
+                    </div>
+                </div>
+
+                <div class="text-[#B8B6B6] text-sm">
+                    <p class="font-semibold">Email Updates & Resources</p>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center rounded-full bg-[#171513] border-grey-darker border ">
+                            <button
+                                type="button"
+                                wire:click.prevent="$set('emailUpdates', true)"
+                                class="px-4 py-6 @if($emailUpdates) border border-white rounded-l-full @endif"
+                            >
+                                Yes
+                            </button>
+                            <button
+                                type="button"
+                                wire:click.prevent="$set('emailUpdates', false)"
+                                class="px-4 py-6 @if(!$emailUpdates) border border-white rounded-r-full @endif"
+                            >
+                                No
+                            </button>
+                        </div>
+                        <div>
+                            I would like to receive email updates & resources from Wild at Heart
+                        </div>
+                    </div>
+                </div>
+
+                <x-button-container>
+                    <x-primary-button class="w-full">
+                        Next
+                    </x-primary-button>
+
+                    <a href="{{ route('home') }}" class="text-sm py-3 text-[#B8B6B6]">
+                        Cancel
+                    </a>
+
+                </x-button-container>
+
+            </form>
+        </div>
+    @endif
+    <div class="md:w-1/2 bg-cover bg-campfire">
+        <div></div>
+    </div>
 </div>
 @push('scripts')
     <script>
+    function dropFileComponent() {
+        return {
+            droppingFile: false,
+            handleFileDrop(e) {
+                if (event.dataTransfer.files.length > 0) {
+                    const files = e.dataTransfer.files;
+                    @this.uploadMultiple('photos', files,
+                        (uploadedFilename) => {
+                        }, () => {
+                        }, (event) => {
+                        }
+                    )
+                }
+            }
+        };
+    }
+
     document.addEventListener('livewire:load', function () {
-        document.title = 'Host a 🔥 | {{ config('app.name') }}';
+        document.title = 'Host a Fire | {{ config('app.name') }}';
     });
     </script>
 @endpush

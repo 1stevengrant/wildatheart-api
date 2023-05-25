@@ -8,6 +8,9 @@ module.exports = {
         "./vendor/wire-elements/pro/**/*.blade.php",
     ],
     theme: {
+        backgroundImage: {
+            'campfire': "url('https://images.unsplash.com/photo-1486915309851-b0cc1f8a0084?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80')"
+        },
         fontWeight: {
             hairline: 100,
             thin: 200,
@@ -53,12 +56,7 @@ module.exports = {
         fontFamily: {
             cursive: ["Rock Salt", "cursive"],
             sans: [
-                "Nunito Sans",
-                "system-ui",
-                "BlinkMacSystemFont",
-                "-apple-system",
-                "Helvetica Neue",
-                "sans-serif",
+                'Inter', "sans-serif"
             ],
             serif: ["Arno Pro", "arno-pro", "Georgia", "serif"],
             mono: ["Menlo", "monospace"],
