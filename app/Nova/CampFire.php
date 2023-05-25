@@ -55,8 +55,7 @@ class CampFire extends Resource
             Text::make('Organization')
                 ->rules('max:255'),
 
-            Trix::make('Description')
-                ->rules('required'),
+            Trix::make('Description'),
 
             Text::make('Phone')
                 ->rules('required')
