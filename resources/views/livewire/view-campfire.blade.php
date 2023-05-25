@@ -3,22 +3,34 @@
     <div id="campfire"
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
 
-        <div class="container mx-auto md:flex md:space-x-8">
-            <div class="md:w-2/3">
-                <h1 class="text-3xl">{{ $campfire->city }}, {{ getStateAbbreviation($campfire->state) }}</h1>
-                <x-campfire-carousel/>
+        <div class="container mx-auto">
+            <div class=" md:flex md:space-x-8">
+                <div class="md:w-2/3">
+                    <h1 class="text-3xl">{{ $campfire->title() }}</h1>
 
-                <x-campfire-host-info :campfire="$campfire"/>
+                    <x-campfire-carousel/>
 
-                <x-campfire-meta :campfire="$campfire"/>
+                    <x-campfire-host-info :campfire="$campfire"/>
 
+                    <x-campfire-meta :campfire="$campfire"/>
+
+                </div>
+
+                <div class="md:w-1/3 hidden md:block">
+                    <x-campfire-cta :campfire="$campfire"/>
+                </div>
             </div>
 
-            <div class="md:w-1/3 hidden md:block">
-                <x-campfire-cta :campfire="$campfire"/>
+            <div>
+                <h2 class="text-2xl">Photos of Fires Like This</h2>
+
+                <div class="grid grid-cols-2 gap-2 mt-8">
+
+                    <div class="grid gap-2 grid-cols-2">
+
+                    </div>
+                </div>
             </div>
-
-
         </div>
 
     </div>
