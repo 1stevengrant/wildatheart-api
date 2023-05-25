@@ -41,6 +41,9 @@ return [
 
     'serve_assets' => [
         'location/GeoLite2-City.mmdb',
+        'svgs/map-campfire-marker.svg',
+        'svgs/map-home-marker.svg',
+        'svgs/map-marker.svg',
     ],
 
 ];
