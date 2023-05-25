@@ -16,7 +16,7 @@ class CampfireObserver
     {
         LookupLatitudeLongitude::dispatch($campfire);
         // todo: enable this when we have a mail server
-//        Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
+        //        Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
     }
 
     /**

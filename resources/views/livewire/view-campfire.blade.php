@@ -4,7 +4,7 @@
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
 
         <div class="container mx-auto">
-            <div class=" md:flex md:space-x-8">
+            <div class="md:flex md:space-x-8">
                 <div class="md:w-2/3">
                     <h1 class="text-3xl leading-tighter mb-8">{{ $campfire->title() }}</h1>
 
@@ -25,14 +25,22 @@
                 <h2 class="text-2xl">Photos of Fires Like This</h2>
 
                 <div class="grid grid-cols-2 gap-2 mt-8">
-
+                    <div>image 1</div>
                     <div class="grid gap-2 grid-cols-2">
-
+                        <div>image 2</div>
+                        <div>image 3</div>
+                        <div>image 4</div>
+                        <div>image 5</div>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div id="mobile-connect-with-host"
+         class="md:hidden px-4 py-6 fixed bottom-0 left-0 right-0 border-t border-grey-darker bg-black">
+        <x-primary-button class="w-full">
+            Connect with Host
+        </x-primary-button>
     </div>
 </div>
 @push('head')
@@ -48,14 +56,10 @@
         document.title = '{{ '🔥 in ' . $campfire->city . ' ' . getStateAbbreviation($campfire->state)  }} | {{ config('app.name') }}';
 
         if (window.innerWidth < 768) {
-            const screenHeight = window.innerHeight,
-                mapBox = document.getElementById('map'),
-                mapBoxHeight = mapBox.offsetHeight,
-                footer = document.getElementById('footer'),
-                footerHeight = footer.offsetHeight,
-                campfiresContainer = document.getElementById('campfire');
-            campfiresContainer.style.maxHeight = `${screenHeight - mapBoxHeight}px`;
-            campfiresContainer.style.paddingBottom = `${footerHeight + 10}px`;
+            const campfireElement = document.getElementById('campfire'),
+                connectWithHostElement = document.getElementById('mobile-connect-with-host');
+
+            campfireElement.style.paddingBottom = connectWithHostElement.offsetHeight + 'px';
         }
 
     });
