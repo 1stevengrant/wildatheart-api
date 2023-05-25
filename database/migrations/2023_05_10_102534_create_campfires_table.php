@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('user_id')->nullable();
             $table->longText('description')->nullable();
             $table->string('organization')->nullable();
-            $table->string('phone');
+            $table->string('name')->nullable();
+            $table->string('phone')->nullable();
             $table->string('frequency')->default('weekly');
-            $table->string('address');
-            $table->string('state');
-            $table->string('city');
-            $table->string('zip');
+            $table->string('address')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('zip')->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->decimal('latitude', 10, 7)->nullable();
             $table->date('date')->nullable();
