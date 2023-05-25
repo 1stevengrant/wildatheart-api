@@ -128,4 +128,13 @@ class Campfire extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function title(): string
+    {
+        if ($this->name) {
+            return $this->name.' Fire';
+        }
+
+        return $this->city.', '.getStateAbbreviation($this->state).' Fire';
+    }
 }
