@@ -27,4 +27,10 @@ class CampfireBuilder extends Builder
             ->where('approved_at', '!=', null)
             ->orderBy('date');
     }
+
+    public function public(): CampfireBuilder
+    {
+        return $this->where('is_private', '=', false)
+            ->where('approved_at', '!=', null);
+    }
 }
