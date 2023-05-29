@@ -3,5 +3,7 @@
 @import "./components/campfire.css";
 @import "./components/wep-override.css";
 @import "./components/card-grid.css";
+@import "./components/file-input.css";
+@import "./components/mapbox-geocoder.css";
 @import "tailwindcss/utilities";
 
