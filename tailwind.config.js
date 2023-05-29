@@ -93,7 +93,6 @@ module.exports = {
         extend: {},
     },
     plugins: [
-        'postcss-import',
         require("@tailwindcss/forms")
     ],
 };
