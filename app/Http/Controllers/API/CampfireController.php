@@ -20,8 +20,8 @@ class CampfireController extends Controller
 
     protected function getCampfires()
     {
-        return cache()->remember('campfires', now()->addHour(), function () {
-            return Campfire::query()->future()->get()->map(function ($campfire) {
+        return cache()->remember('campfires_api', now()->addHour(), function () {
+            return Campfire::query()->public()->get()->map(function ($campfire) {
                 return [
                     'type' => 'Feature',
                     'properties' => [
