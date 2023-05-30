@@ -52,6 +52,7 @@ module.exports = {
             "blue-darker": "#185f68", // From Borders in styleguide
             blue: "#52858F", // From style guide
             brown: "#743617",
+            'green-400': '#4ade80',
         },
         fontFamily: {
             cursive: ["Rock Salt", "cursive"],

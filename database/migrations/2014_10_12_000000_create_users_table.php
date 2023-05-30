@@ -26,6 +26,7 @@ return new class extends Migration
             $table->dateTime('last_login_at')->nullable();
             $table->string('salesforce_id')->nullable();
             $table->unsignedInteger('profile_step')->default(1)->nullable();
+            $table->boolean('opted_into_marketing')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

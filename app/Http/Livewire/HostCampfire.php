@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire;
 
+use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Mail\Campfires\Posted;
-use App\Models\State;
 use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
+use Livewire\Redirector;
 use Livewire\WithFileUploads;
 
 class HostCampfire extends Component
@@ -21,11 +22,17 @@ class HostCampfire extends Component
 
     public string $organization = '';
 
+    public string $campfireName = '';
+
     public string $phone = '';
 
-    public array $photos = [];
+    public string $countryCode = '';
+
+    public $photo;
 
     public bool $emailUpdates = true;
+
+    public string $mapboxPlaceName = '';
 
     public string $address = '';
 
@@ -35,28 +42,23 @@ class HostCampfire extends Component
 
     public string $zip = '';
 
-    public string $date = '';
+    public string $country = '';
 
-    public string $time = '';
+    public $latitude = '';
+
+    public $longitude = '';
 
     public bool $isPrivate = false;
 
-    public $states = [];
+    public bool $isIndoor = false;
 
     public $attendeeLimit = 50;
-
-    public array $times = [];
-
-    public $userEmail = null;
 
     public string $frequency = '';
 
     public function mount()
     {
-        $this->states = State::all();
-        $this->times = generateTimeList();
-
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             session()->put('userType', User::ROLE_HOST);
             session()->put('currentUrl', url()->current());
 
@@ -66,54 +68,60 @@ class HostCampfire extends Component
         $this->step = auth()->user()->profile_step;
     }
 
-    public function handleStepOne()
+    public function handleStepOne(): void
     {
+        $this->validate([
+            'photo' => 'required|image',
+            'phone' => 'required|min:10|numeric',
+            'emailUpdates' => 'required|boolean',
+        ]);
 
+        auth()->user()->update([
+            'phone' => $this->phone,
+            'image' => $this->photo->store('users'),
+            'opted_into_marketing' => $this->emailUpdates,
+            'profile_step' => 2,
+        ]);
     }
 
-    public function handle()
+    public function handleStepTwo(): Redirector
     {
-
         $this->validate([
-            'organization' => 'nullable|min:2|string|max:255',
-            'phone' => 'required|digits:10',
-            'address' => 'required|min:10',
-            'state' => 'required|min:2',
-            'city' => 'required|min:2',
-            'zip' => 'required|digits:5',
-            'attendeeLimit' => 'required|numeric|min:1',
+            'campfireName' => 'required|min:2|string|max:255',
+            'mapboxPlaceName' => 'required|string',
             'isPrivate' => 'required|boolean',
             'frequency' => 'required|string',
+            'isIndoor' => 'required|boolean',
         ]);
 
         $campfire = auth()->user()->campfires()->create([
-            'organization' => $this->organization,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'state' => $this->state,
-            'city' => $this->city,
-            'zip' => $this->zip,
-            'date' => $this->date,
-            'time' => $this->time,
-            'attendee_limit' => $this->attendeeLimit,
+            'name' => $this->campfireName,
+            'mapbox_place_name' => $this->mapboxPlaceName,
             'is_private' => $this->isPrivate,
-            'approved_at' => now(),
+            'is_indoor' => $this->isIndoor,
             'frequency' => $this->frequency,
         ]);
 
-        $this->reset();
-
-        $this->dispatchBrowserEvent('notify', 'Campfire created successfully! 🔥🔥🔥');
-
         Mail::to(config('mail.to.address'))->send(new Posted($campfire));
 
-        UpdateUserRole::run(auth()->user(), User::ROLE_HOST);
+        UpdateUserRole::make()->handle(
+            user: auth()->user(),
+            role: User::ROLE_HOST
+        );
 
-        return redirect()->route('my.campfires');
+        if (!auth()->user()->hasVerifiedEmail()) {
+            SendVerificationEmail::make()->handle();
+
+            return redirect()->route('confirm.email');
+        }
+
+//       return redirect()->route()
+
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.host-campfire')->layout('layouts.base');
+        return view('livewire.host-campfire')
+            ->layout('layouts.base');
     }
 }

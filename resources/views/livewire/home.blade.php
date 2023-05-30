@@ -1,25 +1,28 @@
-<div class="text-white md:flex md:flex-row-reverse w-full md:h-screen md:w-screen">
-    <div id="map" class="md:w-2/3 aspect-square w-full h-full md:border-l md:border-grey-darker"
+<div class="w-full text-white md:flex md:h-screen md:w-screen md:flex-row-reverse">
+    <div id="map"
+         class="aspect-square h-full w-full md:border-grey-darker md:w-2/3 md:border-l"
          style="aspect-ratio: 1 / 1"></div>
-    <div class="h-full overflow-auto md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none px-2.5
-    py-1.5
-    md:p-6" id="campfires-container">
+    <div class="h-full overflow-auto md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none
+    px-2.5 py-1.5 md:p-6"
+         id="campfires-container">
         <p class="text-center md:hidden">{{ $campfireCount }} Fires</p>
 
-        <div id="campfires" class="fires space-y-4 mt-1"></div>
+        <div id="campfires"
+             class="mt-1 fires space-y-4"></div>
     </div>
 </div>
 @push('scripts')
     <script>
     document.addEventListener('livewire:load', function () {
-        document.title = '🔥🔥🔥 | {{ config('app.name') }}';
+        document.title = 'Fires | {{ config('app.name') }}';
         if (window.innerWidth < 768) {
             const screenHeight = window.innerHeight,
                 mapBox = document.getElementById('map'),
                 mapBoxHeight = mapBox.offsetHeight,
                 footer = document.getElementById('footer'),
                 footerHeight = footer.offsetHeight,
-                campfiresContainer = document.getElementById('campfires-container')
+                campfiresContainer = document.getElementById('campfires-container');
+
             campfiresContainer.style.maxHeight = `${screenHeight - mapBoxHeight}px`;
             campfiresContainer.style.paddingBottom = `${footerHeight + 10}px`;
         }
@@ -140,7 +143,7 @@
             detail.id = `link-${campfire.properties.id}`;
             detail.innerHTML = `
             <h3 class='font-semibold md:text-lg'>${campfire.properties.city}, ${campfire.properties.state}</h3>
-<div class='flex items-center space-x-2 mt-2'>
+<div class='mt-2 flex items-center space-x-2'>
 <img src='${campfire.properties.hostProfilePhoto}'
 class='campfire-host-image'
 alt='${campfire.properties.host}' />

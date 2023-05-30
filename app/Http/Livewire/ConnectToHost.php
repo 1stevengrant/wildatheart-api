@@ -64,7 +64,7 @@ class ConnectToHost extends Modal
 
         $this->dispatchBrowserEvent('notify', 'You have registered 🥳');
 
-        UpdateUserRole::run($attendee->user, User::ROLE_ATTENDEE);
+        UpdateUserRole::make()->handle($attendee->user, User::ROLE_ATTENDEE);
 
     }
 
@@ -75,7 +75,7 @@ class ConnectToHost extends Modal
             'confirmPhone' => 'nullable|same:phone',
         ]);
 
-        UpdateUser::run(auth()->user(), [
+        UpdateUser::make()->handle(auth()->user(), [
             'phone' => $this->phone,
         ]);
 
@@ -97,7 +97,7 @@ class ConnectToHost extends Modal
             'confirmPhone' => 'required|same:phone',
         ]);
 
-        $user = CreateUser::run([
+        $user = CreateUser::make()->handle([
             'given_name' => $this->firstName,
             'family_name' => $this->lastName,
             'email' => $this->email,

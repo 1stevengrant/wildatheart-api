@@ -26,7 +26,6 @@ class LoginController extends Controller
                 'name' => $userSocial->getName() ?? null,
                 'given_name' => $userSocial->user['given_name'] ?? null,
                 'family_name' => $userSocial->user['family_name'] ?? null,
-                'email_verified_at' => $userSocial->user['email_verified'] ? now() : null,
                 'email' => $userSocial->getEmail(),
                 'image' => $userSocial->user['picture'],
                 'provider_id' => $userSocial->getId(),

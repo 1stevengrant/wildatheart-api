@@ -26,7 +26,7 @@ class ListCampfires extends Component
 
     public function handleAttendee($campfireId): void
     {
-        HandleAttendee::run(
+        HandleAttendee::make()->handle(
             campfireId: $campfireId,
             currentUrl: $this->currentUrl
         );

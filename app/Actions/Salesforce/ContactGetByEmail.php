@@ -9,12 +9,12 @@ class ContactGetByEmail
 {
     use AsAction;
 
-    public function handle(string $email)
+    public function handle(string $email): void
     {
         $result = Forrest::query("SELECT Id, FirstName, LastName FROM Contact WHERE Email = '$email'");
 
         if (empty($result['records'])) {
-            $response = CreateContact::run([
+            $response = CreateContact::make()->handle([
                 'FirstName' => 'Steven',
                 'LastName' => 'Steven',
                 'Email' => $email,

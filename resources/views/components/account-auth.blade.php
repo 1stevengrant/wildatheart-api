@@ -1,5 +1,6 @@
 @auth
     <div
+        {{ $attributes->merge(['class' => '']) }}
         x-data="{
             open: false,
             toggle() {

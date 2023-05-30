@@ -1,11 +1,14 @@
 <?php
 
+use App\Actions\Salesforce\ContactGetByEmail;
+use App\Http\Livewire\ConfirmEmail;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\HostCampfire;
 use App\Http\Livewire\ListCampfires;
 use App\Http\Livewire\ListCity;
 use App\Http\Livewire\ListState;
 use App\Http\Livewire\MyCampfires;
+use App\Http\Livewire\VerifyEmail;
 use App\Http\Livewire\ViewCampfire;
 use GeoIp2\Database\Reader;
 use Illuminate\Support\Facades\Redirect;
@@ -29,6 +32,11 @@ Route::get('list', ListCampfires::class)->name('list.campfires');
 Route::get('list/state/{state}', ListState::class)->name('list.state');
 Route::get('list/city/{city}', ListCity::class)->name('list.city');
 Route::get('attend/{campfire}', ViewCampfire::class)->name('view.campfire');
+Route::get('confirmemail', ConfirmEmail::class)->name('confirm.email');
+Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
+Route::get('faqs', function () {
+    return 'faqs';
+})->name('faqs');
 
 Route::middleware(['auth', 'role:host'])->group(function () {
     Route::get('my', MyCampfires::class)->name('my.campfires');
@@ -46,10 +54,6 @@ Route::get('oauth/callback', function () {
     return Redirect::to('/');
 });
 
-Route::get('faqs', function () {
-    return 'faqs';
-})->name('faqs');
-
 Route::get('test', function () {
     $response = Forrest::sobjects('Contact', [
         'method' => 'post',
@@ -65,7 +69,7 @@ Route::get('test', function () {
 
 Route::get('find', function () {
 
-    \App\Actions\Salesforce\ContactGetByEmail::run('steven@servant.io');
+    ContactGetByEmail::make()->handle(email: 'steven@servant.io');
 
 });
 

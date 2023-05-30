@@ -67,4 +67,14 @@ class User extends Authenticatable
     {
         return "{$this->given_name} {$this->family_name}";
     }
+
+    public function emailVerifications(): HasMany
+    {
+        return $this->hasMany(EmailVerify::class);
+    }
+
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->email_verified_at !== null;
+    }
 }

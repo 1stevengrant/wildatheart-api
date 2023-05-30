@@ -16,7 +16,8 @@
         @if($placeholder)
             placeholder="{{ $placeholder }}"
         @endif
-        {{ $attributes->merge(['class' => 'p-2 border border-gray-200 w-full']) }}
+        {{ $attributes->merge(['class' => 'border border-[#2E2C29] w-full bg-[#171513] rounded-md
+        focus:border-orange focus:outline-none focus:ring-orange']) }}
         id="{{ $name }}"
     ></textarea>
 

@@ -47,15 +47,12 @@
     </div>
 
     <x-slot name="buttons">
-        <button type="submit"
-                class="p-4 bg-black text-white font-semibold">
+        <x-primary-button>
             Report Issue
-        </button>
-        <button
-            wire:click="$emit('modal.close')"
-            class="bg-black text-white font-semibold p-4 inline-block">
+        </x-primary-button>
+        <x-secondary-button wire:click="$emit('modal.close')">
             Cancel
-        </button>
+        </x-secondary-button>
     </x-slot>
 
 </x-wire-elements-pro::tailwind.modal>
