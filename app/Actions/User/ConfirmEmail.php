@@ -14,8 +14,7 @@ class ConfirmEmail
     public function handle(
         User $user,
         EmailVerify $token
-    ): void
-    {
+    ): void {
 
         $user->update([
             'email_verified_at' => now(),

@@ -26,5 +26,8 @@
 
 @push('scripts')
     <script>
+    document.addEventListener('livewire:load', function () {
+        document.title = 'Confirm Your Email | {{ config('app.name') }}';
+    });
     </script>
 @endpush

@@ -58,7 +58,7 @@ class HostCampfire extends Component
 
     public function mount()
     {
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             session()->put('userType', User::ROLE_HOST);
             session()->put('currentUrl', url()->current());
 
@@ -82,7 +82,19 @@ class HostCampfire extends Component
             'opted_into_marketing' => $this->emailUpdates,
             'profile_step' => 2,
         ]);
+
+        $this->step = 2;
     }
+
+    protected array $messages = [
+        'campfireName.required' => 'A fire name is required.',
+        'campfireName.min' => 'A fire name must be at least 2 characters.',
+        'campfireName.max' => 'A fire name must be less than 255 characters.',
+        'mapboxPlaceName.required' => 'The full Fire address is required.',
+        'isPrivate.required' => 'Please select if the fire is private or not.',
+        'frequency.required' => 'Please select how often the fire will be hosted.',
+        'isIndoor.required' => 'Please select if the fire is indoors or not.',
+    ];
 
     public function handleStepTwo(): Redirector
     {
@@ -110,12 +122,12 @@ class HostCampfire extends Component
         );
 
         if (!auth()->user()->hasVerifiedEmail()) {
-            SendVerificationEmail::make()->handle();
+            SendVerificationEmail::make()->handle(campfire: $campfire);
 
             return redirect()->route('confirm.email');
         }
 
-//       return redirect()->route()
+        return redirect()->route('gift', ['campfire' => $campfire]);
 
     }
 

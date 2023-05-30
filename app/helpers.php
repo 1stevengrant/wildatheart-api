@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\State;
+use Creativeorange\Gravatar\Facades\Gravatar;
 
 if (! function_exists('generateTimeList')) {
     function generateTimeList(): array
@@ -49,5 +50,12 @@ if (! function_exists('getStateName')) {
         $stateNames = State::all()->pluck('name', 'code')->toArray();
 
         return $stateNames[$stateCode];
+    }
+}
+
+if (!function_exists('gravatar')) {
+    function gravatar(string $email, string $transform = null): string
+    {
+        return Gravatar::get($email, $transform);
     }
 }

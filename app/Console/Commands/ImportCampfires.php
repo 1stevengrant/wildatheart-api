@@ -90,6 +90,8 @@ class ImportCampfires extends Command
 
         $bar->finish();
 
+        $this->line('');
+
         $this->info('All done!');
     }
 

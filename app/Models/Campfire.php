@@ -137,4 +137,9 @@ class Campfire extends Model
 
         return $this->city.', '.getStateAbbreviation($this->state).' Fire';
     }
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
+    }
 }

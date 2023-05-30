@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('email_verifies', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('campfire_id')->nullable();
             $table->string('token');
             $table->dateTime('expires_at');
             $table->timestamps();

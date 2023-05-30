@@ -14,7 +14,7 @@ class VerifyEmail extends Component
     {
         $token = GetByToken::make()->handle(token: $token);
         ray($token);
-        if (!$token) {
+        if (! $token) {
             abort(403, 'Invalid token');
         }
 

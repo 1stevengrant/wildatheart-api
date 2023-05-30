@@ -1,6 +1,6 @@
 @auth
     <div
-        {{ $attributes->merge(['class' => '']) }}
+        {{ $attributes->merge(['class' => 'relative']) }}
         x-data="{
             open: false,
             toggle() {
@@ -34,7 +34,7 @@
             type="button"
             class="w-12 h-12 bg-white flex items-center justify-center rounded-full"
         >
-            <img src="{{ Gravatar::get('hello@digitalevangelist.net') }}"
+            <img src="{{ Gravatar::get(auth()->user()->email) }}"
                  class="rounded-full w-9 h-9"
                  alt="">
         </button>

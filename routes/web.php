@@ -8,6 +8,7 @@ use App\Http\Livewire\ListCampfires;
 use App\Http\Livewire\ListCity;
 use App\Http\Livewire\ListState;
 use App\Http\Livewire\MyCampfires;
+use App\Http\Livewire\SendGift;
 use App\Http\Livewire\VerifyEmail;
 use App\Http\Livewire\ViewCampfire;
 use GeoIp2\Database\Reader;
@@ -37,6 +38,7 @@ Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
 Route::get('faqs', function () {
     return 'faqs';
 })->name('faqs');
+Route::get('gift/{campfire}', SendGift::class)->name('gift');
 
 Route::middleware(['auth', 'role:host'])->group(function () {
     Route::get('my', MyCampfires::class)->name('my.campfires');
