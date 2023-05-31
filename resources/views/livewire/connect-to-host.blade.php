@@ -12,7 +12,7 @@
                     Connect with {{ $campfire->host->given_name }}
                 </x-type.registration-h1>
 
-                <form wire:submit="handle">
+                <form wire:submit.prevent="handle">
 
                     <div class="space-y-4">
 

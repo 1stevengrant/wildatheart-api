@@ -49,6 +49,7 @@
 
 
     <div x-show="connectToHost"
+         @registeredForCampfire.window="connectToHost = false"
          x-transition>
         <livewire:connect-to-host
             :campfire="$campfire"

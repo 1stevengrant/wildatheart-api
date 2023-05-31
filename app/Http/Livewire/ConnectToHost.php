@@ -55,8 +55,6 @@ class ConnectToHost extends Component
             $attendee = $this->registerGuest();
         }
 
-        $this->emit('registeredForCampfire');
-
         Mail::to($attendee->user->email)
             ->send(new AttendeeRegistered(
                 campfire: $this->campfire,
@@ -65,11 +63,13 @@ class ConnectToHost extends Component
 
         $this->emit('closeConnectToHost');
 
-        $this->dispatchBrowserEvent('notify', 'You have registered 🥳');
+        $this->dispatchBrowserEvent('notify', 'You have connected 🥳');
+//        $this->dispatchBrowserEvent('registeredForCampfire');
+        $this->emit('registeredForCampfire');
 
         UpdateUserRole::make()->handle($attendee->user, User::ROLE_ATTENDEE);
 
-        $this->reset();
+        $this->resetExcept('campfire','states');
 
     }
 

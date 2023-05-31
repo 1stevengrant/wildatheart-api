@@ -2,12 +2,12 @@
 # Someone has registered for your 🔥
 
 Hey there,
-{{ $attendee->fullName }} has registered for your 🔥
+{{ $attendee->user->fullName }} has registered for your 🔥
 
 - Email: {{ $attendee->user->email }}
-- Phone: {{ $attendee->phone }}
-
-You have {{ $campfire->remaining }} / {{ $campfire->attendee_limit }} spaces remaining.
+- Phone: {{ $attendee->user->phone }}
+- City: {{ $attendee->user->city }}
+- State: {{ $attendee->user->state }}
 
 Thanks,<br>
 {{ config('app.name') }}
