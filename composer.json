@@ -23,6 +23,8 @@
         "spatie/laravel-glide": "^3.7",
         "spatie/laravel-permission": "^5.10",
         "spatie/laravel-ray": "^1.32",
+        "symfony/http-client": "^6.3",
+        "symfony/postmark-mailer": "^6.3",
         "vyuldashev/nova-permission": "^3.2",
         "wire-elements/pro": "^3.0"
     },
