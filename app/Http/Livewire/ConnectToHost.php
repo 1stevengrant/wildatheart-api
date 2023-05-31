@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Actions\User\CreateUser;
 use App\Actions\User\UpdateUser;
 use App\Actions\User\UpdateUserRole;
-use App\Mail\Campfires\AttendeeRegistered;
+use App\Mail\Campfire\AttendeeRegistered;
 use App\Models\Campfire;
 use App\Models\State;
 use App\Models\User;

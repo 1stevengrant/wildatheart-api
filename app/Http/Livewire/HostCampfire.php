@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
-use App\Mail\Campfires\Posted;
+use App\Mail\Campfire\Posted;
 use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;

@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Mail\Campfires;
+namespace App\Mail\Campfire;
 
-use App\Models\Campfire;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class MoreBooksRequested extends Mailable implements ShouldQueue
+class SendGift extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Campfire $campfire)
+    /**
+     * Create a new message instance.
+     */
+    public function __construct()
     {
-
+        //
     }
 
     /**
@@ -25,7 +26,7 @@ class MoreBooksRequested extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'More Books Requested',
+            subject: 'Send Gift',
         );
     }
 
@@ -35,7 +36,7 @@ class MoreBooksRequested extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.campfires.more-books-requested',
+            markdown: 'emails.fires.send-gift',
         );
     }
 

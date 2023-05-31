@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Mail\Fires;
+namespace App\Mail\Campfire;
 
+use App\Models\Attendee;
 use App\Models\Campfire;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,16 +11,17 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SendGiftEmail extends Mailable implements ShouldQueue
+class AttendeeRegistered extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public Campfire $campfire)
-    {
-        //
+    public function __construct(
+        public Campfire $campfire,
+        public Attendee $attendee
+    ) {
     }
 
     /**
@@ -28,7 +30,7 @@ class SendGiftEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Send Gift Email',
+            subject: 'Attendee Registered',
         );
     }
 
@@ -38,7 +40,7 @@ class SendGiftEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.fires.send-gift-email',
+            markdown: 'emails.attendee-registered',
         );
     }
 

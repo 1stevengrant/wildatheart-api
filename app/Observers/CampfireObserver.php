@@ -3,9 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\LookupLatitudeLongitude;
-use App\Mail\Fires\SendWelcomeEmail;
 use App\Models\Campfire;
-use Illuminate\Support\Facades\Mail;
 
 class CampfireObserver
 {

@@ -2,7 +2,7 @@
 
 namespace App\Actions\User;
 
-use App\Mail\Fires\SendEmailVerificationEmail;
+use App\Mail\Campfire\SendEmailVerificationEmail;
 use App\Models\Campfire;
 use Illuminate\Support\Facades\Mail;
 use Lorisleiva\Actions\Concerns\AsAction;

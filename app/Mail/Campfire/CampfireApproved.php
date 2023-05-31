@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail\Campfires;
+namespace App\Mail\Campfire;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;

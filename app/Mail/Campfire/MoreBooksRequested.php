@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Mail\Fires;
+namespace App\Mail\Campfire;
 
+use App\Models\Campfire;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -9,16 +10,13 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SendEmailVerificationEmail extends Mailable implements ShouldQueue
+class MoreBooksRequested extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(public string $verificationToken)
+    public function __construct(public Campfire $campfire)
     {
-        //
+
     }
 
     /**
@@ -27,7 +25,7 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Please verify your email address',
+            subject: 'More Books Requested',
         );
     }
 
@@ -37,7 +35,7 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.users.send-email-verification-email',
+            markdown: 'emails.campfires.more-books-requested',
         );
     }
 

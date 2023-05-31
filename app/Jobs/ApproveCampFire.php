@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\Campfires\CampfireApproved;
+use App\Mail\Campfire\CampfireApproved;
 use App\Models\Campfire;
 use App\Models\User;
 use Illuminate\Bus\Queueable;

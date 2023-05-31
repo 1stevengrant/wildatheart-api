@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Mail\Campfires\MoreBooksRequested;
+use App\Mail\Campfire\MoreBooksRequested;
 use App\Models\Campfire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;

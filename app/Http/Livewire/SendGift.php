@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Actions\Address\CreateAddress;
 use App\Actions\Campfire\UpdateCampfire;
-use App\Mail\Fires\SendGiftEmail;
+use App\Mail\Campfire\SendGiftEmail;
 use App\Models\Campfire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
