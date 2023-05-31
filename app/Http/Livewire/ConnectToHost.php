@@ -63,8 +63,8 @@ class ConnectToHost extends Component
 
         $this->emit('closeConnectToHost');
 
-        $this->dispatchBrowserEvent('notify', 'You have connected 🥳');
-        $this->dispatchBrowserEvent('registeredForCampfire');
+        $this->dispatchBrowserEvent('notify', 'You have connected with ' . $this->campfire->host->given_name . '!');
+        $this->dispatchBrowserEvent('registered-for-campfire');
         $this->emit('registeredForCampfire');
 
         UpdateUserRole::make()->handle($attendee->user, User::ROLE_ATTENDEE);

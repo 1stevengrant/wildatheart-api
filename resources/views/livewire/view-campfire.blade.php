@@ -1,4 +1,5 @@
-<div x-data="{connectToHost: false}">
+<div x-data="{connectToHost: false}"
+     @registered-for-campfire.window="connectToHost = false">
     <div id="map" class="h-[300px]"></div>
     <div id="campfire"
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
@@ -49,7 +50,6 @@
 
 
     <div x-show="connectToHost"
-         @registeredForCampfire.window="connectToHost = false"
          x-transition>
         <livewire:connect-to-host
             :campfire="$campfire"
