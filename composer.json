@@ -19,6 +19,7 @@
         "livewire/livewire": "^2.12",
         "lorisleiva/laravel-actions": "^2.5",
         "omniphx/forrest": "2.*",
+        "sentry/sentry-laravel": "^3.4",
         "socialiteproviders/auth0": "^4.1",
         "spatie/laravel-glide": "^3.7",
         "spatie/laravel-permission": "^5.10",
