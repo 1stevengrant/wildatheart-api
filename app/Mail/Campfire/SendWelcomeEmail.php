@@ -30,7 +30,7 @@ class SendWelcomeEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.fires.send-welcome-email',
+            markdown: 'emails.campfires.send-welcome-email',
         );
     }
 

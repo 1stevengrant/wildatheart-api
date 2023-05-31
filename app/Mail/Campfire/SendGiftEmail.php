@@ -38,7 +38,7 @@ class SendGiftEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.fires.send-gift-email',
+            markdown: 'emails.campfires.send-gift-email',
         );
     }
 
