@@ -1,7 +1,13 @@
-<div class="md:flex h-screen text-white" x-data="{ step: {{ $step }}}">
+<div class="md:flex h-screen text-white"
+     x-data="{ step: @entangle('step') }">
 
     <div x-show="step === 1"
-
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-90"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-90"
          class="md:w-1/2 mt-8 px-8 flex items-center justify-center relative">
 
         <form wire:submit.prevent="handleStepOne"
@@ -18,6 +24,7 @@
                     <div>
                         <x-forms.country-phone-codes
                             label="Country Code"
+                            required
                             name="countryCode"
                             wire:model="countryCode"
                             instruction="Select your country code"
@@ -27,6 +34,7 @@
                         <x-forms.input
                             name="phone"
                             id="phone"
+                            required
                             wire:model.defer="phone"
                             :error="$errors->first('phone')"
                             instruction="Your phone number will only be used for epic memes and cat photos."
@@ -41,16 +49,24 @@
                                id="file"
                                wire:model.defer="photo"
                                class="inputfile outline-none focus:border-none focus:outline-none focus:ring-orange"/>
-                        <label for="file"
-                               class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9] flex justify-center
+                        @if(!$photo)
+                            <label for="file"
+                                   class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9] flex justify-center
                         items-center mx-auto focus:ring-orange focus:ring">
-                            <x-icons.camera/>
-                        </label>
+                                <x-icons.camera/>
+                            </label>
+                        @else
+                            <label for="file"
+                                   style="background-image: url('{{ $photo->temporaryUrl() }}') !important;"
+                                   class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9] flex justify-center
+                                   bg-cover"></label>
+                        @endif
 
                     </div>
                     <div class="text-sm">
                         <x-forms.label for="file"
                                        label="Profile Photo"
+                                       required
                                        class="mt-2"/>
                         <x-forms.instruction instruction="Your photo will only be used to help your community identify your
                                 fire.
@@ -109,8 +125,14 @@
         </form>
     </div>
 
-    <div class="md:w-1/2 mt-8 px-8 flex items-center justify-center"
-         x-show="step === 2">
+    <div x-show="step === 2"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-90"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-90"
+         class="md:w-1/2 mt-8 px-8 flex items-center justify-center">
 
         <form wire:submit.prevent="handleStepTwo"
               class="md:w-2/3 mx-auto relative">
@@ -232,28 +254,7 @@
 
     <div class="md:w-1/2 flex items-center justify-center @if($step === 1) bg-cover bg-campfire @endif">
         @if($step === 2)
-            <div class="rounded-md border-grey-darker border p-5 w-1/2 shadow-lg">
-                <div class="flex items-stretch space-x-4">
-                    <img src="{{ asset('img/campfire.png') }}"
-                         class="rounded-md"
-                         alt="">
-                    <div class="flex flex-col justify-between relative">
-                        <div>
-                            @if($campfireName)
-                                <p>{{ $campfireName }}</p>
-                            @else
-                                <p>Your Fire Name</p>
-                            @endif
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <img src="{{ gravatar(auth()->user()->email, 'campfire-profile') }}"
-                                 class="rounded-full"
-                                 alt="">
-                            <div class="text-[#BABABA] text-sm">Hosted by {{ auth()->user()->full_name }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('partials.preview-campfire')
         @endif
     </div>
 </div>
@@ -269,7 +270,7 @@
 
     const geocoder = new MapboxGeocoder({
         accessToken: '{{ config('services.mapbox.api_key') }}',
-        types: 'address,country,region,place,postcode,locality,neighborhood'
+        types: '{{ config('services.mapbox.types') }}'
     });
 
     geocoder.addTo('#geocoder');
@@ -294,12 +295,11 @@
                 zip = stateZip[1],
                 country = addressComponents[3];
 
-            @this.set('address', address, true)
+            @this.set('street_address', address, true)
             @this.set('city', city, true)
             @this.set('state', state, true)
             @this.set('zip', zip, true)
             @this.set('country', country, true)
-            @this.set('address', address, true)
         }
 
         if (isUKAddress || isCanadaAddress) {
@@ -310,11 +310,10 @@
                 postcode = addressComponents[addressComponents.length - 2].trim(),
                 country = addressComponents[addressComponents.length - 1];
 
-            @this.set('address', address, true)
+            @this.set('street_address', address, true)
             @this.set('city', city, true)
             @this.set('zip', postcode, true)
             @this.set('country', country, true)
-            @this.set('address', address, true)
         }
 
         @this.set('latitude', e.result.geometry.coordinates[0], true)

@@ -30,10 +30,10 @@
        />
 
        <x-forms.input
-           name="address"
-           label="Address"
-           wire:model.defer="campfire.address"
-           :error="$errors->first('campfire.address')"
+           name="street_address"
+           label="Street Address"
+           wire:model.defer="campfire.street_address"
+           :error="$errors->first('campfire.street_address')"
        />
 
        <x-forms.input

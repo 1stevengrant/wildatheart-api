@@ -23,7 +23,7 @@ test('a user can edit their own 🔥', function () {
     ]);
 
     livewire(EditCampfire::class, ['campfire' => $campfire])
-        ->set('campfire.address', '18 Greenlees Road')
+        ->set('campfire.street_address', '18 Greenlees Road')
         ->call('handle')
         ->assertEmitted('campfireUpdated')
         ->assertDispatchedBrowserEvent('notify', 'Campfire updated successfully 🔥');

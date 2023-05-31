@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Campfire extends Model
@@ -138,8 +139,26 @@ class Campfire extends Model
         return $this->city.', '.getStateAbbreviation($this->state).' Fire';
     }
 
-    public function address(): BelongsTo
+    public function address(): HasOne
     {
-        return $this->belongsTo(Address::class);
+        return $this->hasOne(Address::class);
+    }
+
+    public function hasRequestedGift(): bool
+    {
+        if ($this->gift_requested) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function hasDifferentMailingAddress(): bool
+    {
+        if ($this->has_different_mailing_address) {
+            return true;
+        }
+
+        return false;
     }
 }

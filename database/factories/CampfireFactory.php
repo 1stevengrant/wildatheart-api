@@ -20,7 +20,7 @@ class CampfireFactory extends Factory
         return [
             'description' => $this->faker->text,
             'phone' => $this->faker->phoneNumber,
-            'address' => $this->faker->address,
+            'street_address' => $this->faker->streetAddress,
             'state' => $this->faker->state,
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,

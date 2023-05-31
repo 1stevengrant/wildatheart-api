@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Actions\User\SendVerificationEmail;
+use App\Models\Campfire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -10,9 +11,16 @@ use Livewire\Component;
 
 class ConfirmEmail extends Component
 {
+    public Campfire|string $campfire;
+
+    public function mount(Campfire $campfire): void
+    {
+        $this->campfire = $campfire;
+    }
+
     public function resendEmail(): void
     {
-        SendVerificationEmail::run();
+        SendVerificationEmail::run(campfire: $this->campfire);
 
         $this->dispatchBrowserEvent('notify', 'Verification email sent! Check your inbox.');
     }

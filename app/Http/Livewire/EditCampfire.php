@@ -23,7 +23,7 @@ class EditCampfire extends Modal
         return [
             'campfire.description' => 'required',
             'campfire.attendee_limit' => 'nullable|numeric',
-            'campfire.address' => 'required',
+            'campfire.street_address' => 'required',
             'campfire.city' => 'required',
             'campfire.zip' => 'required',
             'campfire.state' => 'required',
@@ -41,7 +41,7 @@ class EditCampfire extends Modal
         $this->campfire->update([
             'description' => $this->campfire->description,
             'attendee_limit' => $this->campfire->attendee_limit,
-            'address' => $this->campfire->address,
+            'street_address' => $this->campfire->street_address,
             'city' => $this->campfire->city,
             'zip' => $this->campfire->zip,
             'state' => $this->campfire->state,

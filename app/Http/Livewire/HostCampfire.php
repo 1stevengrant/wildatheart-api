@@ -18,7 +18,7 @@ class HostCampfire extends Component
 {
     use WithFileUploads;
 
-    public int $step;
+    public int $step = 1;
 
     public string $organization = '';
 
@@ -34,7 +34,7 @@ class HostCampfire extends Component
 
     public string $mapboxPlaceName = '';
 
-    public string $address = '';
+    public string $street_address = '';
 
     public string $state = '';
 
@@ -58,14 +58,12 @@ class HostCampfire extends Component
 
     public function mount()
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             session()->put('userType', User::ROLE_HOST);
             session()->put('currentUrl', url()->current());
 
             return redirect()->route('social.login', ['provider' => 'auth0']);
         }
-
-        $this->step = auth()->user()->profile_step;
     }
 
     public function handleStepOne(): void
@@ -75,6 +73,8 @@ class HostCampfire extends Component
             'phone' => 'required|min:10|numeric',
             'emailUpdates' => 'required|boolean',
         ]);
+
+        ray('validated');
 
         auth()->user()->update([
             'phone' => $this->phone,
@@ -121,10 +121,10 @@ class HostCampfire extends Component
             role: User::ROLE_HOST
         );
 
-        if (!auth()->user()->hasVerifiedEmail()) {
+        if (! auth()->user()->hasVerifiedEmail()) {
             SendVerificationEmail::make()->handle(campfire: $campfire);
 
-            return redirect()->route('confirm.email');
+            return redirect()->route('confirm.email', ['campfire' => $campfire]);
         }
 
         return redirect()->route('gift', ['campfire' => $campfire]);

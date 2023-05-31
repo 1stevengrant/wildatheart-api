@@ -1,9 +1,11 @@
 <div class="md:flex h-screen text-white">
     <div class="md:w-1/2 mt-8 px-8 flex items-center justify-center relative">
-        <div>
+
+        @if(!$submitted)
+        <div class="max-w-lg">
             <x-type.registration-h1>
                 Huzzah! <br>
-                We have a gift for you
+                Your email is confirmed, and we have a gift for you
             </x-type.registration-h1>
             <p class="text-sm text-white font-bold underline mt-4">Promise we won’t spam you</p>
 
@@ -62,6 +64,7 @@
 
                 <x-button-container>
                     <x-primary-button
+                        id="confetti-button"
                         class="w-full"
                         wire:click="handle">
                         Claim Your Free Gift
@@ -70,6 +73,7 @@
             </div>
 
         </div>
+        @endif
     </div>
     <div class="hidden md:w-1/2 md:flex items-center justify-center ">
         <div class="w-[373px] h-[511px] bg-grey-dark text-white flex flex-col items-center justify-center rounded-lg">
@@ -89,7 +93,7 @@
 
     const geocoder = new MapboxGeocoder({
         accessToken: '{{ config('services.mapbox.api_key') }}',
-        types: 'address,country,region,place,postcode,locality,neighborhood'
+        types: '{{ config('services.mapbox.types') }}'
     });
 
     geocoder.addTo('#geocoder');
@@ -98,8 +102,7 @@
     geocoderInput.setAttribute('id', 'geocoder-input')
 
     geocoder.on('result', (e) => {
-        @this.
-        set('mapboxPlaceName', e.result.place_name, true)
+        @this.set('mapboxPlaceName', e.result.place_name, true)
     });
     </script>
 @endpush

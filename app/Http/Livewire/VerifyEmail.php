@@ -10,10 +10,10 @@ use Livewire\Component;
 
 class VerifyEmail extends Component
 {
-    public function mount($token): void
+    public function mount($token): \Livewire\Redirector
     {
         $token = GetByToken::make()->handle(token: $token);
-        ray($token);
+
         if (! $token) {
             abort(403, 'Invalid token');
         }
@@ -23,7 +23,7 @@ class VerifyEmail extends Component
             token: $token
         );
 
-        $this->dispatchBrowserEvent('notify', 'Your email has been verified 🥳');
+        return redirect()->route('gift', ['campfire' => $token->campfire]);
 
     }
 

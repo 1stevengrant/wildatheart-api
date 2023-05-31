@@ -12,7 +12,9 @@
             marginheight="0"
             marginwidth="0"
             src="https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=en&amp;q={{ urlencode
-                ($campfire->address) }},{{ urlencode($campfire->city) }},{{ urlencode($campfire->state) }},{{ urlencode($campfire->zip_code) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                ($campfire->street_address) }},{{ urlencode($campfire->city) }},{{ urlencode($campfire->state) }},{{
+                urlencode
+                ($campfire->zip_code) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
     </div>
 
     <div class="mt-6">

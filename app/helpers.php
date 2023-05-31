@@ -53,7 +53,7 @@ if (! function_exists('getStateName')) {
     }
 }
 
-if (!function_exists('gravatar')) {
+if (! function_exists('gravatar')) {
     function gravatar(string $email, string $transform = null): string
     {
         return Gravatar::get($email, $transform);

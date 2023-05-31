@@ -33,7 +33,7 @@ Route::get('list', ListCampfires::class)->name('list.campfires');
 Route::get('list/state/{state}', ListState::class)->name('list.state');
 Route::get('list/city/{city}', ListCity::class)->name('list.city');
 Route::get('attend/{campfire}', ViewCampfire::class)->name('view.campfire');
-Route::get('confirmemail', ConfirmEmail::class)->name('confirm.email');
+Route::get('confirmemail/{campfire}', ConfirmEmail::class)->name('confirm.email');
 Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
 Route::get('faqs', function () {
     return 'faqs';

@@ -64,7 +64,7 @@ class ImportCampfires extends Command
             $newCampfire = $user->campfires()->create([
                 'name' => $campfire['Organization (Optional)'] !== '' ? $campfire['Organization (Optional)'] : null,
                 'organization' => $campfire['Organization (Optional)'] !== '' ? $campfire['Organization (Optional)'] : null,
-                'address' => $campfire['Address'] !== '' ? $campfire['Address'] : null,
+                'street_address' => $campfire['Address'] !== '' ? $campfire['Address'] : null,
                 'city' => $campfire['City'] !== '' ? $campfire['City'] : null,
                 'state' => $campfire['State'] !== '' ? getStateName($campfire['State']) : null,
                 'zip' => $campfire['Zip'] !== '' ? $campfire['Zip'] : null,

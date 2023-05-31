@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('campfire_id');
+            $table->string('campfire_id');
             $table->string('mapbox_place_name')->nullable();
             $table->timestamps();
         });

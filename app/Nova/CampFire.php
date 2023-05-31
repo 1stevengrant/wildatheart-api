@@ -61,7 +61,7 @@ class CampFire extends Resource
                 ->rules('required')
                 ->hideFromIndex(),
 
-            Text::make('Address')
+            Text::make('Street Address')
                 ->rules('required')
                 ->hideFromIndex(),
 

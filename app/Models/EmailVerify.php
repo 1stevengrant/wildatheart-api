@@ -23,4 +23,9 @@ class EmailVerify extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function campfire(): BelongsTo
+    {
+        return $this->belongsTo(Campfire::class);
+    }
 }
