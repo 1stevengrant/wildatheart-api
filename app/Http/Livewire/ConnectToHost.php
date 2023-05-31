@@ -15,7 +15,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
-use WireElements\Pro\Components\Modal\Modal;
 
 class ConnectToHost extends Component
 {
@@ -63,13 +62,13 @@ class ConnectToHost extends Component
 
         $this->emit('closeConnectToHost');
 
-        $this->dispatchBrowserEvent('notify', 'You have connected with ' . $this->campfire->host->given_name . '!');
+        $this->dispatchBrowserEvent('notify', 'You have connected with '.$this->campfire->host->given_name.'!');
         $this->dispatchBrowserEvent('registered-for-campfire');
         $this->emit('registeredForCampfire');
 
         UpdateUserRole::make()->handle($attendee->user, User::ROLE_ATTENDEE);
 
-        $this->resetExcept('campfire','states');
+        $this->resetExcept('campfire', 'states');
 
     }
 
