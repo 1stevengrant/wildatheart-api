@@ -32,8 +32,8 @@ class CampfireController extends Controller
                         'spaces_remaining' => $campfire->remaining,
                         'url' => route('view.campfire', $campfire->id),
                         'host' => $campfire->user->full_name,
-                        'hostProfilePhoto' => Gravatar::get($campfire->user->email, 'campfire-profile'),
-                        'image' => url('img/campfire.png'),
+                        'hostProfilePhoto' => gravatar($campfire->user->email),
+                        'image' => asset('img/campfire.png'),
                     ],
                     'geometry' => [
                         'type' => 'Point',
