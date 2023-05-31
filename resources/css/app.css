@@ -7,3 +7,4 @@
 @import "./components/mapbox-geocoder.css";
 @import "tailwindcss/utilities";
 
+[x-cloak] { display: none !important; }
