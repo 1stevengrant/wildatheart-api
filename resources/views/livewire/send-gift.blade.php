@@ -73,6 +73,13 @@
             </div>
 
         </div>
+        @else
+            <div class="max-w-lg">
+                <x-type.registration-h1>
+                    Yay! <br>
+                    Your gift is on its way
+                </x-type.registration-h1>
+            </div>
         @endif
     </div>
     <div class="hidden md:w-1/2 md:flex items-center justify-center ">

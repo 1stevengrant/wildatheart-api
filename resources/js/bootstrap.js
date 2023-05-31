@@ -31,3 +31,4 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     enabledTransports: ['ws', 'wss'],
 // });
 import '../../vendor/wire-elements/pro/resources/js/overlay-component.js'
+window.Vapor = require('laravel-vapor');

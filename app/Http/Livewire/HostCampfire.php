@@ -74,8 +74,6 @@ class HostCampfire extends Component
             'emailUpdates' => 'required|boolean',
         ]);
 
-        ray('validated');
-
         auth()->user()->update([
             'phone' => $this->phone,
             'image' => $this->photo->store('users'),

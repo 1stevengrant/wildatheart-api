@@ -43,7 +43,7 @@ return [
         'api_key' => env('MAPBOX_API_KEY'),
         'mapbox_style' => 'mapbox://styles/1stevengrant/cli1piqa3004z01r11o0hby73',
         'mapbox_style_light' => 'mapbox://styles/mapbox/light-v11',
-        'types' => ''
+        'types' => 'address,postcode'
     ],
 
     'zendesk' => [
