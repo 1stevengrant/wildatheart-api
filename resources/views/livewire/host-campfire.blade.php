@@ -13,7 +13,9 @@
         <form wire:submit.prevent="handleStepOne"
               class="md:w-2/3 mx-auto pb-8 md:pb-0">
 
-            <x-type.registration-h1>
+            <x-profile-stepper :step="$step"/>
+
+            <x-type.registration-h1 class="mt-12">
                 Congrats! Just a few more questions.
             </x-type.registration-h1>
 
@@ -137,7 +139,9 @@
         <form wire:submit.prevent="handleStepTwo"
               class="md:w-2/3 mx-auto relative">
 
-            <x-type.registration-h1>
+            <x-profile-stepper :step="$step"/>
+
+            <x-type.registration-h1 class="my-12">
                 Now the Fire
             </x-type.registration-h1>
 
