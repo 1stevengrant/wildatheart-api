@@ -161,4 +161,13 @@ class Campfire extends Model
 
         return false;
     }
+
+    public function indoorOrOutdoor(): string
+    {
+        if ($this->is_indoor) {
+            return 'Indoor';
+        }
+
+        return 'Outdoor';
+    }
 }

@@ -9,7 +9,7 @@
         <x-primary-button
             @click="connectToHost = true"
             class="w-full">
-            Connect with Host
+            Connect with {{ $campfire->host->given_name }}
         </x-primary-button>
     </x-button-container>
 

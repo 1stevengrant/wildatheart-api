@@ -8,15 +8,17 @@
         <x-icons.home />
         <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">Hosted at a Home</p>
-            <p class="text-sm text-[#6B7280]">John has graciously offered up his
-                home to host this event.</p>
+            <p class="text-sm text-[#6B7280]">
+                This needs thought because we dont know if the event is hosted at a home or not.
+            </p>
         </div>
     </div>
     <div class="flex items-start">
         <x-icons.event-type/>
         <div class="ml-[24px] leading-[24px]">
-            <p class="font-medium">Outdoor event</p>
-            <p class="text-sm text-[#6B7280]">Ths event is slated to be an outdoor event. Please dress
+            <p class="font-medium">{{ $campfire->indoorOrOutdoor() }} event</p>
+            <p class="text-sm text-[#6B7280]">Ths event is slated to be an {{ $campfire->indoorOrOutdoor() }} event.
+                Please dress
                 accordingly.</p>
         </div>
     </div>
