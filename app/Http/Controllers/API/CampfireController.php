@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Campfire;
-use Creativeorange\Gravatar\Facades\Gravatar;
 
 class CampfireController extends Controller
 {
