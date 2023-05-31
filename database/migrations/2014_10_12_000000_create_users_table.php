@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
+            $table->string('postal_code')->nullable();
             $table->string('image')->nullable();
             $table->string('provider_id')->nullable();
             $table->string('provider')->nullable();
