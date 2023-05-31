@@ -32,6 +32,11 @@ class CampFire extends Resource
      */
     public static $title = 'id';
 
+    public static function label()
+    {
+        return 'Fires';
+    }
+
     /**
      * The columns that should be searched.
      *
