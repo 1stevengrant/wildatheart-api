@@ -14,9 +14,10 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Component;
 use WireElements\Pro\Components\Modal\Modal;
 
-class ConnectToHost extends Modal
+class ConnectToHost extends Component
 {
     public Campfire|string $campfire;
 
@@ -37,6 +38,8 @@ class ConnectToHost extends Modal
     public string $phone = '';
 
     public string $confirmPhone = '';
+
+    public bool $emailUpdates = true;
 
     public function mount(Campfire $campfire): void
     {
@@ -60,11 +63,13 @@ class ConnectToHost extends Modal
                 attendee: $attendee
             ));
 
-        $this->close();
+        $this->emit('closeConnectToHost');
 
         $this->dispatchBrowserEvent('notify', 'You have registered 🥳');
 
         UpdateUserRole::make()->handle($attendee->user, User::ROLE_ATTENDEE);
+
+        $this->reset();
 
     }
 
@@ -77,6 +82,7 @@ class ConnectToHost extends Modal
 
         UpdateUser::make()->handle(auth()->user(), [
             'phone' => $this->phone,
+            'opted_into_marketing' => $this->emailUpdates,
         ]);
 
         return $this->campfire->attendees()->create([
@@ -104,6 +110,7 @@ class ConnectToHost extends Modal
             'state' => $this->state,
             'city' => $this->city,
             'phone' => $this->phone,
+            'opted_into_marketing' => $this->emailUpdates,
         ]);
 
         return $this->campfire->attendees()->create([

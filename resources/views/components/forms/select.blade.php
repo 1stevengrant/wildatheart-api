@@ -13,7 +13,8 @@
         required="{{ $attributes->has('required') }}"
     />
     <div class="flex mt-2">
-        <select {{ $attributes->merge(['class' => 'bg-[#171513] rounded-md border border-grey-darker block mt-1 w-full p-2
+        <select {{ $attributes->merge(['class' => 'bg-[#171513] text-white rounded-md border border-[#2E2C29] block
+        w-full p-2
         focus:outline-none focus:border-orange focus:ring-orange' . ($trailingAddOn ? '' : '')]) }}>
             @if ($placeholder)
                 <option disabled value="">{{ $placeholder }}</option>

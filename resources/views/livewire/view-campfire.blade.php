@@ -1,4 +1,4 @@
-<div>
+<div x-data="{connectToHost: false}">
     <div id="map" class="h-[300px]"></div>
     <div id="campfire"
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
@@ -36,11 +36,23 @@
             </div>
         </div>
     </div>
+
     <div id="mobile-connect-with-host"
+         x-show="!connectToHost"
          class="md:hidden px-4 py-6 fixed bottom-0 left-0 right-0 border-t border-grey-darker bg-black">
-        <x-primary-button class="w-full">
+        <x-primary-button
+            @click="connectToHost = true"
+            class="w-full">
             Connect with Host
         </x-primary-button>
+    </div>
+
+
+    <div x-show="connectToHost"
+         x-transition>
+        <livewire:connect-to-host
+            :campfire="$campfire"
+            :wire:key="$campfire->id"/>
     </div>
 </div>
 @push('head')
@@ -52,8 +64,9 @@
 @endpush
 @push('scripts')
     <script>
+
     document.addEventListener('livewire:load', function () {
-        document.title = '{{ '🔥 in ' . $campfire->city . ' ' . getStateAbbreviation($campfire->state)  }} | {{ config('app.name') }}';
+        document.title = '{{ $campfire->title() }} | {{ config('app.name') }}';
 
         if (window.innerWidth < 768) {
             const campfireElement = document.getElementById('campfire'),

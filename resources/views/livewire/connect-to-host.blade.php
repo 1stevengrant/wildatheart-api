@@ -1,97 +1,168 @@
-<x-wire-elements-pro::tailwind.modal
-    on-submit="handle">
-    <x-slot name="title">
-        Connect to 🔥 on {{ $campfire->date }} at {{ $campfire->time }}
-    </x-slot>
+<div class="absolute top-0 right-0 bottom-0 left-0 bg-black z-50 h-full">
+    <div class="md:flex items-center h-screen bg-black">
+        <div class="md:w-1/2 md:flex flex-col items-center justify-center bg-[#050504] md:h-screen p-6 bg-black">
 
-    <div class="space-y-4">
+            <div class="max-w-md mx-auto">
 
-        @if(!auth()->check())
-            <x-forms.input
-                required
-                name="first_name"
-                label="First Name"
-                wire:model.defer="firstName"
-                :error="$errors->first('firstName')"
-            />
+                <button @click="connectToHost = false">
+                    <x-icons.back/>
+                </button>
 
-            <x-forms.input
-                required
-                name="last_name"
-                label="Last Name"
-                wire:model.defer="lastName"
-                :error="$errors->first('lastName')"
-            />
+                <x-type.registration-h1 class="my-6">
+                    Connect with {{ $campfire->host->given_name }}
+                </x-type.registration-h1>
 
-            <x-forms.input
-                required
-                name="email"
-                label="Email"
-                wire:model.defer="email"
-                :error="$errors->first('email')"
-            />
+                <form wire:submit="handle">
 
-            <x-forms.input
-                required
-                name="confirm_email"
-                label="Confirm Email"
-                wire:model.defer="confirmEmail"
-                :error="$errors->first('confirmEmail')"
-            />
+                    <div class="space-y-4">
 
-            <x-forms.input
-                name="city"
-                required
-                label="City"
-                wire:model.defer="city"
-                :error="$errors->first('city')"
-            />
+                        @if(!auth()->check())
 
-            <x-forms.select
-                name="state"
-                label="State"
-                required
-                :error="$errors->first('state')"
-                wire:model.defer="state">
-                <option value="">Select a State</option>
-                @foreach($states as $state)
-                    <option value="{{ $state->name }}">
-                        {{ $state->code }}
-                    </option>
-                @endforeach
-            </x-forms.select>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <x-forms.input
+                                    required
+                                    name="first_name"
+                                    label="First Name"
+                                    wire:model.defer="firstName"
+                                    :error="$errors->first('firstName')"
+                                />
 
-        @endif
+                                <x-forms.input
+                                    required
+                                    name="last_name"
+                                    label="Last Name"
+                                    wire:model.defer="lastName"
+                                    :error="$errors->first('lastName')"
+                                />
 
-        <x-forms.input
-            required
-            name="phone"
-            label="Phone"
-            wire:model.defer="phone"
-            type="tel"
-            :error="$errors->first('phone')"
-        />
+                                <x-forms.input
+                                    required
+                                    name="email"
+                                    label="Email"
+                                    wire:model.defer="email"
+                                    :error="$errors->first('email')"
+                                />
 
-        <x-forms.input
-            required
-            name="confirm_phone"
-            label="Confirm Phone"
-            wire:model.defer="confirmPhone"
-            type="tel"
-            :error="$errors->first('confirmPhone')"
-        />
+                                <x-forms.input
+                                    required
+                                    name="confirm_email"
+                                    label="Confirm Email"
+                                    wire:model.defer="confirmEmail"
+                                    :error="$errors->first('confirmEmail')"
+                                />
+
+                                <x-forms.input
+                                    name="city"
+                                    required
+                                    label="City"
+                                    wire:model.defer="city"
+                                    :error="$errors->first('city')"
+                                />
+
+                                <x-forms.select
+                                    name="state"
+                                    label="State"
+                                    required
+                                    :error="$errors->first('state')"
+                                    wire:model.defer="state">
+                                    <option value="">Select a State</option>
+                                    @foreach($states as $state)
+                                        <option value="{{ $state->name }}">
+                                            {{ $state->code }}
+                                        </option>
+                                    @endforeach
+                                </x-forms.select>
+
+                            </div>
+
+                        @endif
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <x-forms.input
+                                required
+                                name="phone"
+                                label="Phone"
+                                wire:model.defer="phone"
+                                type="tel"
+                                instruction="This will only be visible to the host."
+                                :error="$errors->first('phone')"
+                            />
+
+                            <x-forms.input
+                                required
+                                name="confirm_phone"
+                                label="Confirm Phone"
+                                wire:model.defer="confirmPhone"
+                                type="tel"
+                                :error="$errors->first('confirmPhone')"
+                            />
+                        </div>
+
+                        <div class="text-[#B8B6B6] text-sm mt-6">
+                            <x-forms.label
+                                for="emailUpdates"
+                                label="Email Updates & Resources"/>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center rounded-full bg-[#171513]">
+                                    <button
+                                        type="button"
+                                        wire:click.prevent="$set('emailUpdates', true)"
+                                        class="px-10 py-3 text-sm font-semibold @if($emailUpdates) border border-white text-white
+                            rounded-l-full
+                            @endif"
+                                    >
+                                        Yes
+                                    </button>
+                                    <button
+                                        type="button"
+                                        wire:click.prevent="$set('emailUpdates', false)"
+                                        class="px-10 py-3 text-sm font-semibold @if(!$emailUpdates) border border-white text-white
+                            rounded-r-full
+                                    @endif"
+                                    >
+                                        No
+                                    </button>
+                                </div>
+                                <div>
+                                    I would like to receive email updates & resources from Wild at Heart
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mt-12">
+                        <x-primary-button
+                            type="submit"
+                            class="w-full">
+                            Request an Invitation
+                        </x-primary-button>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="hidden w-1/2 md:flex flex-col items-center justify-center">
+            <div class="rounded-md border-grey-darker border p-5 w-1/2 shadow-lg">
+                <div class="flex items-stretch space-x-4">
+                    <img src="{{ asset('img/campfire.png') }}"
+                         class="rounded-md"
+                         alt="">
+                    <div class="flex flex-col justify-between relative">
+                        <div>
+                            <p class="text-white">{{ $campfire->title() }}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <img src="{{ gravatar($campfire->host->email, 'campfire-profile') }}"
+                                 class="rounded-full"
+                                 alt="">
+                            <div class="text-[#BABABA] text-sm">Hosted by {{ $campfire->host->full_name }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <x-slot name="buttons">
-        <button type="submit"
-                class="bg-black border border-black text-white font-semibold p-4 inline-block">
-            Register
-        </button>
-        <button
-            class="border border-black font-semibold p-4 inline-block"
-            type="button"
-            wire:click="$emit('modal.close')">
-            Close
-        </button>
-    </x-slot>
-</x-wire-elements-pro::tailwind.modal>
+</div>
