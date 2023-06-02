@@ -72,13 +72,13 @@
             <div class="mt-12">
                 <h2 class="text-2xl">Photos of Fires Like This</h2>
 
-                <div class="grid grid-cols-2 gap-2 mt-8">
-                    <div>image 1</div>
-                    <div class="grid gap-2 grid-cols-2">
-                        <div>image 2</div>
-                        <div>image 3</div>
-                        <div>image 4</div>
-                        <div>image 5</div>
+                <div class="flex items-center space-x-4 mt-12">
+                    <img src="{{ asset('img/fires/Image1.webp') }}" class="object-fill rounded-lg" alt="">
+                    <div class="grid gap-4 grid-cols-2">
+                        <img src="{{ asset('img/fires/Image2.webp') }}"  class="rounded-lg" alt="">
+                        <img src="{{ asset('img/fires/Image3.webp') }}"  class="rounded-lg" alt="">
+                        <img src="{{ asset('img/fires/Image.webp') }}" class="rounded-lg" alt="">
+                        <img src="{{ asset('img/fires/Image4.webp') }}"  class="rounded-lg" alt="">
                     </div>
                 </div>
             </div>
