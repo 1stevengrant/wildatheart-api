@@ -11,6 +11,7 @@ use Livewire\Component;
 class SearchCampfires extends Component
 {
     public string $searchQuery = '';
+
     public $campfires;
 
     public function updatedSearchQuery(): void

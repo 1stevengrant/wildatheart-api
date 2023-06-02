@@ -18,8 +18,10 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public Campfire $campfire, public Attendee $attendee)
-    {
+    public function __construct(
+        public Campfire $campfire,
+        public Attendee $attendee
+    ) {
 
     }
 
@@ -29,7 +31,7 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Congrats ' . $this->attendee->user->given_name . '! You’ve registered for ' .
+            subject: 'Congrats '.$this->attendee->user->given_name.'! You’ve registered for '.
             $this->campfire->title()
         );
     }

@@ -81,7 +81,7 @@ class Campfire extends Model
 
     public function getCoordinatesAttribute(): string
     {
-        return $this->longitude . ', ' . $this->latitude;
+        return $this->longitude.', '.$this->latitude;
     }
 
     public function isPast(): bool
@@ -134,10 +134,10 @@ class Campfire extends Model
     public function title(): string
     {
         if ($this->name) {
-            return $this->name . ' Fire';
+            return $this->name.' Fire';
         }
 
-        return $this->city . ', ' . getStateAbbreviation($this->state) . ' Fire';
+        return $this->city.', '.getStateAbbreviation($this->state).' Fire';
     }
 
     public function address(): HasOne

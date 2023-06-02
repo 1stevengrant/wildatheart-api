@@ -16,7 +16,7 @@ class CampfireObserver
     {
         LookupLatitudeLongitude::dispatch($campfire);
 
-        if (!$campfire->is_existing) {
+        if (! $campfire->is_existing) {
             Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
         }
 
