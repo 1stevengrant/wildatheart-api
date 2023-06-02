@@ -98,7 +98,7 @@
                             />
                         </div>
 
-                        <div class="text-[#B8B6B6] text-sm mt-6">
+                        <div class="text-grey-200 text-sm mt-6">
                             <x-forms.label
                                 for="emailUpdates"
                                 label="Email Updates & Resources"/>

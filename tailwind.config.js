@@ -33,6 +33,7 @@ module.exports = {
             darker: "#081013",
             "grey-darkest": "#1d272b",
             "grey-darker": "#484848",
+            'grey-200': '#B8B6B6',
             "grey-dark": "#5C6771", // From Sketch File
             grey: "#9FA7A9",
             "grey-light": "var(--wah-grey-light)", //From Sketch File

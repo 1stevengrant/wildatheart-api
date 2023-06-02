@@ -6,6 +6,7 @@ use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Mail\Campfire\Posted;
 use App\Models\User;
+use App\Rules\EndsInFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -64,6 +65,8 @@ class HostCampfire extends Component
 
             return redirect()->route('social.login', ['provider' => 'auth0']);
         }
+
+        $this->campfireName = auth()->user()->given_name."'s Fire";
     }
 
     public function handleStepOne(): void
@@ -84,20 +87,29 @@ class HostCampfire extends Component
         $this->step = 2;
     }
 
-    protected array $messages = [
-        'campfireName.required' => 'A fire name is required.',
-        'campfireName.min' => 'A fire name must be at least 2 characters.',
-        'campfireName.max' => 'A fire name must be less than 255 characters.',
-        'mapboxPlaceName.required' => 'The full Fire address is required.',
-        'isPrivate.required' => 'Please select if the fire is private or not.',
-        'frequency.required' => 'Please select how often the fire will be hosted.',
-        'isIndoor.required' => 'Please select if the fire is indoors or not.',
-    ];
+    public function messages(): array
+    {
+        return [
+            'campfireName.required' => 'A fire name is required.',
+            'campfireName.min' => 'A fire name must be at least 2 characters.',
+            'campfireName.max' => 'A fire name must be less than 255 characters.',
+            'mapboxPlaceName.required' => 'The full Fire address is required.',
+            'isPrivate.required' => 'Please select if the fire is private or not.',
+            'frequency.required' => 'Please select how often the fire will be hosted.',
+            'isIndoor.required' => 'Please select if the fire is indoors or not.',
+        ];
+    }
 
     public function handleStepTwo(): Redirector
     {
         $this->validate([
-            'campfireName' => 'required|min:2|string|max:255',
+            'campfireName' => [
+                'required',
+                'min:2',
+                'string',
+                'max:255',
+                new EndsInFire,
+            ],
             'mapboxPlaceName' => 'required|string',
             'isPrivate' => 'required|boolean',
             'frequency' => 'required|string',

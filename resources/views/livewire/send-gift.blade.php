@@ -69,7 +69,7 @@
                         wire:click="handle">
                         Claim Your Free Gift
                     </x-primary-button>
-                    <a href="{{ route('home') }}" class="text-sm py-3 text-[#B8B6B6]">
+                    <a href="{{ route('home') }}" class="text-sm py-3 text-grey-200">
                         Cancel
                     </a>
                 </x-button-container>

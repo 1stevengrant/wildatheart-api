@@ -25,7 +25,7 @@ class MoreBooksRequested extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Additional Books Requested for ' . $this->campfire->title(),
+            subject: 'Additional Books Requested for '.$this->campfire->title(),
         );
     }
 

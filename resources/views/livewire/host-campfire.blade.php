@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="text-[#B8B6B6] text-sm">
+                <div class="text-grey-200 text-sm">
                     <x-forms.label
                         for="emailUpdates"
                         label="Updates & Resources"/>
@@ -118,7 +118,7 @@
                         Next
                     </x-primary-button>
 
-                    <a href="{{ route('home') }}" class="text-sm py-3 text-[#B8B6B6]">
+                    <a href="{{ route('home') }}" class="text-sm py-3 text-grey-200">
                         Cancel
                     </a>
 
@@ -151,6 +151,7 @@
                     label="Name Your Fire"
                     instruction="This is the name that will be displayed on your Fire page."
                     required
+                    :error="$errors->first('campfireName')"
                     id="campfireName"
                     name="campfireName"
                 />
@@ -245,7 +246,7 @@
                         Next
                     </x-primary-button>
 
-                    <a href="{{ route('home') }}" class="text-sm py-3 text-[#B8B6B6]">
+                    <a href="{{ route('home') }}" class="text-sm py-3 text-grey-200">
                         Cancel
                     </a>
 
