@@ -6,6 +6,7 @@ use App\Actions\User\CreateUser;
 use App\Actions\User\UpdateUser;
 use App\Actions\User\UpdateUserRole;
 use App\Mail\Campfire\AttendeeRegistered;
+use App\Mail\Fires\AttendeeConnectedToHost;
 use App\Models\Campfire;
 use App\Models\State;
 use App\Models\User;
@@ -54,8 +55,14 @@ class ConnectToHost extends Component
             $attendee = $this->registerGuest();
         }
 
-        Mail::to($attendee->user->email)
+        Mail::to($this->campfire->host->email)
             ->send(new AttendeeRegistered(
+                campfire: $this->campfire,
+                attendee: $attendee
+            ));
+
+        Mail::to($attendee->user->email)
+            ->send(new AttendeeConnectedToHost(
                 campfire: $this->campfire,
                 attendee: $attendee
             ));
