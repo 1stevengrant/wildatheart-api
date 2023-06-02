@@ -15,7 +15,7 @@
 @push('scripts')
     <script>
     document.addEventListener('livewire:load', function () {
-        document.title = 'My 🔥🔥🔥 | {{ config('app.name') }}';
+        document.title = 'My FireFireFire | {{ config('app.name') }}';
     });
     </script>
 @endpush

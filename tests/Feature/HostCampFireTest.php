@@ -16,17 +16,17 @@ beforeEach(function (): void {
     actingAs($this->user);
 });
 
-test('the Host 🔥 page renders without error', function (): void {
+test('the Host Fire page renders without error', function (): void {
     $this->get(route('host'))
         ->assertStatus(200);
 });
 
-test('Host 🔥 component renders', function (): void {
+test('Host Fire component renders', function (): void {
     livewire(HostCampfire::class)
         ->assertStatus(200);
 });
 
-test('an authenticated user can post a new 🔥 they want to host', function () {
+test('an authenticated user can post a new Fire they want to host', function () {
 
     $attributes = [
         'phone' => '1234567890',

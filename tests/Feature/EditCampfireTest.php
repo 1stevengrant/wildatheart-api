@@ -17,7 +17,7 @@ beforeEach(function (): void {
     actingAs($this->user);
 });
 
-test('a user can edit their own 🔥', function () {
+test('a user can edit their own Fire', function () {
     $campfire = Campfire::factory()->create([
         'user_id' => $this->user->id,
     ]);
@@ -26,7 +26,7 @@ test('a user can edit their own 🔥', function () {
         ->set('campfire.street_address', '18 Greenlees Road')
         ->call('handle')
         ->assertEmitted('campfireUpdated')
-        ->assertDispatchedBrowserEvent('notify', 'Campfire updated successfully 🔥');
+        ->assertDispatchedBrowserEvent('notify', 'Campfire updated successfully Fire');
 
     $this->assertDatabaseHas('campfires', [
         'id' => $campfire->id,

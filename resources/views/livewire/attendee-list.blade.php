@@ -1,6 +1,6 @@
 <x-wire-elements-pro::tailwind.modal>
     <x-slot name="title">
-        🔥 Attendee List for {{ prettyDate($campfire->date) }}
+        Fire Attendee List for {{ prettyDate($campfire->date) }}
     </x-slot>
     <div class="mb-4">
         Total Attendees: {{ $campfire->attendees->count() }}

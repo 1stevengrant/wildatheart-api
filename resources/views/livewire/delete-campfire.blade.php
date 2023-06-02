@@ -1,6 +1,6 @@
 <x-wire-elements-pro::tailwind.modal>
     <x-slot name="title">
-        Are you sure you want to delete this 🔥?
+        Are you sure you want to delete this Fire?
     </x-slot>
 
     <x-slot name="buttons">

@@ -1,7 +1,7 @@
 <x-wire-elements-pro::tailwind.modal
     on-submit="handle">
     <x-slot name="title">
-        Edit 🔥 {{ prettyDate($campfire->date) }} at {{ prettyTime($campfire->time) }}
+        Edit Fire {{ prettyDate($campfire->date) }} at {{ prettyTime($campfire->time) }}
     </x-slot>
 
    <div class="space-y-4">
@@ -77,7 +77,7 @@
                    <label for="is_private"
                           class="font-medium text-gray-900 hover:cursor-pointer">Is Private?</label>
                    <p id="is-private-description" class="text-gray-500">
-                       This 🔥 will not be publicly listed and can only be accessed by those with the link.
+                       This Fire will not be publicly listed and can only be accessed by those with the link.
                    </p>
                </div>
            </div>
@@ -88,7 +88,7 @@
     <x-slot name="buttons">
         <button type="submit"
                 class="p-4 bg-black text-white font-semibold">
-            Update 🔥
+            Update Fire
         </button>
         <button
             wire:click="$emit('modal.close')"

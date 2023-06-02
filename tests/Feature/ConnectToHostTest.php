@@ -14,7 +14,7 @@ beforeEach(function (): void {
     $this->seed(RoleSeeder::class);
 });
 
-test('a known user can connect to a given 🔥', function () {
+test('a known user can connect to a given Fire', function () {
     $campfire = Campfire::factory()->inTheFuture()->approved()->create();
     $user = User::factory()->create();
     $this->actingAs($user);
@@ -28,7 +28,7 @@ test('a known user can connect to a given 🔥', function () {
     ]);
 });
 
-test('an anonymous user can connect to a given 🔥', function () {
+test('an anonymous user can connect to a given Fire', function () {
     $campfire = Campfire::factory()->inTheFuture()->approved()->create();
 
     livewire(ConnectToHost::class, ['campfire' => $campfire])

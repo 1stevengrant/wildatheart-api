@@ -142,8 +142,8 @@
             detail.className = 'campfire-detail';
             detail.id = `link-${campfire.properties.id}`;
             detail.innerHTML = `
-            <h3 class='font-semibold md:text-lg'>${campfire.properties.city}, ${campfire.properties.state}</h3>
-<div class='mt-2 flex items-center space-x-2'>
+            <h3 class='campfire-title'>${campfire.properties.title}</h3>
+<div class='campfire-content'>
 <img src='${campfire.properties.hostProfilePhoto}'
 class='campfire-host-image'
 alt='${campfire.properties.host}' />

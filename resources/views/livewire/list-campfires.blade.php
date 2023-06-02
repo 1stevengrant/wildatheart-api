@@ -1,6 +1,6 @@
 <div class="relative" id="top">
     <x-type.h1>
-        Attend a 🔥 in
+        Attend a Fire in
     </x-type.h1>
 
     <nav class="space-x-4 space-y-4">
@@ -46,7 +46,7 @@
 @push('scripts')
     <script>
     document.addEventListener('livewire:load', function () {
-        document.title = 'Attend a 🔥 | {{ config('app.name') }}';
+        document.title = 'Attend a Fire | {{ config('app.name') }}';
     });
     </script>
 @endpush

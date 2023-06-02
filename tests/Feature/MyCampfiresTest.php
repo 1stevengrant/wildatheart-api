@@ -17,17 +17,17 @@ beforeEach(function (): void {
     actingAs($this->user);
 });
 
-test('the my 🔥 page renders without error', function (): void {
+test('the my Fire page renders without error', function (): void {
     $this->get(route('my.campfires'))
         ->assertStatus(200);
 });
 
-test('My 🔥 component renders', function (): void {
+test('My Fire component renders', function (): void {
     livewire(MyCampfires::class)
         ->assertStatus(200);
 });
 
-test('user can see their list of 🔥', function () {
+test('user can see their list of Fire', function () {
     $campfires = Campfire::factory()->count(3)->create([
         'user_id' => $this->user->id,
     ]);
@@ -37,7 +37,7 @@ test('user can see their list of 🔥', function () {
         ->assertSee($campfires->last()->description);
 });
 
-test('user cannot see another users 🔥', function () {
+test('user cannot see another users Fire', function () {
     $otherUser = User::factory()->create();
     $campfires = Campfire::factory()->count(3)->create([
         'user_id' => $otherUser->id,
@@ -47,7 +47,7 @@ test('user cannot see another users 🔥', function () {
         ->assertDontSee($campfires->last()->description);
 });
 
-test('user cannot edit/delete 🔥 in the past', function () {
+test('user cannot edit/delete Fire in the past', function () {
     Campfire::factory()->create([
         'user_id' => $this->user->id,
         'date' => now()->subDay(),
@@ -58,7 +58,7 @@ test('user cannot edit/delete 🔥 in the past', function () {
         ->assertDontSee('Delete');
 });
 
-test('user sees pending status for not approved 🔥 in the future', function () {
+test('user sees pending status for not approved Fire in the future', function () {
     Campfire::factory()->create([
         'user_id' => $this->user->id,
         'approved_at' => null,
@@ -69,7 +69,7 @@ test('user sees pending status for not approved 🔥 in the future', function ()
         ->assertSee('Pending');
 });
 
-test('user see edit/delete for upcoming 🔥', function () {
+test('user see edit/delete for upcoming Fire', function () {
     Campfire::factory()->create([
         'user_id' => $this->user->id,
         'date' => now()->addDay(),
@@ -80,7 +80,7 @@ test('user see edit/delete for upcoming 🔥', function () {
         ->assertSee('Delete');
 });
 
-test('user can see request more books for their 🔥 if approved', function () {
+test('user can see request more books for their Fire if approved', function () {
     Campfire::factory()->inTheFuture()->approved()->create([
         'user_id' => $this->user->id,
     ]);

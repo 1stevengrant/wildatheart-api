@@ -2,7 +2,7 @@
     <x-breadcrumbs
         :city="ucwords(str_replace('+', ' ', $city))" />
     <x-type.h1>
-        🔥 in {{ ucwords(str_replace('+', ' ', $city)) }}
+        Fire in {{ ucwords(str_replace('+', ' ', $city)) }}
     </x-type.h1>
     <ul class="mt-6">
         @foreach($campfires as $campfire)

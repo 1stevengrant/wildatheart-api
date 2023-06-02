@@ -1,7 +1,7 @@
 <x-mail::message>
-# New 🔥
+# New Fire
 
-Hey, a new 🔥 has been posted
+Hey, a new Fire has been posted
 
 <x-mail::button :url="''">
 Button Text

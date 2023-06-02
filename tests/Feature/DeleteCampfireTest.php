@@ -17,12 +17,12 @@ beforeEach(function (): void {
     actingAs($this->user);
 });
 
-test('Delete 🔥 component renders', function (): void {
+test('Delete Fire component renders', function (): void {
     livewire(DeleteCampfire::class)
         ->assertStatus(200);
 });
 
-test('a user can delete their own 🔥', function () {
+test('a user can delete their own Fire', function () {
     $campfire = Campfire::factory()->create([
         'user_id' => $this->user->id,
         'deleted_at' => null,
@@ -31,12 +31,12 @@ test('a user can delete their own 🔥', function () {
     livewire(DeleteCampfire::class, ['campfire' => $campfire])
         ->call('handle')
         ->assertEmitted('campfireDeleted')
-        ->assertDispatchedBrowserEvent('notify', '🔥 deleted successfully!');
+        ->assertDispatchedBrowserEvent('notify', 'Fire deleted successfully!');
 
     $this->assertSoftDeleted('campfires', ['id' => $campfire->id]);
 });
 
-test('a user cannot delete the 🔥 of another user', function () {
+test('a user cannot delete the Fire of another user', function () {
     $user2 = User::factory()->create();
     $campfire = Campfire::factory()->create([
         'user_id' => $user2->id,

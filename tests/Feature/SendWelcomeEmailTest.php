@@ -4,7 +4,7 @@ use App\Mail\Campfire\SendWelcomeEmail;
 use App\Models\Campfire;
 use Illuminate\Support\Facades\Mail;
 
-it('sends an email when a new 🔥 is created', function () {
+it('sends an email when a new Fire is created', function () {
     Mail::fake();
     $campfire = Campfire::factory()->create();
 

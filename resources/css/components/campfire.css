@@ -2,6 +2,14 @@
     @apply p-3 rounded border border-grey-darker flex items-stretch md:hover:cursor-pointer hover:border-orange transition ease-in-out duration-200;
 }
 
+.campfire-title {
+    @apply font-semibold md:text-lg;
+}
+
+.campfire-content {
+    @apply mt-2 flex items-center space-x-2;
+}
+
 .campfire.active {
     @apply border-orange;
 }

@@ -53,7 +53,7 @@ class EditCampfire extends Modal
 
         $this->emit('campfireUpdated');
         $this->close();
-        $this->dispatchBrowserEvent('notify', 'Campfire updated successfully 🔥');
+        $this->dispatchBrowserEvent('notify', 'Fire updated successfully');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
