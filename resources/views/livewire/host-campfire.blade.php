@@ -149,7 +149,7 @@
                 <x-forms.input
                     wire:model="campfireName"
                     label="Name Your Fire"
-                    instruction="This is the name that will be displayed on your Fire page."
+                    instruction="This is the name that will be displayed on your Fire page and must end with 'Fire'."
                     required
                     :error="$errors->first('campfireName')"
                     id="campfireName"
