@@ -26,7 +26,7 @@ class CampfireApproved extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Camp Fire Approved',
+            subject: 'Congratulations' . $this->campfire->host->given_name . ' ! Your Fire has been approved!',
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Mail\Campfire;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +17,10 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $verificationToken)
+    public function __construct(
+        public string $verificationToken,
+        public User $user,
+    )
     {
         //
     }
@@ -27,7 +31,7 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Please verify your email address',
+            subject: ' Verify Your Email Address, ' . $this->user->given_name,
         );
     }
 

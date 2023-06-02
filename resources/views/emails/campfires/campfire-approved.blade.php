@@ -1,14 +1,16 @@
 <x-mail::message>
-Hey {{ $campfire->user->given_name }},
+Dear {{ $campfire->user->given_name }},
 
-Your campfire has been approved!
+We're excited to inform you that your Fire has been approved. 
 
-You can now share with people to connect to your 🔥.
+We appreciate your patience and commitment to these events. 
+
+If you need any assistance in setting up the Fire or have any questions, please don't hesitate to reach out.
 
 <x-mail::button :url="route('view.campfire', $campfire)">
-See & Share Campfire
+See & Share Your Fire
 </x-mail::button>
 
-Thanks,<br>
-{{ config('app.name') }}
+Warm regards,
+Wild At heart
 </x-mail::message>

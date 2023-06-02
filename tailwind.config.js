@@ -9,7 +9,7 @@ module.exports = {
     ],
     theme: {
         backgroundImage: {
-            'campfire': "url('/resources/img/wah-fires-suburb-1.jpg')"
+            'campfire': "url('/resources/img/wah-fires-suburb-1.webp')"
         },
         fontWeight: {
             hairline: 100,

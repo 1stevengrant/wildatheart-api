@@ -17,6 +17,9 @@ class SendVerificationEmail
             'campfire_id' => $campfire->id,
         ]);
 
-        Mail::to(auth()->user()->email)->send(new SendEmailVerificationEmail($verification->token));
+        Mail::to(auth()->user()->email)->send(new SendEmailVerificationEmail(
+            verificationToken: $verification->token,
+            user: auth()->user(),
+        ));
     }
 }
