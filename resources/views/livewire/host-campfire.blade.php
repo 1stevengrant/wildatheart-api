@@ -85,7 +85,7 @@
                 <div class="text-[#B8B6B6] text-sm">
                     <x-forms.label
                         for="emailUpdates"
-                        label="Email Updates & Resources"/>
+                        label="Updates & Resources"/>
                     <div class="flex items-center space-x-4">
                         <div class="flex items-center rounded-full bg-[#171513]">
                             <button
@@ -108,7 +108,7 @@
                             </button>
                         </div>
                         <div>
-                            I would like to receive email updates & resources from Wild at Heart
+                            I would like to receive updates & resources from Wild at Heart
                         </div>
                     </div>
                 </div>
@@ -256,7 +256,7 @@
         </form>
     </div>
 
-    <div class="md:w-1/2 flex items-center justify-center @if($step === 1) bg-cover bg-campfire @endif">
+    <div class="md:w-1/2 flex items-center justify-center @if($step === 1) bg-cover bg-center bg-campfire @endif">
         @if($step === 2)
             @include('partials.preview-campfire')
         @endif

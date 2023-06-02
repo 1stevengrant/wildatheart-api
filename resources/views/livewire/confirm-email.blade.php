@@ -15,11 +15,11 @@
         </p>
 
         <x-button-container class="mt-8">
-            <x-primary-button
-                class="w-full"
+            <button
+                class="w-full text-sm"
                 wire:click="resendEmail">
                 I didn't receive an email
-            </x-primary-button>
+            </button>
         </x-button-container>
     </div>
 </div>

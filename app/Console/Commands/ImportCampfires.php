@@ -71,6 +71,7 @@ class ImportCampfires extends Command
                 'phone' => $campfire['Phone'] !== '' ? $campfire['Phone'] : null,
                 'is_private' => ! ($campfire['Public Listing'] === 'x'),
                 'approved_at' => now(),
+                'is_existing' => true,
             ]);
 
             if ($campfire['Books Shipped'] !== '') {

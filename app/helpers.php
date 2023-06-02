@@ -34,18 +34,21 @@ if (! function_exists('prettyTime')) {
 }
 
 if (! function_exists('getStateAbbreviation')) {
-    function getStateAbbreviation($stateName): string
+    function getStateAbbreviation(string|null $stateName = null): ?string
     {
         $stateAbbreviations = State::all()->pluck('code', 'name')->toArray();
 
         $stateName = ucwords(strtolower($stateName));
+        if (array_key_exists($stateName, $stateAbbreviations)) {
+            return $stateAbbreviations[$stateName];
+        }
 
-        return $stateAbbreviations[$stateName];
+        return null;
     }
 }
 
 if (! function_exists('getStateName')) {
-    function getStateName($stateCode): string
+    function getStateName(string|null $stateCode = null): string
     {
         $stateNames = State::all()->pluck('name', 'code')->toArray();
 

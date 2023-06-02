@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Campfire extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, Searchable;
 
     protected $guarded = ['id'];
 
@@ -80,7 +81,7 @@ class Campfire extends Model
 
     public function getCoordinatesAttribute(): string
     {
-        return $this->longitude.', '.$this->latitude;
+        return $this->longitude . ', ' . $this->latitude;
     }
 
     public function isPast(): bool
@@ -94,7 +95,7 @@ class Campfire extends Model
 
     public function getUrlAttribute(): string
     {
-        return route('view.fire', $this->id);
+        return route('view.campfire', ['campfire' => $this]);
     }
 
     public function isPrivate(): bool
@@ -133,10 +134,10 @@ class Campfire extends Model
     public function title(): string
     {
         if ($this->name) {
-            return $this->name.' Fire';
+            return $this->name . ' Fire';
         }
 
-        return $this->city.', '.getStateAbbreviation($this->state).' Fire';
+        return $this->city . ', ' . getStateAbbreviation($this->state) . ' Fire';
     }
 
     public function address(): HasOne
@@ -169,5 +170,19 @@ class Campfire extends Model
         }
 
         return 'Outdoor';
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'name' => $this->title(),
+            'organization' => $this->organization,
+            'city' => $this->city,
+            'state' => $this->state,
+            'state_code' => $this->state_code,
+            'mapbox_place_name' => $this->mapbox_place_name,
+            'country' => $this->country,
+            'zip' => $this->zip,
+        ];
     }
 }

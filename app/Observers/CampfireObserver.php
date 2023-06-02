@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Jobs\LookupLatitudeLongitude;
+use App\Mail\Campfire\SendWelcomeEmail;
 use App\Models\Campfire;
+use Illuminate\Support\Facades\Mail;
 
 class CampfireObserver
 {
@@ -13,8 +15,14 @@ class CampfireObserver
     public function created(Campfire $campfire): void
     {
         LookupLatitudeLongitude::dispatch($campfire);
-        // todo: enable this when we have a mail server
-        //        Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
+
+        if (!$campfire->is_existing) {
+            Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
+        }
+
+        $campfire->update([
+            'state_code' => getStateAbbreviation($campfire->state),
+        ]);
     }
 
     /**
