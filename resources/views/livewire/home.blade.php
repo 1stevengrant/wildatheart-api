@@ -143,12 +143,12 @@
             detail.id = `link-${campfire.properties.id}`;
             detail.innerHTML = `
             <h3 class='campfire-title'>${campfire.properties.title}</h3>
-<div class='campfire-content'>
-<img src='${campfire.properties.hostProfilePhoto}'
-class='campfire-host-image'
-alt='${campfire.properties.host}' />
-<p class='campfire-host'>Hosted by ${campfire.properties.host}</p>
-</div>`;
+            <div class='campfire-content'>
+              <img src='${campfire.properties.hostProfilePhoto}'
+                  class='campfire-host-image'
+                  alt='${campfire.properties.host}' />
+              <p class='campfire-host'>Hosted by ${campfire.properties.host}</p>
+            </div>`;
 
             /**
              * Listen to the element and when it is clicked, do four things:

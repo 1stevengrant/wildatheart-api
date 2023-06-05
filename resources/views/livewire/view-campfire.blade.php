@@ -15,7 +15,7 @@
 
                     <x-campfire-meta :campfire="$campfire"/>
 
-                    <div class="mt-8 space-y-4">
+                    <div class="mt-8 space-y-4 pb-12 md:pb-0">
 
                         <h3 class="text-2xl font-semibold">About Fires</h3>
 
@@ -28,7 +28,7 @@
 
                         <div class="space-y-6 pt-6">
                             <div class="flex items-center space-x-8">
-                                <x-icons.megaphone />
+                                <x-icons.megaphone class="flex-shrink-0 "/>
                                 <div>
                                     <span class="font-semibold">1. Fires aren’t religious.</span> <br>
                                     Leave your religious and professional credentials behind.
@@ -36,7 +36,7 @@
                             </div>
 
                             <div class="flex items-center space-x-8">
-                                <x-icons.book />
+                                <x-icons.book class="flex-shrink-0 "/>
                                 <div>
                                     <span class="font-semibold">2. Your story matters</span> <br>
                                     Fires are not a place for teaching or a podium for experts.
@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="flex items-center space-x-8">
-                                <x-icons.poop />
+                                <x-icons.poop class="flex-shrink-0 "/>
                                 <div>
                                     <span class="font-semibold">3. No bullshit allowed.</span> <br>
                                     Fires are a place for authentic masculinity. No posing.
@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="flex items-center space-x-8">
-                                <x-icons.shield />
+                                <x-icons.shield class="flex-shrink-0 "/>
                                 <div>
                                     <span class="font-semibold">4. Confidentiality is essential.</span> <br>
                                     What is shared at a Fire stays at the Fire.
@@ -69,7 +69,7 @@
                 </div>
             </div>
 
-            <div class="mt-12">
+            <div class="hidden md:block mt-12">
                 <h2 class="text-2xl">Photos of Fires Like This</h2>
 
                 <div class="flex items-center space-x-4 mt-12">

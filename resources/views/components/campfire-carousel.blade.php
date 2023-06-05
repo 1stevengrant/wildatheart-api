@@ -1,35 +1,17 @@
 <ul {{ $attributes->class(['overflow-x-auto snap-mandatory snap-x grid gap-4 md:gap-6 md:hidden // card-grid']) }}>
     <div class="snap-center ">
-        <img
-            src="https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80"
-            class="rounded-lg"
-            alt=""/>
+        <img src="{{ asset('img/fires/Image1.webp') }}" class="rounded-lg" alt="">
     </div>
     <div class="snap-center ">
-        <img
-            src="https://images.unsplash.com/photo-1540206351-d6465b3ac5c1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80"
-            class="rounded-lg"
-            alt=""/>
+        <img src="{{ asset('img/fires/Image2.webp') }}"  class="rounded-lg" alt="">
     </div>
     <div class="snap-center ">
-        <img src="https://images.unsplash.com/photo-1622890806166-111d7f6c7c97?ixlib=rb-1.2
-        .1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80" class="rounded-lg"
-             alt=""/>
+        <img src="{{ asset('img/fires/Image3.webp') }}"  class="rounded-lg" alt="">
     </div>
     <div class="snap-center ">
-        <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?ixlib=rb-1.2
-        .1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80" class="rounded-lg"
-             alt=""/>
+        <img src="{{ asset('img/fires/Image.webp') }}" class="rounded-lg" alt="">
     </div>
     <div class="snap-center ">
-        <img
-            src="https://images.unsplash.com/photo-1575424909138-46b05e5919ec?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80"
-            class="rounded-lg"
-            alt=""/>
-    </div>
-    <div class="snap-center ">
-        <img src="https://images.unsplash.com/photo-1559333086-b0a56225a93c?ixlib=rb-1.2
-        .1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&h=160&q=80" class="rounded-lg"
-             alt=""/>
+        <img src="{{ asset('img/fires/Image4.webp') }}"  class="rounded-lg" alt="">
     </div>
 </ul>
