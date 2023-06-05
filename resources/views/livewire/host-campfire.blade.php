@@ -53,7 +53,7 @@
                                class="inputfile outline-none focus:border-none focus:outline-none focus:ring-orange"/>
                         @if(!$photo)
                             <label for="file"
-                                   class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9] flex justify-center
+                                   class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9]/20 flex justify-center
                         items-center mx-auto focus:ring-orange focus:ring">
                                 <x-icons.camera/>
                             </label>
