@@ -13,10 +13,13 @@
     />
     <select name="countryCode"
         {{ $attributes->merge(['class' => 'p-2 border border-[#2E2C29] w-full bg-[#171513] rounded
-        focus:border-orange focus:outline-none']) }}
+        focus:border-orange focus:outline-none focus:ring-orange']) }}
     >
-        <option data-countryCode="GB" value="44" Selected>UK (+44)</option>
-        <option data-countryCode="US" value="1">USA (+1)</option>
+        <option data-countryCode="US" value="1" selected>USA (+1)</option>
+        <option data-countryCode="CA" value="1">Canada (+1)</option>
+        <option data-countryCode="GB" value="44">UK (+44)</option>
+        <option data-countryCode="AU" value="61">Australia (+61)</option>
+        <option data-countryCode="NZ" value="64">New Zealand (+64)</option>
         <optgroup label="Other countries">
             <option data-countryCode="DZ" value="213">Algeria (+213)</option>
             <option data-countryCode="AD" value="376">Andorra (+376)</option>
@@ -26,7 +29,7 @@
             <option data-countryCode="AR" value="54">Argentina (+54)</option>
             <option data-countryCode="AM" value="374">Armenia (+374)</option>
             <option data-countryCode="AW" value="297">Aruba (+297)</option>
-            <option data-countryCode="AU" value="61">Australia (+61)</option>
+
             <option data-countryCode="AT" value="43">Austria (+43)</option>
             <option data-countryCode="AZ" value="994">Azerbaijan (+994)</option>
             <option data-countryCode="BS" value="1242">Bahamas (+1242)</option>
@@ -49,7 +52,7 @@
             <option data-countryCode="BI" value="257">Burundi (+257)</option>
             <option data-countryCode="KH" value="855">Cambodia (+855)</option>
             <option data-countryCode="CM" value="237">Cameroon (+237)</option>
-            <option data-countryCode="CA" value="1">Canada (+1)</option>
+
             <option data-countryCode="CV" value="238">Cape Verde Islands (+238)</option>
             <option data-countryCode="KY" value="1345">Cayman Islands (+1345)</option>
             <option data-countryCode="CF" value="236">Central African Republic (+236)</option>
@@ -155,7 +158,6 @@
             <option data-countryCode="NP" value="977">Nepal (+977)</option>
             <option data-countryCode="NL" value="31">Netherlands (+31)</option>
             <option data-countryCode="NC" value="687">New Caledonia (+687)</option>
-            <option data-countryCode="NZ" value="64">New Zealand (+64)</option>
             <option data-countryCode="NI" value="505">Nicaragua (+505)</option>
             <option data-countryCode="NE" value="227">Niger (+227)</option>
             <option data-countryCode="NG" value="234">Nigeria (+234)</option>
