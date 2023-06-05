@@ -148,6 +148,7 @@
         maxZoom: 10,
         container: 'map',
         attributionControl: false,
+        interactive: false,
         style: '{{ config('services.mapbox.mapbox_style') }}'
     });
 
