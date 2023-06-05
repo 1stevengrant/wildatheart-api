@@ -59,7 +59,7 @@ class LoginController extends Controller
     {
         $domain = substr(strrchr($email, '@'), 1);
 
-        $whitelist = ['digitalevangelist.net', 'servant.io', 'wildatheart.org', 'ghijk.co.uk'];
+        $whitelist = ['digitalevangelist.net', 'servant.io', 'wildatheart.org', 'ghijk.co.uk', 'ransomedheart.com'];
 
         if (in_array($domain, $whitelist)) {
             return true;
