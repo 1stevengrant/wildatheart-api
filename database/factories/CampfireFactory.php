@@ -24,8 +24,6 @@ class CampfireFactory extends Factory
             'state' => $this->faker->state,
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,
-            'date' => $this->faker->dateTimeBetween('-1 month', '+1 year'),
-            'time' => $this->faker->randomElement(generateTimeList()),
             'attendee_limit' => $this->faker->numberBetween(1, 100),
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
@@ -33,15 +31,6 @@ class CampfireFactory extends Factory
             'is_private' => $this->faker->boolean,
             'user_id' => User::factory()->create()->id,
         ];
-    }
-
-    public function inTheFuture(): self
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'date' => $this->faker->dateTimeBetween('+1 month', '+1 year'),
-            ];
-        });
     }
 
     public function private(): self

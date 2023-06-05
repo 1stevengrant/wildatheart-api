@@ -15,7 +15,7 @@ beforeEach(function (): void {
 });
 
 test('a known user can connect to a given Fire', function () {
-    $campfire = Campfire::factory()->inTheFuture()->approved()->create();
+    $campfire = Campfire::factory()->approved()->create();
     $user = User::factory()->create();
     $this->actingAs($user);
 
@@ -29,7 +29,7 @@ test('a known user can connect to a given Fire', function () {
 });
 
 test('an anonymous user can connect to a given Fire', function () {
-    $campfire = Campfire::factory()->inTheFuture()->approved()->create();
+    $campfire = Campfire::factory()->approved()->create();
 
     livewire(ConnectToHost::class, ['campfire' => $campfire])
         ->set('firstName', 'John')
