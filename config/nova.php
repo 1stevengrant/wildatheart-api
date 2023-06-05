@@ -20,7 +20,7 @@ return [
     |
     */
 
-    'license_key' => 'Ed0RHGRd7T8gSjSyTGRK8jhCovJd8HlNFfZVJP1YY0pbgvd42f',
+    'license_key' => 'xZUzaF3WCcdnrMmt01kBcfQiGo12Le7sflVsllRLx5hmRDepfv',
 
     /*
     |--------------------------------------------------------------------------
