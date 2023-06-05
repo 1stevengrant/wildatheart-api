@@ -16,7 +16,7 @@
             <x-profile-stepper :step="$step"/>
 
             <x-type.registration-h1 class="mt-12">
-                Congrats! Just a few more questions.
+                We're stoked you want to start a Fire! Just a few more questions.
             </x-type.registration-h1>
 
             <p class="mt-8">One of the most important aspects of our Fires are the hosts that commit to them. </p>
@@ -39,7 +39,7 @@
                             required
                             wire:model.defer="phone"
                             :error="$errors->first('phone')"
-                            instruction="Your phone number will only be used for epic memes and cat photos."
+                            instruction="We'll send you text messages."
                             label="Phone Number"/>
                     </div>
                 </div>
@@ -68,7 +68,6 @@
                     <div class="text-sm">
                         <x-forms.label for="file"
                                        label="Profile Photo"
-                                       required
                                        class="mt-2"/>
                         <x-forms.instruction instruction="Your photo will only be used to help your community identify your
                                 fire.
@@ -108,7 +107,7 @@
                             </button>
                         </div>
                         <div>
-                            I would like to receive updates & resources from Wild at Heart
+                            I would like to receive updates & resources from Wild at Heart.
                         </div>
                     </div>
                 </div>
@@ -142,7 +141,7 @@
             <x-profile-stepper :step="$step"/>
 
             <x-type.registration-h1 class="my-12">
-                Now the Fire
+                Tell us about your Fire
             </x-type.registration-h1>
 
             <div class="space-y-10">
