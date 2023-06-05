@@ -72,13 +72,14 @@ class HostCampfire extends Component
     public function handleStepOne(): void
     {
         $this->validate([
-            'photo' => 'required|image',
             'phone' => 'required|min:10|numeric',
             'emailUpdates' => 'required|boolean',
+            'countryCode' => 'required|string',
         ]);
 
         auth()->user()->update([
             'phone' => $this->phone,
+            'country_code' => $this->countryCode,
             'image' => $this->photo->store('users'),
             'opted_into_marketing' => $this->emailUpdates,
             'profile_step' => 2,
