@@ -70,13 +70,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         ];
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
-        //
+        Nova::report(function ($exception) {
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($exception);
+            }
+        });
     }
 }
