@@ -18,13 +18,13 @@
             {{ __('Host') }}
         </x-footer-link>
 
-        <x-footer-link
-            href="{{ route('faqs') }}">
-            <x-slot:icon>
-                <x-icons.questions/>
-            </x-slot:icon>
-            {{ __('FAQs') }}
-        </x-footer-link>
+{{--        <x-footer-link--}}
+{{--            href="{{ route('faqs') }}">--}}
+{{--            <x-slot:icon>--}}
+{{--                <x-icons.questions/>--}}
+{{--            </x-slot:icon>--}}
+{{--            {{ __('FAQs') }}--}}
+{{--        </x-footer-link>--}}
 
         @auth
             <div class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
