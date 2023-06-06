@@ -30,7 +30,7 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: ' Verify Your Email Address, '.$this->user->given_name,
+            subject: 'Please verify your new Fire',
         );
     }
 
