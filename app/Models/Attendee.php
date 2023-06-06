@@ -14,7 +14,7 @@ class Attendee extends Model
 
     public function getFullnameAttribute(): string
     {
-        return "{$this->first_name} {$this->last_name}";
+        return "{$this->given_name} {$this->family_name}";
     }
 
     public function user(): BelongsTo
