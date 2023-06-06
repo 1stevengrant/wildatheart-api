@@ -142,7 +142,7 @@ class Campfire extends Model
 
     public function location(): string
     {
-        return $this->city . ', ' . getStateAbbreviation($this->state);
+        return $this->city.', '.getStateAbbreviation($this->state);
     }
 
     public function address(): HasOne
