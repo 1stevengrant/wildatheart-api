@@ -129,7 +129,7 @@
                                 </button>
                             </div>
                             <div>
-                                I would like to receive updates & resources from Wild at Heart.
+                                Send me updates and resources from Wild at Heart.
                             </div>
                         </div>
                     </div>

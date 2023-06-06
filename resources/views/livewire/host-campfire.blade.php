@@ -10,7 +10,7 @@
             <x-profile-stepper :step="$step"/>
 
             <x-type.registration-h1 class="mt-12">
-                We're stoked you want to start a Fire! Just a few more questions.
+                We're stoked you want to start a Fire! Just a few questions.
             </x-type.registration-h1>
 
             <p class="mt-8">One of the most important aspects of our Fires are the hosts that commit to them. </p>
@@ -101,7 +101,7 @@
                             </button>
                         </div>
                         <div>
-                            I would like to receive updates & resources from Wild at Heart.
+                            Send me updates and resources from Wild at Heart.
                         </div>
                     </div>
                 </div>
@@ -152,7 +152,6 @@
                 <div class="text-sm text-grey-200">
                     <p>Fire Naming Guidelines</p>
                     <ul class="list-disc pl-8">
-                        <li>No profanity or cursing</li>
                         <li>No special characters/emojis</li>
                         <li>Avoid location specific names as we give location elsewhere on your page. Example "Dallas
                             Fire"
@@ -180,11 +179,11 @@
                 <div class="flex items-center">
                     <x-forms.select
                         name="frequency"
-                        label="Occurs"
+                        label="Frequency"
                         required
                         :error="$errors->first('frequency')"
                         wire:model="frequency">
-                        <option value="">Select</option>
+                        <option value="monthly">Select</option>
                         @foreach(\App\Enums\CampfireFrequency::values() as $frequency)
                             <option value="{{ $frequency }}">
                                 {{ $frequency }}
