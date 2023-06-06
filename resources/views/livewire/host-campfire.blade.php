@@ -132,14 +132,14 @@
                 Tell us about your Fire
             </x-type.registration-h1>
 
-            <div class="space-y-10">
+            <div class="space-y-4">
 
                 <div class="flex items-center space-x-4">
                     <x-forms.input
                         wire:model="campfireName"
                         label="Name Your Fire"
-                        instruction="This is the name that will be displayed on your Fire page and must end with 'Fire'."
                         required
+                        instruction="This is the name that will be displayed on your Fire page."
                         :error="$errors->first('campfireName')"
                         id="campfireName"
                         name="campfireName"
@@ -149,8 +149,23 @@
                     </div>
                 </div>
 
+                <div class="text-sm text-grey-200">
+                    <p>Fire Naming Guidelines</p>
+                    <ul class="list-disc pl-8">
+                        <li>No profanity or cursing</li>
+                        <li>No special characters/emojis</li>
+                        <li>Avoid location specific names as we give location elsewhere on your page. Example "Dallas
+                            Fire"
+                        </li>
+                        <li>Putting "Fire" in the name is not needed</li>
+                    </ul>
+                </div>
                 <div>
-                    <x-forms.label for="geocoder-input" label="Full Fire Address" required/>
+                    <x-forms.label
+                        for="geocoder-input"
+                        label="Full Fire Address"
+                        required
+                    />
                     <div wire:ignore>
                         <div id="geocoder"></div>
                     </div>
@@ -237,8 +252,6 @@
                 zip = stateZip[1],
                 country = addressComponents[3];
 
-            console.log(addressComponents)
-
             @this.set('street_address', address, true)
             @this.set('city', city, true)
             @this.set('state', state, true)
@@ -250,7 +263,7 @@
             const addressString = placeName,
                 addressComponents = addressString.split(",").map(component => component.trim()),
                 address = addressComponents[0],
-                city = addressComponents[1],
+                city = addressComponents[2],
                 postcode = addressComponents[addressComponents.length - 2].trim(),
                 country = addressComponents[addressComponents.length - 1];
 

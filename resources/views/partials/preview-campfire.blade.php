@@ -5,11 +5,15 @@
              alt="">
         <div class="flex flex-col justify-between relative">
             <div>
+                <p class="text-xs text-grey-200">{{ $frequency }}</p>
                 @if($campfireName)
-                    <p>{{ $campfireName }}</p>
+                    <p>{{ $campfireName }} Fire</p>
                 @else
                     <p>Your Fire Name</p>
                 @endif
+                <p class="text-sm font-semibold my-3">
+                    {{ $city }} @if($state), {{ $state }}@endif
+                </p>
             </div>
             <div class="flex items-center space-x-2">
                 <img src="{{ gravatar(auth()->user()->email, 'campfire-profile') }}"

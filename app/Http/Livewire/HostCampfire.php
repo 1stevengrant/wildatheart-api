@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\Redirector;
 use Livewire\WithFileUploads;
+use Repat\LaravelRules\DoesntContainEmojis;
 
 class HostCampfire extends Component
 {
@@ -61,6 +62,8 @@ class HostCampfire extends Component
         }
 
         $this->campfireName = auth()->user()->given_name."'s";
+        $this->countryCode = auth()->user()->country_code ?? '1';
+        $this->phone = auth()->user()->phone ?? '';
     }
 
     public function handleStepOne(): void
@@ -89,9 +92,7 @@ class HostCampfire extends Component
             'campfireName.min' => 'A fire name must be at least 2 characters.',
             'campfireName.max' => 'A fire name must be less than 255 characters.',
             'mapboxPlaceName.required' => 'The full Fire address is required.',
-            'isPrivate.required' => 'Please select if the fire is private or not.',
             'frequency.required' => 'Please select how often the fire will be hosted.',
-            'isIndoor.required' => 'Please select if the fire is indoors or not.',
         ];
     }
 
@@ -104,6 +105,7 @@ class HostCampfire extends Component
                 'string',
                 'max:255',
                 new MustNotContainFire(),
+                new DoesntContainEmojis(),
             ],
             'mapboxPlaceName' => 'required|string',
             'frequency' => 'required|string',
