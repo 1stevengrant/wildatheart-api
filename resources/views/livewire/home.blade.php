@@ -1,26 +1,6 @@
 <div class="w-full text-white md:flex md:h-screen md:w-screen md:flex-row-reverse">
     <div id="map"
-         class="aspect-square h-full w-full md:border-grey-darker md:w-2/3 md:border-l"
-         style="aspect-ratio: 1 / 1"></div>
-    <div class="h-full overflow-auto md:w-1/3 border-t md:border-t-0 border-grey-darker rounded-t-xl md:rounded-none
-    px-2.5 py-1.5 md:p-6"
-         id="campfires-container">
-        <p class="text-center md:hidden">{{ $campfireCount }} Fires</p>
-
-        <div id="campfires"
-             class="mt-1 fires space-y-4">
-            <div class="hidden items-center justify-center"
-                 id="fires-loader">
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Loading Fires</span>
-            </div>
-        </div>
-    </div>
+         class="aspect-square h-full w-full md:border-grey-darker"></div>
 </div>
 @push('scripts')
     <script>
@@ -44,36 +24,26 @@
         container: 'map',
         style: '{{ config('services.mapbox.mapbox_style') }}',
         center: [{{ $longitude }}, {{ $latitude }}],
-        zoom: 10,
+        zoom: 4,
         maxZoom: 10,
         // scrollZoom: false,
         attributionControl: false
     });
 
-    let campfires = null,
-        campfiresLoading = true;
-
-    if (campfiresLoading) {
-        const firesLoader = document.getElementById('fires-loader');
-        firesLoader.classList.remove('hidden');
-        firesLoader.classList.add('flex');
-    }
-
-    getCampFires();
+    let campfires = null;
 
     async function getCampFires() {
         const response = await fetch('/api/campfires');
         campfires = await response.json();
-        campfiresLoading = false;
-        const firesLoader = document.getElementById('fires-loader');
-        firesLoader.classList.remove('flex');
-        firesLoader.classList.add('hidden');
     }
 
     /**
      * Wait until the map loads to make changes to the map.
      */
-    map.on('load', () => {
+    map.on('load', async () => {
+
+        await getCampFires();
+
         /**
          * This is where your '.addLayer()' used to be, instead
          * add only the source without styling a layer
@@ -85,12 +55,6 @@
 
         map.resize()
 
-        /**
-         * Add all the things to the page:
-         * - The location listings on the side of the page
-         * - The markers onto the map
-         */
-        buildCampfireList(campfires);
         addMarkers();
     })
 
@@ -139,59 +103,6 @@
                     `campfire-${marker.properties.id}`
                 );
                 listing.classList.add('active');
-            });
-        }
-    }
-
-    /**
-     * Add a listing for each fire
-     **/
-    function buildCampfireList(campfires) {
-        for (const campfire of campfires.features) {
-            /* Add a new listing section to the sidebar. */
-            const listings = document.getElementById('campfires');
-            const listing = listings.appendChild(document.createElement('div'));
-            /* Assign a unique `id` to the listing. */
-            listing.id = `campfire-${campfire.properties.id}`;
-            /* Assign the `item` class to each listing for styling. */
-            listing.className = 'campfire';
-
-            const img = listing.appendChild(document.createElement('img'));
-            img.src = campfire.properties.image;
-            img.className = 'campfire-image';
-
-            /* Add the link to the individual listing created above. */
-            const detail = listing.appendChild(document.createElement('div'));
-            detail.className = 'campfire-detail';
-            detail.id = `link-${campfire.properties.id}`;
-            detail.innerHTML = `
-            <h3 class='campfire-title'>${campfire.properties.title}</h3>
-            <div class='campfire-content'>
-              <img src='${campfire.properties.hostProfilePhoto}'
-                  class='campfire-host-image'
-                  alt='${campfire.properties.host}' />
-              <p class='campfire-host'>Hosted by ${campfire.properties.host}</p>
-            </div>`;
-
-            /**
-             * Listen to the element and when it is clicked, do four things:
-             * 1. Update the `currentFeature` to the fire associated with the clicked link
-             * 2. Fly to the point
-             * 3. Close all other popups and display popup for clicked fire
-             * 4. Highlight listing in sidebar (and remove highlight for all other listings)
-             **/
-            listing.addEventListener('click', function () {
-                for (const feature of campfires.features) {
-                    if (this.id === `campfire-${feature.properties.id}`) {
-                        flyToCampfire(feature);
-                        createPopUp(feature);
-                    }
-                }
-                const activeItem = document.getElementsByClassName('active');
-                if (activeItem[0]) {
-                    activeItem[0].classList.remove('active');
-                }
-                this.parentNode.classList.add('active');
             });
         }
     }

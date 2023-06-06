@@ -20,13 +20,12 @@ class Home extends Component
     public function mount(): void
     {
         $this->getLatitudeAndLongitude();
-        $this->campfireCount = Campfire::count();
     }
 
     public function getLatitudeAndLongitude(): void
     {
         $cityDbReader = new Reader(resource_path('location/GeoLite2-City.mmdb'));
-        $record = $cityDbReader->city(config('app.env') === 'local' ? '81.104.2.147' : request()->ip());
+        $record = $cityDbReader->city(config('app.env') === 'local' ? '148.72.164.216' : request()->ip());
         $this->latitude = $record->location->latitude;
         $this->longitude = $record->location->longitude;
     }

@@ -8,7 +8,6 @@
             </a>
             <x-menu />
         </div>
-        <livewire:search-campfires />
         <div class="hidden md:flex items-center space-x-6">
             <x-support />
             <x-account />
