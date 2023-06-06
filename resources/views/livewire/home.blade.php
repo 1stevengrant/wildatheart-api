@@ -1,4 +1,4 @@
-<div class="w-full text-white md:flex md:h-screen md:w-screen md:flex-row-reverse">
+<div class="w-full text-white h-screen">
     <div id="map"
          class="aspect-square h-full w-full md:border-grey-darker"></div>
 </div>
