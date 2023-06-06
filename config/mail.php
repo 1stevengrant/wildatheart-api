@@ -103,7 +103,7 @@ return [
     ],
 
     'to' => [
-        'address' => env('MAIL_TO_ADDRESS', 'steven@ghijk.co.uk'),
+        'address' => env('MAIL_TO_ADDRESS', 'support@wildatheart.org'),
         'name' => env('MAIL_TO_NAME', 'Steven'),
     ],
 
