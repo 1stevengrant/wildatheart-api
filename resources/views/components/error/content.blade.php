@@ -13,9 +13,12 @@
         <div>
             {{ $exception->getStatusCode() }}
         </div>
-        <div>
-            {{$exception->getMessage()}}
+        <div class="max-w-md">
+            {{ $exception->getMessage() }}
         </div>
-        <a class="text-base border-b border-white hover:border-transparent" href="{{ route('home') }}">Back to Fires</a>
+        <a class="text-base border-b border-white hover:border-transparent"
+           href="{{ route('home') }}">
+            Back to Fires
+        </a>
     </div>
 </div>
