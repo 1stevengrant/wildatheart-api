@@ -273,8 +273,8 @@
             @this.set('country', country, true)
         }
 
-        @this.set('latitude', e.result.geometry.coordinates[0], true)
-        @this.set('longitude', e.result.geometry.coordinates[1], true)
+        @this.set('latitude', e.result.geometry.coordinates[1], true)
+        @this.set('longitude', e.result.geometry.coordinates[0] , true)
     });
     </script>
 @endpush
