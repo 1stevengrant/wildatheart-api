@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Campfire;
 use GeoIp2\Database\Reader;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
