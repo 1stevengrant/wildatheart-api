@@ -1,18 +1,30 @@
 <x-mail::message>
-Dear {{ $campfire->user->given_name }},
+{{ $campfire->user->given_name }},
 
-Welcome to Fires, a place that empowers passionate individuals like you to host extraordinary events and create meaningful experiences for men.
+It’s official—your Fire is approved. Welcome to the revolution!
 
-We are excited to have you on board and can't wait to see what God does through your courage.
+Here are a few suggestions:
 
-A few things we recommend:
-- Share you unique invite link with those you know might be interested in your event
-- Every time someone registers you’ll receive an email with their information
-- You’ll be responsible for communicating frequency, time and location update to your registrants
-- Wild at heart will be sending you a gift and books to help with the event
+**Share your fire.** Here’s your unique link to share with anyone who may be interested: [Fire Link]
 
-If you need anything or have any questions reach out to help@wildatheart.org
+**Respond in a timely manner.** You'll receive an email every time someone expresses interest in your event. It’s up
+    to you to communicate all event details (date/time, location, etc). Please respond promptly as they’ll be waiting to hear from you.
 
-Wild At Heart,
+**Keep an eye on your mailbox.** We’ll be sending you a Firestarter Kit to assist you in organizing the event.
+
+Men were never meant to bear the weight of their pain or their glory alone. So we lit a Fire. And now you are too!
+
+Fires are a place men find themselves outrageously loved by God, and other men.
+
+We are excited to have you on board and can't wait to see what God does with your Fire.
+
+If you have any questions or require any assistance, please don't hesitate to reach out to us at [help@wildatheart.org](help@wildatheart.org).
+
+For the Kingdom,
 John and Morgan
+
+<x-mail::button :url="route('view.campfire', $campfire)">
+See & Share Your Fire
+</x-mail::button>
+
 </x-mail::message>
