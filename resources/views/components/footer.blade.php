@@ -18,31 +18,14 @@
             {{ __('Host') }}
         </x-footer-link>
 
-{{--        <x-footer-link--}}
-{{--            href="{{ route('faqs') }}">--}}
-{{--            <x-slot:icon>--}}
-{{--                <x-icons.questions/>--}}
-{{--            </x-slot:icon>--}}
-{{--            {{ __('FAQs') }}--}}
-{{--        </x-footer-link>--}}
-
         @auth
             <div class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
                 <div class="w-12 h-12 bg-white flex items-center justify-center rounded-full">
-                    <img src="{{ Gravatar::get('hello@digitalevangelist.net') }}"
+                    <img src="{{ Gravatar::get(auth()->user()->email) }}"
                          class="rounded-full w-9 h-9"
                          alt="">
                 </div>
             </div>
         @endauth
-        @guest
-            <x-footer-link
-                href="{{ route('faqs') }}">
-                <x-slot:icon>
-                    <x-icons.user class="w-[24px] h-[24px] text-white fill-current stroke-current"/>
-                </x-slot:icon>
-                {{ __('Login') }}
-            </x-footer-link>
-        @endguest
     </div>
 </footer>
