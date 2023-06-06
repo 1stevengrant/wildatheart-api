@@ -22,8 +22,13 @@ class Attendee extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function campFire(): BelongsTo
+    public function campfire(): BelongsTo
     {
         return $this->belongsTo(Campfire::class);
+    }
+
+    public function hasUser(): bool
+    {
+        return $this->user_id !== null;
     }
 }

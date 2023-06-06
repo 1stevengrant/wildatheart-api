@@ -58,7 +58,19 @@
                 </div>
 
                 <div class="md:w-1/3 hidden md:block">
-                    <x-campfire-cta :campfire="$campfire"/>
+                    @if(!$hasConnected)
+                        <x-campfire-cta :campfire="$campfire"/>
+                    @else
+                        <div class="border border-grey-darker p-8 rounded-lg">
+                            <x-button-container>
+                                <x-primary-button
+                                    disabled
+                                    class="w-full">
+                                    You have connected with {{ $campfire->host->given_name }}
+                                </x-primary-button>
+                            </x-button-container>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -68,10 +80,10 @@
                 <div class="flex items-center space-x-4 mt-12">
                     <img src="{{ asset('img/fires/Image1.webp') }}" class="object-fill rounded-lg" alt="">
                     <div class="grid gap-4 grid-cols-2">
-                        <img src="{{ asset('img/fires/Image2.webp') }}"  class="rounded-lg" alt="">
-                        <img src="{{ asset('img/fires/Image3.webp') }}"  class="rounded-lg" alt="">
+                        <img src="{{ asset('img/fires/Image2.webp') }}" class="rounded-lg" alt="">
+                        <img src="{{ asset('img/fires/Image3.webp') }}" class="rounded-lg" alt="">
                         <img src="{{ asset('img/fires/Image.webp') }}" class="rounded-lg" alt="">
-                        <img src="{{ asset('img/fires/Image4.webp') }}"  class="rounded-lg" alt="">
+                        <img src="{{ asset('img/fires/Image4.webp') }}" class="rounded-lg" alt="">
                     </div>
                 </div>
             </div>

@@ -19,31 +19,29 @@ class CampfireController extends Controller
 
     protected function getCampfires()
     {
-        return cache()->remember('campfires_api', now()->addHour(), function () {
-            return Campfire::query()->public()->get()->map(function ($campfire) {
-                return [
-                    'type' => 'Feature',
-                    'properties' => [
-                        'id' => $campfire->id,
-                        'state' => getStateAbbreviation($campfire->state),
-                        'city' => $campfire->city,
-                        'title' => $campfire->title(),
-                        'attendee_limit' => $campfire->attendee_limit,
-                        'spaces_remaining' => $campfire->remaining,
-                        'url' => route('view.campfire', $campfire->id),
-                        'host' => $campfire->user->full_name,
-                        'hostProfilePhoto' => gravatar($campfire->user->email, 'campfire-profile'),
-                        'image' => asset('img/campfire.png'),
+        return Campfire::query()->public()->get()->map(function ($campfire) {
+            return [
+                'type' => 'Feature',
+                'properties' => [
+                    'id' => $campfire->id,
+                    'state' => getStateAbbreviation($campfire->state),
+                    'city' => $campfire->city,
+                    'title' => $campfire->title(),
+                    'attendee_limit' => $campfire->attendee_limit,
+                    'spaces_remaining' => $campfire->remaining,
+                    'url' => route('view.campfire', $campfire->id),
+                    'host' => $campfire->user->full_name,
+                    'hostProfilePhoto' => gravatar($campfire->user->email, 'campfire-profile'),
+                    'image' => asset('img/campfire.png'),
+                ],
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [
+                        $campfire->longitude,
+                        $campfire->latitude,
                     ],
-                    'geometry' => [
-                        'type' => 'Point',
-                        'coordinates' => [
-                            $campfire->longitude,
-                            $campfire->latitude,
-                        ],
-                    ],
-                ];
-            });
+                ],
+            ];
         });
     }
 }

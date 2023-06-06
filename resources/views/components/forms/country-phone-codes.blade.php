@@ -13,7 +13,7 @@
     />
     <select name="countryCode"
         {{ $attributes->merge(['class' => 'p-2 border border-[#2E2C29] w-full bg-[#171513] rounded
-        focus:border-orange focus:outline-none focus:ring-orange']) }}
+        focus:border-orange focus:outline-none focus:ring-orange text-white']) }}
     >
         <option data-countryCode="US" value="1" selected id="usa">USA (+1)</option>
         <option data-countryCode="CA" value="+1" id="canada">Canada (+1)</option>

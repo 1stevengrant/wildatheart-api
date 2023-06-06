@@ -3,9 +3,9 @@ Dear {{ $campfire->host->given_name }},
 
 We are thrilled to inform you that an attendee has registered for your Fire:
 
-- {{ $attendee->user->fullName }}
-- {{ $attendee->user->email }}
-- {{ $attendee->user->phone }}
+- {{ $attendee->fullName }}
+- {{ $attendee->email }}
+- {{ $attendee->phone }}
 
 Your dedication to making a difference is already attracting enthusiastic participants who are eager to join you on this journey.
 

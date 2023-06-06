@@ -2,19 +2,12 @@
 
 namespace App\Http\Livewire;
 
-use App\Actions\User\CreateUser;
-use App\Actions\User\UpdateUser;
-use App\Actions\User\UpdateUserRole;
-use App\Mail\Campfire\AttendeeRegistered;
-use App\Mail\Fires\AttendeeConnectedToHost;
 use App\Models\Campfire;
 use App\Models\State;
-use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class ConnectToHost extends Component
@@ -37,6 +30,8 @@ class ConnectToHost extends Component
 
     public string $phone = '';
 
+    public string $countryCode = '1';
+
     public string $confirmPhone = '';
 
     public bool $emailUpdates = true;
@@ -45,27 +40,49 @@ class ConnectToHost extends Component
     {
         $this->campfire = $campfire;
         $this->states = State::all();
+
+        $this->prefillFields();
+    }
+
+    public function prefillFields(): void
+    {
+        if (auth()->check()) {
+            $this->firstName = auth()->user()->given_name;
+            $this->lastName = auth()->user()->family_name;
+            $this->email = auth()->user()->email;
+            $this->confirmEmail = auth()->user()->email;
+            $this->phone = auth()->user()->phone;
+            $this->confirmPhone = auth()->user()->phone;
+            $this->state = auth()->user()->state ?? '';
+            $this->city = auth()->user()->city ?? '';
+        }
     }
 
     public function handle(): void
     {
-        if (auth()->check()) {
-            $attendee = $this->registerExistingUser();
-        } else {
-            $attendee = $this->registerGuest();
-        }
+        $this->validate([
+            'firstName' => 'required|string',
+            'lastName' => 'required|string',
+            'email' => 'required|email',
+            'confirmEmail' => 'required|email|same:email',
+            'phone' => 'required|string',
+            'confirmPhone' => 'required|string|same:phone',
+            'state' => 'required|string',
+            'city' => 'required|string',
+            'emailUpdates' => 'required|boolean',
+            'countryCode' => 'required|string',
+        ]);
 
-        Mail::to($this->campfire->host->email)
-            ->send(new AttendeeRegistered(
-                campfire: $this->campfire,
-                attendee: $attendee
-            ));
-
-        Mail::to($attendee->user->email)
-            ->send(new AttendeeConnectedToHost(
-                campfire: $this->campfire,
-                attendee: $attendee
-            ));
+        $this->campfire->attendees()->create([
+            'given_name' => $this->firstName,
+            'family_name' => $this->lastName,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'city' => $this->city,
+            'state' => $this->state,
+            'country_code' => $this->countryCode,
+            'marketing_updates' => $this->emailUpdates,
+        ]);
 
         $this->emit('closeConnectToHost');
 
@@ -73,55 +90,8 @@ class ConnectToHost extends Component
         $this->dispatchBrowserEvent('registered-for-campfire');
         $this->emit('registeredForCampfire');
 
-        UpdateUserRole::make()->handle($attendee->user, User::ROLE_ATTENDEE);
-
         $this->resetExcept('campfire', 'states');
 
-    }
-
-    public function registerExistingUser()
-    {
-        $this->validate([
-            'phone' => 'nullable',
-            'confirmPhone' => 'nullable|same:phone',
-        ]);
-
-        UpdateUser::make()->handle(auth()->user(), [
-            'phone' => $this->phone,
-            'opted_into_marketing' => $this->emailUpdates,
-        ]);
-
-        return $this->campfire->attendees()->create([
-            'user_id' => auth()->id(),
-        ]);
-    }
-
-    public function registerGuest()
-    {
-        $this->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'confirmEmail' => 'required|same:email',
-            'state' => 'required',
-            'city' => 'required',
-            'phone' => 'required',
-            'confirmPhone' => 'required|same:phone',
-        ]);
-
-        $user = CreateUser::make()->handle([
-            'given_name' => $this->firstName,
-            'family_name' => $this->lastName,
-            'email' => $this->email,
-            'state' => $this->state,
-            'city' => $this->city,
-            'phone' => $this->phone,
-            'opted_into_marketing' => $this->emailUpdates,
-        ]);
-
-        return $this->campfire->attendees()->create([
-            'user_id' => $user->id,
-        ]);
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

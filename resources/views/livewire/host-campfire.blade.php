@@ -162,34 +162,34 @@
                             only see general area."/>
                 </div>
 
-{{--                <div>--}}
-{{--                    <x-forms.label for="public" label="Public or Private Fire" required/>--}}
-{{--                    <div class="flex items-center space-x-4">--}}
-{{--                        <div class="flex items-center rounded-full bg-[#171513] border border-grey-darker">--}}
-{{--                            <button--}}
-{{--                                type="button"--}}
-{{--                                wire:click="$set('isPrivate', false)"--}}
-{{--                                class="px-10 py-3 text-sm font-semibold @if(!$isPrivate) border border-white text-white--}}
-{{--                            rounded-l-full--}}
-{{--                            @endif"--}}
-{{--                            >--}}
-{{--                                Public--}}
-{{--                            </button>--}}
-{{--                            <button--}}
-{{--                                type="button"--}}
-{{--                                wire:click="$set('isPrivate', true)"--}}
-{{--                                class="px-10 py-3 text-sm font-semibold @if($isPrivate) border border-white text-white--}}
-{{--                            rounded-r-full--}}
-{{--                            @endif"--}}
-{{--                            >--}}
-{{--                                Private--}}
-{{--                            </button>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
+                {{--                <div>--}}
+                {{--                    <x-forms.label for="public" label="Public or Private Fire" required/>--}}
+                {{--                    <div class="flex items-center space-x-4">--}}
+                {{--                        <div class="flex items-center rounded-full bg-[#171513] border border-grey-darker">--}}
+                {{--                            <button--}}
+                {{--                                type="button"--}}
+                {{--                                wire:click="$set('isPrivate', false)"--}}
+                {{--                                class="px-10 py-3 text-sm font-semibold @if(!$isPrivate) border border-white text-white--}}
+                {{--                            rounded-l-full--}}
+                {{--                            @endif"--}}
+                {{--                            >--}}
+                {{--                                Public--}}
+                {{--                            </button>--}}
+                {{--                            <button--}}
+                {{--                                type="button"--}}
+                {{--                                wire:click="$set('isPrivate', true)"--}}
+                {{--                                class="px-10 py-3 text-sm font-semibold @if($isPrivate) border border-white text-white--}}
+                {{--                            rounded-r-full--}}
+                {{--                            @endif"--}}
+                {{--                            >--}}
+                {{--                                Private--}}
+                {{--                            </button>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
 
-{{--                    <x-forms.instruction instruction="Public events will be discoverable on the listing view. Private events will only be accessible via--}}
-{{--                            your sharing link."/>--}}
-{{--                </div>--}}
+                {{--                    <x-forms.instruction instruction="Public events will be discoverable on the listing view. Private events will only be accessible via--}}
+                {{--                            your sharing link."/>--}}
+                {{--                </div>--}}
 
                 <div class="flex items-center">
                     <x-forms.select
@@ -208,7 +208,10 @@
                 </div>
 
                 <div class="">
-                    <x-forms.label for="" label="Outdoor or Indoor" required/>
+                    <x-forms.label
+                        for=""
+                        label="Outdoor or Indoor"
+                        required/>
                     <div class="flex items-center mt-2">
                         <div class="flex items-center rounded-full bg-[#171513] border border-grey-darker">
                             <button
@@ -277,7 +280,8 @@
     geocoderInput.setAttribute('id', 'geocoder-input')
 
     geocoder.on('result', (e) => {
-        @this.set('mapboxPlaceName', e.result.place_name, true)
+        @this.
+        set('mapboxPlaceName', e.result.place_name, true)
         const placeName = e.result.place_name,
             isUSAddress = placeName.includes('United States'),
             isCanadaAddress = placeName.includes('Canada'),
@@ -293,7 +297,8 @@
                 zip = stateZip[1],
                 country = addressComponents[3];
 
-            @this.set('street_address', address, true)
+            @this.
+            set('street_address', address, true)
             @this.set('city', city, true)
             @this.set('state', state, true)
             @this.set('zip', zip, true)
@@ -308,13 +313,15 @@
                 postcode = addressComponents[addressComponents.length - 2].trim(),
                 country = addressComponents[addressComponents.length - 1];
 
-            @this.set('street_address', address, true)
+            @this.
+            set('street_address', address, true)
             @this.set('city', city, true)
             @this.set('zip', postcode, true)
             @this.set('country', country, true)
         }
 
-        @this.set('latitude', e.result.geometry.coordinates[0], true)
+        @this.
+        set('latitude', e.result.geometry.coordinates[0], true)
         @this.set('longitude', e.result.geometry.coordinates[1], true)
     });
     </script>

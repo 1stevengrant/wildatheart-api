@@ -17,6 +17,17 @@ class ViewCampfire extends Component
 
     public bool $hideFooter = true;
 
+    public bool $hasConnected = false;
+
+    protected $listeners = [
+        'registeredForCampfire' => 'updateConnectionStatus',
+    ];
+
+    public function updateConnectionStatus(): void
+    {
+        $this->hasConnected = true;
+    }
+
     public function mount(Campfire $campfire): void
     {
         $this->campfire = $campfire;
