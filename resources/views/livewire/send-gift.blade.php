@@ -5,7 +5,7 @@
         <div class="max-w-lg">
             <x-type.registration-h1>
                 Huzzah! <br>
-               Your Fires has been registered.
+               Your Fire has been registered.
             </x-type.registration-h1>
 
             <p class="mt-8">We'd like to send you a fire-starter kit. Where would you like us to send it?</p>

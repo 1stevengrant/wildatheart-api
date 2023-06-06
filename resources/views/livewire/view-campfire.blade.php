@@ -119,8 +119,7 @@
     <script>
 
     document.addEventListener('livewire:load', function () {
-        document.title = '{{ $campfire->title() }} | {{ config('app.name') }}';
-
+       document.title = "{!!  $campfire->title() ?? $campfire->location() !!} | {{ config('app.name') }}";
         if (window.innerWidth < 768) {
             const campfireElement = document.getElementById('campfire'),
                 connectWithHostElement = document.getElementById('mobile-connect-with-host');

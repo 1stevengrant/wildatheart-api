@@ -8,7 +8,7 @@
         <x-icons.event-type/>
         <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">{{ $campfire->indoorOrOutdoor() }} event</p>
-            <p class="text-sm text-[#6B7280]">Ths event is slated to be an {{ $campfire->indoorOrOutdoor() }} event.
+            <p class="text-sm text-[#6B7280]">This event is slated to be an {{ $campfire->indoorOrOutdoor() }} event.
                 Please dress
                 accordingly.</p>
         </div>
