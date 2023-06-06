@@ -43,6 +43,7 @@
 
 .mapboxgl-popup-close-button {
     right: 5px !important;
+    top: -7px !important;
 }
 
 .mapboxgl-popup-content {
