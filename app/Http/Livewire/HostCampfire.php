@@ -6,7 +6,7 @@ use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Mail\Campfire\Posted;
 use App\Models\User;
-use App\Rules\EndsInFire;
+use App\Rules\MustNotContainFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -27,7 +27,7 @@ class HostCampfire extends Component
 
     public string $phone = '';
 
-    public string $countryCode = '';
+    public string $countryCode = '1';
 
     public $photo;
 
@@ -66,7 +66,7 @@ class HostCampfire extends Component
             return redirect()->route('social.login', ['provider' => 'auth0']);
         }
 
-        $this->campfireName = auth()->user()->given_name."'s Fire";
+        $this->campfireName = auth()->user()->given_name."'s";
     }
 
     public function handleStepOne(): void
@@ -80,7 +80,7 @@ class HostCampfire extends Component
         auth()->user()->update([
             'phone' => $this->phone,
             'country_code' => $this->countryCode,
-            'image' => $this->photo->store('users'),
+            'image' => $this->photo ? $this->photo->store('users') : null,
             'opted_into_marketing' => $this->emailUpdates,
             'profile_step' => 2,
         ]);
@@ -109,7 +109,7 @@ class HostCampfire extends Component
                 'min:2',
                 'string',
                 'max:255',
-                new EndsInFire,
+                new MustNotContainFire(),
             ],
             'mapboxPlaceName' => 'required|string',
             'isPrivate' => 'required|boolean',

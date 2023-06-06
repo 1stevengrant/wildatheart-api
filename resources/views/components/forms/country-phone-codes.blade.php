@@ -15,11 +15,11 @@
         {{ $attributes->merge(['class' => 'p-2 border border-[#2E2C29] w-full bg-[#171513] rounded
         focus:border-orange focus:outline-none focus:ring-orange']) }}
     >
-        <option data-countryCode="US" value="1" selected>USA (+1)</option>
-        <option data-countryCode="CA" value="1">Canada (+1)</option>
-        <option data-countryCode="GB" value="44">UK (+44)</option>
-        <option data-countryCode="AU" value="61">Australia (+61)</option>
-        <option data-countryCode="NZ" value="64">New Zealand (+64)</option>
+        <option data-countryCode="US" value="1" selected id="usa">USA (+1)</option>
+        <option data-countryCode="CA" value="+1" id="canada">Canada (+1)</option>
+        <option data-countryCode="GB" value="44" id="uk">UK (+44)</option>
+        <option data-countryCode="AU" value="61" id="aus">Australia (+61)</option>
+        <option data-countryCode="NZ" value="64" id="nzl" >New Zealand (+64)</option>
         <optgroup label="Other countries">
             <option data-countryCode="DZ" value="213">Algeria (+213)</option>
             <option data-countryCode="AD" value="376">Andorra (+376)</option>

@@ -6,7 +6,7 @@
     'instruction' => false,
     'placeholder' => false,
 ])
-<div>
+<div {{ $attributes->merge(['class' => '']) }}>
     <x-forms.label
         label="{{ $label }}"
         for="{{ $name }}"

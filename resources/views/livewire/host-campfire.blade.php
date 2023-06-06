@@ -2,12 +2,6 @@
      x-data="{ step: @entangle('step') }">
 
     <div x-show="step === 1"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 scale-90"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-90"
          class="md:w-1/2 mt-8 px-8 flex items-center justify-center relative">
 
         <form wire:submit.prevent="handleStepOne"
@@ -127,12 +121,6 @@
     </div>
 
     <div x-show="step === 2"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 scale-90"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-90"
          class="md:w-1/2 mt-8 px-8 flex items-center justify-center">
 
         <form wire:submit.prevent="handleStepTwo"
@@ -145,15 +133,21 @@
             </x-type.registration-h1>
 
             <div class="space-y-10">
-                <x-forms.input
-                    wire:model="campfireName"
-                    label="Name Your Fire"
-                    instruction="This is the name that will be displayed on your Fire page and must end with 'Fire'."
-                    required
-                    :error="$errors->first('campfireName')"
-                    id="campfireName"
-                    name="campfireName"
-                />
+
+                <div class="flex items-center space-x-4">
+                    <x-forms.input
+                        wire:model="campfireName"
+                        label="Name Your Fire"
+                        instruction="This is the name that will be displayed on your Fire page and must end with 'Fire'."
+                        required
+                        :error="$errors->first('campfireName')"
+                        id="campfireName"
+                        name="campfireName"
+                    />
+                    <div>
+                        Fire
+                    </div>
+                </div>
 
                 <div>
                     <x-forms.label for="geocoder-input" label="Full Fire Address" required/>
@@ -168,34 +162,34 @@
                             only see general area."/>
                 </div>
 
-                <div>
-                    <x-forms.label for="public" label="Public or Private Fire" required/>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center rounded-full bg-[#171513] border border-grey-darker">
-                            <button
-                                type="button"
-                                wire:click="$set('isPrivate', false)"
-                                class="px-10 py-3 text-sm font-semibold @if(!$isPrivate) border border-white text-white
-                            rounded-l-full
-                            @endif"
-                            >
-                                Public
-                            </button>
-                            <button
-                                type="button"
-                                wire:click="$set('isPrivate', true)"
-                                class="px-10 py-3 text-sm font-semibold @if($isPrivate) border border-white text-white
-                            rounded-r-full
-                            @endif"
-                            >
-                                Private
-                            </button>
-                        </div>
-                    </div>
+{{--                <div>--}}
+{{--                    <x-forms.label for="public" label="Public or Private Fire" required/>--}}
+{{--                    <div class="flex items-center space-x-4">--}}
+{{--                        <div class="flex items-center rounded-full bg-[#171513] border border-grey-darker">--}}
+{{--                            <button--}}
+{{--                                type="button"--}}
+{{--                                wire:click="$set('isPrivate', false)"--}}
+{{--                                class="px-10 py-3 text-sm font-semibold @if(!$isPrivate) border border-white text-white--}}
+{{--                            rounded-l-full--}}
+{{--                            @endif"--}}
+{{--                            >--}}
+{{--                                Public--}}
+{{--                            </button>--}}
+{{--                            <button--}}
+{{--                                type="button"--}}
+{{--                                wire:click="$set('isPrivate', true)"--}}
+{{--                                class="px-10 py-3 text-sm font-semibold @if($isPrivate) border border-white text-white--}}
+{{--                            rounded-r-full--}}
+{{--                            @endif"--}}
+{{--                            >--}}
+{{--                                Private--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
-                    <x-forms.instruction instruction="Public events will be discoverable on the listing view. Private events will only be accessible via
-                            your sharing link."/>
-                </div>
+{{--                    <x-forms.instruction instruction="Public events will be discoverable on the listing view. Private events will only be accessible via--}}
+{{--                            your sharing link."/>--}}
+{{--                </div>--}}
 
                 <div class="flex items-center">
                     <x-forms.select
