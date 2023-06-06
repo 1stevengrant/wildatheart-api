@@ -51,8 +51,8 @@ class ConnectToHost extends Component
             $this->lastName = auth()->user()->family_name;
             $this->email = auth()->user()->email;
             $this->confirmEmail = auth()->user()->email;
-            $this->phone = auth()->user()->phone;
-            $this->confirmPhone = auth()->user()->phone;
+            $this->phone = auth()->user()->phone ?? '';
+            $this->confirmPhone = auth()->user()->phone ?? '';
             $this->state = auth()->user()->state ?? '';
             $this->city = auth()->user()->city ?? '';
         }
