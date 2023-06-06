@@ -30,6 +30,8 @@
         attributionControl: false
     });
 
+    map.addControl(new mapboxgl.NavigationControl());
+
     let campfires = null;
 
     async function getCampFires() {
