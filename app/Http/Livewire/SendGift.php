@@ -64,13 +64,13 @@ class SendGift extends Component
     public function prefillAddress(): void
     {
         if (auth()->check()) {
-            $this->firstName = auth()->user()->given_name;
-            $this->lastName = auth()->user()->family_name;
+            $this->firstName = auth()->user()->given_name ?? '';
+            $this->lastName = auth()->user()->family_name ?? '';
             $this->company = auth()->user()->company ?? '';
             $this->address1 = $this->campfire->street_address ?? '';
             $this->city = $this->campfire->city ?? '';
             $this->zip = $this->campfire->zip ?? '';
-            $this->phone = auth()->user()->phone;
+            $this->phone = auth()->user()->phone ?? '';
         }
     }
 

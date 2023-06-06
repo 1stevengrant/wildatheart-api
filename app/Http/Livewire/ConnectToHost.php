@@ -47,8 +47,8 @@ class ConnectToHost extends Component
     public function prefillFields(): void
     {
         if (auth()->check()) {
-            $this->firstName = auth()->user()->given_name;
-            $this->lastName = auth()->user()->family_name;
+            $this->firstName = auth()->user()->given_name ?? '';
+            $this->lastName = auth()->user()->family_name ?? '';
             $this->email = auth()->user()->email;
             $this->confirmEmail = auth()->user()->email;
             $this->phone = auth()->user()->phone ?? '';
