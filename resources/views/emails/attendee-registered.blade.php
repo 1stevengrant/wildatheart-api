@@ -1,21 +1,20 @@
 <x-mail::message>
-Dear {{ $campfire->host->given_name }},
+{{ $campfire->host->given_name }},
 
-We are thrilled to inform you that an attendee has registered for your Fire:
+We’ve got exciting news — {{ $attendee->fullName }} has expressed interest in your Fire!
+
+Here’s the scoop:
 
 - {{ $attendee->fullName }}
 - {{ $attendee->email }}
 - {{ $attendee->phone }}
 
-Your dedication to making a difference is already attracting enthusiastic participants who are eager to join you on this journey.
+{{ $attendee->fullName }} is expecting to hear from you soon, so be sure to reach out.
 
-Thank you for being a part of Wild at Heart Fires. For more info you can visit this link to find out more about the Fires program.
+It's working. Your choice to risk hosting a Fire is already giving others hope.
 
-Additionally, you can catch the podcast from Morgan and John to hear more about the heart of the events.
+Please don't hesitate to reach out if you have any questions or need assistance. We're honored to be alongside you in this mission.
 
-Please don't hesitate to reach out if you have any questions or need assistance. We're here to support you every step of the way.
-
-Best regards,
-Wild At Heart
-
+For the Kingdom,
+Wild at Heart
 </x-mail::message>
