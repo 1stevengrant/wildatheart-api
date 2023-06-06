@@ -35,15 +35,15 @@ class HostCampfire extends Component
 
     public string $mapboxPlaceName = '';
 
-    public string $street_address = '';
+    public $street_address = '';
 
-    public string $state = '';
+    public $state = '';
 
-    public string $city = '';
+    public $city = '';
 
-    public string $zip = '';
+    public $zip = '';
 
-    public string $country = '';
+    public $country = '';
 
     public $latitude = '';
 
@@ -113,6 +113,13 @@ class HostCampfire extends Component
             'name' => $this->campfireName,
             'mapbox_place_name' => $this->mapboxPlaceName,
             'frequency' => $this->frequency,
+            'street_address' => $this->street_address,
+            'state' => $this->state,
+            'city' => $this->city,
+            'zip' => $this->zip,
+            'country' => $this->country,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
         ]);
 
         Mail::to(config('mail.to.address'))->send(new Posted($campfire));

@@ -154,15 +154,6 @@ class Campfire extends Model
         return false;
     }
 
-    public function hasDifferentMailingAddress(): bool
-    {
-        if ($this->has_different_mailing_address) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function indoorOrOutdoor(): string
     {
         if ($this->is_indoor) {
@@ -184,5 +175,10 @@ class Campfire extends Model
             'country' => $this->country,
             'zip' => $this->zip,
         ];
+    }
+
+    public function welcomeHasBeenSent()
+    {
+        return $this->welcome_sent;
     }
 }

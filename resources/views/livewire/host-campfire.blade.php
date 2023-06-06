@@ -221,8 +221,7 @@
     geocoderInput.setAttribute('id', 'geocoder-input')
 
     geocoder.on('result', (e) => {
-        @this.
-        set('mapboxPlaceName', e.result.place_name, true)
+        @this.set('mapboxPlaceName', e.result.place_name, true)
         const placeName = e.result.place_name,
             isUSAddress = placeName.includes('United States'),
             isCanadaAddress = placeName.includes('Canada'),
@@ -238,8 +237,9 @@
                 zip = stateZip[1],
                 country = addressComponents[3];
 
-            @this.
-            set('street_address', address, true)
+            console.log(addressComponents)
+
+            @this.set('street_address', address, true)
             @this.set('city', city, true)
             @this.set('state', state, true)
             @this.set('zip', zip, true)
@@ -254,15 +254,13 @@
                 postcode = addressComponents[addressComponents.length - 2].trim(),
                 country = addressComponents[addressComponents.length - 1];
 
-            @this.
-            set('street_address', address, true)
+            @this.set('street_address', address, true)
             @this.set('city', city, true)
             @this.set('zip', postcode, true)
             @this.set('country', country, true)
         }
 
-        @this.
-        set('latitude', e.result.geometry.coordinates[0], true)
+        @this.set('latitude', e.result.geometry.coordinates[0], true)
         @this.set('longitude', e.result.geometry.coordinates[1], true)
     });
     </script>

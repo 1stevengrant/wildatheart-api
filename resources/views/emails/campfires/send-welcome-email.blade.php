@@ -1,5 +1,5 @@
 <x-mail::message>
-Dear {{ $campfire->user->first_name }},
+Dear {{ $campfire->user->given_name }},
 
 Welcome to Fires, a place that empowers passionate individuals like you to host extraordinary events and create meaningful experiences for men.
 

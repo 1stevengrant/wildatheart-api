@@ -5,69 +5,120 @@
         <div class="max-w-lg">
             <x-type.registration-h1>
                 Huzzah! <br>
-                Your email is confirmed, and we have a gift for you
+               Your Fires has been registered.
             </x-type.registration-h1>
-            <p class="text-sm text-white font-bold underline mt-4">Promise we won’t spam you</p>
+
+            <p class="mt-8">We'd like to send you a fire-starter kit. Where would you like us to send it?</p>
 
             <div class="space-y-8">
 
-                <div x-data="{ open:false }"
-                     class="mt-8">
+                <div class="mt-8">
                     <div>
                         <x-forms.label
                             for="email"
                             label="Mailing Address"
                             class="mt-8"/>
-
-                        <div class="flex items-center rounded-full bg-[#171513]">
-                            <button
-                                type="button"
-                                @click="open = false; $wire.set('differentMailingAddress', false)"
-                                class="px-10 py-3 text-sm font-semibold @if(!$differentMailingAddress) border border-white text-white
-                            rounded-l-full
-                                 @endif"
-                            >
-                                Same as Fire Address
-                            </button>
-                            <button
-                                type="button"
-                                @click="open = true; $wire.set('differentMailingAddress', true)"
-                                class="px-10 py-3 text-sm font-semibold @if($differentMailingAddress) border border-white text-white
-                            rounded-r-full
-                                @endif"
-                            >
-                                Different from Fire Address
-                            </button>
-                        </div>
                     </div>
 
+                    <div class="space-y-4">
+                        <x-forms.select
+                            label="Country"
+                            wire:model="country"
+                            required
+                            :error="$errors->first('country')"
+                            name="country">
+                            <option value="">Select Country</option>
+                            @foreach(getCountries() as $key => $country)
+                                <option value="{{ $key }}">{{ $country }}</option>
+                            @endforeach
+                        </x-forms.select>
 
-                    <div x-show="open"
-                         x-transition:enter="transition ease-out duration-300"
-                         x-transition:enter-start="opacity-0 scale-90"
-                         x-transition:enter-end="opacity-100 scale-100"
-                         x-transition:leave="transition ease-in duration-300"
-                         x-transition:leave-start="opacity-100 scale-100"
-                         x-transition:leave-end="opacity-0 scale-90"
-                         class="mt-8">
-                        <x-forms.label
-                            for="geocoder-input"
-                            label="Address Lookup"
-                            required/>
-                        <div wire:ignore>
-                            <div id="geocoder"></div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <x-forms.input
+                                label="First Name"
+                                required
+                                name="first_name"
+                                wire:model="firstName"
+                                :error="$errors->first('firstName')"
+                            />
+
+                            <x-forms.input
+                                label="Last Name"
+                                required
+                                :error="$errors->first('lastName')"
+                                name="last_name"
+                                wire:model="lastName"
+                            />
                         </div>
-                        <x-forms.error :error="$errors->first('mapboxPlaceName')"/>
-                        <x-forms.instruction instruction="This address will be used to send your free gift."/>
+
+                        <x-forms.input
+                            label="Company"
+                            name="company"
+                            :error="$errors->first('company')"
+                            wire:model="company"
+                            placeholder="(optional)"
+                        />
+
+                        <x-forms.input
+                            label="Address"
+                            required
+                            name="address1"
+                            :error="$errors->first('address1')"
+                            wire:model="address1"
+                        />
+
+                        <x-forms.input
+                            label=""
+                            name="address2"
+                            wire:model="address2"
+                            :error="$errors->first('address2')"
+                            placeholder="Apartment, suite, etc. (optional)"
+                        />
+
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <x-forms.input
+                                label="City"
+                                required
+                                name="city"
+                                :error="$errors->first('city')"
+                                wire:model="city"
+                            />
+                            <x-forms.select
+                                label="State"
+                                wire:model="state"
+                                :error="$errors->first('state')"
+                                name="state">
+                                <option value="">Select State</option>
+                                @foreach(\App\Models\State::all() as $state)
+                                    <option value="{{ $state->name }}">{{ $state->name }}</option>
+                                @endforeach
+                            </x-forms.select>
+
+                            <x-forms.input
+                                label="Zip/Postcode"
+                                name="zip"
+                                :error="$errors->first('zip')"
+                                wire:model="zip"
+                                required
+                            />
+                        </div>
+
+                        <x-forms.input
+                            label="Phone"
+                            name="phone"
+                            wire:model="phone"
+                            :error="$errors->first('phone')"
+                        />
+
                     </div>
+
                 </div>
 
                 <x-button-container>
                     <x-primary-button
-                        id="confetti-button"
                         class="w-full"
                         wire:click="handle">
-                        Claim Your Free Gift
+                        Send me my gift
                     </x-primary-button>
                     <a href="{{ route('home') }}" class="text-sm py-3 text-grey-200">
                         Cancel
@@ -82,6 +133,15 @@
                     Yay! <br>
                     Your gift is on its way
                 </x-type.registration-h1>
+
+                <x-button-container class="mt-8">
+                    <a href="{{ route('view.campfire', $campfire) }}" class="px-4 py-2 border
+border-transparent rounded-md bg-orange hover:bg-transparent-orange text-white text-center font-medium transition
+ease-in-out duration-150 disabled:bg-grey-200 disabled:text-grey-darker disabled:cursor-not-allowed">
+                        {{ __('Visit your Fire listing') }}
+                    </a>
+                </x-button-container>
+
             </div>
         @endif
     </div>
@@ -91,28 +151,10 @@
         </div>
     </div>
 </div>
-@push('head')
-    <script
-        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-@endpush
 @push('scripts')
     <script>
     document.addEventListener('livewire:load', function () {
-        document.title = 'Claim Your Free Gift 🥳 | {{ config('app.name') }}';
-    });
-
-    const geocoder = new MapboxGeocoder({
-        accessToken: '{{ config('services.mapbox.api_key') }}',
-        types: '{{ config('services.mapbox.types') }}'
-    });
-
-    geocoder.addTo('#geocoder');
-
-    const geocoderInput = document.querySelector('#geocoder input')
-    geocoderInput.setAttribute('id', 'geocoder-input')
-
-    geocoder.on('result', (e) => {
-        @this.set('mapboxPlaceName', e.result.place_name, true)
+        document.title = 'Claim Your Gift 🥳 | {{ config('app.name') }}';
     });
     </script>
 @endpush
