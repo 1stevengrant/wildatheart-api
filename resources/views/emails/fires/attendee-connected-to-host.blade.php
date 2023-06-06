@@ -1,19 +1,19 @@
 <x-mail::message>
-Dear {{ $attendee->given_name }},
+{{ $attendee->given_name }},
 
-Thank you for registering for {{ $campfire->title() }}. We can't wait to have you join us for an inspiring and impactful experience. Your commitment to attending this event shows your passion for making a positive change in your life and the lives of other men.
+Thank you for expressing interest in {{ $campfire->title() }}.
 
-We're thrilled to have you on board!
+Well done! Choosing to get your heart back as man is one of the riskiest things you can ever do.
 
-In the coming days, we will be sharing more details about the event schedule and logistics. Stay tuned for updates, and feel free to reach out to {{ $campfire->host->given_name }} at {{ $campfire->host->email }} with questions.
+It changes...everything.
 
-For more info you can visit this link to find out more about the Fires program.
+We’ve sent the info you provided to {{ $campfire->host->given_name }} and you can expect to hear from them soon.
 
-Additionally, you can catch the podcast from Morgan and John to hear more about the heart of the events.
+In the coming days, they will share more details about the event schedule and logistics.
 
-See you at {{ $campfire->title() }}!
+You can learn more about Fires including a video and podcast here.
 
 Warm regards,
-Wild At Heart
+Wild at Heart
 
 </x-mail::message>

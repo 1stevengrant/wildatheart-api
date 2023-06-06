@@ -31,8 +31,7 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Congrats '.$this->attendee->given_name.'! You’ve connected to '.
-            $this->campfire->title()
+            subject: 'We’ve sent your info to the host of '. $this->campfire->title()
         );
     }
 
