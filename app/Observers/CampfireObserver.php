@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\LookupLatitudeLongitude;
 use App\Models\Campfire;
 
 class CampfireObserver
@@ -11,6 +12,7 @@ class CampfireObserver
      */
     public function created(Campfire $campfire): void
     {
+        LookupLatitudeLongitude::dispatch($campfire);
         $campfire->update([
             'state_code' => getStateAbbreviation($campfire->state),
         ]);
