@@ -11,7 +11,7 @@ We’ve sent the info you provided to {{ $campfire->host->given_name }} and you 
 
 In the coming days, they will share more details about the event schedule and logistics.
 
-You can learn more about Fires including a video and podcast here.
+You can learn more about Fires including a [video and podcast here](https://wildatheart.org/fires).
 
 Warm regards,
 Wild at Heart
