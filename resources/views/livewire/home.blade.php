@@ -26,7 +26,6 @@
         center: [{{ $longitude }}, {{ $latitude }}],
         zoom: 4,
         maxZoom: 10,
-        // scrollZoom: false,
         attributionControl: false
     });
 
