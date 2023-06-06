@@ -50,7 +50,7 @@ class HostCampfire extends Component
 
     public $longitude = '';
 
-    public string $frequency = '';
+    public string $frequency = 'monthly';
 
     public function mount()
     {

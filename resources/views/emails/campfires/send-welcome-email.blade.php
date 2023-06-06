@@ -1,11 +1,11 @@
 <x-mail::message>
 {{ $campfire->user->given_name }},
 
-It’s official—your Fire is approved. Welcome to the revolution!
+It’s official—your Fire is live. Welcome to the revolution!
 
 Here are a few suggestions:
 
-**Share your fire.** Here’s your unique link to share with anyone who may be interested: [Fire Link]
+**Share your fire.** Here’s your unique link to share with anyone who may be interested: [Fire Link]({{ $campfire->url }})
 
 **Respond in a timely manner.** You'll receive an email every time someone expresses interest in your event. It’s up
     to you to communicate all event details (date/time, location, etc). Please respond promptly as they’ll be waiting to hear from you.
@@ -21,6 +21,7 @@ We are excited to have you on board and can't wait to see what God does with you
 If you have any questions or require any assistance, please don't hesitate to reach out to us at [help@wildatheart.org](help@wildatheart.org).
 
 For the Kingdom,
+
 John and Morgan
 
 <x-mail::button :url="route('view.campfire', $campfire)">
