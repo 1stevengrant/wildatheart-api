@@ -147,7 +147,7 @@ ease-in-out duration-150 disabled:bg-grey-200 disabled:text-grey-darker disabled
     </div>
     <div class="hidden md:w-1/2 md:flex items-center justify-center ">
         <div class="w-[373px] h-[511px] bg-grey-dark text-white flex flex-col items-center justify-center rounded-lg">
-            <div>Image of workbook etc.</div>
+            <img src="{{ asset('img/fires-gift-image-v2.webp') }}" alt="">
         </div>
     </div>
 </div>
