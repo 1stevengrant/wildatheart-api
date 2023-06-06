@@ -1,6 +1,5 @@
 <?php
 
-use App\Actions\Salesforce\ContactGetByEmail;
 use App\Http\Livewire\ConfirmEmail;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\HostCampfire;
@@ -11,7 +10,6 @@ use App\Http\Livewire\MyCampfires;
 use App\Http\Livewire\SendGift;
 use App\Http\Livewire\VerifyEmail;
 use App\Http\Livewire\ViewCampfire;
-use GeoIp2\Database\Reader;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Omniphx\Forrest\Providers\Laravel\Facades\Forrest;
@@ -35,9 +33,6 @@ Route::get('list/city/{city}', ListCity::class)->name('list.city');
 Route::get('attend/{campfire}', ViewCampfire::class)->name('view.campfire');
 Route::get('confirmemail/{campfire}', ConfirmEmail::class)->name('confirm.email');
 Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
-Route::get('faqs', function () {
-    return 'faqs';
-})->name('faqs');
 Route::get('gift/{campfire}', SendGift::class)->name('gift');
 
 Route::middleware(['auth', 'role:host'])->group(function () {
@@ -69,20 +64,7 @@ Route::get('test', function () {
     dd($response);
 });
 
-Route::get('find', function () {
-
-    ContactGetByEmail::make()->handle(email: 'steven@servant.io');
-
-});
-
 Route::get('account', function () {
     $query = Forrest::query('SELECT Id FROM Account');
     dd($query);
-});
-
-Route::get('ip', function () {
-    ray($_SERVER['REMOTE_ADDR']);
-    $cityDbReader = new Reader(resource_path('location/GeoLite2-City.mmdb'));
-    $record = $cityDbReader->city(config('app.env') === 'local' ? '81.104.2.147' : request()->ip());
-    ray($record);
 });
