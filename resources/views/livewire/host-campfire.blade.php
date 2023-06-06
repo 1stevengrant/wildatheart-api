@@ -162,35 +162,6 @@
                             only see general area."/>
                 </div>
 
-                {{--                <div>--}}
-                {{--                    <x-forms.label for="public" label="Public or Private Fire" required/>--}}
-                {{--                    <div class="flex items-center space-x-4">--}}
-                {{--                        <div class="flex items-center rounded-full bg-[#171513] border border-grey-darker">--}}
-                {{--                            <button--}}
-                {{--                                type="button"--}}
-                {{--                                wire:click="$set('isPrivate', false)"--}}
-                {{--                                class="px-10 py-3 text-sm font-semibold @if(!$isPrivate) border border-white text-white--}}
-                {{--                            rounded-l-full--}}
-                {{--                            @endif"--}}
-                {{--                            >--}}
-                {{--                                Public--}}
-                {{--                            </button>--}}
-                {{--                            <button--}}
-                {{--                                type="button"--}}
-                {{--                                wire:click="$set('isPrivate', true)"--}}
-                {{--                                class="px-10 py-3 text-sm font-semibold @if($isPrivate) border border-white text-white--}}
-                {{--                            rounded-r-full--}}
-                {{--                            @endif"--}}
-                {{--                            >--}}
-                {{--                                Private--}}
-                {{--                            </button>--}}
-                {{--                        </div>--}}
-                {{--                    </div>--}}
-
-                {{--                    <x-forms.instruction instruction="Public events will be discoverable on the listing view. Private events will only be accessible via--}}
-                {{--                            your sharing link."/>--}}
-                {{--                </div>--}}
-
                 <div class="flex items-center">
                     <x-forms.select
                         name="frequency"
@@ -205,36 +176,6 @@
                             </option>
                         @endforeach
                     </x-forms.select>
-                </div>
-
-                <div class="">
-                    <x-forms.label
-                        for=""
-                        label="Outdoor or Indoor"
-                        required/>
-                    <div class="flex items-center mt-2">
-                        <div class="flex items-center rounded-full bg-[#171513] border border-grey-darker">
-                            <button
-                                type="button"
-                                wire:click="$set('isIndoor', false)"
-                                class="px-10 py-3 text-sm font-semibold @if(!$isIndoor) border-white border text-white
-                            rounded-l-full
-                            @endif"
-                            >
-                                Outdoor
-                            </button>
-                            <button
-                                type="button"
-                                wire:click="$set('isIndoor', true)"
-                                class="px-10 py-3 text-sm font-semibold @if($isIndoor) border-white border text-white
-                            rounded-r-full
-                            @endif"
-                            >
-                                Indoor
-                            </button>
-                        </div>
-                    </div>
-                    <x-forms.instruction instruction="We will let your guests know to dress accordingly."/>
                 </div>
 
                 <x-button-container>

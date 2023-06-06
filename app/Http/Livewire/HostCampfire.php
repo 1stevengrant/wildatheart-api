@@ -49,12 +49,6 @@ class HostCampfire extends Component
 
     public $longitude = '';
 
-    public bool $isPrivate = false;
-
-    public bool $isIndoor = false;
-
-    public $attendeeLimit = 50;
-
     public string $frequency = '';
 
     public function mount()
@@ -112,16 +106,12 @@ class HostCampfire extends Component
                 new MustNotContainFire(),
             ],
             'mapboxPlaceName' => 'required|string',
-            'isPrivate' => 'required|boolean',
             'frequency' => 'required|string',
-            'isIndoor' => 'required|boolean',
         ]);
 
         $campfire = auth()->user()->campfires()->create([
             'name' => $this->campfireName,
             'mapbox_place_name' => $this->mapboxPlaceName,
-            'is_private' => $this->isPrivate,
-            'is_indoor' => $this->isIndoor,
             'frequency' => $this->frequency,
         ]);
 
