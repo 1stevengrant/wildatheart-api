@@ -186,4 +186,9 @@ class Campfire extends Model
     {
         return $this->welcome_sent;
     }
+
+    public function hostPhoto(): string
+    {
+        return $this->host->image ? asset('storage/' . $this->host->image) : gravatar($this->host->email);
+    }
 }

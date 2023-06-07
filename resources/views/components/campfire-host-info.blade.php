@@ -4,7 +4,7 @@
 ])
 
 <div {{ $attributes->class(['mt-10 flex items-start space-x-6']) }}>
-    <img src="{{ gravatar($campfire->host->email)  }}"
+    <img src="{{ $campfire->hostPhoto() }}"
          class="rounded-lg w-[54px] h-[54px]"
          alt="">
     <div>
