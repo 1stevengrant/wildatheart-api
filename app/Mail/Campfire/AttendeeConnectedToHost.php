@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail\Fires;
+namespace App\Mail\Campfire;
 
 use App\Models\Attendee;
 use App\Models\Campfire;

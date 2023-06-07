@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
+use App\Mail\Campfire\AttendeeConnectedToHost;
 use App\Mail\Campfire\AttendeeRegistered;
-use App\Mail\Fires\AttendeeConnectedToHost;
 use App\Models\Attendee;
 use Illuminate\Support\Facades\Mail;
 
