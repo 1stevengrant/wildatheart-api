@@ -35,7 +35,7 @@
             class="w-12 h-12 bg-white flex items-center justify-center rounded-full"
         >
             <img src="{{ auth()->user()->profilePhoto() }}"
-                 class="rounded-full w-9 h-9"
+                 class="rounded-full w-10 h-10"
                  alt="">
         </button>
 

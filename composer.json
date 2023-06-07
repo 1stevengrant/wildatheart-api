@@ -48,7 +48,8 @@
     },
     "autoload": {
         "files": [
-            "app/helpers.php"
+            "app/Support/helpers.php",
+            "app/Support/images.php"
         ],
         "psr-4": {
             "App\\": "app/",
