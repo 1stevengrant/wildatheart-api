@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
-use App\Mail\Campfire\Posted;
 use App\Models\User;
 use App\Rules\MustNotContainFire;
 use App\Rules\ShouldBeEmpty;
@@ -12,7 +11,6 @@ use App\Traits\HoneyPot;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\Redirector;
 use Livewire\WithFileUploads;
@@ -76,7 +74,7 @@ class HostCampfire extends Component
             'countryCode' => 'required|string',
             'token' => [
                 new ShouldBeEmpty(),
-            ]
+            ],
         ]);
 
         auth()->user()->update([
@@ -118,7 +116,7 @@ class HostCampfire extends Component
             'frequency' => 'required|string',
             'token' => [
                 new ShouldBeEmpty(),
-            ]
+            ],
         ]);
 
         $campfire = auth()->user()->campfires()->create([
