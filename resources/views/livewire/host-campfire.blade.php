@@ -18,6 +18,28 @@
             <div class="space-y-8 mt-6">
                 <div class="grid md:grid-cols-2 gap-8">
                     <div>
+                        <div>
+                            <x-forms.label
+                                for="first_name"
+                                label="First Name"/>
+                            <div>{{ auth()->user()->given_name }}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <x-forms.label
+                                for="last_name"
+                                label="Last Name"/>
+                            <div>{{ auth()->user()->family_name }}</div>
+                        </div>
+                    </div>
+                    <div class="col-span-2">
+                        <div>
+                            <x-forms.label for="email" label="Email"/>
+                            <div>{{ auth()->user()->email }}</div>
+                        </div>
+                    </div>
+                    <div>
                         <x-forms.country-phone-codes
                             label="Country Code"
                             required
@@ -268,7 +290,8 @@
     geocoderInput.setAttribute('id', 'geocoder-input')
 
     geocoder.on('result', (e) => {
-        @this.set('mapboxPlaceName', e.result.place_name, true)
+        @this.
+        set('mapboxPlaceName', e.result.place_name, true)
         const placeName = e.result.place_name,
             isUSAddress = placeName.includes('United States'),
             isCanadaAddress = placeName.includes('Canada'),
@@ -284,7 +307,8 @@
                 zip = stateZip[1],
                 country = addressComponents[3];
 
-            @this.set('street_address', address)
+            @this.
+            set('street_address', address)
             @this.set('city', city)
             @this.set('state', state)
             @this.set('zip', zip)
@@ -299,13 +323,15 @@
                 postcode = addressComponents[addressComponents.length - 2].trim(),
                 country = addressComponents[addressComponents.length - 1];
 
-            @this.set('street_address', address)
+            @this.
+            set('street_address', address)
             @this.set('city', city)
             @this.set('zip', postcode)
             @this.set('country', country)
         }
 
-        @this.set('latitude', e.result.geometry.coordinates[1])
+        @this.
+        set('latitude', e.result.geometry.coordinates[1])
         @this.set('longitude', e.result.geometry.coordinates[0])
     });
     </script>
