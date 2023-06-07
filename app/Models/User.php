@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\Response;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -82,21 +79,6 @@ class User extends Authenticatable
 
     public function profilePhoto(): string
     {
-        if (! app()->environment('local')) {
-
-            if ($this->image) {
-                $path = $this->image;
-                $file = Storage::get($path);
-                $type = Storage::mimeType($path);
-                $response = Response::make($file, 200);
-                $response->header('Content-Type', $type);
-
-                return $response;
-            }
-
-            return gravatar($this->host->email);
-        }
-
         return $this->image ? asset(auth()->user()->image) : gravatar(auth()->user()
             ->email);
 

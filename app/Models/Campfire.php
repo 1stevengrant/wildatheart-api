@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
 class Campfire extends Model
@@ -191,21 +189,6 @@ class Campfire extends Model
 
     public function hostPhoto(): string
     {
-        if (! app()->environment('local')) {
-            if ($this->image) {
-                $path = $this->image;
-                $file = Storage::get($path);
-                $type = Storage::mimeType($path);
-                $response = Response::make($file, 200);
-                $response->header('Content-Type', $type);
-
-                return $response;
-            }
-
-            return gravatar($this->host->email);
-        }
-
         return $this->host->image ? asset($this->host->image) : gravatar($this->host->email);
-
     }
 }
