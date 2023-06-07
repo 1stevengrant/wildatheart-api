@@ -4,8 +4,8 @@
     <div x-show="step === 1"
          class="md:w-1/2 mt-8 px-8 flex items-center justify-center relative">
 
-        <form wire:submit.prevent="handleStepOne"
-              class="md:w-2/3 mx-auto pb-8 md:pb-0">
+        <div
+            class="md:w-2/3 mx-auto pb-8 md:pb-0">
 
             <x-profile-stepper :step="$step"/>
 
@@ -60,9 +60,10 @@
 
                     </div>
                     <div class="text-sm">
-                        <x-forms.label for="file"
-                                       label="Profile Photo"
-                                       class="mt-2"/>
+                        <x-forms.label
+                            for="file"
+                            label="Profile Photo"
+                            class="mt-2"/>
                         <x-forms.instruction instruction="Your photo will only be used to help your community identify your
                                 fire.
                                 Wild at Heart will never
@@ -109,7 +110,10 @@
 
                 <x-button-container>
                     @include('partials.honeypot')
-                    <x-primary-button class="w-full">
+                    <x-primary-button
+                        class="w-full"
+                        type="submit"
+                        wire:click.prevent="handleStepOne">
                         Next
                     </x-primary-button>
 
@@ -119,14 +123,14 @@
 
                 </x-button-container>
             </div>
-        </form>
+        </div>
     </div>
 
     <div x-show="step === 2"
          class="md:w-1/2 mt-8 px-8 flex items-center justify-center">
 
-        <form wire:submit.prevent="handleStepTwo"
-              class="md:w-2/3 mx-auto relative">
+        <div
+            class="md:w-2/3 mx-auto relative">
 
             <x-profile-stepper :step="$step"/>
 
@@ -151,7 +155,7 @@
 
                 <div class="text-sm text-grey-200">
                     <p>Fire Naming Guidelines</p>
-                    <ul class="list-disc pl-8">
+                    <ul class="list-disc pl-8 mt-2">
                         <li>No special characters/emojis</li>
                         <li>Avoid location specific names as we give location elsewhere on your page. Example "Dallas
                             Fire"
@@ -169,11 +173,8 @@
                         <div id="geocoder"></div>
                     </div>
                     <x-forms.error :error="$errors->first('mapboxPlaceName')"/>
-                    <x-forms.instruction instruction="This address is specifically for the Fire. This will
-                            only be shared
-                            with Wild at Heart.
-                            Attendees will
-                            only see general area."/>
+                    <x-forms.instruction instruction="This address is specifically for the Fire. This will only be shared
+                            with Wild at Heart. Attendees will only see general area."/>
                 </div>
 
                 <div class="flex items-center">
@@ -183,39 +184,59 @@
                         required
                         :error="$errors->first('frequency')"
                         wire:model="frequency">
-                        <option value="monthly">Select</option>
-                        @foreach(\App\Enums\CampfireFrequency::values() as $frequency)
-                            <option value="{{ $frequency }}">
-                                {{ $frequency }}
-                            </option>
-                        @endforeach
+                        <option value="">Select</option>
+                        <option value="weekly">
+                            Weekly
+                        </option>
+                        <option value="monthly">
+                            Monthly
+                        </option>
+                        <option value="quarterly">
+                            Quarterly
+                        </option>
+                        <option value="twice monthly">
+                            Twice Monthly
+                        </option>
+                        <option value="every other month">
+                            Every Other Month
+                        </option>
                     </x-forms.select>
                 </div>
 
                 <x-button-container>
                     @include('partials.honeypot')
-                    <x-primary-button class="w-full">
+                    <x-primary-button
+                        type="submit"
+                        class="w-full"
+                        wire:click.prevent="handleStepTwo">
                         Next
                     </x-primary-button>
 
-                    <button @click="step = 1" class="text-sm py-3 text-grey-200">
+                    <button @click="step = 1"
+                            class="text-sm py-3 text-grey-200">
                         Cancel
                     </button>
 
                 </x-button-container>
             </div>
-
-
-        </form>
+        </div>
     </div>
 
     <div class="md:w-1/2 flex items-center justify-center
     @if($step === 1)
     md:bg-cover md:bg-center md:bg-campfire
     @endif">
-        @if($step === 2)
-            @include('partials.preview-campfire')
-        @endif
+        <div x-show="step === 2" class="w-1/2">
+            <x-campfire-card
+                :title="$campfireName"
+                :frequency="$frequency"
+                :location="$city"
+                :host-name="auth()->user()->full_name"
+                :profile-image="auth()->user()->image ? asset('storage/'. auth()->user()->profilePhoto()) : gravatar(auth()->user()->email)"
+            />
+        </div>
+
+
     </div>
 </div>
 @push('head')
@@ -263,11 +284,11 @@
                 zip = stateZip[1],
                 country = addressComponents[3];
 
-            @this.set('street_address', address, true)
-            @this.set('city', city, true)
-            @this.set('state', state, true)
-            @this.set('zip', zip, true)
-            @this.set('country', country, true)
+            @this.set('street_address', address)
+            @this.set('city', city)
+            @this.set('state', state)
+            @this.set('zip', zip)
+            @this.set('country', country)
         }
 
         if (isUKAddress || isCanadaAddress) {
@@ -278,14 +299,14 @@
                 postcode = addressComponents[addressComponents.length - 2].trim(),
                 country = addressComponents[addressComponents.length - 1];
 
-            @this.set('street_address', address, true)
-            @this.set('city', city, true)
-            @this.set('zip', postcode, true)
-            @this.set('country', country, true)
+            @this.set('street_address', address)
+            @this.set('city', city)
+            @this.set('zip', postcode)
+            @this.set('country', country)
         }
 
-        @this.set('latitude', e.result.geometry.coordinates[1], true)
-        @this.set('longitude', e.result.geometry.coordinates[0] , true)
+        @this.set('latitude', e.result.geometry.coordinates[1])
+        @this.set('longitude', e.result.geometry.coordinates[0])
     });
     </script>
 @endpush

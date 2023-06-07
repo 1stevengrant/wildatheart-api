@@ -77,4 +77,11 @@ class User extends Authenticatable
     {
         return $this->email_verified_at !== null;
     }
+
+    public function profilePhoto()
+    {
+        ray($this);
+
+        return $this->image;
+    }
 }

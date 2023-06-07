@@ -69,8 +69,10 @@ class SendGift extends Component
             $this->company = auth()->user()->company ?? '';
             $this->address1 = $this->campfire->street_address ?? '';
             $this->city = $this->campfire->city ?? '';
+            $this->state = $this->campfire->state ?? '';
             $this->zip = $this->campfire->zip ?? '';
             $this->phone = auth()->user()->phone ?? '';
+            $this->country = getCountryCodeFromCountryName($this->campfire->country) ?? '';
         }
     }
 

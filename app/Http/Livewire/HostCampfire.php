@@ -80,7 +80,7 @@ class HostCampfire extends Component
         auth()->user()->update([
             'phone' => $this->phone,
             'country_code' => $this->countryCode,
-            'image' => $this->photo ? $this->photo->store('users') : null,
+            'image' => $this->photo ? $this->photo->storeAs('users') : auth()->user()->image,
             'opted_into_marketing' => $this->emailUpdates,
             'profile_step' => 2,
         ]);

@@ -129,8 +129,8 @@
         new mapboxgl.Popup({closeOnClick: false})
             .setLngLat(currentFeature.geometry.coordinates)
             .setHTML(
-                `<h3>${currentFeature.properties.title ?? currentFeature.properties.city + ', ' + currentFeature
-                    .properties.state }</h3><h4>Host:
+                `<h3>${currentFeature.properties.title ?? currentFeature.properties.city + ', ' + currentFeature.properties.state }</h3>
+<h4>Host:
                 ${currentFeature.properties.host}</h4><a href="${currentFeature.properties.url}">View Fire</a>`
             )
             .addTo(map);

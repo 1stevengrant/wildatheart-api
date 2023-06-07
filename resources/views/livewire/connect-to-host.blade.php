@@ -139,26 +139,13 @@
 
                         </div>
                         <div class="hidden w-1/2 md:flex flex-col items-center justify-center">
-                            <div class="rounded-md border-grey-darker border p-5 w-1/2 shadow-lg">
-                                <div class="flex items-stretch space-x-4">
-                                    <img src="{{ asset('img/campfire.png') }}"
-                                         class="rounded-md"
-                                         alt="">
-                                    <div class="flex flex-col justify-between relative">
-                                        <div>
-                                            <p class="text-white">{{ $campfire->title() }}</p>
-                                        </div>
-                                        <div class="flex items-center space-x-2">
-                                            <img src="{{ gravatar($campfire->host->email, 'campfire-profile') }}"
-                                                 class="rounded-full"
-                                                 alt="">
-                                            <div class="text-[#BABABA] text-sm">Hosted
-                                                by {{ $campfire->host->full_name }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                            <x-campfire-card
+                                :title="$campfire->title()"
+                                :frequency="$campfire->frequency->name"
+                                :location="$campfire->location()"
+                                :host-name="$campfire->host->fullName"
+                                :profile-image="$campfire->host->image"
+                            />
                         </div>
                     </div>
                 </div>
