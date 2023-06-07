@@ -43,6 +43,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect(env('AUTH0_DOMAIN') . '/oidc/logout?post_logout_redirect_uri=' . urlencode(url('/')) . '&client_id=' . env('AUTH0_CLIENT_ID'));
+        return redirect(env('AUTH0_DOMAIN').'/oidc/logout?post_logout_redirect_uri='.urlencode(url('/')).'&client_id='.env('AUTH0_CLIENT_ID'));
     }
 }
