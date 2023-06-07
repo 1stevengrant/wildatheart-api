@@ -3,7 +3,7 @@
         <div class="md:w-1/2 text-grey-200">
 
             <h1 class="text-white text-[39px]">
-                Great! One Last Step {{ auth()->user()->given_name ? auth()->user()->given_name : "" }}.
+                Great! One Last Step{{ auth()->user()->given_name ? ' ' . auth()->user()->given_name : "." }}
             </h1>
 
             <p class="my-6">Please click on the link in the email we just sent you to finalize your listing.</p>
