@@ -34,7 +34,7 @@
             type="button"
             class="w-12 h-12 bg-white flex items-center justify-center rounded-full"
         >
-            <img src="{{ Gravatar::get(auth()->user()->email) }}"
+            <img src="{{ auth()->user()->profilePhoto() }}"
                  class="rounded-full w-9 h-9"
                  alt="">
         </button>
