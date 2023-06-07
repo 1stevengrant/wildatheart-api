@@ -16,7 +16,7 @@ class ShouldBeEmpty implements ValidationRule
     {
         if (! empty($value)) {
             abort(422, 'Spam detected.');
-//            $fail('The :attribute should be empty.');
+            //            $fail('The :attribute should be empty.');
         }
     }
 }

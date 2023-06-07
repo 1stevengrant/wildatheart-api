@@ -67,8 +67,8 @@ class ConnectToHost extends Component
             'emailUpdates' => 'required|boolean',
             'countryCode' => 'required|string|max:3',
             'token' => [
-                new ShouldBeEmpty()
-            ]
+                new ShouldBeEmpty(),
+            ],
         ]);
 
         $this->campfire->attendees()->create([
@@ -85,7 +85,7 @@ class ConnectToHost extends Component
         $this->emit('closeConnectToHost');
 
         $this->dispatchBrowserEvent('notify', [
-            'message' => 'You have connected with ' . $this->campfire->host->given_name . '!',
+            'message' => 'You have connected with '.$this->campfire->host->given_name.'!',
             'timeout' => null,
         ]);
         $this->dispatchBrowserEvent('registered-for-campfire');
