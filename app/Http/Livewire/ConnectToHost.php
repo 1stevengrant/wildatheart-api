@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Campfire;
 use App\Models\State;
+use App\Rules\ShouldBeEmpty;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -31,6 +32,8 @@ class ConnectToHost extends Component
     public string $countryCode = '1';
 
     public bool $emailUpdates = true;
+
+    public string $token = '';
 
     public function mount(Campfire $campfire): void
     {
@@ -63,6 +66,9 @@ class ConnectToHost extends Component
             'city' => 'required|string|max:255',
             'emailUpdates' => 'required|boolean',
             'countryCode' => 'required|string|max:3',
+            'token' => [
+                new ShouldBeEmpty()
+            ]
         ]);
 
         $this->campfire->attendees()->create([
