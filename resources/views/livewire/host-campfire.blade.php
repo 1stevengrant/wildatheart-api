@@ -232,7 +232,7 @@
                 :frequency="$frequency"
                 :location="$city"
                 :host-name="auth()->user()->full_name"
-                :profile-image="auth()->user()->image ? asset('storage/'. auth()->user()->profilePhoto()) : gravatar(auth()->user()->email)"
+                :profile-image="auth()->user()->profilePhoto()"
             />
         </div>
 

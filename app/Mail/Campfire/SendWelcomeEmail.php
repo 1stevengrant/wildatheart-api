@@ -22,7 +22,7 @@ class SendWelcomeEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Fire has been approved!',
+            subject: 'Your Fire is live!',
         );
     }
 

@@ -14,7 +14,7 @@
         <div class="flex flex-col justify-between relative">
 
             <div>
-                <div class="text-grey-200 text-sm capitalize ">
+                <div class="text-grey-200 text-sm capitalize">
                     {{ $frequency }}
                 </div>
                 @if($title)

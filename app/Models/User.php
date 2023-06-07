@@ -80,8 +80,8 @@ class User extends Authenticatable
 
     public function profilePhoto()
     {
-        ray($this);
+        return $this->image ? asset('storage/'. auth()->user()->image) : gravatar(auth()->user()
+            ->email);
 
-        return $this->image;
     }
 }
