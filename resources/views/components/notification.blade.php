@@ -10,7 +10,8 @@
     messages.push(message);
     if (timeout !== null) {
         setTimeout(() => { remove(message) }, timeout)
-    }"
+    }
+    "
     class="fixed inset-0 flex flex-col items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:justify-start
      space-y-4 z-50"
 >
