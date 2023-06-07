@@ -44,6 +44,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect(config('services.auth0.base_url').'/oidc/logout?post_logout_redirect_uri='.urlencode(url('/')
-            ).'&client_id='. config('services.auth0.client_id'));
+        ).'&client_id='.config('services.auth0.client_id'));
     }
 }
