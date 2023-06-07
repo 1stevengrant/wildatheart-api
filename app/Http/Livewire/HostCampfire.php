@@ -5,8 +5,8 @@ namespace App\Http\Livewire;
 use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Models\User;
-use App\Rules\MustNotContainFire;
 use App\Rules\ShouldBeEmpty;
+use App\Rules\ShouldNotEndWithFire;
 use App\Traits\HoneyPot;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -109,7 +109,7 @@ class HostCampfire extends Component
                 'min:2',
                 'string',
                 'max:255',
-                new MustNotContainFire(),
+                new ShouldNotEndWithFire(),
                 new DoesntContainEmojis(),
             ],
             'mapboxPlaceName' => 'required|string',

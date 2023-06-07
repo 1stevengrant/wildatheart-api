@@ -341,7 +341,7 @@ if (! function_exists('getCountries')) {
     }
 }
 
-if (!function_exists('getCountryCode')) {
+if (! function_exists('getCountryCode')) {
     function getCountryCodeFromCountryName(string $countryName): bool|int|string
     {
         return array_search($countryName, getCountries());
