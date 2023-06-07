@@ -13,6 +13,8 @@ use Livewire\Component;
 
 class ConnectToHost extends Component
 {
+    use \App\Traits\HoneyPot;
+
     public Campfire|string $campfire;
 
     public string $firstName = '';
@@ -32,8 +34,6 @@ class ConnectToHost extends Component
     public string $countryCode = '1';
 
     public bool $emailUpdates = true;
-
-    public string $token = '';
 
     public function mount(Campfire $campfire): void
     {

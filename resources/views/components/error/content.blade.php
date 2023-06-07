@@ -13,7 +13,7 @@
         <div>
             {{ $exception->getStatusCode() }}
         </div>
-        <div class="max-w-md">
+        <div class="max-w-md mx-auto">
             {{ $exception->getMessage() }}
         </div>
         <a class="text-base border-b border-white hover:border-transparent"

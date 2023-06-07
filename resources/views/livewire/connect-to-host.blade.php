@@ -126,9 +126,7 @@
 
 
                                     <div class="mt-12">
-                                        <label for="">
-                                            <input type="text" wire:model="token" style="display: none">
-                                        </label>
+                                        @include('partials.honeypot')
                                         <x-primary-button
                                             type="submit"
                                             class="w-full">
