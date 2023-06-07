@@ -9,8 +9,6 @@
                 <div class="md:w-2/3">
                     <h1 class="text-3xl leading-tighter mb-8">{{ $campfire->title() }}</h1>
 
-                    <x-campfire-carousel/>
-
                     <x-campfire-host-info :campfire="$campfire"/>
 
                     <x-campfire-meta :campfire="$campfire"/>
@@ -87,17 +85,27 @@
                     </div>
                 </div>
             </div>
+
+            <x-campfire-carousel/>
         </div>
     </div>
 
     <div id="mobile-connect-with-host"
          x-show="!connectToHost"
          class="md:hidden px-4 py-6 fixed bottom-0 left-0 right-0 border-t border-grey-darker bg-black">
+        @if(!$hasConnected)
         <x-primary-button
             @click="connectToHost = true"
             class="w-full">
             Connect with Host
         </x-primary-button>
+        @else
+            <x-primary-button
+                disabled
+                class="w-full">
+                You have connected with {{ $campfire->host->given_name }}
+            </x-primary-button>
+        @endif
     </div>
 
 
@@ -124,7 +132,7 @@
             const campfireElement = document.getElementById('campfire'),
                 connectWithHostElement = document.getElementById('mobile-connect-with-host');
 
-            campfireElement.style.paddingBottom = connectWithHostElement.offsetHeight + 'px';
+            campfireElement.style.paddingBottom = (connectWithHostElement.offsetHeight + 16) + 'px';
         }
 
     });

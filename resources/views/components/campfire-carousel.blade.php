@@ -1,8 +1,5 @@
 <ul {{ $attributes->class(['overflow-x-auto snap-mandatory snap-x grid gap-4 md:gap-6 md:hidden // card-grid']) }}>
     <div class="snap-center ">
-        <img src="{{ asset('img/fires/Image1.webp') }}" class="rounded-lg" alt="">
-    </div>
-    <div class="snap-center ">
         <img src="{{ asset('img/fires/Image2.webp') }}"  class="rounded-lg" alt="">
     </div>
     <div class="snap-center ">

@@ -20,8 +20,6 @@ class ConnectToHost extends Component
 
     public string $email = '';
 
-    public string $confirmEmail = '';
-
     public string $state = '';
 
     public Collection $states;
@@ -31,8 +29,6 @@ class ConnectToHost extends Component
     public string $phone = '';
 
     public string $countryCode = '1';
-
-    public string $confirmPhone = '';
 
     public bool $emailUpdates = true;
 
@@ -50,9 +46,7 @@ class ConnectToHost extends Component
             $this->firstName = auth()->user()->given_name ?? '';
             $this->lastName = auth()->user()->family_name ?? '';
             $this->email = auth()->user()->email;
-            $this->confirmEmail = auth()->user()->email;
             $this->phone = auth()->user()->phone ?? '';
-            $this->confirmPhone = auth()->user()->phone ?? '';
             $this->state = auth()->user()->state ?? '';
             $this->city = auth()->user()->city ?? '';
         }
@@ -61,16 +55,14 @@ class ConnectToHost extends Component
     public function handle(): void
     {
         $this->validate([
-            'firstName' => 'required|string',
-            'lastName' => 'required|string',
-            'email' => 'required|email',
-            'confirmEmail' => 'required|email|same:email',
-            'phone' => 'required|string',
-            'confirmPhone' => 'required|string|same:phone',
-            'state' => 'required|string',
-            'city' => 'required|string',
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'string|min:7|max:15',
+            'state' => 'string|max:255',
+            'city' => 'required|string|max:255',
             'emailUpdates' => 'required|boolean',
-            'countryCode' => 'required|string',
+            'countryCode' => 'required|string|max:3',
         ]);
 
         $this->campfire->attendees()->create([
