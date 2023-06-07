@@ -21,7 +21,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Component::macro('notify', function ($message): void {
-            $this->dispatchBrowserEvent('notify', $message);
+            $this->dispatchBrowserEvent('notify', [
+                'message' => $message,
+                'timeout' => $timeout ?? 7000,
+            ]);
         });
     }
 }

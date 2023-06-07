@@ -78,7 +78,10 @@ class ConnectToHost extends Component
 
         $this->emit('closeConnectToHost');
 
-        $this->dispatchBrowserEvent('notify', 'You have connected with '.$this->campfire->host->given_name.'!');
+        $this->dispatchBrowserEvent('notify', [
+            'message' => 'You have connected with ' . $this->campfire->host->given_name . '!' ,
+            'timeout' => null,
+        ]);
         $this->dispatchBrowserEvent('registered-for-campfire');
         $this->emit('registeredForCampfire');
 
