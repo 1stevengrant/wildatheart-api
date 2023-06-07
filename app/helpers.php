@@ -67,6 +67,11 @@ if (! function_exists('getCountries')) {
     function getCountries(): array
     {
         return [
+            'US' => 'United States',
+            'CA' => 'Canada',
+            'UK' => 'United Kingdom',
+            'AU' => 'Australia',
+            'NZ' => 'New Zealand',
             'AF' => 'Afghanistan',
             'AL' => 'Albania',
             'DZ' => 'Algeria',
@@ -333,5 +338,12 @@ if (! function_exists('getCountries')) {
             'AX' => 'Åland Islands',
         ];
 
+    }
+}
+
+if (!function_exists('getCountryCode')) {
+    function getCountryCodeFromCountryName(string $countryName): bool|int|string
+    {
+        return array_search($countryName, getCountries());
     }
 }
