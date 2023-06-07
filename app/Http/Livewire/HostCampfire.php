@@ -7,6 +7,8 @@ use App\Actions\User\UpdateUserRole;
 use App\Mail\Campfire\Posted;
 use App\Models\User;
 use App\Rules\MustNotContainFire;
+use App\Rules\ShouldBeEmpty;
+use App\Traits\HoneyPot;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,7 +20,7 @@ use Repat\LaravelRules\DoesntContainEmojis;
 
 class HostCampfire extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, HoneyPot;
 
     public int $step = 1;
 
@@ -72,6 +74,9 @@ class HostCampfire extends Component
             'phone' => 'required|min:10|numeric',
             'emailUpdates' => 'required|boolean',
             'countryCode' => 'required|string',
+            'token' => [
+                new ShouldBeEmpty(),
+            ]
         ]);
 
         auth()->user()->update([
@@ -83,6 +88,8 @@ class HostCampfire extends Component
         ]);
 
         $this->step = 2;
+
+        $this->dispatchBrowserEvent('next-step');
     }
 
     public function messages(): array
@@ -109,6 +116,9 @@ class HostCampfire extends Component
             ],
             'mapboxPlaceName' => 'required|string',
             'frequency' => 'required|string',
+            'token' => [
+                new ShouldBeEmpty(),
+            ]
         ]);
 
         $campfire = auth()->user()->campfires()->create([
@@ -123,8 +133,6 @@ class HostCampfire extends Component
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
         ]);
-
-        Mail::to(config('mail.to.address'))->send(new Posted($campfire));
 
         UpdateUserRole::make()->handle(
             user: auth()->user(),

@@ -79,23 +79,24 @@
                     <x-forms.label
                         for="emailUpdates"
                         label="Updates & Resources"/>
-                    <div class="flex items-center space-x-4">
+                    <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
                         <div class="flex items-center rounded-full bg-[#171513]">
                             <button
                                 type="button"
                                 wire:click.prevent="$set('emailUpdates', true)"
-                                class="px-10 py-3 text-sm font-semibold @if($emailUpdates) border border-white text-white
-                            rounded-l-full
-                            @endif"
+                                class="px-10 py-3 text-sm font-semibold w-1/2
+                                @if($emailUpdates)
+                                border border-white text-white rounded-l-full
+                                @endif"
                             >
                                 Yes
                             </button>
                             <button
                                 type="button"
                                 wire:click.prevent="$set('emailUpdates', false)"
-                                class="px-10 py-3 text-sm font-semibold @if(!$emailUpdates) border border-white text-white
-                            rounded-r-full
-                                    @endif"
+                                class="px-10 py-3 text-sm font-semibold w-1/2
+                                @if(!$emailUpdates) border border-white text-white rounded-r-full
+                                @endif"
                             >
                                 No
                             </button>
@@ -107,6 +108,7 @@
                 </div>
 
                 <x-button-container>
+                    @include('partials.honeypot')
                     <x-primary-button class="w-full">
                         Next
                     </x-primary-button>
@@ -143,10 +145,8 @@
                         :error="$errors->first('campfireName')"
                         id="campfireName"
                         name="campfireName"
+                        append="Fire"
                     />
-                    <div>
-                        Fire
-                    </div>
                 </div>
 
                 <div class="text-sm text-grey-200">
@@ -193,13 +193,14 @@
                 </div>
 
                 <x-button-container>
+                    @include('partials.honeypot')
                     <x-primary-button class="w-full">
                         Next
                     </x-primary-button>
 
-                    <a href="{{ route('home') }}" class="text-sm py-3 text-grey-200">
+                    <button @click="step = 1" class="text-sm py-3 text-grey-200">
                         Cancel
-                    </a>
+                    </button>
 
                 </x-button-container>
             </div>
@@ -208,7 +209,10 @@
         </form>
     </div>
 
-    <div class="md:w-1/2 flex items-center justify-center @if($step === 1) bg-cover bg-center bg-campfire @endif">
+    <div class="md:w-1/2 flex items-center justify-center
+    @if($step === 1)
+    md:bg-cover md:bg-center md:bg-campfire
+    @endif">
         @if($step === 2)
             @include('partials.preview-campfire')
         @endif
@@ -222,6 +226,14 @@
     <script>
     document.addEventListener('livewire:load', function () {
         document.title = 'Host a Fire | {{ config('app.name') }}';
+    });
+
+    window.addEventListener('next-step', event => {
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
     });
 
     const geocoder = new MapboxGeocoder({

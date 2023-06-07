@@ -1,4 +1,4 @@
-<div class="rounded-md border-grey-darker border p-5 w-1/2 shadow-lg">
+<div class="hidden md:block rounded-md border-grey-darker border p-5 md:w-1/2 shadow-lg">
     <div class="flex items-stretch space-x-4">
         <img src="{{ asset('img/campfire.png') }}"
              class="rounded-md"
