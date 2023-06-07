@@ -78,9 +78,9 @@ class User extends Authenticatable
         return $this->email_verified_at !== null;
     }
 
-    public function profilePhoto()
+    public function profilePhoto(): string
     {
-        return $this->image ? asset('storage/'. auth()->user()->image) : gravatar(auth()->user()
+        return $this->image ? asset(auth()->user()->image) : gravatar(auth()->user()
             ->email);
 
     }
