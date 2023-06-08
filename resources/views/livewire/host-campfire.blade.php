@@ -41,14 +41,14 @@
                             wire:model.defer="lastName"
                             :error="$errors->first('lastName')"
                             label="Last Name"/>
-                        @else
-                            <div>
-                                <x-forms.label
-                                    for="last_name"
-                                    label="Last Name"/>
-                                <div>{{ auth()->user()->family_name }}</div>
-                            </div>
-                        @endif
+                    @else
+                        <div>
+                            <x-forms.label
+                                for="last_name"
+                                label="Last Name"/>
+                            <div>{{ auth()->user()->family_name }}</div>
+                        </div>
+                    @endif
                     <div class="col-span-2">
                         <div>
                             <x-forms.label for="email" label="Email"/>
@@ -176,7 +176,17 @@
                 Tell us about your Fire
             </x-type.registration-h1>
 
-            <div class="space-y-4">
+            <div x-show="step === 2" class="md:hidden">
+                <x-campfire-card
+                    :title="$campfireName"
+                    :frequency="$frequency"
+                    :location="$city"
+                    :host-name="auth()->user()->full_name"
+                    :profile-image="auth()->user()->profilePhoto()"
+                />
+            </div>
+
+            <div class="space-y-4 mt-8">
 
                 <div class="flex items-center space-x-4">
                     <x-forms.input
@@ -215,6 +225,64 @@
                             with Wild at Heart. Attendees will only see general area."/>
                 </div>
 
+                @if($mapboxPlaceName)
+
+                    <x-forms.instruction
+                        class="italic"
+                        instruction="Please correct any errors from autocompletion"/>
+
+                    <x-forms.input
+                        wire:model="street_address"
+                        label="Street Address"
+                        required
+                        :error="$errors->first('street_address')"
+                        name="street_address"/>
+
+                    <x-forms.input
+                        wire:model="city"
+                        label="City"
+                        required
+                        :error="$errors->first('city')"
+                        name="city"/>
+
+                    <x-forms.select
+                        name="state"
+                        label="State"
+                        required
+                        :error="$errors->first('state')"
+                        wire:model="state">
+                        <option value="">Select</option>
+                        <option value="-">Not Applicable</option>
+                        @foreach(\App\Models\State::all() as $state)
+                            <option value="{{ $state->code }}">
+                                {{ $state->name }}
+                            </option>
+                        @endforeach
+                    </x-forms.select>
+
+                    <x-forms.select
+                        name="country"
+                        label="Country"
+                        :error="$errors->first('country')"
+                        required
+                        wire:model="country">
+                        <option value="">Select Country</option>
+                        @foreach(getCountries() as $key => $country)
+                            <option value="{{ $country }}">
+                                {{ $country }}
+                            </option>
+                        @endforeach
+                    </x-forms.select>
+
+                    <x-forms.input
+                        wire:model="zip"
+                        label="Zip Code"
+                        :error="$errors->first('zip')"
+                        name="zip"
+                        required/>
+
+                @endif
+
                 <div class="flex items-center">
                     <x-forms.select
                         name="frequency"
@@ -245,7 +313,7 @@
                     @include('partials.honeypot')
                     <x-primary-button
                         type="submit"
-                        class="w-full"
+                        class="w-full mt-8"
                         wire:click.prevent="handleStepTwo">
                         Next
                     </x-primary-button>
@@ -264,7 +332,7 @@
     @if($step === 1)
     md:bg-cover md:bg-center md:bg-campfire
     @endif">
-        <div x-show="step === 2" class="w-1/2">
+        <div x-show="step === 2" class="hidden md:block">
             <x-campfire-card
                 :title="$campfireName"
                 :frequency="$frequency"
@@ -306,8 +374,7 @@
     geocoderInput.setAttribute('id', 'geocoder-input')
 
     geocoder.on('result', (e) => {
-        @this.
-        set('mapboxPlaceName', e.result.place_name, true)
+        @this.set('mapboxPlaceName', e.result.place_name, true)
         const placeName = e.result.place_name,
             isUSAddress = placeName.includes('United States'),
             isCanadaAddress = placeName.includes('Canada'),
@@ -323,8 +390,7 @@
                 zip = stateZip[1],
                 country = addressComponents[3];
 
-            @this.
-            set('street_address', address)
+            @this.set('street_address', address)
             @this.set('city', city)
             @this.set('state', state)
             @this.set('zip', zip)
@@ -339,15 +405,13 @@
                 postcode = addressComponents[addressComponents.length - 2].trim(),
                 country = addressComponents[addressComponents.length - 1];
 
-            @this.
-            set('street_address', address)
+            @this.set('street_address', address)
             @this.set('city', city)
             @this.set('zip', postcode)
             @this.set('country', country)
         }
 
-        @this.
-        set('latitude', e.result.geometry.coordinates[1])
+        @this.set('latitude', e.result.geometry.coordinates[1])
         @this.set('longitude', e.result.geometry.coordinates[0])
     });
     </script>

@@ -55,7 +55,7 @@ class ImportCampfires extends Command
                 'name' => $campfire['First Name'].' '.$campfire['Last Name'],
                 'given_name' => $campfire['First Name'],
                 'family_name' => $campfire['Last Name'],
-                'email' => $this->sanitizeEmail(($campfire['Primary Contact Email'])),
+                'email' => $campfire['Primary Contact Email'],
                 'phone' => $campfire['Phone'] !== '' ? $campfire['Phone'] : null,
             ]);
 
@@ -72,6 +72,7 @@ class ImportCampfires extends Command
                 'is_private' => ! ($campfire['Public Listing'] === 'x'),
                 'approved_at' => now(),
                 'is_existing' => true,
+                'country' => 'United States',
             ]);
 
             if ($campfire['Books Shipped'] !== '') {
@@ -94,10 +95,5 @@ class ImportCampfires extends Command
         $this->line('');
 
         $this->info('All done!');
-    }
-
-    protected function sanitizeEmail($email): string
-    {
-        return strtolower(str_replace(' ', '', $email));
     }
 }

@@ -123,6 +123,10 @@ class HostCampfire extends Component
                 new DoesntContainEmojis(),
             ],
             'mapboxPlaceName' => 'required|string',
+            'street_address' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
             'frequency' => 'required|string',
             'token' => [
                 new ShouldBeEmpty(),

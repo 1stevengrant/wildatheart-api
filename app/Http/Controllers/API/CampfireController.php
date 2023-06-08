@@ -27,6 +27,7 @@ class CampfireController extends Controller
                     'state' => getStateAbbreviation($campfire->state),
                     'city' => $campfire->city,
                     'title' => $campfire->title(),
+                    'location' => $campfire->location(),
                     'attendee_limit' => $campfire->attendee_limit,
                     'spaces_remaining' => $campfire->remaining,
                     'url' => route('view.campfire', $campfire->id),

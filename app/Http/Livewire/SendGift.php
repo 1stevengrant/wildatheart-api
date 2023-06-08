@@ -10,6 +10,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Component;
 
 class SendGift extends Component
@@ -79,16 +80,19 @@ class SendGift extends Component
     public function handle(): void
     {
         $this->validate([
-            'country' => 'required',
-            'firstName' => 'required',
-            'lastName' => 'required',
+            'country' => 'required|max:255',
+            'firstName' => 'required|max:255|min:2',
+            'lastName' => 'required|max:255|min:2',
             'company' => 'nullable',
-            'address1' => 'required',
+            'address1' => 'required|max:255',
             'address2' => 'nullable',
-            'city' => 'required',
-            'state' => 'nullable',
-            'zip' => 'required',
-            'phone' => 'nullable',
+            'city' => 'required|max:255',
+            'state' => [
+                'nullable',
+                new RequiredIf($this->country === 'US'),
+            ],
+            'zip' => 'required|max:20|min:5',
+            'phone' => 'nullable|numeric|min:7|max:15',
         ]);
 
         CreateAddress::run([

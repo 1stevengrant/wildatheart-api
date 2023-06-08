@@ -6,7 +6,7 @@
     'hostName' => false,
 ])
 
-<div {{ $attributes->class(['rounded-md border-grey-darker border p-4 shadow-lg']) }}>
+<div {{ $attributes->class(['rounded-md border-grey-darker border p-2 md:p-4 shadow-lg']) }}>
     <div class="flex items-stretch space-x-4">
         <img src="{{ asset('img/campfire.png') }}"
              class="rounded-md"
@@ -26,7 +26,7 @@
                 <img src="{{ $profileImage }}"
                      class="rounded-full w-6 h-6 object-fill object-fit"
                      alt="">
-                <div class="text-[#BABABA] text-sm">Hosted
+                <div class="text-[#BABABA] text-sm leading-tighter">Hosted
                     by {{ $hostName }}</div>
             </div>
         </div>

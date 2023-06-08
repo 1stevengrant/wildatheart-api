@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Builders\CampfireBuilder;
 use App\Enums\CampfireFrequency;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -142,7 +143,10 @@ class Campfire extends Model
 
     public function location(): string
     {
-        return $this->city.', '.getStateAbbreviation($this->state);
+        if ($this->state) {
+            return $this->city.', '.getStateAbbreviation($this->state);
+        }
+        return $this->city;
     }
 
     public function address(): HasOne
@@ -196,5 +200,13 @@ class Campfire extends Model
         }
 
         return asset('svgs/user.svg');
+    }
+
+    protected function country(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $value,
+            set: fn (string $value) => getCountryCodeFromCountryName($value),
+        );
     }
 }

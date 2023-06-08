@@ -1,17 +1,19 @@
 <div x-data="{connectToHost: false}"
      @registered-for-campfire.window="connectToHost = false">
-    <div id="map" class="h-[300px]"></div>
+    <div id="map" class="h-[150px] md:h-[300px]"></div>
     <div id="campfire"
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
 
         <div class="container mx-auto">
             <div class="md:flex md:space-x-8">
                 <div class="md:w-2/3">
-                    <h1 class="text-3xl leading-tighter mb-8">{{ $campfire->title() }}</h1>
+                    <h1 class="text-3xl leading-tighter mb-8">{{ $campfire->title() }} {{ $campfire->location() }}</h1>
 
-                    <x-campfire-host-info :campfire="$campfire"/>
+                    <x-campfire-host-info
+                        :campfire="$campfire"/>
 
-                    <x-campfire-meta :campfire="$campfire"/>
+                    <x-campfire-meta
+                        :campfire="$campfire"/>
 
                     <div class="mt-8 space-y-4 pb-12 md:pb-0">
 
@@ -94,11 +96,11 @@
          x-show="!connectToHost"
          class="md:hidden px-4 py-6 fixed bottom-0 left-0 right-0 border-t border-grey-darker bg-black">
         @if(!$hasConnected)
-        <x-primary-button
-            @click="connectToHost = true"
-            class="w-full">
-            Connect with Host
-        </x-primary-button>
+            <x-primary-button
+                @click="connectToHost = true"
+                class="w-full">
+                Connect with Host
+            </x-primary-button>
         @else
             <x-primary-button
                 disabled
@@ -127,7 +129,7 @@
     <script>
 
     document.addEventListener('livewire:load', function () {
-       document.title = "{!!  $campfire->title() ?? $campfire->location() !!} | {{ config('app.name') }}";
+        document.title = "{!!  $campfire->title() ?? $campfire->location() !!} | {{ config('app.name') }}";
         if (window.innerWidth < 768) {
             const campfireElement = document.getElementById('campfire'),
                 connectWithHostElement = document.getElementById('mobile-connect-with-host');
