@@ -1,13 +1,10 @@
-<div class="md:flex h-screen text-white"
-     x-data="{ step: @entangle('step') }">
+<div class="md:flex h-screen text-white " x-data="{ step: @entangle('step') }">
 
-    <div x-show="step === 1"
-         class="md:w-1/2 mt-8 px-8 flex items-center justify-center relative">
+    <div x-show="step === 1" class="md:w-1/2 mt-8 px-8 flex items-center justify-center relative overflow-auto">
 
-        <div
-            class="md:w-2/3 mx-auto pb-8 md:pb-0">
+        <div class="md:w-2/3 mx-auto pb-8 md:pb-0 h-full ">
 
-            <x-profile-stepper :step="$step"/>
+            <x-profile-stepper :step="$step" />
 
             <x-type.registration-h1 class="mt-12">
                 We're stoked you want to start a Fire! Just a few questions.
@@ -18,107 +15,71 @@
             <div class="space-y-8 mt-6">
                 <div class="grid md:grid-cols-2 gap-8">
 
-                    <x-forms.input
-                        name="first_name"
-                        id="first_name"
-                        required
-                        wire:model.defer="firstName"
-                        :error="$errors->first('firstName')"
-                        label="First Name"/>
+                    <x-forms.input name="first_name" id="first_name" required wire:model.defer="firstName"
+                        :error="$errors->first('firstName')" label="First Name" />
 
 
-                    <x-forms.input
-                        name="last_name"
-                        id="last_name"
-                        required
-                        wire:model.defer="lastName"
-                        :error="$errors->first('lastName')"
-                        label="Last Name"/>
+                    <x-forms.input name="last_name" id="last_name" required wire:model.defer="lastName"
+                        :error="$errors->first('lastName')" label="Last Name" />
                     <div class="col-span-2">
                         <div>
-                            <x-forms.label for="email" label="Email"/>
+                            <x-forms.label for="email" label="Email" />
                             <div>{{ auth()->user()->email }}</div>
                         </div>
                     </div>
                     <div>
-                        <x-forms.country-phone-codes
-                            label="Country Code"
-                            required
-                            name="countryCode"
-                            wire:model="countryCode"
-                            instruction="Select your country code"
-                        />
+                        <x-forms.country-phone-codes label="Country Code" required name="countryCode"
+                            wire:model="countryCode" instruction="Select your country code" />
                     </div>
                     <div>
-                        <x-forms.input
-                            name="phone"
-                            id="phone"
-                            required
-                            wire:model.defer="phone"
-                            :error="$errors->first('phone')"
-                            instruction="We may occasionally send you text messages."
-                            label="Phone Number"/>
+                        <x-forms.input name="phone" id="phone" required wire:model.defer="phone"
+                            :error="$errors->first('phone')" instruction="We may occasionally send you text messages."
+                            label="Phone Number" />
                     </div>
                 </div>
 
                 <div class="flex items-center space-x-4">
                     <div>
-                        <input type="file"
-                               name="file"
-                               id="file"
-                               wire:model.defer="photo"
-                               class="inputfile outline-none focus:border-none focus:outline-none focus:ring-orange"/>
-                        @if(!$photo)
+                        <input type="file" name="file" id="file" wire:model.defer="photo"
+                            class="inputfile outline-none focus:border-none focus:outline-none focus:ring-orange" />
+                        @if (!$photo)
                             <label for="file"
-                                   class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9]/20 flex justify-center
+                                class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9]/20 flex justify-center
                         items-center mx-auto focus:ring-orange focus:ring">
-                                <x-icons.camera/>
+                                <x-icons.camera />
                             </label>
                         @else
                             <label for="file"
-                                   style="background-image: url('{{ $photo->temporaryUrl() }}') !important;"
-                                   class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9] flex justify-center
+                                style="background-image: url('{{ $photo->temporaryUrl() }}') !important;"
+                                class="w-[134px] h-[134px] rounded-full bg-[#D9D9D9] flex justify-center
                                    bg-cover"></label>
                         @endif
 
                     </div>
                     <div class="text-sm">
-                        <x-forms.label
-                            for="file"
-                            label="Profile Photo"
-                            class="mt-2"/>
-                        <x-forms.instruction instruction="Your photo will only be used to help your community identify your
-                                fire."/>
+                        <x-forms.label for="file" label="Profile Photo" class="mt-2" />
+                        <x-forms.instruction
+                            instruction="Your photo will only be used to help your community identify your
+                                fire." />
 
                         @error('photo')
-                        <x-forms.error :error="$message"/>
+                            <x-forms.error :error="$message" />
                         @enderror
                     </div>
                 </div>
 
                 <div class="text-grey-200 text-sm">
-                    <x-forms.label
-                        for="emailUpdates"
-                        label="Updates & Resources"/>
+                    <x-forms.label for="emailUpdates" label="Updates & Resources" />
                     <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
                         <div class="flex items-center rounded-full bg-[#171513]">
-                            <button
-                                type="button"
-                                wire:click.prevent="$set('emailUpdates', true)"
+                            <button type="button" wire:click.prevent="$set('emailUpdates', true)"
                                 class="px-10 py-3 text-sm font-semibold w-1/2
-                                @if($emailUpdates)
-                                border border-white text-white rounded-l-full
-                                @endif"
-                            >
+                                @if ($emailUpdates) border border-white text-white rounded-l-full @endif">
                                 Yes
                             </button>
-                            <button
-                                type="button"
-                                wire:click.prevent="$set('emailUpdates', false)"
+                            <button type="button" wire:click.prevent="$set('emailUpdates', false)"
                                 class="px-10 py-3 text-sm font-semibold w-1/2
-                                @if(!$emailUpdates) border border-white text-white rounded-r-full
-                                @endif"
-                            >
+                                @if (!$emailUpdates) border border-white text-white rounded-r-full @endif">
                                 No
                             </button>
                         </div>
@@ -130,10 +91,7 @@
 
                 <x-button-container>
                     @include('partials.honeypot')
-                    <x-primary-button
-                        class="w-full"
-                        type="submit"
-                        wire:click.prevent="handleStepOne">
+                    <x-primary-button class="w-full" type="submit" wire:click.prevent="handleStepOne">
                         Next
                     </x-primary-button>
 
@@ -146,41 +104,29 @@
         </div>
     </div>
 
-    <div x-show="step === 2"
-         class="md:w-1/2 mt-8 px-8 flex items-center justify-center">
+    <div x-show="step === 2" class="md:w-1/2 mt-8 px-8 flex items-center justify-center overflow-auto">
 
-        <div
-            class="md:w-2/3 mx-auto relative">
+        <div class="md:w-2/3 mx-auto relative h-full ">
 
-            <x-profile-stepper :step="$step"/>
+            <x-profile-stepper :step="$step" />
 
             <x-type.registration-h1 class="my-12">
                 Tell us about your Fire
             </x-type.registration-h1>
 
             <div x-show="step === 2" class="md:hidden">
-                <x-campfire-card
-                    :title="$campfireName"
-                    :frequency="$frequency"
-                    :location="$city"
-                    :host-name="auth()->user()->full_name"
-                    :profile-image="auth()->user()->profilePhoto()"
-                />
+                <x-campfire-card :title="$campfireName" :frequency="$frequency" :location="$city" :host-name="auth()->user()->full_name"
+                    :profile-image="auth()
+                        ->user()
+                        ->profilePhoto()" />
             </div>
 
             <div class="space-y-4 mt-8">
 
                 <div class="flex items-center space-x-4">
-                    <x-forms.input
-                        wire:model="campfireName"
-                        label="Name Your Fire"
-                        required
-                        instruction="This is the name that will be displayed on your Fire page."
-                        :error="$errors->first('campfireName')"
-                        id="campfireName"
-                        name="campfireName"
-                        append="Fire"
-                    />
+                    <x-forms.input wire:model="campfireName" label="Name Your Fire" required
+                        instruction="This is the name that will be displayed on your Fire page." :error="$errors->first('campfireName')"
+                        id="campfireName" name="campfireName" append="Fire" />
                 </div>
 
                 <div class="text-sm text-grey-200">
@@ -194,83 +140,50 @@
                     </ul>
                 </div>
                 <div>
-                    <x-forms.label
-                        for="geocoder-input"
-                        label="Full Fire Address"
-                        required
-                    />
+                    <x-forms.label for="geocoder-input" label="Full Fire Address" required />
                     <div wire:ignore>
                         <div id="geocoder"></div>
                     </div>
-                    <x-forms.error :error="$errors->first('mapboxPlaceName')"/>
-                    <x-forms.instruction instruction="This address is specifically for the Fire. This will only be shared
-                            with Wild at Heart. Attendees will only see general area."/>
+                    <x-forms.error :error="$errors->first('mapboxPlaceName')" />
+                    <x-forms.instruction
+                        instruction="This address is specifically for the Fire. This will only be shared
+                            with Wild at Heart. Attendees will only see general area." />
                 </div>
 
-                @if($mapboxPlaceName)
+                @if ($mapboxPlaceName)
 
-                    <x-forms.instruction
-                        class="italic"
-                        instruction="Please correct any errors from autocompletion"/>
+                    <x-forms.instruction class="italic" instruction="Please correct any errors from autocompletion" />
 
-                    <x-forms.input
-                        wire:model="street_address"
-                        label="Street Address"
-                        required
-                        :error="$errors->first('street_address')"
-                        name="street_address"/>
+                    <x-forms.input wire:model="street_address" label="Street Address" required :error="$errors->first('street_address')"
+                        name="street_address" />
 
-                    <x-forms.input
-                        wire:model="city"
-                        label="City"
-                        required
-                        :error="$errors->first('city')"
-                        name="city"/>
+                    <x-forms.input wire:model="city" label="City" required :error="$errors->first('city')" name="city" />
 
-                    <x-forms.select
-                        name="state"
-                        label="State"
-                        required
-                        :error="$errors->first('state')"
-                        wire:model="state">
+                    <x-forms.select name="state" label="State" required :error="$errors->first('state')" wire:model="state">
                         <option value="">Select</option>
                         <option value="-">Not Applicable</option>
-                        @foreach(\App\Models\State::all() as $state)
+                        @foreach (\App\Models\State::all() as $state)
                             <option value="{{ $state->code }}">
                                 {{ $state->name }}
                             </option>
                         @endforeach
                     </x-forms.select>
 
-                    <x-forms.select
-                        name="country"
-                        label="Country"
-                        :error="$errors->first('country')"
-                        required
-                        wire:model="country">
+                    <x-forms.select name="country" label="Country" :error="$errors->first('country')" required wire:model="country">
                         <option value="">Select Country</option>
-                        @foreach(getCountries() as $key => $country)
+                        @foreach (getCountries() as $key => $country)
                             <option value="{{ $country }}">
                                 {{ $country }}
                             </option>
                         @endforeach
                     </x-forms.select>
 
-                    <x-forms.input
-                        wire:model="zip"
-                        label="Zip Code"
-                        :error="$errors->first('zip')"
-                        name="zip"
-                        required/>
+                    <x-forms.input wire:model="zip" label="Zip Code" :error="$errors->first('zip')" name="zip" required />
 
                 @endif
 
                 <div class="flex items-center">
-                    <x-forms.select
-                        name="frequency"
-                        label="Frequency"
-                        required
-                        :error="$errors->first('frequency')"
+                    <x-forms.select name="frequency" label="Frequency" required :error="$errors->first('frequency')"
                         wire:model="frequency">
                         <option value="">Select</option>
                         <option value="weekly">
@@ -293,15 +206,11 @@
 
                 <x-button-container>
                     @include('partials.honeypot')
-                    <x-primary-button
-                        type="submit"
-                        class="w-full mt-8"
-                        wire:click.prevent="handleStepTwo">
+                    <x-primary-button type="submit" class="w-full mt-8" wire:click.prevent="handleStepTwo">
                         Next
                     </x-primary-button>
 
-                    <button @click="step = 1"
-                            class="text-sm py-3 text-grey-200">
+                    <button @click="step = 1" class="text-sm py-3 text-grey-200">
                         Cancel
                     </button>
 
@@ -310,91 +219,86 @@
         </div>
     </div>
 
-    <div class="md:w-1/2 flex items-center justify-center
-    @if($step === 1)
-    md:bg-cover md:bg-center md:bg-campfire
-    @endif">
+    <div
+        class="md:w-1/2 flex items-center justify-center
+    @if ($step === 1) md:bg-cover md:bg-center md:bg-campfire @endif">
         <div x-show="step === 2" class="hidden md:block">
-            <x-campfire-card
-                :title="$campfireName"
-                :frequency="$frequency"
-                :location="$city"
-                :host-name="auth()->user()->full_name"
-                :profile-image="auth()->user()->profilePhoto()"
-            />
+            <x-campfire-card :title="$campfireName" :frequency="$frequency" :location="$city" :host-name="auth()->user()->full_name"
+                :profile-image="auth()
+                    ->user()
+                    ->profilePhoto()" />
         </div>
 
 
     </div>
 </div>
 @push('head')
-    <script
-        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 @endpush
 @push('scripts')
     <script>
-    document.addEventListener('livewire:load', function () {
-        document.title = 'Host a Fire | {{ config('app.name') }}';
-    });
-
-    window.addEventListener('next-step', event => {
-        window.scroll({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
+        document.addEventListener('livewire:load', function() {
+            document.title = 'Host a Fire | {{ config('app.name') }}';
         });
-    });
 
-    const geocoder = new MapboxGeocoder({
-        accessToken: '{{ config('services.mapbox.api_key') }}',
-        types: '{{ config('services.mapbox.types') }}'
-    });
+        window.addEventListener('next-step', event => {
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        });
 
-    geocoder.addTo('#geocoder');
+        const geocoder = new MapboxGeocoder({
+            accessToken: '{{ config('services.mapbox.api_key') }}',
+            types: '{{ config('services.mapbox.types') }}'
+        });
 
-    const geocoderInput = document.querySelector('#geocoder input')
-    geocoderInput.setAttribute('id', 'geocoder-input')
+        geocoder.addTo('#geocoder');
 
-    geocoder.on('result', (e) => {
-        @this.set('mapboxPlaceName', e.result.place_name, true)
-        const placeName = e.result.place_name,
-            isUSAddress = placeName.includes('United States'),
-            isCanadaAddress = placeName.includes('Canada'),
-            isUKAddress = placeName.includes('United Kingdom');
+        const geocoderInput = document.querySelector('#geocoder input')
+        geocoderInput.setAttribute('id', 'geocoder-input')
 
-        if (isUSAddress) {
-            const addressString = placeName,
-                addressComponents = addressString.split(",").map(component => component.trim()),
-                address = addressComponents[0],
-                city = addressComponents[1],
-                stateZip = addressComponents[2].split(" "),
-                state = stateZip[0],
-                zip = stateZip[1],
-                country = addressComponents[3];
+        geocoder.on('result', (e) => {
+            @this.set('mapboxPlaceName', e.result.place_name, true)
+            const placeName = e.result.place_name,
+                isUSAddress = placeName.includes('United States'),
+                isCanadaAddress = placeName.includes('Canada'),
+                isUKAddress = placeName.includes('United Kingdom');
 
-            @this.set('street_address', address)
-            @this.set('city', city)
-            @this.set('state', state)
-            @this.set('zip', zip)
-            @this.set('country', country)
-        }
+            if (isUSAddress) {
+                const addressString = placeName,
+                    addressComponents = addressString.split(",").map(component => component.trim()),
+                    address = addressComponents[0],
+                    city = addressComponents[1],
+                    stateZip = addressComponents[2].split(" "),
+                    state = stateZip[0],
+                    zip = stateZip[1],
+                    country = addressComponents[3];
 
-        if (isUKAddress || isCanadaAddress) {
-            const addressString = placeName,
-                addressComponents = addressString.split(",").map(component => component.trim()),
-                address = addressComponents[0],
-                city = addressComponents[2],
-                postcode = addressComponents[addressComponents.length - 2].trim(),
-                country = addressComponents[addressComponents.length - 1];
+                @this.set('street_address', address)
+                @this.set('city', city)
+                @this.set('state', state)
+                @this.set('zip', zip)
+                @this.set('country', country)
+            }
 
-            @this.set('street_address', address)
-            @this.set('city', city)
-            @this.set('zip', postcode)
-            @this.set('country', country)
-        }
+            if (isUKAddress || isCanadaAddress) {
+                const addressString = placeName,
+                    addressComponents = addressString.split(",").map(component => component.trim()),
+                    address = addressComponents[0],
+                    city = addressComponents[2],
+                    postcode = addressComponents[addressComponents.length - 2].trim(),
+                    country = addressComponents[addressComponents.length - 1];
 
-        @this.set('latitude', e.result.geometry.coordinates[1])
-        @this.set('longitude', e.result.geometry.coordinates[0])
-    });
+                @this.set('street_address', address)
+                @this.set('city', city)
+                @this.set('zip', postcode)
+                @this.set('country', country)
+            }
+
+            @this.set('latitude', e.result.geometry.coordinates[1])
+            @this.set('longitude', e.result.geometry.coordinates[0])
+        });
     </script>
 @endpush
