@@ -16,6 +16,7 @@
 
     <div class="flex items-center">
         <input
+            autocomplete
             @if($placeholder)
                 placeholder="{{ $placeholder }}"
             @endif

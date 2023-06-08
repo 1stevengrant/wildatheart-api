@@ -1,7 +1,7 @@
 <x-wire-elements-pro::tailwind.modal
     on-submit="handle">
     <x-slot name="title">
-        Report an Issue
+        Report an Issue or Provide Feedback
     </x-slot>
 
     <div class="space-y-4">
@@ -21,13 +21,7 @@
                 wire:model.defer="email"
                 :error="$errors->first('email')"
             />
-            <x-forms.input
-                required
-                name="confirm_email"
-                label="Confirm Email"
-                wire:model.defer="confirm_email"
-                :error="$errors->first('confirm_email')"
-            />
+
             <x-forms.input
                 required
                 name="subject"
@@ -48,7 +42,7 @@
 
     <x-slot name="buttons">
         <x-primary-button>
-            Report Issue
+            Submit
         </x-primary-button>
         <x-secondary-button wire:click="$emit('modal.close')">
             Cancel

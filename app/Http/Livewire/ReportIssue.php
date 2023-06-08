@@ -12,8 +12,6 @@ class ReportIssue extends Modal
 {
     public string $email = '';
 
-    public string $confirm_email = '';
-
     public string $name = '';
 
     public string $subject = '';
@@ -24,7 +22,6 @@ class ReportIssue extends Modal
     {
         $this->validate([
             'email' => 'required|email|max:255',
-            'confirm_email' => 'required|email|same:email|max:255',
             'name' => 'required|max:255',
             'subject' => 'required|max:255',
             'description' => 'required',
