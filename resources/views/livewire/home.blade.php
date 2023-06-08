@@ -1,4 +1,4 @@
-<div class="w-full text-white h-screen">
+<div class="w-full text-white h-screen mt-[75px] md:mt-[107px]">
     <div id="map"
          class="aspect-square h-full w-full md:border-grey-darker"></div>
 </div>
@@ -11,11 +11,7 @@
                 mapBox = document.getElementById('map'),
                 mapBoxHeight = mapBox.offsetHeight,
                 footer = document.getElementById('footer'),
-                footerHeight = footer.offsetHeight,
-                campfiresContainer = document.getElementById('campfires-container');
-
-            campfiresContainer.style.maxHeight = `${screenHeight - mapBoxHeight}px`;
-            campfiresContainer.style.paddingBottom = `${footerHeight + 10}px`;
+                footerHeight = footer.offsetHeight
         }
     });
 

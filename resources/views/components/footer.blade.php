@@ -19,13 +19,26 @@
         </x-footer-link>
 
         @auth
-            <div class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
-                <div class="w-12 h-12 bg-white flex items-center justify-center rounded-full">
-                    <img src="{{ Gravatar::get(auth()->user()->email) }}"
-                         class="rounded-full w-9 h-9"
-                         alt="">
-                </div>
-            </div>
+            <form class="inline-flex flex-col items-center justify-center px-5 group"
+                  method="POST"
+                  action="{{ route('logout') }}">
+                @csrf
+                <img src="{{ auth()->user()->profilePhoto() }}"
+                     class="w-6 h-6"
+                     alt="">
+                <button onclick="event.preventDefault(); this.closest('form').submit();"
+                        class="text-sm text-white">
+                    {{ __('Logout') }}
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}"
+               class="inline-flex flex-col items-center justify-center px-5 group">
+                <x-icons.user/>
+                <span class="text-sm text-white">
+                    {{ __('Login') }}
+                </span>
+            </a>
         @endauth
     </div>
 </footer>
