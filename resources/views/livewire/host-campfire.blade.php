@@ -17,38 +17,23 @@
 
             <div class="space-y-8 mt-6">
                 <div class="grid md:grid-cols-2 gap-8">
-                    @if(!auth()->user()->given_name)
-                        <x-forms.input
-                            name="first_name"
-                            id="first_name"
-                            required
-                            wire:model.defer="firstName"
-                            :error="$errors->first('firstName')"
-                            label="First Name"/>
-                    @else
-                        <div>
-                            <x-forms.label
-                                for="first_name"
-                                label="First Name"/>
-                            <div>{{ auth()->user()->given_name }}</div>
-                        </div>
-                    @endif
-                    @if(!auth()->user()->family_name)
-                        <x-forms.input
-                            name="last_name"
-                            id="last_name"
-                            required
-                            wire:model.defer="lastName"
-                            :error="$errors->first('lastName')"
-                            label="Last Name"/>
-                    @else
-                        <div>
-                            <x-forms.label
-                                for="last_name"
-                                label="Last Name"/>
-                            <div>{{ auth()->user()->family_name }}</div>
-                        </div>
-                    @endif
+
+                    <x-forms.input
+                        name="first_name"
+                        id="first_name"
+                        required
+                        wire:model.defer="firstName"
+                        :error="$errors->first('firstName')"
+                        label="First Name"/>
+
+
+                    <x-forms.input
+                        name="last_name"
+                        id="last_name"
+                        required
+                        wire:model.defer="lastName"
+                        :error="$errors->first('lastName')"
+                        label="Last Name"/>
                     <div class="col-span-2">
                         <div>
                             <x-forms.label for="email" label="Email"/>
