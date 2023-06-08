@@ -65,7 +65,7 @@ class ConnectToHost extends Component
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|numeric|min:10',
+            'phone' => 'numeric',
             'state' => [
                 'string',
                 'max:255',

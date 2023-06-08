@@ -5,7 +5,8 @@
                 <div class="m-0 relative w-full overflow-hidden text-left">
                     <div class="md:flex items-center h-full">
                         <div
-                            class="md:w-1/2 md:flex flex-col items-center justify-center bg-[#050504] md:h-screen p-6">
+                            class="md:w-1/2 md:flex flex-col items-center justify-center bg-[#050504] md:h-screen p-6
+                             mb-[76px]">
 
                             <div class="max-w-md mx-auto">
 

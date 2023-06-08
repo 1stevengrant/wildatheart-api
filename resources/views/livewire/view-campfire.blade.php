@@ -1,4 +1,4 @@
-<div>
+<div class="mt-[75px] md:mt-[107px]">
     <div id="map" class="h-[150px] md:h-[300px]"></div>
     <div id="campfire"
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
