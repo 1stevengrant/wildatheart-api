@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Livewire\ConfirmEmail;
+use App\Http\Livewire\ConnectToHost;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\HostCampfire;
 use App\Http\Livewire\ListCampfires;
@@ -31,6 +32,7 @@ Route::get('list', ListCampfires::class)->name('list.campfires');
 Route::get('list/state/{state}', ListState::class)->name('list.state');
 Route::get('list/city/{city}', ListCity::class)->name('list.city');
 Route::get('attend/{campfire}', ViewCampfire::class)->name('view.campfire');
+Route::get('connect/{campfire}', ConnectToHost::class)->name('connect.host');
 Route::get('confirmemail/{campfire}', ConfirmEmail::class)->name('confirm.email');
 Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
 Route::get('gift/{campfire}', SendGift::class)->name('gift');

@@ -83,7 +83,7 @@ class User extends Authenticatable
         if ($this->image) {
             makeImagePublic($this->image);
 
-            return $this->image ? getImageUrl($this->image) : asset('svgs/user.svg');
+            return getImageUrl($this->image);
         }
 
         return asset('svgs/user.svg');

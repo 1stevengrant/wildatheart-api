@@ -32,7 +32,7 @@
             :aria-expanded="open"
             :aria-controls="$id('dropdown-button')"
             type="button"
-            class="w-12 h-12 bg-white flex items-center justify-center rounded-full"
+            class="w-12 h-12 bg-grey-200 flex items-center justify-center rounded-full"
         >
             <img src="{{ auth()->user()->profilePhoto() }}"
                  class="rounded-full w-10 h-10"

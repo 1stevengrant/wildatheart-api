@@ -59,13 +59,13 @@ class ConnectToHost extends Component
         }
     }
 
-    public function handle(): void
+    public function handle()
     {
         $this->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'numeric|min:7|max:15',
+            'phone' => 'required|numeric|min:10',
             'state' => [
                 'string',
                 'max:255',
@@ -92,18 +92,7 @@ class ConnectToHost extends Component
             'marketing_updates' => $this->emailUpdates,
         ]);
 
-        $this->emit('closeConnectToHost');
-
-        $this->dispatchBrowserEvent('notify', [
-            'message' => 'You have connected with '.$this->campfire->host->given_name.'!',
-            'timeout' => null,
-        ]);
-
-        $this->dispatchBrowserEvent('registered-for-campfire');
-
-        $this->emit('registeredForCampfire');
-
-        $this->resetExcept('campfire', 'states');
+        return redirect(route('view.campfire', $this->campfire))->with('connected', true);
 
     }
 

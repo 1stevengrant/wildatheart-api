@@ -197,7 +197,7 @@ class Campfire extends Model
         if ($this->host->image) {
             makeImagePublic($this->host->image);
 
-            return $this->host->image ? getImageUrl($this->host->image) : asset('svgs/user.svg');
+            return getImageUrl($this->host->image);
         }
 
         return asset('svgs/user.svg');

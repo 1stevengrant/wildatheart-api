@@ -1,5 +1,4 @@
-<div x-data="{connectToHost: false}"
-     @registered-for-campfire.window="connectToHost = false">
+<div>
     <div id="map" class="h-[150px] md:h-[300px]"></div>
     <div id="campfire"
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
@@ -59,8 +58,9 @@
                 </div>
 
                 <div class="md:w-1/3 hidden md:block">
-                    @if(!$hasConnected)
-                        <x-campfire-cta :campfire="$campfire"/>
+                    @if(!session()->has('connected'))
+                        <x-campfire-cta
+                            :campfire="$campfire"/>
                     @else
                         <div class="border border-grey-darker p-8 rounded-lg">
                             <x-button-container>
@@ -69,6 +69,9 @@
                                     class="w-full">
                                     You have connected with {{ $campfire->host->given_name }}
                                 </x-primary-button>
+                                <p class="text-sm mt-2">Thank you! We've forwarded your details to {{
+                                $campfire->host->given_name }} and
+                                    he'll be in touch directly.</p>
                             </x-button-container>
                         </div>
                     @endif
@@ -94,14 +97,13 @@
     </div>
 
     <div id="mobile-connect-with-host"
-         x-show="!connectToHost"
          class="md:hidden px-4 py-6 fixed bottom-0 left-0 right-0 border-t border-grey-darker bg-black">
-        @if(!$hasConnected)
-            <x-primary-button
-                @click="connectToHost = true"
+        @if(!session()->has('connected'))
+            <x-primary-link
+                href="{{ route('connect.host', $campfire) }}"
                 class="w-full">
-                Connect with Host
-            </x-primary-button>
+                Connect with {{ $campfire->host->given_name }}
+            </x-primary-link>
         @else
             <x-primary-button
                 disabled
@@ -111,13 +113,6 @@
         @endif
     </div>
 
-
-    <div x-show="connectToHost"
-         x-transition>
-        <livewire:connect-to-host
-            :campfire="$campfire"
-            :wire:key="$campfire->id"/>
-    </div>
 </div>
 @push('head')
     <style>

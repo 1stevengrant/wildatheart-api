@@ -9,9 +9,9 @@
 
                             <div class="max-w-md mx-auto">
 
-                                <button @click="connectToHost = false">
+                                <a href="{{ route('view.campfire', $campfire) }}">
                                     <x-icons.back/>
-                                </button>
+                                </a>
 
                                 <x-type.registration-h1 class="my-6">
                                     Connect with {{ $campfire->host->given_name }}
@@ -165,7 +165,7 @@
                                 :frequency="$campfire->frequency->name"
                                 :location="$campfire->location()"
                                 :host-name="$campfire->host->fullName"
-                                :profile-image="$campfire->host->image"
+                                :profile-image="$campfire->hostPhoto()"
                             />
                         </div>
                     </div>
