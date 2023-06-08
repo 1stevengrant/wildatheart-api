@@ -77,7 +77,7 @@ class HostCampfire extends Component
         $this->validate([
             'firstName' => 'required|string|min:2|max:255',
             'lastName' => 'required|string|min:2|max:255',
-            'phone' => 'required|min:10|numeric',
+            'phone' => 'required|numeric|digits_between:10,15',
             'emailUpdates' => 'required|boolean',
             'countryCode' => 'required|string',
             'token' => [

@@ -92,7 +92,7 @@ class SendGift extends Component
                 new RequiredIf($this->country === 'US'),
             ],
             'zip' => 'required|max:20|min:5',
-            'phone' => 'nullable|numeric',
+            'phone' => 'required|numeric|digits_between:10,15',
         ]);
 
         CreateAddress::run([

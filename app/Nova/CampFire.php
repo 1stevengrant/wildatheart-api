@@ -4,8 +4,6 @@ namespace App\Nova;
 
 use App\Enums\CampfireFrequency;
 use App\Nova\Actions\ApproveCampFire;
-use App\Nova\Filters\ApprovalStatus;
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -46,21 +44,14 @@ class CampFire extends Resource
         'id',
     ];
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @return array
-     */
-    public function fields(NovaRequest $request)
+    public function fields(NovaRequest $request): array
     {
         return [
             BelongsTo::make('Host', 'user', User::class)
                 ->rules('required'),
 
-            Text::make('Organization')
-                ->rules('max:255'),
-
-            Trix::make('Description'),
+            Text::make('Name')
+                ->rules('required'),
 
             Text::make('Phone')
                 ->rules('required')
@@ -73,12 +64,7 @@ class CampFire extends Resource
             Text::make('City')
                 ->rules('required'),
 
-            Select::make('Frequency')
-                ->rules('required')
-                ->options(CampfireFrequency::array()),
-
-            Text::make('State')
-                ->rules('required'),
+            Text::make('State'),
 
             Text::make('Zip')
                 ->rules('required'),
@@ -90,6 +76,7 @@ class CampFire extends Resource
                 ->hideFromIndex(),
 
             Number::make('Attendee Limit')
+                ->hideFromIndex()
                 ->rules('required', 'numeric', 'min:1'),
 
             Text::make('Attendee Count', 'attendee_count')
@@ -97,12 +84,11 @@ class CampFire extends Resource
                 ->readonly(),
 
             Text::make('Spaces Remaining', 'remaining')
+                ->hideFromIndex()
                 ->readonly(),
 
-            Boolean::make('Approval Status', 'approved_at')
-                ->exceptOnForms(),
-
-            Boolean::make('Is Private'),
+            Boolean::make('Is Private')
+                ->hideFromIndex(),
 
             DateTime::make('Approved At', 'approved_at')
                 ->hideFromIndex()
@@ -123,44 +109,23 @@ class CampFire extends Resource
         ];
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @return array
-     */
-    public function cards(NovaRequest $request)
+    public function cards(NovaRequest $request): array
     {
         return [];
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @return array
-     */
-    public function filters(NovaRequest $request)
+    public function filters(NovaRequest $request): array
     {
         return [
-            //            new ApprovalStatus()
         ];
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @return array
-     */
-    public function lenses(NovaRequest $request)
+    public function lenses(NovaRequest $request): array
     {
         return [];
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @return array
-     */
-    public function actions(NovaRequest $request)
+    public function actions(NovaRequest $request): array
     {
         return [
             new ApproveCampFire(),
