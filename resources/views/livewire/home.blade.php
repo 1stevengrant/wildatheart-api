@@ -126,12 +126,12 @@
             .setLngLat(currentFeature.geometry.coordinates)
             .setHTML(
                `<div class='rounded-md shadow-lg p-2 md:p-4'>
-    <div class='flex items-stretch space-x-4'>
-        <a href='${currentFeature.properties.url}'>
+    <a href='${currentFeature.properties.url}' class='flex items-stretch space-x-4'>
+
           <img src='${currentFeature.properties.image}'
              class='rounded-md flex-grow-0'
              alt='' />
-        </a>
+
         <div class='flex flex-col justify-between relative'>
 
             <div>
@@ -150,7 +150,7 @@
                         by ${currentFeature.properties.host}</div>
             </div>
         </div>
-    </div>
+    </a>
 </div>`
             )
             .addTo(map);
