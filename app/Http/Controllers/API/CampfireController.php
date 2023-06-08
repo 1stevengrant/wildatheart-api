@@ -34,6 +34,7 @@ class CampfireController extends Controller
                     'host' => $campfire->user->full_name,
                     'hostProfilePhoto' => $campfire->hostPhoto(),
                     'image' => asset('img/campfire.png'),
+                    'frequency' => $campfire->frequency,
                 ],
                 'geometry' => [
                     'type' => 'Point',

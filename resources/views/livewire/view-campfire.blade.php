@@ -7,7 +7,8 @@
         <div class="container mx-auto">
             <div class="md:flex md:space-x-8">
                 <div class="md:w-2/3">
-                    <h1 class="text-3xl leading-tighter mb-8">{{ $campfire->title() }} {{ $campfire->location() }}</h1>
+                    <h1 class="text-3xl leading-tighter mb-1">{{ $campfire->title() }}</h1>
+                    <h2 class="text-xl leading-tighter mb-8">{{ $campfire->location() }}</h2>
 
                     <x-campfire-host-info
                         :campfire="$campfire"/>

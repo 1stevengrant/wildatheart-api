@@ -129,9 +129,33 @@
         new mapboxgl.Popup({closeOnClick: false})
             .setLngLat(currentFeature.geometry.coordinates)
             .setHTML(
-                `<h3>${currentFeature.properties.title ?? currentFeature.properties.city + ', ' + currentFeature.properties.state }</h3>
-<h4>Host:
-                ${currentFeature.properties.host}</h4><a href="${currentFeature.properties.url}">View Fire</a>`
+               `<div class='rounded-md shadow-lg p-2 md:p-4'>
+    <div class='flex items-stretch space-x-4'>
+        <a href='${currentFeature.properties.url}'>
+          <img src='${currentFeature.properties.image}'
+             class='rounded-md flex-grow-0'
+             alt='' />
+        </a>
+        <div class='flex flex-col justify-between relative'>
+
+            <div>
+                <div class='text-grey-200 text-sm capitalize'>
+                    ${currentFeature.properties.frequency}
+                </div>
+                <p class='text-white'>${currentFeature.properties.title ?? ''}</p>
+
+                <p class='text-white text-sm'>${currentFeature.properties.location}</p>
+            </div>
+            <div class='flex items-center space-x-2'>
+                <img src='${currentFeature.properties.hostProfilePhoto}'
+                     class='rounded-full w-6 h-6 object-fill object-fit'
+                     alt='' />
+                    <div class='text-[#BABABA] text-xs leading-tighter'>Hosted
+                        by ${currentFeature.properties.host}</div>
+            </div>
+        </div>
+    </div>
+</div>`
             )
             .addTo(map);
     }
