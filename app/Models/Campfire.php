@@ -143,7 +143,7 @@ class Campfire extends Model
 
     public function location(): string
     {
-        if ($this->state) {
+        if ($this->country === 'US') {
             return $this->city.', '.getStateAbbreviation($this->state);
         }
 

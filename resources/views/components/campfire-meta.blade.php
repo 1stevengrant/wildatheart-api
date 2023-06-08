@@ -5,7 +5,7 @@
 
 <div {{ $attributes->class(['border-t border-b border-grey-darker py-8 mt-[25px] space-y-4']) }}>
     <div class="flex items-start">
-        <x-icons.event-type/>
+        <x-icons.event-type class="flex-shrink-0"/>
         <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">{{ $campfire->indoorOrOutdoor() }} event</p>
             <p class="text-sm text-[#6B7280]">This event is slated to be an {{ $campfire->indoorOrOutdoor() }} event.
@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="flex items-start">
-        <x-icons.calendar/>
+        <x-icons.calendar class="flex-shrink-0"/>
         <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">Frequency</p>
             <p class="text-sm text-[#6B7280]">
