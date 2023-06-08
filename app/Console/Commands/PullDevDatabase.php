@@ -27,8 +27,8 @@ class PullDevDatabase extends Command
     public function handle(): void
     {
         Artisan::call('db:wipe');
+        $this->info('Local database wiped successfully!');
         shell_exec('./scripts/pulldevdb.sh');
-
         $this->info('Dev Database pulled successfully!');
     }
 }

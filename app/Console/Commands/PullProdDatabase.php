@@ -27,6 +27,7 @@ class PullProdDatabase extends Command
     public function handle(): void
     {
         Artisan::call('db:wipe');
+        $this->info('Local database wiped successfully!');
         shell_exec('./scripts/pullproddb.sh');
 
         $this->info('Prod Database pulled successfully!');
