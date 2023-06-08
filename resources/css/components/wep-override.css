@@ -1,7 +1,8 @@
 [x-cloak] { display: none !important; }
 
 .wep-modal {
-    @apply relative z-40;
+    @apply relative;
+    z-index: 1000;
 }
 
 .wep-modal-container {
