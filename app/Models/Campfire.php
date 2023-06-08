@@ -189,17 +189,12 @@ class Campfire extends Model
 
     public function hostPhoto(): string
     {
-        if (! app()->environment('local')) {
-            if ($this->host->image) {
-                makeImagePublic($this->host->image);
+        if ($this->host->image) {
+            makeImagePublic($this->host->image);
 
-                return $this->host->image ? getImageUrl($this->host->image) : asset('svgs/user.svg');
-            }
-
-            return asset('svgs/user.svg');
-
+            return $this->host->image ? getImageUrl($this->host->image) : asset('svgs/user.svg');
         }
 
-        return $this->host->image ? asset($this->host->image) : asset('svgs/user.svg');
+        return asset('svgs/user.svg');
     }
 }

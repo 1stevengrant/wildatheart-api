@@ -3,9 +3,9 @@
     'campfire'
 ])
 
-<div {{ $attributes->class(['mt-10 flex items-start space-x-6']) }}>
+<div {{ $attributes->class(['mt-10 flex items-start space-x-4']) }}>
     <img src="{{ $campfire->hostPhoto() }}"
-         class="rounded-lg w-[54px] h-[54px]"
+         class="rounded-lg w-10 h-10 object-scale-down shadow"
          alt="">
     <div>
         <p class="text-sm">Your Host  &middot;</p>

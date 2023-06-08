@@ -79,17 +79,13 @@ class User extends Authenticatable
 
     public function profilePhoto(): string
     {
-        if (! app()->environment('local')) {
-            if ($this->image) {
-                makeImagePublic($this->image);
+        if ($this->image) {
+            makeImagePublic($this->image);
 
-                return $this->image ? getImageUrl($this->image) : asset('svgs/user.svg');
-            }
-
-            return asset('svgs/user.svg');
-
+            return $this->image ? getImageUrl($this->image) : asset('svgs/user.svg');
         }
 
-        return $this->image ? asset($this->image) : asset('svgs/user.svg');
+        return asset('svgs/user.svg');
+
     }
 }
