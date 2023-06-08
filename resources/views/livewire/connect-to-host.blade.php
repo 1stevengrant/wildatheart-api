@@ -47,27 +47,48 @@
                                                     :error="$errors->first('email')"
                                                 />
                                             </div>
+                                            <div class="col-span-2">
+                                                <x-forms.input
+                                                    name="city"
+                                                    required
+                                                    label="City"
+                                                    wire:model.defer="city"
+                                                    :error="$errors->first('city')"
+                                                />
+                                            </div>
+                                            <div class="col-span-2">
 
-                                            <x-forms.input
-                                                name="city"
-                                                required
-                                                label="City"
-                                                wire:model.defer="city"
-                                                :error="$errors->first('city')"
-                                            />
+                                                <x-forms.select
+                                                    name="state"
+                                                    label="State"
+                                                    :error="$errors->first('state')"
+                                                    wire:model.defer="state">
+                                                    <option value="">Select a State</option>
+                                                    @foreach($states as $state)
+                                                        <option value="{{ $state->name }}">
+                                                            {{ $state->code }}
+                                                        </option>
+                                                    @endforeach
+                                                </x-forms.select>
+                                            </div>
 
-                                            <x-forms.select
-                                                name="state"
-                                                label="State"
-                                                :error="$errors->first('state')"
-                                                wire:model.defer="state">
-                                                <option value="">Select a State</option>
-                                                @foreach($states as $state)
-                                                    <option value="{{ $state->name }}">
-                                                        {{ $state->code }}
-                                                    </option>
-                                                @endforeach
-                                            </x-forms.select>
+                                            <div class="col-span-2">
+
+                                                <x-forms.select
+                                                    wire:model="country"
+                                                    label="Country"
+                                                    id="country"
+                                                    name="country"
+                                                    required>
+                                                    <option value="">Select a Country</option>
+                                                    @foreach(getCountries() as $key => $country)
+                                                        <option value="{{ $key }}">
+                                                            {{ $country }}
+                                                        </option>
+                                                    @endforeach
+                                                </x-forms.select>
+
+                                            </div>
 
                                         </div>
 
