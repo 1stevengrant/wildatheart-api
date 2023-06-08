@@ -69,7 +69,7 @@ class ConnectToHost extends Component
             'state' => [
                 'string',
                 'max:255',
-                new RequiredIf($this->country === 'US')
+                new RequiredIf($this->country === 'US'),
             ],
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
