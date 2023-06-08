@@ -146,6 +146,7 @@ class Campfire extends Model
         if ($this->state) {
             return $this->city.', '.getStateAbbreviation($this->state);
         }
+
         return $this->city;
     }
 
