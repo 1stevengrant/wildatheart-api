@@ -88,10 +88,7 @@
                             label="Profile Photo"
                             class="mt-2"/>
                         <x-forms.instruction instruction="Your photo will only be used to help your community identify your
-                                fire.
-                                Wild at Heart will never
-                                use your
-                                photo for anything other than your Fire page."/>
+                                fire."/>
 
                         @error('photo')
                         <x-forms.error :error="$message"/>
