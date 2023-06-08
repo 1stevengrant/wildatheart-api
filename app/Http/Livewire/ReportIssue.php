@@ -30,7 +30,7 @@ class ReportIssue extends Modal
         Issue::create([
             'email' => $this->email,
             'name' => $this->name,
-            'subject' => "Fires Feedback: " . $this->subject,
+            'subject' => 'Fires Feedback: '.$this->subject,
             'description' => $this->description,
         ]);
 
