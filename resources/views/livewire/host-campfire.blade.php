@@ -56,7 +56,7 @@
                             required
                             wire:model.defer="phone"
                             :error="$errors->first('phone')"
-                            instruction="We'll send you text messages."
+                            instruction="We may occasionally send you text messages."
                             label="Phone Number"/>
                     </div>
                 </div>
