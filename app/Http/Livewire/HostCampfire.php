@@ -22,6 +22,10 @@ class HostCampfire extends Component
 
     public int $step = 1;
 
+    public string $firstName = '';
+
+    public string $lastName = '';
+
     public string $organization = '';
 
     public string $campfireName = '';
@@ -61,6 +65,8 @@ class HostCampfire extends Component
             return redirect()->route('social.login', ['provider' => 'auth0']);
         }
 
+        $this->firstName = auth()->user()->given_name;
+        $this->lastName = auth()->user()->family_name;
         $this->campfireName = auth()->user()->given_name."'s";
         $this->countryCode = auth()->user()->country_code ?? '1';
         $this->phone = auth()->user()->phone ?? '';
@@ -69,6 +75,8 @@ class HostCampfire extends Component
     public function handleStepOne(): void
     {
         $this->validate([
+            'firstName' => 'required|string|min:2|max:255',
+            'lastName' => 'required|string|min:2|max:255',
             'phone' => 'required|min:10|numeric',
             'emailUpdates' => 'required|boolean',
             'countryCode' => 'required|string',
@@ -78,6 +86,8 @@ class HostCampfire extends Component
         ]);
 
         auth()->user()->update([
+            'given_name' => $this->firstName,
+            'family_name' => $this->lastName,
             'phone' => $this->phone,
             'country_code' => $this->countryCode,
             'image' => $this->photo ? $this->photo->store('users') : auth()->user()->image,
