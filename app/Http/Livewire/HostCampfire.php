@@ -44,6 +44,8 @@ class HostCampfire extends Component
 
     public $state = '';
 
+    public $location = '';
+
     public $showState = false;
 
     public $city = '';

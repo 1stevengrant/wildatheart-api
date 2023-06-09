@@ -115,7 +115,7 @@
             </x-type.registration-h1>
 
             <div x-show="step === 2" class="md:hidden">
-                <x-campfire-card :title="$campfireName" :frequency="$frequency" :location="$city" :host-name="auth()->user()->full_name"
+                <x-campfire-card :title="$campfireName" :frequency="$frequency" :location="$location" :host-name="auth()->user()->full_name"
                     :profile-image="auth()
                         ->user()
                         ->profilePhoto()" />
@@ -223,8 +223,9 @@
     <div
         class="md:w-1/2 flex items-center justify-center
     @if ($step === 1) md:bg-cover md:bg-center md:bg-campfire @endif">
+
         <div x-show="step === 2" class="hidden md:block">
-            <x-campfire-card :title="$campfireName" :frequency="$frequency" :location="$city" :host-name="auth()->user()->full_name"
+            <x-campfire-card :title="$campfireName" :frequency="$frequency" :location="$location" :host-name="auth()->user()->full_name"
                 :profile-image="auth()
                     ->user()
                     ->profilePhoto()" />
@@ -284,6 +285,7 @@
                 @this.set('street_address', address)
                 @this.set('city', city)
                 @this.set('state', state)
+                @this.set('location', city + ', ' + state)
                 @this.set('zip', zip)
                 @this.set('country', country)
             }
@@ -292,16 +294,18 @@
                 const addressString = placeName,
                     addressComponents = addressString.split(",").map(component => component.trim()),
                     address = addressComponents[0],
-                    city = addressComponents[2],
+                    city = addressComponents[1],
                     postcode = addressComponents[addressComponents.length - 2].trim(),
                     country = addressComponents[addressComponents.length - 1];
 
                 @this.set('street_address', address)
                 @this.set('state', '-')
                 @this.set('city', city)
+                @this.set('location', city)
                 @this.set('zip', postcode)
                 @this.set('country', country)
             }
+
 
             @this.set('latitude', e.result.geometry.coordinates[1])
             @this.set('longitude', e.result.geometry.coordinates[0])
