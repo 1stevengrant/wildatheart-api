@@ -159,16 +159,17 @@
 
                     <x-forms.input wire:model="city" label="City" required :error="$errors->first('city')" name="city" />
 
-                    <x-forms.select name="state" label="State" required :error="$errors->first('state')" wire:model="state">
-                        <option value="">Select</option>
-                        <option value="-">Not Applicable</option>
-                        @foreach (\App\Models\State::all() as $state)
-                            <option value="{{ $state->code }}">
-                                {{ $state->name }}
-                            </option>
-                        @endforeach
-                    </x-forms.select>
-
+                    @if ($showState)
+                        <x-forms.select name="state" label="State" required :error="$errors->first('state')" wire:model="state">
+                            <option value="">Select</option>
+                            <option value="-">Not Applicable</option>
+                            @foreach (\App\Models\State::all() as $state)
+                                <option value="{{ $state->code }}">
+                                    {{ $state->name }}
+                                </option>
+                            @endforeach
+                        </x-forms.select>
+                    @endif
                     <x-forms.select name="country" label="Country" :error="$errors->first('country')" required wire:model="country">
                         <option value="">Select Country</option>
                         @foreach (getCountries() as $key => $country)
@@ -260,20 +261,24 @@
         geocoderInput.setAttribute('id', 'geocoder-input')
 
         geocoder.on('result', (e) => {
+
             @this.set('mapboxPlaceName', e.result.place_name, true)
+            @this.set('showState', false)
             const placeName = e.result.place_name,
                 isUSAddress = placeName.includes('United States'),
                 isCanadaAddress = placeName.includes('Canada'),
                 isUKAddress = placeName.includes('United Kingdom');
 
             if (isUSAddress) {
+                @this.set('showState', true)
                 const addressString = placeName,
                     addressComponents = addressString.split(",").map(component => component.trim()),
                     address = addressComponents[0],
                     city = addressComponents[1],
                     stateZip = addressComponents[2].split(" "),
-                    state = stateZip[0],
-                    zip = stateZip[1],
+                    state = e.result.context.find(context => context.id.includes('region')).short_code
+                    .replace("US-", ""),
+                    zip = e.result.context.find(context => context.id.includes('postcode')).text,
                     country = addressComponents[3];
 
                 @this.set('street_address', address)
@@ -292,6 +297,7 @@
                     country = addressComponents[addressComponents.length - 1];
 
                 @this.set('street_address', address)
+                @this.set('state', '-')
                 @this.set('city', city)
                 @this.set('zip', postcode)
                 @this.set('country', country)

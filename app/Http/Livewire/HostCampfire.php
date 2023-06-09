@@ -44,6 +44,8 @@ class HostCampfire extends Component
 
     public $state = '';
 
+    public $showState = false;
+
     public $city = '';
 
     public $zip = '';
@@ -58,7 +60,7 @@ class HostCampfire extends Component
 
     public function mount()
     {
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             session()->put('userType', User::ROLE_HOST);
             session()->put('currentUrl', url()->current());
 
@@ -67,7 +69,7 @@ class HostCampfire extends Component
 
         $this->firstName = auth()->user()->given_name;
         $this->lastName = auth()->user()->family_name;
-        $this->campfireName = auth()->user()->given_name."'s";
+        $this->campfireName = auth()->user()->given_name . "'s";
         $this->countryCode = auth()->user()->country_code ?? '1';
         $this->phone = auth()->user()->phone ?? '';
     }
@@ -151,14 +153,13 @@ class HostCampfire extends Component
             role: User::ROLE_HOST
         );
 
-        if (! auth()->user()->hasVerifiedEmail()) {
+        if (!auth()->user()->hasVerifiedEmail()) {
             SendVerificationEmail::make()->handle(campfire: $campfire);
 
             return redirect()->route('confirm.email', ['campfire' => $campfire]);
         }
 
         return redirect()->route('gift', ['campfire' => $campfire]);
-
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
