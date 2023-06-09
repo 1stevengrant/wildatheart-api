@@ -3,7 +3,7 @@
 use App\Models\State;
 use Creativeorange\Gravatar\Facades\Gravatar;
 
-if (!function_exists('generateTimeList')) {
+if (! function_exists('generateTimeList')) {
     function generateTimeList(): array
     {
         $times = [];
@@ -19,21 +19,21 @@ if (!function_exists('generateTimeList')) {
     }
 }
 
-if (!function_exists('prettyDate')) {
+if (! function_exists('prettyDate')) {
     function prettyDate(string $date): string
     {
         return date('l, F jS, Y', strtotime($date));
     }
 }
 
-if (!function_exists('prettyTime')) {
+if (! function_exists('prettyTime')) {
     function prettyTime(string $time): string
     {
         return date('g:i A', strtotime($time));
     }
 }
 
-if (!function_exists('getStateAbbreviation')) {
+if (! function_exists('getStateAbbreviation')) {
     function getStateAbbreviation(string|null $stateName = null): ?string
     {
         // Already stored as abbreviated in DB so return.
@@ -51,7 +51,7 @@ if (!function_exists('getStateAbbreviation')) {
     }
 }
 
-if (!function_exists('getStateName')) {
+if (! function_exists('getStateName')) {
     function getStateName(string|null $stateCode = null): string
     {
         $stateNames = State::all()->pluck('name', 'code')->toArray();
@@ -60,14 +60,14 @@ if (!function_exists('getStateName')) {
     }
 }
 
-if (!function_exists('gravatar')) {
+if (! function_exists('gravatar')) {
     function gravatar(string $email, string $transform = null): string
     {
         return Gravatar::get($email, $transform);
     }
 }
 
-if (!function_exists('getCountries')) {
+if (! function_exists('getCountries')) {
     function getCountries(): array
     {
         return [
@@ -344,7 +344,7 @@ if (!function_exists('getCountries')) {
     }
 }
 
-if (!function_exists('getCountryCode')) {
+if (! function_exists('getCountryCode')) {
     function getCountryCodeFromCountryName(string $countryName): bool|int|string
     {
         return array_search($countryName, getCountries());
