@@ -285,7 +285,6 @@
                 @this.set('street_address', address)
                 @this.set('city', city)
                 @this.set('state', state)
-                @this.set('location', city + ', ' + state)
                 @this.set('zip', zip)
                 @this.set('country', country)
             }
@@ -301,7 +300,6 @@
                 @this.set('street_address', address)
                 @this.set('state', '-')
                 @this.set('city', city)
-                @this.set('location', city)
                 @this.set('zip', postcode)
                 @this.set('country', country)
             }
