@@ -51,7 +51,7 @@ class SendGift extends Component
             'approved_at' => now(),
         ]);
 
-        if (!$campfire->welcomeHasBeenSent()) {
+        if (! $campfire->welcomeHasBeenSent()) {
             Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
         }
 
