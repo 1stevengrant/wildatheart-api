@@ -66,6 +66,8 @@ class CampFire extends Resource
             Text::make('Zip')
                 ->rules('required'),
 
+            Text::make('Country'),
+
             Text::make('Latitude')
                 ->hideFromIndex(),
 
@@ -113,8 +115,7 @@ class CampFire extends Resource
 
     public function filters(NovaRequest $request): array
     {
-        return [
-        ];
+        return [];
     }
 
     public function lenses(NovaRequest $request): array
