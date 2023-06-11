@@ -51,7 +51,7 @@ class SendGift extends Component
             'approved_at' => now(),
         ]);
 
-        if (! $campfire->welcomeHasBeenSent()) {
+        if (!$campfire->welcomeHasBeenSent()) {
             Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
         }
 
@@ -73,7 +73,7 @@ class SendGift extends Component
             $this->state = $this->campfire->state ?? '';
             $this->zip = $this->campfire->zip ?? '';
             $this->phone = auth()->user()->phone ?? '';
-            $this->country = getCountryCodeFromCountryName($this->campfire->country) ?? '';
+            $this->country = $this->campfire->country ?? '';
         }
     }
 
