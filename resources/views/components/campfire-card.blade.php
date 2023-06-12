@@ -8,7 +8,7 @@
 
 <div {{ $attributes->class(['rounded-md border-grey-darker border p-2 md:p-4 shadow-lg']) }}>
     <div class="flex items-stretch space-x-4">
-        <img src="{{ asset('img/campfire.png') }}"
+        <img src="{{ asset('img/wah-fires-suburb-1.webp') }}"
              class="rounded-md"
              alt="">
         <div class="flex flex-col justify-between relative">
