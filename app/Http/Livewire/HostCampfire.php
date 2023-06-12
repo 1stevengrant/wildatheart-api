@@ -123,17 +123,6 @@ class HostCampfire extends Component
         $this->dispatchBrowserEvent('next-step');
     }
 
-    public function messages(): array
-    {
-        return [
-            'campfireName.required' => 'A fire name is required.',
-            'campfireName.min' => 'A fire name must be at least 2 characters.',
-            'campfireName.max' => 'A fire name must be less than 255 characters.',
-            'mapboxPlaceName.required' => 'The full Fire address is required.',
-            'frequency.required' => 'Please select how often the fire will be hosted.',
-        ];
-    }
-
     public function handleStepTwo(): Redirector
     {
         $this->validate([
@@ -181,6 +170,17 @@ class HostCampfire extends Component
         }
 
         return redirect()->route('gift', ['campfire' => $campfire]);
+    }
+
+    public function messages(): array
+    {
+        return [
+            'campfireName.required' => 'A fire name is required.',
+            'campfireName.min' => 'A fire name must be at least 2 characters.',
+            'campfireName.max' => 'A fire name must be less than 255 characters.',
+            'mapboxPlaceName.required' => 'The full Fire address is required.',
+            'frequency.required' => 'Please select how often the fire will be hosted.',
+        ];
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
