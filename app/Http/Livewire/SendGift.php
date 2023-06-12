@@ -116,6 +116,8 @@ class SendGift extends Component
         );
 
         $this->submitted = true;
+
+        $this->dispatchBrowserEvent('next-step');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

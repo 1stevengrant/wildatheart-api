@@ -108,6 +108,14 @@ ease-in-out duration-150 disabled:bg-grey-200 disabled:text-grey-darker disabled
     <script>
         document.addEventListener('livewire:load', function() {
             document.title = 'Claim Your Gift 🥳 | {{ config('app.name') }}';
+
+            window.addEventListener('next-step', event => {
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
         });
     </script>
 @endpush
