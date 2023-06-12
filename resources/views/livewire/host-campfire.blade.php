@@ -99,7 +99,10 @@
 
                 <x-button-container>
                     @include('partials.honeypot')
-                    <x-primary-button class="w-full" type="submit" wire:click.prevent="handleStepOne">
+                    <x-primary-button
+                        class="w-full"
+                        type="submit"
+                        wire:click.prevent="handleStepOne">
                         Next
                     </x-primary-button>
 
@@ -156,6 +159,12 @@
                     <x-forms.instruction
                         instruction="This address is specifically for the Fire. This will only be shared
                             with Wild at Heart. Attendees will only see general area." />
+
+                    <div wire:loading
+                         class="my-4"
+                         wire:target="mapboxPlaceName">
+                        <x-icons.spinner />
+                    </div>
                 </div>
 
                 @if ($mapboxPlaceName)
@@ -218,7 +227,11 @@
 
                 <x-button-container>
                     @include('partials.honeypot')
-                    <x-primary-button type="submit" class="w-full mt-8" wire:click.prevent="handleStepTwo">
+                    <x-primary-button
+                        type="submit"
+                        class="w-full mt-8"
+                        :disabled="!$mapboxPlaceName"
+                        wire:click.prevent="handleStepTwo">
                         Next
                     </x-primary-button>
 

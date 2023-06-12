@@ -73,9 +73,9 @@ class HostCampfire extends Component
 
         $user = auth()->user();
 
-        $this->firstName = $user->given_name;
-        $this->lastName = $user->family_name;
-        $this->campfireName = $user->given_name."'s";
+        $this->firstName = $user->given_name ?? '';
+        $this->lastName = $user->family_name ?? '';
+        $this->campfireName = $user->given_name ? $user->given_name."'s" : 'Your Fire Name';
         $this->countryCode = $user->country_code ?? '1';
         $this->phone = $user->phone ?? '';
         $this->photo = $user->image;
