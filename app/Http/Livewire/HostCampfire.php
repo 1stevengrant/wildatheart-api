@@ -60,7 +60,7 @@ class HostCampfire extends Component
 
     public string $frequency = 'monthly';
 
-    public  bool $isUploaded = false;
+    public bool $isUploaded = false;
 
     public function mount()
     {
