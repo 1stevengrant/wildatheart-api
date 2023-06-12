@@ -60,6 +60,8 @@ class HostCampfire extends Component
 
     public string $frequency = 'monthly';
 
+    public  bool $isUploaded = false;
+
     public function mount()
     {
         if (! auth()->check()) {
@@ -76,6 +78,12 @@ class HostCampfire extends Component
         $this->campfireName = $user->given_name."'s";
         $this->countryCode = $user->country_code ?? '1';
         $this->phone = $user->phone ?? '';
+        $this->photo = $user->image;
+    }
+
+    public function updatedPhoto(): void
+    {
+        $this->isUploaded = true;
     }
 
     public function updated(): void

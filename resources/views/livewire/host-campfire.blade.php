@@ -48,10 +48,20 @@
                                 <x-icons.camera />
                             </label>
                         @else
+                            @if($isUploaded)
+                                <label for="file"
+                                       style="background-image: url('{{ $photo->temporaryUrl() }}') !important;"
+                                       class="photo-placeholder"
+                                ></label>
+                            @else
                             <label for="file"
-                                style="background-image: url('{{ $photo->temporaryUrl() }}') !important;"
+                                style="background-image: url('{{ getImageUrl($photo) }}') !important;"
                                 class="photo-placeholder"></label>
+                                @endif
                         @endif
+                        <div wire:loading wire:target="photo">
+                            <x-icons.spinner />
+                        </div>
 
                     </div>
                     <div class="text-sm">
