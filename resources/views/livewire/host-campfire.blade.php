@@ -279,7 +279,8 @@
             const placeName = e.result.place_name,
                 isUSAddress = placeName.includes('United States'),
                 isCanadaAddress = placeName.includes('Canada'),
-                isUKAddress = placeName.includes('United Kingdom');
+                isUKAddress = placeName.includes('United Kingdom'),
+                isAustraliaAddress = placeName.includes('Australia');
 
             if (isUSAddress) {
                 @this.set('showState', true)
@@ -315,6 +316,20 @@
                 @this.set('country', country)
             }
 
+            if(isAustraliaAddress) {
+                const addressString = placeName,
+                    addressComponents = addressString.split(",").map(component => component.trim()),
+                    address = addressComponents[0],
+                    city = e.result.context.find(context => context.id.includes('place')).text,
+                    zip = e.result.context.find(context => context.id.includes('postcode')).text,
+                    country = e.result.context.find(context => context.id.includes('country')).text;
+
+                @this.set('street_address', address)
+                @this.set('state', '-')
+                @this.set('city', city)
+                @this.set('zip', zip)
+                @this.set('country', country)
+            }
 
             @this.set('latitude', e.result.geometry.coordinates[1])
             @this.set('longitude', e.result.geometry.coordinates[0])
