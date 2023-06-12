@@ -5,6 +5,7 @@
 @import "./components/card-grid.css";
 @import "./components/file-input.css";
 @import "./components/mapbox-geocoder.css";
+@import "./components/photos.css";
 @import "tailwindcss/utilities";
 
 [x-cloak] { display: none !important; }
