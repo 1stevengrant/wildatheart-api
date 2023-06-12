@@ -1,4 +1,11 @@
-<div class="mt-[75px] md:mt-[107px]">
+<div class="mt-[75px] md:mt-[107px] relative">
+    <a href="{{ route('home') }}" class="bg-white text-black absolute top-2 left-2 z-50 rounded-full">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+             stroke="currentColor" class="w-6 h-6 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+
+    </a>
     <div id="map" class="h-[150px] md:h-[300px]"></div>
     <div id="campfire"
          class="p-6 rounded-t-2xl border-t border-grey-darker text-white">
