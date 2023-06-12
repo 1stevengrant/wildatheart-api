@@ -78,7 +78,7 @@ class HostCampfire extends Component
         $this->phone = $user->phone ?? '';
     }
 
-    public function updated()
+    public function updated(): void
     {
         if ($this->showState) {
             $this->location = $this->location = $this->city.', '.$this->state;
