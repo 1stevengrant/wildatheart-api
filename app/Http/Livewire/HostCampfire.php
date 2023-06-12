@@ -83,6 +83,10 @@ class HostCampfire extends Component
 
     public function updatedPhoto(): void
     {
+        $this->validate([
+            'photo' => 'image|max:10000',
+        ]);
+
         $this->isUploaded = true;
     }
 
