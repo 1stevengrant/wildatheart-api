@@ -17,7 +17,7 @@
             </x-button-container>
         </div>
         <div class="md:w-1/2 mt-8 mt:mt-0">
-            <img src="{{ asset('img/fires-gift-image-v2.webp') }}" alt="">
+            <img src="{{ asset('img/fires-gift-image-v2.webp') }}" alt="" class="hidden md:block">
         </div>
     </div>
 </div>
