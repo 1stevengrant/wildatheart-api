@@ -1,17 +1,23 @@
 @props(['closeButton' => true, 'onSubmit' => null, 'contentPadding' => true])
 <form wire:submit.prevent="{{ $onSubmit }}">
     <div class="offcanvas-header">
-        @if($title ?? false)
-        <h5 class="offcanvas-title">{{ $title }}</h5>
+        @if ($title ?? false)
+            <h5 class="offcanvas-title">{{ $title }}</h5>
         @endif
-        @if($closeButton)
-        <button type="button" wire:click="$emit('slide-over.close')" class="btn-close text-reset" aria-label="Close"></button>
+
+        @if ($closeButton)
+            <button
+                type="button"
+                wire:click="$emit('slide-over.close')"
+                class="btn-close text-reset"
+                aria-label="Close"
+            ></button>
         @endif
     </div>
-    <div @class(['offcanvas-body', 'px-0 py-0' => !$contentPadding])>
+    <div @class(['offcanvas-body', 'px-0 py-0' => ! $contentPadding])>
         {{ $slot }}
     </div>
-    @if($buttons ?? false)
+    @if ($buttons ?? false)
         <div class="offcanvas-body py-0">
             {{ $buttons }}
         </div>

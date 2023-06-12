@@ -1,15 +1,21 @@
 @props(['contentPadding' => true, 'onSubmit' => null])
 <form wire:submit.prevent="{{ $onSubmit }}">
     <div class="modal-header">
-        @if($title ?? false)
+        @if ($title ?? false)
             <h5 class="modal-title">{{ $title }}</h5>
         @endif
-        <button type="button" class="btn-close" wire:click="$emit('modal.close')" aria-label="Close"></button>
+
+        <button
+            type="button"
+            class="btn-close"
+            wire:click="$emit('modal.close')"
+            aria-label="Close"
+        ></button>
     </div>
-    <div @class(['modal-body' , 'px-0 py-0' => !$contentPadding])>
+    <div @class(['modal-body', 'px-0 py-0' => ! $contentPadding])>
         {{ $slot }}
     </div>
-    @if($buttons ?? false)
+    @if ($buttons ?? false)
         <div class="modal-footer">
             {{ $buttons }}
         </div>

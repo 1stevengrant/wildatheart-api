@@ -1,23 +1,29 @@
 @props([
-    'exception'
+    'exception',
 ])
 
-<div {{ $attributes->class(['h-screen flex flex-col items-center justify-center']) }}>
-    <div class="text-white text-center text-2xl font-semibold">
+<div
+    {{ $attributes->class(['flex h-screen flex-col items-center justify-center']) }}
+>
+    <div class="text-center text-2xl font-semibold text-white">
         <div class="flex items-center">
-            <x-logo class="w-[300px] mx-auto mb-4"/>
-            <img src="{{ asset('svgs/map-campfire-marker.svg') }}"
-                 class="h-[200px] mx-auto mb-4"
-                 alt="">
+            <x-logo class="mx-auto mb-4 w-[300px]" />
+            <img
+                src="{{ asset('svgs/map-campfire-marker.svg') }}"
+                class="mx-auto mb-4 h-[200px]"
+                alt=""
+            />
         </div>
         <div>
             {{ $exception->getStatusCode() }}
         </div>
-        <div class="max-w-md mx-auto">
+        <div class="mx-auto max-w-md">
             {{ $exception->getMessage() }}
         </div>
-        <a class="text-base border-b border-white hover:border-transparent"
-           href="{{ route('home') }}">
+        <a
+            class="border-b border-white text-base hover:border-transparent"
+            href="{{ route('home') }}"
+        >
             Back to Fires
         </a>
     </div>

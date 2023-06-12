@@ -1,6 +1,6 @@
 @props([
-    'error'
+    'error',
 ])
-<div class="text-sm mt-1 italic text-red">
+<div class="mt-1 text-sm italic text-red">
     {{ $error }}
 </div>

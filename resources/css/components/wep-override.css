@@ -1,4 +1,6 @@
-[x-cloak] { display: none !important; }
+[x-cloak] {
+    display: none !important;
+}
 
 .wep-modal {
     @apply relative;
@@ -6,20 +8,20 @@
 }
 
 .wep-modal-container {
-    @apply fixed z-10 inset-0 overflow-y-auto;
+    @apply fixed inset-0 z-10 overflow-y-auto;
 }
 
 .wep-modal-inner-container {
-    @apply flex items-end sm:items-center justify-center min-h-full text-center;
+    @apply flex min-h-full items-end justify-center text-center sm:items-center;
 }
 
 .wep-modal-backdrop,
 .wep-slide-over-backdrop {
-    @apply fixed inset-0 bg-opacity-25 bg-grey-darkest backdrop-blur transition-opacity;
+    @apply fixed inset-0 bg-grey-darkest bg-opacity-25 backdrop-blur transition-opacity;
 }
 
 .wep-modal-content {
-    @apply relative bg-white text-left overflow-hidden shadow-xl transform transition-all w-full m-4 sm:m-0;
+    @apply relative m-4 w-full transform overflow-hidden bg-white text-left shadow-xl transition-all sm:m-0;
 }
 
 .wep-modal-content > div {
@@ -27,12 +29,12 @@
 }
 
 .wep-modal-content.fullscreen {
-    @apply h-screen rounded-none shadow-none w-full m-0;
+    @apply m-0 h-screen w-full rounded-none shadow-none;
 }
 
 .wep-modal-backdrop.enter,
 .wep-slide-over-backdrop.enter {
-    @apply ease-out duration-300;
+    @apply duration-300 ease-out;
 }
 
 .wep-modal-backdrop.start,
@@ -51,29 +53,29 @@
 
 .wep-modal-backdrop.leave,
 .wep-slide-over-backdrop.leave {
-    @apply ease-in duration-200;
+    @apply duration-200 ease-in;
 }
 
 .wep-modal-content.enter {
-    @apply ease-out duration-300;
+    @apply duration-300 ease-out;
 }
 
 .wep-modal-content.start,
 .wep-modal-content.leave.end {
-    @apply opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95;
+    @apply translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95;
 }
 
 .wep-modal-content.end,
 .wep-modal-content.leave.start {
-    @apply opacity-100 translate-y-0 sm:scale-100;
+    @apply translate-y-0 opacity-100 sm:scale-100;
 }
 
 .wep-modal-content.leave {
-    @apply ease-in duration-200;
+    @apply duration-200 ease-in;
 }
 
 .wep-slide-over {
-    @apply fixed inset-0 overflow-hidden z-30;
+    @apply fixed inset-0 z-30 overflow-hidden;
 }
 
 .wep-slide-over.wep-slide-over-top {
@@ -98,7 +100,7 @@
 
 .wep-slide-over-container-inner-wrap.enter,
 .wep-slide-over-container-inner-wrap.leave {
-    @apply transform transition ease-in-out duration-500;
+    @apply transform transition duration-500 ease-in-out;
 }
 
 .wep-slide-over-container-inner-wrap.enter.start,
@@ -114,4 +116,3 @@
 .wep-slide-over-container-inner-content {
     @apply flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl;
 }
-

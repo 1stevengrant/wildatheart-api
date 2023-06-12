@@ -1,14 +1,17 @@
-@if(app()->isProduction())
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CT9GZRL7RX"></script>
+@if (app()->isProduction())
+    <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-CT9GZRL7RX"
+    ></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
+        function gtag() {
+            dataLayer.push(arguments);
+        }
 
-    gtag('js', new Date());
+        gtag("js", new Date());
 
-    gtag('config', 'G-CT9GZRL7RX');
+        gtag("config", "G-CT9GZRL7RX");
     </script>
 @endif

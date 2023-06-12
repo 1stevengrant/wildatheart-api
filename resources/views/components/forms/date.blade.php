@@ -26,12 +26,10 @@
     />
 
     @if ($error)
-        <x-forms.error
-            :error="$error"/>
+        <x-forms.error :error="$error" />
     @endif
 
-    @if($instruction)
-        <x-forms.instruction
-            :instruction="$instruction"/>
+    @if ($instruction)
+        <x-forms.instruction :instruction="$instruction" />
     @endif
 </div>

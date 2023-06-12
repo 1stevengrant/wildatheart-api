@@ -8,4 +8,6 @@
 @import "./components/photos.css";
 @import "tailwindcss/utilities";
 
-[x-cloak] { display: none !important; }
+[x-cloak] {
+    display: none !important;
+}

@@ -12,13 +12,18 @@
         for="{{ $name }}"
         required="{{ $attributes->has('required') }}"
     />
-    <div class="flex mt-2">
-        <select {{ $attributes->merge(['class' => 'bg-[#171513] text-white rounded-md border border-[#2E2C29] block
-        w-full p-2 capitalize
-        focus:outline-none focus:border-orange focus:ring-orange' . ($trailingAddOn ? '' : '')]) }}>
+    <div class="mt-2 flex">
+        <select
+            {{
+                $attributes->merge(['class' => 'bg-[#171513] text-white rounded-md border border-[#2E2C29] block
+                w-full p-2 capitalize
+                focus:outline-none focus:border-orange focus:ring-orange' . ($trailingAddOn ? '' : '')])
+            }}
+        >
             @if ($placeholder)
                 <option disabled value="">{{ $placeholder }}</option>
             @endif
+
             {{ $slot }}
         </select>
 
@@ -26,12 +31,11 @@
             {{ $trailingAddOn }}
         @endif
     </div>
-    @if($error)
+    @if ($error)
         <x-forms.error :error="$error" />
     @endif
 
-    @if($instruction)
-        <x-forms.instruction
-            :instruction="$instruction"/>
+    @if ($instruction)
+        <x-forms.instruction :instruction="$instruction" />
     @endif
 </div>

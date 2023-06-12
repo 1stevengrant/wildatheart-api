@@ -1,8 +1,8 @@
-@if($item->image())
+@if ($item->image())
     <div class="wep-spotlight-item-icon">
-        <img src="{{ $item->image() }}" alt="">
+        <img src="{{ $item->image() }}" alt="" />
     </div>
-    @elseif($item->icon())
+@elseif ($item->icon())
     <div class="wep-spotlight-item-icon">
         {!! $item->icon()->svg() !!}
     </div>
@@ -15,12 +15,18 @@
             {{ __('wire-elements-pro::spotlight.enter') }}
         </span>
         <span>
-            {{ __('wire-elements-pro::spotlight.to') }} <span class="wep-spotlight-item-action-description">{{ $item->action()->description() }}</span>
+            {{ __('wire-elements-pro::spotlight.to') }}
+            <span class="wep-spotlight-item-action-description">
+                {{ $item->action()->description() }}
+            </span>
         </span>
     </div>
-    @if($item->tokens()->isNotEmpty())
-    <div class="wep-spotlight-item-token">
-        <span class="wep-spotlight-item-token-key">{{ __('wire-elements-pro::spotlight.tab') }}</span> <span>{{ __('wire-elements-pro::spotlight.to_search') }}</span>
-    </div>
+    @if ($item->tokens()->isNotEmpty())
+        <div class="wep-spotlight-item-token">
+            <span class="wep-spotlight-item-token-key">
+                {{ __('wire-elements-pro::spotlight.tab') }}
+            </span>
+            <span>{{ __('wire-elements-pro::spotlight.to_search') }}</span>
+        </div>
     @endif
 </div>

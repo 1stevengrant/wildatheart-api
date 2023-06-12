@@ -1,11 +1,7 @@
-<x-wire-elements-pro::tailwind.modal
-    on-submit="handle">
-    <x-slot name="title">
-        Report an Issue or Provide Feedback
-    </x-slot>
+<x-wire-elements-pro::tailwind.modal on-submit="handle">
+    <x-slot name="title">Report an Issue or Provide Feedback</x-slot>
 
     <div class="space-y-4">
-
         <div class="space-y-4">
             <x-forms.input
                 required
@@ -41,12 +37,9 @@
     </div>
 
     <x-slot name="buttons">
-        <x-primary-button>
-            Submit
-        </x-primary-button>
+        <x-primary-button>Submit</x-primary-button>
         <x-secondary-button wire:click="$emit('modal.close')">
             Cancel
         </x-secondary-button>
     </x-slot>
-
 </x-wire-elements-pro::tailwind.modal>

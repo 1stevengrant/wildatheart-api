@@ -1,5 +1,7 @@
-<button class="flex items-center text-white hover:text-orange transition-colors ease-in-out duration-150 space-x-2 focus:ring-orange focus:outline-none"
-        onclick="Livewire.emit('modal.open', 'report-issue')">
+<button
+    class="flex items-center space-x-2 text-white transition-colors duration-150 ease-in-out hover:text-orange focus:outline-none focus:ring-orange"
+    onclick="Livewire.emit('modal.open', 'report-issue')"
+>
     <x-icons.questions />
     <span>{{ __('Feedback') }}</span>
 </button>

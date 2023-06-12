@@ -1,20 +1,24 @@
 @props([
     /** @var \App\Models\Campfire */
-    'campfire'
+    'campfire',
 ])
 
-<div {{ $attributes->class(['border-t border-b border-grey-darker py-8 mt-[25px] space-y-4']) }}>
+<div
+    {{ $attributes->class(['mt-[25px] space-y-4 border-b border-t border-grey-darker py-8']) }}
+>
     <div class="flex items-start">
-        <x-icons.event-type class="flex-shrink-0"/>
+        <x-icons.event-type class="flex-shrink-0" />
         <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">{{ $campfire->indoorOrOutdoor() }} event</p>
-            <p class="text-sm text-[#6B7280]">This event is slated to be an {{ $campfire->indoorOrOutdoor() }} event.
-                Please dress
-                accordingly.</p>
+            <p class="text-sm text-[#6B7280]">
+                This event is slated to be an
+                {{ $campfire->indoorOrOutdoor() }} event. Please dress
+                accordingly.
+            </p>
         </div>
     </div>
     <div class="flex items-start">
-        <x-icons.calendar class="flex-shrink-0"/>
+        <x-icons.calendar class="flex-shrink-0" />
         <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">Frequency</p>
             <p class="text-sm text-[#6B7280]">

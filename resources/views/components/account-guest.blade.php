@@ -1,6 +1,8 @@
 @guest
-    <a href="{{ route('login') }}"
-       class="text-white hover:text-orange transition-colors ease-in-out duration-150">
+    <a
+        href="{{ route('login') }}"
+        class="text-white transition-colors duration-150 ease-in-out hover:text-orange"
+    >
         {{ __('Login / Register') }}
     </a>
 @endguest

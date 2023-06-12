@@ -1,25 +1,34 @@
 <div class="md:w-[350px]">
-    <div class="flex items-center bg-white rounded-full py-1 pl-3 pr-2 z-60 relative">
+    <div
+        class="z-60 relative flex items-center rounded-full bg-white py-1 pl-3 pr-2"
+    >
         <label for="search" class="w-full">
-            <input type="search"
-                   class="w-full border-white placeholder:text-xs md:placeholder:text-base outline-none focus:ring-0
-                   ring-transparent focus:border-transparent "
-                   id="search"
-                   wire:model.debounce="searchQuery"
-                   placeholder="Search Fires (Location or Host)"
-                   name="search">
+            <input
+                type="search"
+                class="w-full border-white outline-none ring-transparent placeholder:text-xs focus:border-transparent focus:ring-0 md:placeholder:text-base"
+                id="search"
+                wire:model.debounce="searchQuery"
+                placeholder="Search Fires (Location or Host)"
+                name="search"
+            />
         </label>
-        <button class="bg-orange flex-col items-center justify-center rounded-full p-4 w-2 h-2">
-            <x-icons.search/>
+        <button
+            class="h-2 w-2 flex-col items-center justify-center rounded-full bg-orange p-4"
+        >
+            <x-icons.search />
         </button>
     </div>
 
-    @if(!empty($searchQuery))
-        <div class="absolute bg-white pt-2 pb-4 px-4 overflow-auto z-50 rounded-xl ml-[1px]">
-            @if($campfires->isNotEmpty())
+    @if (! empty($searchQuery))
+        <div
+            class="absolute z-50 ml-[1px] overflow-auto rounded-xl bg-white px-4 pb-4 pt-2"
+        >
+            @if ($campfires->isNotEmpty())
                 @foreach ($campfires as $campfire)
-                    <a class="block px-4 py-2 hover:border-orange border border-white rounded-xl"
-                       href="{{$campfire->url }}">
+                    <a
+                        class="block rounded-xl border border-white px-4 py-2 hover:border-orange"
+                        href="{{ $campfire->url }}"
+                    >
                         {{ $campfire->title() }}
                     </a>
                 @endforeach
