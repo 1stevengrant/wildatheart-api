@@ -69,11 +69,13 @@ class HostCampfire extends Component
             return redirect()->route('social.login', ['provider' => 'auth0']);
         }
 
-        $this->firstName = auth()->user()->given_name;
-        $this->lastName = auth()->user()->family_name;
-        $this->campfireName = auth()->user()->given_name."'s";
-        $this->countryCode = auth()->user()->country_code ?? '1';
-        $this->phone = auth()->user()->phone ?? '';
+        $user = auth()->user();
+
+        $this->firstName = $user->given_name;
+        $this->lastName = $user->family_name;
+        $this->campfireName = $user->given_name."'s";
+        $this->countryCode = $user->country_code ?? '1';
+        $this->phone = $user->phone ?? '';
     }
 
     public function updated()
