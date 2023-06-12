@@ -1,6 +1,6 @@
 <div class="hidden md:block rounded-md border-grey-darker border p-5 md:w-1/2 shadow-lg">
     <div class="flex items-stretch space-x-4">
-        <img src="{{ asset('img/campfire.png') }}"
+        <img src="{{ asset('img/wah-fires-suburb-1.webp') }}"
              class="rounded-md"
              alt="">
         <div class="flex flex-col justify-between relative">
