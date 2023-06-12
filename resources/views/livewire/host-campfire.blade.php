@@ -160,7 +160,17 @@
 
                 @if ($mapboxPlaceName)
 
+
                     <x-forms.instruction class="italic" instruction="Please correct any errors from autocompletion" />
+
+                    <x-forms.select name="country" label="Country" :error="$errors->first('country')" required wire:model="country">
+                        <option value="">Select Country</option>
+                        @foreach (getCountries() as $key => $country)
+                            <option value="{{ $country }}">
+                                {{ $country }}
+                            </option>
+                        @endforeach
+                    </x-forms.select>
 
                     <x-forms.input wire:model="street_address" label="Street Address" required :error="$errors->first('street_address')"
                         name="street_address" />
@@ -178,14 +188,7 @@
                             @endforeach
                         </x-forms.select>
                     @endif
-                    <x-forms.select name="country" label="Country" :error="$errors->first('country')" required wire:model="country">
-                        <option value="">Select Country</option>
-                        @foreach (getCountries() as $key => $country)
-                            <option value="{{ $country }}">
-                                {{ $country }}
-                            </option>
-                        @endforeach
-                    </x-forms.select>
+
 
                     <x-forms.input wire:model="zip" label="Zip Code" :error="$errors->first('zip')" name="zip" required />
 

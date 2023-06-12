@@ -113,7 +113,7 @@ class HostCampfire extends Component
             'family_name' => $this->lastName,
             'phone' => $this->phone,
             'country_code' => $this->countryCode,
-            'image' => $this->photo ? $this->photo->store('users') : auth()->user()->image,
+            'image' => $this->isUploaded ? $this->photo->store('users') : auth()->user()->image,
             'opted_into_marketing' => $this->emailUpdates,
             'profile_step' => 2,
         ]);
