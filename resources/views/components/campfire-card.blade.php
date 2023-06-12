@@ -21,7 +21,7 @@
                     {{ $frequency }}
                 </div>
                 @if ($title)
-                    <p class="text-white">{{ $title }} Fire</p>
+                    <p class="text-white">{{ $title }}</p>
                 @endif
 
                 <p class="text-sm text-white">{{ $location }}</p>
