@@ -129,14 +129,15 @@
                             <button
                                 type="button"
                                 wire:click.prevent="$set('emailUpdates', true)"
-                                class="@if ($emailUpdates) border border-white text-white rounded-l-full @endifw-1/2 px-10 py-3 text-sm font-semibold"
+                                class="@if ($emailUpdates) border border-white text-white rounded-l-full @endif w-1/2
+                                 px-10 py-3 text-sm font-semibold"
                             >
                                 Yes
                             </button>
                             <button
                                 type="button"
                                 wire:click.prevent="$set('emailUpdates', false)"
-                                class="@if (!$emailUpdates) border border-white text-white rounded-r-full @endifw-1/2 px-10 py-3 text-sm font-semibold"
+                                class="@if (!$emailUpdates) border border-white text-white rounded-r-full @endif w-1/2 px-10 py-3 text-sm font-semibold"
                             >
                                 No
                             </button>
@@ -348,7 +349,8 @@
     </div>
 
     <div
-        class="@if ($step === 1) md:bg-cover md:bg-center md:bg-campfire @endifflex items-center justify-center md:w-1/2"
+        class="@if ($step === 1) md:bg-cover md:bg-center md:bg-campfire @endif flex items-center justify-center
+        md:w-1/2"
     >
         <div x-show="step === 2" class="hidden md:block">
             <x-campfire-card

@@ -12,7 +12,7 @@ class CampfireObserver
      */
     public function created(Campfire $campfire): void
     {
-        LookupLatitudeLongitude::dispatch($campfire);
+//        LookupLatitudeLongitude::dispatch($campfire);
         $campfire->update([
             'state_code' => getStateAbbreviation($campfire->state),
         ]);
