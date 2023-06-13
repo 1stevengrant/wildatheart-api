@@ -9,10 +9,8 @@ jobs:
     name: run prettier
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: Adzz/jest_test_action@v1.0.0
-        with:
-          command: format
+      - name: actionsx/prettier
+        uses: actionsx/prettier@v2
       - name: "Commit changes"
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
