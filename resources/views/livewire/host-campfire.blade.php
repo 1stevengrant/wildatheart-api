@@ -355,7 +355,7 @@
     >
         <div x-show="step === 2" class="hidden md:block">
             <x-campfire-card
-                :title="$campfireName"
+                :title="$campfireName . ' Fire'"
                 :frequency="$frequency"
                 :location="$location"
                 :host-name="auth()->user()->full_name"
