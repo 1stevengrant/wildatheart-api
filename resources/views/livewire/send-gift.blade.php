@@ -18,11 +18,7 @@
                 <div class="space-y-8">
                     <div class="mt-8">
                         <div>
-                            <x-forms.label
-                                for="email"
-                                label="Mailing Address"
-                                class="mt-8"
-                            />
+                            <x-forms.label for="email" label="Mailing Address" class="mt-8" />
                         </div>
 
                         <div class="space-y-4">
