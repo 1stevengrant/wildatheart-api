@@ -57,11 +57,7 @@
         });
 
         function addMarkers() {
-            const homeMarker = document.createElement("div");
-            homeMarker.className = "home-marker";
-            new mapboxgl.Marker(homeMarker)
-                .setLngLat([{{ $longitude }}, {{ $latitude }}])
-                .addTo(map);
+
 
             for (const marker of campfires.features) {
                 /* Create a div element for the marker. */
@@ -90,17 +86,6 @@
                     flyToCampfire(marker);
                     /* Close all other popups and display popup for clicked fire */
                     createPopUp(marker);
-                    /* Highlight listing in sidebar */
-                    const activeItem =
-                        document.getElementsByClassName("active");
-                    e.stopPropagation();
-                    if (activeItem[0]) {
-                        activeItem[0].classList.remove("active");
-                    }
-                    const listing = document.getElementById(
-                        `campfire-${marker.properties.id}`
-                    );
-                    listing.classList.add("active");
                 });
             }
         }
