@@ -91,7 +91,7 @@ class SendGift extends Component
                 'nullable',
                 new RequiredIf($this->country === 'US'),
             ],
-            'zip' => 'required|max:20|min:5',
+            'zip' => 'required|max:20|min:4',
             'phone' => 'required|numeric|digits_between:10,15',
         ]);
 
