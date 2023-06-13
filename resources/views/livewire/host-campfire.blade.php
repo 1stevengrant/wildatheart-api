@@ -398,10 +398,7 @@
         @this.set('mapboxPlaceName', e.result.place_name, true)
         @this.set('showState', false)
         const placeName = e.result.place_name,
-            isUSAddress = placeName.includes('United States'),
-            isCanadaAddress = placeName.includes('Canada'),
-            isUKAddress = placeName.includes('United Kingdom'),
-            isAustraliaAddress = placeName.includes('Australia');
+            isUSAddress = placeName.includes('United States');
 
         if (isUSAddress) {
             @this.set('showState', true)
@@ -409,7 +406,6 @@
                 addressComponents = addressString.split(",").map(component => component.trim()),
                 address = addressComponents[0],
                 city = addressComponents[1],
-                stateZip = addressComponents[2].split(" "),
                 state = e.result.context.find(context => context.id.includes('region')).short_code
                 .replace("US-", ""),
                 zip = e.result.context.find(context => context.id.includes('postcode')).text,
@@ -420,24 +416,7 @@
             @this.set('state', state)
             @this.set('zip', zip)
             @this.set('country', country)
-        }
-
-        if (isUKAddress || isCanadaAddress) {
-            const addressString = placeName,
-                addressComponents = addressString.split(",").map(component => component.trim()),
-                address = addressComponents[0],
-                city = addressComponents[1],
-                postcode = addressComponents[addressComponents.length - 2].trim(),
-                country = addressComponents[addressComponents.length - 1];
-
-            @this.set('street_address', address)
-            @this.set('state', '-')
-            @this.set('city', city)
-            @this.set('zip', postcode)
-            @this.set('country', country)
-        }
-
-        if(isAustraliaAddress) {
+        } else {
             const addressString = placeName,
                 addressComponents = addressString.split(",").map(component => component.trim()),
                 address = addressComponents[0],
