@@ -53,20 +53,29 @@ Route::get('oauth/callback', function () {
     return Redirect::to('/');
 });
 
-Route::get('test', function () {
-    $response = Forrest::sobjects('Contact', [
-        'method' => 'post',
-        'body' => [
-            'FirstName' => 'Steven',
-            'LastName' => 'Steven',
-            'Email' => 'steven@servant.io',
-            'Phone' => '+447766494949',
-        ],
-    ]);
-    dd($response);
-});
 
-Route::get('account', function () {
-    $query = Forrest::query('SELECT Id FROM Account');
-    dd($query);
+Route::middleware(['role:admin'])->group(function () {
+    Route::get('mailable', function () {
+        $campfire = App\Models\Campfire::first();
+
+        return new \App\Mail\Campfire\CampfireApproved($campfire);
+    });
+
+    Route::get('account', function () {
+        $query = Forrest::query('SELECT Id FROM Account');
+        dd($query);
+    });
+
+    Route::get('test', function () {
+        $response = Forrest::sobjects('Contact', [
+            'method' => 'post',
+            'body' => [
+                'FirstName' => 'Steven',
+                'LastName' => 'Steven',
+                'Email' => 'steven@servant.io',
+                'Phone' => '+447766494949',
+            ],
+        ]);
+        dd($response);
+    });
 });
