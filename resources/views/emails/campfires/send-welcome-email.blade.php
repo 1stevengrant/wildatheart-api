@@ -18,7 +18,7 @@ Fires are a place men find themselves outrageously loved by God, and other men.
 
 We are excited to have you on board and can't wait to see what God does with your Fire.
 
-If you have any questions or require any assistance, please don't hesitate to reach out to us at [help@wildatheart.org](help@wildatheart.org).
+If you have any questions or require any assistance, please don't hesitate to reach out to us at [{{ config('mail.from.address') }}](mailto:{{ config('mail.from.address') }}).
 
 For the Kingdom,
 
