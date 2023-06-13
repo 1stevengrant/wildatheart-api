@@ -119,6 +119,7 @@
                             <x-forms.input
                                 label="Phone"
                                 name="phone"
+                                type="tel"
                                 wire:model="phone"
                                 :error="$errors->first('phone')"
                             />
@@ -171,11 +172,9 @@
             document.title = "Claim Your Gift 🥳 | {{ config('app.name') }}";
 
             window.addEventListener("next-step", (event) => {
-                window.scroll({
-                    top: 0,
-                    left: 0,
-                    behavior: "smooth",
-                });
+                setTimeout(() => {
+                    window.scroll({ top: 0, left: 0, behavior: "smooth" });
+                }, 10);
             });
         });
     </script>

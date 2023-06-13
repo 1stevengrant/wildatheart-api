@@ -58,6 +58,7 @@
                             :error="$errors->first('phone')"
                             instruction="We may occasionally send you text messages."
                             label="Phone Number"
+                            type="tel"
                         />
                     </div>
                 </div>
@@ -375,12 +376,10 @@
         document.title = 'Host a Fire | {{ config('app.name') }}';
     });
 
-    window.addEventListener('next-step', event => {
-        window.scroll({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
-        });
+    window.addEventListener('next-step', () => {
+        setTimeout(() => {
+            window.scroll({ top: 0, left: 0, behavior: "smooth" });
+        }, 10);
     });
 
     const geocoder = new MapboxGeocoder({
