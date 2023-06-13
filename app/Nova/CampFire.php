@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Nova\Actions\ApproveCampFire;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Number;
@@ -100,6 +101,8 @@ class CampFire extends Resource
             Text::make('Book Shipments Count', 'book_shipments_count')
                 ->sortable()
                 ->readonly(),
+
+            Date::make('Created At'),
 
             HasMany::make('Book Shipments'),
 
