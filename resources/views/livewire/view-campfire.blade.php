@@ -27,10 +27,10 @@
             <div class="md:flex md:space-x-8">
                 <div class="md:w-2/3">
                     <h1 class="mb-1 text-3xl leading-tighter">
-                        {{ $campfire->title() }}
+                        {{ $campfire->title }}
                     </h1>
                     <h2 class="mb-8 text-xl leading-tighter">
-                        {{ $campfire->location() }}
+                        {{ $campfire->location }}
                     </h2>
 
                     <x-campfire-host-info :campfire="$campfire" />
@@ -182,7 +182,7 @@
     <script>
         document.addEventListener("livewire:load", function () {
             document.title =
-                "{!! $campfire->title() ?? $campfire->location() !!} | {{ config('app.name') }}";
+                "{!! $campfire->title ?? $campfire->location !!} | {{ config('app.name') }}";
             if (window.innerWidth < 768) {
                 const campfireElement = document.getElementById("campfire"),
                     connectWithHostElement = document.getElementById(

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\SendNewCampfireSlackAlert;
 use App\Models\Campfire;
 
 class CampfireObserver
@@ -14,6 +15,8 @@ class CampfireObserver
         $campfire->update([
             'state_code' => getStateAbbreviation($campfire->state),
         ]);
+
+        SendNewCampfireSlackAlert::dispatch($campfire);
     }
 
     /**

@@ -1,7 +1,7 @@
 <x-mail::message>
 {{ $attendee->given_name }},
 
-Thank you for expressing interest in {{ $campfire->title() }}.
+Thank you for expressing interest in {{ $campfire->title }}.
 
 Well done! Choosing to get your heart back as man is one of the riskiest things you can ever do.
 

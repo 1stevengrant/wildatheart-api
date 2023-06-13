@@ -132,7 +132,7 @@ class Campfire extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function title(): ?string
+    public function getTitleAttribute(): ?string
     {
         if ($this->name) {
             return $this->name.' Fire';
@@ -141,7 +141,7 @@ class Campfire extends Model
         return null;
     }
 
-    public function location(): string
+    public function getLocationAttribute(): string
     {
         if ($this->country === 'US') {
             return $this->city.', '.getStateAbbreviation($this->state);
@@ -209,5 +209,10 @@ class Campfire extends Model
             get: fn (string $value) => $value,
             set: fn (string $value) => getCountryCodeFromCountryName($value),
         );
+    }
+
+    public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|\Illuminate\Contracts\Routing\UrlGenerator|\Illuminate\Contracts\Foundation\Application
+    {
+        return url('manager/resources/camp-fires/'.$this->id);
     }
 }

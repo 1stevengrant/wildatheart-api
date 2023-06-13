@@ -174,9 +174,9 @@
                             class="hidden w-1/2 flex-col items-center justify-center md:flex"
                         >
                             <x-campfire-card
-                                :title="$campfire->title()"
+                                :title="$campfire->title"
                                 :frequency="$campfire->frequency->name"
-                                :location="$campfire->location()"
+                                :location="$campfire->location"
                                 :host-name="$campfire->host->fullName"
                                 :profile-image="$campfire->hostPhoto()"
                             />
