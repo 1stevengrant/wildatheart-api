@@ -53,7 +53,6 @@ Route::get('oauth/callback', function () {
     return Redirect::to('/');
 });
 
-
 Route::middleware(['role:admin'])->group(function () {
     Route::get('mailable', function () {
         $campfire = App\Models\Campfire::first();
