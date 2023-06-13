@@ -13,3 +13,9 @@ jobs:
       - uses: Adzz/jest_test_action@v1.0.0
         with:
           command: format
+      - name: "Commit changes"
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Blade formatting (Prettier)"
+          commit_user_name: "Blade Bot"
+          skip_fetch: true
