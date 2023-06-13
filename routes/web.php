@@ -34,7 +34,7 @@ Route::get('list/city/{city}', ListCity::class)->name('list.city');
 Route::get('attend/{campfire}', ViewCampfire::class)->name('view.campfire');
 Route::get('connect/{campfire}', ConnectToHost::class)->name('connect.host');
 Route::get('confirmemail/{campfire}', ConfirmEmail::class)->name('confirm.email');
-Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
+Route::get('verify/{token}', VerifyEmail::class)->name('verify.email')->middleware('auth');
 Route::get('gift/{campfire}', SendGift::class)->name('gift');
 
 Route::middleware(['auth', 'role:host'])->group(function () {
