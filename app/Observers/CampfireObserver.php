@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Jobs\LookupLatitudeLongitude;
 use App\Models\Campfire;
 
 class CampfireObserver
