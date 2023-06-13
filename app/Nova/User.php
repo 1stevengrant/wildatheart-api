@@ -28,7 +28,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'full_name';
 
     /**
      * The columns that should be searched.
@@ -36,7 +36,7 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'email',
+        'id', 'family_name', 'given_name', 'email',
     ];
 
     /**
@@ -51,7 +51,11 @@ class User extends Resource
 
             Gravatar::make()->maxWidth(50),
 
-            Text::make('Name')
+            Text::make('Family Name')
+                ->sortable()
+                ->rules('required', 'max:255'),
+
+            Text::make('Given Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
