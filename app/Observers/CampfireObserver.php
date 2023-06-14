@@ -16,7 +16,9 @@ class CampfireObserver
             'state_code' => getStateAbbreviation($campfire->state),
         ]);
 
-        SendNewCampfireSlackAlert::dispatch($campfire);
+        if (config('app.env') === 'production') {
+            SendNewCampfireSlackAlert::dispatch($campfire);
+        }
     }
 
     /**
