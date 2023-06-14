@@ -148,6 +148,7 @@
                         <div id="geocoder"></div>
                     </div>
                     <x-forms.error :error="$errors->first('mapboxPlaceName')" />
+                    <x-forms.error :error="$mapboxError" />
                     <x-forms.instruction
                         instruction="This address is specifically for the Fire. This will only be shared
                             with Wild at Heart. Attendees will only see general area." />
@@ -157,7 +158,7 @@
                     </div>
                 </div>
 
-                @if ($mapboxPlaceName)
+                @if ($mapboxPlaceName || $mapboxError)
                     <x-forms.instruction class="italic" instruction="Please correct any errors from autocompletion" />
 
                     <x-forms.select name="country" label="Country" :error="$errors->first('country')" required wire:model="country">
@@ -222,7 +223,7 @@
         class="@if ($step === 1) md:bg-cover md:bg-center md:bg-campfire @endif flex items-center justify-center
         md:w-1/2">
         <div x-show="step === 2" class="hidden md:block">
-            <x-campfire-card :title="$campfireName . ' Fire'" :frequency="$frequency" :location="$location" :host-name="auth()->user()->full_name"
+            <x-campfire-card :title="$campfireName . ' Fire'" :frequency="$frequency" :location="$city" :host-name="auth()->user()->full_name"
                 :profile-image="auth()
                     ->user()
                     ->profilePhoto()" />
@@ -260,45 +261,47 @@
         geocoderInput.setAttribute('id', 'geocoder-input')
 
         geocoder.on('result', (e) => {
+            try {
 
-            @this.set('mapboxPlaceName', e.result.place_name, true)
-            @this.set('showState', false)
-            const placeName = e.result.place_name,
-                isUSAddress = placeName.includes('United States');
+                @this.set('mapboxPlaceName', e.result.place_name, true)
+                @this.set('showState', false)
+                @this.set('mapboxError', '')
 
-            if (isUSAddress) {
-                @this.set('showState', true)
+                const placeName = e.result.place_name,
+                    isUSAddress = placeName.includes('United States'),
+                    isPostalcode = e.result.place_type.includes('postcode');
+
                 const addressString = placeName,
                     addressComponents = addressString.split(",").map(component => component.trim()),
-                    address = addressComponents[0],
-                    city = e.result.context.find(context => context.id.includes('place'))?.text,
+                    address = isPostalcode ? '' : addressComponents[0],
+                    zip = isPostalcode ? e.result.text : e.result.context.find(context => context.id
+                        .includes(
+                            'postcode'))?.text,
+                    country = e.result.context.find(context => context.id.includes('country'))?.text,
+                    city = e.result.context.find(context => context.id.includes('place'))?.text
+
+                let state = "-";
+
+                if (isUSAddress) {
+                    @this.set('showState', true)
                     state = e.result.context.find(context => context.id.includes('region'))?.short_code
-                    .replace("US-", ""),
-                    zip = e.result.context.find(context => context.id.includes('postcode'))?.text,
-                    country = addressComponents[3];
+                        .replace(
+                            "US-", "")
+                }
 
                 @this.set('street_address', address)
-                @this.set('city', city)
                 @this.set('state', state)
-                @this.set('zip', zip)
-                @this.set('country', country)
-            } else {
-                const addressString = placeName,
-                    addressComponents = addressString.split(",").map(component => component.trim()),
-                    address = addressComponents[0],
-                    city = e.result.context.find(context => context.id.includes('place'))?.text,
-                    zip = e.result.context.find(context => context.id.includes('postcode'))?.text,
-                    country = e.result.context.find(context => context.id.includes('country'))?.text;
-
-                @this.set('street_address', address)
-                @this.set('state', '-')
                 @this.set('city', city)
                 @this.set('zip', zip)
                 @this.set('country', country)
+                @this.set('latitude', e.result.geometry.coordinates[1])
+                @this.set('longitude', e.result.geometry.coordinates[0])
+            } catch (e) {
+                @this.set('mapboxError',
+                    'There was a problem with autoloading the address. Please enter the address manually or try refreshing the page.'
+                )
             }
 
-            @this.set('latitude', e.result.geometry.coordinates[1])
-            @this.set('longitude', e.result.geometry.coordinates[0])
         });
     </script>
 @endpush

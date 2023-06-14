@@ -40,6 +40,8 @@ class HostCampfire extends Component
 
     public string $mapboxPlaceName = '';
 
+    public string $mapboxError = '';
+
     public $street_address = '';
 
     public $state = '';
@@ -64,7 +66,7 @@ class HostCampfire extends Component
 
     public function mount()
     {
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             session()->put('userType', User::ROLE_HOST);
             session()->put('currentUrl', url()->current());
 
@@ -75,7 +77,7 @@ class HostCampfire extends Component
 
         $this->firstName = $user->given_name ?? '';
         $this->lastName = $user->family_name ?? '';
-        $this->campfireName = $user->given_name ? $user->given_name."'s" : 'Your Fire Name';
+        $this->campfireName = $user->given_name ? $user->given_name . "'s" : 'Your Fire Name';
         $this->countryCode = $user->country_code ?? '1';
         $this->phone = $user->phone ?? '';
         $this->photo = $user->image;
@@ -93,7 +95,7 @@ class HostCampfire extends Component
     public function updated(): void
     {
         if ($this->showState) {
-            $this->location = $this->location = $this->city.', '.$this->state;
+            $this->location = $this->location = $this->city . ', ' . $this->state;
         } else {
             $this->location = $this->location = $this->city;
         }
@@ -143,6 +145,7 @@ class HostCampfire extends Component
             'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+            'zip' => 'required|string|max:16',
             'frequency' => 'required|string',
             'token' => [
                 new ShouldBeEmpty(),
@@ -167,7 +170,7 @@ class HostCampfire extends Component
             role: User::ROLE_HOST
         );
 
-        if (! auth()->user()->hasVerifiedEmail()) {
+        if (!auth()->user()->hasVerifiedEmail()) {
             SendVerificationEmail::make()->handle(campfire: $campfire);
 
             return redirect()->route('confirm.email', ['campfire' => $campfire]);
