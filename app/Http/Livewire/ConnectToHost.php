@@ -5,16 +5,18 @@ namespace App\Http\Livewire;
 use App\Models\Campfire;
 use App\Models\State;
 use App\Rules\ShouldBeEmpty;
+use App\Traits\HoneyPot;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Component;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class ConnectToHost extends Component
 {
-    use \App\Traits\HoneyPot;
+    use HoneyPot;
 
     public Campfire|string $campfire;
 
@@ -91,6 +93,8 @@ class ConnectToHost extends Component
             'country_code' => $this->countryCode,
             'marketing_updates' => $this->emailUpdates,
         ]);
+
+        SlackAlert::message($this->firstName.' '.$this->lastName.' contacted '.$this->campfire->host->fullName.' about his Fire in '.$this->campfire->location().' !');
 
         return redirect(route('view.campfire', $this->campfire))->with('connected', true);
 
