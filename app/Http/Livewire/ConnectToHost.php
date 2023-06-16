@@ -97,7 +97,6 @@ class ConnectToHost extends Component
             SlackAlert::message($this->firstName.' '.$this->lastName.' contacted '.$this->campfire->host->fullName.' about his Fire in '.$this->campfire->location.' !');
         }
 
-
         return redirect(route('view.campfire', $this->campfire))->with('connected', true);
 
     }
