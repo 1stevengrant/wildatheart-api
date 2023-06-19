@@ -45,6 +45,7 @@
                                 <x-forms.input
                                     label="First Name"
                                     required
+                                    maxlength="50"
                                     name="first_name"
                                     wire:model="firstName"
                                     :error="$errors->first('firstName')"
@@ -53,6 +54,7 @@
                                 <x-forms.input
                                     label="Last Name"
                                     required
+                                    maxlength="50"
                                     :error="$errors->first('lastName')"
                                     name="last_name"
                                     wire:model="lastName"
@@ -62,6 +64,7 @@
                             <x-forms.input
                                 label="Company"
                                 name="company"
+                                maxlength="50"
                                 :error="$errors->first('company')"
                                 wire:model="company"
                                 placeholder="(optional)"
@@ -71,12 +74,14 @@
                                 label="Address"
                                 required
                                 name="address1"
+                                maxlength="50"
                                 :error="$errors->first('address1')"
                                 wire:model="address1"
                             />
 
                             <x-forms.input
                                 label=""
+                                maxlength="50"
                                 name="address2"
                                 wire:model="address2"
                                 :error="$errors->first('address2')"
@@ -86,6 +91,7 @@
                             <div class="grid gap-4 md:grid-cols-3">
                                 <x-forms.input
                                     label="City"
+                                    maxlength="50"
                                     required
                                     name="city"
                                     :error="$errors->first('city')"
@@ -110,6 +116,7 @@
                                 <x-forms.input
                                     label="Zip/Postcode"
                                     name="zip"
+                                    maxlength="10"
                                     :error="$errors->first('zip')"
                                     wire:model="zip"
                                     required
@@ -120,6 +127,7 @@
                                 label="Phone"
                                 name="phone"
                                 type="tel"
+                                maxlength="50"
                                 wire:model="phone"
                                 :error="$errors->first('phone')"
                             />
