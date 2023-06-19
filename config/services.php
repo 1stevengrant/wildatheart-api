@@ -58,4 +58,8 @@ return [
         'secret' => env('SALESFORCE_SECRET'),
     ],
 
+    'slack' => [
+        'webhook_url' => 'https://hooks.slack.com/services/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',
+    ],
+
 ];

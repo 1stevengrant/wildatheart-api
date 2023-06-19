@@ -5,7 +5,7 @@ return [
      * The webhook URLs that we'll use to send a message to Slack.
      */
     'webhook_urls' => [
-        'default' => 'https://hooks.slack.com/services/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',
+        'default' => config('services.slack.webhook_url'),
     ],
 
     /*
