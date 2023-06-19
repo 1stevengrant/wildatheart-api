@@ -30,6 +30,7 @@
                                         >
                                             <x-forms.input
                                                 required
+                                                maxlength="50"
                                                 name="first_name"
                                                 label="First Name"
                                                 wire:model.defer="firstName"
@@ -38,6 +39,7 @@
 
                                             <x-forms.input
                                                 required
+                                                maxlength="50"
                                                 name="last_name"
                                                 label="Last Name"
                                                 wire:model.defer="lastName"
@@ -47,6 +49,7 @@
                                             <div class="md:col-span-2">
                                                 <x-forms.input
                                                     required
+                                                    maxlength="50"
                                                     name="email"
                                                     label="Email"
                                                     wire:model.defer="email"
@@ -57,6 +60,7 @@
                                                 <x-forms.input
                                                     name="city"
                                                     required
+                                                    maxlength="50"
                                                     label="City"
                                                     wire:model.defer="city"
                                                     :error="$errors->first('city')"
@@ -116,6 +120,7 @@
                                                 label="Phone"
                                                 wire:model.defer="phone"
                                                 type="tel"
+                                                maxlength="20"
                                                 instruction="This will only be visible to the host."
                                                 :error="$errors->first('phone')"
                                             />

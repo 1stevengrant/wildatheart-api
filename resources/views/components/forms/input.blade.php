@@ -6,6 +6,8 @@
     'instruction' => false,
     'placeholder' => false,
     'append' => false,
+    'maxlength' => false,
+    'minlength' => false,
 ])
 <div {{ $attributes->merge(['class' => '']) }}>
     <x-forms.label
@@ -25,6 +27,12 @@
                 $attributes->merge(['class' => 'p-2 border border-[#2E2C29] w-full bg-[#171513] rounded-md
                 focus:border-orange focus:outline-none focus:ring-orange text-white'])
             }}
+            @if($maxlength)
+                    maxlength="{{ $maxlength }}"
+                @endif
+            @if($minlength)
+                minlength="{{ $minlength }}"
+            @endif
             id="{{ $name }}"
         />
         @if ($append)

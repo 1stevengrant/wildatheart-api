@@ -14,14 +14,14 @@
 
             <div class="mt-6 space-y-8">
                 <div class="grid gap-8 md:grid-cols-2">
-                    <x-forms.input name="first_name" id="first_name" required wire:model.defer="firstName"
+                    <x-forms.input maxlength="50" name="first_name" id="first_name" required wire:model.defer="firstName"
                         :error="$errors->first('firstName')" label="First Name" />
 
-                    <x-forms.input name="last_name" id="last_name" required wire:model.defer="lastName"
+                    <x-forms.input name="last_name" maxlength="50" id="last_name" required wire:model.defer="lastName"
                         :error="$errors->first('lastName')" label="Last Name" />
                     <div class="col-span-2">
                         <div>
-                            <x-forms.label for="email" label="Email" />
+                            <x-forms.label for="email" maxlength="255" label="Email" />
                             <div>{{ auth()->user()->email }}</div>
                         </div>
                     </div>
@@ -32,6 +32,8 @@
                     <div>
                         <x-forms.input name="phone" id="phone" required wire:model.defer="phone"
                             :error="$errors->first('phone')" instruction="We may occasionally send you text messages."
+                                       maxlength="20"
+                                       minlength="9"
                             label="Phone Number" type="tel" />
                     </div>
                 </div>
@@ -127,6 +129,7 @@
             <div class="mt-8 space-y-4">
                 <div class="flex items-center space-x-4">
                     <x-forms.input wire:model="campfireName" label="Name Your Fire" required
+                                   maxlength="50"
                         instruction="This is the name that will be displayed on your Fire page." :error="$errors->first('campfireName')"
                         id="campfireName" name="campfireName" append="Fire" />
                 </div>
@@ -171,9 +174,11 @@
                     </x-forms.select>
 
                     <x-forms.input wire:model="street_address" label="Street Address" required :error="$errors->first('street_address')"
+                                   maxlength="50"
                         name="street_address" />
 
-                    <x-forms.input wire:model="city" label="City" required :error="$errors->first('city')" name="city" />
+                    <x-forms.input wire:model="city" label="City" required :error="$errors->first('city')"
+                                   name="city" maxlength="50" />
 
                     @if ($showState)
                         <x-forms.select name="state" label="State" required :error="$errors->first('state')" wire:model="state">
@@ -187,7 +192,8 @@
                         </x-forms.select>
                     @endif
 
-                    <x-forms.input wire:model="zip" label="Zip Code" :error="$errors->first('zip')" name="zip" required />
+                    <x-forms.input wire:model="zip" label="Zip Code" :error="$errors->first('zip')" name="zip"
+                                   required                                    maxlength="10"/>
                 @endif
 
                 <div class="flex items-center">
