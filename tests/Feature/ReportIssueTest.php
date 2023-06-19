@@ -21,7 +21,6 @@ test('it creates a zendesk support ticket in the database', function () {
     livewire(ReportIssue::class)
         ->set('name', $payload['name'])
         ->set('email', $payload['email'])
-        ->set('confirm_email', $payload['email'])
         ->set('subject', $payload['subject'])
         ->set('description', $payload['description'])
         ->call('handle')
@@ -30,7 +29,7 @@ test('it creates a zendesk support ticket in the database', function () {
     $this->assertDatabaseHas('issues', [
         'name' => $payload['name'],
         'email' => $payload['email'],
-        'subject' => $payload['subject'],
+        'subject' => 'Fires Feedback: '.$payload['subject'],
         'description' => $payload['description'],
     ]);
 });
@@ -46,7 +45,6 @@ it('needs the email address', function () {
     livewire(ReportIssue::class)
         ->set('name', $payload['name'])
         ->set('email', $payload['email'])
-        ->set('confirm_email', $payload['email'])
         ->set('subject', $payload['subject'])
         ->set('description', $payload['description'])
         ->call('handle')
@@ -64,7 +62,6 @@ it('needs the email address to be an email addres', function () {
     livewire(ReportIssue::class)
         ->set('name', $payload['name'])
         ->set('email', $payload['email'])
-        ->set('confirm_email', $payload['email'])
         ->set('subject', $payload['subject'])
         ->set('description', $payload['description'])
         ->call('handle')

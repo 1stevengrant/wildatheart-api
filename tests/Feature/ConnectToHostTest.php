@@ -6,7 +6,6 @@ use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Livewire\livewire;
-use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
@@ -15,16 +14,27 @@ beforeEach(function (): void {
 });
 
 test('a known user can connect to a given Fire', function () {
+    $this->withoutExceptionHandling();
     $campfire = Campfire::factory()->approved()->create();
+    ray($campfire->toArray());
     $user = User::factory()->create();
     $this->actingAs($user);
 
     livewire(ConnectToHost::class, ['campfire' => $campfire])
+        ->set('firstName', $user->given_name)
+        ->set('lastName', $user->family_name)
+        ->set('email', $user->email)
+        ->set('city', 'New York')
+        ->set('state', 'New York')
+        ->set('phone', '5555555555')
+        ->set('emailUpdates', true)
+        ->set('token', '')
+        ->set('country', 'United States')
         ->call('handle');
 
     $this->assertDatabaseHas('attendees', [
-        'user_id' => auth()->id(),
         'campfire_id' => $campfire->id,
+        'email' => $user->email,
     ]);
 });
 
@@ -32,27 +42,19 @@ test('an anonymous user can connect to a given Fire', function () {
     $campfire = Campfire::factory()->approved()->create();
 
     livewire(ConnectToHost::class, ['campfire' => $campfire])
-        ->set('firstName', 'John')
-        ->set('lastName', 'Doe')
-        ->set('email', 'john@doe.com')
-        ->set('confirmEmail', 'john@doe.com')
-        ->set('phone', '555-555-5555')
-        ->set('confirmPhone', '555-555-5555')
+        ->set('firstName', 'Steven')
+        ->set('lastName', 'Grant')
+        ->set('email', 'steven@servant.io')
         ->set('city', 'New York')
         ->set('state', 'New York')
+        ->set('phone', '5555555555')
+        ->set('emailUpdates', true)
+        ->set('token', '')
+        ->set('country', 'United States')
         ->call('handle')
-        ->assertEmitted('registeredForCampfire');
+        ->assertEmitted('connectedToHost');
 
     $this->assertDatabaseHas('attendees', [
         'campfire_id' => $campfire->id,
-    ]);
-
-    $this->assertDatabaseHas('users', [
-        'email' => 'john@doe.com',
-    ]);
-
-    $this->assertDatabaseHas('model_has_roles', [
-        'model_id' => User::where('email', 'john@doe.com')->first()->id,
-        'role_id' => Role::where('name', User::ROLE_ATTENDEE)->first()->id,
     ]);
 });
