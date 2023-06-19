@@ -21,7 +21,8 @@ class CampfireFactory extends Factory
             'description' => $this->faker->text,
             'phone' => $this->faker->phoneNumber,
             'street_address' => $this->faker->streetAddress,
-            'state' => $this->faker->state,
+            'state' => 'Montana',
+            'state_code' => 'MT',
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,
             'attendee_limit' => $this->faker->numberBetween(1, 100),
@@ -31,6 +32,8 @@ class CampfireFactory extends Factory
             'is_private' => $this->faker->boolean,
             'user_id' => User::factory()->create()->id,
             'country' => 'US',
+            'name' => $this->faker->sentence,
+            'frequency' => $this->faker->randomElement(['weekly', 'monthly', 'quarterly']),
         ];
     }
 

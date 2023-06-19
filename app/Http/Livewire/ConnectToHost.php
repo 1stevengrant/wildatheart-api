@@ -93,9 +93,12 @@ class ConnectToHost extends Component
             'country_code' => $this->countryCode,
             'marketing_updates' => $this->emailUpdates,
         ]);
+
         if (app()->isProduction()) {
             SlackAlert::message($this->firstName.' '.$this->lastName.' contacted '.$this->campfire->host->fullName.' about his Fire in '.$this->campfire->location.' !');
         }
+
+        $this->emit('connectedToHost');
 
         return redirect(route('view.campfire', $this->campfire))->with('connected', true);
 

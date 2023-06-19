@@ -29,7 +29,7 @@ test('it creates a zendesk support ticket in the database', function () {
     $this->assertDatabaseHas('issues', [
         'name' => $payload['name'],
         'email' => $payload['email'],
-        'subject' => 'Fires Feedback: ' . $payload['subject'],
+        'subject' => 'Fires Feedback: '.$payload['subject'],
         'description' => $payload['description'],
     ]);
 });
