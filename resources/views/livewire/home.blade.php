@@ -57,8 +57,6 @@
         });
 
         function addMarkers() {
-
-
             for (const marker of campfires.features) {
                 /* Create a div element for the marker. */
                 const el = document.createElement("div");
