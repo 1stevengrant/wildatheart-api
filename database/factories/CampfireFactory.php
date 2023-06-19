@@ -30,6 +30,7 @@ class CampfireFactory extends Factory
             'book_request_count' => $this->faker->boolean ? $this->faker->numberBetween(1, 100) : 0,
             'is_private' => $this->faker->boolean,
             'user_id' => User::factory()->create()->id,
+            'country' => 'US',
         ];
     }
 
