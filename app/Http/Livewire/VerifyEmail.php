@@ -19,9 +19,11 @@ class VerifyEmail extends Component
         }
 
         \App\Actions\User\ConfirmEmail::run(
-            user: auth()->user(),
+            user: $token->user,
             token: $token
         );
+
+        auth()->login($token->user);
 
         return redirect()->route('gift', ['campfire' => $token->campfire]);
 
