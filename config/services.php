@@ -47,7 +47,7 @@ return [
     ],
 
     'zendesk' => [
-        'ticket_api' => 'https://'.env('ZENDESK_SUBDOMAIN').'.zendesk.com/api/v2/tickets.json',
+        'ticket_api' => 'https://' . env('ZENDESK_SUBDOMAIN') . '.zendesk.com/api/v2/tickets.json',
         'token' => env('ZENDESK_TOKEN'),
         'user' => env('ZENDESK_USERNAME'),
     ],
@@ -57,5 +57,9 @@ return [
         'key' => env('SALESFORCE_KEY'),
         'secret' => env('SALESFORCE_SECRET'),
     ],
+
+    'slack' => [
+        'webhook_url' => 'https://hooks.slack.com/services/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',
+    ]
 
 ];
