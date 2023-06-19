@@ -26,20 +26,23 @@ class PostToZapier implements ShouldQueue
      */
     public function handle(): void
     {
-        $data = $this->data;
 
-        Http::post('https://hooks.zapier.com/hooks/catch/7935383/3tew72r/', [
-            'email' => $data['email'],
-            'quantity' => 1,
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'address_1' => $data['address_1'],
-            'address_2' => $data['address_2'],
-            'city' => $data['city'],
-            'state' => $data['state'],
-            'zip' => $data['zip'],
-            'country' => $data['country'],
-            'date' => now(),
-        ]);
+        if (app()->isProduction()) {
+            $data = $this->data;
+            Http::post('https://hooks.zapier.com/hooks/catch/7935383/3tew72r/', [
+                'email' => $data['email'],
+                'quantity' => 1,
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'address_1' => $data['address_1'],
+                'address_2' => $data['address_2'],
+                'city' => $data['city'],
+                'state' => $data['state'],
+                'zip' => $data['zip'],
+                'country' => $data['country'],
+                'date' => now(),
+            ]);
+        }
+
     }
 }
