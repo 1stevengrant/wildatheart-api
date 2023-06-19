@@ -2,26 +2,30 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
+    const ROLE_ADMIN = 'admin';
+
+    const ROLE_HOST = 'host';
+
+    const ROLE_ATTENDEE = 'attendee';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,5 +44,57 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
+        'id' => 'integer',
     ];
+
+    public function attendees(): HasMany
+    {
+        return $this->hasMany(Attendee::class);
+    }
+
+    public function campfires(): HasMany
+    {
+        return $this->hasMany(Campfire::class);
+    }
+
+    public function isAttending(Campfire $campfire): bool
+    {
+        return $this->attendees->contains('campfire_id', $campfire->id);
+    }
+
+    public function getFullnameAttribute(): string
+    {
+        return "{$this->given_name} {$this->family_name}";
+    }
+
+    public function emailVerifications(): HasMany
+    {
+        return $this->hasMany(EmailVerify::class);
+    }
+
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->email_verified_at !== null;
+    }
+
+    public function profilePhoto(): string
+    {
+        if ($this->image) {
+            makeImagePublic($this->image);
+
+            return getImageUrl($this->image);
+        }
+
+        return asset('svgs/user.svg');
+
+    }
+
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => strtolower($value),
+            set: fn (string $value) => strtolower(str_replace(' ', '', $value)),
+        );
+    }
 }

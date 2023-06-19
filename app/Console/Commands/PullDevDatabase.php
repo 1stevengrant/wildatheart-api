@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
+
+class PullDevDatabase extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:pull-dev-database';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): void
+    {
+        Artisan::call('db:wipe');
+        $this->info('Local database wiped successfully!');
+        shell_exec('./scripts/pulldevdb.sh');
+        $this->info('Dev Database pulled successfully!');
+    }
+}

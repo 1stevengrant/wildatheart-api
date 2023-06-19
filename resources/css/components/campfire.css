@@ -1,0 +1,96 @@
+.campfire {
+    @apply flex items-stretch rounded border border-grey-darker p-3 transition duration-200 ease-in-out hover:border-orange md:hover:cursor-pointer;
+}
+
+.campfire-title {
+    @apply font-semibold md:text-lg;
+}
+
+.campfire-content {
+    @apply mt-2 flex items-center space-x-2;
+}
+
+.campfire.active {
+    @apply border-orange;
+}
+
+.campfire-image {
+    @apply h-24 w-24 rounded-xl object-cover;
+}
+
+.campfire-host {
+    @apply text-xs text-[#bababa] md:text-base;
+}
+
+.campfire-host-image {
+    @apply rounded-full;
+}
+
+.campfire-marker {
+    @apply h-[48px] w-[48px] cursor-pointer;
+    background-repeat: no-repeat;
+    background-image: url("/resources/svgs/map-campfire-marker.svg");
+}
+
+.campfire-detail {
+    @apply ml-3 flex flex-col justify-between;
+}
+
+/* Marker tweaks */
+.mapboxgl-popup {
+    @apply pb-[50px];
+}
+
+.mapboxgl-popup-close-button {
+    right: 5px !important;
+    top: -7px !important;
+    font-size: x-large;
+}
+
+.mapboxgl-popup-content {
+    @apply max-w-none;
+    background: #0b1419 !important;
+    width: 300px !important;
+    padding: 0 !important;
+}
+
+.mapboxgl-popup-content h3 {
+    background: theme("colors.orange");
+    color: #fff;
+    padding: 10px;
+    border-radius: 3px 3px 0 0;
+    font-weight: 700;
+    margin: -15px 0 0;
+}
+
+.mapboxgl-popup-content h4 {
+    margin: 0;
+    padding: 10px;
+    font-weight: 400;
+    color: black;
+}
+
+.mapboxgl-popup-content a {
+    @apply rounded-md text-white outline-none;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+    margin-top: 15px;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+    border-bottom-color: theme("colors.orange") !important;
+}
+
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+    border-top-color: #0b1419 !important;
+}
+
+.home-marker {
+    background-image: url("/resources/svgs/map-home-marker.svg");
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
