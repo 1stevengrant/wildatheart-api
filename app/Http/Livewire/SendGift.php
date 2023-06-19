@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Actions\Address\CreateAddress;
 use App\Actions\Campfire\UpdateCampfire;
+use App\Jobs\PostToZapier;
 use App\Mail\Campfire\SendWelcomeEmail;
 use App\Models\Campfire;
 use Illuminate\Contracts\Foundation\Application;
@@ -114,6 +115,18 @@ class SendGift extends Component
             data: ['gift_requested' => true],
             campfire: $this->campfire
         );
+
+        PostToZapier::dispatch(data: [
+            'email' => $this->campfire->host->email,
+            'first_name' => $this->firstName,
+            'last_name' => $this->lastName,
+            'address_1' => $this->address1,
+            'address_2' => $this->address2,
+            'city' => $this->city,
+            'state' => $this->state,
+            'zip' => $this->zip,
+            'country' => $this->country,
+        ]);
 
         $this->submitted = true;
 
