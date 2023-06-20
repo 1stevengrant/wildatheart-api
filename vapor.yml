@@ -5,8 +5,8 @@ environments:
     memory: 1024
     cli-memory: 512
     runtime: docker
-    storage: wildatheart-campfires
-    cache: wildatheart-campfires
+    storage: wildatheart-campfires-dev
+    cache: wildatheart-campfires-dev
     database: wildatheart-campfires-dev
     build:
       - "COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev"

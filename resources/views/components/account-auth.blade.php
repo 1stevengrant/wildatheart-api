@@ -34,11 +34,8 @@
             type="button"
             class="flex h-8 w-8 items-center justify-center rounded-full bg-grey-200"
         >
-            <img
-                src="{{ auth()->user()->profilePhoto() }}"
-                class="h-8 w-8 rounded-full"
-                alt=""
-            />
+            <div class="avatar"
+                 style="background-image: url('{{ auth()->user()->profilePhoto() }}')"></div>
         </button>
 
         <!-- Panel -->

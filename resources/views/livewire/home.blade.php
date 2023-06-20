@@ -133,9 +133,9 @@
                 }</p>
             </div>
             <div class='flex items-center space-x-2'>
-                <img src='${currentFeature.properties.hostProfilePhoto}'
-                     class='rounded-full w-6 h-6 object-fill object-fit'
-                     alt='' />
+                <div class='avatar'
+                     style='background-image: url(${currentFeature.properties.hostProfilePhoto}) !important;'></div>
+
                     <div class='text-[#BABABA] text-xs leading-tighter'>Hosted
                         by ${currentFeature.properties.host}</div>
             </div>

@@ -24,11 +24,9 @@
                 action="{{ route('logout') }}"
             >
                 @csrf
-                <img
-                    src="{{ auth()->user()->profilePhoto() }}"
-                    class="h-6 w-6 rounded-full"
-                    alt=""
-                />
+                <div class="avatar"
+                     style='background-image: url({{ auth()->user()->profilePhoto() }}) !important;'>
+                </div>
                 <button
                     onclick="event.preventDefault(); this.closest('form').submit();"
                     class="text-sm text-white"
