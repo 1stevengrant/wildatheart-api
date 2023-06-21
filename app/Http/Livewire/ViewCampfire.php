@@ -21,6 +21,7 @@ class ViewCampfire extends Component
 
     protected $listeners = [
         'registeredForCampfire' => 'updateConnectionStatus',
+        'campfireUpdated' => '$refresh',
     ];
 
     public function updateConnectionStatus(): void

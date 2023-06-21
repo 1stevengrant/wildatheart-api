@@ -26,9 +26,19 @@
         <div class="container mx-auto">
             <div class="md:flex md:space-x-8">
                 <div class="md:w-2/3">
-                    <h1 class="mb-1 text-3xl leading-tighter">
-                        {{ $campfire->title }}
-                    </h1>
+                    <div class="flex items-center space-x-4">
+                        <h1 class="mb-1 text-3xl leading-tighter">
+                            {{ $campfire->name }}
+                        </h1>
+                        @if($campfire->isHost())
+                            <button
+                                wire:click="$emit('modal.open', 'edit-campfire', {'campfire': '{{ $campfire->id }}' })"
+                                class="bg-orange hover:bg-orange/80 text-sm px-2 py-1 rounded-md">
+                                Edit Fire
+                            </button>
+                        @endif
+                    </div>
+
                     <h2 class="mb-8 text-xl leading-tighter">
                         {{ $campfire->location }}
                     </h2>

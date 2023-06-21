@@ -4,9 +4,11 @@ namespace App\Http\Livewire;
 
 use App\Models\Campfire;
 use App\Models\State;
+use App\Rules\ShouldNotEndWithFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Repat\LaravelRules\DoesntContainEmojis;
 use WireElements\Pro\Components\Modal\Modal;
 
 class EditCampfire extends Modal
@@ -21,16 +23,14 @@ class EditCampfire extends Modal
     protected function rules(): array
     {
         return [
-            'campfire.description' => 'required',
-            'campfire.attendee_limit' => 'nullable|numeric',
-            'campfire.street_address' => 'required',
-            'campfire.city' => 'required',
-            'campfire.zip' => 'required',
-            'campfire.state' => 'required',
-            'campfire.phone' => 'required',
-            'campfire.date' => 'required',
-            'campfire.time' => 'required',
-            'campfire.is_private' => 'nullable|boolean',
+            'campfire.name' => [
+                'required',
+                'min:2',
+                'string',
+                'max:255',
+                new ShouldNotEndWithFire(),
+                new DoesntContainEmojis(),
+            ],
         ];
     }
 
@@ -39,16 +39,7 @@ class EditCampfire extends Modal
         $this->validate();
 
         $this->campfire->update([
-            'description' => $this->campfire->description,
-            'attendee_limit' => $this->campfire->attendee_limit,
-            'street_address' => $this->campfire->street_address,
-            'city' => $this->campfire->city,
-            'zip' => $this->campfire->zip,
-            'state' => $this->campfire->state,
-            'phone' => $this->campfire->phone,
-            'date' => $this->campfire->date,
-            'time' => $this->campfire->time,
-            'is_private' => $this->campfire->is_private,
+            'name' => trim($this->campfire->name),
         ]);
 
         $this->emit('campfireUpdated');
@@ -58,9 +49,6 @@ class EditCampfire extends Modal
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.edit-campfire', [
-            'states' => State::all(),
-            'times' => generateTimeList(),
-        ]);
+        return view('livewire.edit-campfire');
     }
 }
