@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Models\Campfire;
-use App\Models\State;
 use App\Rules\ShouldNotEndWithFire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
