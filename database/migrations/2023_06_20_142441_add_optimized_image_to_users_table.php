@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->uuid()->after('id')->unique();
+            $table->dropColumn('optimized_image');
+            $table->dropColumn('uuid');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->uuid()->after('id')->unique()->nullable();
             $table->string('optimized_image')->nullable()->after('image');
         });
     }
