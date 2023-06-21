@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Actions\Campfire\ApproveCampfire;
 use App\Actions\EmailVerify\GetByToken;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -13,6 +14,7 @@ class VerifyEmail extends Component
     public function mount($token): \Livewire\Redirector
     {
         $token = GetByToken::make()->handle(token: $token);
+        $campfire = $token->campfire;
 
         if (! $token) {
             abort(403, 'Invalid token');
@@ -22,6 +24,8 @@ class VerifyEmail extends Component
             user: $token->user,
             token: $token
         );
+
+        ApproveCampfire::run(campfire: $campfire);
 
         auth()->login($token->user);
 

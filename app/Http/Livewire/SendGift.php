@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Actions\Address\CreateAddress;
 use App\Actions\Campfire\UpdateCampfire;
 use App\Jobs\PostToZapier;
-use App\Mail\Campfire\SendWelcomeEmail;
+use App\Mail\Campfire\GiftRequested;
 use App\Models\Campfire;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -47,18 +47,6 @@ class SendGift extends Component
         if ($campfire->hasRequestedGift()) {
             abort(403, 'You have already requested your gift.');
         }
-
-        $campfire->update([
-            'approved_at' => now(),
-        ]);
-
-        if (! $campfire->welcomeHasBeenSent()) {
-            Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
-        }
-
-        $campfire->update([
-            'welcome_sent' => true,
-        ]);
 
         $this->prefillAddress();
     }
@@ -115,6 +103,9 @@ class SendGift extends Component
             data: ['gift_requested' => true],
             campfire: $this->campfire
         );
+
+        Mail::to($this->campfire->host->email)
+            ->send(new GiftRequested($this->campfire));
 
         PostToZapier::dispatch(data: [
             'email' => $this->campfire->host->email,

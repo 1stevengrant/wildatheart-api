@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Campfire\CheckWelcomeStatus;
+use App\Mail\Campfire\SendWelcomeEmail;
 use App\Models\Campfire;
 
 it('sends the welcome email', function () {
@@ -18,5 +19,5 @@ it('sends the welcome email', function () {
 
     $this->assertTrue((bool) $campfire->welcome_sent);
 
-    Mail::assertQueued(\App\Mail\Campfire\SendWelcomeEmail::class);
+    Mail::assertQueued(SendWelcomeEmail::class);
 });

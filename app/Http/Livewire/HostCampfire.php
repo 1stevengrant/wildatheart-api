@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\Actions\Campfire\ApproveCampfire;
+use App\Actions\Campfire\CheckWelcomeStatus;
 use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Models\User;
@@ -175,6 +177,10 @@ class HostCampfire extends Component
 
             return redirect()->route('confirm.email', ['campfire' => $campfire]);
         }
+
+        ApproveCampfire::run(campfire: $campfire);
+
+        CheckWelcomeStatus::run(campfire: $campfire);
 
         return redirect()->route('gift', ['campfire' => $campfire]);
     }
