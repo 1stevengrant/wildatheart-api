@@ -24,7 +24,7 @@
             @endif
             type="{{ $type ?? 'text' }}"
             {{
-                $attributes->merge(['class' => 'p-2 border border-[#2E2C29] w-full bg-[#171513] rounded-md
+                $attributes->merge(['class' => 'p-2 border border-grey-border w-full bg-form rounded-md
                 focus:border-orange focus:outline-none focus:ring-orange text-white'])
             }}
             @if($maxlength)

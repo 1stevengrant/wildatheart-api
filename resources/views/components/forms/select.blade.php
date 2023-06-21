@@ -15,7 +15,7 @@
     <div class="mt-2 flex">
         <select
             {{
-                $attributes->merge(['class' => 'bg-[#171513] text-white rounded-md border border-[#2E2C29] block
+                $attributes->merge(['class' => 'bg-form text-white rounded-md border border-grey-border block
                 w-full p-2 capitalize
                 focus:outline-none focus:border-orange focus:ring-orange' . ($trailingAddOn ? '' : '')])
             }}

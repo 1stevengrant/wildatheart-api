@@ -37,7 +37,7 @@
         <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     </head>
 
-    <body class="bg-[#0B1419] font-sans">
+    <body class="bg-blue-900 font-sans">
         {{ $slot }}
         @livewire('modal-pro')
         @livewireScripts

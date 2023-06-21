@@ -136,7 +136,7 @@
                                             class="flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0"
                                         >
                                             <div
-                                                class="flex items-stretch rounded-full bg-[#171513]"
+                                                class="flex items-stretch rounded-full bg-form"
                                             >
                                                 <button
                                                     type="button"

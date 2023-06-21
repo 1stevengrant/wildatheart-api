@@ -14,7 +14,7 @@
     <select
         name="countryCode"
         {{
-            $attributes->merge(['class' => 'p-2 border border-[#2E2C29] w-full bg-[#171513] rounded
+            $attributes->merge(['class' => 'p-2 border border-grey-border w-full bg-form rounded
             focus:border-orange focus:outline-none focus:ring-orange text-white'])
         }}
     >

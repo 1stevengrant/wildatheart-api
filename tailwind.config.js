@@ -35,6 +35,8 @@ module.exports = {
             "grey-darker": "#484848",
             'grey-200': '#B8B6B6',
             "grey-dark": "#5C6771", // From Sketch File
+            'grey-border': '#2E2C29',
+            'form': '#171513',
             grey: "#9FA7A9",
             "grey-light": "var(--wah-grey-light)", //From Sketch File
             "grey-lighter": "#f1f5f8",
@@ -52,6 +54,7 @@ module.exports = {
             "blue-darkest": "#06272E",
             "blue-darker": "#185f68", // From Borders in styleguide
             blue: "#52858F", // From style guide
+            'blue-900': '#0B1419',
             brown: "#743617",
             'green-400': '#4ade80',
         },
