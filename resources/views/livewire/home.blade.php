@@ -121,9 +121,6 @@
         <div class='flex flex-col justify-between relative'>
 
             <div>
-                <div class='text-grey-200 text-sm capitalize'>
-                    ${currentFeature.properties.frequency}
-                </div>
                 <p class='text-white'>${
                     currentFeature.properties.title ?? ""
                 }</p>

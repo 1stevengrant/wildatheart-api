@@ -17,9 +17,6 @@
         />
         <div class="relative flex flex-col justify-between">
             <div>
-                <div class="text-sm capitalize text-grey-200">
-                    {{ $frequency }}
-                </div>
                 @if ($title)
                     <p class="text-white">{{ $title }}</p>
                 @endif
