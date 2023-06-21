@@ -115,9 +115,9 @@ class HostCampfire extends Component
         ]);
 
         auth()->user()->update([
-            'given_name' => $this->firstName,
-            'family_name' => $this->lastName,
-            'phone' => $this->phone,
+            'given_name' => trim($this->firstName),
+            'family_name' => trim($this->lastName),
+            'phone' => trim($this->phone),
             'country_code' => $this->countryCode,
             'image' => $this->isUploaded ? $this->photo->store('users') : auth()->user()->image,
             'opted_into_marketing' => $this->emailUpdates,
@@ -153,13 +153,13 @@ class HostCampfire extends Component
         ]);
 
         $campfire = auth()->user()->campfires()->create([
-            'name' => $this->campfireName,
+            'name' => trim($this->campfireName),
             'mapbox_place_name' => $this->mapboxPlaceName,
             'frequency' => $this->frequency,
-            'street_address' => $this->street_address,
+            'street_address' => trim($this->street_address),
             'state' => $this->state,
-            'city' => $this->city,
-            'zip' => $this->zip,
+            'city' => trim($this->city),
+            'zip' => trim($this->zip),
             'country' => $this->country,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
