@@ -17,7 +17,6 @@ environments:
       - "php artisan migrate --force"
       - "php artisan db:seed --class=RoleSeeder --force"
       - "php artisan db:seed --class=StateSeeder --force"
-      - "php artisan app:import-campfires"
   prod:
     domain: local.wildatheart.org
     memory: 1024

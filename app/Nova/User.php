@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\VaporImage;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Vyuldashev\NovaPermission\Permission;
 use Vyuldashev\NovaPermission\Role;
@@ -63,6 +64,15 @@ class User extends Resource
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
+
+            VaporImage::make('Image')
+                ->hideFromIndex()
+                ->path('users')
+                ->storeAs(static function ($request): string {
+                    $img = $request->input('vaporFile')['image'];
+
+                    return str_replace('tmp/', '', (string) $img['key']).'.'.$img['extension'];
+                }),
 
             Password::make('Password')
                 ->onlyOnForms()
