@@ -1,6 +1,5 @@
 <?php
 
-use App\Mail\Campfire\SendWelcomeEmail;
 use App\Models\Campfire;
 use Illuminate\Support\Facades\Mail;
 
