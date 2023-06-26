@@ -3,7 +3,7 @@
         <div class="text-grey-200 md:w-1/2">
             <x-type.registration-h1>
                 Great! One Last
-                Step{{ auth()->user()->given_name ? ' ' . auth()->user()->given_name : '.' }}
+                Step
             </x-type.registration-h1>
 
             <p class="my-6">
