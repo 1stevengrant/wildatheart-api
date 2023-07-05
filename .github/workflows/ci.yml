@@ -42,7 +42,9 @@ jobs:
       - name: Install composer dependencies
         run: |
           composer install --no-scripts
-
+        env:
+          COMPOSER_AUTH: '{ "github-oauth": { "github.com": "${{ secrets.PAT }}" }, "http-basic": { "wire-elements-pro.composer.sh": { "username": "nic@wildatheart.org", "password": "${{ secrets.WIRE_ELEMENTS_PRO_KEY }}" }, "nova.laravel.com": { "username": "nic@wildatheart.org", "password": "${{ secrets.NOVA_KEY }}"}}}'
+     
       - name: Prepare Laravel Application
         run: |
           cp .env.ci .env
