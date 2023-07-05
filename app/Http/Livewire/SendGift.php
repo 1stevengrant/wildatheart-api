@@ -88,7 +88,7 @@ class SendGift extends Component
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'company' => $this->company,
-            'address1' => $this->address1,
+            'street_address' => $this->address1,
             'address2' => $this->address2,
             'city' => $this->city,
             'state' => $this->state,
