@@ -35,10 +35,6 @@ jobs:
           path: ~/.composer/cache/files
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-${{ matrix.dependency-version }}-${{ matrix.os }}-${{ hashFiles('composer.json') }}
 
-      - name: Configure composer for Laravel Nova
-        run: |
-          composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
-
       - name: Install composer dependencies
         run: |
           composer install --no-scripts
