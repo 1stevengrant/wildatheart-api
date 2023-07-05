@@ -25,16 +25,16 @@ class SendAddressEmailToUsers extends Command
 
     public function handle(): void
     {
-        $fires = Campfire::all()->filter(function ($fire) {
-            return $fire->hasAddress();
+        $campfires = Campfire::all()->filter(function ($campfire) {
+            return $campfire->hasAddress();
         });
 
-        $fires = $fires->filter(function ($fire) {
-            return $fire->address->street_address === null;
+        $campfires = $campfires->filter(function ($campfire) {
+            return $campfire->address->street_address === null;
         });
 
-        $fires->each(function ($fire) {
-            Mail::to($fire->user)->send(new PleaseUpdateMailingAddress($fire, $fire->user));
+        $campfires->each(function ($campfire) {
+            Mail::to($campfire->user)->send(new PleaseUpdateMailingAddress($campfire, $campfire->user));
         });
 
     }
