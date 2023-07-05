@@ -9,8 +9,10 @@ use App\Http\Livewire\ListCity;
 use App\Http\Livewire\ListState;
 use App\Http\Livewire\MyCampfires;
 use App\Http\Livewire\SendGift;
+use App\Http\Livewire\UpdateAddress;
 use App\Http\Livewire\VerifyEmail;
 use App\Http\Livewire\ViewCampfire;
+use App\Mail\Campfire\CampfireApproved;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Omniphx\Forrest\Providers\Laravel\Facades\Forrest;
@@ -41,6 +43,8 @@ Route::middleware(['auth', 'role:host'])->group(function () {
     Route::get('my', MyCampfires::class)->name('my.campfires');
 });
 
+Route::get('update-address/{campfire}', UpdateAddress::class)->name('update.address');
+
 require __DIR__.'/auth.php';
 
 Route::get('salesforce/authenticate', function () {
@@ -57,7 +61,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('mailable', function () {
         $campfire = App\Models\Campfire::first();
 
-        return new \App\Mail\Campfire\CampfireApproved($campfire);
+        return new CampfireApproved($campfire);
     });
 
     Route::get('account', function () {

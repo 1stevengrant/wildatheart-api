@@ -22,8 +22,9 @@
         <div class="ml-[24px] leading-[24px]">
             <p class="font-medium">Frequency</p>
             <p class="text-sm text-[#6B7280]">
-                The vision of Fires is that they’re monthly gatherings. However, each Host is free to schedule his
-                Fire as best suits the local context.
+                The vision of Fires is that they’re monthly gatherings. However,
+                each Host is free to schedule his Fire as best suits the local
+                context.
             </p>
         </div>
     </div>

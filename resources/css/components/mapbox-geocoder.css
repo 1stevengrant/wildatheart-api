@@ -4,7 +4,7 @@
 
 :root {
     --background: #171513;
-    --border: theme('colors.grey-border');
+    --border: theme("colors.grey-border");
 }
 
 /* Basics */

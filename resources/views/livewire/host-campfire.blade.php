@@ -1,4 +1,7 @@
-<div class="h-screen text-white md:flex" x-data="{ step: @entangle('step') }">
+<div
+    class="h-screen text-white md:flex"
+    x-data="{ step: @entangle('step') }"
+>
     <div
         x-show="step === 1"
         class="relative mt-8 flex items-center justify-center overflow-auto px-8 md:w-1/2"
@@ -132,22 +135,18 @@
                     <div
                         class="flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0"
                     >
-                        <div
-                            class="flex items-center rounded-full bg-form"
-                        >
+                        <div class="flex items-center rounded-full bg-form">
                             <button
                                 type="button"
                                 wire:click.prevent="$set('emailUpdates', true)"
-                                class="@if ($emailUpdates) border border-white text-white rounded-l-full @endif w-1/2
-                                 px-10 py-3 text-sm font-semibold"
+                                class="@if ($emailUpdates) border border-white text-white rounded-l-full @endif w-1/2 px-10 py-3 text-sm font-semibold"
                             >
                                 Yes
                             </button>
                             <button
                                 type="button"
                                 wire:click.prevent="$set('emailUpdates', false)"
-                                class="
-                                w-1/2 px-10 py-3 text-sm font-semibold"
+                                class="w-1/2 px-10 py-3 text-sm font-semibold"
                                 @if (!$emailUpdates) border border-white text-white rounded-r-full @endif
                             >
                                 No
@@ -197,9 +196,11 @@
                     :frequency="$frequency"
                     :location="$location"
                     :host-name="auth()->user()->full_name"
-                    :profile-image="auth()
-                        ->user()
-                        ->profilePhoto()"
+                    :profile-image="
+                        auth()
+                            ->user()
+                            ->profilePhoto()
+                    "
                 />
             </div>
 
@@ -328,7 +329,7 @@
                     <x-primary-button
                         type="submit"
                         class="mt-8 w-full"
-                        :disabled="!$mapboxPlaceName"
+                        :disabled="! $mapboxPlaceName"
                         wire:click.prevent="handleStepTwo"
                     >
                         Next
@@ -346,8 +347,7 @@
     </div>
 
     <div
-        class="@if ($step === 1) md:bg-cover md:bg-center md:bg-campfire @endif flex items-center justify-center
-        md:w-1/2"
+        class="@if ($step === 1) md:bg-cover md:bg-center md:bg-campfire @endif flex items-center justify-center md:w-1/2"
     >
         <div x-show="step === 2" class="hidden md:block">
             <x-campfire-card
@@ -355,9 +355,11 @@
                 :frequency="$frequency"
                 :location="$city"
                 :host-name="auth()->user()->full_name"
-                :profile-image="auth()
-                    ->user()
-                    ->profilePhoto()"
+                :profile-image="
+                    auth()
+                        ->user()
+                        ->profilePhoto()
+                "
             />
         </div>
     </div>
