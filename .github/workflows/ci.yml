@@ -1,12 +1,12 @@
 on:
   push:
     branches:
-      - production
+      - prod
       - develop
     pull_request:
       branches:
         - develop
-        - production
+        - prod
 
 name: CI
 jobs:
