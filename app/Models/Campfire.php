@@ -94,6 +94,11 @@ class Campfire extends Model
         return false;
     }
 
+    public function getEmailAttribute(): string
+    {
+        return $this->user->email;
+    }
+
     public function getUrlAttribute(): string
     {
         return route('view.campfire', ['campfire' => $this]);
@@ -158,6 +163,15 @@ class Campfire extends Model
     public function hasRequestedGift(): bool
     {
         if ($this->gift_requested) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function hasAddress(): bool
+    {
+        if ($this->address) {
             return true;
         }
 
