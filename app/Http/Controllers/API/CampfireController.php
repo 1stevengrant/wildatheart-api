@@ -9,12 +9,12 @@ class CampfireController extends Controller
 {
     public function __invoke()
     {
-        return response()->json(
-            [
+        return cache()->remember('campfires', now()->addHour(), function () {
+            return response()->json([
                 'type' => 'FeatureCollection',
                 'features' => $this->getCampfires(),
-            ],
-        );
+            ]);
+        });
     }
 
     protected function getCampfires()

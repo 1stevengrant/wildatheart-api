@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Jobs\SendNewCampfireSlackAlert;
 use App\Models\Campfire;
+use Illuminate\Support\Facades\Artisan;
 
 class CampfireObserver
 {
@@ -19,6 +20,8 @@ class CampfireObserver
         if (config('app.env') === 'production') {
             SendNewCampfireSlackAlert::dispatch($campfire);
         }
+
+        Artisan::call('app:clear-campfire-cache');
     }
 
     /**
@@ -26,7 +29,7 @@ class CampfireObserver
      */
     public function updated(Campfire $campfire): void
     {
-        //
+        Artisan::call('app:clear-campfire-cache');
     }
 
     /**
@@ -34,7 +37,7 @@ class CampfireObserver
      */
     public function deleted(Campfire $campfire): void
     {
-        //
+        Artisan::call('app:clear-campfire-cache');
     }
 
     /**
@@ -50,6 +53,6 @@ class CampfireObserver
      */
     public function forceDeleted(Campfire $campfire): void
     {
-        //
+        Artisan::call('app:clear-campfire-cache');
     }
 }
