@@ -30,10 +30,11 @@
                         <h1 class="mb-1 text-3xl leading-tighter">
                             {{ $campfire->name }}
                         </h1>
-                        @if($campfire->isHost())
+                        @if ($campfire->isHost())
                             <button
                                 wire:click="$emit('modal.open', 'edit-campfire', {'campfire': '{{ $campfire->id }}' })"
-                                class="bg-orange hover:bg-orange/80 text-sm px-2 py-1 rounded-md">
+                                class="rounded-md bg-orange px-2 py-1 text-sm hover:bg-orange/80"
+                            >
                                 Edit Fire
                             </button>
                         @endif

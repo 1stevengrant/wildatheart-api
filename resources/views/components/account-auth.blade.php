@@ -18,7 +18,7 @@
                 this.open = false
 
                 focusAfter && focusAfter.focus()
-            }
+            },
         }"
         x-on:keydown.escape.prevent.stop="close($refs.button)"
         x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
@@ -34,8 +34,12 @@
             type="button"
             class="flex h-8 w-8 items-center justify-center rounded-full bg-grey-200"
         >
-            <div class="avatar"
-                 style="background-image: url('{{ auth()->user()->profilePhoto() }}')"></div>
+            <div
+                class="avatar"
+                style="
+                    background-image: url('{{ auth()->user()->profilePhoto() }}');
+                "
+            ></div>
         </button>
 
         <!-- Panel -->

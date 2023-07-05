@@ -124,7 +124,11 @@
                         tabindex="0"
                         x-bind="input"
                         wire:model.debounce.{{ $this->config('default-behavior.debounce_milliseconds') }}ms="query"
-                        x-bind:placeholder="selection()?.typeahead ?? selection()?.title ?? '{{ __('wire-elements-pro::spotlight.search_or_jump_to') }}'"
+                        x-bind:placeholder="
+                            selection()?.typeahead ??
+                                selection()?.title ??
+                                '{{ __('wire-elements-pro::spotlight.search_or_jump_to') }}'
+                        "
                         class="wep-spotlight-input"
                     />
                 </div>

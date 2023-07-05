@@ -6,5 +6,5 @@
 }
 
 .avatar {
-    @apply w-6 h-6 rounded-full object-fill bg-cover flex-shrink-0;
+    @apply h-6 w-6 flex-shrink-0 rounded-full bg-cover object-fill;
 }

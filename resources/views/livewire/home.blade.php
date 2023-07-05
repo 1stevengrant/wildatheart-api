@@ -131,7 +131,9 @@
             </div>
             <div class='flex items-center space-x-2'>
                 <div class='avatar'
-                     style='background-image: url(${currentFeature.properties.hostProfilePhoto}) !important;'></div>
+                     style='background-image: url(${
+                         currentFeature.properties.hostProfilePhoto
+                     }) !important;'></div>
 
                     <div class='text-[#BABABA] text-xs leading-tighter'>Hosted
                         by ${currentFeature.properties.host}</div>
