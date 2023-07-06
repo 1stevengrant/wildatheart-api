@@ -3,10 +3,12 @@ on:
     branches:
       - prod
       - develop
-    pull_request:
-      branches:
-        - develop
-        - prod
+  pull_request:
+    branches:
+      - develop
+      - prod
+    types:
+      - opened
 
 name: CI
 jobs:
@@ -20,7 +22,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: test
+          MYSQL_DATABASE: wahfires_test
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -40,7 +42,7 @@ jobs:
           composer install --no-scripts
         env:
           COMPOSER_AUTH: '{ "github-oauth": { "github.com": "${{ secrets.PAT }}" }, "http-basic": { "wire-elements-pro.composer.sh": { "username": "nic@wildatheart.org", "password": "${{ secrets.WIRE_ELEMENTS_PRO_KEY }}" }, "nova.laravel.com": { "username": "nic@wildatheart.org", "password": "${{ secrets.NOVA_KEY }}"}}}'
-     
+
       - name: Prepare Laravel Application
         run: |
           cp .env.ci .env

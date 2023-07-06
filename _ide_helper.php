@@ -18284,26 +18284,6 @@
                     /**
          * 
          *
-         * @see \App\Models\Campfire::attendees()
-         * @static 
-         */ 
-        public static function searchable()
-        {
-                        return \Illuminate\Support\Collection::searchable();
-        }
-                    /**
-         * 
-         *
-         * @see \App\Models\Campfire::getRemainingAttribute()
-         * @static 
-         */ 
-        public static function unsearchable()
-        {
-                        return \Illuminate\Support\Collection::unsearchable();
-        }
-                    /**
-         * 
-         *
          * @see \Laravel\Nova\NovaServiceProvider::registerCollectionMacros()
          * @static 
          */ 
@@ -20919,6 +20899,13 @@
      *
      */ 
         class MyCampfires {
+         
+    }
+            /**
+     * 
+     *
+     */ 
+        class UpdateAddress {
          
     }
      

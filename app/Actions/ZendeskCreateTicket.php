@@ -12,21 +12,26 @@ class ZendeskCreateTicket
 
     public function handle(Issue $issue): void
     {
-        $payload = [
-            'subject' => $issue->subject,
-            'description' => $issue->description,
-            'requester' => [
-                'name' => $issue->name,
-                'email' => $issue->email,
-            ],
-        ];
+        if (app()->isProduction()) {
 
-        $response = Http::withBasicAuth(config('services.zendesk.user').'/token', config('services.zendesk.token'))
-            ->post(config('services.zendesk.ticket_api'), ['ticket' => $payload]);
+            $payload = [
+                'subject' => $issue->subject,
+                'description' => $issue->description,
+                'requester' => [
+                    'name' => $issue->name,
+                    'email' => $issue->email,
+                ],
+            ];
 
-        $statusCode = $response->status();
-        $responseData = $response->json();
+            $response = Http::withBasicAuth(config('services.zendesk.user').'/token', config('services.zendesk.token'))
+                ->post(config('services.zendesk.ticket_api'), ['ticket' => $payload]);
 
-        ray($statusCode, $responseData);
+            $statusCode = $response->status();
+            $responseData = $response->json();
+
+            ray($statusCode, $responseData);
+        } else {
+            ray('Zendesk ticket creation is disabled in non-production environments.', $issue->toArray());
+        }
     }
 }

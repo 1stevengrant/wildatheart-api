@@ -12,11 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Scout\Searchable;
 
 class Campfire extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes, Searchable;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -185,20 +184,6 @@ class Campfire extends Model
         }
 
         return 'Outdoor';
-    }
-
-    public function toSearchableArray(): array
-    {
-        return [
-            'name' => $this->title(),
-            'organization' => $this->organization,
-            'city' => $this->city,
-            'state' => $this->state,
-            'state_code' => $this->state_code,
-            'mapbox_place_name' => $this->mapbox_place_name,
-            'country' => $this->country,
-            'zip' => $this->zip,
-        ];
     }
 
     public function welcomeHasBeenSent()
