@@ -339,7 +339,7 @@
                         @click="step = 1"
                         class="py-3 text-sm text-grey-200"
                     >
-                        Cancel
+                        Back
                     </button>
                 </x-button-container>
             </div>
