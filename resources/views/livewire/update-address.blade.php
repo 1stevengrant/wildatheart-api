@@ -61,6 +61,7 @@
                 @isset($campfire->state)
                         , {{ $campfire->state }}
                 @endisset
+
                 {{ $campfire->zip }}
             </div>
             <div>
