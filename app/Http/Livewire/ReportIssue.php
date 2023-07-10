@@ -18,7 +18,7 @@ class ReportIssue extends Modal
 
     public string $description = '';
 
-    public function handle()
+    public function handle(): void
     {
         $this->validate([
             'email' => 'required|email|max:255',
@@ -36,6 +36,7 @@ class ReportIssue extends Modal
 
         $this->emit('issueReported');
         $this->dispatchBrowserEvent('notify', 'Issue reported successfully!');
+
         $this->close();
     }
 

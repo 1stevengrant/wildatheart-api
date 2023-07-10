@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Livewire\ReportIssue;
+use App\Jobs\ReportIssueToSlack;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Livewire\livewire;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 test('report issue component renders', function () {
     livewire(ReportIssue::class)
@@ -11,6 +13,9 @@ test('report issue component renders', function () {
 });
 
 test('it creates a zendesk support ticket in the database', function () {
+
+    Queue::fake();
+
     $payload = [
         'name' => 'Test User',
         'email' => 'steven@servant.io',
@@ -25,6 +30,8 @@ test('it creates a zendesk support ticket in the database', function () {
         ->set('description', $payload['description'])
         ->call('handle')
         ->assertEmitted('issueReported');
+
+    Queue::assertPushed(ReportIssueToSlack::class);
 
     $this->assertDatabaseHas('issues', [
         'name' => $payload['name'],
@@ -51,7 +58,7 @@ it('needs the email address', function () {
         ->assertHasErrors(['email' => 'required']);
 });
 
-it('needs the email address to be an email addres', function () {
+it('needs the email address to be an email address', function () {
     $payload = [
         'name' => 'Test User',
         'email' => 'sts',
