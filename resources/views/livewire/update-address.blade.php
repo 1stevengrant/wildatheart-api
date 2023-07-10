@@ -1,14 +1,21 @@
 <div class="p-4">
     @if (! $addressUpdated)
-        <h2 class="text-2xl font-bold">Update Address for {{ $campfire->name }} Fire</h2>
-        <p class="mt-4">{{ $campfire->user->given_name }}, please update your mailing address so that we can ship your
-            starter
-            kit.</p>
-        <p class="mt-4"><span class="text-red-500">*</span> denotes required field</p>
+        <h2 class="text-2xl font-bold">
+            Update Address for {{ $campfire->name }} Fire
+        </h2>
+        <p class="mt-4">
+            {{ $campfire->user->given_name }}, please update your mailing
+            address so that we can ship your starter kit.
+        </p>
+        <p class="mt-4">
+            <span class="text-red-500">*</span>
+            denotes required field
+        </p>
         <form wire:submit.prevent="handle" class="mt-6 space-y-4">
             <div class="">
                 <label for="address1" class="block font-semibold">
-                    Street Address 1 <span class="text-red-500">*</span>
+                    Street Address 1
+                    <span class="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
@@ -18,7 +25,7 @@
                     placeholder="Street Address 1"
                 />
                 @error('street_address')
-                    <div class="mt-1 text-red-500">{{ $message }}</div>
+                    <div class="text-red-500 mt-1">{{ $message }}</div>
                 @enderror
             </div>
             <div class="">
@@ -33,13 +40,11 @@
                     placeholder="Street Address 2"
                 />
                 @error('address2')
-                    <div class="mt-1 text-red-500">{{ $message }}</div>
+                    <div class="text-red-500 mt-1">{{ $message }}</div>
                 @enderror
             </div>
             <div class="">
-                <label for="company" class="block font-semibold">
-                    Company
-                </label>
+                <label for="company" class="block font-semibold">Company</label>
                 <input
                     type="text"
                     wire:model="company"
@@ -48,11 +53,15 @@
                     placeholder="Company"
                 />
                 @error('address2')
-                <div class="mt-1 text-red-500">{{ $message }}</div>
+                    <div class="text-red-500 mt-1">{{ $message }}</div>
                 @enderror
             </div>
             <div>
-                {{ $campfire->city }}@isset($campfire->state), {{ $campfire->state }}@endisset {{ $campfire->zip }}
+                {{ $campfire->city }}
+                @isset($campfire->state)
+                        , {{ $campfire->state }}
+                @endisset
+                {{ $campfire->zip }}
             </div>
             <div>
                 {{ $campfire->country }}
@@ -68,7 +77,8 @@
         </form>
     @else
         <h2 class="text-green-500 text-2xl font-bold">
-            Thanks {{ $campfire->user->given_name }}. Your address has been updated!
+            Thanks {{ $campfire->user->given_name }}. Your address has been
+            updated!
         </h2>
     @endif
 </div>
