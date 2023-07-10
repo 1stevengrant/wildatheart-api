@@ -28,7 +28,7 @@
                 <div class="md:w-2/3">
                     <div class="flex items-center space-x-4">
                         <h1 class="mb-1 text-3xl leading-tighter">
-                            {{ $campfire->name }}
+                            {{ $campfire->name }} Fire
                         </h1>
                         @if ($campfire->isHost())
                             <button
@@ -193,7 +193,7 @@
     <script>
         document.addEventListener("livewire:load", function () {
             document.title =
-                "{!! $campfire->title ?? $campfire->location !!} | {{ config('app.name') }}";
+                "{!! $campfire->name . ' Fire' ?? $campfire->location !!} | {{ config('app.name') }}";
             if (window.innerWidth < 768) {
                 const campfireElement = document.getElementById("campfire"),
                     connectWithHostElement = document.getElementById(
