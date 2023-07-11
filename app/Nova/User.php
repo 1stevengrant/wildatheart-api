@@ -2,11 +2,13 @@
 
 namespace App\Nova;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\VaporImage;
@@ -39,6 +41,11 @@ class User extends Resource
         'id', 'family_name', 'given_name', 'email',
     ];
 
+    public static function indexQuery(NovaRequest $request, $query): Builder
+    {
+        return $query->withCount('campfires');
+    }
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -64,6 +71,10 @@ class User extends Resource
                 ->rules('required', 'email', 'max:254')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
+
+            Number::make('Campfires Count')
+                ->sortable()
+                ->onlyOnIndex(),
 
             VaporImage::make('Image')
                 ->hideFromIndex()
