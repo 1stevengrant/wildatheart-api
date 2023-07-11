@@ -72,7 +72,7 @@ class User extends Resource
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
-            Number::make('Campfires Count')
+            Number::make('Fire Count', 'campfires_count')
                 ->sortable()
                 ->onlyOnIndex(),
 
