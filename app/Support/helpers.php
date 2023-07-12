@@ -34,7 +34,7 @@ if (! function_exists('prettyTime')) {
 }
 
 if (! function_exists('getStateAbbreviation')) {
-    function getStateAbbreviation(string|null $stateName = null): ?string
+    function getStateAbbreviation(string $stateName = null): ?string
     {
         // Already stored as abbreviated in DB so return.
         if ($stateName && strlen($stateName) === 2) {
@@ -52,7 +52,7 @@ if (! function_exists('getStateAbbreviation')) {
 }
 
 if (! function_exists('getStateName')) {
-    function getStateName(string|null $stateCode = null): string
+    function getStateName(string $stateCode = null): string
     {
         $stateNames = State::all()->pluck('name', 'code')->toArray();
 

@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Attendee extends Resource
@@ -42,6 +43,27 @@ class Attendee extends Resource
             ID::make()->sortable(),
 
             BelongsTo::make('User'),
+
+            Text::make('Given Name'),
+
+            Text::make('Family Name')->sortable(),
+
+            Text::make('Email'),
+
+            Text::make('Phone')->hideFromDetail(),
+
+
+
+            Text::make('Phone Number', function () {
+               return "+{$this->country_code}{$this->phone}";
+            }),
+
+            Text::make('City'),
+
+
+            Text::make('State'),
+
+            Text::make('Country'),
 
             BelongsTo::make('CampFire'),
         ];
