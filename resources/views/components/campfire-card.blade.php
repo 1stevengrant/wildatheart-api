@@ -7,7 +7,7 @@
 ])
 
 <div
-    {{ $attributes->class(['rounded-md border border-grey-darker p-2 shadow-lg md:p-4']) }}
+    {{ $attributes->merge(['class' => 'rounded-md border border-grey-darker bg-black p-2 shadow-lg md:p-4']) }}
 >
     <div class="flex items-stretch space-x-4">
         <img
@@ -21,14 +21,12 @@
                     <p class="text-white">{{ $title }}</p>
                 @endif
 
-                <p class="text-sm text-white">{{ $location }}</p>
+                @if ($location)
+                    <p class="text-sm text-white">{{ $location }}</p>
+                @endif
             </div>
             <div class="flex items-center space-x-2">
-                <img
-                    src="{{ $profileImage }}"
-                    class="object-fit h-6 w-6 rounded-full object-fill"
-                    alt=""
-                />
+                <x-avatar :image="$profileImage" />
                 <div class="text-sm leading-tighter text-[#BABABA]">
                     Hosted by {{ $hostName }}
                 </div>

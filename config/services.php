@@ -36,6 +36,7 @@ return [
         'client_secret' => env('AUTH0_CLIENT_SECRET'),
         'redirect' => env('AUTH0_REDIRECT_URI'),
         'base_url' => env('AUTH0_DOMAIN'),
+        'cookie_secret' => 'c1XhulxTocmsvHIQ1tBOp7McazNhkZVO',
     ],
 
     'mapbox' => [
@@ -44,6 +45,7 @@ return [
         'mapbox_style' => 'mapbox://styles/1stevengrant/cli1piqa3004z01r11o0hby73',
         'mapbox_style_light' => 'mapbox://styles/mapbox/light-v11',
         'types' => 'address,postcode',
+        'initial_zoom_level' => 10,
     ],
 
     'zendesk' => [
@@ -60,6 +62,10 @@ return [
 
     'slack' => [
         'webhook_url' => env('SLACK_WEBHOOK_URL'),
+    ],
+
+    'bunny' => [
+        'api_url' => env('BUNNY_CDN_URL'),
     ],
 
 ];

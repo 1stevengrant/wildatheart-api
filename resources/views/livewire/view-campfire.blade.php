@@ -13,12 +13,12 @@
                             {{ $campfire->name }} Fire
                         </h1>
                         @if ($campfire->isHost())
-                            <button
-                                wire:click="$emit('modal.open', 'edit-campfire', {'campfire': '{{ $campfire->id }}' })"
+                            <a
+                                href="{{ route('edit.campfire', $campfire) }}"
                                 class="rounded-md bg-orange px-2 py-1 text-sm hover:bg-orange/80"
                             >
                                 Edit Fire
-                            </button>
+                            </a>
                         @endif
                     </div>
 
@@ -162,7 +162,7 @@
 
         const map = new mapboxgl.Map({
             center: [{{ $campfire->coordinates }}],
-            zoom: 10,
+            zoom: {{ config('services.mapbox.initial_zoom_level') }},
             maxZoom: 10,
             container: "map",
             attributionControl: false,

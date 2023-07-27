@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Component;
 
@@ -12,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+
     }
 
     /**
@@ -26,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
                 'timeout' => $timeout,
             ]);
         });
+
+        Model::preventLazyLoading(! app()->isProduction());
     }
 }

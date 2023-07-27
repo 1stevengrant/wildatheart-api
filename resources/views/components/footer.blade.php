@@ -26,12 +26,7 @@
                 action="{{ route('logout') }}"
             >
                 @csrf
-                <div
-                    class="avatar"
-                    style="
-                        background-image: url({{ auth()->user()->profilePhoto() }}) !important;
-                    "
-                ></div>
+                <x-avatar :image="auth()->user()->profilePhoto()" />
                 <button
                     onclick="event.preventDefault(); this.closest('form').submit();"
                     class="text-sm text-white"

@@ -29,7 +29,7 @@ class VerifyEmail extends Component
 
         auth()->login($token->user);
 
-        return redirect()->route('gift', ['campfire' => $token->campfire]);
+        return to_route('gift', ['campfire' => $token->campfire]);
 
     }
 

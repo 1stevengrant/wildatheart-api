@@ -2,7 +2,7 @@
     'isActive' => false,
 ])
 <a
-    {{ $attributes->merge(['class' => 'inline-flex flex-col items-center justify-center px-5 group']) }}
+    {{ $attributes->merge(['class' => 'inline-flex flex-col items-center justify-center px-5 group text-white']) }}
 >
     {{ $icon }}
     <span class="text-sm text-white">

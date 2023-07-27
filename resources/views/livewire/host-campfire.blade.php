@@ -91,6 +91,7 @@
                             @if ($isUploaded)
                                 <label
                                     for="file"
+                                    wire:ignore
                                     style="
                                         background-image: url('{{ $photo->temporaryUrl() }}') !important;
                                     "
@@ -146,8 +147,7 @@
                             <button
                                 type="button"
                                 wire:click.prevent="$set('emailUpdates', false)"
-                                class="w-1/2 px-10 py-3 text-sm font-semibold"
-                                @if (!$emailUpdates) border border-white text-white rounded-r-full @endif
+                                class="@if (!$emailUpdates) border border-white text-white rounded-r-full @endif w-1/2 px-10 py-3 text-sm font-semibold"
                             >
                                 No
                             </button>
@@ -230,117 +230,35 @@
                         <li>Putting "Fire" in the name is not needed</li>
                     </ul>
                 </div>
-                <div>
-                    <x-forms.label
-                        for="geocoder-input"
-                        label="Full Fire Address"
-                        required
-                    />
-                    <div wire:ignore>
-                        <div id="geocoder"></div>
-                    </div>
-                    <x-forms.error
-                        :error="$errors->first('mapboxPlaceName')"
-                    />
-                    <x-forms.error :error="$mapboxError" />
-                    <x-forms.instruction
-                        instruction="This address is specifically for the Fire. This will only be shared
-                            with Wild at Heart. Attendees will only see general area."
-                    />
 
-                    <div
-                        wire:loading
-                        class="my-4"
-                        wire:target="mapboxPlaceName"
-                    >
-                        <x-icons.spinner />
-                    </div>
-                </div>
-
-                @if ($mapboxPlaceName || $mapboxError)
-                    <x-forms.instruction
-                        class="italic"
-                        instruction="Please correct any errors from autocompletion"
-                    />
-
-                    <x-forms.select
-                        name="country"
-                        label="Country"
-                        :error="$errors->first('country')"
-                        required
-                        wire:model="country"
-                    >
-                        <option value="">Select Country</option>
-                        @foreach (getCountries() as $key => $country)
-                            <option value="{{ $country }}">
-                                {{ $country }}
-                            </option>
-                        @endforeach
-                    </x-forms.select>
-
-                    <x-forms.input
-                        wire:model="street_address"
-                        label="Street Address"
-                        required
-                        :error="$errors->first('street_address')"
-                        maxlength="50"
-                        name="street_address"
-                    />
-
-                    <x-forms.input
-                        wire:model="city"
-                        label="City"
-                        required
-                        :error="$errors->first('city')"
-                        name="city"
-                        maxlength="50"
-                    />
-
-                    @if ($showState)
-                        <x-forms.select
-                            name="state"
-                            label="State"
-                            required
-                            :error="$errors->first('state')"
-                            wire:model="state"
-                        >
-                            <option value="">Select</option>
-                            <option value="-">Not Applicable</option>
-                            @foreach (\App\Models\State::all() as $state)
-                                <option value="{{ $state->code }}">
-                                    {{ $state->name }}
-                                </option>
-                            @endforeach
-                        </x-forms.select>
-                    @endif
-
-                    <x-forms.input
-                        wire:model="zip"
-                        label="Zip Code"
-                        :error="$errors->first('zip')"
-                        name="zip"
-                        required
-                        maxlength="10"
-                    />
-                @endif
+                <x-map type="Set" :mapboxError="$mapboxError" />
 
                 <x-button-container>
                     @include('partials.honeypot')
                     <x-primary-button
                         type="submit"
                         class="mt-8 w-full"
-                        :disabled="! $mapboxPlaceName"
+                        :disabled="! empty($mapboxError)"
                         wire:click.prevent="handleStepTwo"
                     >
                         Next
                     </x-primary-button>
 
-                    <button
-                        @click="step = 1"
-                        class="py-3 text-sm text-grey-200"
-                    >
-                        Back
-                    </button>
+                    @if ($step == 2)
+                        <a
+                            href="{{ route('my.profile') }}"
+                            class="py-3 text-sm text-grey-200"
+                        >
+                            Cancel
+                        </a>
+                    @else
+                        <button
+                            @click="step = 1"
+                            class="py-3 text-sm text-grey-200"
+                        >
+                            Cancel
+                        </button>
+                    @endif
                 </x-button-container>
             </div>
         </div>
@@ -365,77 +283,29 @@
     </div>
 </div>
 @push('head')
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link
+        href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css"
+        rel="stylesheet"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
 @endpush
 
 @push('scripts')
-<script>
-    document.addEventListener('livewire:load', function() {
-        document.title = 'Host a Fire | {{ config('app.name') }}';
-    });
+    <script>
+        document.addEventListener("livewire:load", function () {
+            document.title = "Host a Fire | {{ config('app.name') }}";
+        });
 
-    window.addEventListener('next-step', () => {
-        setTimeout(() => {
-            window.scroll({
-                top: 0,
-                left: 0,
-                behavior: "smooth"
-            });
-        }, 10);
-    });
+        window.addEventListener("next-step", () => {
+            setTimeout(() => {
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: "smooth",
+                });
+            }, 10);
+        });
+    </script>
 
-    const geocoder = new MapboxGeocoder({
-        accessToken: '{{ config('services.mapbox.api_key') }}',
-        types: '{{ config('services.mapbox.types') }}'
-    });
-
-    geocoder.addTo('#geocoder');
-
-    const geocoderInput = document.querySelector('#geocoder input')
-    geocoderInput.setAttribute('id', 'geocoder-input')
-
-    geocoder.on('result', (e) => {
-        try {
-
-            @this.set('mapboxPlaceName', e.result.place_name, true)
-            @this.set('showState', false)
-            @this.set('mapboxError', '')
-
-            const placeName = e.result.place_name,
-                isUSAddress = placeName.includes('United States'),
-                isPostalcode = e.result.place_type.includes('postcode');
-
-            const addressString = placeName,
-                addressComponents = addressString.split(",").map(component => component.trim()),
-                address = isPostalcode ? '' : addressComponents[0],
-                zip = isPostalcode ? e.result.text : e.result.context.find(context => context.id
-                    .includes(
-                        'postcode'))?.text,
-                country = e.result.context.find(context => context.id.includes('country'))?.text,
-                city = e.result.context.find(context => context.id.includes('place'))?.text
-
-            let state = "-";
-
-            if (isUSAddress) {
-                @this.set('showState', true)
-                state = e.result.context.find(context => context.id.includes('region'))?.short_code
-                    .replace(
-                        "US-", "")
-            }
-
-            @this.set('street_address', address)
-            @this.set('state', state)
-            @this.set('city', city)
-            @this.set('zip', zip)
-            @this.set('country', country)
-            @this.set('latitude', e.result.geometry.coordinates[1])
-            @this.set('longitude', e.result.geometry.coordinates[0])
-        } catch (e) {
-            @this.set('mapboxError',
-                'There was a problem with autoloading the address. Please enter the address manually or try refreshing the page.'
-            )
-        }
-
-    });
-</script>
+    @include('js.update-map')
 @endpush

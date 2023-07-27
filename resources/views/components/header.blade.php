@@ -10,8 +10,26 @@
                     alt=""
                 />
             </a>
+
             <x-menu />
         </div>
+        <button class="text-white md:hidden" @click="openMenu = !openMenu">
+            <x-icons.menu x-show="!openMenu" />
+            <x-icons.close x-show="openMenu" />
+        </button>
+
+        <x-account.mobile-menu
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 transform scale-90"
+            x-transition:enter-end="opacity-100 transform scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 transform scale-100"
+            x-transition:leave-end="opacity-0 transform scale-90"
+            x-show="openMenu"
+            @click.away="openMenu = false"
+            class="absolute left-0 right-0 top-[75px] z-50 bg-blue-900 p-4 text-white md:hidden"
+        />
+
         <div class="hidden items-center space-x-6 md:flex">
             <x-support />
             <x-account />

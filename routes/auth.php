@@ -1,20 +1,10 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Auth\CallbackController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->group(function () {
-    Route::get('login/{provider}', [LoginController::class, 'redirect'])->name('social.login');
-    Route::get('login/{provider}/callback', [LoginController::class, 'callback'])->name('social.callback');
-
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
-
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
-});
-
-Route::middleware('auth')->group(function () {
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
-});
+Route::get('login', LoginController::class)->name('login')->middleware('guest');
+Route::get('callback', CallbackController::class)->name('callback');
+Route::get('logout', LogoutController::class)->name('logout')->middleware('auth');

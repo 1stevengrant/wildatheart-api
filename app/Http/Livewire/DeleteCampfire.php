@@ -23,7 +23,12 @@ class DeleteCampfire extends Modal
 
         $this->emit('campfireDeleted');
         $this->close();
-        $this->dispatchBrowserEvent('notify', 'Fire deleted successfully!');
+        $this->dispatchBrowserEvent('notify', [
+            'message' => 'Fire deleted successfully!',
+            'timeout' => 3000,
+        ]);
+
+        $this->dispatchBrowserEvent('campfire-deleted');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

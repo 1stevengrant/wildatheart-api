@@ -52,14 +52,11 @@ class Attendee extends Resource
 
             Text::make('Phone')->hideFromDetail(),
 
-
-
             Text::make('Phone Number', function () {
-               return "+{$this->country_code}{$this->phone}";
+                return "+{$this->country_code}{$this->phone}";
             }),
 
             Text::make('City'),
-
 
             Text::make('State'),
 

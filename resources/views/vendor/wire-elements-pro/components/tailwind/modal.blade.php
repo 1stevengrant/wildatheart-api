@@ -1,10 +1,10 @@
 @props(['contentPadding' => true, 'onSubmit' => ''])
 <form
-    class="flex h-full flex-col bg-blue-900"
+    class="flex h-full flex-col rounded-lg bg-blue-900"
     wire:submit.prevent="{{ $onSubmit }}"
 >
     @if ($title ?? false)
-        <div class="p-4 text-white sm:px-6 sm:py-5">
+        <div class="rounded-lg p-4 text-white sm:px-6 sm:py-5">
             <h3 class="leading-4 text-lg font-medium">{{ $title }}</h3>
         </div>
     @endif

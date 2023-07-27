@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Laravel\Nova\Auth\Impersonatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Impersonatable;
 
     const ROLE_ADMIN = 'admin';
 
@@ -58,14 +60,27 @@ class User extends Authenticatable
         });
     }
 
-    public function attendees(): HasMany
+    public function attendees(): HasManyThrough
     {
-        return $this->hasMany(Attendee::class);
+        return $this->hasManyThrough(
+            Attendee::class,
+            Campfire::class,
+            'user_id',
+            'campfire_id'
+        );
     }
 
     public function campfires(): HasMany
     {
         return $this->hasMany(Campfire::class);
+    }
+
+    public function addresses(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Address::class,
+            Campfire::class,
+        );
     }
 
     public function isAttending(Campfire $campfire): bool
@@ -93,7 +108,9 @@ class User extends Authenticatable
         if ($this->image) {
             makeImagePublic($this->image);
 
-            return getImageUrl($this->image);
+            return bunnyImage($this->image, [
+                'width' => 200,
+            ]);
         }
 
         return asset('svgs/user.svg');
@@ -105,6 +122,14 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn (string $value) => strtolower($value),
             set: fn (string $value) => strtolower(str_replace(' ', '', $value)),
+        );
+    }
+
+    public function connections(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Attendee::class,
+            Campfire::class,
         );
     }
 }

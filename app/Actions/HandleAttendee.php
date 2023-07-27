@@ -18,6 +18,6 @@ class HandleAttendee
         session()->put('currentUrl', $currentUrl);
         session()->put('campfireId', $campfireId);
 
-        return redirect()->route('social.login', ['provider' => 'auth0']);
+        return redirect()->route('login');
     }
 }

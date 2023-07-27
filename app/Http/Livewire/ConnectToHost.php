@@ -83,13 +83,14 @@ class ConnectToHost extends Component
         ]);
 
         $this->campfire->attendees()->create([
+            'user_id' => $this->campfire->host->id,
             'given_name' => trim($this->firstName),
             'family_name' => trim($this->lastName),
             'email' => trim($this->email),
             'phone' => trim($this->phone),
             'city' => trim($this->city),
             'state' => $this->state,
-            'country' => $this->country,
+            'country' => getCountryCodeFromCountryName($this->country),
             'country_code' => $this->countryCode,
             'marketing_updates' => $this->emailUpdates,
         ]);

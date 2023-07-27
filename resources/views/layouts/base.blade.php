@@ -37,12 +37,12 @@
         <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     </head>
 
-    <body class="bg-blue-900 font-sans">
+    <body class="bg-blue-900 font-sans" x-data="{ openMenu: false }">
         {{ $slot }}
         @livewire('modal-pro')
         @livewireScripts
-        @stack('scripts')
         @vite('resources/js/app.js')
+        @stack('scripts')
         <x-notification />
     </body>
 </html>

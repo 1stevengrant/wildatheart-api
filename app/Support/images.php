@@ -15,3 +15,10 @@ if (! function_exists('getImageUrl')) {
         return Storage::url($image);
     }
 }
+
+if (! function_exists('bunnyImage')) {
+    function bunnyImage(string $image, array $params = []): string
+    {
+        return config('services.bunny.api_url').'/'.$image.'?'.http_build_query($params);
+    }
+}

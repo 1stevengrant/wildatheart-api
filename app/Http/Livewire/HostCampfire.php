@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Rules\ShouldBeEmpty;
 use App\Rules\ShouldNotEndWithFire;
 use App\Traits\HoneyPot;
+use App\Traits\LocationTrait;
+use App\Traits\MapboxErrorTrait;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -20,7 +22,7 @@ use Repat\LaravelRules\DoesntContainEmojis;
 
 class HostCampfire extends Component
 {
-    use WithFileUploads, HoneyPot;
+    use WithFileUploads, HoneyPot, LocationTrait, MapboxErrorTrait;
 
     public int $step = 1;
 
@@ -42,8 +44,6 @@ class HostCampfire extends Component
 
     public string $mapboxPlaceName = '';
 
-    public string $mapboxError = '';
-
     public $street_address = '';
 
     public $state = '';
@@ -58,25 +58,23 @@ class HostCampfire extends Component
 
     public $country = '';
 
-    public $latitude = '';
-
-    public $longitude = '';
-
     public string $frequency = 'monthly';
 
     public bool $isUploaded = false;
 
     public function mount()
     {
+        $this->getLatitudeAndLongitude();
+
         if (! auth()->check()) {
             session()->put('userType', User::ROLE_HOST);
             session()->put('currentUrl', url()->current());
 
-            return redirect()->route('social.login', ['provider' => 'auth0']);
+            return redirect()->route('login');
         }
 
         $user = auth()->user();
-
+        $this->step = $user->profile_step ?? 1;
         $this->firstName = $user->given_name ?? '';
         $this->lastName = $user->family_name ?? '';
         $this->campfireName = $user->given_name ? $user->given_name."'s" : 'Your Fire Name';
@@ -97,9 +95,9 @@ class HostCampfire extends Component
     public function updated(): void
     {
         if ($this->showState) {
-            $this->location = $this->location = $this->city.', '.$this->state;
+            $this->location = $this->city.', '.$this->state;
         } else {
-            $this->location = $this->location = $this->city;
+            $this->location = $this->city;
         }
     }
 
@@ -142,8 +140,7 @@ class HostCampfire extends Component
                 new ShouldNotEndWithFire(),
                 new DoesntContainEmojis(),
             ],
-            'mapboxPlaceName' => 'required|string',
-            'street_address' => 'required|string|max:255',
+            'street_address' => 'nullable|string|max:255',
             'state' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
@@ -156,13 +153,12 @@ class HostCampfire extends Component
 
         $campfire = auth()->user()->campfires()->create([
             'name' => trim($this->campfireName),
-            'mapbox_place_name' => $this->mapboxPlaceName,
             'frequency' => $this->frequency,
             'street_address' => trim($this->street_address),
             'state' => $this->state,
             'city' => trim($this->city),
             'zip' => trim($this->zip),
-            'country' => $this->country,
+            'country' => strtoupper($this->country),
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
         ]);
@@ -175,14 +171,14 @@ class HostCampfire extends Component
         if (! auth()->user()->hasVerifiedEmail()) {
             SendVerificationEmail::make()->handle(campfire: $campfire);
 
-            return redirect()->route('confirm.email', ['campfire' => $campfire]);
+            return to_route('confirm.email', ['campfire' => $campfire]);
         }
 
         ApproveCampfire::run(campfire: $campfire);
 
         CheckWelcomeStatus::run(campfire: $campfire);
 
-        return redirect()->route('gift', ['campfire' => $campfire]);
+        return to_route('gift', ['campfire' => $campfire]);
     }
 
     public function messages(): array

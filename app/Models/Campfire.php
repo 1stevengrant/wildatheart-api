@@ -4,7 +4,8 @@ namespace App\Models;
 
 use App\Builders\CampfireBuilder;
 use App\Enums\CampfireFrequency;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,11 @@ class Campfire extends Model
     public function attendees(): HasMany
     {
         return $this->hasMany(Attendee::class);
+    }
+
+    public function getAttendeesCountAttribute(): int
+    {
+        return $this->attendees->count();
     }
 
     public function getRemainingAttribute(): int
@@ -196,22 +202,21 @@ class Campfire extends Model
         if ($this->host->image) {
             makeImagePublic($this->host->image);
 
-            return getImageUrl($this->host->image);
+            return bunnyImage($this->host->image, [
+                'height' => 100,
+            ]);
         }
 
         return asset('svgs/user.svg');
     }
 
-    protected function country(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => $value,
-            set: fn (string $value) => getCountryCodeFromCountryName($value),
-        );
-    }
-
-    public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|\Illuminate\Contracts\Routing\UrlGenerator|\Illuminate\Contracts\Foundation\Application
+    public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
     {
         return url('manager/resources/camp-fires/'.$this->id);
+    }
+
+    public function allAttendeeEmails(): string
+    {
+        return implode(', ', $this->attendees->pluck('email')->toArray());
     }
 }

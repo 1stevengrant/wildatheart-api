@@ -52,18 +52,24 @@
             style="display: none"
             class="absolute left-0 mt-2 w-40 rounded-md bg-white shadow-md"
         >
-            <form method="POST" class="flex" action="{{ route('logout') }}">
-                @csrf
 
-                <a
-                    href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-               this.closest('form').submit();"
-                    class="hover:bg-gray-50 disabled:text-gray-500 flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm first-of-type:rounded-t-md last-of-type:rounded-b-md"
-                >
-                    {{ __('Logout') }}
-                </a>
-            </form>
+            <a href="{{ route('my.profile') }}" class="flex hover:bg-gray-50 disabled:text-gray-500 w-full items-center gap-2
+            px-4
+            py-2.5
+                    text-left text-sm first-of-type:rounded-t-md last-of-type:rounded-b-md">
+                {{ __('Profile') }}
+            </a>
+
+            <a
+                href="{{ route('logout') }}"
+                class="flex hover:bg-gray-50 disabled:text-gray-500 w-full items-center gap-2 px-4 py-2.5
+                    text-left text-sm first-of-type:rounded-t-md last-of-type:rounded-b-md"
+            >
+                {{ __('Logout') }}
+            </a>
+
+
+
         </div>
     </div>
 @endauth

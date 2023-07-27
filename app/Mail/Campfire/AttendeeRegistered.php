@@ -30,6 +30,7 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
+            replyTo: $this->attendee->email,
             subject: $this->attendee->given_name.' has expressed interest in your Fire.',
         );
     }

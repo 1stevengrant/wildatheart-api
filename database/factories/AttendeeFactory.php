@@ -18,8 +18,13 @@ class AttendeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'campfire_id' => \App\Models\Campfire::query()->inRandomOrder()->first()->id,
             'user_id' => User::factory()->create()->id,
+            'given_name' => $this->faker->firstName,
+            'family_name' => $this->faker->lastName,
+            'email' => $this->faker->email,
+            'city' => $this->faker->city,
+            'country' => 'US',
+            'state' => 'CA',
         ];
     }
 }

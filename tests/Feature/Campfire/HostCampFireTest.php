@@ -29,5 +29,5 @@ test('Host Fire component renders', function (): void {
 test('an unauthenticated user is redirected to login trying to access host url', function () {
     auth()->logout();
     $this->get(route('host'))
-        ->assertRedirect(route('social.login', ['provider' => 'auth0']));
+        ->assertRedirect(route('login'));
 });

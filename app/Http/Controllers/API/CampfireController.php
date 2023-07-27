@@ -19,7 +19,7 @@ class CampfireController extends Controller
 
     protected function getCampfires()
     {
-        return Campfire::query()->public()->get()->map(function ($campfire) {
+        return Campfire::query()->public()->with('attendees', 'user', 'host')->get()->map(function ($campfire) {
             return [
                 'type' => 'Feature',
                 'properties' => [
@@ -29,13 +29,10 @@ class CampfireController extends Controller
                     'title' => $campfire->title,
                     'location' => $campfire->location,
                     'country' => $campfire->country,
-                    'attendee_limit' => $campfire->attendee_limit,
-                    'spaces_remaining' => $campfire->remaining,
                     'url' => route('view.campfire', $campfire->id),
                     'host' => $campfire->user->full_name,
                     'hostProfilePhoto' => $campfire->hostPhoto(),
                     'image' => asset('img/wah-fires-suburb-1.webp'),
-                    'frequency' => $campfire->frequency,
                 ],
                 'geometry' => [
                     'type' => 'Point',

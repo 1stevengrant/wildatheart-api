@@ -21,7 +21,7 @@
 }
 
 .wep-modal-content {
-    @apply relative m-4 w-full transform overflow-hidden bg-white text-left shadow-xl transition-all sm:m-0;
+    @apply relative m-4 w-full transform overflow-hidden text-left shadow-xl transition-all sm:m-0;
 }
 
 .wep-modal-content > div {

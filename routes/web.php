@@ -2,12 +2,16 @@
 
 use App\Http\Livewire\ConfirmEmail;
 use App\Http\Livewire\ConnectToHost;
+use App\Http\Livewire\EditCampfire;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\HostCampfire;
 use App\Http\Livewire\ListCampfires;
 use App\Http\Livewire\ListCity;
 use App\Http\Livewire\ListState;
+use App\Http\Livewire\MyAddresses;
 use App\Http\Livewire\MyCampfires;
+use App\Http\Livewire\MyConnections;
+use App\Http\Livewire\MyProfile;
 use App\Http\Livewire\SendGift;
 use App\Http\Livewire\UpdateAddress;
 use App\Http\Livewire\VerifyEmail;
@@ -39,8 +43,12 @@ Route::get('confirmemail/{campfire}', ConfirmEmail::class)->name('confirm.email'
 Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
 Route::get('gift/{campfire}', SendGift::class)->name('gift');
 
-Route::middleware(['auth', 'role:host'])->group(function () {
-    Route::get('my', MyCampfires::class)->name('my.campfires');
+Route::middleware(['auth'])->group(function () {
+    Route::get('fires', MyCampfires::class)->name('my.campfires');
+    Route::get('fires/{campfire}', EditCampfire::class)->name('edit.campfire');
+    Route::get('profile', MyProfile::class)->name('my.profile');
+    Route::get('connections', MyConnections::class)->name('my.connections');
+    Route::get('addresses', MyAddresses::class)->name('my.addresses');
 });
 
 Route::get('update-address/{campfire}', UpdateAddress::class)->name('update.address');

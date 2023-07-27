@@ -46,7 +46,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 return true;
             }
 
-            abort(redirect()->route('social.login', ['provider' => 'auth0']));
+            abort(redirect()->route('login'));
         });
     }
 

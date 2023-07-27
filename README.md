@@ -1,49 +1,57 @@
+<p align="center"><a href="https://local.wildatheart.org" target="_blank"><img src="public/favicon.svg" alt="Wild at 
+Heart Fires Logo"></a></p>
+
 # Wild at Heart Local
 A Laravel-based platform for connecting like-hearted friends of Wild at Heart to events around the world.
 
-## Local Development
-
-### Prerequisites
+## Requirements
 To run this locally you will need to make sure you have a SQL db and PHP running on your device. If you're on a Mac, you may want to consider installing the following tools:
 * Running PHP - [Laravel Valet](https://laravel.com/docs/10.x/valet)
-* Running SQL - [Dbngin](https://dbngin.com/)
+* Running SQL - [DBngin](https://dbngin.com/)
+- PHP 8.1
+- npm as a package manager. This is important. While npm could be used, it's not advised to have package-lock.json and 
+  yarn.lock files in the same project.
+- MySQL 8.0
 
 You will also need to make sure you have the following tools installed:
-* [Comoposer](https://getcomposer.org/) for dependency management.
-*  [Artisan](https://laravel.com/docs/10.x/installation) for running db migrations. Follow Laravel installation docs.
-*  [Vapor CLI](https://docs.vapor.build/1.0/introduction.html#installing-the-vapor-cli) - for manual deployments and getting local .env files.
 
-### First time setup
-You will need to do a few extra steps if it's your first time running the project locally.
+* [Composer](https://getcomposer.org/) for dependency management.
+* [Vapor CLI](https://docs.vapor.build/1.0/introduction.html#installing-the-vapor-cli) - for manual deployments and 
+  getting local .env files.
 
-**Update dependencies**
+## Installation
 
-Run `composer update` in the project root to install all of the required dependencies.
+Make sure your server meets the minimum requirements before you start. [Official Documentation](https://laravel.com/docs/10.x/installation).
 
-**Create a `.env` file**
+1. clone the repository `git clone git@github.com:wild-at-heart/fires.git`
+2. change into the directory `cd fires`
+3. install composer dependencies `composer install`
+4. install npm dependencies `npm install`
+5. copy the `.env.example` file to `.env` and fill in the database credentials `cp .env.example .env`
 
-Run `vapor env:pull dev` to get a local env file you can use that has all of the api keys for things like mapbox and auth0. Once you have it, rename it from `.env.dev` to `.env`
+   ```bash
+    DB_HOST=your_local_db_host
+    DB_PORT=your_local_db_port
+    DB_DATABASE=your_local_db_name
+    DB_USERNAME=your_local_db_username
+    DB_PASSWORD=your_local_db_password
+   ```
+6. populate AWS credentials in `.env` file
+    
+    ```bash
+    AWS_ACCESS_KEY_ID=
+    AWS_SECRET_ACCESS_KEY=
+    AWS_DEFAULT_REGION=us-east-1
+    AWS_BUCKET=
+    AWS_USE_PATH_STYLE_ENDPOINT=false
+    ```
+7. generate an application key `php artisan key:generate`
+8. run the database migrations `php artisan migrate`
+9. run the database seeders `php artisan db:seed`
+   
+    These commands set the database back up to a default state with a few sample fires to work with. 
+10. optionally, you might want to grab a production database backup. For that, add the production database credentials 
+   to the `.env` file and run `php artisan app:pull-prod-database`
+11. run the development server `php artisan serve` if not using something like Laravel Valet or Sail.
 
-**Update `.env` with your local SQL details**
 
-Inside your `.env` file update the following variables:
-```bash
-DB_HOST=your_local_db_host
-DB_PORT=your_local_db_port
-DB_DATABASE=your_local_db_name
-DB_USERNAME=your_local_db_username
-DB_PASSWORD=your_local_db_password
-```
-If your everything is setup correctly you should be able to run the artisan migrate commands:
-
-```
-php artisan db:wipe --force
-
-php artisan migrate --force
-
-php artisan db:seed --class=RoleSeeder --force
-
-php artisan db:seed --class=StateSeeder --force
-```
-
-These commands set the database back up to a default state with a few sample fires to work with.

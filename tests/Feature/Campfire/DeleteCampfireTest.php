@@ -31,21 +31,10 @@ test('a user can delete their own Fire', function () {
     livewire(DeleteCampfire::class, ['campfire' => $campfire])
         ->call('handle')
         ->assertEmitted('campfireDeleted')
-        ->assertDispatchedBrowserEvent('notify', 'Fire deleted successfully!');
+        ->assertDispatchedBrowserEvent('notify', [
+            'message' => 'Fire deleted successfully!',
+            'timeout' => 3000,
+        ]);
 
     $this->assertSoftDeleted('campfires', ['id' => $campfire->id]);
 });
-
-test('a user cannot delete the Fire of another user', function () {
-    $user2 = User::factory()->create();
-    $campfire = Campfire::factory()->create([
-        'user_id' => $user2->id,
-    ]);
-
-    livewire(DeleteCampfire::class, ['campfire' => $campfire])
-        ->call('handle')
-        ->assertNotEmitted('campfireDeleted')
-        ->assertNotDispatchedBrowserEvent('notify');
-
-    $this->assertDatabaseHas('campfires', ['id' => $campfire->id]);
-})->skip();

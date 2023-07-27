@@ -4,19 +4,44 @@ namespace App\Http\Livewire;
 
 use App\Models\Campfire;
 use App\Rules\ShouldNotEndWithFire;
+use App\Traits\LocationTrait;
+use App\Traits\MapboxErrorTrait;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Livewire\Component;
+use Livewire\Redirector;
 use Repat\LaravelRules\DoesntContainEmojis;
-use WireElements\Pro\Components\Modal\Modal;
 
-class EditCampfire extends Modal
+class EditCampfire extends Component
 {
+    use LocationTrait, MapboxErrorTrait;
+
     public string|Campfire $campfire;
+
+    public string $mapboxPlaceName = '';
+
+    public $street_address = '';
+
+    public $state = '';
+
+    public $location = '';
+
+    public $showState = false;
+
+    public $city = '';
+
+    public $zip = '';
+
+    public $country = '';
 
     public function mount(Campfire $campfire): void
     {
         $this->campfire = $campfire;
+        $this->city = $campfire->city;
+        $this->latitude = $campfire->latitude;
+        $this->longitude = $campfire->longitude;
     }
 
     protected function rules(): array
@@ -30,20 +55,29 @@ class EditCampfire extends Modal
                 new ShouldNotEndWithFire(),
                 new DoesntContainEmojis(),
             ],
+            'campfire.longitude' => 'required',
+            'campfire.latitude' => 'required',
         ];
     }
 
-    public function handle(): void
+    public function handle(): Redirector|RedirectResponse
     {
         $this->validate();
 
         $this->campfire->update([
             'name' => trim($this->campfire->name),
+            'street_address' => $this->street_address,
+            'city' => $this->city,
+            'state' => $this->state,
+            'zip' => $this->zip,
+            'country' => $this->country,
+            'longitude' => $this->longitude,
+            'latitude' => $this->latitude,
         ]);
 
         $this->emit('campfireUpdated');
-        $this->close();
-        $this->dispatchBrowserEvent('notify', 'Fire updated successfully');
+
+        return to_route('my.campfires');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
