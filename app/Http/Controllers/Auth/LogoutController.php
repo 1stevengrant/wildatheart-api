@@ -18,7 +18,6 @@ class LogoutController extends Controller
 
     public function __invoke(Request $request)
     {
-        $this->auth0->logout();
 
         auth()->logout();
 
@@ -26,6 +25,11 @@ class LogoutController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        $route = (string) url('/');
+
+        $url = $this->auth0->logout($route);
+
+        return redirect()->away($url);
+
     }
 }

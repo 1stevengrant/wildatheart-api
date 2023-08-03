@@ -32,8 +32,8 @@ class CallbackController extends Controller
 
         $user = User::firstOrCreate(['email' => $auth0User['email']],
             [
-                'given_name' => $auth0User['given_name'],
-                'family_name' => $auth0User['family_name'],
+                'given_name' => $auth0User['given_name'] ?? null,
+                'family_name' => $auth0User['family_name'] ?? null,
                 'password' => bcrypt(Str::random(32)),
                 'email' => $auth0User['email'],
                 'provider_id' => $auth0User['sub'],

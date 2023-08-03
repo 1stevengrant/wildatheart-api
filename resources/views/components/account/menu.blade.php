@@ -27,20 +27,10 @@
     {{-- {{ __('My Addresses') }} --}}
     {{-- </x-profile.menu-item> --}}
 
-    <form
-        method="POST"
-        class="flex w-full rounded-lg px-4 py-5"
-        action="{{ route('logout') }}"
-    >
-        @csrf
-        <button
-            onclick="event.preventDefault(); this.closest('form').submit();"
-            class="flex w-full items-center space-x-4"
-        >
+    <x-profile.menu-item slug="logout" :href="route('logout')">
+        <x-slot name="icon">
             <x-icons.logout />
-            <span class="text-sm text-white">
-                {{ __('Logout') }}
-            </span>
-        </button>
-    </form>
+        </x-slot>
+        {{ __('Logout') }}
+    </x-profile.menu-item>
 </div>
