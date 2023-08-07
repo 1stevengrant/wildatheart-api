@@ -9,8 +9,11 @@
         <span class="text-red">*</span>
     </h2>
     <x-forms.instruction
-        instruction="Drag the marker & zoom the map to update the location of your Fire."
+        instruction="Drag the marker & zoom the map to update the location of your Fire, or lookup the city name to update the location."
     />
+
+    <div id="geocoder" class="my-4"></div>
+    <pre id="results"></pre>
 
     <div
         id="map"

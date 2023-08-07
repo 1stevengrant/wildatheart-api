@@ -1,25 +1,6 @@
 <script>
     setTimeout(() => {
-        mapboxgl.accessToken = "{{ config('services.mapbox.api_key') }}";
-        const map = new mapboxgl.Map({
-            container: "map",
-            style: "{{ config('services.mapbox.mapbox_style') }}",
-            center: [{{ $longitude }}, {{ $latitude }}],
-            zoom: {{ config('services.mapbox.initial_zoom_level') }},
-            attributionControl: false,
-        });
-
-        map.addControl(new mapboxgl.NavigationControl({
-            showCompass: false
-        }));
-        map.dragRotate.disable();
-
-        // disable map rotation using touch rotation gesture
-        map.touchZoomRotate.disableRotation();
-
-        const canvas = map.getCanvasContainer();
-
-        const geojson = {
+        let geojson = {
             type: "FeatureCollection",
             features: [
                 {
@@ -32,6 +13,52 @@
             ]
         };
 
+        mapboxgl.accessToken = "{{ config('services.mapbox.api_key') }}";
+        const map = new mapboxgl.Map({
+            container: "map",
+            style: "{{ config('services.mapbox.mapbox_style') }}",
+            center: [{{ $longitude }}, {{ $latitude }}],
+            zoom: {{ config('services.mapbox.initial_zoom_level') }},
+            attributionControl: false,
+        });
+
+        const geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            placeholder: 'Lookup City Name',
+            types: 'place, locality',
+        });
+
+        geocoder.addTo('#geocoder');
+
+        // Get the geocoder results container.
+        const results = document.getElementById('result');
+
+        // Add geocoder result to container.
+        geocoder.on('result', (e) => {
+            let coords = e.result.center;
+            @this.set("longitude", coords[0]);
+            @this.set("latitude", coords[1]);
+            lookupAddress(coords[0] + ',' + coords[1]);
+            setGeoJson(coords[0], coords[1])
+            map.getSource("point").setData(geojson);
+            flyToLocation(coords[0], coords[1])
+        });
+
+        // Clear results container when search is cleared.
+        geocoder.on('clear', () => {
+            results.innerText = '';
+        });
+
+        map.addControl(new mapboxgl.NavigationControl({
+            showCompass: false
+        }));
+        map.dragRotate.disable();
+
+        // disable map rotation using touch rotation gesture
+        map.touchZoomRotate.disableRotation();
+
+        const canvas = map.getCanvasContainer();
+
         function onMove(e) {
             const coords = e.lngLat;
 
@@ -40,7 +67,7 @@
 
             // Update the Point feature in `geojson` coordinates
             // and call setData to the source layer `point` on it.
-            geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
+            setGeoJson(coords.lng, coords.lat)
             map.getSource("point").setData(geojson);
         }
 
@@ -85,6 +112,10 @@
                 .catch(error => {
                     console.log(error);
                 });
+        }
+
+        function setGeoJson(longitude, latitude) {
+            geojson.features[0].geometry.coordinates = [longitude, latitude];
         }
 
         map.on("load", () => {
@@ -138,6 +169,14 @@
         });
 
         document.querySelector('#map-loader').classList.add('hidden');
+
+        function flyToLocation(longitude, latitude, duration = 1000) {
+            map.flyTo({
+                center: [longitude, latitude],
+                essential: true,
+                duration: duration
+            });
+        }
 
     }, 1000)
 </script>
