@@ -44,6 +44,7 @@ return [
         'svgs/map-campfire-marker.svg',
         'svgs/map-home-marker.svg',
         'svgs/map-marker.svg',
+        'img/opengraph.png',
     ],
 
 ];

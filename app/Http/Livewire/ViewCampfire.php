@@ -39,7 +39,7 @@ class ViewCampfire extends Component
         $this->currentUrl = url()->current();
         $title = $campfire->title.' by '.$campfire->host->full_name;
         $url = $this->currentUrl;
-        $image = url('img/opengraph.jpeg');
+        $image = url('img/opengraph.png');
 
         SEOMeta::setTitle($title)
             ->setCanonical($url);
