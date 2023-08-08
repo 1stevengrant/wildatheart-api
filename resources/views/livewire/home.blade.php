@@ -13,9 +13,6 @@
 </div>
 @push('scripts')
     <script>
-        document.addEventListener("livewire:load", function () {
-                    document.title = "Fires | {{ config('app.name') }}";
-                });
 
                 mapboxgl.accessToken = "{{ config('services.mapbox.api_key') }}";
                 const map = new mapboxgl.Map({

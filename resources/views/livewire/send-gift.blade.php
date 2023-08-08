@@ -177,7 +177,7 @@
 @push('scripts')
     <script>
         document.addEventListener("livewire:load", function () {
-            document.title = "Claim Your Gift 🥳 | {{ config('app.name') }}";
+
 
             window.addEventListener("next-step", (event) => {
                 setTimeout(() => {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -30,6 +31,11 @@ class MyCampfires extends Component
     public function startAFire(): Redirector|RedirectResponse
     {
         return to_route('host');
+    }
+
+    public function mount(): void
+    {
+        SEOTools::setTitle('My Fires');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

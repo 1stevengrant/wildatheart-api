@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Attendee;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -30,6 +31,11 @@ class MyConnections extends Component
             'message' => 'Copied link to clipboard',
             'timeout' => 5000,
         ]);
+    }
+
+    public function mount(): void
+    {
+        SEOTools::setTitle('My Connections');
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

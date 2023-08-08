@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -24,6 +25,7 @@ class MyProfile extends Component
     {
         $this->user = auth()->user();
         $this->photo = $this->user->image;
+        SEOTools::setTitle('My Fire Host Profile');
     }
 
     public function updatedPhoto(): void

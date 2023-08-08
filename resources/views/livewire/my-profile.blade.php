@@ -138,11 +138,3 @@
         </div>
     </div>
 </x-layouts.account>
-
-@push('scripts')
-    <script>
-        document.addEventListener("livewire:load", function () {
-            document.title = "My Fire Host Profile | {{ config('app.name') }}";
-        });
-    </script>
-@endpush

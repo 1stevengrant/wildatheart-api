@@ -7,6 +7,7 @@ use App\Actions\Campfire\UpdateCampfire;
 use App\Jobs\PostToZapier;
 use App\Mail\Campfire\GiftRequested;
 use App\Models\Campfire;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -49,6 +50,8 @@ class SendGift extends Component
         }
 
         $this->prefillAddress();
+
+        SEOTools::setTitle('Claim Your Gift 🥳');
     }
 
     public function prefillAddress(): void

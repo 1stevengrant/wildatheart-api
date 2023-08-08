@@ -76,10 +76,6 @@
 
 @push('scripts')
     <script>
-        document.addEventListener("livewire:load", function () {
-            document.title = "My Fires | {{ config('app.name') }}";
-        });
-
         function copyLinkToClipboard(url) {
             // Create a temporary input element
             const tempInput = document.createElement("input");

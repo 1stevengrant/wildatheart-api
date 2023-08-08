@@ -39,6 +39,7 @@
                 </div>
 
                 <div class="hidden md:block md:w-1/3">
+                    @include('share')
                     @if (! session()->has('connected'))
                         <x-campfire-cta :campfire="$campfire" />
                     @else
@@ -105,18 +106,21 @@
         id="mobile-connect-with-host"
         class="fixed bottom-0 left-0 right-0 border-t border-grey-darker bg-black px-4 py-6 md:hidden"
     >
-        @if (! session()->has('connected'))
-            <x-primary-link
-                href="{{ route('connect.host', $campfire) }}"
-                class="w-full"
-            >
-                Connect with {{ $campfire->host->given_name }}
-            </x-primary-link>
-        @else
-            <x-primary-button disabled class="w-full">
-                You have connected with {{ $campfire->host->given_name }}
-            </x-primary-button>
-        @endif
+        <div class="flex items-center space-x-6">
+            <x-share-button id="share-btn" />
+            @if (! session()->has('connected'))
+                <x-primary-link
+                    href="{{ route('connect.host', $campfire) }}"
+                    class="w-full"
+                >
+                    Connect with {{ $campfire->host->given_name }}
+                </x-primary-link>
+            @else
+                <x-primary-button disabled class="w-full">
+                    You have connected with {{ $campfire->host->given_name }}
+                </x-primary-button>
+            @endif
+        </div>
     </div>
 </div>
 @push('head')
@@ -130,8 +134,7 @@
 @push('scripts')
     <script>
         document.addEventListener("livewire:load", function () {
-            document.title =
-                "{!! $campfire->name . ' Fire' ?? $campfire->location !!} | {{ config('app.name') }}";
+
             if (window.innerWidth < 768) {
                 const campfireElement = document.getElementById("campfire"),
                     connectWithHostElement = document.getElementById(
@@ -184,5 +187,21 @@
                 .setLngLat(marker.geometry.coordinates)
                 .addTo(map);
         }
+
+        const shareBtn = document.querySelector("#share-btn");
+        shareBtn.addEventListener("click", async () => {
+            try {
+                await navigator.share({
+                    title: "{{ $campfire->name }}",
+                    text: "{{ $campfire->location }}",
+                    url: "{{ route('view.campfire', $campfire) }}",
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        });
     </script>
 @endpush
+
+
+

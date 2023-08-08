@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Actions\User\SendVerificationEmail;
 use App\Models\Campfire;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -16,6 +17,7 @@ class ConfirmEmail extends Component
     public function mount(Campfire $campfire): void
     {
         $this->campfire = $campfire;
+        SEOTools::setTitle('Confirm Your Email');
     }
 
     public function resendEmail(): void

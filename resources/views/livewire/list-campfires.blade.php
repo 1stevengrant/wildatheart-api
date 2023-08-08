@@ -46,11 +46,3 @@
         &uarr;
     </a>
 </div>
-
-@push('scripts')
-    <script>
-        document.addEventListener("livewire:load", function () {
-            document.title = "Attend a Fire | {{ config('app.name') }}";
-        });
-    </script>
-@endpush

@@ -12,6 +12,7 @@ use App\Rules\ShouldNotEndWithFire;
 use App\Traits\HoneyPot;
 use App\Traits\LocationTrait;
 use App\Traits\MapboxErrorTrait;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -81,6 +82,8 @@ class HostCampfire extends Component
         $this->countryCode = $user->country_code ?? '1';
         $this->phone = $user->phone ?? '';
         $this->photo = $user->image;
+
+        SEOTools::setTitle('Host a Fire ');
     }
 
     public function updatedPhoto(): void

@@ -6,6 +6,7 @@ use App\Models\Campfire;
 use App\Rules\ShouldNotEndWithFire;
 use App\Traits\LocationTrait;
 use App\Traits\MapboxErrorTrait;
+use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -42,6 +43,8 @@ class EditCampfire extends Component
         $this->city = $campfire->city;
         $this->latitude = $campfire->latitude;
         $this->longitude = $campfire->longitude;
+
+        SEOTools::setTitle('Edit Fire '.$campfire->name);
     }
 
     protected function rules(): array

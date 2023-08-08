@@ -282,21 +282,8 @@
         </div>
     </div>
 </div>
-@push('head')
-    <link
-        href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css"
-        rel="stylesheet"
-    />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-@endpush
-
 @push('scripts')
     <script>
-        document.addEventListener("livewire:load", function () {
-            document.title = "Host a Fire | {{ config('app.name') }}";
-        });
-
         window.addEventListener("next-step", () => {
             setTimeout(() => {
                 window.scroll({

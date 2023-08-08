@@ -4,6 +4,10 @@ namespace App\Http\Livewire;
 
 use App\Actions\HandleAttendee;
 use App\Models\Campfire;
+use Artesaos\SEOTools\Facades\JsonLd;
+use Artesaos\SEOTools\Facades\OpenGraph;
+use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\TwitterCard;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -33,6 +37,29 @@ class ViewCampfire extends Component
     {
         $this->campfire = $campfire;
         $this->currentUrl = url()->current();
+        $title = $campfire->title.' by '.$campfire->host->full_name;
+        $url = $this->currentUrl;
+        $image = url('img/opengraph.jpeg');
+
+        SEOMeta::setTitle($title)
+            ->setCanonical($url);
+
+        OpenGraph::setTitle($title)
+            ->setUrl($url)
+            ->addProperty('type', 'articles')
+            ->addImage($image)
+            ->addProperty('locale', 'en-US');
+
+        TwitterCard::setTitle($title)
+            ->addImage($image)
+            ->setSite('@wildatheart');
+
+        JsonLd::setTitle($title)
+            ->setType('Event')
+            ->addImage($image)
+            ->setUrl($url);
+
+        JsonLd::generate();
     }
 
     public function handleAttendee($campfireId): void

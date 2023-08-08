@@ -53,10 +53,6 @@
 
 @push('scripts')
     <script>
-        document.addEventListener("livewire:load", function () {
-            document.title = "My Connections | {{ config('app.name') }}";
-        });
-
         function copyToClipboard(url, type = "copiedEmailsToClipboard") {
             // Create a temporary input element
             const tempInput = document.createElement("input");

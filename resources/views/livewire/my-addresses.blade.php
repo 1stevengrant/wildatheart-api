@@ -43,11 +43,3 @@
         </div>
     @endunless
 </x-layouts.account>
-
-@push('scripts')
-    <script>
-        document.addEventListener("livewire:load", function () {
-            document.title = "My Addresses | {{ config('app.name') }}";
-        });
-    </script>
-@endpush
