@@ -37,7 +37,7 @@ class ViewCampfire extends Component
     {
         $this->campfire = $campfire;
         $this->currentUrl = url()->current();
-        $title = $campfire->title.' by '.$campfire->host->full_name;
+        $title = $campfire->title.' hosted by '.$campfire->host->full_name.' in '.$campfire->location;
         $url = $this->currentUrl;
         $image = url('img/opengraph.png');
 
