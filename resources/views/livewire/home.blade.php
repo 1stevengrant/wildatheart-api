@@ -25,6 +25,12 @@
 
                 map.addControl(new mapboxgl.NavigationControl());
 
+                // disable map rotation using right click + drag
+                map.dragRotate.disable();
+
+                // disable map rotation using touch rotation gesture
+                map.touchZoomRotate.disableRotation();
+
                 let campfires = null;
 
                 async function getCampFires() {
