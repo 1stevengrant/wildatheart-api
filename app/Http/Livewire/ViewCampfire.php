@@ -26,7 +26,16 @@ class ViewCampfire extends Component
     protected $listeners = [
         'registeredForCampfire' => 'updateConnectionStatus',
         'campfireUpdated' => '$refresh',
+        'copiedToClipboard' => 'copiedToClipboard',
     ];
+
+    public function copiedToClipboard()
+    {
+        $this->dispatchBrowserEvent('notify', [
+            'timeout' => 5000,
+            'message' => 'Link copied to clipboard!',
+        ]);
+    }
 
     public function updateConnectionStatus(): void
     {

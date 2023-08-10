@@ -199,5 +199,18 @@
                 console.error(err);
             }
         });
+
+        function copyToClipboard(url) {
+            document
+                .getElementById("share-component")
+                .dispatchEvent(new CustomEvent("toggle-share", { detail: {} }));
+            Livewire.emit("copiedToClipboard");
+            const el = document.createElement("textarea");
+            el.value = url;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand("copy");
+            document.body.removeChild(el);
+        }
     </script>
 @endpush

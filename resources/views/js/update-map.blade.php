@@ -87,7 +87,6 @@
             await fetch('{{ config('services.mapbox.api_url') }}' + latLng + '.json?types=address&access_token={{ config('services.mapbox.api_key') }}')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     const features = data.features[0];
                     if (features) {
                         @this.set('mapboxError', '')

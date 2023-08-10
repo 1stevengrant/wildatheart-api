@@ -1,4 +1,6 @@
 <div
+    id="share-component"
+    @toggle-share="shareModal = !shareModal"
     class="mb-4 text-right font-semibold"
     @keydown.escape="shareModal = false"
     x-data="{ 'shareModal': false }"
@@ -59,6 +61,12 @@
                 >
                     Email
                 </x-share-link>
+                <button
+                    class="col-span-2 rounded-lg border border-orange bg-orange px-2 py-1 text-center text-white transition-colors duration-100 ease-in-out hover:border-black hover:bg-black"
+                    onclick="copyToClipboard('{{ route('view.campfire', $campfire) }}')"
+                >
+                    Copy URL to Clipboard
+                </button>
             </div>
         </div>
     </div>

@@ -10,7 +10,6 @@
     let timeout = $event.detail.timeout;
     if ($event.detail.type === undefined) {
         this.type = null;
-        console.log(this.type);
     } else {
         this.type = $event.detail.type;
     }
