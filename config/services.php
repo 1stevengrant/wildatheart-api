@@ -42,7 +42,7 @@ return [
     'mapbox' => [
         'api_url' => 'https://api.mapbox.com/geocoding/v5/mapbox.places/',
         'api_key' => env('MAPBOX_API_KEY'),
-        'mapbox_style' => 'mapbox://styles/1stevengrant/cli1piqa3004z01r11o0hby73',
+        'mapbox_style' => 'mapbox://styles/mapbox/navigation-day-v1',
         'mapbox_style_light' => 'mapbox://styles/mapbox/light-v11',
         'types' => 'address,postcode',
         'initial_zoom_level' => 10,
