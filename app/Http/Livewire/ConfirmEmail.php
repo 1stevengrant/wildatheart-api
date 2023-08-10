@@ -24,7 +24,10 @@ class ConfirmEmail extends Component
     {
         SendVerificationEmail::run(campfire: $this->campfire);
 
-        $this->dispatchBrowserEvent('notify', 'Verification email sent! Check your inbox.');
+        $this->dispatchBrowserEvent('notify', [
+            'message' => 'Verification email sent! Check your inbox.',
+            'timeout' => 5000,
+        ]);
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

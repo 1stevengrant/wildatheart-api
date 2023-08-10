@@ -35,8 +35,11 @@ class ReportIssue extends Modal
         ]);
 
         $this->emit('issueReported');
-        $this->dispatchBrowserEvent('notify', 'Issue reported successfully!');
 
+        $this->dispatchBrowserEvent('notify', [
+            'message' => 'Issue reported successfully!',
+            'timeout' => 5000,
+        ]);
         $this->close();
     }
 

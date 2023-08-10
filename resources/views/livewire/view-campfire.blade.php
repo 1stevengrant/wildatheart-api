@@ -134,7 +134,6 @@
 @push('scripts')
     <script>
         document.addEventListener("livewire:load", function () {
-
             if (window.innerWidth < 768) {
                 const campfireElement = document.getElementById("campfire"),
                     connectWithHostElement = document.getElementById(
@@ -202,6 +201,3 @@
         });
     </script>
 @endpush
-
-
-

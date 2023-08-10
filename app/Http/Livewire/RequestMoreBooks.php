@@ -29,7 +29,10 @@ class RequestMoreBooks extends Modal
 
         $this->close();
 
-        $this->dispatchBrowserEvent('notify', 'More books have been requested!');
+        $this->dispatchBrowserEvent('notify', [
+            'message' => 'More books have been requested!',
+            'timeout' => 5000,
+        ]);
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

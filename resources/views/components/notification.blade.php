@@ -8,7 +8,12 @@
     }"
     @notify.window="let message = $event.detail.message;
     let timeout = $event.detail.timeout;
-    type = $event.detail.type;
+    if ($event.detail.type === undefined) {
+        this.type = null;
+        console.log(this.type);
+    } else {
+        this.type = $event.detail.type;
+    }
     messages.push(message);
     if (timeout !== null) {
         setTimeout(() => { remove(message) }, timeout)

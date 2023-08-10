@@ -96,8 +96,9 @@ class ConnectToHost extends Component
         ]);
 
         if (app()->isProduction()) {
-            SlackAlert::message(trim($this->firstName).' '.trim($this->lastName).' contacted '
-                .$this->campfire->host->fullName.' about his Fire in '.$this->campfire->location.' !');
+            SlackAlert::toChannel('wah-fires-event-feed')
+                ->message(trim($this->firstName).' '.trim($this->lastName).' contacted '
+                    .$this->campfire->host->fullName.' about his Fire in '.$this->campfire->location.' !');
         }
 
         $this->emit('connectedToHost');

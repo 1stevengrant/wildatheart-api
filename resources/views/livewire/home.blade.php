@@ -13,8 +13,7 @@
 </div>
 @push('scripts')
     <script>
-
-                mapboxgl.accessToken = "{{ config('services.mapbox.api_key') }}";
+        mapboxgl.accessToken = "{{ config('services.mapbox.api_key') }}";
                 const map = new mapboxgl.Map({
                     container: "map",
                     style: "{{ config('services.mapbox.mapbox_style') }}",

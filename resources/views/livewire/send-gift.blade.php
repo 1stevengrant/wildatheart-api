@@ -177,8 +177,6 @@
 @push('scripts')
     <script>
         document.addEventListener("livewire:load", function () {
-
-
             window.addEventListener("next-step", (event) => {
                 setTimeout(() => {
                     window.scroll({ top: 0, left: 0, behavior: "smooth" });
