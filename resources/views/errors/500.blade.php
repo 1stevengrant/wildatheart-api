@@ -11,8 +11,8 @@
             </div>
             <div>500</div>
             <div class="max-w-md">
-                Whoops! It's not you, it's us. We're a moment and our engineers
-                are working on it.
+                Whoops! It's not you, it's us. Our engineers are working on
+                fixing the code.
             </div>
             <a
                 class="border-b border-white text-base hover:border-transparent"
