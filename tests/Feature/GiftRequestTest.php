@@ -5,6 +5,7 @@ use App\Mail\Campfire\GiftRequested;
 use App\Models\Campfire;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);

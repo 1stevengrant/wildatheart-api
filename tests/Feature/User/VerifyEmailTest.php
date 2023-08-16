@@ -3,6 +3,7 @@
 use App\Models\Campfire;
 use App\Models\EmailVerify;
 use App\Models\User;
+
 use function Pest\Livewire\livewire;
 
 it('verifies user email', function () {

@@ -3,6 +3,7 @@
 use App\Http\Livewire\ReportIssue;
 use App\Jobs\ReportIssueToSlack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);

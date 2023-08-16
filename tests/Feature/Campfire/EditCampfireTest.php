@@ -6,9 +6,10 @@ use App\Models\User;
 use App\Rules\ShouldNotEndWithFire;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Repat\LaravelRules\DoesntContainEmojis;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Livewire\livewire;
-use Repat\LaravelRules\DoesntContainEmojis;
 
 uses(RefreshDatabase::class);
 
