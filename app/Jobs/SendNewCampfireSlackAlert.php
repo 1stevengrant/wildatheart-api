@@ -27,7 +27,7 @@ class SendNewCampfireSlackAlert implements ShouldQueue
         $country = $campfire->country;
         $name = $campfire->name;
 
-        SlackAlert::toChannel(app()->isProduction() ? 'wah-fires-event-feed' : 'general')
+        SlackAlert::to('events')
             ->blocks([
                 [
                     'type' => 'section',

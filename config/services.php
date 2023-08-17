@@ -62,6 +62,7 @@ return [
 
     'slack' => [
         'webhook_url' => env('SLACK_WEBHOOK_URL'),
+        'events_webhook_url' => env('SLACK_EVENTS_WEBHOOK_URL'),
     ],
 
     'bunny' => [

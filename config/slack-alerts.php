@@ -6,6 +6,7 @@ return [
      */
     'webhook_urls' => [
         'default' => config('services.slack.webhook_url'),
+        'events' => config('services.slack.events_webhook_url'),
     ],
 
     /*
