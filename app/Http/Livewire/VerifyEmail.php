@@ -14,11 +14,12 @@ class VerifyEmail extends Component
     public function mount($token): \Livewire\Redirector
     {
         $token = GetByToken::make()->handle(token: $token);
-        $campfire = $token->campfire;
 
         if (! $token) {
-            abort(403, 'Invalid token');
+            abort(403, 'That token is invalid or has already been used.');
         }
+
+        $campfire = $token->campfire;
 
         \App\Actions\User\ConfirmEmail::run(
             user: $token->user,

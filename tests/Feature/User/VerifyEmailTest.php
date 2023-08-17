@@ -6,6 +6,7 @@ use App\Models\User;
 
 use function Pest\Livewire\livewire;
 
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 it('verifies user email', function () {
     $user = User::factory()->create([
         'email_verified_at' => null,
@@ -29,4 +30,9 @@ it('verifies user email', function () {
         ->and(EmailVerify::find($token->id))->toBeNull()
         ->and(auth()->user()->id)->toEqual($user->id);
 
+});
+
+it('needs a valid token validate the email', function () {
+    livewire('verify-email', ['token' => 'invalid-token'])
+        ->assertStatus(403);
 });
