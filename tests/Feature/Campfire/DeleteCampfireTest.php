@@ -19,7 +19,11 @@ beforeEach(function (): void {
 });
 
 test('Delete Fire component renders', function (): void {
-    livewire(DeleteCampfire::class)
+    $campfire = Campfire::factory()->create([
+        'user_id' => $this->user->id,
+        'deleted_at' => null,
+    ]);
+    livewire(DeleteCampfire::class, ['campfire' => $campfire])
         ->assertStatus(200);
 });
 

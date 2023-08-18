@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Campfire extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, Searchable;
 
     protected $guarded = ['id'];
 
@@ -27,6 +28,8 @@ class Campfire extends Model
         'deleted_at' => 'datetime',
         'frequency' => CampfireFrequency::class,
     ];
+
+    protected $appends = ['url'];
 
     const STATUS_APPROVED = 'approved';
 
@@ -218,5 +221,36 @@ class Campfire extends Model
     public function allAttendeeEmails(): string
     {
         return implode(', ', $this->attendees->pluck('email')->toArray());
+    }
+
+    public function searchableAs(): string
+    {
+        return config('scout.prefix').'fires';
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'objectID' => $this->id,
+            'city' => $this->city,
+            'state' => $this->state,
+            'country' => $this->country,
+            'name' => $this->name,
+            'url' => $this->url,
+            '_geoloc' => [
+                'lat' => floatval($this->latitude),
+                'lng' => floatval($this->longitude),
+            ],
+        ];
+    }
+
+    public function getScoutKey(): mixed
+    {
+        return $this->id;
+    }
+
+    public function getScoutKeyName(): string
+    {
+        return 'id';
     }
 }
