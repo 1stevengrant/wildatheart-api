@@ -16,7 +16,15 @@ return [
     |
     */
 
-    'searchableAttributes' => ['objectID', 'city', 'state', 'country', 'name', 'timestamp'],
+    'searchableAttributes' => [
+        'objectID',
+        'city',
+        'state',
+        'country',
+        'host',
+        'name',
+        'timestamp',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -95,7 +103,8 @@ return [
     |
     */
 
-    'unretrievableAttributes' => null,
+    'unretrievableAttributes' => [
+    ],
 
     /*
     |--------------------------------------------------------------------------

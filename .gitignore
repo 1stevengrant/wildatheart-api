@@ -22,3 +22,5 @@ yarn-error.log
 .env.dev
 /dbdumps
 /.vapor
+/public/mix-manifest.json
+/public/js

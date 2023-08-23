@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Campfire;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Component;
@@ -29,5 +30,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Model::preventLazyLoading(! app()->isProduction());
+
+        Campfire::saving(function (Campfire $campfire): void {
+            $campfire->load('host');
+        });
     }
 }

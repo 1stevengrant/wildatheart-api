@@ -16,7 +16,15 @@ return [
     |
     */
 
-    'searchableAttributes' => ['objectID', 'city', 'state', 'country', 'name', 'timestamp'],
+    'searchableAttributes' => [
+        'objectID',
+        'city',
+        'state',
+        'country',
+        'name',
+        'timestamp',
+        'host',
+    ],
 
     /*
     |--------------------------------------------------------------------------

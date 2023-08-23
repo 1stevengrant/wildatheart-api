@@ -126,6 +126,11 @@ class Campfire extends Model
         return $this->hasMany(BookShipment::class);
     }
 
+    public function getHostNameAttribute()
+    {
+        return $this->host->full_name;
+    }
+
     public function getBookShipmentsCountAttribute()
     {
         return $this->bookShipments->count();
@@ -232,10 +237,13 @@ class Campfire extends Model
     {
         return [
             'objectID' => $this->id,
+            'id' => $this->id,
             'city' => $this->city,
             'state' => $this->state,
             'country' => $this->country,
             'name' => $this->name,
+            'host' => $this->hostName,
+            'hostPhoto' => $this->hostPhoto(),
             'url' => $this->url,
             '_geoloc' => [
                 'lat' => floatval($this->latitude),
