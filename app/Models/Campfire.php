@@ -243,6 +243,7 @@ class Campfire extends Model
             'country' => $this->country,
             'name' => $this->name,
             'host' => $this->hostName,
+            'location' => $this->location,
             'hostPhoto' => $this->hostPhoto(),
             'url' => $this->url,
             '_geoloc' => [

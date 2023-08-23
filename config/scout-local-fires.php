@@ -24,6 +24,7 @@ return [
         'name',
         'timestamp',
         'host',
+        'location',
     ],
 
     /*

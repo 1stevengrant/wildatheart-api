@@ -22,6 +22,7 @@ return [
         'state',
         'country',
         'host',
+        'location',
         'name',
         'timestamp',
     ],
