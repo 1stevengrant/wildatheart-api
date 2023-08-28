@@ -29,7 +29,7 @@ class ViewCampfire extends Component
         'copiedToClipboard' => 'copiedToClipboard',
     ];
 
-    public function copiedToClipboard()
+    public function copiedToClipboard(): void
     {
         $this->dispatchBrowserEvent('notify', [
             'timeout' => 5000,

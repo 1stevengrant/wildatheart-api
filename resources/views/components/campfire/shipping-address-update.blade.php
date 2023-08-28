@@ -2,7 +2,7 @@
     /** @var \App\Models\Campfire */
     'campfire',
 ])
-@if (! $campfire->hasRequestedGift())
+@if (! $campfire->hasRequestedGift() && $campfire->isHost())
     <div {{ $attributes->merge(['class' => 'my-6 md:my-10']) }}>
         <p class="mb-4">
             We want to fuel your Fire. Share your shipping address with us, and

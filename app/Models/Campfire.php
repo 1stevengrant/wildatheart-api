@@ -72,20 +72,12 @@ class Campfire extends Model
 
     public function isHost(): bool
     {
-        if (auth()->check() && auth()->user()->id === $this->user->id) {
-            return true;
-        }
-
-        return false;
+        return auth()->check() && auth()->user()->id === $this->user->id;
     }
 
     public function isApproved(): bool
     {
-        if ($this->approved_at) {
-            return true;
-        }
-
-        return false;
+        return (bool) $this->approved_at;
     }
 
     public function getCoordinatesAttribute(): string
@@ -95,11 +87,7 @@ class Campfire extends Model
 
     public function isPast(): bool
     {
-        if ($this->date < now()) {
-            return true;
-        }
-
-        return false;
+        return $this->date < now();
     }
 
     public function getEmailAttribute(): string
@@ -114,11 +102,7 @@ class Campfire extends Model
 
     public function isPrivate(): bool
     {
-        if ($this->is_private) {
-            return true;
-        }
-
-        return false;
+        return (bool) $this->is_private;
     }
 
     public function bookShipments(): HasMany
@@ -138,11 +122,7 @@ class Campfire extends Model
 
     public function isOverCapacity(): bool
     {
-        if ($this->attendee_limit < $this->attendees->count()) {
-            return true;
-        }
-
-        return false;
+        return $this->attendee_limit < $this->attendees->count();
     }
 
     public function host(): BelongsTo
@@ -175,29 +155,17 @@ class Campfire extends Model
 
     public function hasRequestedGift(): bool
     {
-        if ($this->gift_requested) {
-            return true;
-        }
-
-        return false;
+        return (bool) $this->gift_requested;
     }
 
     public function hasAddress(): bool
     {
-        if ($this->address) {
-            return true;
-        }
-
-        return false;
+        return (bool) $this->address;
     }
 
     public function indoorOrOutdoor(): string
     {
-        if ($this->is_indoor) {
-            return 'Indoor';
-        }
-
-        return 'Outdoor';
+        return $this->is_indoor ? 'Indoor' : 'Outdoor';
     }
 
     public function welcomeHasBeenSent()
