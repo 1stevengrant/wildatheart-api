@@ -49,6 +49,16 @@ test('a Fire name cannot end in the word "Fire" ', function () {
         ->assertHasErrors(['campfire.name' => ShouldNotEndWithFire::class]);
 });
 
+test('a Fire name cannot end in the word "fire" in lowercase ', function () {
+
+    livewire(EditCampfire::class, ['campfire' => $this->campfire])
+        ->set('campfire.name', 'My New fire')
+        ->set('campfire.latitude', fake()->latitude())
+        ->set('campfire.longitude', fake()->longitude())
+        ->call('handle')
+        ->assertHasErrors(['campfire.name' => ShouldNotEndWithFire::class]);
+});
+
 test('a Fire name cannot contain an emoji', function () {
     livewire(EditCampfire::class, ['campfire' => $this->campfire])
         ->set('campfire.name', 'My New 🔥')

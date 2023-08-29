@@ -9,7 +9,7 @@ class ShouldNotEndWithFire implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (str_ends_with($value, 'Fire')) {
+        if (str_ends_with(strtolower($value), 'fire')) {
             $fail('The Fire name should not end with "Fire"');
         }
     }
