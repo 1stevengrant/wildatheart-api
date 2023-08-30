@@ -17,7 +17,7 @@ use Laravel\Scout\Searchable;
 
 class Campfire extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes, Searchable;
+    use HasFactory, HasUuids, Searchable, SoftDeletes;
 
     protected $guarded = ['id'];
 

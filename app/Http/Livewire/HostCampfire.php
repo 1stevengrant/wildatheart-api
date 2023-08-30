@@ -23,7 +23,7 @@ use Repat\LaravelRules\DoesntContainEmojis;
 
 class HostCampfire extends Component
 {
-    use WithFileUploads, HoneyPot, LocationTrait, MapboxErrorTrait;
+    use HoneyPot, LocationTrait, MapboxErrorTrait, WithFileUploads;
 
     public int $step = 1;
 
