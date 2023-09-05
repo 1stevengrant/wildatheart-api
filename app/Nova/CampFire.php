@@ -54,7 +54,6 @@ class CampFire extends Resource
                 ->rules('required'),
 
             Text::make('Phone')
-                ->rules('required')
                 ->hideFromIndex(),
 
             Text::make('Street Address')
@@ -82,7 +81,7 @@ class CampFire extends Resource
 
             Number::make('Attendee Limit')
                 ->hideFromIndex()
-                ->rules('numeric', 'min:1'),
+                ->rules('numeric', 'min:1', 'nullable'),
 
             Text::make('Attendee Count', 'attendee_count')
                 ->hideFromIndex()
