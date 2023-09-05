@@ -2,7 +2,7 @@
     <div class="items-center md:flex md:w-[1000px] md:space-x-4">
         <div class="text-grey-200 md:w-1/2">
             <x-type.registration-h1>
-                Great! One Last Step {{ auth()->user()->given_name }}.
+                Great! One Last Step {{ auth()->user()->given_name ?? '' }}.
             </x-type.registration-h1>
 
             <p class="my-6">
