@@ -20,6 +20,8 @@ class CampFire extends Resource
      */
     public static $model = \App\Models\Campfire::class;
 
+    public static $with = ['bookShipments', 'attendees', 'user'];
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -48,6 +50,7 @@ class CampFire extends Resource
                 ->rules('required'),
 
             Text::make('Name')
+                ->sortable()
                 ->rules('required'),
 
             Text::make('Phone')
@@ -59,14 +62,17 @@ class CampFire extends Resource
                 ->hideFromIndex(),
 
             Text::make('City')
+                ->sortable()
                 ->rules('required'),
 
             Text::make('State'),
 
             Text::make('Zip')
+                ->sortable()
                 ->rules('required'),
 
-            Text::make('Country'),
+            Text::make('Country')
+                ->sortable(),
 
             Text::make('Latitude')
                 ->hideFromIndex(),
@@ -76,7 +82,7 @@ class CampFire extends Resource
 
             Number::make('Attendee Limit')
                 ->hideFromIndex()
-                ->rules('required', 'numeric', 'min:1'),
+                ->rules('numeric', 'min:1'),
 
             Text::make('Attendee Count', 'attendee_count')
                 ->hideFromIndex()
