@@ -72,7 +72,7 @@ class Campfire extends Model
 
     public function isHost(): bool
     {
-        return auth()->check() && auth()->user()->id === $this->user->id;
+        return auth()->check() && $this->user->id === auth()->user()->id;
     }
 
     public function isApproved(): bool
