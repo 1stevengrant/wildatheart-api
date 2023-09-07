@@ -20,20 +20,15 @@
         </x-footer-link>
 
         @auth
-            <form
+            <a
                 class="group inline-flex flex-col items-center justify-center px-5"
-                method="POST"
-                action="{{ route('logout') }}"
+                href="{{ route('logout') }}"
             >
-                @csrf
                 <x-avatar :image="auth()->user()->profilePhoto()" />
-                <button
-                    onclick="event.preventDefault(); this.closest('form').submit();"
-                    class="text-sm text-white"
-                >
+                <span class="text-sm text-white">
                     {{ __('Logout') }}
-                </button>
-            </form>
+                </span>
+            </a>
         @else
             <a
                 href="{{ route('login') }}"
