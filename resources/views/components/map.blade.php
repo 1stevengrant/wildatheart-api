@@ -9,7 +9,8 @@
         <span class="text-red">*</span>
     </h2>
     <x-forms.instruction
-        instruction="Drag the marker & zoom the map to update the location of your Fire, or lookup the city name to update the location."
+        instruction="Touch the map to drop a pin on the location of your Fire. You can also search for an address in
+        the search box below."
     />
 
     <div id="geocoder" class="my-4"></div>
