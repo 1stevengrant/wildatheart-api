@@ -14,6 +14,7 @@
         };
 
         mapboxgl.accessToken = "{{ config('services.mapbox.api_key') }}";
+
         const map = new mapboxgl.Map({
             container: "map",
             style: "{{ config('services.mapbox.mapbox_style') }}",
@@ -30,7 +31,7 @@
 
         let userMarker = new mapboxgl.Marker({
             element: createCustomMarkerElement(),
-            draggable: true
+            draggable: false
         })
 
         function createCustomMarkerElement() {
@@ -48,11 +49,24 @@
         const results = document.getElementById('result');
 
         // Add geocoder result to container.
-        geocoder.on('result', (event) => {
+        geocoder.on('result', async (event) => {
             let coords = event.result.center;
             @this.set("longitude", coords[0]);
             @this.set("latitude", coords[1]);
-            lookupAddress(coords[0] + ',' + coords[1]);
+
+            const address = await lookupAddress(coords[0] + ',' + coords[1]);
+
+            if (!address) {
+                const context = event.result.context,
+                    country = context[1].short_code,
+                    city = context[0].text;
+
+                @this.set('country', country);
+                @this.set('city', city);
+                @this.set('state', '-');
+                @this.set('zip', '-');
+            }
+
             setGeoJson(coords[0], coords[1])
             map.getSource("point").setData(geojson);
             flyToLocation(coords[0], coords[1]);
@@ -79,7 +93,30 @@
             userMarker.setLngLat([coordinates.lng, coordinates.lat]).addTo(map);
             @this.set("longitude", coordinates.lng);
             @this.set("latitude", coordinates.lat);
+
             lookupAddress(coordinates.lng + ',' + coordinates.lat);
+            reverseGeocode(coordinates.lng + ',' + coordinates.lat);
+        }
+
+        async function reverseGeocode(latLng) {
+            await fetch('{{config('services.mapbox.api_url')}}'+ latLng +'.json?access_token={{ config('services.mapbox.api_key') }}')
+                .then(response => response.json())
+                .then(data => {
+
+                    const features = data.features;
+
+                    if (features) {
+                        @this.set('mapboxError', '')
+
+                        @this.set('city', features[0].text);
+                        @this.set('state', '-');
+                        @this.set('country', features[1].short_code);
+                        @this.set('zip', '-');
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
 
         map.on('click', addMarker);
@@ -107,9 +144,11 @@
                         @this.set('state', state);
                         @this.set('country', country);
                         @this.set('zip', zip);
-                    } else {
-                        @this.set('mapboxError', 'Unable to find location. Please try again.');
+                        return
                     }
+
+                    return false
+
                 })
                 .catch(error => {
                     console.log(error);
