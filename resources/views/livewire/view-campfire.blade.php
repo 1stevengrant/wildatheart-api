@@ -1,4 +1,4 @@
-<div class="relative mt-[75px] md:mt-[107px]">
+<div class="relative mt-[103px] md:mt-[120px]">
     <x-buttons.back-to-fires />
     <div id="map" class="h-[150px] md:h-[300px]"></div>
     <div

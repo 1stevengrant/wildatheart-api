@@ -1,9 +1,24 @@
-let mix = require('laravel-mix');
+const mix = require('laravel-mix');
 
-mix.browserSync({
-    proxy: 'https://wahfires.test',
-    files:[
-        './public/**/*.css',
-        './public/**/*.js',
-    ]
-})
+mix.webpackConfig({
+    module: {
+        rules: [
+            {
+                test: /\.svg$/,
+                use: ['@svgr/webpack']
+            }
+        ]
+    }
+});
+
+mix.ts('resources/ts/search.tsx', 'public/js').react();
+if (!mix.inProduction()) {
+    mix.browserSync({
+        proxy: 'https://wahfires.test',
+        files: [
+            './public/js/*.js',
+            './public/css/*.css'
+        ]
+    })
+}
+

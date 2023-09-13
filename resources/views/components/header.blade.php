@@ -14,8 +14,8 @@
             <x-menu />
         </div>
         <button class="text-white md:hidden" @click="openMenu = !openMenu">
-            <x-icons.menu x-show="!openMenu" />
-            <x-icons.close x-show="openMenu" />
+            <x-icons.menu x-show="!openMenu" x-cloak />
+            <x-icons.close x-show="openMenu" x-cloak />
         </button>
         @auth
             <x-account.mobile-menu
@@ -27,9 +27,10 @@
                 x-transition:leave-end="opacity-0 transform scale-90"
                 x-show="openMenu"
                 @click.away="openMenu = false"
+                x-cloak
                 class="absolute left-0 right-0 top-[75px] z-50 bg-blue-900 p-4 text-white md:hidden"
             />
-            @else
+        @else
             <div
                 x-transition:enter="transition duration-200 ease-out"
                 x-transition:enter-start="scale-90 transform opacity-0"
@@ -37,6 +38,7 @@
                 x-transition:leave="transition duration-200 ease-in"
                 x-transition:leave-start="scale-100 transform opacity-100"
                 x-transition:leave-end="scale-90 transform opacity-0"
+                x-cloak
                 x-show="openMenu"
                 @click.away="openMenu = false"
                 class="absolute left-0 right-0 top-[75px] z-50 bg-blue-900 p-4 text-white md:hidden"

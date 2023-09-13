@@ -13,11 +13,13 @@ class CampFireSeeder extends Seeder
      */
     public function run(): void
     {
-        Campfire::factory()->private()->count(5)->create([
-            'user_id' => User::inRandomOrder()->first()->id,
-        ]);
-        Campfire::factory()->approved()->count(5)->create([
-            'user_id' => User::inRandomOrder()->first()->id,
-        ]);
+        $sql = file_get_contents(database_path('seeders/campfires.sql'));
+        \DB::unprepared($sql);
+        $user = User::factory()->create();
+        Campfire::all()->each(function ($campfire) use ($user) {
+            $campfire->update([
+                'user_id' => $user->id,
+            ]);
+        });
     }
 }

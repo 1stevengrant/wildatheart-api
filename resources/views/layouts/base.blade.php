@@ -21,11 +21,6 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://use.typekit.net" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;900&family=Rock+Salt&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="stylesheet" href="https://use.typekit.net/utc5cwe.css" />
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link
             href="https://fonts.bunny.net/css?family=inter:100,200,300,400,500,600,700,800,900"
@@ -34,10 +29,7 @@
         @vite('resources/css/app.css')
         @livewireStyles
         @stack('head')
-        <link
-            href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
-            rel="stylesheet"
-        />
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
         <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
         <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
     </head>

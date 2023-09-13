@@ -2,8 +2,7 @@
 module.exports = {
     content: [
         "./resources/**/*.blade.php",
-        "./resources/**/*.js",
-        "./resources/**/*.vue",
+        "./resources/**/*.{js,jsx,ts,tsx,vue}",
         "./vendor/wire-elements/pro/config/wire-elements-pro.php",
         "./vendor/wire-elements/pro/**/*.blade.php",
     ],

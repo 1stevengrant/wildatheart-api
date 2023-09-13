@@ -6,6 +6,7 @@
 @import "./components/file-input.css";
 @import "./components/mapbox-geocoder.css";
 @import "./components/mapbox.css";
+@import "./components/ais-hits-list.css";
 @import "./components/photos.css";
 @import "tailwindcss/utilities";
 

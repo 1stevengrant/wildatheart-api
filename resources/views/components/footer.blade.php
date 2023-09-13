@@ -22,11 +22,11 @@
         @auth
             <a
                 class="group inline-flex flex-col items-center justify-center px-5"
-                href="{{ route('logout') }}"
+                href="{{ route('my.profile') }}"
             >
                 <x-avatar :image="auth()->user()->profilePhoto()" />
                 <span class="text-sm text-white">
-                    {{ __('Logout') }}
+                    {{ __('My Profile') }}
                 </span>
             </a>
         @else

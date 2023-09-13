@@ -15,3 +15,6 @@
 a.mapboxgl-ctrl-logo {
     display: none !important;
 }
+.mapboxgl-ctrl-compass {
+    display: none !important;
+}

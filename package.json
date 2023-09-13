@@ -3,7 +3,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "watch": "npx mix watch",
+        "search": "npx mix --production",
+        "search:watch": "npx mix watch",
         "format": "npx prettier --write resources/",
         "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
     },
@@ -12,6 +13,8 @@
         "format"
     ],
     "devDependencies": {
+        "@babel/preset-react": "^7.22.5",
+        "@svgr/webpack": "^8.1.0",
         "@tailwindcss/forms": "^0.5.3",
         "alpinejs": "^3.12.1",
         "autoprefixer": "^10.4.2",
@@ -28,9 +31,25 @@
         "prettier-plugin-blade": "^1.6.4",
         "prettier-plugin-tailwindcss": "^0.3.0",
         "tailwindcss": "^3.1.0",
+        "ts-loader": "^9.4.4",
+        "typescript": "^5.1.6",
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "@alpinejs/focus": "^3.12.0"
+        "@alpinejs/focus": "^3.12.0",
+        "@headlessui/react": "^1.7.17",
+        "@heroicons/react": "^2.0.18",
+        "@types/lodash.debounce": "^4.0.7",
+        "@types/react": "^18.2.20",
+        "@types/react-dom": "^18.2.7",
+        "@types/react-instantsearch": "^6.10.1",
+        "algoliasearch": "^4.19.1",
+        "lodash.debounce": "^4.0.8",
+        "mapbox-gl": "^2.15.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-instantsearch-dom": "^6.40.4",
+        "react-map-gl": "^7.1.5",
+        "recoil": "^0.7.7"
     }
 }

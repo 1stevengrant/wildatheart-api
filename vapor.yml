@@ -11,12 +11,13 @@ environments:
     build:
       - "COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev"
       - "php artisan event:cache"
-      - "npm ci && npm run build && rm -rf node_modules"
+      - "npm ci && npm run build && npm run search && rm -rf node_modules"
     deploy:
       - "php artisan db:wipe --force"
       - "php artisan migrate --force"
       - "php artisan db:seed --class=RoleSeeder --force"
       - "php artisan db:seed --class=StateSeeder --force"
+      - "php artisan db:seed --class=CampFireSeeder --force"
   prod:
     domain: local.wildatheart.org
     memory: 1024
@@ -28,6 +29,6 @@ environments:
     build:
       - "COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev"
       - "php artisan event:cache"
-      - "npm ci && npm run build && rm -rf node_modules"
+      - "npm ci && npm run build && && npm run search && rm -rf node_modules"
     deploy:
       - "php artisan migrate --force"

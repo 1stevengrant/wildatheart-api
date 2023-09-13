@@ -1,0 +1,66 @@
+import React from "react";
+import {
+    InstantSearch,
+    Hits, Configure,
+} from 'react-instantsearch-dom';
+import {searchClient, indexName} from "./lib/algoliaClient";
+import FireComponent from "./Components/FireComponent";
+import {GeoHit} from "./types/FireHit";
+import Header from "./Components/Header";
+import MapComponent from "./Components/MapComponent";
+import MapboxSearch from "./Components/MapboxSearch";
+import {currentFireAtom, selectedPlaceAtom, flyToLocationAtom} from "./store";
+import {useRecoilState} from "recoil";
+import FirePopupMobile from "./Components/FirePopupMobile";
+
+const SearchApp = () => {
+    const [currentFire, setCurrentFire] = useRecoilState(currentFireAtom)
+    const [selectedPlace, setSelectedPlace] = useRecoilState(selectedPlaceAtom);
+    const [flyToLocation, setFlyToLocation] = useRecoilState(flyToLocationAtom)
+
+    return (
+        <div className="flex flex-col w-full h-full">
+            <Header>
+                <div className={"flex flex-col md:flex-row md:items-center " + (selectedPlace ? 'space-y-2' +
+                    ' md:space-y-0 md:space-x-4' : '')}>
+                    <MapboxSearch onSelect={setSelectedPlace}/>
+                    {selectedPlace && (
+                        <button className="border border-orange px-4 py-2 rounded bg-orange text-white font-semibold"
+                                onClick={() => setFlyToLocation(selectedPlace.center)}>
+                            Go
+                        </button>
+                    )}
+                </div>
+            </Header>
+            <InstantSearch
+                searchClient={searchClient}
+                indexName={indexName}>
+                <Configure
+                    analytics={true}
+                    hitsPerPage={400}
+                />
+                <div className="flex max-h-screen h-full w-full">
+                    {/*<div className="flex flex-col w-1/4">*/}
+                    {/*    <div className="overflow-y-scroll">*/}
+                    {/*        <Hits<GeoHit> hitComponent={(hit) =>*/}
+                    {/*            <FireComponent*/}
+                    {/*                key={hit.hit.objectID}*/}
+                    {/*                fire={hit.hit}*/}
+                    {/*                onClick={() => setCurrentFire(hit.hit)}*/}
+                    {/*                currentFire={currentFire}*/}
+                    {/*            />}/>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
+                    <div className="flex flex-col w-full">
+                        <MapComponent/>
+                    </div>
+                </div>
+            </InstantSearch>
+            {currentFire && (
+                <FirePopupMobile className={'fixed bottom-4 right-4 left-4 md:hidden z-[1001]'}/>
+            )}
+        </div>
+    );
+}
+
+export default SearchApp;
