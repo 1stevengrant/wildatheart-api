@@ -11,6 +11,7 @@
     <div
         class="fixed inset-0 z-30 flex items-center justify-center overflow-auto bg-black bg-opacity-50"
         x-show="shareModal"
+        x-cloak
     >
         <!-- Modal inner -->
         <div
