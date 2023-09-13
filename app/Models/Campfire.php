@@ -198,7 +198,7 @@ class Campfire extends Model
 
     public function searchableAs(): string
     {
-        return config('scout.prefix').'fires';
+        return config('scout.prefix').'wah_local';
     }
 
     public function toSearchableArray(): array
