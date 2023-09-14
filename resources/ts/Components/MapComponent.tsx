@@ -68,7 +68,6 @@ const MapComponent: React.FC<GeoSearchProvided> = ({
                  dragRotate={false}
                  touchPitch={false}
                  pitchWithRotate={false}
-                 touchZoomRotate={false}
                  maxPitch={0}
                  minPitch={0}
                  mapStyle="mapbox://styles/mapbox/navigation-day-v1"
