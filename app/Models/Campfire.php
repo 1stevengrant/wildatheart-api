@@ -186,15 +186,6 @@ class Campfire extends Model
         return asset('svgs/user.svg');
     }
 
-    public function hostAvatar()
-    {
-        if ($this->host->image) {
-            return $this->host->image;
-        }
-
-        return asset('svgs/user.svg');
-    }
-
     public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
     {
         return url('manager/resources/camp-fires/'.$this->id);
@@ -221,7 +212,7 @@ class Campfire extends Model
             'name' => $this->name,
             'host' => $this->hostName,
             'location' => $this->location,
-            'hostPhoto' => $this->hostAvatar(),
+            'hostPhoto' => $this->hostPhoto(),
             'url' => $this->url,
             '_geoloc' => [
                 'lat' => floatval($this->latitude),

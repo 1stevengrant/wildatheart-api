@@ -1,18 +1,18 @@
 {
     "compilerOptions": {
-        "allowJs": true,
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "jsx": "react-jsx",
-        "strict": true,
-        "isolatedModules": true,
-        "target": "ESNext",
+        "target": "es2016",
+        "jsx": "react",
+        "module": "commonjs",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "noEmit": true,
-        "paths": {
-            "@/*": ["./resources/js/*"]
-        }
+        "strict": true,
+        "skipLibCheck": true,
+        "typeRoots": [
+            "./node_modules/@types",
+            "./resources/ts/types"
+        ],
     },
-    "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.d.ts"]
+    "include": [
+        "./resources/ts/**/*"
+    ]
 }

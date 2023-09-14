@@ -14,7 +14,6 @@
         "fakerphp/faker": "^1.22",
         "geoip2/geoip2": "^2.13",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^0.6.10",
         "intervention/image": "^2.7",
         "laravel/framework": "^10.9",
         "laravel/nova": "~4.0",
@@ -35,7 +34,6 @@
         "spatie/laravel-slack-alerts": "^1.2",
         "symfony/http-client": "^6.3",
         "symfony/postmark-mailer": "^6.3",
-        "tightenco/ziggy": "^1.6",
         "vyuldashev/nova-permission": "^3.2",
         "wire-elements/pro": "^3.0"
     },

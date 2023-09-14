@@ -1,5 +1,5 @@
-import React from "react";
-import { GeoHit } from "@/types/FireHit";
+import React, { useEffect, useState } from "react";
+import { GeoHit } from "../types/FireHit";
 import FireContent from "./FireContent";
 
 interface FireComponentProps {
