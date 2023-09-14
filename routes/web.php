@@ -32,7 +32,10 @@ use Omniphx\Forrest\Providers\Laravel\Facades\Forrest;
 |
 */
 
-Route::get('/', Home::class)->name('home');
+//Route::get('/', Home::class)->name('home');
+Route::get('/', function () {
+    return inertia('Home');
+})->name('home');
 Route::get('host', HostCampfire::class)->name('host');
 Route::get('list', ListCampfires::class)->name('list.campfires');
 Route::get('list/state/{state}', ListState::class)->name('list.state');

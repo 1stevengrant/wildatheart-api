@@ -2,14 +2,14 @@ import React from 'react';
 import FireContent from "./FireContent";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import {useRecoilState} from "recoil";
-import {currentFireAtom} from "../store";
+import {currentFireAtom} from "../../store";
 
 const FirePopup = (props: any) => {
     const [currentFire, setCurrentFire] = useRecoilState(currentFireAtom)
     return (
-        <div className="rounded-md shadow-lg p-2 md:p-4 bg-black relative hidden md:block">
+        <div className="rounded-md shadow-lg p-2 md:p-4 bg-black relative hidden md:block mt-6">
             <button
-                className="float-right hover:text-orange transition ease-in-out duration-75"
+                className="float-right text-white hover:text-orange transition ease-in-out duration-75"
                 onClick={() => setCurrentFire(undefined)}>
                 <XMarkIcon className="h-5 w-5"/>
             </button>

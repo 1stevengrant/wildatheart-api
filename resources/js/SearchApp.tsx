@@ -4,14 +4,14 @@ import {
     Hits, Configure,
 } from 'react-instantsearch-dom';
 import {searchClient, indexName} from "./lib/algoliaClient";
-import FireComponent from "./Components/FireComponent";
+import FireComponent from "./Components/Fires/FireComponent";
 import {GeoHit} from "./types/FireHit";
 import Header from "./Components/Header";
-import MapComponent from "./Components/MapComponent";
-import MapboxSearch from "./Components/MapboxSearch";
+import MapComponent from "./Components/Maps/MapComponent";
+import MapboxSearch from "./Components/Maps/MapboxSearch";
 import {currentFireAtom, selectedPlaceAtom, flyToLocationAtom} from "./store";
 import {useRecoilState} from "recoil";
-import FirePopupMobile from "./Components/FirePopupMobile";
+import FirePopupMobile from "./Components/Fires/FirePopupMobile";
 
 const SearchApp = () => {
     const [currentFire, setCurrentFire] = useRecoilState(currentFireAtom)

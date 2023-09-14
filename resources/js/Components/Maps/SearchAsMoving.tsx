@@ -1,6 +1,6 @@
 import React from "react";
 import {useRecoilState} from "recoil";
-import {searchAsMovingAtom} from "../store";
+import {searchAsMovingAtom} from "../../store";
 
 const SearchAsMoving = () => {
     const [checked, setChecked] = useRecoilState(searchAsMovingAtom)

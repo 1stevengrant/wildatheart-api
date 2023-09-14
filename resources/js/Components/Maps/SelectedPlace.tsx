@@ -1,5 +1,5 @@
 import React from "react";
-import {selectedPlaceAtom} from "../store";
+import {selectedPlaceAtom} from "../../store";
 import {useRecoilState} from "recoil";
 
 const SelectedPlace = () => {

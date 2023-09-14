@@ -2,15 +2,14 @@ import React, {useState, useMemo, Fragment} from 'react';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import {Combobox, Transition} from '@headlessui/react';
-import {MapboxSearchProps} from "../types/MapboxSearchProps";
-import {Place} from "../types/Place";
+import {MapboxPlace} from "@/types/MapboxPlace";
 import {useRecoilState} from "recoil";
-import {selectedPlaceAtom} from "../store";
+import {selectedPlaceAtom} from "@/store";
 
-const MapboxSearch: React.FC<MapboxSearchProps> = ({onSelect}) => {
+const MapboxSearch = () => {
     const [selected, setSelected] = useState<string>('');
     const [query, setQuery] = useState<string>('');
-    const [results, setResults] = useState<Place[]>([]);
+    const [results, setResults] = useState<MapboxPlace[]>([]);
     const [selectedPlace, setSelectedPlace] = useRecoilState(selectedPlaceAtom)
 
     const debouncedSearch = useMemo(() => debounce(async (searchQuery: string) => {
@@ -19,7 +18,7 @@ const MapboxSearch: React.FC<MapboxSearchProps> = ({onSelect}) => {
         try {
             const response = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery)}.json`, {
                 params: {
-                    access_token: process.env.MIX_REACT_APP_MAPBOX_TOKEN,
+                    access_token: import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN,
                 },
             });
 
@@ -44,7 +43,7 @@ const MapboxSearch: React.FC<MapboxSearchProps> = ({onSelect}) => {
     };
 
     return (
-        <div className="relative z-40 md:w-[500px]">
+        <div className="relative z-40 md:w-[500px] w-full">
             <Combobox value={selected}
                       onChange={(value: string) => {
                           setSelected(value)
@@ -55,8 +54,8 @@ const MapboxSearch: React.FC<MapboxSearchProps> = ({onSelect}) => {
                         className="relative w-full cursor-default rounded-lg bg-white">
                         <Combobox.Input
                             className={"w-full border-2 rounded-lg border-transparent py-2 pl-3 text-sm leading-5" +
-                                " text-black focus:ring-0 focus:border-orange " + (results.length > 0 ? "rounded-bl-none rounded-br-none focus:border-b-transparent" : "")}
-                            displayValue={(place: Place) => place.place_name}
+                                " text-black focus:ring-0 focus:border-orange " + (query.length > 0 ? "rounded-bl-none rounded-br-none focus:border-b-transparent" : "")}
+                            displayValue={(place: MapboxPlace) => place.place_name}
                             autoComplete={"off"}
                             placeholder={"Search for a place"}
                             onChange={(event) => handleInputChange(event)}
@@ -71,13 +70,13 @@ const MapboxSearch: React.FC<MapboxSearchProps> = ({onSelect}) => {
                     >
                         <Combobox.Options
                             className={"absolute max-h-60 w-full overflow-auto rounded-md bg-white text-base" +
-                                " shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm "  + (results.length > 0 ? "rounded-tl-none rounded-tr-none" : "") }>
+                                " shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm "  + (query.length > 0 ? "rounded-tl-none rounded-tr-none" : "") }>
                             {results.length === 0 && query !== '' ? (
                                 <div className="relative cursor-default select-none py-2 px-4 text-black">
                                     Nothing found.
                                 </div>
                             ) : (
-                                results.map((place: Place, index: Number) => (
+                                results.map((place: MapboxPlace, index: Number) => (
                                     <Combobox.Option
                                         key={`place-${index}`}
                                         className={({active}) =>
