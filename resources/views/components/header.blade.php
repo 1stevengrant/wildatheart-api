@@ -1,4 +1,5 @@
 <div
+    id="site-header"
     class="fixed left-0 right-0 top-0 z-50 border-b border-grey-darker bg-[#0B1419] p-4 md:p-6"
 >
     <header class="container mx-auto flex items-center justify-between">
