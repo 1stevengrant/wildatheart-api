@@ -70,13 +70,14 @@ const MapComponent: React.FC<GeoSearchProvided> = ({
              pitchWithRotate={false}
              maxPitch={0}
              minPitch={0}
+             attributionControl={false}
              mapStyle="mapbox://styles/mapbox/navigation-day-v1"
              initialViewState={{
                  zoom: 1,
                  latitude: parseFloat(latitude.value),
                  longitude: parseFloat(longitude.value),
              }}
-             style={{width: '100%', height: '100vh'}}
+             style={{width: '100%', height: '100%'}}
              mapboxAccessToken={process.env.MIX_REACT_APP_MAPBOX_TOKEN}
              onMoveEnd={onMapInteraction}
         >
