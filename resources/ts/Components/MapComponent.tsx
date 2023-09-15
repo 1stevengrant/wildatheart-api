@@ -35,17 +35,6 @@ const MapComponent: React.FC<GeoSearchProvided> = ({
 
     }, [selectedPlace, flyToLocation]);
 
-    const onMapInteraction = () => {
-        if (userInteractionEnabled) {
-            refine({
-                // @ts-ignore
-                northEast: mapRef.current.getBounds().getNorthEast(),
-                // @ts-ignore
-                southWest: mapRef.current.getBounds().getSouthWest(),
-            });
-        }
-    };
-
     const flyTo = (coordinates: [number, number]) => {
         mapRef.current?.flyTo({
             essential: false,
@@ -79,7 +68,6 @@ const MapComponent: React.FC<GeoSearchProvided> = ({
              }}
              style={{width: '100%', height: '100%'}}
              mapboxAccessToken={process.env.MIX_REACT_APP_MAPBOX_TOKEN}
-             onMoveEnd={onMapInteraction}
         >
             <>
                 {hits.map(hit => (

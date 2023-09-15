@@ -32,7 +32,7 @@ const SearchApp = () => {
                 indexName={indexName}>
                 <Configure
                     analytics={true}
-                    hitsPerPage={400}
+                    hitsPerPage={600}
                 />
                 <MapComponent/>
             </InstantSearch>

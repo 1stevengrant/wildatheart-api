@@ -3,8 +3,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "search": "npx mix --production",
-        "search:watch": "npx mix watch",
+        "prod": "npx mix --production",
+        "watch": "npx mix watch",
         "format": "npx prettier --write resources/",
         "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
     },
