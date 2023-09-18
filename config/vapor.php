@@ -45,6 +45,7 @@ return [
         'svgs/map-home-marker.svg',
         'svgs/map-marker.svg',
         'img/opengraph.png',
+        'img/wah-fires-suburb-1.webp',
     ],
 
 ];
