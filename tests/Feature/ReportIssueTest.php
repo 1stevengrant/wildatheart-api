@@ -75,3 +75,23 @@ it('needs the email address to be an email address', function () {
         ->call('handle')
         ->assertHasErrors(['email' => 'email']);
 });
+
+test('support modal creates a new support ticket', function () {
+
+    $attributes = [
+        'name' => 'Test User',
+        'email' => 'steven@ghijk.co.uk',
+        'subject' => 'Test Subject',
+        'description' => 'Test Description',
+    ];
+
+    $this->post('support', $attributes);
+
+    $this->assertDatabaseHas('issues', [
+        'name' => $attributes['name'],
+        'email' => $attributes['email'],
+        'subject' => 'Fires Feedback: '.$attributes['subject'],
+        'description' => $attributes['description'],
+    ]);
+
+});

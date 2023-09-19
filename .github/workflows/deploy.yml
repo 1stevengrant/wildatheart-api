@@ -37,7 +37,8 @@ jobs:
         run: vapor deploy ${{ github.ref_name }} --commit="${{ github.event.head_commit.id }}" --message="${{ github.event.head_commit.message }}"
         env:
           VAPOR_API_TOKEN: ${{ secrets.VAPOR_API_TOKEN }}
-          MIX_REACT_APP_MAPBOX_TOKEN: ${{ secrets.MIX_REACT_APP_MAPBOX_TOKEN }}
-          MIX_REACT_APP_ALGOLIA_API_KEY: ${{ secrets.MIX_REACT_APP_ALGOLIA_API_KEY }}
-          MIX_REACT_APP_ALGOLIA_APP_ID: ${{ secrets.MIX_REACT_APP_ALGOLIA_APP_ID }}
-          MIX_SCOUT_PREFIX: ${{ secrets.MIX_SCOUT_PREFIX }}
+          VITE_REACT_APP_MAPBOX_TOKEN: ${{ secrets.VITE_REACT_APP_MAPBOX_TOKEN }}
+          VITE_REACT_APP_ALGOLIA_API_KEY: ${{ secrets.VITE_REACT_APP_ALGOLIA_API_KEY }}
+          VITE_REACT_APP_ALGOLIA_APP_ID: ${{ secrets.VITE_REACT_APP_ALGOLIA_APP_ID }}
+          VITE_SCOUT_PREFIX: ${{ secrets.VITE_SCOUT_PREFIX }}
+          VITE_BUNNY_CDN_URL: ${{ secrets.VITE_BUNNY_CDN_URL }}

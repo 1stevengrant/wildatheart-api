@@ -40,5 +40,12 @@
                 </span>
             </a>
         @endauth
+
+        <button class="flex flex-col items-center" onclick="Livewire.emit('modal.open', 'report-issue')">
+            <x-icons.questions/>
+            <span class="text-sm text-white">
+                {{ __('Feedback') }}
+            </span>
+        </button>
     </div>
 </footer>

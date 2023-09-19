@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SupportRequestController;
 use App\Http\Livewire\ConfirmEmail;
 use App\Http\Livewire\ConnectToHost;
 use App\Http\Livewire\EditCampfire;
-use App\Http\Livewire\Home;
 use App\Http\Livewire\HostCampfire;
 use App\Http\Livewire\ListCampfires;
 use App\Http\Livewire\ListCity;
@@ -32,7 +33,8 @@ use Omniphx\Forrest\Providers\Laravel\Facades\Forrest;
 |
 */
 
-Route::get('/', Home::class)->name('home');
+Route::get('/', HomeController::class)->name('home');
+Route::post('support', SupportRequestController::class)->name('support');
 Route::get('host', HostCampfire::class)->name('host');
 Route::get('list', ListCampfires::class)->name('list.campfires');
 Route::get('list/state/{state}', ListState::class)->name('list.state');

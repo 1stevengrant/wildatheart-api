@@ -70,7 +70,7 @@ class MyProfile extends Component
             'family_name' => trim($this->user->family_name),
             'phone' => trim($this->user->phone),
             'country_code' => $this->user->country_code,
-            'image' => $this->isUploaded ? $this->photo->store('users') : auth()->user()->image,
+            'image' => $this->isUploaded ? $this->photo->storePublicly('users', 's3') : auth()->user()->image,
             'opted_into_marketing' => $this->user->opted_into_marketing,
         ]);
 
