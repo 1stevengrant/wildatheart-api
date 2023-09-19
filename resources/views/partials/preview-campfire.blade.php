@@ -31,7 +31,7 @@
                     class="rounded-full"
                     alt=""
                 />
-                <div class="text-sm text-[#BABABA]">
+                <div class="text-sm text-grey-200">
                     Hosted by {{ auth()->user()->full_name }}
                 </div>
             </div>

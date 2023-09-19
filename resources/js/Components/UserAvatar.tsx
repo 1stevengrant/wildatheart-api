@@ -15,7 +15,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
                                                    alt = ''
                                                }) => {
     return (
-        <img className={className + ' rounded-full inline-block flex-shrink-0'}
+        <img className={className + ' rounded-full inline-block flex-shrink-0 object-cover'}
              src={userPhoto(image, {
                  width: width
              })}

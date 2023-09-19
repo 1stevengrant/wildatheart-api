@@ -19,7 +19,7 @@
 }
 
 .campfire-host {
-    @apply text-xs text-[#bababa] md:text-base;
+    @apply text-xs text-grey-200 md:text-base;
 }
 
 .campfire-host-image {

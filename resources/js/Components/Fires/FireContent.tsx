@@ -1,5 +1,6 @@
 import React from 'react';
 import UserAvatar from "@/Components/UserAvatar";
+import {UserCircleIcon} from "@heroicons/react/24/outline";
 
 const FireContent = (props: any) => {
     return (
@@ -16,11 +17,16 @@ const FireContent = (props: any) => {
                     <p className="text-white text-sm">{props.fire.location}</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <UserAvatar
-                        image={props.fire.hostPhoto}
-                        width={32}/>
-
-                    <div className="text-[#BABABA] text-xs leading-tighter">
+                    <>
+                        {props.fire.hostPhoto ? (
+                            <UserAvatar
+                                image={props.fire.hostPhoto}
+                                width={32}/>
+                        ) : (
+                            <UserCircleIcon className={'w-6 h-6 text-white'} />
+                        )}
+                    </>
+                    <div className="text-grey-200 text-xs leading-tighter">
                         Hosted by {props.fire.host}
                     </div>
                 </div>

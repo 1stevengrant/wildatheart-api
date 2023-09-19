@@ -186,13 +186,13 @@ class Campfire extends Model
         return asset('svgs/user.svg');
     }
 
-    public function hostAvatar()
+    public function hostAvatar(): ?string
     {
         if ($this->host->image) {
             return $this->host->image;
         }
 
-        return asset('svgs/user.svg');
+        return null;
     }
 
     public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application

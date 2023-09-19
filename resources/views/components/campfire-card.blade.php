@@ -27,7 +27,7 @@
             </div>
             <div class="flex items-center space-x-2">
                 <x-avatar :image="$profileImage" />
-                <div class="text-sm leading-tighter text-[#BABABA]">
+                <div class="text-sm leading-tighter text-grey-200">
                     Hosted by {{ $hostName }}
                 </div>
             </div>
