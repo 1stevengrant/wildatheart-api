@@ -44,6 +44,8 @@
         }
 
         geocoder.addTo('#geocoder');
+        const geocoderInput = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+        geocoderInput.setAttribute('autocomplete', 'off');
 
         // Get the geocoder results container.
         const results = document.getElementById('result');
@@ -57,14 +59,12 @@
             const address = await lookupAddress(coords[0] + ',' + coords[1]);
 
             if (!address) {
-                const context = event.result.context,
-                    country = context[1].short_code,
-                    city = context[0].text;
-
-                @this.set('country', country);
-                @this.set('city', city);
-                @this.set('state', '-');
-                @this.set('zip', '-');
+                const context = event.result.context;
+                // console.log(context)')
+                @this.set('country', context.find(feature => feature.id.includes('country'))?.short_code);
+                @this.set('city', context.find(feature => feature.id.includes('place'))?.text ?? '-');
+                @this.set('state', context.find(feature => feature.id.includes('region'))?.text ?? '-');
+                @this.set('zip', context.find(feature => feature.id.includes('postcode'))?.text ?? '-');
             }
 
             setGeoJson(coords[0], coords[1])
@@ -104,13 +104,11 @@
                 .then(data => {
 
                     const features = data.features;
-
                     if (features) {
                         @this.set('mapboxError', '')
-
-                        @this.set('city', features[0].text);
-                        @this.set('state', '-');
-                        @this.set('country', features[1].short_code);
+                        @this.set('city', features.find(feature => feature.id.includes('place'))?.text);
+                        @this.set('state', features.find(feature => feature.id.includes('region'))?.text);
+                        @this.set('country', features.find(feature => feature.id.includes('country'))?.properties.short_code);
                         @this.set('zip', '-');
                     }
                 })

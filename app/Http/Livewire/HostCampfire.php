@@ -134,6 +134,18 @@ class HostCampfire extends Component
 
     public function handleStepTwo(): Redirector
     {
+        activity()
+            ->causedBy(auth()->user())
+            ->withProperties([
+                'name' => $this->campfireName,
+                'state' => $this->state,
+                'city' => $this->city,
+                'zip' => $this->zip,
+                'country' => $this->country,
+                'frequency' => $this->frequency,
+            ])
+            ->log('campfire.handle');
+
         $this->validate([
             'campfireName' => [
                 'required',
@@ -149,6 +161,8 @@ class HostCampfire extends Component
             'country' => 'required|string|max:255',
             'zip' => 'required|string|max:16',
             'frequency' => 'required|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
             'token' => [
                 new ShouldBeEmpty(),
             ],
