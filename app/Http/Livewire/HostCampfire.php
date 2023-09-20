@@ -43,25 +43,33 @@ class HostCampfire extends Component
 
     public bool $emailUpdates = true;
 
-    public string $mapboxPlaceName = '';
+    public ?string $mapboxPlaceName = '';
 
-    public $street_address = '';
+    public ?string $street_address = '';
 
-    public $state = '';
+    public ?string $state = '';
 
-    public $location = '';
+    public ?string $location = '';
 
     public $showState = false;
 
-    public $city = '';
+    public ?string $city = '';
 
-    public $zip = '';
+    public ?string $zip = '';
 
-    public $country = '';
+    public ?string $country = '';
 
     public string $frequency = 'monthly';
 
     public bool $isUploaded = false;
+
+    public ?string $region = '';
+
+    public ?string $district = '';
+
+    public ?string $locality = '';
+
+    public ?string $neighborhood = '';
 
     public function mount()
     {
@@ -143,6 +151,10 @@ class HostCampfire extends Component
                 'zip' => $this->zip,
                 'country' => $this->country,
                 'frequency' => $this->frequency,
+                'district' => $this->district,
+                'locality' => $this->locality,
+                'neighborhood' => $this->neighborhood,
+                'region' => $this->region,
             ])
             ->log('campfire.handle');
 
@@ -156,10 +168,14 @@ class HostCampfire extends Component
                 new DoesntContainEmojis(),
             ],
             'street_address' => 'nullable|string|max:255',
-            'state' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'zip' => 'required|string|max:16',
+            'state' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+            'zip' => 'nullable|string|max:16',
+            'region' => 'nullable|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'locality' => 'nullable|string|max:255',
+            'neighborhood' => 'nullable|string|max:255',
             'frequency' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
@@ -178,6 +194,10 @@ class HostCampfire extends Component
             'country' => strtoupper($this->country),
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'region' => $this->region,
+            'district' => $this->district,
+            'locality' => $this->locality,
+            'neighborhood' => $this->neighborhood,
         ]);
 
         UpdateUserRole::make()->handle(

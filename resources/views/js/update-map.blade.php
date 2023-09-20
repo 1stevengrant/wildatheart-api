@@ -60,11 +60,14 @@
 
             if (!address) {
                 const context = event.result.context;
-                // console.log(context)
                 @this.set('country', context.find(feature => feature.id.includes('country'))?.short_code);
-                @this.set('city', context.find(feature => feature.id.includes('place'))?.text ?? '-');
-                @this.set('state', context.find(feature => feature.id.includes('region'))?.text ?? '-');
-                @this.set('zip', context.find(feature => feature.id.includes('postcode'))?.text ?? '-');
+                @this.set('region', context.find(feature => feature.id.includes('region'))?.text);
+                @this.set('locality', context.find(feature => feature.id.includes('locality'))?.text);
+                @this.set('district', context.find(feature => feature.id.includes('district'))?.text);
+                @this.set('neighborhood', context.find(feature => feature.id.includes('neighborhood'))?.text);
+                @this.set('city', context.find(feature => feature.id.includes('place'))?.text);
+                @this.set('state', context.find(feature => feature.id.includes('region'))?.text);
+                @this.set('zip', context.find(feature => feature.id.includes('postcode'))?.text);
             }
 
             setGeoJson(coords[0], coords[1])
@@ -105,11 +108,16 @@
 
                     const features = data.features;
                     if (features) {
+                        console.log('features are', features)
                         @this.set('mapboxError', '')
                         @this.set('city', features.find(feature => feature.id.includes('place'))?.text);
                         @this.set('state', features.find(feature => feature.id.includes('region'))?.text);
                         @this.set('country', features.find(feature => feature.id.includes('country'))?.properties.short_code);
-                        @this.set('zip', '-');
+                        @this.set('zip', features.find(feature => feature.id.includes('postcode'))?.text);
+                        @this.set('district', features.find(feature => feature.id.includes('district'))?.text);
+                        @this.set('neighborhood', features.find(feature => feature.id.includes('neighborhood'))?.text);
+                        @this.set('locality', features.find(feature => feature.id.includes('locality'))?.text);
+                        @this.set('region', features.find(feature => feature.id.includes('region'))?.text);
                     }
                 })
                 .catch(error => {
