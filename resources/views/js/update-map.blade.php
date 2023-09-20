@@ -60,13 +60,14 @@
 
             if (!address) {
                 const context = event.result.context;
+                console.log('from geocoder result', event.result)
                 @this.set('country', context.find(feature => feature.id.includes('country'))?.short_code);
                 @this.set('region', context.find(feature => feature.id.includes('region'))?.text);
                 @this.set('locality', context.find(feature => feature.id.includes('locality'))?.text);
                 @this.set('street_address', context.find(feature => feature.id.includes('address'))?.text);
                 @this.set('district', context.find(feature => feature.id.includes('district'))?.text);
                 @this.set('neighborhood', context.find(feature => feature.id.includes('neighborhood'))?.text);
-                @this.set('city', context.find(feature => feature.id.includes('place'))?.text);
+                @this.set('city', event.result.text ?? null);
                 @this.set('state', context.find(feature => feature.id.includes('region'))?.text);
                 @this.set('zip', context.find(feature => feature.id.includes('postcode'))?.text);
             }
@@ -109,7 +110,7 @@
 
                     const features = data.features;
                     if (features) {
-                        console.log('features are', features)
+                        console.log('from reverse geocode', features)
                         @this.set('mapboxError', '')
                         @this.set('city', features.find(feature => feature.id.includes('place'))?.text);
                         @this.set('street_address', features.find(feature => feature.id.includes('address'))?.text);
@@ -136,6 +137,7 @@
 
                     const features = data.features.context;
                     if (features) {
+                        console.log('from lookup address', features)
                         @this.set('city', features.find(feature => feature.id.includes('place'))?.text);
                         @this.set('street_address', features.find(feature => feature.id.includes('address'))?.text);
                         @this.set('state', features.find(feature => feature.id.includes('region'))?.text);
