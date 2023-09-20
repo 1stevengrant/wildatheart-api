@@ -60,7 +60,7 @@
 
             if (!address) {
                 const context = event.result.context;
-                console.log(context)')
+                // console.log(context)
                 @this.set('country', context.find(feature => feature.id.includes('country'))?.short_code);
                 @this.set('city', context.find(feature => feature.id.includes('place'))?.text ?? '-');
                 @this.set('state', context.find(feature => feature.id.includes('region'))?.text ?? '-');
