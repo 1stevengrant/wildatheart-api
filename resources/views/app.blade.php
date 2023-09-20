@@ -11,7 +11,7 @@
     {!! Twitter::generate() !!}
     {!! JsonLd::generate() !!}
     @include('partials.analytics')
-    meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link
         rel="icon"
         type="image/svg+xml"
