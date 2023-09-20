@@ -63,6 +63,7 @@
                 @this.set('country', context.find(feature => feature.id.includes('country'))?.short_code);
                 @this.set('region', context.find(feature => feature.id.includes('region'))?.text);
                 @this.set('locality', context.find(feature => feature.id.includes('locality'))?.text);
+                @this.set('street_address', context.find(feature => feature.id.includes('address'))?.text);
                 @this.set('district', context.find(feature => feature.id.includes('district'))?.text);
                 @this.set('neighborhood', context.find(feature => feature.id.includes('neighborhood'))?.text);
                 @this.set('city', context.find(feature => feature.id.includes('place'))?.text);
@@ -111,6 +112,7 @@
                         console.log('features are', features)
                         @this.set('mapboxError', '')
                         @this.set('city', features.find(feature => feature.id.includes('place'))?.text);
+                        @this.set('street_address', features.find(feature => feature.id.includes('address'))?.text);
                         @this.set('state', features.find(feature => feature.id.includes('region'))?.text);
                         @this.set('country', features.find(feature => feature.id.includes('country'))?.properties.short_code);
                         @this.set('zip', features.find(feature => feature.id.includes('postcode'))?.text);
@@ -132,24 +134,17 @@
                 .then(response => response.json())
                 .then(data => {
 
-                    const features = data.features[0];
-
+                    const features = data.features.context;
                     if (features) {
-                        @this.set('mapboxError', '')
-                        const placeName = features && features.hasOwnProperty('place_name') ? features.place_name : null,
-                            streetAddress = placeName ? placeName.split(",").map(component => component.trim())[0] : null,
-                            context = features.context,
-                            city = context.find(feature => feature.id.includes('place'))?.text,
-                            state = context.find(feature => feature.id.includes('region'))?.short_code
-                                .replace("US-", "").toUpperCase(),
-                            country = context.find(feature => feature.id.includes('country'))?.short_code,
-                            zip = context.find(feature => feature.id.includes('postcode'))?.text;
-
-                        @this.set('street_address', streetAddress);
-                        @this.set('city', city);
-                        @this.set('state', state);
-                        @this.set('country', country);
-                        @this.set('zip', zip);
+                        @this.set('city', features.find(feature => feature.id.includes('place'))?.text);
+                        @this.set('street_address', features.find(feature => feature.id.includes('address'))?.text);
+                        @this.set('state', features.find(feature => feature.id.includes('region'))?.text);
+                        @this.set('country', features.find(feature => feature.id.includes('country'))?.properties.short_code);
+                        @this.set('zip', features.find(feature => feature.id.includes('postcode'))?.text);
+                        @this.set('district', features.find(feature => feature.id.includes('district'))?.text);
+                        @this.set('neighborhood', features.find(feature => feature.id.includes('neighborhood'))?.text);
+                        @this.set('locality', features.find(feature => feature.id.includes('locality'))?.text);
+                        @this.set('region', features.find(feature => feature.id.includes('region'))?.text);
                         return
                     }
 

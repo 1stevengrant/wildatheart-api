@@ -141,12 +141,12 @@ class Campfire extends Model
 
     public function getLocationAttribute(): string
     {
-        if (strtolower($this->country) === 'us' && $this->state && $this->state !== '-') {
+        if (strtolower($this->country) === 'us' && $this->state && $this->state !== '-' && ! empty($this->city)) {
             return $this->city.', '.getStateAbbreviation($this->state);
         }
 
-        if (! $this->city) {
-            return $this->state;
+        if (! $this->city or empty($this->city)) {
+            return $this->district.', '.getStateAbbreviation($this->state);
         }
 
         return $this->city;

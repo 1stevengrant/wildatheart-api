@@ -271,7 +271,7 @@
             <x-campfire-card
                 :title="$campfireName . ' Fire'"
                 :frequency="$frequency"
-                :location="$city"
+                :location="$locality ?? $district ?? $region ?? $country"
                 :host-name="auth()->user()->full_name"
                 :profile-image="
                     auth()

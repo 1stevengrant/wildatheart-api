@@ -155,6 +155,7 @@ class HostCampfire extends Component
                 'locality' => $this->locality,
                 'neighborhood' => $this->neighborhood,
                 'region' => $this->region,
+                'street_address' => $this->street_address,
             ])
             ->log('campfire.handle');
 
