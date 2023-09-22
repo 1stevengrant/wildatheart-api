@@ -4,10 +4,8 @@ namespace App\Nova;
 
 use App\Nova\Actions\ApproveCampFire;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -57,7 +55,7 @@ class CampFire extends Resource
                 ->hideFromIndex(),
 
             Text::make('Street Address')
-                ->rules('required')
+                ->readonly()
                 ->hideFromIndex(),
 
             Text::make('City')
@@ -79,20 +77,13 @@ class CampFire extends Resource
             Text::make('Longitude')
                 ->hideFromIndex(),
 
-            Number::make('Attendee Limit')
-                ->hideFromIndex()
-                ->rules('numeric', 'min:1', 'nullable'),
+            Text::make('Region')->readonly(),
 
-            Text::make('Attendee Count', 'attendee_count')
-                ->hideFromIndex()
-                ->readonly(),
+            Text::make('District')->readonly(),
 
-            Text::make('Spaces Remaining', 'remaining')
-                ->hideFromIndex()
-                ->readonly(),
+            Text::make('Locality')->readonly(),
 
-            Boolean::make('Is Private')
-                ->hideFromIndex(),
+            Text::make('Neighborhood')->readonly(),
 
             DateTime::make('Approved At', 'approved_at')
                 ->hideFromIndex()

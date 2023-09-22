@@ -20,10 +20,6 @@
         </div>
     </div>
     <div class="my-6 flex items-center space-x-4">
-        <div class="border border-black p-4">
-            {{ $campfire->spacesRemaining() }}
-        </div>
-
         <a
             class="inline-block bg-black p-4 font-semibold text-white"
             target="_blank"

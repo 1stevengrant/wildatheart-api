@@ -22,7 +22,6 @@ class Campfire extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'date' => 'date',
         'is_private' => 'boolean',
         'approved_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -45,24 +44,9 @@ class Campfire extends Model
         return $this->hasMany(Attendee::class);
     }
 
-    public function getAttendeesCountAttribute(): int
+    public function getAttendeeCountAttribute(): int
     {
         return $this->attendees->count();
-    }
-
-    public function getRemainingAttribute(): int
-    {
-        return $this->attendee_limit - $this->attendees->count();
-    }
-
-    public function getAttendeeCountAttribute()
-    {
-        return $this->attendees->count();
-    }
-
-    public function spacesRemaining(): string
-    {
-        return "{$this->remaining} spaces remaining";
     }
 
     public function user(): BelongsTo
@@ -83,11 +67,6 @@ class Campfire extends Model
     public function getCoordinatesAttribute(): string
     {
         return $this->longitude.', '.$this->latitude;
-    }
-
-    public function isPast(): bool
-    {
-        return $this->date < now();
     }
 
     public function getEmailAttribute(): string
@@ -118,11 +97,6 @@ class Campfire extends Model
     public function getBookShipmentsCountAttribute()
     {
         return $this->bookShipments->count();
-    }
-
-    public function isOverCapacity(): bool
-    {
-        return $this->attendee_limit < $this->attendees->count();
     }
 
     public function host(): BelongsTo
@@ -165,11 +139,6 @@ class Campfire extends Model
     public function hasAddress(): bool
     {
         return (bool) $this->address;
-    }
-
-    public function indoorOrOutdoor(): string
-    {
-        return $this->is_indoor ? 'Indoor' : 'Outdoor';
     }
 
     public function welcomeHasBeenSent()

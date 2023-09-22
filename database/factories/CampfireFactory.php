@@ -18,14 +18,12 @@ class CampfireFactory extends Factory
     public function definition(): array
     {
         return [
-            'description' => $this->faker->text,
             'phone' => $this->faker->phoneNumber,
             'street_address' => $this->faker->streetAddress,
             'state' => 'Montana',
             'state_code' => 'MT',
             'city' => $this->faker->city,
             'zip' => $this->faker->postcode,
-            'attendee_limit' => $this->faker->numberBetween(1, 100),
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
             'book_request_count' => $this->faker->boolean ? $this->faker->numberBetween(1, 100) : 0,

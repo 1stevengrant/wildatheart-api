@@ -238,10 +238,14 @@
                     <x-primary-button
                         type="submit"
                         class="mt-8 w-full"
-                        :disabled="! empty($mapboxError)"
+                        :disabled="! $country"
                         wire:click.prevent="handleStepTwo"
                     >
-                        Next
+                        @if($country)
+                            Next
+                            @else
+                            Pick a location
+                        @endif
                     </x-primary-button>
 
                     @if ($step == 2)
@@ -254,6 +258,7 @@
                     @else
                         <button
                             @click="step = 1"
+                            :disabled="!"
                             class="py-3 text-sm text-grey-200"
                         >
                             Cancel
