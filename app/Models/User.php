@@ -132,4 +132,9 @@ class User extends Authenticatable
             Campfire::class,
         );
     }
+
+    public function generalConnections(): HasMany
+    {
+        return $this->hasMany(Attendee::class);
+    }
 }

@@ -44,7 +44,7 @@ class MyConnections extends Component
             $query->orderBy('created_at', 'desc');
         }])->get();
 
-        $allConnections = auth()->user()->attendees->sortBy('family_name');
+        $allConnections = auth()->user()->generalConnections->sortBy('family_name');
 
         return view('livewire.my-connections', [
             'campfires' => $campfires,
