@@ -93,6 +93,11 @@ class EditCampfire extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.edit-campfire');
+        if ($this->campfire->user_id == auth()->id()) {
+            return view('livewire.edit-campfire');
+        }
+
+        abort(403, 'You do not own this Fire to make changes');
+
     }
 }
