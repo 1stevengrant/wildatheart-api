@@ -34,7 +34,7 @@ const Home = () => {
                 indexName={indexName}>
                 <Configure
                     analytics={true}
-                    hitsPerPage={400}
+                    hitsPerPage={1000}
                 />
                 <MapComponent/>
             </InstantSearch>
