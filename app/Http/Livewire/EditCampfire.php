@@ -31,6 +31,14 @@ class EditCampfire extends Component
 
     public $showState = false;
 
+    public $region = '';
+
+    public $district = '';
+
+    public $neighborhood = '';
+
+    public $locality = '';
+
     public $city = '';
 
     public $zip = '';

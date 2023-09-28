@@ -65,8 +65,7 @@ class CampFire extends Resource
             Text::make('State'),
 
             Text::make('Zip')
-                ->sortable()
-                ->rules('required'),
+                ->sortable(),
 
             Text::make('Country')
                 ->sortable(),
