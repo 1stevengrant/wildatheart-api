@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendOneTimeLogin;
 use App\Models\User;
 use Auth0\SDK\Auth0 as Auth0SDK;
+use Auth0\SDK\Exception\StateException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Str;
 
 class CallbackController extends Controller
@@ -15,34 +18,44 @@ class CallbackController extends Controller
     public function __construct(
         Auth0SDK $auth0
     ) {
-
         $this->auth0 = $auth0;
     }
 
     public function __invoke(Request $request)
     {
+        try {
+            $response = $this->auth0->exchange();
 
-        $response = $this->auth0->exchange();
+            if (! $response) {
+                abort(401, 'Unauthorized');
+            }
 
-        if (! $response) {
-            abort(401, 'Unauthorized');
-        }
+            $auth0User = $this->auth0->getUser();
 
-        $auth0User = $this->auth0->getUser();
+            $user = User::firstOrCreate(['email' => $auth0User['email']],
+                [
+                    'given_name' => $auth0User['given_name'] ?? null,
+                    'family_name' => $auth0User['family_name'] ?? null,
+                    'password' => bcrypt(Str::random(32)),
+                    'email' => $auth0User['email'],
+                    'provider_id' => $auth0User['sub'],
+                ]);
 
-        $user = User::firstOrCreate(['email' => $auth0User['email']],
-            [
-                'given_name' => $auth0User['given_name'] ?? null,
-                'family_name' => $auth0User['family_name'] ?? null,
-                'password' => bcrypt(Str::random(32)),
-                'email' => $auth0User['email'],
-                'provider_id' => $auth0User['sub'],
+            $emailVerification = $user->emailVerifications()->create([
+                'expires_at' => now()->addHour(),
             ]);
 
-        auth()->login($user);
+            Mail::to($user->email)->send(new SendOneTimeLogin(
+                user: $user,
+                emailVerify: $emailVerification,
+            ));
 
-        $redirectUrl = session()->pull('currentUrl');
+            return to_route('successful-auth0-callback');
 
-        return redirect()->to($redirectUrl ? $redirectUrl : '/');
+        } catch (StateException $e) {
+
+            return redirect()->route('login');
+        }
+
     }
 }

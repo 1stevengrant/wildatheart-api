@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OneTimeLoginController;
+use App\Http\Controllers\SuccessAuth0CallbackController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Livewire\ConfirmEmail;
 use App\Http\Livewire\ConnectToHost;
@@ -92,3 +94,6 @@ Route::middleware(['role:admin'])->group(function () {
         dd($response);
     });
 });
+
+Route::get('onetime/{emailVerify}', OneTimeLoginController::class)->name('onetime.login');
+Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');

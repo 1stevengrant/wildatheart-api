@@ -15,7 +15,9 @@ class EmailVerify extends Model
         parent::boot();
         static::creating(function ($model) {
             $model->token = (string) Str::uuid();
-            $model->expires_at = now()->addDay();
+            if (! $model->expires_at) {
+                $model->expires_at = now()->addDay();
+            }
         });
     }
 
