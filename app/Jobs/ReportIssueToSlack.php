@@ -48,6 +48,10 @@ class ReportIssueToSlack implements ShouldQueue
                             'type' => 'mrkdwn',
                             'text' => "*Description:*\n {$issue->description}",
                         ],
+                        [
+                            'type' => 'mrkdwn',
+                            'text' => "*Email:*\n {$issue->email}",
+                        ],
                     ],
                 ],
             ]);
