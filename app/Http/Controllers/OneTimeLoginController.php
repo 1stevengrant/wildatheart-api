@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\EmailVerify\GetByToken;
-use App\Models\EmailVerify;
 use Illuminate\Http\Request;
 
 class OneTimeLoginController extends Controller
@@ -11,9 +10,9 @@ class OneTimeLoginController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, EmailVerify $emailVerify)
+    public function __invoke(Request $request, string $token)
     {
-        $token = GetByToken::run($emailVerify->token);
+        $emailVerify = GetByToken::run($token);
 
         if (! $token && $emailVerify->expires_at->isPast()) {
             abort(404, 'Token not found');

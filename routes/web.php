@@ -95,5 +95,5 @@ Route::middleware(['role:admin'])->group(function () {
     });
 });
 
-Route::get('onetime/{emailVerify}', OneTimeLoginController::class)->name('onetime.login');
+Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.login');
 Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');
