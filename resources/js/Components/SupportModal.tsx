@@ -4,7 +4,7 @@ import InputLabel from "@/Components/Forms/InputLabel";
 import TextInput from "@/Components/Forms/TextInput";
 import TextArea from "@/Components/Forms/TextArea";
 import InputError from "@/Components/Forms/InputError";
-import {useForm} from "@inertiajs/react";
+import {useForm, usePage} from "@inertiajs/react";
 import Modal from "@/Components/Ui/Modal";
 import ModalActions from "@/Components/Ui/ModalActions";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
@@ -17,9 +17,10 @@ interface SupportModalProps {
 }
 
 const SupportModal: React.FC<SupportModalProps> = ({open, setOpen}) => {
+    const {auth} = usePage<any>().props
     const {data, setData, post, processing, errors, reset} = useForm({
-        name: '',
-        email: '',
+        name: auth.user ? `${auth.user.given_name} ${auth.user.family_name}` : '',
+        email: auth.user ? auth.user.email : '',
         subject: '',
         description: '',
     });

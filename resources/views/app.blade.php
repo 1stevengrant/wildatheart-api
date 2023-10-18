@@ -6,10 +6,11 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
-    {!! SEOMeta::generate() !!}
-    {!! OpenGraph::generate() !!}
-    {!! Twitter::generate() !!}
-    {!! JsonLd::generate() !!}
+
+{{--    {!! SEOMeta::generate() !!}--}}
+{{--    {!! OpenGraph::generate() !!}--}}
+{{--    {!! Twitter::generate() !!}--}}
+{{--    {!! JsonLd::generate() !!}--}}
     @include('partials.analytics')
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link
@@ -31,7 +32,7 @@
     @vite(['resources/js/local.tsx', "resources/js/Pages/{$page['component']}.tsx"])
     @inertiaHead
 </head>
-<body class="font-sans antialiased bg-blue-900">
+<body class="font-sans antialiased bg-blue-900 text-white">
 @inertia
 </body>
 </html>

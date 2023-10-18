@@ -22,7 +22,6 @@ class Campfire extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'is_private' => 'boolean',
         'approved_at' => 'datetime',
         'deleted_at' => 'datetime',
         'frequency' => CampfireFrequency::class,
@@ -33,6 +32,8 @@ class Campfire extends Model
     const STATUS_APPROVED = 'approved';
 
     const STATUS_PENDING = 'pending';
+
+    const DEFAULT_COUNTRY = 'us';
 
     public function newEloquentBuilder($query): CampfireBuilder
     {
@@ -76,12 +77,7 @@ class Campfire extends Model
 
     public function getUrlAttribute(): string
     {
-        return route('view.campfire', ['campfire' => $this]);
-    }
-
-    public function isPrivate(): bool
-    {
-        return (bool) $this->is_private;
+        return route('view.fire', ['campfire' => $this]);
     }
 
     public function bookShipments(): HasMany
@@ -113,9 +109,14 @@ class Campfire extends Model
         return null;
     }
 
+    public function setStateCodeAttribute($value): void
+    {
+        $this->attributes['state'] = getStateAbbreviation(strtoupper($value));
+    }
+
     public function getLocationAttribute(): string
     {
-        if (strtolower($this->country) === 'us' && $this->state && $this->state !== '-' && ! empty($this->city)) {
+        if (strtolower($this->country) === self::DEFAULT_COUNTRY && $this->state && $this->state !== '-' && ! empty($this->city)) {
             return $this->city.', '.getStateAbbreviation($this->state);
         }
 
@@ -123,7 +124,7 @@ class Campfire extends Model
             return $this->district.', '.getStateAbbreviation($this->state);
         }
 
-        return $this->city;
+        return $this->city.', '.strtoupper($this->country);
     }
 
     public function address(): HasOne
@@ -211,5 +212,25 @@ class Campfire extends Model
     public function getScoutKeyName(): string
     {
         return 'id';
+    }
+
+    public function inertiaFilter(): array
+    {
+        return [
+            'host' => $this->host_name,
+            'hostFriendlyName' => $this->host->given_name,
+            'location' => $this->location,
+            'name' => $this->name,
+            'city' => $this->city,
+            'state' => $this->state,
+            'country' => $this->country,
+            'hostPhoto' => $this->hostAvatar(),
+            'url' => $this->url,
+            'id' => $this->id,
+            'hostId' => $this->host->id,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'gift_requested' => $this->hasRequestedGift(),
+        ];
     }
 }

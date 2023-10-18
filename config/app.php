@@ -169,7 +169,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        WireElements\Pro\Components\Modal\ModalServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         \App\Providers\Auth0ServiceProvider::class,
     ])->toArray(),

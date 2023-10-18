@@ -10,7 +10,6 @@
         "algolia/scout-extended": "^3.0",
         "artesaos/seotools": "^1.2",
         "auth0/auth0-php": "^8.7",
-        "creativeorange/gravatar": "^1.0",
         "fakerphp/faker": "^1.22",
         "geoip2/geoip2": "^2.13",
         "guzzlehttp/guzzle": "^7.2",
@@ -23,7 +22,6 @@
         "laravel/tinker": "^2.8",
         "laravel/vapor-core": "^2.32",
         "league/flysystem-aws-s3-v3": "^3.0",
-        "livewire/livewire": "^2.12",
         "lorisleiva/laravel-actions": "^2.5",
         "omniphx/forrest": "2.*",
         "repat/laravel-validator-emojis": "^0.2.0",
@@ -34,11 +32,11 @@
         "spatie/laravel-permission": "^5.10",
         "spatie/laravel-ray": "^1.32",
         "spatie/laravel-slack-alerts": "^1.2",
+        "squirephp/countries-en": "^3.4",
         "symfony/http-client": "^6.3",
         "symfony/postmark-mailer": "^6.3",
         "tightenco/ziggy": "^1.6",
-        "vyuldashev/nova-permission": "^3.2",
-        "wire-elements/pro": "^3.0"
+        "vyuldashev/nova-permission": "^3.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",
@@ -50,9 +48,9 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "pestphp/pest": "^2.6",
+        "pestphp/pest-plugin-drift": "^2.3",
         "pestphp/pest-plugin-faker": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.0",
-        "pestphp/pest-plugin-livewire": "^2.0",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -106,10 +104,6 @@
         {
             "type": "composer",
             "url": "https://nova.laravel.com"
-        },
-        {
-            "type": "composer",
-            "url": "https://wire-elements-pro.composer.sh"
         }
     ]
 }

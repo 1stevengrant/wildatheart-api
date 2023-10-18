@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\State;
-use Creativeorange\Gravatar\Facades\Gravatar;
 
 if (! function_exists('generateTimeList')) {
     function generateTimeList(): array
@@ -57,13 +56,6 @@ if (! function_exists('getStateName')) {
         $stateNames = State::all()->pluck('name', 'code')->toArray();
 
         return $stateNames[$stateCode];
-    }
-}
-
-if (! function_exists('gravatar')) {
-    function gravatar(string $email, string $transform = null): string
-    {
-        return Gravatar::get($email, $transform);
     }
 }
 
@@ -347,6 +339,6 @@ if (! function_exists('getCountries')) {
 if (! function_exists('getCountryCode')) {
     function getCountryCodeFromCountryName(string $countryName): bool|int|string
     {
-        return array_search($countryName, getCountries());
+        return \Squire\Models\Country::where('name', 'like', $countryName)->firstOrFail()->code_2;
     }
 }

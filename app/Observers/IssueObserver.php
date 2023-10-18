@@ -8,44 +8,9 @@ use App\Models\Issue;
 
 class IssueObserver
 {
-    /**
-     * Handle the Issue "created" event.
-     */
     public function created(Issue $issue): void
     {
         ZendeskCreateTicket::dispatch($issue);
         ReportIssueToSlack::dispatch($issue);
-    }
-
-    /**
-     * Handle the Issue "updated" event.
-     */
-    public function updated(Issue $issue): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Issue "deleted" event.
-     */
-    public function deleted(Issue $issue): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Issue "restored" event.
-     */
-    public function restored(Issue $issue): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Issue "force deleted" event.
-     */
-    public function forceDeleted(Issue $issue): void
-    {
-        //
     }
 }

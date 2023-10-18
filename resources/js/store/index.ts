@@ -16,3 +16,8 @@ export const flyToLocationAtom = atom<LngLat | undefined>({
     key: 'flyToLocationAtom',
     default: undefined
 });
+
+export const reactNotificationAtom = atom<Array<any>>({
+    key: 'reactNotificationAtom',
+    default: []
+});

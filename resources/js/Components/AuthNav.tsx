@@ -4,9 +4,12 @@ import {Menu, Transition} from "@headlessui/react";
 import classNames from "@/helpers/classNames";
 import {linkClass} from "@/helpers/linkClass";
 import UserAvatar from "@/Components/UserAvatar";
+import {UserCircleIcon} from "@heroicons/react/24/outline";
+import LogoutModal from "@/Components/LogoutModal";
 
 const AuthNav = () => {
     const {auth} = usePage<any>().props
+    const [open, setOpen] = React.useState(false)
     return (
         <>
             {auth.user ? (
@@ -17,9 +20,14 @@ const AuthNav = () => {
                             <span className="absolute -inset-1.5"/>
                             <span className="sr-only">Open user menu</span>
 
-                            <UserAvatar
-                                className={'h-8 w-8'}
-                                image={auth.user.image} />
+                            {auth.user.image ? (
+                                <UserAvatar
+                                    className={'h-10 w-10'}
+                                    width={64}
+                                    image={auth.user.image}/>
+                            ) : (
+                                <UserCircleIcon className={'w-8 h-8'}/>
+                            )}
 
                         </Menu.Button>
                     </div>
@@ -47,13 +55,16 @@ const AuthNav = () => {
                             </Menu.Item>
                             <Menu.Item>
                                 {({active}) => (
-                                    <a
-                                        href={route('logout')}
-                                        className={classNames(active ? 'bg-grey-lighter' : '', 'block px-4 py-2' +
-                                            ' text-black ')}
-                                    >
-                                        Logout
-                                    </a>
+                                    <>
+                                        <button
+                                            onClick={() => setOpen(true)}
+                                            className={classNames(active ? 'bg-grey-lighter' : '', `block px-4 py-2 text-black hover:bg-grey-lighter w-full text-left`)}
+                                        >
+                                            Logout
+                                        </button>
+                                        <LogoutModal open={open} setOpen={setOpen}/>
+                                    </>
+
                                 )}
                             </Menu.Item>
                         </Menu.Items>

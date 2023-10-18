@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\SendOneTimeLogin;
 use App\Models\User;
 use Auth0\SDK\Auth0 as Auth0SDK;
 use Auth0\SDK\Exception\StateException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Str;
 
 class CallbackController extends Controller
@@ -41,16 +39,13 @@ class CallbackController extends Controller
                     'provider_id' => $auth0User['sub'],
                 ]);
 
-            $emailVerification = $user->emailVerifications()->create([
-                'expires_at' => now()->addHour(),
+            auth()->login($user);
+
+            return to_route('home')->with(['notifications' => [
+                'message' => 'You are now logged in!',
+                'type' => 'success',
+            ],
             ]);
-
-            Mail::to($user->email)->send(new SendOneTimeLogin(
-                user: $user,
-                emailVerify: $emailVerification,
-            ));
-
-            return to_route('successful-auth0-callback');
 
         } catch (StateException $e) {
 

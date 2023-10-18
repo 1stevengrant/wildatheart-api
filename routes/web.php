@@ -1,28 +1,31 @@
 <?php
 
+use App\Http\Controllers\Campfire\CreateCampfireController;
+use App\Http\Controllers\Campfire\DeleteCampfireController;
+use App\Http\Controllers\Campfire\UpdateCampfireController;
+use App\Http\Controllers\ConfirmEmailController;
+use App\Http\Controllers\ConnectWithHostController;
+use App\Http\Controllers\DestroyUserImageController;
+use App\Http\Controllers\GiftSuccessController;
+use App\Http\Controllers\HandleSendGiftController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HostCampfireController;
+use App\Http\Controllers\HostProfileController;
 use App\Http\Controllers\OneTimeLoginController;
+use App\Http\Controllers\Profile\EditFireController;
+use App\Http\Controllers\Profile\MyConnectionsController;
+use App\Http\Controllers\Profile\MyFiresController;
+use App\Http\Controllers\Profile\MyProfileController;
+use App\Http\Controllers\ResendConfirmationEmail;
+use App\Http\Controllers\ResourcesController;
+use App\Http\Controllers\SendGiftController;
 use App\Http\Controllers\SuccessAuth0CallbackController;
 use App\Http\Controllers\SupportRequestController;
-use App\Http\Livewire\ConfirmEmail;
-use App\Http\Livewire\ConnectToHost;
-use App\Http\Livewire\EditCampfire;
-use App\Http\Livewire\HostCampfire;
-use App\Http\Livewire\ListCampfires;
-use App\Http\Livewire\ListCity;
-use App\Http\Livewire\ListState;
-use App\Http\Livewire\MyAddresses;
-use App\Http\Livewire\MyCampfires;
-use App\Http\Livewire\MyConnections;
-use App\Http\Livewire\MyProfile;
-use App\Http\Livewire\SendGift;
-use App\Http\Livewire\UpdateAddress;
-use App\Http\Livewire\VerifyEmail;
-use App\Http\Livewire\ViewCampfire;
-use App\Mail\Campfire\CampfireApproved;
-use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\ToggleConnectionContactedController;
+use App\Http\Controllers\User\UpdateUserProfileController;
+use App\Http\Controllers\VerifyEmailController;
+use App\Http\Controllers\ViewFireListingController;
 use Illuminate\Support\Facades\Route;
-use Omniphx\Forrest\Providers\Laravel\Facades\Forrest;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,63 +40,38 @@ use Omniphx\Forrest\Providers\Laravel\Facades\Forrest;
 
 Route::get('/', HomeController::class)->name('home');
 Route::post('support', SupportRequestController::class)->name('support');
-Route::get('host', HostCampfire::class)->name('host');
-Route::get('list', ListCampfires::class)->name('list.campfires');
-Route::get('list/state/{state}', ListState::class)->name('list.state');
-Route::get('list/city/{city}', ListCity::class)->name('list.city');
-Route::get('attend/{campfire}', ViewCampfire::class)->name('view.campfire');
-Route::get('connect/{campfire}', ConnectToHost::class)->name('connect.host');
-Route::get('confirmemail/{campfire}', ConfirmEmail::class)->name('confirm.email');
-Route::get('verify/{token}', VerifyEmail::class)->name('verify.email');
-Route::get('gift/{campfire}', SendGift::class)->name('gift');
+
+Route::get('confirmemail/{campfire}', ConfirmEmailController::class)->name('confirm.email');
+Route::post('resend-confirmation-email/{campfire}', ResendConfirmationEmail::class)
+    ->middleware('throttle:email')
+    ->name('resend-confirmation-email');
+Route::get('verify/{token}', VerifyEmailController::class)->name('verify.email');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('fires', MyCampfires::class)->name('my.campfires');
-    Route::get('fires/{campfire}', EditCampfire::class)->name('edit.campfire');
-    Route::get('profile', MyProfile::class)->name('my.profile');
-    Route::get('connections', MyConnections::class)->name('my.connections');
-    Route::get('addresses', MyAddresses::class)->name('my.addresses');
+    Route::get('host', HostProfileController::class)->name('host');
+    Route::get('host/fire', HostCampfireController::class)->name('host.fire');
+    Route::post('host/store', CreateCampfireController::class)->name('host.store');
+    Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
+
+    Route::get('gift/{campfire}/success', GiftSuccessController::class)->name('gift.success');
+    Route::get('gift/{campfire}', SendGiftController::class)->name('gift');
+    Route::post('gift/{campfire}', HandleSendGiftController::class)->name('gift.store');
+
+    Route::get('fires', MyFiresController::class)->name('my.campfires');
+    Route::delete('fires/{campfire}', DeleteCampfireController::class)->name('delete.fire');
+    Route::put('fires/{campfire}', UpdateCampfireController::class)->name('update.fire');
+    Route::get('fires/{campfire}', EditFireController::class)->name('my.campfires.edit');
+    Route::get('connections', MyConnectionsController::class)->name('my.connections');
+    Route::get('profile', MyProfileController::class)->name('my.profile');
+    Route::delete('destroy-photo', DestroyUserImageController::class)->name('user.profile-photo.destroy');
+    Route::get('resources', ResourcesController::class)->name('resources');
+    Route::put('toggle-contacted/{attendee}', ToggleConnectionContactedController::class)->name('toggle.contacted');
 });
 
-Route::get('update-address/{campfire}', UpdateAddress::class)->name('update.address');
 
-require __DIR__.'/auth.php';
-
-Route::get('salesforce/authenticate', function () {
-    return Forrest::authenticate();
-});
-
-Route::get('oauth/callback', function () {
-    Forrest::callback();
-
-    return Redirect::to('/');
-});
-
-Route::middleware(['role:admin'])->group(function () {
-    Route::get('mailable', function () {
-        $campfire = App\Models\Campfire::first();
-
-        return new CampfireApproved($campfire);
-    });
-
-    Route::get('account', function () {
-        $query = Forrest::query('SELECT Id FROM Account');
-        dd($query);
-    });
-
-    Route::get('test', function () {
-        $response = Forrest::sobjects('Contact', [
-            'method' => 'post',
-            'body' => [
-                'FirstName' => 'Steven',
-                'LastName' => 'Steven',
-                'Email' => 'steven@servant.io',
-                'Phone' => '+447766494949',
-            ],
-        ]);
-        dd($response);
-    });
-});
+Route::get('attend/{campfire}', ViewFireListingController::class)->name('view.fire');
+Route::get('connect/{campfire}', [ConnectWithHostController::class, 'index'])->name('connect.index');
+Route::post('connect/{campfire}', [ConnectWithHostController::class, 'store'])->name('connect.store');
 
 Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.login');
 Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');

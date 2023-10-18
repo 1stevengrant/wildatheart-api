@@ -24,7 +24,7 @@ For the Kingdom,
 
 John and Morgan
 
-<x-mail::button :url="route('view.campfire', $campfire)">
+<x-mail::button :url="route('view.fire', $campfire)">
 See & Share Your Fire
 </x-mail::button>
 

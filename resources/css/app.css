@@ -1,13 +1,13 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "./components/campfire.css";
-@import "./components/wep-override.css";
 @import "./components/card-grid.css";
 @import "./components/file-input.css";
 @import "./components/mapbox-geocoder.css";
 @import "./components/mapbox.css";
 @import "./components/ais-hits-list.css";
 @import "./components/photos.css";
+@import "./components/phone.css";
 @import "tailwindcss/utilities";
 
 [x-cloak] {

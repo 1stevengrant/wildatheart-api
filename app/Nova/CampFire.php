@@ -88,14 +88,6 @@ class CampFire extends Resource
                 ->hideFromIndex()
                 ->readonly(),
 
-            Text::make('Book Requests', 'book_request_count')
-                ->sortable()
-                ->readonly(),
-
-            Text::make('Book Shipments Count', 'book_shipments_count')
-                ->sortable()
-                ->readonly(),
-
             DateTime::make('Created At'),
 
             HasMany::make('Book Shipments'),

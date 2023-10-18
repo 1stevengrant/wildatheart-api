@@ -15,6 +15,7 @@ class CheckWelcomeStatus
         Campfire $campfire
     ): void {
         if (! $campfire->welcomeHasBeenSent()) {
+
             Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
 
             $campfire->update([

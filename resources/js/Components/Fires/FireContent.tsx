@@ -1,36 +1,44 @@
 import React from 'react';
 import UserAvatar from "@/Components/UserAvatar";
 import {UserCircleIcon} from "@heroicons/react/24/outline";
+import HostedBy from "@/Components/Fires/HostedBy";
+import FireName from "@/Components/Fires/FireName";
+import FireLocation from "@/Components/Fires/FireLocation";
+import FireImage from "@/Components/Fires/FireImage";
+import FireHostInfo from "@/Components/Fires/FireHostInfo";
+import FireInfo from "@/Components/Fires/FireInfo";
 
-const FireContent = (props: any) => {
+interface FireContentProps {
+    fire: {
+        name: string;
+        location: string;
+        host: string;
+        hostPhoto: string;
+    }
+}
+
+const FireContent = (props: FireContentProps) => {
     return (
         <>
-            <img
-                src='/img/wah-fires-suburb-1.webp'
-                className="rounded-md flex-grow-0"
-                alt="" />
-
-            <div className="flex flex-col justify-between relative">
+            <FireImage/>
+            <FireInfo>
                 <div>
-                    <p className="text-white font-semibold">{props.fire.name} Fire</p>
-
-                    <p className="text-white text-sm">{props.fire.location}</p>
+                    <FireName name={props.fire.name}/>
+                    <FireLocation location={props.fire.location}/>
                 </div>
-                <div className="flex items-center space-x-2">
+                <FireHostInfo>
                     <>
                         {props.fire.hostPhoto ? (
                             <UserAvatar
                                 image={props.fire.hostPhoto}
                                 width={32}/>
                         ) : (
-                            <UserCircleIcon className={'w-6 h-6 text-white'} />
+                            <UserCircleIcon className={'w-6 h-6 text-white'}/>
                         )}
                     </>
-                    <div className="text-grey-200 text-xs leading-tighter">
-                        Hosted by {props.fire.host}
-                    </div>
-                </div>
-            </div>
+                    <HostedBy host={props.fire.host}/>
+                </FireHostInfo>
+            </FireInfo>
         </>
     );
 }

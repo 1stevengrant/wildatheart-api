@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Nova\Auth\Impersonatable;
 use Laravel\Sanctum\HasApiTokens;
@@ -131,6 +133,30 @@ class User extends Authenticatable
             Attendee::class,
             Campfire::class,
         );
+    }
+
+    public function deleteProfilePhoto(): void
+    {
+        if (is_null($this->image)) {
+            return;
+        }
+
+        Storage::disk('s3')->delete($this->image);
+
+        $this->forceFill([
+            'image' => null,
+        ])->save();
+    }
+
+    public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'users'): void
+    {
+        ray('update profile photo');
+        $this->forceFill([
+            'image' => $photo->storePublicly(
+                $storagePath,
+                ['disk' => 's3']
+            ),
+        ])->save();
     }
 
     public function generalConnections(): HasMany

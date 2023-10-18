@@ -26,22 +26,11 @@ class CampfireFactory extends Factory
             'zip' => $this->faker->postcode,
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
-            'book_request_count' => $this->faker->boolean ? $this->faker->numberBetween(1, 100) : 0,
-            'is_private' => $this->faker->boolean,
             'user_id' => User::factory()->create()->id,
             'country' => 'US',
             'name' => $this->faker->sentence,
             'frequency' => $this->faker->randomElement(['weekly', 'monthly', 'quarterly']),
         ];
-    }
-
-    public function private(): self
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'is_private' => true,
-            ];
-        });
     }
 
     public function approved(): self

@@ -1,20 +1,50 @@
-import React from "react";
+import React, {PropsWithChildren} from "react";
 import MainHeader from "@/Components/MainHeader";
 import Footer from "@/Components/Footer";
 import Notification from "@/Components/Notification";
-import {usePage} from "@inertiajs/react";
+import {Head, usePage} from "@inertiajs/react";
+import {useRecoilState} from "recoil";
+import {reactNotificationAtom} from "@/store";
+import NotificationWrapper from "@/Components/NotificationWrapper";
 
-const AppLayout = ({children}: { children?: JSX.Element[] | JSX.Element }) => {
+interface Props {
+    title: string;
+    showFooter?: boolean;
+}
+
+const AppLayout = ({
+                       title,
+                       children,
+                       showFooter = true,
+                   }: PropsWithChildren<Props>) => {
+
     const {notifications} = usePage<any>().props;
+    const [reactNotifications] = useRecoilState(reactNotificationAtom);
+
     return (
         <div className="flex flex-col h-[100dvh]">
+            <Head title={title}/>
             <MainHeader/>
             <main className={'flex-1 overflow-y-auto'}>{children}</main>
-            <Footer/>
+            {showFooter && <Footer/>}
             {notifications && (
-                <Notification
-                    message={notifications.message}
-                />
+                <NotificationWrapper>
+                    <Notification
+                        message={notifications.message}
+                    />
+                </NotificationWrapper>
+            )}
+            {reactNotifications.length > 0 && (
+                <NotificationWrapper>
+                    {reactNotifications && reactNotifications.map((notification, index) => (
+                        <Notification
+                            key={index}
+                            message={notification.message}
+                            type={notification.type}
+                        />
+
+                    ))}
+                </NotificationWrapper>
             )}
         </div>
     )

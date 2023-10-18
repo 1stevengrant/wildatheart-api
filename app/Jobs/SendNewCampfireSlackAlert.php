@@ -70,7 +70,7 @@ class SendNewCampfireSlackAlert implements ShouldQueue
                                 'emoji' => true,
                             ],
                             'value' => 'View Listing',
-                            'url' => route('view.campfire', $campfire),
+                            'url' => route('view.fire', $campfire),
                             'action_id' => 'view-listing',
                         ],
                     ],

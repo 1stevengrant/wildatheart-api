@@ -8,6 +8,6 @@ class SuccessAuth0CallbackController extends Controller
 {
     public function __invoke(Request $request)
     {
-        return view('successful-auth0-callback');
+        return inertia('SuccessfulCallback');
     }
 }

@@ -33,7 +33,6 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
 
     const handleUserLevelZoom = (zoom: number) => {
         setUserZoomLevel(zoom)
-        console.log(userZoomLevel)
     }
 
     const flyTo = (

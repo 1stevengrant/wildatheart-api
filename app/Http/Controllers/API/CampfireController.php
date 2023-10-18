@@ -29,7 +29,7 @@ class CampfireController extends Controller
                     'title' => $campfire->title,
                     'location' => $campfire->location,
                     'country' => $campfire->country,
-                    'url' => route('view.campfire', $campfire->id),
+                    'url' => route('view.fire', $campfire->id),
                     'host' => $campfire->user->full_name,
                     'hostProfilePhoto' => $campfire->hostPhoto(),
                     'image' => asset('img/wah-fires-suburb-1.webp'),
