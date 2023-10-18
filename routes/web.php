@@ -68,7 +68,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('toggle-contacted/{attendee}', ToggleConnectionContactedController::class)->name('toggle.contacted');
 });
 
-
 Route::get('attend/{campfire}', ViewFireListingController::class)->name('view.fire');
 Route::get('connect/{campfire}', [ConnectWithHostController::class, 'index'])->name('connect.index');
 Route::post('connect/{campfire}', [ConnectWithHostController::class, 'store'])->name('connect.store');

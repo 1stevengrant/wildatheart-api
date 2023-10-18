@@ -11,7 +11,7 @@ import {
     CalendarDaysIcon,
     MegaphoneIcon,
     ShieldCheckIcon,
-    SparklesIcon
+    SparklesIcon, UserCircleIcon
 } from "@heroicons/react/24/outline";
 import PoopIcon from "@/Components/Icons/Poop";
 import Guideline from "@/Components/Fires/Guideline";
@@ -21,6 +21,7 @@ import ConnectWithHost from "@/Components/Fires/ConnectWithHost";
 import UpdateAddress from "@/Components/Fires/UpdateAddress";
 import MobileConnect from "@/Components/Fires/MobileConnect";
 import {PageProps} from "@/types";
+import UserAvatar from "@/Components/UserAvatar";
 
 const iconSize = 'w-6 h-6 flex-shrink-0';
 const metaItems = [
@@ -100,8 +101,11 @@ const ViewFire = () => {
                             </h2>
 
                             <div className="mt-10 flex items-start space-x-4">
-                                <div className="h-20 w-20 flex-shrink-0 rounded-full bg-cover bg-center object-fill"
-                                     style={{backgroundImage: `url('/svgs/user.svg')`}}/>
+                                {fire.hostPhoto ? (
+                                    <UserAvatar image={fire.hostPhoto} width={400} className={`w-20 h-20`}/>) : (
+                                    <UserCircleIcon className={'w-20 h-20'}/>
+                                )}
+
                                 <div>
                                     <p className="text-sm">Your Host ·</p>
                                     <p className="text-2xl font-medium">{fire.host}</p>

@@ -40,7 +40,7 @@ class SendNewCampfireSlackAlert implements ShouldQueue
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => "*Name:*\n $name Fire \n*Where:*\n$location, $country \n*Who:* $hostName ",
+                        'text' => "*Name:*\n $name Fire \n*Where:*\n$location \n*Who:* $hostName ",
                     ],
                     'accessory' => [
                         'type' => 'image',

@@ -29,4 +29,5 @@ export type Fire = {
     user_id: number;
     welcome_sent: boolean;
     zip?: string;
+    hostPhoto?: string;
 }

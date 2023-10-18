@@ -2,10 +2,10 @@ on:
   push:
     branches:
       - prod
-      - develop
+      - dev
   pull_request:
     branches:
-      - develop
+      - dev
       - prod
     types:
       - opened
