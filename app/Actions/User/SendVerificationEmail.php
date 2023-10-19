@@ -13,6 +13,7 @@ class SendVerificationEmail
 
     public function handle(Campfire $campfire): void
     {
+
         $verification = auth()->user()->emailVerifications()->create([
             'campfire_id' => $campfire->id,
         ]);

@@ -95,10 +95,12 @@ const MyConnections = () => {
                         {fireConnectionData.map((fire: any, index) => (
                             <div key={index}>
                                 <div className="flex items-center space-x-4">
-                                    <h2 className="text-lg font-medium">{fire.name}</h2>
-                                    <PrimaryButton onClick={(event) => copyFireEmailAddressesToClipboard(fire)}>
-                                        Copy Email Addresses
-                                    </PrimaryButton>
+                                    <h2 className="text-lg font-medium">{fire.name} Fire</h2>
+                                    {fire.attendees?.length > 0 && (
+                                        <PrimaryButton onClick={(event) => copyFireEmailAddressesToClipboard(fire)}>
+                                            Copy Email Addresses
+                                        </PrimaryButton>
+                                    )}
                                 </div>
                                 <ul
                                     role="list"

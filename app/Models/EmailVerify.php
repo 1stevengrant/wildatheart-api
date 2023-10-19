@@ -10,6 +10,10 @@ class EmailVerify extends Model
 {
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();

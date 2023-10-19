@@ -12,6 +12,7 @@ class ToggleConnectionContactedController extends Controller
      */
     public function __invoke(Request $request, Attendee $attendee)
     {
+
         if ($attendee->user_id !== auth()->id()) {
             abort(403);
         }

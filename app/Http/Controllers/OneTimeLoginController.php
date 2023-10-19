@@ -14,7 +14,16 @@ class OneTimeLoginController extends Controller
     {
         $emailVerify = GetByToken::run($token);
 
-        if (! $token && $emailVerify->expires_at->isPast()) {
+        if (! $token) {
+            abort(404, 'Token not found');
+        }
+
+        if (! $emailVerify) {
+            abort(404, 'Token not found');
+        }
+
+        if ($emailVerify->expires_at->isPast()) {
+            $emailVerify->delete();
             abort(404, 'Token not found');
         }
 
