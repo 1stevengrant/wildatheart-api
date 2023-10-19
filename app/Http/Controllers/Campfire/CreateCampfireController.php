@@ -24,6 +24,7 @@ class CreateCampfireController extends Controller
             'name' => [
                 'required',
                 'string',
+                'min:2',
                 'max:255',
                 new ShouldNotEndWithFire,
                 new DoesntContainEmojis,

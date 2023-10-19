@@ -13,6 +13,10 @@ class EditFireController extends Controller
      */
     public function __invoke(Request $request, Campfire $campfire)
     {
+        if ($campfire->host->id !== auth()->id()) {
+            return redirect()->route('home');
+        }
+
         return inertia('Profile/EditFire', [
             'campfire' => $campfire->inertiaFilter(),
         ]);

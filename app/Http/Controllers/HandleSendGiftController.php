@@ -22,7 +22,7 @@ class HandleSendGiftController extends Controller
             'given_name' => 'required|max:255|min:2',
             'family_name' => 'required|max:255|min:2',
             'company' => 'nullable',
-            'address' => 'required|max:255',
+            'street_address' => 'required|max:255',
             'address2' => 'nullable',
             'city' => 'required|max:255',
             'state' => ['required'],
@@ -31,10 +31,10 @@ class HandleSendGiftController extends Controller
         ]);
 
         CreateAddress::run([
-            'first_name' => request('given_name'),
-            'last_name' => request('family_name'),
+            'given_name' => request('given_name'),
+            'family_name' => request('family_name'),
             'company' => request('company'),
-            'street_address' => request('address'),
+            'street_address' => request('street_address'),
             'address2' => request('address2'),
             'city' => request('city'),
             'state' => request('state'),
@@ -55,9 +55,9 @@ class HandleSendGiftController extends Controller
 
         PostToZapier::dispatch(data: [
             'email' => $campfire->host->email,
-            'first_name' => request('given_name'),
-            'last_name' => request('family_name'),
-            'address_1' => request('address'),
+            'given_name' => request('given_name'),
+            'family_name' => request('family_name'),
+            'street_address' => request('street_address'),
             'address_2' => request('address2'),
             'city' => request('city'),
             'state' => request('state'),

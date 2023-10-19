@@ -8,8 +8,8 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 test('an address is added to the database', function () {
     $campfire = Campfire::factory()->create();
     $attributes = [
-        'first_name' => 'Steven',
-        'last_name' => 'Grant',
+        'given_name' => 'Steven',
+        'family_name' => 'Grant',
         'company' => null,
         'street_address' => '18 Greenlees Road',
         'address2' => null,

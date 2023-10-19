@@ -15,8 +15,7 @@ class UpdateUserProfileController extends Controller
         request()->validate([
             'given_name' => 'required|string|max:255|min:2',
             'family_name' => 'required|string|max:255|min:2',
-            'email' => 'required|email',
-            'phone' => 'required',
+            'phone' => 'required|max:15|min:9',
             'opted_into_marketing' => 'required|boolean',
             'image' => 'nullable|image|max:1024|mimes:jpg,jpeg,png',
         ]);
@@ -29,7 +28,6 @@ class UpdateUserProfileController extends Controller
         auth()->user()->update([
             'given_name' => request('given_name'),
             'family_name' => request('family_name'),
-            'email' => request('email'),
             'phone' => request('phone'),
             'opted_into_marketing' => request('opted_into_marketing'),
             'profile_step' => 2,

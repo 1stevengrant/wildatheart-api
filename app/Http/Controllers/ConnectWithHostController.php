@@ -24,7 +24,7 @@ class ConnectWithHostController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'country' => 'required|string|max:255',
-            'phone' => 'required|min:9',
+            'phone' => 'required|min:9|max:15',
             'opted_into_marketing' => 'required|boolean',
         ]);
 

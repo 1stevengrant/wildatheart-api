@@ -29,7 +29,7 @@ const SendGift = () => {
         given_name: auth.user.given_name ?? '',
         family_name: auth.user.family_name ?? '',
         company: '',
-        address: '',
+        street_address: '',
         address2: '',
         city: auth.user.city ?? '',
         state: auth.user.state ?? '',
@@ -117,11 +117,11 @@ const SendGift = () => {
                                     <TextInput
                                         id="address"
                                         name="address"
-                                        value={data.address}
+                                        value={data.street_address}
                                         autoComplete="address"
-                                        onChange={(e) => setData('address', e.target.value)}
+                                        onChange={(e) => setData('street_address', e.target.value)}
                                     />
-                                    <InputError message={errors.address}/>
+                                    <InputError message={errors.street_address}/>
                                 </div>
 
                                 <div className={`col-span-2`}>

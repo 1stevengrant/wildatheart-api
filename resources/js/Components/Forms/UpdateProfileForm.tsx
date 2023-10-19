@@ -21,12 +21,12 @@ const UpdateProfileForm = ({
                            }: any) => {
     const form = useForm({
         _method: 'PUT',
-        given_name: user.given_name,
-        family_name: user.family_name,
-        phone: user.phone,
-        email: user.email,
+        given_name: user.given_name ?? '',
+        family_name: user.family_name ?? '',
+        phone: user.phone ?? '',
+        email: user.email ?? '',
         image: null as File | null,
-        opted_into_marketing: user.opted_into_marketing,
+        opted_into_marketing: user.opted_into_marketing ?? true,
     });
 
     const route = useRoute();
