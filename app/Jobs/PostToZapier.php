@@ -35,7 +35,7 @@ class PostToZapier implements ShouldQueue
                 'given_name' => $data['given_name'],
                 'family_name' => $data['family_name'],
                 'street_address' => $data['street_address'],
-                'address2' => $data['address2'],
+                'address2' => $data['address_2'],
                 'city' => $data['city'],
                 'state' => $data['state'],
                 'zip' => $data['zip'],
