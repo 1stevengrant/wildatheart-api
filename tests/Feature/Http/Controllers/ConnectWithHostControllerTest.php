@@ -82,9 +82,10 @@ test('making a connection requires a phone for the attendee', function () {
         ->assertSessionHasErrors('phone');
 });
 
-test('phone number cannot exceed 15 characters', function () {
+test('phone number cannot exceed 20 characters', function () {
 
-    $this->post(route('connect.store', $this->campfire), array_merge($this->attributes, ['phone' => str_repeat('1', 16)]))
+    $this->post(route('connect.store', $this->campfire), array_merge($this->attributes, ['phone' => str_repeat('1',
+        21)]))
         ->assertSessionHasErrors('phone');
 });
 

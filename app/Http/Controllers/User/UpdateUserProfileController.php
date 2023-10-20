@@ -15,7 +15,7 @@ class UpdateUserProfileController extends Controller
         request()->validate([
             'given_name' => 'required|string|max:255|min:2',
             'family_name' => 'required|string|max:255|min:2',
-            'phone' => 'required|max:15|min:9',
+            'phone' => 'required|max:20|min:9',
             'opted_into_marketing' => 'required|boolean',
             'image' => 'nullable|image|max:1024|mimes:jpg,jpeg,png',
         ]);

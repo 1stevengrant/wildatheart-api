@@ -94,9 +94,9 @@ test('updating profile requires phone', function () {
         ->assertInvalid(['phone']);
 });
 
-test('updating profile requires phone to be no more than 15 digits', function () {
+test('updating profile requires phone to be no more than 20 digits', function () {
     $this->actingAs($this->user)
-        ->put(route('user.profile'), array_merge($this->newAttributes, ['phone' => str_repeat('1', 16)]))
+        ->put(route('user.profile'), array_merge($this->newAttributes, ['phone' => str_repeat('1', 21)]))
         ->assertInvalid(['phone']);
 });
 
