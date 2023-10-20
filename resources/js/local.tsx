@@ -6,7 +6,7 @@ import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {RecoilRoot} from "recoil";
 import {RouteContext} from "@/Hooks/useRoute";
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Wild at Heart';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
