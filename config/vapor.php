@@ -47,6 +47,11 @@ return [
         'img/opengraph.png',
         'img/wah-fires-suburb-1.webp',
         'img/fires-gift-image-v2.webp',
+        'img/fires/Image.webp',
+        'img/fires/Image1.webp',
+        'img/fires/Image2.webp',
+        'img/fires/Image3.webp',
+        'img/fires/Image4.webp',
     ],
 
 ];
