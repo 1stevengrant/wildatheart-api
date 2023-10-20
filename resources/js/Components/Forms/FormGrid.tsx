@@ -7,7 +7,7 @@ interface FormGridProps {
 
 const FormGrid = ({children, className}: FormGridProps) => {
     return (
-        <div className={`md:grid space-y-4 md:space-y-0 md:grid-cols-2 md:gap-2 ${className}`}>
+        <div className={`md:grid md:grid-cols-2 md:gap-2 ${className}`}>
             {children}
         </div>
     )
