@@ -33,6 +33,10 @@ class UpdateUserProfileController extends Controller
             'profile_step' => 2,
         ]);
 
+        activity()->performedOn(auth()->user())
+            ->causedBy(auth()->user())
+            ->log('Update User Profile');
+
         return redirect()->back()->with(['notifications' => [
             'message' => 'User Profile Updated!',
             'type' => 'success',

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Campfire;
 
+use App\Http\Controllers\Controller;
 use App\Models\Campfire;
 use Illuminate\Http\Request;
 

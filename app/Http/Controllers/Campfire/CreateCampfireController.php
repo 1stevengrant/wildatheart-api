@@ -49,6 +49,11 @@ class CreateCampfireController extends Controller
             'neighborhood' => request('neighborhood'),
         ]);
 
+        activity()
+            ->performedOn($campfire)
+            ->causedBy(auth()->user())
+            ->log('Create Campfire');
+
         UpdateUserRole::make()->handle(
             user: auth()->user(),
             role: User::ROLE_HOST

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gift;
 
+use App\Http\Controllers\Controller;
 use App\Models\Campfire;
 use Illuminate\Http\Request;
 

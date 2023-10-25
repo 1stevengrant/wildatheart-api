@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Attendee;
 
+use App\Http\Controllers\Controller;
 use App\Models\Campfire;
 use Illuminate\Http\Request;
 use Spatie\SlackAlerts\Facades\SlackAlert;
@@ -40,6 +41,11 @@ class ConnectWithHostController extends Controller
             'country_code' => getCountryCodeFromCountryName($request->country),
             'marketing_updates' => $request->opted_into_marketing,
         ]);
+
+        activity()
+            ->performedOn($attendee)
+            ->causedBy($campfire)
+            ->log('Connected with Host');
 
         if (app()->isProduction()) {
             SlackAlert::to('events')

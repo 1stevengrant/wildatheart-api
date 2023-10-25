@@ -19,6 +19,11 @@ class LoginController extends Controller
     public function __invoke(Request $request)
     {
         $this->auth0->clear();
+        activity()
+            ->log('Clearing Auth0 Session');
+
+        activity()
+            ->log('Redirecting to Auth0 Login');
 
         return redirect($this->auth0->login());
     }

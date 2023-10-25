@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gift;
 
 use App\Actions\Address\CreateAddress;
 use App\Actions\Campfire\UpdateCampfire;
+use App\Http\Controllers\Controller;
 use App\Jobs\PostToZapier;
 use App\Mail\Campfire\GiftRequested;
 use App\Models\Campfire;

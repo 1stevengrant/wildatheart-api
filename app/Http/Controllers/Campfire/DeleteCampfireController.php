@@ -23,6 +23,10 @@ class DeleteCampfireController extends Controller
 
         $campfire->delete();
 
+        activity()->causedBy(auth()->user())
+            ->performedOn($campfire)
+            ->log('Soft Delete Campfire');
+
         return redirect()->back()->with(['notifications' => [
             'message' => 'Fire deleted successfully.',
             'type' => 'success',

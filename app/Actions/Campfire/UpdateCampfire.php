@@ -13,6 +13,7 @@ class UpdateCampfire
         array $data,
         Campfire $campfire
     ): void {
+        activity()->performedOn($campfire)->log('Update Campfire');
         $campfire->update($data);
     }
 }

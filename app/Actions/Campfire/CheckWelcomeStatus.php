@@ -14,6 +14,7 @@ class CheckWelcomeStatus
     public function handle(
         Campfire $campfire
     ): void {
+        activity()->performedOn($campfire)->log('Check Welcome Status');
         if (! $campfire->welcomeHasBeenSent()) {
 
             Mail::to($campfire->user)->send(new SendWelcomeEmail($campfire));
@@ -21,6 +22,8 @@ class CheckWelcomeStatus
             $campfire->update([
                 'welcome_sent' => true,
             ]);
+
+            activity()->performedOn($campfire)->log('Send Welcome Email');
         }
     }
 }

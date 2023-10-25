@@ -13,10 +13,14 @@ class SendVerificationEmail
 
     public function handle(Campfire $campfire): void
     {
-
         $verification = auth()->user()->emailVerifications()->create([
             'campfire_id' => $campfire->id,
         ]);
+
+        activity()
+            ->performedOn($campfire)
+            ->causedBy(auth()->user())
+            ->log('Send Verification Email');
 
         Mail::to(auth()->user()->email)->send(new SendEmailVerificationEmail(
             verificationToken: $verification->token,

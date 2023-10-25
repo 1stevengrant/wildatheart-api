@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Actions\User\SendVerificationEmail;
+use App\Http\Controllers\Controller;
 use App\Models\Campfire;
 use Illuminate\Http\Request;
 

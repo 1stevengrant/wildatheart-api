@@ -15,5 +15,6 @@ class ApproveCampfire
         $campfire->update([
             'approved_at' => now(),
         ]);
+        activity()->performedOn($campfire)->log('Approve Campfire');
     }
 }

@@ -12,5 +12,6 @@ class UpdateUserRole
     public function handle(User $user, string $role): void
     {
         $user->assignRole($role);
+        activity()->performedOn($user)->log('Update User Role');
     }
 }

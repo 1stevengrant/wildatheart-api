@@ -16,6 +16,8 @@ class SupportRequestController extends Controller
             'description' => 'required',
         ]);
 
+        activity()->log('Create Issue');
+
         Issue::create([
             'email' => request('email'),
             'name' => request('name'),

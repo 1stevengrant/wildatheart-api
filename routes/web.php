@@ -1,30 +1,30 @@
 <?php
 
+use App\Http\Controllers\Attendee\ConnectWithHostController;
+use App\Http\Controllers\Attendee\ToggleConnectionContactedController;
+use App\Http\Controllers\Auth\OneTimeLoginController;
+use App\Http\Controllers\Auth\SuccessAuth0CallbackController;
 use App\Http\Controllers\Campfire\CreateCampfireController;
 use App\Http\Controllers\Campfire\DeleteCampfireController;
+use App\Http\Controllers\Campfire\EditFireController;
+use App\Http\Controllers\Campfire\HostCampfireController;
 use App\Http\Controllers\Campfire\UpdateCampfireController;
-use App\Http\Controllers\ConfirmEmailController;
-use App\Http\Controllers\ConnectWithHostController;
-use App\Http\Controllers\DestroyUserImageController;
-use App\Http\Controllers\GiftSuccessController;
-use App\Http\Controllers\HandleSendGiftController;
+use App\Http\Controllers\Campfire\ViewFireListingController;
+use App\Http\Controllers\Gift\GiftSuccessController;
+use App\Http\Controllers\Gift\HandleSendGiftController;
+use App\Http\Controllers\Gift\SendGiftController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HostCampfireController;
-use App\Http\Controllers\HostProfileController;
-use App\Http\Controllers\OneTimeLoginController;
-use App\Http\Controllers\Profile\EditFireController;
-use App\Http\Controllers\Profile\MyConnectionsController;
-use App\Http\Controllers\Profile\MyFiresController;
-use App\Http\Controllers\Profile\MyProfileController;
-use App\Http\Controllers\ResendConfirmationEmail;
 use App\Http\Controllers\ResourcesController;
-use App\Http\Controllers\SendGiftController;
-use App\Http\Controllers\SuccessAuth0CallbackController;
 use App\Http\Controllers\SupportRequestController;
-use App\Http\Controllers\ToggleConnectionContactedController;
+use App\Http\Controllers\User\ConfirmEmailController;
+use App\Http\Controllers\User\DestroyUserImageController;
+use App\Http\Controllers\User\HostProfileController;
+use App\Http\Controllers\User\MyConnectionsController;
+use App\Http\Controllers\User\MyFiresController;
+use App\Http\Controllers\User\MyProfileController;
+use App\Http\Controllers\User\ResendConfirmationEmail;
 use App\Http\Controllers\User\UpdateUserProfileController;
-use App\Http\Controllers\VerifyEmailController;
-use App\Http\Controllers\ViewFireListingController;
+use App\Http\Controllers\User\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 /*

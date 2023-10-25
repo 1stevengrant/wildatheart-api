@@ -34,6 +34,11 @@ class UpdateCampfireController extends Controller
 
         $campfire->update($request->all());
 
+        activity()
+            ->performedOn($campfire)
+            ->causedBy(auth()->user())
+            ->log('Update Campfire');
+
         return to_route('my.campfires')->with(['notifications' => [
             'message' => 'Fire updated successfully!',
             'type' => 'success',

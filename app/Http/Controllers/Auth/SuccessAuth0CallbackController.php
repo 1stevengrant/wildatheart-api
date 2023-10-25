@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class SuccessAuth0CallbackController extends Controller
 {
     public function __invoke(Request $request)
     {
+        activity()
+            ->log('Successful Auth0 Callback');
+
         return inertia('SuccessfulCallback');
     }
 }
