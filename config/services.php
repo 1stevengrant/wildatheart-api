@@ -69,4 +69,8 @@ return [
         'api_url' => env('BUNNY_CDN_URL'),
     ],
 
+    'zapier' => [
+        'fire_webhook_url' => 'https://hooks.zapier.com/hooks/catch/7935383/3tew72r/',
+    ],
+
 ];

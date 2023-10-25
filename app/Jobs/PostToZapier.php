@@ -28,7 +28,7 @@ class PostToZapier implements ShouldQueue
 
         if (app()->isProduction()) {
             $data = $this->data;
-            Http::post('https://hooks.zapier.com/hooks/catch/7935383/3tew72r/', [
+            Http::post(config('services.zapier.fire_webhook_url'), [
                 'email' => $data['email'],
                 'quantity' => 1,
                 'first_name' => $data['given_name'],
