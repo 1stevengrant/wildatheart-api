@@ -43,7 +43,7 @@ const ConnectWithHost = () => {
         e.preventDefault();
         form.post(route('connect.store', fire.id), {
             preserveScroll: true,
-            onSuccess: () => {
+            onFinish: () => {
                 setProcessing(false)
             }
         });

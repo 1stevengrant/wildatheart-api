@@ -18,7 +18,6 @@ class PostToZapier implements ShouldQueue
      */
     public function __construct(public array $data)
     {
-
     }
 
     /**
@@ -32,10 +31,10 @@ class PostToZapier implements ShouldQueue
             Http::post('https://hooks.zapier.com/hooks/catch/7935383/3tew72r/', [
                 'email' => $data['email'],
                 'quantity' => 1,
-                'given_name' => $data['given_name'],
-                'family_name' => $data['family_name'],
-                'street_address' => $data['street_address'],
-                'address2' => $data['address_2'],
+                'first_name' => $data['given_name'],
+                'last_name' => $data['family_name'],
+                'address_1' => $data['street_address'],
+                'address_2' => $data['address_2'],
                 'city' => $data['city'],
                 'state' => $data['state'],
                 'zip' => $data['zip'],
@@ -43,6 +42,5 @@ class PostToZapier implements ShouldQueue
                 'date' => now(),
             ]);
         }
-
     }
 }
