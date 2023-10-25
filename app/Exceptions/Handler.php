@@ -48,6 +48,14 @@ class Handler extends ExceptionHandler
             ]);
         }
 
+        activity()
+            ->withProperties([
+                'request' => $request,
+                'response' => $response,
+                'exception' => $e,
+            ])
+            ->log('error');
+
         return $response;
     }
 }

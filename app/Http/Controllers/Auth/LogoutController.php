@@ -18,6 +18,9 @@ class LogoutController extends Controller
 
     public function __invoke(Request $request)
     {
+        activity()
+            ->causedBy(auth()->user())
+            ->log('LogoutController');
 
         auth()->logout();
 

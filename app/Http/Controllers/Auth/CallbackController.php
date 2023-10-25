@@ -25,6 +25,8 @@ class CallbackController extends Controller
             $response = $this->auth0->exchange();
 
             if (! $response) {
+                activity()
+                    ->log('Unauthorized access attempt');
                 abort(401, 'Unauthorized');
             }
 
@@ -41,6 +43,13 @@ class CallbackController extends Controller
 
             auth()->login($user);
 
+            activity()
+                ->withProperties([
+                    'auth0User' => $auth0User,
+                    'user' => $user,
+                ])
+                ->log('CallbackController');
+
             return to_route('home')->with(['notifications' => [
                 'message' => 'You are now logged in!',
                 'type' => 'success',
@@ -48,6 +57,11 @@ class CallbackController extends Controller
             ]);
 
         } catch (StateException $e) {
+            activity()
+                ->withProperties([
+                    'exception' => $e,
+                ])
+                ->log('Unauthorized access attempt');
 
             return redirect()->route('login');
         }
