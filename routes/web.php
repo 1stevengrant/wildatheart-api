@@ -8,6 +8,7 @@ use App\Http\Controllers\Campfire\CreateCampfireController;
 use App\Http\Controllers\Campfire\DeleteCampfireController;
 use App\Http\Controllers\Campfire\EditFireController;
 use App\Http\Controllers\Campfire\HostCampfireController;
+use App\Http\Controllers\Campfire\ToggleCampfireApprovedAtController;
 use App\Http\Controllers\Campfire\UpdateCampfireController;
 use App\Http\Controllers\Campfire\ViewFireListingController;
 use App\Http\Controllers\Gift\GiftSuccessController;
@@ -61,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('fires/{campfire}', DeleteCampfireController::class)->name('delete.fire');
     Route::put('fires/{campfire}', UpdateCampfireController::class)->name('update.fire');
     Route::get('fires/{campfire}', EditFireController::class)->name('my.campfires.edit');
+    Route::put('approved/{campfire}', ToggleCampfireApprovedAtController::class)->name('toggle-campfire-approved-at');
     Route::get('connections', MyConnectionsController::class)->name('my.connections');
     Route::get('profile', MyProfileController::class)->name('my.profile');
     Route::delete('destroy-photo', DestroyUserImageController::class)->name('user.profile-photo.destroy');

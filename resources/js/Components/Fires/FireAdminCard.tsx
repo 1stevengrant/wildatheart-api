@@ -4,7 +4,9 @@ import {ClipboardDocumentCheckIcon, PencilIcon} from "@heroicons/react/24/outlin
 import {defaultIconSize} from "@/helpers/defaultIconSize";
 import {useRecoilState} from "recoil";
 import {reactNotificationAtom} from "@/store";
-import DeleteFireModal from "@/Components/DeleteFireModal";
+import DeleteFireModal from "@/Components/Fires/DeleteFireModal";
+import UnpublishFireModal from "@/Components/Fires/UnpublishFireModal";
+import PublishFireModal from "@/Components/Fires/PublishFireModal";
 
 interface FireAdminCardProps {
     fire: Fire
@@ -31,8 +33,9 @@ const FireAdminCard = ({fire}: FireAdminCardProps) => {
         }
     };
 
-    const [open, setOpen] = useState(false)
-
+    const [openDeleteFireModal, setOpenDeleteFireModal] = useState(false)
+    const [openDraftFireModal, setOpenDraftFireModal] = useState(false)
+    const [openPublishFireModal, setOpenPublishFireModal] = useState(false)
     return (
         <div>
             <a href={fire.url} className="relative z-40">
@@ -61,9 +64,18 @@ const FireAdminCard = ({fire}: FireAdminCardProps) => {
             </a>
             <div
                 className="relative -mt-2 flex justify-end space-x-4 rounded-lg bg-white/10 p-6 text-sm">
+                {fire.approved_at ? (
+                    <UnpublishFireModal
+                        open={openDraftFireModal}
+                        setOpen={setOpenDraftFireModal}
+                        fire={fire}/>
+                ) : (
+                    <PublishFireModal open={openPublishFireModal} setOpen={setOpenPublishFireModal} fire={fire}/>
+                )
+                }
                 <DeleteFireModal
-                    open={open}
-                    setOpen={setOpen}
+                    open={openDeleteFireModal}
+                    setOpen={setOpenDeleteFireModal}
                     fire={fire}/>
                 <a href={route('my.campfires.edit', fire)}
                    className="flex items-center space-x-2 hover:text-orange">

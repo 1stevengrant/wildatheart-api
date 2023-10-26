@@ -233,4 +233,9 @@ class Campfire extends Model
             'gift_requested' => $this->hasRequestedGift(),
         ];
     }
+
+    public function shouldBeSearchable(): bool
+    {
+        return (bool) $this->approved_at;
+    }
 }

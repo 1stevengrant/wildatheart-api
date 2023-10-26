@@ -21,17 +21,10 @@ const Notification: FC<NotificationProps> = ({
     useEffect(() => {
         const timer = setTimeout(() => {
             setShow(false);
+            setReactNotifications([]);
         }, duration);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [duration]);
-
-    // If show is false, return null
-    if (!show) {
-        return null;
-    }
+        return () => clearTimeout(timer);
+    });
 
     const icon = type === 'success'
         ? <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />

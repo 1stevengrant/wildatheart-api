@@ -35,6 +35,8 @@ class MyFiresController extends Controller
                 'gift_requested' => $fire->gift_requested,
                 'gift_sent' => $fire->gift_sent,
                 'host' => $fire->host->full_name,
+                'approved_at' => $fire->approved_at,
+                'url' => $fire->url,
             ]);
 
         return inertia('Profile/MyFires', [

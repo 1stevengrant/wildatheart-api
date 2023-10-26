@@ -13,6 +13,10 @@ class ViewFireListingController extends Controller
      */
     public function __invoke(Request $request, Campfire $campfire)
     {
+        if ($campfire->user_id != optional(auth()->user())->id && ! $campfire->approved_at) {
+            abort(404);
+        }
+
         return inertia('ViewFire', [
             'campfire' => $campfire->inertiaFilter(),
         ]);

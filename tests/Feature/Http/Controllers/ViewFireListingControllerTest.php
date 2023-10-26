@@ -7,7 +7,7 @@ use Inertia\Testing\AssertableInertia as Assert;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->campfire = Campfire::factory()->create();
+    $this->campfire = Campfire::factory()->approved()->create();
 });
 
 test('anyone can view a fire', function () {

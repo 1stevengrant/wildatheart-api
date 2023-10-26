@@ -38,7 +38,6 @@ class CampfireFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'approved_at' => now(),
-                'approved_by' => 1,
             ];
         });
     }
