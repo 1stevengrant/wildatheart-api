@@ -137,6 +137,10 @@ const UpdateProfileForm = ({
                         defaultCountry={'us'}
                         onChange={phone => form.setData('phone', phone ? phone.toString() : '')}
                     />
+                    <InputError message={form.errors.phone}/>
+                    {!isValidPhoneNumber(form.data.phone) && (
+                      <InputError message={`Please enter a valid phone number.`}/>
+                    )}
                 </div>
 
                 <div className="col-span-2">
@@ -167,11 +171,13 @@ const UpdateProfileForm = ({
                                         <UserAvatar image={user.image}
                                                     className={'w-[134px] h-[134px]'}
                                                     width={134}/>
-                                        <button type="button"
-                                                className={`${photoButtonClass}`}
-                                                onClick={deletePhoto}>
-                                            Remove Photo
-                                        </button>
+                                        <div className={`flex flex-col justify-center`}>
+                                            <button type="button"
+                                                    className={`${photoButtonClass}`}
+                                                    onClick={deletePhoto}>
+                                                Remove Photo
+                                            </button>
+                                        </div>
                                     </div>
 
                                 ) : (
@@ -221,7 +227,7 @@ const UpdateProfileForm = ({
 
             <div className="mt-4">
                 <PrimaryButton className={'w-full'}
-                               disabled={form.processing || (form.data.phone && !isValidPhoneNumber(form.data.phone))}>
+                               disabled={form.processing || !isValidPhoneNumber(form.data.phone)}>
                     {buttonText ?? 'Save'}
                 </PrimaryButton>
                 <Link href={route('home')}
