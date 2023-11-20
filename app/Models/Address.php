@@ -9,9 +9,9 @@ class Address extends Model
 {
     protected $guarded = ['id'];
 
-    public function campfire(): BelongsTo
+    public function event(): BelongsTo
     {
-        return $this->belongsTo(Campfire::class);
+        return $this->belongsTo(Event::class);
     }
 
     public function getFullNameAttribute(): string

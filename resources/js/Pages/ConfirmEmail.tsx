@@ -7,7 +7,7 @@ import HeadingOne from "@/Components/Type/HeadingOne";
 import {useForm, usePage} from "@inertiajs/react";
 import {PageProps} from "@/types";
 import useRoute from "@/Hooks/useRoute";
-import {Fire} from "@/types/Fire";
+import {Event} from "@/types/Event";
 import axios from "axios";
 import {useRecoilState} from "recoil";
 import {reactNotificationAtom} from "@/store";
@@ -17,10 +17,10 @@ const ConfirmEmail = () => {
     const page = usePage();
     const {auth} = page.props as unknown as PageProps;
     const route = useRoute();
-    const fire = page.props.campfire as Fire;
+    const event = page.props.event as Event;
 
     const resendEmail = () => {
-        axios.post(route('resend-confirmation-email', fire))
+        axios.post(route('resend-confirmation-email', event))
             .then((response) => {
                 const newNotification = response.data;
                 setReactNotifications([...reactNotifications, newNotification]);

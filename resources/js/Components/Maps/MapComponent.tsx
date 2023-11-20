@@ -4,17 +4,17 @@ import React, {FC, useEffect, useRef, useState} from "react";
 import {GeoSearchProvided} from "react-instantsearch-core";
 import {connectGeoSearch} from "react-instantsearch-dom";
 import mapboxgl from "mapbox-gl";
-import FireMarker from "@/Components/Fires/FireMarker";
+import FireMarker from "@/Components/Events/FireMarker";
 import {useRecoilState} from "recoil";
-import {currentFireAtom, flyToLocationAtom, selectedPlaceAtom} from "@/store";
-import {GeoHit} from "@/types/FireHit";
-import SelectedFire from "@/Components/Fires/SelectedFire";
+import {currentEventAtom, flyToLocationAtom, selectedPlaceAtom} from "@/store";
+import {GeoHit} from "@/types/EventHit";
+import SelectedEvent from "@/Components/Events/SelectedEvent";
 import objectIsEmpty from "@/helpers/objectIsEmpty";
 import {oneHour} from "@/helpers/timeConstants";
 
 const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
     const mapRef = useRef<MapRef>(null);
-    const [currentFire, setCurrentFire] = useRecoilState(currentFireAtom);
+    const [currentEvent, setCurrentEvent] = useRecoilState(currentEventAtom);
     const [selectedPlace, setSelectedPlace] = useRecoilState(selectedPlaceAtom);
     const [flyToLocation, setFlyToLocation] = useRecoilState(flyToLocationAtom)
     const [userZoomLevel, setUserZoomLevel] = useState<number>(6)
@@ -50,7 +50,7 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
 
     const handleMarkerClick = (marker: GeoHit) => {
         const {lat, lng} = marker._geoloc
-        setCurrentFire(marker)
+        setCurrentEvent(marker)
 
         flyTo([lng, lat], undefined, userZoomLevel < 6 ? 6 : userZoomLevel)
     }
@@ -105,7 +105,7 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
                 {hits.map(hit => (
                     <Marker
                         style={comparePosition(
-                            [currentFire?._geoloc.lng, currentFire?._geoloc.lat],
+                            [currentEvent?._geoloc.lng, currentEvent?._geoloc.lat],
                             [hit._geoloc.lng, hit._geoloc.lat]) ?
                             {zIndex: 1000} :
                             {zIndex: 0}}
@@ -115,9 +115,9 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
                         longitude={hit._geoloc.lng}>
                         <>
                             {comparePosition(
-                                [currentFire?._geoloc.lng, currentFire?._geoloc.lat],
+                                [currentEvent?._geoloc.lng, currentEvent?._geoloc.lat],
                                 [hit._geoloc.lng, hit._geoloc.lat]) ?
-                                <SelectedFire/> :
+                                <SelectedEvent/> :
                                 <FireMarker className={'hover:cursor-pointer w-8'}
                                             onClick={() => handleMarkerClick(hit)}/>
                             }

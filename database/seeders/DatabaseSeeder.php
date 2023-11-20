@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             StateSeeder::class,
             //            UserSeeder::class,
-            //            CampFireSeeder::class,
+            //                        EventSeeder::class,
             //            AttendeeSeeder::class,
         ]);
     }

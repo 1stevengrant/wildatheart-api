@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Campfire;
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,8 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(! app()->isProduction());
 
-        Campfire::saving(function (Campfire $campfire): void {
-            $campfire->load('host');
+        Event::saving(function (Event $event): void {
+            $event->load('host');
         });
     }
 }

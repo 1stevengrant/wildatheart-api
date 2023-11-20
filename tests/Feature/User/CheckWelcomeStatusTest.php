@@ -1,23 +1,23 @@
 <?php
 
-use App\Actions\Campfire\CheckWelcomeStatus;
-use App\Mail\Campfire\SendWelcomeEmail;
-use App\Models\Campfire;
+use App\Actions\Event\CheckWelcomeStatus;
+use App\Mail\Event\SendWelcomeEmail;
+use App\Models\Event;
 
 it('sends the welcome email', function () {
     Mail::fake();
 
-    $campfire = Campfire::factory()->create([
+    $event = Event::factory()->create([
         'welcome_sent' => false,
     ]);
 
-    $this->assertFalse($campfire->welcome_sent);
+    $this->assertFalse($event->welcome_sent);
 
-    CheckWelcomeStatus::run(campfire: $campfire);
+    CheckWelcomeStatus::run(event: $event);
 
-    $campfire->refresh();
+    $event->refresh();
 
-    $this->assertTrue((bool) $campfire->welcome_sent);
+    $this->assertTrue((bool) $event->welcome_sent);
 
     Mail::assertQueued(SendWelcomeEmail::class);
 });

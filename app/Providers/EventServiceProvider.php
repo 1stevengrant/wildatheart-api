@@ -4,17 +4,15 @@ namespace App\Providers;
 
 use App\Listeners\UpdateLastLoginDateTime;
 use App\Models\Attendee;
-use App\Models\Campfire;
+use App\Models\Event;
 use App\Models\Issue;
 use App\Observers\AttendeeObserver;
-use App\Observers\CampfireObserver;
+use App\Observers\EventObserver;
 use App\Observers\IssueObserver;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use SocialiteProviders\Auth0\Auth0ExtendSocialite;
-use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,9 +27,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         Login::class => [
             UpdateLastLoginDateTime::class,
-        ],
-        SocialiteWasCalled::class => [
-            Auth0ExtendSocialite::class.'@handle',
         ],
     ];
 
@@ -52,7 +47,7 @@ class EventServiceProvider extends ServiceProvider
     }
 
     protected $observers = [
-        Campfire::class => [CampfireObserver::class],
+        Event::class => [EventObserver::class],
         Issue::class => [IssueObserver::class],
         Attendee::class => [AttendeeObserver::class],
     ];

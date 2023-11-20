@@ -13,10 +13,7 @@ class ToggleConnectionContactedController extends Controller
      */
     public function __invoke(Request $request, Attendee $attendee)
     {
-
-        if ($attendee->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($attendee->user_id == auth()->user()->id, 403);
 
         if ($attendee->contacted_on) {
 
@@ -24,7 +21,10 @@ class ToggleConnectionContactedController extends Controller
                 'contacted_on' => null,
             ]);
 
-            activity()->performedOn($attendee)->causedBy(auth()->user())->log('Connection unmarked as not contacted');
+            activity()
+                ->performedOn($attendee)
+                ->causedBy(auth()->user())
+                ->log('Connection unmarked as not contacted');
 
             return redirect()->back()->with(['notifications' => [
                 'message' => 'Connection updated',
@@ -36,7 +36,10 @@ class ToggleConnectionContactedController extends Controller
             'contacted_on' => now(),
         ]);
 
-        activity()->performedOn($attendee)->causedBy(auth()->user())->log('Connection unmarked as contacted');
+        activity()
+            ->performedOn($attendee)
+            ->causedBy(auth()->user())
+            ->log('Connection unmarked as contacted');
 
         return redirect()->back()->with(['notifications' => [
             'message' => 'Connection updated',

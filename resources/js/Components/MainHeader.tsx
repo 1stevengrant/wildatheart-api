@@ -15,11 +15,9 @@ const MainHeader = () => {
     const {auth} = usePage<any>().props
     const shouldDisplayMenu = () => {
         const url = route().current();
-        if (url) {
-            return url.includes('profile') || url.includes('fires') || url.includes('connections') || url.includes('resources')
-        }
-        return false
-    }
+        return url ? ['profile', 'events', 'connections', 'resources'].some(str => url.includes(str)) : false;
+    };
+
     return (
         <header className={`px-2 py-4 md:p-4 bg-black text-white flex items-center space-x-2 md:space-x-4 w-full`}>
             <div className={`flex items-center xl:w-1/3`}>

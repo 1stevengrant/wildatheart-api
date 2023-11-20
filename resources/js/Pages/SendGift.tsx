@@ -11,7 +11,7 @@ import {isValidPhoneNumber} from "react-phone-number-input";
 import FormGrid from "@/Components/Forms/FormGrid";
 import {CountryDropdown, RegionDropdown} from "react-country-region-selector";
 import selectClasses from "@/helpers/selectClasses";
-import {Fire} from "@/types/Fire";
+import {Event} from "@/types/Event";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 import LeftColumn from "@/Layouts/LeftColumn";
 import RightColumn from "@/Layouts/RightColumn";
@@ -22,7 +22,7 @@ import {PhoneInput} from "react-international-phone";
 const SendGift = () => {
     const page = usePage();
     const {auth} = page.props as unknown as PageProps;
-    const fire = page.props.campfire as Fire;
+    const event = page.props.event as Event;
     let phoneNumber = auth.user.phone.replace(/\s/g, '');
     const [phone, setPhone] = React.useState(phoneNumber);
     const {data, setData, post, processing, errors} = useForm({
@@ -38,9 +38,9 @@ const SendGift = () => {
         zip: auth.user.postal_code ?? '',
     })
 
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault()
-        post(route('gift.store', fire), {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        post(route('gift.store', event), {
             preserveScroll: true
         })
     }
@@ -56,7 +56,7 @@ const SendGift = () => {
                         </HeadingOne>
 
                         <p className="mt-8">
-                            We'd like to send you a fire-starter kit. Where would you
+                            We'd like to send you a Firestarter kit. Where would you
                             like us to send it?
                         </p>
 

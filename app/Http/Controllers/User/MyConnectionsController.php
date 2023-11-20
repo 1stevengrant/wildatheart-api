@@ -12,14 +12,14 @@ class MyConnectionsController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $fireConnections = auth()->user()
-            ->campfires()
+        $eventConnections = auth()->user()
+            ->events()
             ->with('attendees')
             ->paginate(100)
-            ->through(fn ($campfire) => [
-                'id' => $campfire->id,
-                'name' => $campfire->name,
-                'attendees' => $campfire->attendees->map(fn ($attendee) => [
+            ->through(fn ($event) => [
+                'id' => $event->id,
+                'name' => $event->name,
+                'attendees' => $event->attendees->map(fn ($attendee) => [
                     'family_name' => $attendee->family_name,
                     'given_name' => $attendee->given_name,
                     'phone' => $attendee->phone,
@@ -32,7 +32,7 @@ class MyConnectionsController extends Controller
             ]);
 
         return inertia('Profile/MyConnections', [
-            'fireConnections' => $fireConnections,
+            'eventConnections' => $eventConnections,
             'allConnections' => auth()->user()->generalConnections->sortBy('family_name'),
         ]);
     }

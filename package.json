@@ -2,19 +2,12 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "format": "npx prettier --write resources/",
-        "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
+        "build": "vite build"
     },
-    "pre-commit": [
-        "precommit-mgs",
-        "format"
-    ],
     "devDependencies": {
         "@babel/preset-react": "^7.22.5",
         "@headlessui/react": "^1.4.2",
         "@inertiajs/react": "^1.0.0",
-        "@svgr/webpack": "^8.1.0",
         "@tailwindcss/forms": "^0.5.3",
         "@types/node": "^18.13.0",
         "@types/react": "^18.0.28",
@@ -28,9 +21,6 @@
         "postcss": "^8.4.6",
         "postcss-import": "^15.1.0",
         "pre-commit": "^1.2.2",
-        "prettier": "^2.8.8",
-        "prettier-plugin-blade": "^1.6.4",
-        "prettier-plugin-tailwindcss": "^0.3.0",
         "tailwindcss": "^3.1.0",
         "ts-loader": "^9.4.4",
         "typescript": "^5.1.6",

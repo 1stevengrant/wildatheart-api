@@ -1,5 +1,5 @@
 export type Connection = {
-    campfire_id: string;
+    event_id: string;
     city: string;
     contacted_on: string;
     country: string;

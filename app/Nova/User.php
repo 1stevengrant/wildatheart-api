@@ -43,7 +43,7 @@ class User extends Resource
 
     public static function indexQuery(NovaRequest $request, $query): Builder
     {
-        return $query->withCount('campfires');
+        return $query->withCount('events');
     }
 
     /**
@@ -72,7 +72,7 @@ class User extends Resource
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
-            Number::make('Fire Count', 'campfires_count')
+            Number::make('Event Count', 'events_count')
                 ->sortable()
                 ->onlyOnIndex(),
 
@@ -90,7 +90,7 @@ class User extends Resource
                 ->creationRules('required', Rules\Password::defaults())
                 ->updateRules('nullable', Rules\Password::defaults()),
 
-            HasMany::make('Camp Fires', 'campFires', CampFire::class),
+            HasMany::make('Events', 'events', Event::class),
 
             MorphToMany::make('Roles', 'roles', Role::class),
             MorphToMany::make('Permissions', 'permissions', Permission::class),

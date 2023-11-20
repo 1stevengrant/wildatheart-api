@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Gift;
 
 use App\Actions\Address\CreateAddress;
-use App\Actions\Campfire\UpdateCampfire;
+use App\Actions\Event\UpdateEvent;
 use App\Http\Controllers\Controller;
 use App\Jobs\PostToZapier;
-use App\Mail\Campfire\GiftRequested;
-use App\Models\Campfire;
+use App\Mail\Event\GiftRequested;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -16,7 +16,7 @@ class HandleSendGiftController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, Campfire $campfire)
+    public function __invoke(Request $request, Event $event)
     {
         $request->validate([
             'country' => 'required|max:255',
@@ -43,29 +43,25 @@ class HandleSendGiftController extends Controller
             'phone' => request('phone'),
             'is_primary' => true,
             'country' => request('country'),
-            'campfire_id' => $campfire->id,
+            'event_id' => $event->id,
         ]);
 
-        UpdateCampfire::run(
+        UpdateEvent::run(
             data: ['gift_requested' => true],
-            campfire: $campfire
+            event: $event
         );
 
-        Mail::to($campfire->host->email)
-            ->send(new GiftRequested($campfire));
+        Mail::to($event->host->email)
+            ->send(new GiftRequested($event));
 
-        PostToZapier::dispatch(data: [
-            'email' => $campfire->host->email,
-            'given_name' => request('given_name'),
-            'family_name' => request('family_name'),
-            'street_address' => request('street_address'),
-            'address_2' => request('address2'),
-            'city' => request('city'),
-            'state' => request('state'),
-            'zip' => request('zip'),
-            'country' => request('country'),
+        $data = request()->only([
+            'given_name', 'family_name', 'street_address', 'address2', 'city', 'state', 'zip', 'country',
         ]);
 
-        return to_route('gift.success', $campfire);
+        $data['email'] = $event->host->email;
+
+        PostToZapier::dispatch(data: $data);
+
+        return to_route('gift.success', $event);
     }
 }

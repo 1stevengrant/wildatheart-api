@@ -23,9 +23,9 @@ class Attendee extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function campfire(): BelongsTo
+    public function event(): BelongsTo
     {
-        return $this->belongsTo(Campfire::class);
+        return $this->belongsTo(Event::class);
     }
 
     public function hasUser(): bool

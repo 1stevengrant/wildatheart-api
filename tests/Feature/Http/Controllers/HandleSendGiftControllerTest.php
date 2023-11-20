@@ -1,14 +1,13 @@
 <?php
 
 use App\Jobs\PostToZapier;
-use App\Mail\Campfire\GiftRequested;
-use App\Models\Campfire;
+use App\Mail\Event\GiftRequested;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->campfire = Campfire::factory()->create();
+    $this->event = \App\Models\Event::factory()->create();
 
     $this->addressData = [
         'country' => 'US',
@@ -24,36 +23,36 @@ beforeEach(function () {
     ];
 });
 
-test('it creates an address for the fire that can be shipped to', function () {
-    $response = $this->actingAs($this->campfire->host)
-        ->post(route('gift.store', $this->campfire), $this->addressData);
+test('it creates an address for the event that can be shipped to', function () {
+    $response = $this->actingAs($this->event->host)
+        ->post(route('gift.store', $this->event), $this->addressData);
 
-    $response->assertRedirect(route('gift.success', $this->campfire));
+    $response->assertRedirect(route('gift.success', $this->event));
 
     $this->assertDatabaseHas('addresses',
-        array_merge($this->addressData, ['campfire_id' => $this->campfire->id, 'is_primary' => true])
+        array_merge($this->addressData, ['event_id' => $this->event->id, 'is_primary' => true])
     );
 });
 
 it('marks the gift as requested', function () {
-    $this->actingAs($this->campfire->host)
-        ->post(route('gift.store', $this->campfire), $this->addressData);
+    $this->actingAs($this->event->host)
+        ->post(route('gift.store', $this->event), $this->addressData);
 
-    expect($this->campfire->fresh()->gift_requested)->toBe(1);
+    expect($this->event->fresh()->gift_requested)->toBe(1);
 });
 
 it('sends mail notification to admin about the request', function () {
     Mail::fake();
-    $this->actingAs($this->campfire->host)
-        ->post(route('gift.store', $this->campfire), $this->addressData);
+    $this->actingAs($this->event->host)
+        ->post(route('gift.store', $this->event), $this->addressData);
 
     Mail::assertQueued(GiftRequested::class);
 });
 
 it('updates zapier about the request', function () {
     Queue::fake();
-    $this->actingAs($this->campfire->host)
-        ->post(route('gift.store', $this->campfire), $this->addressData);
+    $this->actingAs($this->event->host)
+        ->post(route('gift.store', $this->event), $this->addressData);
 
     Queue::assertPushed(PostToZapier::class);
 
@@ -61,9 +60,9 @@ it('updates zapier about the request', function () {
 
 it('redirects to a success page', function () {
 
-    $response = $this->actingAs($this->campfire->host)
-        ->post(route('gift.store', $this->campfire), $this->addressData);
+    $response = $this->actingAs($this->event->host)
+        ->post(route('gift.store', $this->event), $this->addressData);
 
-    $response->assertRedirect(route('gift.success', $this->campfire));
+    $response->assertRedirect(route('gift.success', $this->event));
 
 });

@@ -3,7 +3,7 @@
 namespace App\Nova\Dashboards;
 
 use App\Nova\Metrics\AttendeesPerDay;
-use App\Nova\Metrics\FiresPerDay;
+use App\Nova\Metrics\EventsPerDay;
 use App\Nova\Metrics\UsersPerDay;
 use Laravel\Nova\Dashboards\Main as Dashboard;
 
@@ -18,7 +18,7 @@ class Main extends Dashboard
     {
         return [
             new UsersPerDay(),
-            new FiresPerDay(),
+            new EventsPerDay(),
             new AttendeesPerDay(),
         ];
     }

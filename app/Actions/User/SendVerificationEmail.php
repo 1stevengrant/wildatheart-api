@@ -2,8 +2,8 @@
 
 namespace App\Actions\User;
 
-use App\Mail\Campfire\SendEmailVerificationEmail;
-use App\Models\Campfire;
+use App\Mail\Event\SendEmailVerificationEmail;
+use App\Models\Event;
 use Illuminate\Support\Facades\Mail;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -11,14 +11,14 @@ class SendVerificationEmail
 {
     use AsAction;
 
-    public function handle(Campfire $campfire): void
+    public function handle(Event $event): void
     {
         $verification = auth()->user()->emailVerifications()->create([
-            'campfire_id' => $campfire->id,
+            'event_id' => $event->id,
         ]);
 
         activity()
-            ->performedOn($campfire)
+            ->performedOn($event)
             ->causedBy(auth()->user())
             ->log('Send Verification Email');
 

@@ -6,19 +6,19 @@ import {
 } from 'react-instantsearch-dom';
 import {searchClient, indexName} from "@/lib/algoliaClient";
 import MapComponent from "@/Components/Maps/MapComponent";
-import {currentFireAtom} from "@/store";
+import {currentEventAtom} from "@/store";
 import {useRecoilState} from "recoil";
-import FirePopupMobile from "@/Components/Fires/FirePopupMobile";
+import EventPopupMobile from "@/Components/Events/EventPopupMobile";
 import {useSwipeable} from "react-swipeable";
 
 const Home = () => {
-    const [currentFire, setCurrentFire] = useRecoilState(currentFireAtom)
+    const [currentEvent, setCurrentEvent] = useRecoilState(currentEventAtom)
 
     const swipeHandlers = useSwipeable({
-        onSwipedDown: () => setCurrentFire(undefined),
-        onSwipedUp: () => setCurrentFire(undefined),
-        onSwipedLeft: () => setCurrentFire(undefined),
-        onSwipedRight: () => setCurrentFire(undefined),
+        onSwipedDown: () => setCurrentEvent(undefined),
+        onSwipedUp: () => setCurrentEvent(undefined),
+        onSwipedLeft: () => setCurrentEvent(undefined),
+        onSwipedRight: () => setCurrentEvent(undefined),
         swipeDuration: 500,
         preventScrollOnSwipe: true,
         trackMouse: true
@@ -36,9 +36,9 @@ const Home = () => {
                 <MapComponent/>
             </InstantSearch>
             <>
-                {currentFire && (
+                {currentEvent && (
                     <div {...swipeHandlers}>
-                        <FirePopupMobile className={'fixed bottom-4 right-4 left-4 md:hidden z-[1001]'}/>
+                        <EventPopupMobile className={'fixed bottom-4 right-4 left-4 md:hidden z-[1001]'}/>
                     </div>
                 )}
             </>

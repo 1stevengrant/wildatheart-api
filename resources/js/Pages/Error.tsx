@@ -1,8 +1,8 @@
 import React from "react";
 import EmptyLayout from "@/Layouts/EmptyLayout";
 import Logo from "@/Components/Logo";
-import FireMarker from "@/Components/Fires/FireMarker";
-import BackToFires from "@/Components/Buttons/BackToFires";
+import FireMarker from "@/Components/Events/FireMarker";
+import BackToEvents from "@/Components/Buttons/BackToEvents";
 
 type Status = 503 | 500 | 404 | 403;
 type ErrorProps = {
@@ -33,7 +33,7 @@ const Error = ({status}: ErrorProps) => {
                     <h2>{title}</h2>
                     <p>{description}</p>
                     <div className={`flex justify-center`}>
-                        <BackToFires positionClasses={'static'} />
+                        <BackToEvents positionClasses={'static'} />
                     </div>
                 </div>
             </div>

@@ -10,7 +10,7 @@ class HostProfileController extends Controller
     public function __invoke(Request $request)
     {
         if (auth()->user()->profile_step == 2) {
-            return to_route('host.fire');
+            return to_route('host.event');
         }
 
         return inertia('Host');

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Campfire;
+use App\Models\Event;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,7 +16,7 @@ class LookupLocation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public Campfire $campfire)
+    public function __construct(public Event $event)
     {
 
     }
@@ -26,7 +26,7 @@ class LookupLocation implements ShouldQueue
      */
     public function handle(): void
     {
-        $location = $this->lookup($this->campfire->latitude, $this->campfire->longitude);
+        $location = $this->lookup($this->event->latitude, $this->event->longitude);
 
         $country = collect($location)->firstWhere(fn ($feature) => str_contains($feature->id, 'country'))->text ?? null;
         $region = collect($location)->firstWhere(fn ($feature) => str_contains($feature->id, 'region'))->text ?? null;
@@ -38,7 +38,7 @@ class LookupLocation implements ShouldQueue
         $streetAddress = collect($location)->firstWhere(fn ($feature) => str_contains($feature->id, 'address'))->text ?? null;
 
         try {
-            $this->campfire->update([
+            $this->event->update([
                 'country' => $country ? getCountryCodeFromCountryName($country) : null,
                 'region' => $region,
                 'zip' => $postcode,
@@ -52,7 +52,7 @@ class LookupLocation implements ShouldQueue
             ]);
 
         } catch (Exception $e) {
-            Log::error("$this->campfire->name has been a problem with your fetch operation: {$e->getMessage()}");
+            Log::error("$this->event->name has been a problem with your fetch operation: {$e->getMessage()}");
         }
     }
 

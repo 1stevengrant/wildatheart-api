@@ -1,14 +1,15 @@
 <?php
 
-use App\Models\Campfire;
+use App\Models\Event;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 beforeEach(function () {
-    $this->campfire = Campfire::factory()->create();
+    $this->event = Event::factory()->create();
 });
 test('it shows my profile to be edited', function () {
-    $this->actingAs($this->campfire->host)
+    $this->actingAs($this->event->host)
         ->get(route('my.profile'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page

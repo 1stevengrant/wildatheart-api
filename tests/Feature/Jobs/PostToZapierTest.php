@@ -2,7 +2,7 @@
 
 use App\Jobs\PostToZapier;
 
-it('posts the fire details to zapier and adds the fire to the spreadsheet', function () {
+it('posts the event details to zapier and adds the event to the spreadsheet', function () {
     \Illuminate\Support\Facades\Queue::fake();
     \Illuminate\Support\Facades\Http::fake();
 
@@ -31,7 +31,7 @@ it('posts the fire details to zapier and adds the fire to the spreadsheet', func
 
     Http::assertSent(function ($request) use ($data) {
         return $request->hasHeader('Content-Type', 'application/json') &&
-            $request->url() === config('services.zapier.fire_webhook_url') &&
+            $request->url() === config('services.zapier.event_webhook_url') &&
             $request['email'] === $data['email'] &&
             $request['quantity'] === $data['quantity'] &&
             $request['first_name'] === $data['given_name'] &&

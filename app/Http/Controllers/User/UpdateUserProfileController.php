@@ -17,7 +17,7 @@ class UpdateUserProfileController extends Controller
             'family_name' => 'required|string|max:255|min:2',
             'phone' => 'required|max:20|min:9',
             'opted_into_marketing' => 'required|boolean',
-            'image' => 'nullable|image|max:1024|mimes:jpg,jpeg,png',
+            'image' => 'nullable|image|max:5120|mimes:jpg,jpeg,png',
         ]);
 
         if ($request->hasFile('image')) {

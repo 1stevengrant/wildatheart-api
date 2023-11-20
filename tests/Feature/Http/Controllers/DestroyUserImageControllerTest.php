@@ -1,19 +1,19 @@
 <?php
 
-use App\Models\Campfire;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->campfire = Campfire::factory()->create();
+    $this->event = Event::factory()->create();
 });
 
 it('deletes a users profile photo', function () {
     config(['filesystems.default' => 'memory']);
     Storage::fake();
-    $user = $this->campfire->host;
+    $user = $this->event->host;
     $user->update(['image' => 'profile-photos/1234.jpg']);
 
     $this->actingAs($user)

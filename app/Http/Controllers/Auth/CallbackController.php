@@ -23,48 +23,53 @@ class CallbackController extends Controller
     {
         try {
             $response = $this->auth0->exchange();
-
-            if (! $response) {
-                activity()
-                    ->log('Unauthorized access attempt');
-                abort(401, 'Unauthorized');
-            }
+            abort_unless($response, 401, $this->logAndReturn('Unauthorized access attempt'));
 
             $auth0User = $this->auth0->getUser();
-
-            $user = User::firstOrCreate(['email' => $auth0User['email']],
-                [
-                    'given_name' => $auth0User['given_name'] ?? null,
-                    'family_name' => $auth0User['family_name'] ?? null,
-                    'password' => bcrypt(Str::random(32)),
-                    'email' => $auth0User['email'],
-                    'provider_id' => $auth0User['sub'],
-                ]);
+            $user = $this->findOrCreateUser($auth0User);
 
             auth()->login($user);
 
-            activity()
-                ->withProperties([
-                    'auth0User' => $auth0User,
-                    'user' => $user,
-                ])
-                ->log('CallbackController');
+            $this->logActivity('CallbackController', ['auth0User' => $auth0User, 'user' => $user]);
 
-            return to_route('home')->with(['notifications' => [
-                'message' => 'You are now logged in!',
-                'type' => 'success',
-            ],
+            return to_route('home')->with([
+                'notifications' => [
+                    'message' => 'You are now logged in!',
+                    'type' => 'success',
+                ],
             ]);
 
         } catch (StateException $e) {
-            activity()
-                ->withProperties([
-                    'exception' => $e,
-                ])
-                ->log('Unauthorized access attempt');
+            $this->logActivity('Unauthorized access attempt', ['exception' => $e]);
 
             return redirect()->route('login');
         }
+    }
 
+    protected function findOrCreateUser(array $auth0User): User
+    {
+        return User::firstOrCreate(
+            ['email' => $auth0User['email']],
+            [
+                'given_name' => $auth0User['given_name'] ?? null,
+                'family_name' => $auth0User['family_name'] ?? null,
+                'password' => bcrypt(Str::random(32)),
+                'provider_id' => $auth0User['sub'],
+            ]
+        );
+    }
+
+    protected function logActivity(string $message, array $properties = [])
+    {
+        activity()
+            ->withProperties($properties)
+            ->log($message);
+    }
+
+    protected function logAndReturn(string $message)
+    {
+        $this->logActivity($message);
+
+        return $message;
     }
 }

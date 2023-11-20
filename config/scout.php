@@ -133,7 +133,7 @@ return [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
         'key' => env('MEILISEARCH_KEY'),
         'index-settings' => [
-            \App\Models\Campfire::class => [
+            \App\Models\Event::class => [
                 'filterableAttributes' => ['state', 'city', 'country'],
             ],
         ],

@@ -18,7 +18,7 @@ const UpdateProfile = () => {
                     <p>One of the most important aspects of our Fires are the hosts that commit to them.</p>
                     <UpdateProfileForm user={page.props.auth.user!}
                                        buttonText={'Next'}
-                                       redirectTo={route('host.fire')}
+                                       redirectTo={route('host.event')}
                     />
                 </div>
             </LeftColumn>

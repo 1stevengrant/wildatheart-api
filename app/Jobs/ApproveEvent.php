@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Mail\Event\EventApproved;
+use App\Models\Event;
+use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+
+class ApproveEvent implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public function __construct(
+        public Event $event,
+        public User $user
+    ) {
+    }
+
+    public function handle(): void
+    {
+        $this->event->update([
+            'approved_at' => now(),
+            'approved_by' => $this->user->id,
+        ]);
+
+        Mail::to($this->event->user->email)
+            ->send(new EventApproved($this->event));
+
+        LookupLatitudeLongitude::dispatch($this->event);
+
+    }
+}

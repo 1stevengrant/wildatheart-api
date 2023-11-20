@@ -1,19 +1,19 @@
 <?php
 
 use App\Actions\User\SendVerificationEmail;
-use App\Mail\Campfire\SendEmailVerificationEmail;
-use App\Models\Campfire;
+use App\Mail\Event\SendEmailVerificationEmail;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 it('sends a verification email', function () {
     \Illuminate\Support\Facades\Mail::fake();
-    $campfire = Campfire::factory()->create();
-    $this->actingAs($campfire->host);
+    $event = Event::factory()->create();
+    $this->actingAs($event->host);
 
-    SendVerificationEmail::run($campfire);
+    SendVerificationEmail::run($event);
 
-    Mail::assertQueued(SendEmailVerificationEmail::class, function ($mail) use ($campfire) {
-        return $mail->hasTo($campfire->host->email);
+    Mail::assertQueued(SendEmailVerificationEmail::class, function ($mail) use ($event) {
+        return $mail->hasTo($event->host->email);
     });
 });

@@ -12,8 +12,8 @@ const myProfileNavItems = [
     },
     {
         icon: <FireIcon className={defaultIconSize}/>,
-        title: 'My Fires',
-        url: 'my.campfires',
+        title: 'My Events',
+        url: 'my.events',
     },
     {
         icon: <LinkIcon className={defaultIconSize}/>,

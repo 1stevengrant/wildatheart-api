@@ -2,7 +2,7 @@
 
 namespace App\Mail\Address;
 
-use App\Models\Campfire;
+use App\Models\Event;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +19,7 @@ class PleaseUpdateMailingAddress extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public Campfire $campfire, public User $user)
+    public function __construct(public Event $event, public User $user)
     {
 
     }

@@ -1,5 +1,5 @@
 <x-mail::message>
-{{ $campfire->host->given_name }},
+{{ $event->host->given_name }},
 
 We’ve got exciting news — {{ $attendee->fullName }} has expressed interest in your Fire!
 

@@ -1,18 +1,18 @@
 <?php
 
-use App\Actions\Campfire\ApproveCampfire;
-use App\Models\Campfire;
+use App\Actions\Event\ApproveEvent;
+use App\Models\Event;
 
-it('it approves a Fire', function () {
-    $campfire = Campfire::factory()->create([
+it('it approves an event', function () {
+    $event = Event::factory()->create([
         'approved_at' => null,
     ]);
 
-    $this->assertNull($campfire->approved_at);
+    $this->assertNull($event->approved_at);
 
-    ApproveCampfire::run(campfire: $campfire);
+    ApproveEvent::run(event: $event);
 
-    $campfire->refresh();
+    $event->refresh();
 
-    $this->assertNotNull($campfire->approved_at);
+    $this->assertNotNull($event->approved_at);
 });

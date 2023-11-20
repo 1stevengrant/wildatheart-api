@@ -18409,7 +18409,7 @@
                     /**
          * 
          *
-         * @see \App\Models\Campfire::observe()
+         * @see \App\Models\Event::observe()
          * @static 
          */ 
         public static function searchable()
@@ -18419,7 +18419,7 @@
                     /**
          * 
          *
-         * @see \App\Models\Campfire::registerSearchableMacros()
+         * @see \App\Models\Event::registerSearchableMacros()
          * @static 
          */ 
         public static function unsearchable()

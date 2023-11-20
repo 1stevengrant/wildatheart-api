@@ -1,20 +1,20 @@
 <?php
 
-use App\Actions\Campfire\UpdateCampfire;
-use App\Models\Campfire;
+use App\Actions\Event\UpdateEvent;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('updates a fire with given data', function () {
-    $campfire = Campfire::factory()->create();
+it('updates an event with given data', function () {
+    $event = Event::factory()->create();
 
     $newData = ['name' => 'Steven'];
 
-    UpdateCampfire::run(campfire: $campfire, data: $newData);
+    UpdateEvent::run(event: $event, data: $newData);
 
-    $this->assertDatabaseHas('campfires', [
-        'id' => $campfire->id,
+    $this->assertDatabaseHas('events', [
+        'id' => $event->id,
         'name' => 'Steven',
     ]);
 });

@@ -9,8 +9,8 @@ class BookShipment extends Model
 {
     protected $guarded = ['id'];
 
-    public function campFire(): BelongsTo
+    public function event(): BelongsTo
     {
-        return $this->belongsTo(Campfire::class);
+        return $this->belongsTo(Event::class);
     }
 }

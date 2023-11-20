@@ -27,12 +27,12 @@ it('shows the update profile form', function () {
         );
 });
 
-it('redirects to the create campfire page if the user has already completed the profile', function () {
+it('redirects to the create an event page if the user has already completed the profile', function () {
     $this->user->update(['profile_step' => 2]);
 
     $this->actingAs($this->user)
         ->get(route('host'))
-        ->assertRedirect(route('host.fire'));
+        ->assertRedirect(route('host.event'));
 });
 
 it('redirects to the login page if the user is not logged in', function () {

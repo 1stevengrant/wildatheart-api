@@ -1,12 +1,12 @@
 <?php
 
 use App\Actions\Address\CreateAddress;
-use App\Models\Campfire;
+use App\Models\Event;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 test('an address is added to the database', function () {
-    $campfire = Campfire::factory()->create();
+    $event = Event::factory()->create();
     $attributes = [
         'given_name' => 'Steven',
         'family_name' => 'Grant',
@@ -19,7 +19,7 @@ test('an address is added to the database', function () {
         'phone' => '079 1234 5678',
         'is_primary' => true,
         'country' => 'UK',
-        'campfire_id' => $campfire->id,
+        'event_id' => $event->id,
     ];
 
     CreateAddress::run($attributes);

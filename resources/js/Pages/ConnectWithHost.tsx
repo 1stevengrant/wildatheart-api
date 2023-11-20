@@ -4,7 +4,7 @@ import LeftColumn from "@/Layouts/LeftColumn";
 import HeadingOne from "@/Components/Type/HeadingOne";
 import RightColumn from "@/Layouts/RightColumn";
 import {Link, useForm, usePage} from "@inertiajs/react";
-import {Fire} from "@/types/Fire";
+import {Event} from "@/types/Event";
 import {ArrowLeftIcon} from "@heroicons/react/20/solid";
 import InputLabel from "@/Components/Forms/InputLabel";
 import TextInput from "@/Components/Forms/TextInput";
@@ -13,7 +13,7 @@ import {PhoneInput} from "react-international-phone";
 import Instruction from "@/Components/Forms/Instruction";
 import FormGrid from "@/Components/Forms/FormGrid";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import FireDisplay from "@/Components/Fires/FireDisplay";
+import EventDisplay from "@/Components/Events/EventDisplay";
 import {CountryDropdown, RegionDropdown} from 'react-country-region-selector';
 import EmptyLayout from "@/Layouts/EmptyLayout";
 import {PageProps} from "@/types";
@@ -23,7 +23,7 @@ import selectClasses from "@/helpers/selectClasses";
 
 const ConnectWithHost = () => {
     const page = usePage();
-    const fire = page.props.campfire as Fire;
+    const event = page.props.event as Event;
     const {auth} = page.props as unknown as PageProps;
     const [processing, setProcessing] = React.useState(false);
     const form = useForm({
@@ -41,7 +41,7 @@ const ConnectWithHost = () => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         setProcessing(true)
         e.preventDefault();
-        form.post(route('connect.store', fire.id), {
+        form.post(route('connect.store', event.id), {
             preserveScroll: true,
             onFinish: () => {
                 setProcessing(false)
@@ -49,15 +49,15 @@ const ConnectWithHost = () => {
         });
     }
     return (
-        <EmptyLayout title={`Connect with ${fire.host} for ${fire.name} in ${fire.location}`}>
+        <EmptyLayout title={`Connect with ${event.host} for ${event.name} in ${event.location}`}>
             <TwoColumnWrapper>
                 <LeftColumn className={''}>
                     <div className={'mx-auto max-w-[500px]'}>
-                        <Link href={fire.url} className={'bg-white rounded-full h-14 w-14 flex items-center' +
+                        <Link href={event.url} className={'bg-white rounded-full h-14 w-14 flex items-center' +
                             ' justify-center'}>
                             <ArrowLeftIcon className={'h-8 w-8 text-black'}/>
                         </Link>
-                        <HeadingOne className={'mt-6'}>Connect With {fire.host}</HeadingOne>
+                        <HeadingOne className={'mt-6'}>Connect With {event.host}</HeadingOne>
 
                         <form onSubmit={handleSubmit}
                               className={'mt-6'}>
@@ -191,7 +191,7 @@ const ConnectWithHost = () => {
                                 <PrimaryButton
                                     disabled={processing}
                                     className={'w-full'}>
-                                    Connect with {fire.host}
+                                    Connect with {event.host}
                                 </PrimaryButton>
                             </div>
                         </form>
@@ -199,7 +199,9 @@ const ConnectWithHost = () => {
                     </div>
                 </LeftColumn>
                 <RightColumn>
-                    <FireDisplay className={'max-w-[350px] mx-auto hidden lg:flex'} fire={fire}/>
+                    <EventDisplay
+                        className={'max-w-[350px] mx-auto hidden lg:flex'}
+                        event={event}/>
                 </RightColumn>
             </TwoColumnWrapper>
         </EmptyLayout>

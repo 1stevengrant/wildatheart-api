@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Mail\Campfire\AttendeeConnectedToHost;
-use App\Mail\Campfire\AttendeeRegistered;
+use App\Mail\Event\AttendeeConnectedToHost;
+use App\Mail\Event\AttendeeRegistered;
 use App\Models\Attendee;
 use Illuminate\Support\Facades\Mail;
 
@@ -11,15 +11,15 @@ class AttendeeObserver
 {
     public function created(Attendee $attendee): void
     {
-        Mail::to($attendee->campfire->host->email)
+        Mail::to($attendee->event->host->email)
             ->send(new AttendeeRegistered(
-                campfire: $attendee->campfire,
+                event: $attendee->event,
                 attendee: $attendee
             ));
 
         Mail::to($attendee->email)
             ->send(new AttendeeConnectedToHost(
-                campfire: $attendee->campfire,
+                event: $attendee->event,
                 attendee: $attendee
             ));
     }

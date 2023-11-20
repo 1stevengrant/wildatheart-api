@@ -10,14 +10,14 @@ import {reactNotificationAtom} from "@/store";
 
 const MyConnections = () => {
     const [reactNotifications, setReactNotifications] = useRecoilState(reactNotificationAtom)
-    const {allConnections, fireConnections} = usePage().props;
+    const {allConnections, eventConnections} = usePage().props;
     const connections = Object.values(allConnections as Record<string, Connection>);
-    const fireConnectionData = (fireConnections as { data: Connection[] })?.data || [];
+    const eventConnectionData = (eventConnections as { data: Connection[] })?.data || [];
     const pageTitle = 'My Connections';
 
-    const copyFireEmailAddressesToClipboard = (fire: any) => {
+    const copyFireEmailAddressesToClipboard = (event: any) => {
 
-        const emails = fire.attendees.map((attendee: any) => attendee.email);
+        const emails = event.attendees.map((attendee: any) => attendee.email);
 
         const emailString = emails.join(',');
 
@@ -90,14 +90,14 @@ const MyConnections = () => {
                     <p>No connections available.</p>
                 )}
 
-                {fireConnectionData.length > 0 && (
+                {eventConnectionData.length > 0 && (
                     <div className={`space-y-8 mt-8`}>
-                        {fireConnectionData.map((fire: any, index) => (
+                        {eventConnectionData.map((event: any, index) => (
                             <div key={index}>
                                 <div className="flex items-center space-x-4">
-                                    <h2 className="text-lg font-medium">{fire.name} Fire</h2>
-                                    {fire.attendees?.length > 0 && (
-                                        <PrimaryButton onClick={(event) => copyFireEmailAddressesToClipboard(fire)}>
+                                    <h2 className="text-lg font-medium">{event.name} Fire</h2>
+                                    {event.attendees?.length > 0 && (
+                                        <PrimaryButton onClick={(event) => copyFireEmailAddressesToClipboard(event)}>
                                             Copy Email Addresses
                                         </PrimaryButton>
                                     )}
@@ -106,8 +106,8 @@ const MyConnections = () => {
                                     role="list"
                                     className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2"
                                 >
-                                    {fire.attendees?.length > 0 ? (
-                                        fire.attendees.map((attendee: any, attendeeIndex: number) => (
+                                    {event.attendees?.length > 0 ? (
+                                        event.attendees.map((attendee: any, attendeeIndex: number) => (
                                             <ConnectionCard
                                                 key={attendeeIndex}
                                                 connection={attendee}/>

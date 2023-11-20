@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Campfire;
+use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -9,19 +9,19 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
 });
 
-test('a user cannot claim a gift for a fire that has already claimed a gift', function () {
-    $campfire = Campfire::factory()->create([
+test('a user cannot claim a gift for an event that has already claimed a gift', function () {
+    $event = Event::factory()->create([
         'gift_requested' => true,
     ]);
-    $this->actingAs($campfire->host)
-        ->get(route('gift', $campfire))
+    $this->actingAs($event->host)
+        ->get(route('gift', $event))
         ->assertStatus(403);
 });
 
-test("a gift for a fire that hasn't been claimed, can be requested", function () {
-    $campfire = Campfire::factory()->create();
-    $this->actingAs($campfire->host)
-        ->get(route('gift', $campfire))
+test("a gift for an event that hasn't been claimed, can be requested", function () {
+    $event = Event::factory()->create();
+    $this->actingAs($event->host)
+        ->get(route('gift', $event))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
             ->component('SendGift')
@@ -29,7 +29,7 @@ test("a gift for a fire that hasn't been claimed, can be requested", function ()
 });
 
 test('logged out user cannot request a gift', function () {
-    $campfire = Campfire::factory()->create();
-    $this->get(route('gift', $campfire))
+    $event = Event::factory()->create();
+    $this->get(route('gift', $event))
         ->assertRedirect(route('login'));
 });

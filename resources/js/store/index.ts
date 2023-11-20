@@ -1,9 +1,9 @@
 import { atom } from 'recoil';
-import {GeoHit} from "@/types/FireHit";
+import {GeoHit} from "@/types/EventHit";
 import {LngLat} from "@/types/LngLat";
 
-export const currentFireAtom = atom<GeoHit | null | undefined>({
-    key: 'currentFireAtom',
+export const currentEventAtom = atom<GeoHit | null | undefined>({
+    key: 'currentEventAtom',
     default: undefined
 });
 

@@ -70,7 +70,7 @@ return [
     ],
 
     'zapier' => [
-        'fire_webhook_url' => 'https://hooks.zapier.com/hooks/catch/7935383/3tew72r/',
+        'event_webhook_url' => 'https://hooks.zapier.com/hooks/catch/7935383/3tew72r/',
     ],
 
 ];

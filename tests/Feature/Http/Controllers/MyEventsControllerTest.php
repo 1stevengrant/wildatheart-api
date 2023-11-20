@@ -1,0 +1,20 @@
+<?php
+
+use App\Models\Event;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
+
+uses(RefreshDatabase::class);
+beforeEach(function () {
+    $this->event = Event::factory()->create();
+});
+
+test('it shows a list of events belonging to the authenticated user', function () {
+    $this->actingAs($this->event->host)
+        ->get(route('my.events'))
+        ->assertStatus(200)
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Profile/MyEvents')
+            ->has('events.data', 1)
+        );
+});

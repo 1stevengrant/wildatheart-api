@@ -62,7 +62,7 @@ class Attendee extends Resource
 
             Text::make('Country'),
 
-            BelongsTo::make('CampFire'),
+            BelongsTo::make('Event'),
         ];
     }
 

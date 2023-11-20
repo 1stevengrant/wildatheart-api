@@ -66,28 +66,28 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(
             Attendee::class,
-            Campfire::class,
+            Event::class,
             'user_id',
-            'campfire_id'
+            'event_id'
         );
     }
 
-    public function campfires(): HasMany
+    public function events(): HasMany
     {
-        return $this->hasMany(Campfire::class);
+        return $this->hasMany(Event::class);
     }
 
     public function addresses(): HasManyThrough
     {
         return $this->hasManyThrough(
             Address::class,
-            Campfire::class,
+            Event::class,
         );
     }
 
-    public function isAttending(Campfire $campfire): bool
+    public function isAttending(Event $event): bool
     {
-        return $this->attendees->contains('campfire_id', $campfire->id);
+        return $this->attendees->contains('event_id', $event->id);
     }
 
     public function getFullnameAttribute(): string
@@ -131,7 +131,7 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(
             Attendee::class,
-            Campfire::class,
+            Event::class,
         );
     }
 

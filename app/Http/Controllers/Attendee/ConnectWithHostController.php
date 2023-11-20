@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
-use App\Models\Campfire;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class ConnectWithHostController extends Controller
 {
-    public function index(Campfire $campfire)
+    public function index(Event $event)
     {
         return inertia('ConnectWithHost', [
-            'campfire' => $campfire->inertiaFilter(),
+            'event' => $event->inertiaFilter(),
         ]);
     }
 
-    public function store(Request $request, Campfire $campfire)
+    public function store(Request $request, Event $event)
     {
         $request->validate([
             'family_name' => 'required|string|max:255|min:2',
@@ -29,8 +29,8 @@ class ConnectWithHostController extends Controller
             'opted_into_marketing' => 'required|boolean',
         ]);
 
-        $attendee = $campfire->attendees()->create([
-            'user_id' => $campfire->host->id,
+        $attendee = $event->attendees()->create([
+            'user_id' => $event->host->id,
             'given_name' => $request->given_name,
             'family_name' => $request->family_name,
             'email' => $request->email,
@@ -43,18 +43,19 @@ class ConnectWithHostController extends Controller
         ]);
 
         activity()
+            ->withProperties(['attendee' => $attendee, 'event' => $event])
             ->performedOn($attendee)
-            ->causedBy($campfire)
+            ->causedBy($event)
             ->log('Connected with Host');
 
         if (app()->isProduction()) {
             SlackAlert::to('events')
                 ->message($attendee->fullName.' contacted '
-                    .$campfire->host->fullName.' about his Fire in '.$campfire->location.' !');
+                    .$event->host->fullName.' about their event in '.$event->location.' !');
         }
 
-        return to_route('view.fire', $campfire)->with(['notifications' => [
-            'message' => "Connected with {$campfire->host->fullName}!",
+        return to_route('view.event', $event)->with(['notifications' => [
+            'message' => "Connected with {$event->host->fullName}!",
             'connectedWithHost' => true,
             'type' => 'success',
         ],

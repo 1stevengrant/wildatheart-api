@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class HandleAttendee
@@ -10,13 +11,13 @@ class HandleAttendee
     use AsAction;
 
     public function handle(
-        string $campfireId,
+        string $eventId,
         string $currentUrl
-    ) {
+    ): RedirectResponse {
 
         session()->put('userType', User::ROLE_ATTENDEE);
         session()->put('currentUrl', $currentUrl);
-        session()->put('campfireId', $campfireId);
+        session()->put('eventId', $eventId);
 
         return redirect()->route('login');
     }

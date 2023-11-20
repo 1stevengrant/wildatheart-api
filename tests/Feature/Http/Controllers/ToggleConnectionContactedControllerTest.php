@@ -1,24 +1,23 @@
 <?php
 
 use App\Models\Attendee;
-use App\Models\Campfire;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->campfire = Campfire::factory()->create();
+    $this->event = \App\Models\Event::factory()->create();
     $this->attendees = Attendee::factory()->count(3)->create([
-        'campfire_id' => $this->campfire->id,
-        'user_id' => $this->campfire->host->id,
+        'event_id' => $this->event->id,
+        'user_id' => $this->event->host->id,
     ]);
 });
 
 test('it marks an attendee as contacted', function () {
 
-    $user = $this->campfire->host;
-    $attendee = $this->campfire->attendees->first();
+    $user = $this->event->host;
+    $attendee = $this->event->attendees->first();
     $this->actingAs($user)
         ->put(route('toggle.contacted', $attendee))
         ->assertSessionHas('notifications.message', 'Connection updated');
@@ -26,9 +25,9 @@ test('it marks an attendee as contacted', function () {
     expect($attendee->fresh()->contacted_on)->not->toBeNull();
 });
 
-test('it marks an attendee as not contacted', function () {
-    $user = $this->campfire->host;
-    $attendee = $this->campfire->attendees->first();
+it('marks an attendee as not contacted', function () {
+    $user = $this->event->host;
+    $attendee = $this->event->attendees->first();
     $attendee->update([
         'contacted_on' => now(),
     ]);
@@ -41,7 +40,7 @@ test('it marks an attendee as not contacted', function () {
 
 test('it only allows the host to mark an attendee as contacted', function () {
     $user = User::factory()->create();
-    $attendee = $this->campfire->attendees->first();
+    $attendee = $this->event->attendees->first();
     $this->actingAs($user)
         ->put(route('toggle.contacted', $attendee))
         ->assertStatus(403);
