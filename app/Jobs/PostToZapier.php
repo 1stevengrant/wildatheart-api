@@ -22,28 +22,40 @@ class PostToZapier implements ShouldQueue
 
     /**
      * Execute the job.
+     *
+     * @throws \Exception
      */
     public function handle(): void
     {
-
         if (app()->isProduction()) {
             activity()
                 ->withProperties($this->data)
                 ->log('Post to Zapier');
             $data = $this->data;
-            Http::post(config('services.zapier.event_webhook_url'), [
+            $response = Http::post(config('services.zapier.event_webhook_url'), [
                 'email' => $data['email'],
                 'quantity' => 1,
                 'first_name' => $data['given_name'],
                 'last_name' => $data['family_name'],
                 'address_1' => $data['street_address'],
-                'address_2' => $data['address_2'],
+                'address_2' => $data['address2'],
                 'city' => $data['city'],
                 'state' => $data['state'],
                 'zip' => $data['zip'],
                 'country' => $data['country'],
                 'date' => now(),
             ]);
+
+            if ($response->failed()) {
+                activity()
+                    ->withProperties([
+                        'data' => $this->data,
+                        'response' => $response->body(),
+                    ])
+                    ->log('Post to Zapier failed');
+
+                throw new \Exception('Post to Zapier failed');
+            }
         }
     }
 }

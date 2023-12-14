@@ -12,7 +12,7 @@ it('posts the event details to zapier and adds the event to the spreadsheet', fu
         'given_name' => 'Steven',
         'family_name' => 'Grant',
         'street_address' => '123 Main St',
-        'address_2' => 'Apt 1',
+        'address2' => 'Apt 1',
         'city' => 'Anytown',
         'state' => 'NY',
         'zip' => '12345',
@@ -37,7 +37,7 @@ it('posts the event details to zapier and adds the event to the spreadsheet', fu
             $request['first_name'] === $data['given_name'] &&
             $request['last_name'] === $data['family_name'] &&
             $request['address_1'] === $data['street_address'] &&
-            $request['address_2'] === $data['address_2'] &&
+            $request['address_2'] === $data['address2'] &&
             $request['city'] === $data['city'] &&
             $request['state'] === $data['state'] &&
             $request['zip'] === $data['zip'] &&
