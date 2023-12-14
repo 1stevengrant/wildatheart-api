@@ -27,7 +27,9 @@ class PostToZapier implements ShouldQueue
     {
 
         if (app()->isProduction()) {
-            activity()->log('Post to Zapier');
+            activity()
+                ->withProperties($this->data)
+                ->log('Post to Zapier');
             $data = $this->data;
             Http::post(config('services.zapier.event_webhook_url'), [
                 'email' => $data['email'],
