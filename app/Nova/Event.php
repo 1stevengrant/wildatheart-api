@@ -90,6 +90,9 @@ class Event extends Resource
 
             DateTime::make('Created At'),
 
+            DateTime::make('Deleted At')
+                ->hideFromIndex(),
+
             HasMany::make('Book Shipments'),
 
             HasMany::make('Attendees'),
