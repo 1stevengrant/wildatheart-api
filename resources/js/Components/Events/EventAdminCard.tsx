@@ -39,6 +39,11 @@ const EventAdminCard = ({event}: EventAdminCardProps) => {
     return (
         <div>
             <a href={event.url} className="relative z-40">
+                {event.approved_at ? (
+                    <div className={`absolute right-6 px-4 rounded-full -top-3 uppercase py-1 text-sm font-semibold text-white bg-orange`}>published</div>
+                ) : (
+                    <div className={`absolute right-6 px-4 rounded-full bg-grey text-white -top-3 uppercase py-1 text-sm font-semibold`}>unpublished</div>
+                ) }
                 <div className="rounded-md border border-grey-darker bg-black p-2 shadow-lg md:p-4">
                     <div className="flex items-stretch space-x-4">
                         <img src="/img/wah-fires-suburb-1.webp"

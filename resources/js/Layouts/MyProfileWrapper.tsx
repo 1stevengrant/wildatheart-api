@@ -4,7 +4,7 @@ import HeadingOne from "@/Components/Type/HeadingOne";
 
 interface MyProfileWrapperProps {
     children: React.ReactNode;
-    title: string;
+    title: string | React.ReactNode;
 }
 
 const MyProfileWrapper = ({

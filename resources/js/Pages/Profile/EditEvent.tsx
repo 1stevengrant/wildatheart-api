@@ -5,6 +5,7 @@ import MyProfileWrapper from "@/Layouts/MyProfileWrapper";
 import {Link, useForm} from "@inertiajs/react";
 import useRoute from "@/Hooks/useRoute";
 import {Event} from "@/types/Event";
+import Parser from 'html-react-parser';
 import {useRecoilState} from "recoil";
 import {selectedPlaceAtom} from "@/store";
 import lookupLocation from "@/helpers/lookupLocation";
@@ -28,11 +29,17 @@ const EditEvent = () => {
     const user = page.props.auth.user!;
     const event = page.props.event as Event;
     const route = useRoute();
+
+    const publishedStatus = event.approved_at ? 'published' : 'unpublished'
+
     const pageTitle = `Editing ${event.name} Fire`
+    const pageName = `Editing ${event.name} Fire <span class="ml-2 rounded px-2 py-1 text-sm font-semibold uppercase text-white bg-orange">${publishedStatus}</span>`
     const [marker, setMarker] = useState<any>({
         lat: event.latitude,
         lng: event.longitude
     })
+
+
 
     const {
         data,
@@ -138,7 +145,7 @@ const EditEvent = () => {
 
     return (
         <AppLayout title={pageTitle}>
-            <MyProfileWrapper title={pageTitle}>
+            <MyProfileWrapper title={Parser(pageName)}>
                 <form onSubmit={handleSubmit}>
                     <div>
                         <InputLabel
