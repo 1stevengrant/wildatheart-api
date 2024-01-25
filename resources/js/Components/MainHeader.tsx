@@ -13,10 +13,15 @@ import {usePage} from "@inertiajs/react";
 const MainHeader = () => {
     const [open, setOpen] = useState(false)
     const {auth} = usePage<any>().props
+    const url = route().current();
+
     const shouldDisplayMenu = () => {
-        const url = route().current();
         return url ? ['profile', 'events', 'connections', 'resources'].some(str => url.includes(str)) : false;
     };
+
+    const shouldDisplaySearch = () => {
+        return url ? url === 'home' : false;
+    }
 
     return (
         <header className={`px-2 py-4 md:p-4 bg-black text-white flex items-center space-x-2 md:space-x-4 w-full`}>
@@ -26,7 +31,7 @@ const MainHeader = () => {
             </div>
 
             <div className={`w-full lg:w-1/3`}>
-                <MapboxSearch/>
+                {shouldDisplaySearch() ? (<MapboxSearch/>) : (<div></div>)}
             </div>
 
             {auth.user && shouldDisplayMenu() ? (
