@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Nova\Actions\ApproveEvent;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Text;
@@ -27,9 +28,9 @@ class Event extends Resource
      */
     public static $title = 'id';
 
-    public static function label()
+    public static function label(): string
     {
-        return 'Fires';
+        return 'Events';
     }
 
     /**
@@ -39,6 +40,7 @@ class Event extends Resource
      */
     public static $search = [
         'id',
+        'name',
     ];
 
     public function fields(NovaRequest $request): array
@@ -78,17 +80,22 @@ class Event extends Resource
 
             Text::make('Region')->readonly(),
 
-            Text::make('District')->readonly(),
+            Text::make('District')->readonly()->hideFromIndex(),
 
-            Text::make('Locality')->readonly(),
+            Text::make('Locality')->readonly()->hideFromIndex(),
 
-            Text::make('Neighborhood')->readonly(),
+            Text::make('Neighborhood')->readonly()->hideFromIndex(),
+
+            Boolean::make('Published', function () {
+                return $this->isApproved();
+            })->readonly(),
 
             DateTime::make('Approved At', 'approved_at')
                 ->hideFromIndex()
                 ->readonly(),
 
-            DateTime::make('Created At'),
+            DateTime::make('Created At')
+                ->hideFromIndex(),
 
             DateTime::make('Deleted At')
                 ->hideFromIndex(),
