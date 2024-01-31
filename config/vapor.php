@@ -40,12 +40,14 @@ return [
     */
 
     'serve_assets' => [
-        'location/GeoLite2-City.mmdb',
         'svgs/map-campfire-marker.svg',
-        'svgs/map-home-marker.svg',
-        'svgs/map-marker.svg',
+        'svgs/map-marker-retreat.svg',
+        'svgs/map-marker-experience.svg',
+        'svgs/map-marker-fire.svg',
         'img/opengraph.png',
         'img/wah-fires-suburb-1.webp',
+        'img/retreat-logo.webp',
+        'img/experiences-logo.webp',
         'img/fires-gift-image-v2.webp',
         'img/fires/Image.webp',
         'img/fires/Image1.webp',

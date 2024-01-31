@@ -9,7 +9,7 @@ interface UserAvatarProps {
 }
 
 const UserAvatar: React.FC<UserAvatarProps> = ({
-                                                   className = 'w-6 h-6',
+                                                   className = 'h-6 w-6',
                                                    width = 200,
                                                    image,
                                                    alt = ''

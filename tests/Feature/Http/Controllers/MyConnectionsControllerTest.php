@@ -5,7 +5,8 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    $this->event = \App\Models\Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->event = \App\Models\Event::factory()->fires()->create();
 });
 test('loads a list of my connections', function () {
     $this->actingAs($this->event->host)

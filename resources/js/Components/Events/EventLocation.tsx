@@ -6,7 +6,7 @@ type EventLocationProps = {
 
 const EventLocation: React.FC<EventLocationProps> = ({ location }) => {
     return (
-        <p className="text-white font-semibold">{location}</p>
+        <p className="font-semibold text-white">{location}</p>
     );
 };
 

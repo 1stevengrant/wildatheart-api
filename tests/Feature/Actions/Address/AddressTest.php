@@ -4,9 +4,11 @@ use App\Actions\Address\CreateAddress;
 use App\Models\Event;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
-
+beforeEach(function () {
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+});
 test('an address is added to the database', function () {
-    $event = Event::factory()->create();
+    $event = Event::factory()->fires()->create();
     $attributes = [
         'given_name' => 'Steven',
         'family_name' => 'Grant',

@@ -8,7 +8,7 @@ uses(RefreshDatabase::class);
 it('updates a user role', function () {
     Artisan::call('db:seed', ['--class' => 'RoleSeeder']);
     $user = User::factory()->create();
-    UpdateUserRole::run($user, 'admin');
+    UpdateUserRole::run($user, User::ROLE_ADMIN);
 
-    expect($user->fresh()->hasRole('admin'))->toBeTrue();
+    expect($user->fresh()->hasRole(User::ROLE_ADMIN))->toBeTrue();
 });

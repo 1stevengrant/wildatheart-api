@@ -44,8 +44,8 @@ const EventPublishModal = ({open, setOpen, event}: EventPublishModalProps) => {
                         <XMarkIcon className={'w-6 h-6 text-white'}/>
                     </button>
                 </div>
-                <ModalHeading>Publish {event.name} Fire?</ModalHeading>
-                <p>Are you sure you want to publish this Fire and allow connections to make contact?</p>
+                <ModalHeading>Publish {event.name} Event?</ModalHeading>
+                <p>Are you sure you want to publish this Event and allow connections to make contact?</p>
                 <ModalActions>
                     <SecondaryButton onClick={() => setOpen(false)}>Cancel</SecondaryButton>
                     <PrimaryButton onClick={publishEvent}>

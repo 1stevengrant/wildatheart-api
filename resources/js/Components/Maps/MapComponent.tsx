@@ -4,13 +4,17 @@ import React, {FC, useEffect, useRef, useState} from "react";
 import {GeoSearchProvided} from "react-instantsearch-core";
 import {connectGeoSearch} from "react-instantsearch-dom";
 import mapboxgl from "mapbox-gl";
-import FireMarker from "@/Components/Events/FireMarker";
 import {useRecoilState} from "recoil";
 import {currentEventAtom, flyToLocationAtom, selectedPlaceAtom} from "@/store";
-import {GeoHit} from "@/types/EventHit";
-import SelectedEvent from "@/Components/Events/SelectedEvent";
 import objectIsEmpty from "@/helpers/objectIsEmpty";
 import {oneHour} from "@/helpers/timeConstants";
+import FiresMarker from "@/Components/Icons/FiresMarker";
+import RetreatsMarker from "@/Components/Icons/RetreatsMarker";
+import Tippy from '@tippyjs/react/headless';
+import EventCard from "@/Components/Events/EventCard";
+import {defaultLatLng} from "@/helpers/defaultLatLng";
+import {GeoHit} from "@/types/EventHit";
+import ExperiencesMarker from "@/Components/Icons/ExperiencesMarker";
 
 const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
     const mapRef = useRef<MapRef>(null);
@@ -48,13 +52,6 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
         })
     }
 
-    const handleMarkerClick = (marker: GeoHit) => {
-        const {lat, lng} = marker._geoloc
-        setCurrentEvent(marker)
-
-        flyTo([lng, lat], undefined, userZoomLevel < 6 ? 6 : userZoomLevel)
-    }
-
     const lookupCurrentLocation = () => {
         if (navigator.geolocation) {
             const locationData = JSON.parse(localStorage.getItem('locationData') || '{}');
@@ -80,8 +77,25 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
 
     const getLocationError = (error: GeolocationPositionError) => {
         console.log(error)
-        flyTo([0, 0], undefined, 1)
+        flyTo([defaultLatLng.longitude, defaultLatLng.latitude], undefined, 9)
     }
+
+    const iconClasses = `text-black inline-flex hover:stroke-white group-hover:stroke-white`
+    const iconWrapperClasses = `group w-10 h-10 flex justify-center items-center rounded-full hover:bg-orange shadow-lg hover:cursor-pointer`
+
+    const currentEventStyles = (hit: GeoHit) => {
+        return currentEvent?.id === hit.id ? `stroke-white` : `stroke-black`
+    }
+
+    const [activeTooltipId, setActiveTooltipId] = useState('');
+
+    const handleShowTooltip = (id: string) => {
+        setActiveTooltipId(id);
+    };
+
+    const handleHideTooltip = () => {
+        setActiveTooltipId('');
+    };
 
     return (
         <Map mapLib={mapboxgl}
@@ -95,6 +109,8 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
              mapStyle="mapbox://styles/mapbox/navigation-day-v1"
              initialViewState={{
                  zoom: userZoomLevel,
+                 latitude: defaultLatLng.latitude,
+                 longitude: defaultLatLng.longitude
              }}
              style={{width: '100%', height: '100%'}}
              mapboxAccessToken={import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN}
@@ -113,17 +129,38 @@ const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
                         latitude={hit._geoloc.lat}
                         anchor="bottom"
                         longitude={hit._geoloc.lng}>
-                        <>
-                            {comparePosition(
-                                [currentEvent?._geoloc.lng, currentEvent?._geoloc.lat],
-                                [hit._geoloc.lng, hit._geoloc.lat]) ?
-                                <SelectedEvent/> :
-                                <FireMarker className={'hover:cursor-pointer w-8'}
-                                            onClick={() => handleMarkerClick(hit)}/>
-                            }
-                        </>
+
+                        <Tippy trigger="click mouseenter"
+                               key={hit.objectID}
+                               placement={`bottom`}
+                               interactive={true}
+                               touch={false}
+                               delay={250}
+                               appendTo={() => document.body}
+                               render={attrs => (
+                                   <EventCard className={`hidden md:block`} event={hit}/>
+                               )}>
+                            <button
+                                className={`${iconWrapperClasses} ${currentEvent?.id === hit.id ? `bg-orange text-white` : `bg-white`}`}
+                                id={`fire-${hit.id}`}
+                                onMouseEnter={() => handleShowTooltip(`fire-${hit.id}`)}
+                                onMouseLeave={handleHideTooltip}
+                                onClick={() => {
+                                    setCurrentEvent(hit)
+                                    handleShowTooltip(`fire-${hit.id}`);
+                                }}>
+                                {
+                                    hit.eventType.includes('retreat') &&
+                                    <RetreatsMarker className={`${iconClasses} ${currentEventStyles(hit)}`}/>
+                                    || (hit.eventType.includes('experience') || hit.eventType.includes('school')) &&
+                                    <ExperiencesMarker className={`${iconClasses} ${currentEventStyles(hit)}`}/>
+                                    || <FiresMarker className={`${iconClasses} ${currentEventStyles(hit)}`}/>
+                                }
+                            </button>
+                        </Tippy>
                     </Marker>
                 ))}
+
             </>
             <GeolocateControl position="top-left"/>
             <NavigationControl position="top-left"/>

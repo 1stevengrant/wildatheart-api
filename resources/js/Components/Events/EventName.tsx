@@ -6,7 +6,7 @@ type EventProps = {
 
 const EventName: React.FC<EventProps> = ({ name }) => {
     return (
-        <p className="text-white font-semibold">{name} Fire</p>
+        <p className="font-semibold text-white">{name} Fire</p>
     );
 };
 

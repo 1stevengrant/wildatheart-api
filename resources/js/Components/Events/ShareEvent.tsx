@@ -82,7 +82,7 @@ const ShareEvent= () => {
                         </a>
                     ))}
                     <button
-                        className="col-span-2 rounded-lg border border-orange bg-orange px-2 py-1 text-center text-white transition-colors duration-100 ease-in-out hover:border-black hover:bg-black"
+                        className="col-span-2 rounded-lg border px-2 py-1 text-center text-white transition-colors duration-100 ease-in-out border-orange bg-orange hover:border-black hover:bg-black"
                         onClick={copyToClipboard}
                     >
                         Copy URL to Clipboard

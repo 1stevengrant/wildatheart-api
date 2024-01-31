@@ -1,5 +1,8 @@
 export type GeoHit = {
+    id: any;
     name: string;
+    eventType: string;
+    eventTypeImage: string;
     city: string;
     country: string;
     objectID: string;
@@ -8,4 +11,7 @@ export type GeoHit = {
     host: string;
     hostPhoto: string;
     location: string;
+    startDate: string;
+    endDate: string | null;
+    sex: string;
 };

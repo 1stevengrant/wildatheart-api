@@ -4,7 +4,8 @@ use App\Models\Event;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 beforeEach(function () {
-    $this->event = Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->event = Event::factory()->fires()->create();
 });
 
 test('it allows a user to soft delete their own event', function () {

@@ -19,7 +19,7 @@ class Event extends Resource
      */
     public static $model = \App\Models\Event::class;
 
-    public static $with = ['bookShipments', 'attendees', 'user'];
+    public static $with = ['bookShipments', 'attendees', 'user', 'eventType'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -104,6 +104,8 @@ class Event extends Resource
 
             HasMany::make('Attendees'),
 
+            BelongsTo::make('Event Type', 'eventType', EventType::class)->filterable(),
+
         ];
     }
 
@@ -114,7 +116,8 @@ class Event extends Resource
 
     public function filters(NovaRequest $request): array
     {
-        return [];
+        return [
+        ];
     }
 
     public function lenses(NovaRequest $request): array

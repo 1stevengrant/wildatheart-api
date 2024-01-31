@@ -1,12 +1,15 @@
 <?php
 
 use App\Mail\Event\SendEmailVerificationEmail;
+use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+
     $this->user = User::factory()->create([
         'profile_step' => 2,
     ]);
@@ -21,6 +24,7 @@ it('allows a user to create a event', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ]);
 
     $this->assertDatabaseHas('events', [
@@ -38,6 +42,7 @@ test('an event needs a name', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('name');
 });
@@ -49,6 +54,7 @@ test('an event name needs to be at least 2 characters', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('name');
 });
@@ -60,6 +66,7 @@ test('an event name cannot be more than 255 characters', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('name');
 });
@@ -71,6 +78,7 @@ test('an event name cannot end with fire', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('name');
 });
@@ -82,6 +90,7 @@ test('an event name cannot contain emojis', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('name');
 });
@@ -93,6 +102,7 @@ test('an event needs a country', function () {
             'country' => '',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('country');
 });
@@ -104,6 +114,7 @@ test('an event needs a latitude', function () {
             'country' => 'United States',
             'latitude' => '',
             'longitude' => '123',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('latitude');
 });
@@ -115,6 +126,7 @@ test('an event needs a longitude', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '',
+            'event_type_id' => 1,
         ])
         ->assertSessionHasErrors('longitude');
 });
@@ -126,6 +138,7 @@ test('a users role is updated to host', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
         ]);
 
     $this->user->refresh();
@@ -145,6 +158,7 @@ test('it sends a verification email to an unverified user', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
         ]);
 
     \Illuminate\Support\Facades\Mail::assertQueued(SendEmailVerificationEmail::class);
@@ -162,6 +176,7 @@ test('it does not send a verification email to a verified user', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => 1,
         ]);
 
     \Illuminate\Support\Facades\Mail::assertNotQueued(SendEmailVerificationEmail::class);
@@ -174,6 +189,7 @@ it('approves an event', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
         ]);
 
     $this->assertDatabaseHas('events', [
@@ -192,6 +208,7 @@ it('redirects the user to the gift request page after success', function () {
             'country' => 'United States',
             'latitude' => '123',
             'longitude' => '123',
+            'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
         ]);
 
     $event = \App\Models\Event::first();

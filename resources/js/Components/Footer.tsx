@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {FireIcon, HandRaisedIcon, QuestionMarkCircleIcon, UserCircleIcon} from "@heroicons/react/24/outline";
 import FooterNavLink from "@/Components/FooterNavLink";
-import {usePage} from '@inertiajs/react';
+import {Link, usePage} from '@inertiajs/react';
 import UserAvatar from "@/Components/UserAvatar";
 import SupportModal from "@/Components/SupportModal";
 
@@ -12,7 +12,7 @@ const Header = () => {
     const {auth} = usePage<any>().props;
     const [open, setOpen] = useState(false)
     return (
-        <footer className="p-4 bg-black text-white lg:hidden">
+        <footer className="bg-black p-4 text-white lg:hidden">
 
             <nav className={'flex items-center space-x-6 justify-center'}>
                 <FooterNavLink
@@ -23,14 +23,14 @@ const Header = () => {
                     <span>Fires</span>
                 </FooterNavLink>
 
-                <a href={route('host')}
+                <Link href={route('host')}
                    className={linkClass}>
                     <HandRaisedIcon className={defaultIconSize}/>
                     <span>Host</span>
-                </a>
+                </Link>
                 <>
                     {auth.user ? (
-                        <a href={route('my.profile')} className={linkClass}>
+                        <Link href={route('my.profile')} className={linkClass}>
                             {auth.user.image ? (
                                 <UserAvatar image={auth.user.image}
                                             width={64}/>
@@ -38,7 +38,7 @@ const Header = () => {
                                 <UserCircleIcon className={defaultIconSize}/>
                             )}
                             <span>My Profile</span>
-                        </a>
+                        </Link>
                     ) : <a href={route('login')} className={linkClass}>
                         <UserCircleIcon className={defaultIconSize}/>
                         <span>Login</span>

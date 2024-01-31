@@ -23,12 +23,12 @@ const MyEvents = () => {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-center text-2xl clear-both">
+                    <p className="clear-both text-center text-2xl">
                         You have no Fires currently
                     </p>
                 )}
 
-                <div className="flex items-center justify-center mt-6">
+                <div className="mt-6 flex items-center justify-center">
                     <Link href={route('host')}
                           className={`${primaryButtonClasses}`}>
                         Start a New Fire

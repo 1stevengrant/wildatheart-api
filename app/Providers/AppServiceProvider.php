@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\Event;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,10 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::preventLazyLoading(! app()->isProduction());
-
         Event::saving(function (Event $event): void {
-            $event->load('host');
+            $event->load('host', 'eventType');
         });
     }
 }

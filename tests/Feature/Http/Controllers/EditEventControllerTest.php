@@ -5,7 +5,8 @@ use Inertia\Testing\AssertableInertia as Assert;
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->event = \App\Models\Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->event = \App\Models\Event::factory()->fires()->create();
 });
 it('loads the edit event page for an authenticated user that owns the event', function () {
     $this->actingAs($this->event->host)

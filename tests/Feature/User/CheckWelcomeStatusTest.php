@@ -3,11 +3,14 @@
 use App\Actions\Event\CheckWelcomeStatus;
 use App\Mail\Event\SendWelcomeEmail;
 use App\Models\Event;
+use Database\Seeders\EventTypeSeeder;
 
 it('sends the welcome email', function () {
     Mail::fake();
 
-    $event = Event::factory()->create([
+    $this->seed(EventTypeSeeder::class);
+
+    $event = Event::factory()->fires()->create([
         'welcome_sent' => false,
     ]);
 

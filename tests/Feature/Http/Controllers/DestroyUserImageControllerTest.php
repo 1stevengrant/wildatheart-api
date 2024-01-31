@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Storage;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->event = Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->event = Event::factory()->fires()->create();
 });
 
 it('deletes a users profile photo', function () {

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Builders\EventBuilder;
 use App\Enums\EventFrequency;
+use App\Transformers\EventInertiaTransformer;
+use App\Transformers\Search\EventSearchTransformer;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -21,17 +23,22 @@ class Event extends Model
 
     protected $guarded = ['id'];
 
+    protected $with = ['eventType'];
+
     protected $casts = [
         'approved_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
         'frequency' => EventFrequency::class,
+        'legacy_drupal_location' => 'array',
     ];
 
     protected $appends = ['url'];
 
-    const STATUS_APPROVED = 'approved';
+    const FOR_MEN = 'm';
 
-    const STATUS_PENDING = 'pending';
+    const FOR_WOMEN = 'f';
 
     const DEFAULT_COUNTRY = 'us';
 
@@ -190,22 +197,9 @@ class Event extends Model
 
     public function toSearchableArray(): array
     {
-        return [
-            'objectID' => $this->id,
-            'id' => $this->id,
-            'city' => $this->city,
-            'state' => $this->state,
-            'country' => $this->country,
-            'name' => $this->name,
-            'host' => $this->hostName,
-            'location' => $this->location,
-            'hostPhoto' => $this->hostAvatar(),
-            'url' => $this->url,
-            '_geoloc' => [
-                'lat' => floatval($this->latitude),
-                'lng' => floatval($this->longitude),
-            ],
-        ];
+        return $this->transform($this->toArray(), [
+            EventSearchTransformer::class,
+        ]);
     }
 
     public function getScoutKey(): mixed
@@ -220,27 +214,27 @@ class Event extends Model
 
     public function inertiaFilter(): array
     {
-        return [
-            'host' => $this->host_name,
-            'hostFriendlyName' => $this->host->given_name,
-            'location' => $this->location,
-            'name' => $this->name,
-            'city' => $this->city,
-            'state' => $this->state,
-            'country' => $this->country,
-            'hostPhoto' => $this->hostAvatar(),
-            'url' => $this->url,
-            'id' => $this->id,
-            'hostId' => $this->host->id,
-            'latitude' => floatval($this->latitude),
-            'longitude' => floatval($this->longitude),
-            'gift_requested' => $this->hasRequestedGift(),
-            'approved_at' => $this->approved_at,
-        ];
+        return $this->transform($this->toArray(), [
+            EventInertiaTransformer::class,
+        ]);
     }
 
     public function shouldBeSearchable(): bool
     {
-        return (bool) $this->approved_at;
+        if ($this->eventType->name === EventType::FIRES) {
+            return (bool) $this->approved_at;
+        }
+
+        // all other event types
+        if ($this->approved_at !== null && ($this->start_date !== null && $this->start_date->isFuture())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function eventType(): BelongsTo
+    {
+        return $this->belongsTo(EventType::class);
     }
 }

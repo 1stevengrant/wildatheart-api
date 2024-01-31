@@ -7,7 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->event = \App\Models\Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->event = \App\Models\Event::factory()->fires()->create();
 
     $this->addressData = [
         'country' => 'US',

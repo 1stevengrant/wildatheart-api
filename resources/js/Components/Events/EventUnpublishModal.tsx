@@ -35,7 +35,7 @@ const EventUnpublishModal = ({open, setOpen, event}: EventUnpublishModalProps) =
                     onClick={() => setOpen(true)}>
                 <EyeSlashIcon className="h-6 w-6" />
                 <span className="hidden md:inline">
-                    Unpublish Fire
+                    Unpublish Event
                 </span>
             </button>
             <Modal open={open} setOpen={setOpen}>
@@ -45,7 +45,7 @@ const EventUnpublishModal = ({open, setOpen, event}: EventUnpublishModalProps) =
                     </button>
                 </div>
                 <ModalHeading>Unpublish {event.name}?</ModalHeading>
-                <p>Are you sure you want to unpublish this Fire and make it invisible to the public?</p>
+                <p>Are you sure you want to unpublish this Event and make it invisible to the public?</p>
                 <ModalActions>
                     <SecondaryButton onClick={() => setOpen(false)}>Cancel</SecondaryButton>
                     <PrimaryButton onClick={unpublishEvent}>

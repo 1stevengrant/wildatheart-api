@@ -10,7 +10,8 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Mail::fake();
-    $this->event = Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->event = Event::factory()->fires()->create();
     $this->attributes = [
         'family_name' => 'Doe',
         'given_name' => 'John',

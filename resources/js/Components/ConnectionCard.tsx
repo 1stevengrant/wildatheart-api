@@ -13,8 +13,8 @@ const ConnectionCard = ({connection}: ConnectionCardProps) => {
 
     return (
         <li
-            className="col-span-1 divide-y divide-grey-darker rounded-lg border border-grey-darker shadow-lg">
-            <div className="flex w-full items-center justify-between space-x-6 p-6">
+            className="col-span-1 rounded-lg border shadow-lg divide-y divide-grey-darker border-grey-darker">
+            <div className="flex w-full items-center justify-between p-6 space-x-6">
                 <div className="flex-1 truncate">
                     <div className="flex items-center space-x-3">
                         <h3 className="truncate text-sm font-medium text-grey-200">
@@ -28,12 +28,12 @@ const ConnectionCard = ({connection}: ConnectionCardProps) => {
             </div>
             <div>
                 <div
-                    className="-mt-px flex flex-col divide-x divide-y divide-grey-darker md:flex-row md:divide-y-0"
+                    className="-mt-px flex flex-col divide-x divide-y divide-grey-darker md:divide-y-0 md:flex-row"
                 >
                     <div className="flex flex-1 md:w-0">
                         <a
                             href={`mailto:${connection.email}`}
-                            className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent px-3 py-4 text-sm font-semibold text-grey-200 transition-all duration-150 ease-in-out hover:text-orange"
+                            className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent px-3 py-4 text-sm font-semibold transition-all duration-150 ease-in-out text-grey-200 hover:text-orange"
                         >
 
                             <span className="overflow-hidden text-ellipsis">
@@ -46,7 +46,7 @@ const ConnectionCard = ({connection}: ConnectionCardProps) => {
                         <div className="-ml-px flex flex-1 md:w-0">
                             <a
                                 href={`tel:${connection.phone}`}
-                                className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-grey-200 transition-all duration-150 ease-in-out hover:text-orange"
+                                className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold transition-all duration-150 ease-in-out text-grey-200 hover:text-orange"
                             >
                                 <PhoneIcon className={defaultIconSize}/>
                                 {connection.phone}
@@ -62,7 +62,7 @@ const ConnectionCard = ({connection}: ConnectionCardProps) => {
                                     preserveScroll: true,
                                 });
                             }}
-                            className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-grey-200 transition-all duration-150 ease-in-out hover:text-orange"
+                            className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold transition-all duration-150 ease-in-out text-grey-200 hover:text-orange"
                         >
                             {
                                 connection.contacted_on ? (

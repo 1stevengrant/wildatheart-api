@@ -7,8 +7,9 @@ use Illuminate\Support\Carbon;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->approvedEvent = \App\Models\Event::factory()->approved()->create();
-    $this->notApprovedEvent = \App\Models\Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->approvedEvent = \App\Models\Event::factory()->approved()->fires()->create();
+    $this->notApprovedEvent = \App\Models\Event::factory()->fires()->create();
 });
 
 it('changes the approved at timestamp for an event to be null', function () {
@@ -40,6 +41,7 @@ test('a user cannot see an event that is unpublished', function () {
 });
 
 test('only the host can see their unpublished event', function () {
+    $this->withoutExceptionHandling();
     $this->actingAs($this->notApprovedEvent->host)
         ->get(route('view.event', ['event' => $this->notApprovedEvent]))
         ->assertStatus(200);

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use AlexAzartsev\Heroicon\Heroicon;
+use App\Models\User;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Nova;
@@ -19,6 +21,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::footer(static fn ($request): string => Blade::render(''));
 
         Nova::withBreadcrumbs();
+
+        Heroicon::defaultIconSets(['solid', 'outline']);
     }
 
     /**
@@ -42,7 +46,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewNova', function ($user) {
-            if ($user->hasRole('admin')) {
+            if ($user->hasRole(User::ROLE_ADMIN)) {
                 return true;
             }
 

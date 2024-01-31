@@ -6,7 +6,7 @@ type HostedByProps = {
 
 const HostedBy: React.FC<HostedByProps> = ({ host }) => {
     return (
-        <div className="text-grey-200 text-xs leading-tighter">
+        <div>
             Hosted by {host}
         </div>
     );

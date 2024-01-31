@@ -2,7 +2,7 @@
 
 source './.env'
 
-file=dbdumps/prod-$(date +"%Y%m%d%H%M").sql
+file=dbdumps/dev-$(date +"%Y%m%d%H%M").sql
 mysqldump \
   --host ${DEV_DB_HOST} \
   --port ${DEV_DB_PORT} \

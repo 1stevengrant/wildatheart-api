@@ -1,4 +1,5 @@
 export type Event = {
+    eventTypeImage: string;
     approved_at: string;
     approved_by?: string;
     city: string;
@@ -9,6 +10,8 @@ export type Event = {
     frequency: string;
     gift_requested: boolean;
     id: string;
+    eventType: string;
+    eventTypeData: any;
     host: string;
     hostId: number;
     is_existing: boolean;
@@ -30,4 +33,7 @@ export type Event = {
     welcome_sent: boolean;
     zip?: string;
     hostPhoto?: string;
+    startDate?: string;
+    endDate?: string;
+    sex?: string;
 }

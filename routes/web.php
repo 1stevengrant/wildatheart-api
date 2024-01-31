@@ -76,3 +76,33 @@ Route::post('connect/{event}', [ConnectWithHostController::class, 'store'])->nam
 
 Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.login');
 Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');
+
+// for manual purposes only
+Route::get('drupal-events', function () {
+    return collect(Http::get('https://wildatheart.org/json/allies')->json());
+});
+
+Route::get('drupal-events/past', function () {
+    $drupalEvents = collect(Http::get('https://wildatheart.org/json/allies')->json());
+
+    return $drupalEvents->filter(function ($experience) {
+        return $experience['start_date'] < now()->format('Y-m-d');
+    });
+});
+
+Route::get('drupal-events/upcoming', function () {
+    $drupalEvents = collect(Http::get('https://wildatheart.org/json/allies')->json());
+
+    return $drupalEvents->filter(function ($experience) {
+        return $experience['start_date'] > now()->format('Y-m-d');
+    });
+});
+
+Route::get('drupal-events/null', function () {
+    $drupalEvents = collect(Http::get('https://wildatheart.org/json/allies')->json());
+
+    return $drupalEvents->filter(function ($experience) {
+        return $experience['first_name'] === null || $experience['last_name'] === null;
+    });
+
+});

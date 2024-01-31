@@ -1,0 +1,3 @@
+export const whiteButtonClasses = `px-2 py-1 md:px-4 md:py-2  text-sm md:text-base border-2
+        border-transparent rounded-md bg-white hover:bg-black text-black hover:text-white hover:border-white text-center font-medium transition
+        ease-in-out duration-150 disabled:bg-grey-dark disabled:text-grey-white disabled:cursor-not-allowed focus:ring-0`

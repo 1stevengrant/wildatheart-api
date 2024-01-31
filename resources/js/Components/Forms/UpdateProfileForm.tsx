@@ -153,7 +153,7 @@ const UpdateProfileForm = ({
                     {photoPreview ? (
                             <div className="mt-2 inline-flex justify-center space-x-4">
                                 <div
-                                    className="block rounded-full w-[134px] h-[134px] bg-cover bg-center bg-no-repeat"
+                                    className="block rounded-full bg-cover bg-center bg-no-repeat w-[134px] h-[134px]"
                                     style={{backgroundImage: `url('${photoPreview}')`}}
                                 />
                                 <div className={`flex flex-col justify-center`}>
@@ -205,7 +205,7 @@ const UpdateProfileForm = ({
                         htmlFor="emailUpdates"
                         value="Updates & Resources"/>
                     <div
-                        className="flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+                        className="flex flex-col space-y-4 md:space-x-4 md:space-y-0 md:flex-row md:items-center">
                         <div className="flex items-center rounded-full bg-form">
                             <button type={'button'}
                                     onClick={() => form.setData('opted_into_marketing', true)}
@@ -231,7 +231,7 @@ const UpdateProfileForm = ({
                     {buttonText ?? 'Save'}
                 </PrimaryButton>
                 <Link href={route('home')}
-                      className="py-3 text-sm text-grey-200 text-center block">
+                      className="block py-3 text-center text-sm text-grey-200">
                     Cancel
                 </Link>
             </div>

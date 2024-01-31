@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\CheckIfUserShouldBeAdmin;
 use App\Models\User;
 use Auth0\SDK\Auth0 as Auth0SDK;
 use Auth0\SDK\Exception\StateException;
@@ -29,6 +30,8 @@ class CallbackController extends Controller
             $user = $this->findOrCreateUser($auth0User);
 
             auth()->login($user);
+
+            CheckIfUserShouldBeAdmin::dispatch($user);
 
             $this->logActivity('CallbackController', ['auth0User' => $auth0User, 'user' => $user]);
 

@@ -4,61 +4,26 @@ import StaticMap from "@/Components/Maps/StaticMap";
 import {usePage} from "@inertiajs/react";
 import {Event} from "@/types/Event";
 import BackToEvents from "@/Components/Buttons/BackToEvents";
-import PhotoCarouselMobile from "@/Components/Events/PhotoCarouselMobile";
-import PhotoCarousel from "@/Components/Events/PhotoCarousel";
-import {
-    BookOpenIcon,
-    CalendarDaysIcon,
-    MegaphoneIcon,
-    ShieldCheckIcon,
-    SparklesIcon, UserCircleIcon
-} from "@heroicons/react/24/outline";
-import PoopIcon from "@/Components/Icons/Poop";
-import Guideline from "@/Components/Events/Guideline";
-import MetaItem from "@/Components/Events/MetaItem";
 import ShareEvent from "@/Components/Events/ShareEvent";
 import ConnectWithHost from "@/Components/Events/ConnectWithHost";
 import UpdateAddress from "@/Components/Events/UpdateAddress";
 import MobileConnect from "@/Components/Events/MobileConnect";
 import {PageProps} from "@/types";
-import UserAvatar from "@/Components/UserAvatar";
-
-const iconSize = 'w-6 h-6 flex-shrink-0';
-const metaItems = [
-    {
-        icon: <SparklesIcon className={iconSize}/>,
-        title: 'Outdoor Event',
-        description: 'This event is slated to be an outdoor event. Please dress accordingly.'
-    },
-    {
-        icon: <CalendarDaysIcon className={iconSize}/>,
-        title: 'Frequency',
-        description: 'The vision of Fires is that they’re monthly gatherings. However, each Host is free to schedule his Fire as best suits the local context.'
-    }
-]
-
-const guidelines = [
-    {
-        icon: <MegaphoneIcon className={iconSize}/>,
-        title: '1. Fires aren’t religious',
-        description: 'Leave your religious and professional credentials behind.'
-    },
-    {
-        icon: <BookOpenIcon className={iconSize}/>,
-        title: '2. Your Story Matters',
-        description: 'Fires are not a place for teaching or a podium for experts.'
-    },
-    {
-        icon: <PoopIcon className={iconSize}/>,
-        title: '3. No bullshit allowed',
-        description: 'Fires are a place for authentic masculinity. No posing.'
-    },
-    {
-        icon: <ShieldCheckIcon className={iconSize}/>,
-        title: '4. Confidentiality is essential',
-        description: 'What is shared at the Fire, stays at the Fire.'
-    }
-]
+import Host from "@/Components/Events/Detail/Host";
+import Title from "@/Components/Events/Detail/Title";
+import Location from "@/Components/Events/Detail/Location";
+import Date from "@/Components/Events/Detail/Dates";
+import VideoPlayer from "@/Components/Events/Detail/VideoPlayer";
+import HeadingOne from "@/Components/Type/HeadingOne";
+import Markdown from "react-markdown";
+import PhotoCarousel from "@/Components/Events/PhotoCarousel";
+import {
+    EventTypeBecomingAKingExperience,
+    EventTypeBecomingAKingRetreat,
+    EventTypeCaptivatingCoreRetreat, EventTypeCaptivatingExperience,
+    EventTypeFires,
+    EventTypeWahBasicRetreat, EventTypeWahExperience
+} from "@/helpers/eventNames";
 
 const ViewEvent = () => {
     const page = usePage();
@@ -79,74 +44,129 @@ const ViewEvent = () => {
         }
     })
 
+    const eventTitle = (event: Event) => {
+
+        switch (event.eventType) {
+            case EventTypeFires:
+                return `${event.name} Fire`;
+            case EventTypeWahBasicRetreat:
+                return `Wild at Heart BASIC Retreat`;
+            case EventTypeCaptivatingCoreRetreat:
+                return `Captivating CORE Retreat`;
+            case EventTypeBecomingAKingRetreat:
+                return `Becoming a King Retreat`;
+            case EventTypeWahExperience:
+                return `Wild at Heart Experience`;
+            case EventTypeCaptivatingExperience:
+                return `Captivating Experience`;
+            case EventTypeBecomingAKingExperience:
+                return `Becoming a King Experience`;
+            default:
+                return `${event.name} hosted by ${event.host} in ${event.location}`;
+        }
+    }
+
+    const eventImages = (event: Event) => {
+        switch (event.eventType) {
+            case EventTypeFires:
+                return ['/img/fires/Image2.webp', '/img/fires/Image3.webp', '/img/fires/Image.webp', '/img/fires/Image4.webp'];
+            default:
+                return [];
+
+        }
+    }
+
+    const eventDate = (event: Event) => {
+        switch (event.eventType) {
+            case EventTypeFires:
+                return '';
+            case EventTypeCaptivatingExperience
+            || EventTypeWahExperience
+            || EventTypeBecomingAKingExperience:
+                return `Starts on ${event.startDate}`;
+            default:
+                return `${event.startDate} - ${event.endDate}`;
+        }
+    }
+
+
     return (
         <AppLayout title={`${event.name} hosted by ${event.host} in ${event.location}`}
                    showFooter={false}>
             <div className={'relative'}>
-                <StaticMap lng={event.longitude} lat={event.latitude}/>
+                <StaticMap lng={event.longitude} lat={event.latitude} event={event}/>
                 <BackToEvents/>
             </div>
             <div className="rounded-t-2xl border-t p-6 text-white border-grey-darker" id={'event'}>
                 <div className="container mx-auto">
                     <div className="md:space-x-8 md:flex">
                         <div className="md:w-2/3">
+
                             <div className="flex items-center space-x-4">
                                 <h1 className="mb-1 flex items-center text-3xl leading-tighter">
-                                    {event.name} Fire
+                                    {eventTitle(event)}
                                     {!event.approved_at && (
-                                        <span className="ml-2 rounded px-2 py-1 text-sm font-semibold uppercase text-white bg-orange">
+                                        <span
+                                            className="ml-2 rounded px-2 py-1 text-sm font-semibold uppercase text-white bg-orange">
                                             Unpublished
                                         </span>
                                     )}
                                 </h1>
                             </div>
 
-                            <h2 className="mb-8 text-xl leading-tighter">
-                                {event.location}
-                            </h2>
-
-                            <div className="mt-10 flex items-start space-x-4">
-                                {event.hostPhoto ? (
-                                    <UserAvatar
-                                        image={event.hostPhoto}
-                                        width={400}
-                                        className={`w-20 h-20`}/>) : (
-                                    <UserCircleIcon className={'w-20 h-20'}/>
+                            <div className="md:flex md:items-start md:space-x-4 space-y-4 md:space-y-0 mt-4">
+                                <Location location={event.location}/>
+                                {eventDate(event) && (
+                                    <Date date={eventDate(event)}/>
                                 )}
 
+                            </div>
+
+                            {event.eventTypeData.hero_video && (
+                                <VideoPlayer src={event.eventTypeData.hero_video}
+                                             className={`mt-[48px]`}/>
+                            )}
+
+                            {event.eventTypeData.key_details && event.eventTypeData.key_details.length > 0 && (
                                 <div>
-                                    <p className="text-sm">Your Host ·</p>
-                                    <p className="text-2xl font-medium">{event.host}</p>
+                                    <HeadingOne className={`mt-[48px]`}>Key Details</HeadingOne>
+                                    <ul className={`my-8`}>
+                                        {event.eventTypeData.key_details.map((item: any, index: number) => (
+                                            <li className="flex items-start mb-4" key={index}>
+                                                <div dangerouslySetInnerHTML={{__html: item.fields.icon}}
+                                                     className={`w-6 h-6`}/>
+                                                <div className="ml-[24px] leading-[24px]">
+                                                    <p className="font-medium">{item.fields.headline}</p>
+                                                    <p className="text-sm text-[#B8B8B8]">
+                                                        {item.fields.description}
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
+                            )
+                            }
+
+                            <div
+                                className={`mt-4 prose prose-p:text-white prose-a:text-orange max-w-none prose-hr:bg-black prose-h2:text-white prose-h3:text-white  prose-li:text-white`}>
+                                <Markdown>
+                                    {event.eventTypeData.description}
+                                </Markdown>
                             </div>
 
-                            <div className="border-t border-b py-8 mt-[25px] space-y-4 border-grey-darker">
-                                {metaItems.map((metaItem, index) => (
-                                    <MetaItem key={index} icon={metaItem.icon} title={metaItem.title}
-                                              description={metaItem.description}/>
-                                ))}
-                            </div>
+                            {eventImages(event).length > 0 && (
+                                <PhotoCarousel
+                                    className={`mt-8`}
+                                    images={eventImages(event)}/>
+                            )}
 
-                            <div className="mt-8 pb-12 space-y-4 md:pb-0">
-                                <p className="font-semibold">Guidelines for Fire participants:</p>
-
-                                <div className="pt-6 space-y-6">
-                                    {guidelines.map((guideline, index) => (
-                                        <Guideline key={index}
-                                                   icon={guideline.icon}
-                                                   title={guideline.title}
-                                                   description={guideline.description}/>
-                                    ))}
-                                </div>
-                            </div>
-                            <PhotoCarousel/>
-                            <PhotoCarouselMobile/>
                         </div>
 
-                        <div className="hidden md:block md:w-1/3">
-                            <ShareEvent/>
+                        <div className="hidden md:block md:w-1/3 relative">
+                            <Host host={event.host} hostPhoto={event.hostPhoto}/>
 
-                            <ConnectWithHost className={'mt-6'}/>
+                            <ConnectWithHost className={'mt-6 sticky top-4'}/>
 
                             {(!event.gift_requested && auth.user && auth.user.id === event.hostId) && (
                                 <UpdateAddress/>

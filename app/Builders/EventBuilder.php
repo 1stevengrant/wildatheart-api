@@ -21,4 +21,16 @@ class EventBuilder extends Builder
     {
         return $this->where('approved_at', '!=', null);
     }
+
+    public function inThePast(): EventBuilder
+    {
+        return $this->where('approved_at', '!=', null)
+            ->where('end_date', '<', now());
+    }
+
+    public function upcoming(): EventBuilder
+    {
+        return $this->where('approved_at', '!=', null)
+            ->where('start_date', '>=', now());
+    }
 }

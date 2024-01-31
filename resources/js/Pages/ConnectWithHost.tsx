@@ -168,7 +168,7 @@ const ConnectWithHost = () => {
                                         htmlFor="emailUpdates"
                                         value="Updates & Resources"/>
                                     <div
-                                        className="flex flex-col space-y-4 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+                                        className="flex flex-col space-y-4 md:space-x-4 md:space-y-0 md:flex-row md:items-center">
                                         <div className="flex items-center rounded-full bg-form">
                                             <button type={'button'}
                                                     onClick={() => form.setData('opted_into_marketing', true)}

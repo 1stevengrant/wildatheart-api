@@ -5,6 +5,7 @@ import {Link, usePage} from "@inertiajs/react";
 import primaryButtonClasses from "@/helpers/primaryButtonClasses";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import {Event} from "@/types/Event";
+import {whiteButtonClasses} from "@/helpers/whiteButtonClasses";
 
 const MobileConnect = () => {
     const page = usePage();
@@ -27,7 +28,7 @@ const MobileConnect = () => {
     return (
         <div
             id="mobile-connect-with-host"
-            className="fixed bottom-0 left-0 right-0 border-t border-grey-darker bg-black px-4 py-6 md:hidden"
+            className="fixed right-0 bottom-0 left-0 border-t bg-black px-4 py-6 border-grey-darker md:hidden"
         >
             <div className="flex items-center space-x-6">
                 <button onClick={shareEvent}
@@ -42,7 +43,7 @@ const MobileConnect = () => {
 
                 ) : (
                     <Link href={route('connect.index', event)}
-                          className={`${primaryButtonClasses} w-full`}>
+                          className={`${whiteButtonClasses} w-full`}>
                         Connect with {event.host}
                     </Link>
                 )}

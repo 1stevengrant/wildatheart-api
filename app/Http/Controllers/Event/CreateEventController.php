@@ -22,6 +22,7 @@ class CreateEventController extends Controller
         $request->validated();
 
         $event = auth()->user()->events()->create([
+            'event_type_id' => request('event_type_id'),
             'name' => request('name'),
             'street_address' => request('street_address'),
             'state' => request('state'),

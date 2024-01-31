@@ -37,6 +37,7 @@ class MyEventsController extends Controller
                 'host' => $event->host->full_name,
                 'approved_at' => $event->approved_at,
                 'url' => $event->url,
+                'eventType' => $event->eventType ? $event->eventType->name : null,
             ]);
 
         return inertia('Profile/MyEvents', [

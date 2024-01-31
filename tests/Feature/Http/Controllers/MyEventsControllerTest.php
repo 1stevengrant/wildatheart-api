@@ -6,7 +6,8 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
 beforeEach(function () {
-    $this->event = Event::factory()->create();
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->event = Event::factory()->fires()->create();
 });
 
 test('it shows a list of events belonging to the authenticated user', function () {

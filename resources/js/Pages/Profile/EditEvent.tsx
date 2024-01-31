@@ -175,7 +175,7 @@ const EditEvent = () => {
                     <FireNamingGuidelines/>
 
                     <MapboxSearch className={'mt-4'}/>
-                    <div className="w-full h-[300px] md:h-[600px] mt-4">
+                    <div className="mt-4 w-full h-[300px] md:h-[600px]">
                         <Map mapLib={mapboxgl}
                              ref={mapRef}
                              dragRotate={false}

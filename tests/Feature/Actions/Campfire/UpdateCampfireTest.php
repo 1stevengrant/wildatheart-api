@@ -6,8 +6,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+});
+
 it('updates an event with given data', function () {
-    $event = Event::factory()->create();
+    $event = Event::factory()->fires()->create();
 
     $newData = ['name' => 'Steven'];
 

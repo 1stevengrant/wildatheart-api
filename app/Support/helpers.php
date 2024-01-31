@@ -342,3 +342,12 @@ if (! function_exists('getCountryCode')) {
         return \Squire\Models\Country::where('name', 'like', $countryName)->firstOrFail()->code_2;
     }
 }
+
+if (! function_exists('novaThumbnail')) {
+    function novaThumbnail($value): string
+    {
+        return bunnyImage($value, [
+            'width' => 50,
+        ]);
+    }
+}

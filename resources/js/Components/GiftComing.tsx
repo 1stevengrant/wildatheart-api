@@ -18,7 +18,7 @@ const GiftComing = () => {
             <div className={`mt-8`}>
                 <Link
                     href={route('view.event', event)}
-                    className="rounded-md border border-transparent bg-orange px-4 py-2 text-center font-medium text-white transition duration-150 ease-in-out hover:bg-transparent-orange disabled:cursor-not-allowed disabled:bg-grey-200 disabled:text-grey-darker"
+                    className="rounded-md border border-transparent px-4 py-2 text-center font-medium text-white transition duration-150 ease-in-out bg-orange hover:bg-transparent-orange disabled:bg-grey-200 disabled:text-grey-darker disabled:cursor-not-allowed"
                 >
                     Visit Your Fire Listing
                 </Link>

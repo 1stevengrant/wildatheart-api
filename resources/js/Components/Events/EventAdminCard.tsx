@@ -8,6 +8,12 @@ import EventDeleteModal from "@/Components/Events/EventDeleteModal";
 import EventUnpublishModal from "@/Components/Events/EventUnpublishModal";
 import EventPublishModal from "@/Components/Events/EventPublishModal";
 
+import {
+    EventTypeFires
+} from "@/helpers/eventNames";
+import {Link} from "@inertiajs/react";
+import {userPhoto} from "@/helpers/user";
+
 interface EventAdminCardProps {
     event: Event
 }
@@ -38,20 +44,19 @@ const EventAdminCard = ({event}: EventAdminCardProps) => {
     const [openEventPublishModal, setOpenEventPublishModal] = useState(false)
     return (
         <div>
-            <a href={event.url} className="relative z-40">
-                {event.approved_at ? (
-                    <div className={`absolute right-6 px-4 rounded-full -top-3 uppercase py-1 text-sm font-semibold text-white bg-orange`}>published</div>
-                ) : (
-                    <div className={`absolute right-6 px-4 rounded-full bg-grey text-white -top-3 uppercase py-1 text-sm font-semibold`}>unpublished</div>
-                ) }
-                <div className="rounded-md border border-grey-darker bg-black p-2 shadow-lg md:p-4">
+            <Link href={event.url} className="relative z-40">
+                <div className="rounded-md border bg-black p-2 shadow-lg border-grey-darker md:p-4">
                     <div className="flex items-stretch space-x-4">
-                        <img src="/img/wah-fires-suburb-1.webp"
-                             className="rounded-md"
+                        <img src={userPhoto(event?.eventTypeImage, {
+                            height: 100,
+                            width: 100,
+                        })}
                              alt=""/>
                         <div className="relative flex flex-col justify-between">
                             <div>
-                                <p className="text-white">{event.name} Fire</p>
+                                <p className="text-white">
+                                    {event.name} {event.eventType === EventTypeFires && (<span>Fire</span>)}
+                                </p>
 
                                 <p className="text-sm text-white">{event.location}</p>
                             </div>
@@ -66,9 +71,9 @@ const EventAdminCard = ({event}: EventAdminCardProps) => {
                         </div>
                     </div>
                 </div>
-            </a>
+            </Link>
             <div
-                className="relative -mt-2 flex justify-end space-x-4 rounded-lg bg-white/10 p-6 text-sm">
+                className="relative -mt-2 flex justify-end rounded-lg bg-white/10 p-6 text-sm space-x-4">
                 {event.approved_at ? (
                     <EventUnpublishModal
                         open={openEventUnpublishModal}
@@ -85,14 +90,14 @@ const EventAdminCard = ({event}: EventAdminCardProps) => {
                     open={openEventDeleteModal}
                     setOpen={setOpenEventDeleteModal}
                     event={event}/>
-                <a href={route('my.events.edit', event)}
-                   className="flex items-center space-x-2 hover:text-orange">
+                <Link href={route('my.events.edit', event)}
+                      className="flex items-center space-x-2 hover:text-orange">
                     <PencilIcon className={defaultIconSize}/>
 
                     <span className="hidden md:inline">
-                        Edit Fire
+                        Edit Event
                     </span>
-                </a>
+                </Link>
                 <button className="flex items-center space-x-2 hover:text-orange"
                         onClick={copyToClipboard}
                 >

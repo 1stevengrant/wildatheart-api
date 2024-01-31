@@ -6,9 +6,13 @@ use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
+beforeEach(function () {
+    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+});
 it('sends a verification email', function () {
     \Illuminate\Support\Facades\Mail::fake();
-    $event = Event::factory()->create();
+    $event = Event::factory()->fires()->create();
+
     $this->actingAs($event->host);
 
     SendVerificationEmail::run($event);

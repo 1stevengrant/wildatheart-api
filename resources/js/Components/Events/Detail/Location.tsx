@@ -1,0 +1,26 @@
+import React, {FC} from "react";
+import UserAvatar from "@/Components/UserAvatar";
+import {MapPinIcon, UserCircleIcon} from "@heroicons/react/24/outline";
+
+interface LocationProps {
+    location: String;
+    children?: React.ReactNode;
+    className?: string;
+}
+
+const Location: FC<LocationProps> = ({
+                                         location,
+                                         children,
+                                         className
+                                     }) => {
+    return (
+        <div className={`flex items-center space-x-1 ${className}`}>
+            <MapPinIcon className={`w-6 h-6`}/>
+            <h2 className="leading-tighter">
+                {location} {children}
+            </h2>
+        </div>
+    )
+}
+
+export default Location;

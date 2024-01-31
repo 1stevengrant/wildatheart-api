@@ -8,8 +8,9 @@ import {searchClient, indexName} from "@/lib/algoliaClient";
 import MapComponent from "@/Components/Maps/MapComponent";
 import {currentEventAtom} from "@/store";
 import {useRecoilState} from "recoil";
-import EventPopupMobile from "@/Components/Events/EventPopupMobile";
+import EventCardMobile from "@/Components/Events/EventCardMobile";
 import {useSwipeable} from "react-swipeable";
+import OutsideClickHandler from "react-outside-click-handler";
 
 const Home = () => {
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventAtom)
@@ -31,15 +32,17 @@ const Home = () => {
                 indexName={indexName}>
                 <Configure
                     analytics={true}
-                    hitsPerPage={1000}
+                    hitsPerPage={2000}
                 />
                 <MapComponent/>
             </InstantSearch>
             <>
                 {currentEvent && (
-                    <div {...swipeHandlers}>
-                        <EventPopupMobile className={'fixed bottom-4 right-4 left-4 md:hidden z-[1001]'}/>
-                    </div>
+                    <OutsideClickHandler onOutsideClick={() => setCurrentEvent(undefined)}>
+                        <div {...swipeHandlers}>
+                            <EventCardMobile className={'fixed bottom-4 right-4 left-4 md:hidden z-[1001]'}/>
+                        </div>
+                    </OutsideClickHandler>
                 )}
             </>
         </AppLayout>
