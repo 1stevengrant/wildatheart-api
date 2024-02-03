@@ -8,6 +8,7 @@ use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
+use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,7 +23,7 @@ class CreateEventController extends Controller
         $request->validated();
 
         $event = auth()->user()->events()->create([
-            'event_type_id' => request('event_type_id'),
+            'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
             'name' => request('name'),
             'street_address' => request('street_address'),
             'state' => request('state'),
