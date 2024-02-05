@@ -23,11 +23,19 @@ const Header = () => {
                     <span>Fires</span>
                 </FooterNavLink>
 
-                <Link href={route('host')}
-                   className={linkClass}>
-                    <HandRaisedIcon className={defaultIconSize}/>
-                    <span>Host</span>
-                </Link>
+                {auth.user ? (
+                    <Link href={route('host')}
+                          className={linkClass}>
+                        <HandRaisedIcon className={'w-6'}/>
+                        <span>Host</span>
+                    </Link>
+                ) : (
+                    <a href={route('login')}
+                       className={linkClass}>
+                        <HandRaisedIcon className={'w-6'}/>
+                        <span>Host</span>
+                    </a>
+                )}
                 <>
                     {auth.user ? (
                         <Link href={route('my.profile')} className={linkClass}>
