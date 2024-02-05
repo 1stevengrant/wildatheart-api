@@ -214,3 +214,19 @@ it('redirects the user to the gift request page after success', function () {
     $event = \App\Models\Event::first();
     $response->assertRedirect(route('gift', $event));
 });
+
+test('an event has an event type', function () {
+    $this->actingAs($this->user)
+        ->post(route('host.store'), [
+            'name' => 'The',
+            'country' => 'United States',
+            'latitude' => '123',
+            'longitude' => '123',
+            'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
+        ]);
+
+    $this->assertDatabaseHas('events', [
+        'name' => 'The',
+        'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
+    ]);
+});
