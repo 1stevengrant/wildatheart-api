@@ -4,13 +4,11 @@ import StaticMap from "@/Components/Maps/StaticMap";
 import {usePage} from "@inertiajs/react";
 import {Event} from "@/types/Event";
 import BackToEvents from "@/Components/Buttons/BackToEvents";
-import ShareEvent from "@/Components/Events/ShareEvent";
 import ConnectWithHost from "@/Components/Events/ConnectWithHost";
 import UpdateAddress from "@/Components/Events/UpdateAddress";
 import MobileConnect from "@/Components/Events/MobileConnect";
 import {PageProps} from "@/types";
 import Host from "@/Components/Events/Detail/Host";
-import Title from "@/Components/Events/Detail/Title";
 import Location from "@/Components/Events/Detail/Location";
 import Date from "@/Components/Events/Detail/Dates";
 import VideoPlayer from "@/Components/Events/Detail/VideoPlayer";
@@ -97,7 +95,7 @@ const ViewEvent = () => {
                 <StaticMap lng={event.longitude} lat={event.latitude} event={event}/>
                 <BackToEvents/>
             </div>
-            <div className="rounded-t-2xl border-t p-6 text-white border-grey-darker" id={'event'}>
+            <div className="relative top-[-32px] bg-black rounded-t-[2.5rem] border-t p-6 text-white border-grey-darker" id={'event'}>
                 <div className="container mx-auto">
                     <div className="md:space-x-8 md:flex">
                         <div className="md:w-2/3">
