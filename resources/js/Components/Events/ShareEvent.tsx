@@ -1,5 +1,5 @@
 import React from "react";
-import {ShareIcon} from "@heroicons/react/24/outline";
+import {PaperAirplaneIcon} from "@heroicons/react/24/outline";
 import Modal from "@/Components/Ui/Modal";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import {Event} from "@/types/Event";
@@ -7,7 +7,11 @@ import {useRecoilState} from "recoil";
 import {reactNotificationAtom} from "@/store";
 import {usePage} from "@inertiajs/react";
 
-const ShareEvent= () => {
+interface ShareEventProps {
+    className?: string;
+}
+
+const ShareEvent= ({ className = '' }: ShareEventProps) => {
     const [isOpen, setOpen] = React.useState(false);
     const [reactNotifications, setReactNotifications] = useRecoilState(reactNotificationAtom);
     const page = usePage();
@@ -55,18 +59,17 @@ const ShareEvent= () => {
         }
     };
 
-
     return (
-        <div>
-            <button
-                onClick={() => setOpen(true)}
-                className={'flex items-center justify-end share-btn space-x-2 text-white'}
-            >
-                <ShareIcon className={'w-6 h-6'}/>
+        <div className={`${className}`}>
+            <button className={`flex items-center space-x-2 rounded-full px-4 py-2`}
+                    onClick={() => setOpen(true)}>
+                <PaperAirplaneIcon className={'w-6 h-6 -rotate-45'}/>
                 <span>Share</span>
             </button>
             <Modal open={isOpen} setOpen={setOpen}>
-                <div className={'flex justify-end mb-6'}>
+                <div className={'flex justify-between mb-6'}>
+                    <h1 className={`font-bold
+                   `}>Share Event</h1>
                     <button onClick={() => setOpen(false)}>
                         <XMarkIcon className={'w-6 h-6 text-white'}/>
                     </button>

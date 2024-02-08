@@ -22,6 +22,8 @@ import {
     EventTypeFires,
     EventTypeWahBasicRetreat, EventTypeWahExperience
 } from "@/helpers/eventNames";
+import ShareEvent from "@/Components/Events/ShareEvent";
+import {ShareIcon} from "@heroicons/react/24/outline";
 
 const ViewEvent = () => {
     const page = usePage();
@@ -94,6 +96,7 @@ const ViewEvent = () => {
             <div className={'relative'}>
                 <StaticMap lng={event.longitude} lat={event.latitude} event={event}/>
                 <BackToEvents/>
+                <ShareEvent className={`absolute top-[20px] right-4 bg-white z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-orange transition-colors duration-200 ease-in-out`}/>
             </div>
             <div className="relative top-[-32px] bg-black rounded-t-[2.5rem] border-t p-6 text-white border-grey-darker" id={'event'}>
                 <div className="container mx-auto">

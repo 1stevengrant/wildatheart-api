@@ -39,7 +39,7 @@ const StaticMap = ({lat, lng, event}: IStaticMapProps) => {
         new mapboxgl.Marker(el).setLngLat([lng, lat]).addTo(map);
     }, []);
 
-    return <div id="mapContainer" style={{width: '100%', height: '400px'}}/>;
+    return <div id="mapContainer" style={{width: '100%', height: '275px'}}/>;
 };
 
 export default StaticMap;
