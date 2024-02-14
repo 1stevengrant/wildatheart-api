@@ -68,7 +68,7 @@ class EventType extends Resource
                     ? novaThumbnail($value)
                     : null)
                 ->storeAs(static function ($request): string {
-                    $img = $request->input('vaporFile')['image'];
+                    $img = $request->input('vaporFile')['hero_image'];
 
                     return str_replace('tmp/', '', (string) $img['key']).'.'.$img['extension'];
                 }),

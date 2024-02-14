@@ -96,9 +96,11 @@ const ViewEvent = () => {
             <div className={'relative'}>
                 <StaticMap lng={event.longitude} lat={event.latitude} event={event}/>
                 <BackToEvents/>
-                <ShareEvent className={`absolute top-[20px] right-4 bg-white z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-orange transition-colors duration-200 ease-in-out`}/>
+                <ShareEvent
+                    className={`absolute top-[20px] right-4 bg-white z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-orange transition-colors duration-200 ease-in-out`}/>
             </div>
-            <div className="relative top-[-32px] bg-black rounded-t-[2.5rem] border-t p-6 text-white border-grey-darker" id={'event'}>
+            <div className="relative top-[-32px] bg-black rounded-t-[2.5rem] border-t p-6 text-white border-grey-darker"
+                 id={'event'}>
                 <div className="container mx-auto">
                     <div className="md:space-x-8 md:flex">
                         <div className="md:w-2/3">
@@ -126,6 +128,11 @@ const ViewEvent = () => {
                             {event.eventTypeData.hero_video && (
                                 <VideoPlayer src={event.eventTypeData.hero_video}
                                              className={`mt-[48px]`}/>
+                            )}
+
+                            {event.eventTypeData.hero_image && (
+                                <img src={event.eventTypeData.hero_image}
+                                     className={`mt-[48px]`} alt={``}/>
                             )}
 
                             {event.eventTypeData.key_details && event.eventTypeData.key_details.length > 0 && (
