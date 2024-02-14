@@ -40,7 +40,7 @@ const Home = () => {
                 {currentEvent && (
                     <OutsideClickHandler onOutsideClick={() => setCurrentEvent(undefined)}>
                         <div {...swipeHandlers}>
-                            <EventCardMobile className={'fixed bottom-4 right-4 left-4 md:hidden z-[1001]'}/>
+                            <EventCardMobile className={`fixed bottom-4 right-4 left-4 xl:hidden z-[1001] md:max-w-[500px] md:mx-auto`}/>
                         </div>
                     </OutsideClickHandler>
                 )}

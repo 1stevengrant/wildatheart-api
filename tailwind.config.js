@@ -94,7 +94,11 @@ module.exports = {
             wider: "0.06em",
             widest: "0.07em",
         },
-        extend: {},
+        extend: {
+            screens: {
+                'ipad-landscape': '1180px',
+            }
+        },
     },
     plugins: [
         require("@tailwindcss/forms"),
