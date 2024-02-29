@@ -36,9 +36,9 @@ class Event extends Model
 
     protected $appends = ['url'];
 
-    const FOR_MEN = 'm';
+    const FOR_MEN = 'men';
 
-    const FOR_WOMEN = 'f';
+    const FOR_WOMEN = 'women';
 
     const DEFAULT_COUNTRY = 'us';
 

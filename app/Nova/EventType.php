@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Markdown;
 use Laravel\Nova\Fields\Repeater;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -47,6 +48,13 @@ class EventType extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
+
+            Select::make('Sex')
+                ->help('Who is this event type for?')
+                ->options([
+                    \App\Models\Event::FOR_MEN => ucfirst(\App\Models\Event::FOR_MEN),
+                    \App\Models\Event::FOR_WOMEN => ucfirst(\App\Models\Event::FOR_WOMEN),
+                ]),
 
             PublicVaporImage::make('Image')
                 ->path('event_types')
