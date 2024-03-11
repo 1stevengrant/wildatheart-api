@@ -30,14 +30,15 @@ class Attendee extends Resource
      */
     public static $search = [
         'id',
+        'given_name',
+        'family_name',
+        'email',
     ];
 
     /**
      * Get the fields displayed by the resource.
-     *
-     * @return array
      */
-    public function fields(NovaRequest $request)
+    public function fields(NovaRequest $request): array
     {
         return [
             ID::make()->sortable(),
