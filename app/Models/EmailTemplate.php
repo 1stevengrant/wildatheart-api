@@ -12,6 +12,10 @@ class EmailTemplate extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     public static function boot(): void
     {
         parent::boot();

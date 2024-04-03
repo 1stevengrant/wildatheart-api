@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Markdown;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -36,6 +37,8 @@ class EmailTemplate extends Resource
         return [
             Text::make('Name')
                 ->rules('required', 'max:255'),
+
+            Boolean::make('Is Active'),
 
             Text::make('From Name')
                 ->hideFromIndex()
