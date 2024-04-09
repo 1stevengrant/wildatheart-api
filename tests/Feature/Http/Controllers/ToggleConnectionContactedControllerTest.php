@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\UserSeeder::class);
+    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
     $this->seed(\Database\Seeders\EventTypeSeeder::class);
     $this->event = \App\Models\Event::factory()->fires()->create();
     $this->attendees = Attendee::factory()->count(3)->create([

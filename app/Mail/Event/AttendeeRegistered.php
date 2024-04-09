@@ -3,7 +3,9 @@
 namespace App\Mail\Event;
 
 use App\Models\Attendee;
+use App\Models\EmailTemplate;
 use App\Models\Event;
+use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,7 +15,11 @@ use Illuminate\Queue\SerializesModels;
 
 class AttendeeRegistered extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+
+    public EmailTemplate $emailTemplate;
+
+    public string $emailContent;
 
     /**
      * Create a new message instance.
@@ -22,6 +28,7 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
         public Event $event,
         public Attendee $attendee
     ) {
+        $this->emailTemplate = $this->getEmailTemplate('attendee-registered');
     }
 
     /**
@@ -29,9 +36,12 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        $subject = $this->emailTemplate->subject;
+        $subject = str_replace('[attendee_name]', $this->attendee->fullname, $subject);
+
         return new Envelope(
             replyTo: $this->attendee->email,
-            subject: $this->attendee->given_name.' has expressed interest in your event.',
+            subject: $subject,
         );
     }
 
@@ -40,6 +50,16 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
+        $content = $this->emailTemplate->body;
+        $content = str_replace('[host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[attendee_fullname]', $this->attendee->given_name, $content);
+        $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);
+        $content = str_replace('[attendee_email]', $this->attendee->email, $content);
+        $content = str_replace('[attendee_phone]', $this->attendee->phone ?? 'no phone number', $content);
+        $content = str_replace('[attendee_city]', $this->attendee->city, $content);
+        $content = str_replace('[attendee_state]', $this->attendee->state ?? 'no state', $content);
+        $this->emailContent = $content;
+
         return new Content(
             markdown: 'emails.attendee-registered',
         );

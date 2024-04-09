@@ -26,6 +26,7 @@ class EventTypeSeeder extends Seeder
         $eventTypes->each(function ($eventType) {
             \App\Models\EventType::create([
                 'name' => $eventType,
+                'slug' => \Illuminate\Support\Str::slug($eventType),
                 'summary' => fake()->sentence(5),
                 'description' => fake()->paragraphs(6, true),
             ]);

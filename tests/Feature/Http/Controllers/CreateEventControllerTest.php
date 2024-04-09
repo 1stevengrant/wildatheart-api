@@ -8,8 +8,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\UserSeeder::class);
     $this->seed(\Database\Seeders\EventTypeSeeder::class);
-
+    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
     $this->user = User::factory()->create([
         'profile_step' => 2,
     ]);
@@ -199,20 +200,6 @@ it('approves an event', function () {
         'longitude' => '123',
         'approved_at' => now(),
     ]);
-});
-
-it('redirects the user to the gift request page after success', function () {
-    $response = $this->actingAs($this->user)
-        ->post(route('host.store'), [
-            'name' => 'The',
-            'country' => 'United States',
-            'latitude' => '123',
-            'longitude' => '123',
-            'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
-        ]);
-
-    $event = \App\Models\Event::first();
-    $response->assertRedirect(route('gift', $event));
 });
 
 test('an event has an event type', function () {

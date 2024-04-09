@@ -38,6 +38,8 @@ class EmailTemplate extends Resource
     {
         return [
             Text::make('Name')
+                ->sortable()
+                ->showOnUpdating(false)
                 ->rules('required', 'max:255'),
 
             Boolean::make('Is Active'),
@@ -54,6 +56,7 @@ class EmailTemplate extends Resource
                 ->rules('required', 'max:255'),
 
             Markdown::make('Body')
+                ->help('This is the email body content. Please speak to engineering about any placeholders that need to be added.')
                 ->rules('required'),
 
             Markdown::make('Notes')

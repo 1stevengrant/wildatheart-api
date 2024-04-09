@@ -2,6 +2,8 @@
 
 namespace App\Mail\Event;
 
+use App\Models\EmailTemplate;
+use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -10,14 +12,18 @@ use Illuminate\Queue\SerializesModels;
 
 class EventApproved extends Mailable
 {
-    use Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+
+    public EmailTemplate $emailTemplate;
+
+    public string $emailContent;
 
     /**
      * Create a new message instance.
      */
     public function __construct(public \App\Models\Event $event)
     {
-
+        $this->emailTemplate = $this->getEmailTemplate('event-approved');
     }
 
     /**
@@ -26,7 +32,7 @@ class EventApproved extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Event is live!',
+            subject: $this->emailTemplate->subject,
         );
     }
 
@@ -35,6 +41,12 @@ class EventApproved extends Mailable
      */
     public function content(): Content
     {
+        $content = $this->emailTemplate->body;
+        $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[Fire Link]', "[Fire Link]({$this->event->url})", $content);
+        $content = str_replace('[email_address]', config('mail.from.address'), $content);
+        $this->emailContent = $content;
+
         return new Content(
             markdown: 'emails.events.event-approved',
         );

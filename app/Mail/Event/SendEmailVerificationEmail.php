@@ -2,7 +2,9 @@
 
 namespace App\Mail\Event;
 
+use App\Models\EmailTemplate;
 use App\Models\User;
+use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,7 +14,11 @@ use Illuminate\Queue\SerializesModels;
 
 class SendEmailVerificationEmail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+
+    public EmailTemplate $emailTemplate;
+
+    public string $emailContent;
 
     /**
      * Create a new message instance.
@@ -21,7 +27,7 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
         public string $verificationToken,
         public User $user,
     ) {
-        //
+        $this->emailTemplate = $this->getEmailTemplate('send-verification-email');
     }
 
     /**
@@ -30,7 +36,7 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Please verify your new Fire',
+            subject: $this->emailTemplate->subject,
         );
     }
 
@@ -39,6 +45,11 @@ class SendEmailVerificationEmail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
+        $route = route('verify.email', $this->verificationToken);
+        $content = $this->emailTemplate->body;
+        $content = str_replace('[call_to_action_link]', "[Verify Email]({$route})", $content);
+        $this->emailContent = $content;
+
         return new Content(
             markdown: 'emails.users.send-email-verification-email',
         );

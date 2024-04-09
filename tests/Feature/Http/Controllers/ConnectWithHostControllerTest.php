@@ -2,6 +2,7 @@
 
 use App\Mail\Event\AttendeeConnectedToHost;
 use App\Mail\Event\AttendeeRegistered;
+use App\Models\EmailTemplate;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -10,8 +11,10 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Mail::fake();
+    $this->seed(\Database\Seeders\UserSeeder::class);
+    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
     $this->seed(\Database\Seeders\EventTypeSeeder::class);
-    $this->event = Event::factory()->fires()->create();
+    $this->event = Event::factory()->approved()->fires()->create();
     $this->attributes = [
         'family_name' => 'Doe',
         'given_name' => 'John',
@@ -22,6 +25,8 @@ beforeEach(function () {
         'phone' => '123456789',
         'opted_into_marketing' => true,
     ];
+
+    $this->emailTemplate = EmailTemplate::factory()->create();
 });
 
 it('allows an anonymous user to see the form to connect with an event host', function () {
@@ -33,6 +38,7 @@ it('allows an anonymous user to see the form to connect with an event host', fun
 });
 
 it('makes a connection between the anonymous user and host', function () {
+    $this->withoutExceptionHandling();
     $this->post(route('connect.store', $this->event), $this->attributes)
         ->assertRedirect(route('view.event', $this->event))
         ->assertSessionHas('notifications.message', "Connected with {$this->event->host->fullName}!");

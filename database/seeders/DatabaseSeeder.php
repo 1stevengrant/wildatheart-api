@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             //            UserSeeder::class,
             //                        EventSeeder::class,
             //            AttendeeSeeder::class,
-            //            EventTypeSeeder::class,
+            EventTypeSeeder::class,
         ]);
     }
 }

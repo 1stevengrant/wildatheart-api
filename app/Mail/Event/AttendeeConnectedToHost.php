@@ -3,7 +3,9 @@
 namespace App\Mail\Event;
 
 use App\Models\Attendee;
+use App\Models\EmailTemplate;
 use App\Models\Event;
+use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,7 +15,11 @@ use Illuminate\Queue\SerializesModels;
 
 class AttendeeConnectedToHost extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+
+    public EmailTemplate $emailTemplate;
+
+    public string $emailContent;
 
     /**
      * Create a new message instance.
@@ -22,7 +28,7 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
         public Event $event,
         public Attendee $attendee
     ) {
-
+        $this->emailTemplate = $this->getEmailTemplate('attendee-connected-to-host');
     }
 
     /**
@@ -30,8 +36,11 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        $subject = $this->emailTemplate->subject;
+        $subject = str_replace('[event_title]', $this->event->title, $subject);
+
         return new Envelope(
-            subject: 'We’ve sent your info to the host of '.$this->event->title
+            subject: $subject
         );
     }
 
@@ -40,6 +49,11 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
+        $content = $this->emailTemplate->body;
+        $content = str_replace('[host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);
+        $this->emailContent = $content;
+
         return new Content(
             markdown: 'emails.events.attendee-connected-to-host',
         );

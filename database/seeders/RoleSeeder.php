@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -16,11 +17,12 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-
-        DB::table('roles')->insert([
-            ['name' => User::ROLE_ADMIN, 'guard_name' => 'web'],
-            ['name' => User::ROLE_HOST, 'guard_name' => 'web'],
-            ['name' => User::ROLE_ATTENDEE, 'guard_name' => 'web'],
-        ]);
+        // if roles table is not empty, do not seed
+        if (DB::table('roles')->count() > 0) {
+            return;
+        }
+        Role::create(['name' => User::ROLE_ADMIN]);
+        Role::create(['name' => User::ROLE_HOST]);
+        Role::create(['name' => User::ROLE_ATTENDEE]);
     }
 }

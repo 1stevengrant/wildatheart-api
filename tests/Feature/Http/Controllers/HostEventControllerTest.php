@@ -8,6 +8,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create([
+        'email' => 'john@xxx.com',
         'profile_step' => 2,
     ]);
 });

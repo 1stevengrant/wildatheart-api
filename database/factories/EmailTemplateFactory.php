@@ -17,8 +17,8 @@ class EmailTemplateFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'Attendee connected to host',
-            'subject' => 'We’ve sent your info to the host of [event_title]',
+            'name' => fake()->word,
+            'subject' => fake()->sentence,
             'body' => 'hello world [host_name] [attendee_name]',
         ];
     }
