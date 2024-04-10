@@ -9,9 +9,9 @@ import { StaticMap } from "@/Components/Maps/StaticMap";
 import ModalHeading from "@/Components/Type/ModalHeading";
 import Modal from "@/Components/Ui/Modal";
 import ModalActions from "@/Components/Ui/ModalActions";
+import Spinner from "@/Components/Ui/Spinner";
 import { defaultLatLng } from "@/helpers/defaultLatLng";
 import { useMapData } from "@/Hooks/useMapData";
-import Spinner from "@/Components/Ui/Spinner";
 
 interface GetUserLocationModalProps {
     open: boolean;

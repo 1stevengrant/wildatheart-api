@@ -2,7 +2,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { useMapData } from "@/Hooks/useMapData";
 import { eventAPIQuery } from "@/lib/eventAPIQuery";
-import { eventsListState } from "@/store/eventsAtom";
+import { eventsListLoadingState, eventsListState } from "@/store/eventsAtom";
 import {
     endDateStringState,
     radiusState,
@@ -14,6 +14,7 @@ import {
 
 export const useGetEvents = () => {
     const setEvents = useSetRecoilState(eventsListState);
+    const setEventsListLoading = useSetRecoilState(eventsListLoadingState);
     const { latitude, longitude } = useMapData();
     const [radius] = useRecoilState(radiusState);
     const [sex] = useRecoilState(sexState);
@@ -28,6 +29,8 @@ export const useGetEvents = () => {
                 `latitude: ${latitude}, longitude: ${longitude}, radius: ${radius}, sex: ${sex}, typeGroup: ${typeGroup}, types: ${types}, startDate: ${startDate}, endDate: ${endDate}`
             );
 
+            setEventsListLoading(true);
+
             const response = await eventAPIQuery({
                 latitude,
                 longitude,
@@ -39,8 +42,10 @@ export const useGetEvents = () => {
                 endDate,
             });
             setEvents(response.events);
+            setEventsListLoading(false);
         } catch (error) {
             console.log(error);
+            setEventsListLoading(false);
         }
     };
 
