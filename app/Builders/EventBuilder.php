@@ -9,7 +9,7 @@ class EventBuilder extends Builder
 {
     public function public(): EventBuilder
     {
-        return $this->where('approved_at', '!=', null);
+        return $this->whereNotNull('approved_at');
     }
 
     public function published(): EventBuilder

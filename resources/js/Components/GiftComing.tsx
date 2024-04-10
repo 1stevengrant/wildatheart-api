@@ -1,8 +1,10 @@
 import React from "react";
+
+import { Link, usePage } from "@inertiajs/react";
+
 import HeadingOne from "@/Components/Type/HeadingOne";
-import {Link, usePage} from "@inertiajs/react";
 import useRoute from "@/Hooks/useRoute";
-import {Event} from "@/types/Event";
+import { Event } from "@/types/Event";
 
 const GiftComing = () => {
     const page = usePage();
@@ -10,21 +12,22 @@ const GiftComing = () => {
     const route = useRoute();
 
     return (
-        <div className={'max-w-[500px] mx-auto p-4'}>
-            <HeadingOne>Yay!
-                <br/>
+        <div className={"max-w-[500px] mx-auto p-4"}>
+            <HeadingOne>
+                Yay!
+                <br />
                 Your gift is on its way!
             </HeadingOne>
             <div className={`mt-8`}>
                 <Link
-                    href={route('view.event', event)}
+                    href={route("view.event", event)}
                     className="rounded-md border border-transparent px-4 py-2 text-center font-medium text-white transition duration-150 ease-in-out bg-orange hover:bg-transparent-orange disabled:bg-grey-200 disabled:text-grey-darker disabled:cursor-not-allowed"
                 >
                     Visit Your Fire Listing
                 </Link>
             </div>
         </div>
-    )
+    );
 };
 
 export default GiftComing;

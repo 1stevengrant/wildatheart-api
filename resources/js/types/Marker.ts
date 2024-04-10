@@ -4,7 +4,7 @@ export type Marker = {
     host: string;
     hostPhoto: string;
     id: string;
-    location: string
+    location: string;
     name: string;
     objectID: string;
     state: string;
@@ -12,30 +12,28 @@ export type Marker = {
     _geoloc: {
         lat: number;
         lng: number;
-    }
+    };
     _highlightResult: {
         city: {
             matchLevel: string;
             matchedWords: string[];
             value: string;
-        },
+        };
         country: {
             matchLevel: string;
             matchedWords: string[];
             value: string;
-        },
+        };
         name: {
             matchLevel: string;
             matchedWords: string[];
             value: string;
-        },
+        };
         state: {
             matchLevel: string;
             matchedWords: string[];
             value: string;
-        }
-    },
+        };
+    };
     _tags: string[];
 };
-
-

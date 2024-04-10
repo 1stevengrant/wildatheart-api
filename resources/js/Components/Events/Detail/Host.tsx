@@ -1,18 +1,16 @@
 import React from "react";
-import {UserCircleIcon} from "@heroicons/react/24/outline";
+
+import { UserCircleIcon } from "@heroicons/react/24/outline";
+
 import UserAvatar from "@/Components/UserAvatar";
 
 type HostProps = {
     className?: string;
     host: string;
     hostPhoto?: string;
-}
+};
 
-const Host: React.FC<HostProps> = ({
-                                       className,
-                                       host,
-                                       hostPhoto
-                                   }) => {
+const Host: React.FC<HostProps> = ({ className, host, hostPhoto }) => {
     return (
         <div className={`${className}`}>
             <div className="flex items-start space-x-4">
@@ -20,8 +18,10 @@ const Host: React.FC<HostProps> = ({
                     <UserAvatar
                         image={hostPhoto}
                         width={400}
-                        className={`w-20 h-20`}/>) : (
-                    <UserCircleIcon className={'w-20 h-20'}/>
+                        className={`w-20 h-20`}
+                    />
+                ) : (
+                    <UserCircleIcon className={"w-20 h-20"} />
                 )}
 
                 <div>
@@ -30,7 +30,7 @@ const Host: React.FC<HostProps> = ({
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Host;

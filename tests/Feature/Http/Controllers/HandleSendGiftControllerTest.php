@@ -41,7 +41,7 @@ it('marks the gift as requested', function () {
     $this->actingAs($this->event->host)
         ->post(route('gift.store', $this->event), $this->addressData);
 
-    expect($this->event->fresh()->gift_requested)->toBe(1);
+    expect($this->event->fresh()->gift_requested)->toBe(true);
 });
 
 it('sends mail notification to admin about the request', function () {

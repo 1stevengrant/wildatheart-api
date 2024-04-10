@@ -18,6 +18,6 @@ it('shows the host event form', function () {
         ->get(route('host.event'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('HostEvent')
+            ->component('HostEventPage')
         );
 });

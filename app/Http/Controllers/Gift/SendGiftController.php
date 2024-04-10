@@ -15,7 +15,7 @@ class SendGiftController extends Controller
     {
         abort_unless(! $event->hasRequestedGift(), 403, 'You have already requested your gift.');
 
-        return inertia('SendGift', [
+        return inertia('SendGiftPage', [
             'event' => $event,
         ]);
     }

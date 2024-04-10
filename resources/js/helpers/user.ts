@@ -1,15 +1,18 @@
-import config from './config';
+import config from "./config";
 
 interface Params {
     [key: string]: string | number;
 }
 
-export const userPhoto = (image: string | undefined, params: Params = {}): string => {
+export const imageGenerator = (
+    image: string | undefined,
+    params: Params = {}
+): string => {
     if (!image) {
-        return '';
+        return "";
     }
 
-    const apiUrl = config('services.bunny.api_url');
+    const apiUrl = config("services.bunny.api_url");
 
     const stringParams: Record<string, string> = Object.fromEntries(
         Object.entries(params).map(([key, value]) => [key, String(value)])

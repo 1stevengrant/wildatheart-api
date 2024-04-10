@@ -1,4 +1,4 @@
 export const defaultLatLng = {
-    latitude: 39.0646,
-    longitude: -105.3272
-}
+    latitude: 38.90379,
+    longitude: -104.86443,
+};

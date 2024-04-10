@@ -1,46 +1,54 @@
 import React from "react";
-import {Event} from "@/types/Event";
+
+import { Link, usePage } from "@inertiajs/react";
+
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import {Link, usePage} from "@inertiajs/react";
-import primaryButtonClasses from "@/helpers/primaryButtonClasses";
-import {whiteButtonClasses} from "@/helpers/whiteButtonClasses";
+import { whiteButtonClasses } from "@/helpers/whiteButtonClasses";
+import { Event } from "@/types/Event";
 
 interface ConnectWithHostProps {
     className?: string;
 }
 
-const ConnectWithHost = ({className}: ConnectWithHostProps) => {
+const ConnectWithHost = ({ className }: ConnectWithHostProps) => {
     const page = usePage();
     const event = page.props.event as Event;
-    // @ts-ignore
-    const hasConnectedWithHost = page.props.notifications?.connectedWithHost ?? false;
+    const hasConnectedWithHost =
+        (page.props.notifications as { connectedWithHost?: boolean })
+            ?.connectedWithHost ?? false;
     return (
-        <div className={className + ' rounded-lg border border-grey-darker p-8'}>
+        <div
+            className={className + " rounded-lg border border-grey-darker p-8"}
+        >
             {hasConnectedWithHost ? (
                 <>
-                    <PrimaryButton className={'w-full'}
-                                   disabled={true}>
+                    <PrimaryButton className={"w-full"} disabled={true}>
                         You have connected with {event.host}
                     </PrimaryButton>
                     <p className="mt-2 text-sm">
-                        Thank you! We've forwarded your details to {event.host} and he'll be in touch directly.
+                        Thank you! We've forwarded your details to {event.host}{" "}
+                        and he'll be in touch directly.
                     </p>
                 </>
             ) : (
                 <>
-                    <p className={`text-center text-lg font-medium mb-4`}>Want More Info?</p>
+                    <p className={`text-center text-lg font-medium mb-4`}>
+                        Want More Info?
+                    </p>
                     <Link
                         className={`${whiteButtonClasses} block`}
-                        href={`/connect/${event.id}`}>
+                        href={`/connect/${event.id}`}
+                    >
                         Connect With {event.host}
                     </Link>
                     <p className="mt-4 text-center text-sm">
-                        {event.host} will send out updates regarding the event after sign-up.
+                        {event.host} will send out updates regarding the event
+                        after sign-up.
                     </p>
                 </>
             )}
         </div>
-    )
+    );
 };
 
 export default ConnectWithHost;

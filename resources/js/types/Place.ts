@@ -1,4 +1,4 @@
-import {LngLat} from "./LngLat";
+import { LngLat } from "./LngLat";
 
 export type Place = {
     place_name: string;

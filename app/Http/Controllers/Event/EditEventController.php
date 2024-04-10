@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,8 @@ class EditEventController extends Controller
             return redirect()->route('home');
         }
 
-        return inertia('Profile/EditEvent', [
-            'event' => $event->inertiaFilter(),
+        return inertia('Profile/EditEventPage', [
+            'event' => EventResource::make($event)->resolve(),
         ]);
     }
 }

@@ -15,7 +15,7 @@ test('it shows a list of events belonging to the authenticated user', function (
         ->get(route('my.events'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/MyEvents')
+            ->component('Profile/MyEventsPage')
             ->has('events.data', 1)
         );
 });
