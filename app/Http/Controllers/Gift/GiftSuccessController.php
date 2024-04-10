@@ -10,7 +10,7 @@ class GiftSuccessController extends Controller
 {
     public function __invoke(Request $request, Event $event)
     {
-        return inertia('GiftSuccess', [
+        return inertia('GiftSuccessPage', [
             'event' => $event->inertiaFilter(),
         ]);
     }

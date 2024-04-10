@@ -14,4 +14,4 @@ export type Connection = {
     state: string;
     updated_at: string;
     user_id: number;
-}
+};

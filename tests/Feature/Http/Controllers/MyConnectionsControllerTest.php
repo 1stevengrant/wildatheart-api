@@ -11,6 +11,6 @@ test('loads a list of my connections', function () {
         ->get(route('my.connections'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/MyConnections')
+            ->component('Profile/MyConnectionsPage')
         );
 });

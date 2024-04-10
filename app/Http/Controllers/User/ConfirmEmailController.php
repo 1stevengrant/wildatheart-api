@@ -13,7 +13,7 @@ class ConfirmEmailController extends Controller
      */
     public function __invoke(Request $request, Event $event)
     {
-        return inertia('ConfirmEmail', [
+        return inertia('ConfirmEmailPage', [
             'event' => $request->event,
         ]);
     }

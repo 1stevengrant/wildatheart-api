@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EventSeeder extends Seeder
 {
@@ -13,43 +13,34 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            return;
+        }
 
-        $user = User::factory()->create();
+        $sql = file_get_contents(database_path('seeders/events.sql'));
 
-        Event::factory()->count(5)->approved()->wahExperiences()->create([
-            'user_id' => $user->id,
+        \DB::unprepared($sql);
+
+        $user = User::factory()->create([
+            'family_name' => 'Grant',
+            'given_name' => 'Steven',
+            'email' => 'steven@ghijk.co.uk',
+            'password' => bcrypt('password'),
         ]);
 
-        Event::factory()->count(5)->approved()->captivatingExperience()->create([
-            'user_id' => $user->id,
+        $user->assignRole(User::ROLE_ADMIN);
+
+        User::factory()->create([
+            'family_name' => 'Morrison',
+            'given_name' => 'Jamie',
+            'email' => 'jamie@wildatheart.org',
+            'password' => bcrypt('password'),
         ]);
 
-        Event::factory()->count(5)->approved()->becomingAKingExperience()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->captivatingCoreRetreat()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->becomingAKingRetreat()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->basicRetreat()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->survivalSchool()->create([
-            'user_id' => $user->id,
-        ]);
-        $days = now()->subDays(100);
-        Event::factory()->count(50)->approved()->fires()->create([
-            'user_id' => $user->id,
-            'updated_at' => $days,
-            'created_at' => $days,
-            'approved_at' => $days,
-        ]);
+        DB::table('events')
+            ->update([
+                'user_id' => $user->id,
+            ]);
 
     }
 }

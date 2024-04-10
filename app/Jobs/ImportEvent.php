@@ -36,13 +36,12 @@ class ImportEvent implements ShouldQueue
                 'summary' => strip_tags($this->experience['body']),
                 'legacy_drupal_id' => $this->experience['nid'],
                 'legacy_drupal_user_id' => $this->experience['user_id'],
-                'user_id' => User::updateOrCreate(['email' => $this->experience['email']], [
-                    'family_name' => $this->experience['last_name'],
-                    'given_name' => $this->experience['first_name'],
-                    'email' => $this->experience['email'],
-                    'phone' => $this->experience['phone'],
-                    'password' => bcrypt(Str::random()),
-                ])->id,
+                'user_id' => $this->updateOrCreateUser(
+                    $this->experience['email'],
+                    $this->experience['first_name'],
+                    $this->experience['last_name'],
+                    $this->experience['phone']
+                ),
                 'legacy_drupal_location' => $this->experience['location'],
                 'legacy_drupal_url' => $this->experience['url'],
                 'start_date' => Carbon::createFromFormat('Y-m-d', $this->experience['start_date']),
@@ -53,6 +52,17 @@ class ImportEvent implements ShouldQueue
         );
 
         dispatch(new UpdateEvent($event));
+    }
+
+    public function updateOrCreateUser($email, $firstName, $lastName, $phone): int
+    {
+        return User::updateOrCreate(['email' => $email], [
+            'family_name' => $lastName,
+            'given_name' => $firstName,
+            'email' => $email,
+            'phone' => $phone,
+            'password' => bcrypt(Str::random()),
+        ])->id;
     }
 
     public function getEndDate($endDate): bool|Carbon|null

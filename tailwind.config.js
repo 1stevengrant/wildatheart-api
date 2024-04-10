@@ -1,14 +1,18 @@
+import forms from "@tailwindcss/forms";
+import typography from "@tailwindcss/typography";
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
     content: [
-        "./resources/**/*.blade.php",
-        "./resources/**/*.{js,jsx,ts,tsx,vue}",
-        "./vendor/wire-elements/pro/config/wire-elements-pro.php",
-        "./vendor/wire-elements/pro/**/*.blade.php",
+        "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
+        "./storage/framework/views/*.php",
+        "./resources/views/**/*.blade.php",
+        "./resources/js/**/*.{tsx,ts,vue,js,jsx}",
     ],
+
     theme: {
         backgroundImage: {
-            'campfire': "url('/resources/img/wah-fires-suburb-1.webp')"
+            campfire: "url('/resources/img/wah-fires-suburb-1.webp')",
         },
         fontWeight: {
             hairline: 100,
@@ -32,10 +36,10 @@ module.exports = {
             darker: "#081013",
             "grey-darkest": "#1d272b",
             "grey-darker": "#484848",
-            'grey-200': '#B8B6B6',
+            "grey-200": "#B8B6B6",
             "grey-dark": "#5C6771", // From Sketch File
-            'grey-border': '#2E2C29',
-            'form': '#171513',
+            "grey-border": "#2E2C29",
+            form: "#171513",
             grey: "#9FA7A9",
             "grey-light": "var(--wah-grey-light)", //From Sketch File
             "grey-lighter": "#f1f5f8",
@@ -48,24 +52,22 @@ module.exports = {
             "red-light": "#ef5753",
             "red-lighter": "#f9acaa",
             "red-lightest": "#fcebea",
-
             orange: "#D65F00",
             "blue-darkest": "#06272E",
             "blue-darker": "#185f68", // From Borders in styleguide
             blue: "#52858F", // From style guide
-            'blue-900': '#0B1419',
+            "blue-900": "#0B1419",
             brown: "#743617",
-            'green-400': '#4ade80',
+            "green-400": "#4ade80",
         },
         fontFamily: {
             cursive: ["Rock Salt", "cursive"],
-            sans: [
-                'Inter', "sans-serif"
-            ],
+            sans: ["Inter", "sans-serif"],
             serif: ["Arno Pro", "arno-pro", "Georgia", "serif"],
             mono: ["Menlo", "monospace"],
         },
         fontSize: {
+            xxs: ".625rem", // 10px
             xs: ".75rem", // 12px
             sm: ".875rem", // 14px
             base: "1rem", // 16px
@@ -96,12 +98,10 @@ module.exports = {
         },
         extend: {
             screens: {
-                'ipad-landscape': '1180px',
-            }
+                "ipad-landscape": "1180px",
+            },
         },
     },
-    plugins: [
-        require("@tailwindcss/forms"),
-        require('@tailwindcss/typography'),
-    ],
+
+    plugins: [forms, typography],
 };

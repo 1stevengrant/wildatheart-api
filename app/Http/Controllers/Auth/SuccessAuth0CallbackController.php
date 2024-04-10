@@ -12,6 +12,6 @@ class SuccessAuth0CallbackController extends Controller
         activity()
             ->log('Successful Auth0 Callback');
 
-        return inertia('SuccessfulCallback');
+        return inertia('SuccessfulCallbackPage');
     }
 }

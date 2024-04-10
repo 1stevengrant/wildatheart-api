@@ -51,19 +51,22 @@ class Attendee extends Resource
 
             Text::make('Email'),
 
-            Text::make('Phone')->hideFromDetail(),
+            Text::make('Phone')
+                ->onlyOnDetail(),
 
             Text::make('Phone Number', function () {
                 return "+{$this->country_code}{$this->phone}";
             }),
 
-            Text::make('City'),
+            Text::make('City')
+                ->hideFromIndex(),
 
             Text::make('State'),
 
             Text::make('Country'),
 
-            BelongsTo::make('Event'),
+            BelongsTo::make('Event')
+                ->hideFromIndex(),
         ];
     }
 

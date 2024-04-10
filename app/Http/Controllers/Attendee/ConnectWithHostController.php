@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Spatie\SlackAlerts\Facades\SlackAlert;
@@ -11,8 +12,8 @@ class ConnectWithHostController extends Controller
 {
     public function index(Event $event)
     {
-        return inertia('ConnectWithHost', [
-            'event' => $event->inertiaFilter(),
+        return inertia('ConnectWithHostPage', [
+            'event' => EventResource::make($event)->resolve(),
         ]);
     }
 

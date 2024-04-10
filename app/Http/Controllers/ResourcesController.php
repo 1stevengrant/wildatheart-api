@@ -11,6 +11,6 @@ class ResourcesController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return inertia('Resources');
+        return inertia('ResourcesPage');
     }
 }

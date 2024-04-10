@@ -6,11 +6,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
-
-{{--    {!! SEOMeta::generate() !!}--}}
-{{--    {!! OpenGraph::generate() !!}--}}
-{{--    {!! Twitter::generate() !!}--}}
-{{--    {!! JsonLd::generate() !!}--}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     @include('partials.analytics')
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link

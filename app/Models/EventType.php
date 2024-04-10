@@ -29,6 +29,12 @@ class EventType extends Model
 
     const FIRES = 'Fires';
 
+    const TYPE_RETREAT = 'retreat';
+
+    const TYPE_EXPERIENCE = 'experience';
+
+    const TYPE_FIRE = 'fire';
+
     protected $casts = [
         'key_details' => 'array',
         'photos' => 'array',

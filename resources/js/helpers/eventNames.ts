@@ -1,10 +1,10 @@
-const EventTypeFires = 'fires',
-    EventTypeWahBasicRetreat = 'wild-at-heart-basic-retreat',
-    EventTypeCaptivatingCoreRetreat = 'captivating-core-retreat',
-    EventTypeBecomingAKingRetreat = 'becoming-a-king-retreat',
-    EventTypeWahExperience = 'wild-at-heart-experience',
-    EventTypeCaptivatingExperience = 'captivating-experience',
-    EventTypeBecomingAKingExperience = 'becoming-a-king-experience'
+const EventTypeFires = "fires",
+    EventTypeWahBasicRetreat = "wild-at-heart-basic-retreat",
+    EventTypeCaptivatingCoreRetreat = "captivating-core-retreat",
+    EventTypeBecomingAKingRetreat = "becoming-a-king-retreat",
+    EventTypeWahExperience = "wild-at-heart-experience",
+    EventTypeCaptivatingExperience = "captivating-experience",
+    EventTypeBecomingAKingExperience = "becoming-a-king-experience";
 
 export {
     EventTypeFires,
@@ -13,5 +13,5 @@ export {
     EventTypeBecomingAKingRetreat,
     EventTypeWahExperience,
     EventTypeCaptivatingExperience,
-    EventTypeBecomingAKingExperience
-}
+    EventTypeBecomingAKingExperience,
+};

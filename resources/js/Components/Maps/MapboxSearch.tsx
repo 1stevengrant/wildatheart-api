@@ -1,67 +1,59 @@
-import React, {useState, useMemo, Fragment} from 'react';
-import axios from 'axios';
-import debounce from 'lodash.debounce';
-import {Combobox, Transition} from '@headlessui/react';
-import {MapboxPlace} from "@/types/MapboxPlace";
-import {useRecoilState} from "recoil";
-import {selectedPlaceAtom} from "@/store";
-import {MagnifyingGlassIcon} from "@heroicons/react/20/solid";
+import React, { useState, Fragment } from "react";
 
-interface MapboxSearchProps {
-    className?: string;
-}
+import { Combobox, Transition } from "@headlessui/react";
+import { MapPinIcon } from "@heroicons/react/24/outline";
 
-const MapboxSearch = ({className}: MapboxSearchProps) => {
-    const [selected, setSelected] = useState<string>('');
-    const [query, setQuery] = useState<string>('');
-    const [results, setResults] = useState<MapboxPlace[]>([]);
-    const [selectedPlace, setSelectedPlace] = useRecoilState(selectedPlaceAtom)
+import InputLabel from "@/Components/Forms/InputLabel";
+import { useDebounce } from "@/Hooks/useDebounce";
+import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
+import { useMapData } from "@/Hooks/useMapData";
+import { IMapboxSearchProps } from "@/types/IMapboxSearchProps";
+import { MapboxPlace } from "@/types/MapboxPlace";
 
-    const debouncedSearch = useMemo(() => debounce(async (searchQuery: string) => {
-        if (!searchQuery) return;
+const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
+    const [selected, setSelected] = useState<string>("");
+    const { setSelectedPlace, setLongitude, setLatitude } = useMapData();
 
-        try {
-            const response = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery)}.json`, {
-                params: {
-                    access_token: import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN,
-                },
-            });
-
-            if (response.data && response.data.features) {
-                setResults(response.data.features);
-            }
-        } catch (error) {
-            console.error('Error querying Mapbox', error);
-        }
-    }, 300), []);
+    const debouncedQueryMapbox = useDebounce((inputValue: string) => {
+        queryMapbox(inputValue).then((r) => setResults(r));
+    }, 500);
+    const { query, queryMapbox, setQuery, setResults, results } =
+        useMapboxSearch();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         setQuery(inputValue);
-        debouncedSearch(inputValue);
+        debouncedQueryMapbox(inputValue);
     };
 
-    const handleSelect = (place: string) => {
-        setSelectedPlace(place)
+    const handleSelect = (place: any) => {
+        setSelectedPlace(place);
+        setLatitude(place.center[1]);
+        setLongitude(place.center[0]);
         setResults([]);
-        setQuery('');
+        setQuery("");
+        localStorage.setItem("latitude", place.center[1]);
+        localStorage.setItem("longitude", place.center[0]);
     };
 
     return (
-        <div className={className + ' relative w-full z-10'}>
-            <Combobox value={selected}
-                      onChange={(value: string) => {
-                          setSelected(value)
-                          handleSelect(value)
-                      }}>
+        <div className={className + " relative w-full z-10"}>
+            <InputLabel className={`mb-1`}>Event Location</InputLabel>
+            <Combobox
+                value={selected}
+                onChange={(value: string) => {
+                    setSelected(value);
+                    handleSelect(value);
+                }}
+            >
                 <div className="relative">
-                    <div
-                        className="relative flex w-full cursor-default items-center rounded-lg border-2 border-transparent bg-white pl-4 focus-within:border-orange">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-black"/>
+                    <div className="relative flex w-full cursor-default items-center rounded-lg border-2 bg-black pl-4 border-grey-darker focus-within:border-orange">
+                        <MapPinIcon className={`h-5 w-5 text-white`} />
                         <Combobox.Input
-                            className={"w-full border-2 rounded-lg border-transparent py-2 pl-3 text-sm leading-5" +
-                                " text-black focus:ring-0 focus:border-transparent " + (query.length > 0 ? "rounded-bl-none rounded-br-none focus:border-b-transparent" : "")}
-                            displayValue={(place: MapboxPlace) => place.place_name}
+                            className={`w-full border-2 bg-black rounded-lg border-transparent py-2 pl-3 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${query.length > 0 ? `rounded-bl-none rounded-br-none focus:border-b-transparent` : ``}`}
+                            displayValue={(place: MapboxPlace) =>
+                                place.place_name
+                            }
                             autoComplete={"off"}
                             placeholder={"Search for a place"}
                             onChange={(event) => handleInputChange(event)}
@@ -72,39 +64,51 @@ const MapboxSearch = ({className}: MapboxSearchProps) => {
                         leave="transition ease-in duration-100"
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
-                        afterLeave={() => setQuery('')}
+                        afterLeave={() => setQuery("")}
                     >
                         <Combobox.Options
-                            className={"absolute max-h-60 w-full overflow-auto rounded-md bg-white text-base" +
-                                " shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm " + (query.length > 0 ? "rounded-tl-none rounded-tr-none" : "")}>
-                            {results.length === 0 && query !== '' ? (
+                            className={
+                                "absolute max-h-60 w-full overflow-auto rounded-md bg-white text-base" +
+                                " shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm " +
+                                (query.length > 0
+                                    ? "rounded-tl-none rounded-tr-none"
+                                    : "")
+                            }
+                        >
+                            {results.length === 0 && query !== "" ? (
                                 <div className="relative cursor-default select-none px-4 py-2 text-black">
                                     Nothing found.
                                 </div>
                             ) : (
-                                results.map((place: MapboxPlace, index: Number) => (
-                                    <Combobox.Option
-                                        key={`place-${index}`}
-                                        className={({active}) =>
-                                            `relative cursor-default select-none py-2 px-4 ${
-                                                active ? 'bg-orange text-white' : 'text-black'
-                                            }`
-                                        }
-                                        value={place}
-                                    >
-                                        {({selected, active}) => (
-                                            <>
-                        <span
-                            className={`block ${
-                                selected ? 'font-medium' : 'font-normal'
-                            }`}
-                        >
-                          {place.place_name}
-                        </span>
-                                            </>
-                                        )}
-                                    </Combobox.Option>
-                                ))
+                                results.map(
+                                    (place: MapboxPlace, index: number) => (
+                                        <Combobox.Option
+                                            key={`place-${index}`}
+                                            className={({ active }) =>
+                                                `relative cursor-default select-none py-2 px-4 ${
+                                                    active
+                                                        ? "bg-orange text-white"
+                                                        : "text-black"
+                                                }`
+                                            }
+                                            value={place}
+                                        >
+                                            {({ selected }) => (
+                                                <>
+                                                    <span
+                                                        className={`block ${
+                                                            selected
+                                                                ? "font-medium"
+                                                                : "font-normal"
+                                                        }`}
+                                                    >
+                                                        {place.place_name}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </Combobox.Option>
+                                    )
+                                )
                             )}
                         </Combobox.Options>
                     </Transition>
