@@ -1,27 +1,17 @@
-import React, {PropsWithChildren} from "react";
-import MainHeader from "@/Components/MainHeader";
-import Footer from "@/Components/Footer";
-import Notification from "@/Components/Notification";
-import {Head, usePage} from "@inertiajs/react";
-import {useRecoilState} from "recoil";
-import {reactNotificationAtom} from "@/store";
+import React, { PropsWithChildren } from "react";
 
-interface Props {
-    title: string;
-}
+import { Head } from "@inertiajs/react";
 
-const EmptyLayout = ({
-                       title,
-                       children
-                   }: PropsWithChildren<Props>) => {
+import { EmptyLayoutProps } from "@/types/EmptyLayoutProps";
 
-
+export const EmptyLayout = ({
+    title,
+    children,
+}: PropsWithChildren<EmptyLayoutProps>) => {
     return (
         <>
-            <Head title={title}/>
+            <Head title={title} />
             {children}
         </>
-    )
-}
-
-export default EmptyLayout
+    );
+};

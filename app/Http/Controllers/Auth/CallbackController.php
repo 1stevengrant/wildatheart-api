@@ -31,7 +31,7 @@ class CallbackController extends Controller
 
             auth()->login($user);
 
-            CheckIfUserShouldBeAdmin::dispatch($user);
+            //            CheckIfUserShouldBeAdmin::dispatch($user);
 
             $this->logActivity('CallbackController', ['auth0User' => $auth0User, 'user' => $user]);
 

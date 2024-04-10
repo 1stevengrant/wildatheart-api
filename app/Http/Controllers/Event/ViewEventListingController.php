@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -18,8 +19,8 @@ class ViewEventListingController extends Controller
             404
         );
 
-        return inertia('ViewEvent', [
-            'event' => $event->inertiaFilter(),
+        return inertia('ViewEventPage', [
+            'event' => EventResource::make($event)->resolve(),
         ]);
     }
 }

@@ -19,10 +19,6 @@ environments:
       - "php artisan db:seed --class=StateSeeder --force"
       - "php artisan db:seed --class=EventTypeSeeder --force"
       - "php artisan db:seed --class=EventSeeder --force"
-      - "php artisan db:seed --class=EmailTemplateSeeder --force"
-#      - "php artisan app:import-from-drupal"
-#      - 'php artisan scout:flush "App\Models\Event"'
-#      - 'php artisan scout:import "App\Models\Event"'
   prod:
     domain: local.wildatheart.org
     memory: 1024

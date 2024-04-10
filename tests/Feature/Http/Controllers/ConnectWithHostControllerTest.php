@@ -33,7 +33,7 @@ it('allows an anonymous user to see the form to connect with an event host', fun
 
     $this->get(route('connect.index', $this->event))
         ->assertInertia(fn (Assert $assert) => $assert
-            ->component('ConnectWithHost')
+            ->component('ConnectWithHostPage')
         );
 });
 

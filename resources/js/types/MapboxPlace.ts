@@ -1,18 +1,18 @@
-import {LngLat} from "./LngLat";
+import { LngLat } from "./LngLat";
 
 export type MapboxPlace = {
     address: string;
     center: LngLat;
-    context: {}[];
+    context: unknown[];
     geometry: {
-        type: string,
-        coordinates: LngLat
+        type: string;
+        coordinates: LngLat;
     };
     id: string;
     place_name: string;
     place_type: string[];
-    properties: {};
+    properties: unknown;
     relevance: number;
     text: string;
     type: string;
-}
+};

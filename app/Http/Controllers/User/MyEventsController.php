@@ -17,7 +17,6 @@ class MyEventsController extends Controller
                 'id' => $event->id,
                 'name' => $event->name,
                 'phone' => $event->phone,
-                'frequency' => $event->frequency,
                 'street_address' => $event->street_address,
                 'state' => $event->state,
                 'state_code' => $event->state_code,
@@ -40,7 +39,7 @@ class MyEventsController extends Controller
                 'eventType' => $event->eventType ? $event->eventType->name : null,
             ]);
 
-        return inertia('Profile/MyEvents', [
+        return inertia('Profile/MyEventsPage', [
             'events' => $events,
         ]);
     }

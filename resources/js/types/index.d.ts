@@ -1,4 +1,4 @@
-import {Connection} from "@/types/Connection";
+import { Connection } from "@/types/Connection";
 
 export type Nullable<T> = T | null;
 
@@ -21,7 +21,9 @@ export interface User {
     postal_code: string;
 }
 
-export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+export type PageProps<
+    T extends Record<string, unknown> = Record<string, unknown>,
+> = T & {
     auth: {
         user: User;
     };
@@ -32,7 +34,7 @@ export interface Auth {
     user: Nullable<User>;
 }
 
-export type InertiaSharedProps<T = {}> = T & {
+export type InertiaSharedProps<T = unknown> = T & {
     auth: Auth;
     errors: any;
 };

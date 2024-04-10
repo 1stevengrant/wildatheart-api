@@ -1,25 +1,26 @@
-import React from 'react';
-import EventCardContent from "./EventCardContent";
-import {useRecoilState} from "recoil";
-import {currentEventAtom} from "@/store";
-import {Link} from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
+import { useRecoilState } from "recoil";
 
-interface EventCardMobileProps {
-    className?: string;
-}
+import { EventCardContent } from "./EventCardContent";
 
-const EventCardMobile: React.FC<EventCardMobileProps> = ({className}) => {
-    const [currentEvent, setCurrentEvent] = useRecoilState(currentEventAtom)
+import { currentEventState } from "@/store";
+import { IEventCardMobileProps } from "@/types/IEventCardMobileProps";
+
+export const EventCardMobile = ({ className }: IEventCardMobileProps) => {
+    const [currentEvent] = useRecoilState(currentEventState);
 
     return (
-        <div
-            className={`fixed bottom-[96px] right-4 left-4 text-white rounded-md shadow-lg p-2 md:p-4 bg-black ${className}`}>
-            { /*  @ts-ignore */ }
-            <Link href={currentEvent?.url}
-               className="clear-both flex items-stretch space-x-4">
-                <EventCardContent event={currentEvent}/>
-            </Link>
-        </div>
+        <>
+            {currentEvent && (
+                <Link
+                    href={currentEvent.url}
+                    className={`fixed bottom-[96px] right-4 left-4 text-white rounded-md shadow-lg p-2 md:p-4 bg-black ${className}`}
+                >
+                    <div className="clear-both flex items-stretch space-x-4">
+                        <EventCardContent event={currentEvent} />
+                    </div>
+                </Link>
+            )}
+        </>
     );
 };
-export default EventCardMobile

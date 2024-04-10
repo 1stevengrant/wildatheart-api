@@ -1,171 +1,175 @@
-import Map, {GeolocateControl, NavigationControl, Marker, MapRef} from "react-map-gl";
-import {comparePosition} from "@/lib/comparePosition";
-import React, {FC, useEffect, useRef, useState} from "react";
-import {GeoSearchProvided} from "react-instantsearch-core";
-import {connectGeoSearch} from "react-instantsearch-dom";
-import mapboxgl from "mapbox-gl";
-import {useRecoilState} from "recoil";
-import {currentEventAtom, flyToLocationAtom, selectedPlaceAtom} from "@/store";
-import objectIsEmpty from "@/helpers/objectIsEmpty";
-import {oneHour} from "@/helpers/timeConstants";
-import FiresMarker from "@/Components/Icons/FiresMarker";
-import RetreatsMarker from "@/Components/Icons/RetreatsMarker";
-import Tippy from '@tippyjs/react/headless';
-import EventCard from "@/Components/Events/EventCard";
-import {defaultLatLng} from "@/helpers/defaultLatLng";
-import {GeoHit} from "@/types/EventHit";
-import ExperiencesMarker from "@/Components/Icons/ExperiencesMarker";
+import React, { useEffect, useRef, useState } from "react";
 
-const MapComponent: FC<GeoSearchProvided> = ({hits}) => {
+import Map, {
+    GeolocateControl,
+    ViewState,
+    MapRef,
+} from "react-map-gl/maplibre";
+import { useRecoilState } from "recoil";
+
+import { EventList } from "@/Components/API/EventList";
+import { EventCountButton } from "@/Components/Buttons/EventCountButton";
+import { GetUserLocationModal } from "@/Components/GetUserLocationModal";
+import IsLoading from "@/Components/IsLoading";
+import { OutsideClickHandlerEvents } from "@/Components/Ui/OutsideClickHandlerEvents";
+import { defaultLatLng } from "@/helpers/defaultLatLng";
+import { LOCATION_PERMISSIONS_DENIED } from "@/helpers/locationPermissions";
+import { useGetEvents } from "@/Hooks/useGetEvents";
+import { useLoaderState } from "@/Hooks/useLoaderState";
+import { useMapData } from "@/Hooks/useMapData";
+import { mapFlyTo } from "@/lib/mapFlyTo";
+import { showFilterPanelState } from "@/store";
+import { eventsListLoadingState } from "@/store/eventsAtom";
+import {
+    endDateStringState,
+    radiusState,
+    sexState,
+    startDateStringState,
+    typeGroupState,
+    typesState,
+} from "@/store/filtersAtom";
+import { IMapComponentProps } from "@/types/IMapComponentProps";
+
+export const MapComponent = ({ className = "" }: IMapComponentProps) => {
+    const initialViewState = {
+        longitude:
+            Number(localStorage.getItem("longitude")) ??
+            defaultLatLng.longitude,
+        latitude:
+            Number(localStorage.getItem("latitude")) ?? defaultLatLng.latitude,
+        zoom: 10,
+    };
+    const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<MapRef>(null);
-    const [currentEvent, setCurrentEvent] = useRecoilState(currentEventAtom);
-    const [selectedPlace, setSelectedPlace] = useRecoilState(selectedPlaceAtom);
-    const [flyToLocation, setFlyToLocation] = useRecoilState(flyToLocationAtom)
-    const [userZoomLevel, setUserZoomLevel] = useState<number>(6)
+    const { latitude, setLatitude, longitude, setLongitude, selectedPlace } =
+        useMapData();
+    const [radius] = useRecoilState(radiusState);
+    const [sex] = useRecoilState(sexState);
+    const [typeGroup] = useRecoilState(typeGroupState);
+    const [types] = useRecoilState(typesState);
+    const [startDate] = useRecoilState(startDateStringState);
+    const [endDate] = useRecoilState(endDateStringState);
+    const [eventsListLoading] = useRecoilState(eventsListLoadingState);
+    const [showFilterPanel] = useRecoilState(showFilterPanelState);
+    const [openGetUserLocationModal, setOpenGetUserLocationModal] =
+        useState(false);
+    const { showLoader, handleLoaderState } = useLoaderState();
+    const mounted = useRef(false);
+    const { getEvents } = useGetEvents();
+
+    const handleViewStateChange = async (viewState: ViewState) => {
+        if (!showFilterPanel) {
+            const { latitude, longitude } = viewState;
+            setLatitude(latitude);
+            setLongitude(longitude);
+        }
+    };
+
+    const handleFlyTo = async (theLatitude: number, theLongitude: number) => {
+        if (mapRef.current) {
+            mapFlyTo(mapRef, theLatitude, theLongitude);
+        }
+    };
 
     useEffect(() => {
-        setTimeout(() => {
-            lookupCurrentLocation()
-        }, 50);
+        const storedLatitude = localStorage.getItem("latitude");
+        const storedLongitude = localStorage.getItem("longitude");
+        const locationPermissions = localStorage.getItem("locationPermissions");
+
+        if (storedLatitude && storedLongitude) {
+            console.log("user has coords in local storage, set them to state");
+            console.log(mapRef);
+            setLatitude(Number(storedLatitude));
+            setLongitude(Number(storedLongitude));
+            setTimeout(() => {
+                mapFlyTo(
+                    mapRef,
+                    Number(storedLatitude),
+                    Number(storedLongitude)
+                );
+            }, 1000);
+        }
+
+        if (
+            !storedLatitude &&
+            !storedLongitude &&
+            locationPermissions !== LOCATION_PERMISSIONS_DENIED
+        ) {
+            console.log(
+                "user has not stored location and has not denied location permissions, open modal to get location"
+            );
+            setOpenGetUserLocationModal(true);
+        }
+
+        if (locationPermissions === LOCATION_PERMISSIONS_DENIED) {
+            console.log("location denied, get the default events");
+            setLatitude(defaultLatLng.latitude);
+            setLongitude(defaultLatLng.longitude);
+        }
     }, []);
 
     useEffect(() => {
-        if (selectedPlace) {
-            flyTo(selectedPlace.center)
+        if (!mounted.current) {
+            mounted.current = true;
+            return;
         }
-    }, [selectedPlace, flyToLocation]);
+        getEvents();
+    }, [
+        latitude,
+        longitude,
+        radius,
+        sex,
+        typeGroup,
+        types,
+        startDate,
+        endDate,
+    ]);
 
-    const handleUserLevelZoom = (zoom: number) => {
-        setUserZoomLevel(zoom)
-    }
+    useEffect(() => {
+        handleLoaderState();
+    }, [eventsListLoading]);
 
-    const flyTo = (
-        coordinates: [number, number],
-        duration: number = 2000,
-        zoom: number = 6
-    ) => {
-        mapRef.current?.flyTo({
-            essential: false,
-            center: coordinates,
-            duration: duration,
-            zoom: zoom
-        })
-    }
-
-    const lookupCurrentLocation = () => {
-        if (navigator.geolocation) {
-            const locationData = JSON.parse(localStorage.getItem('locationData') || '{}');
-
-            if (objectIsEmpty(locationData) || (Date.now() - locationData.timestamp) > oneHour) {
-                navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
-            } else {
-                flyTo([locationData.coords.longitude, locationData.coords.latitude], undefined, userZoomLevel)
-            }
+    useEffect(() => {
+        if (selectedPlace && selectedPlace.center) {
+            mapFlyTo(mapRef, selectedPlace.center[1], selectedPlace.center[0]);
         }
-    }
-
-    const getLocationSuccess = (position: GeolocationPosition) => {
-        localStorage.setItem('locationData', JSON.stringify({
-            timestamp: Date.now(),
-            coords: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            }
-        }));
-        flyTo([position.coords.longitude, position.coords.latitude], undefined, userZoomLevel)
-    }
-
-    const getLocationError = (error: GeolocationPositionError) => {
-        console.log(error)
-        flyTo([defaultLatLng.longitude, defaultLatLng.latitude], undefined, 9)
-    }
-
-    const iconClasses = `text-black inline-flex hover:stroke-white group-hover:stroke-white`
-    const iconWrapperClasses = `group w-10 h-10 flex justify-center items-center rounded-full hover:bg-orange shadow-lg hover:cursor-pointer`
-
-    const currentEventStyles = (hit: GeoHit) => {
-        return currentEvent?.id === hit.id ? `stroke-white` : `stroke-black`
-    }
-
-    const [activeTooltipId, setActiveTooltipId] = useState('');
-
-    const handleShowTooltip = (id: string) => {
-        setActiveTooltipId(id);
-    };
-
-    const handleHideTooltip = () => {
-        setActiveTooltipId('');
-    };
+    }, [selectedPlace]);
 
     return (
-        <Map mapLib={mapboxgl}
-             ref={mapRef}
-             maxZoom={10}
-             dragRotate={false}
-             touchPitch={false}
-             pitchWithRotate={false}
-             maxPitch={0}
-             minPitch={0}
-             mapStyle="mapbox://styles/mapbox/navigation-day-v1"
-             initialViewState={{
-                 zoom: userZoomLevel,
-                 latitude: defaultLatLng.latitude,
-                 longitude: defaultLatLng.longitude
-             }}
-             style={{width: '100%', height: '100%'}}
-             mapboxAccessToken={import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN}
-             attributionControl={false}
-             onZoomEnd={() => handleUserLevelZoom(mapRef.current?.getZoom() || 6)}
-        >
-            <>
-                {hits.map(hit => (
-                    <Marker
-                        style={comparePosition(
-                            [currentEvent?._geoloc.lng, currentEvent?._geoloc.lat],
-                            [hit._geoloc.lng, hit._geoloc.lat]) ?
-                            {zIndex: 1000} :
-                            {zIndex: 0}}
-                        key={hit.objectID}
-                        latitude={hit._geoloc.lat}
-                        anchor="bottom"
-                        longitude={hit._geoloc.lng}>
+        <div className={`${className} relative flex-1`} ref={mapContainerRef}>
+            <Map
+                ref={mapRef}
+                initialViewState={initialViewState}
+                minZoom={0}
+                maxZoom={13}
+                maxPitch={0}
+                minPitch={0}
+                pitchWithRotate={false}
+                dragRotate={false}
+                touchPitch={false}
+                customAttribution={``}
+                onDragEnd={async (e) => handleViewStateChange(e.viewState)}
+                onZoomEnd={async (e) => handleViewStateChange(e.viewState)}
+                style={{ width: "100%", height: "100%" }}
+                mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=sr5EVCtJBfz1IQnASSwn`}
+            >
+                <GetUserLocationModal
+                    open={openGetUserLocationModal}
+                    setOpen={setOpenGetUserLocationModal}
+                    onLocationSet={handleFlyTo}
+                />
+                <EventList />
 
-                        <Tippy trigger="click mouseenter"
-                               key={hit.objectID}
-                               placement={`bottom`}
-                               interactive={true}
-                               touch={false}
-                               delay={250}
-                               appendTo={() => document.body}
-                               render={attrs => (
-                                   <EventCard className={`hidden md:block`} event={hit}/>
-                               )}>
-                            <button
-                                className={`${iconWrapperClasses} ${currentEvent?.id === hit.id ? `bg-orange text-white` : `bg-white`}`}
-                                id={`fire-${hit.id}`}
-                                onMouseEnter={() => handleShowTooltip(`fire-${hit.id}`)}
-                                onMouseLeave={handleHideTooltip}
-                                onClick={() => {
-                                    setCurrentEvent(hit)
-                                    handleShowTooltip(`fire-${hit.id}`);
-                                }}>
-                                {
-                                    hit.eventType.includes('retreat') &&
-                                    <RetreatsMarker className={`${iconClasses} ${currentEventStyles(hit)}`}/>
-                                    || (hit.eventType.includes('experience') || hit.eventType.includes('school')) &&
-                                    <ExperiencesMarker className={`${iconClasses} ${currentEventStyles(hit)}`}/>
-                                    || <FiresMarker className={`${iconClasses} ${currentEventStyles(hit)}`}/>
-                                }
-                            </button>
-                        </Tippy>
-                    </Marker>
-                ))}
-
-            </>
-            <GeolocateControl position="top-left"/>
-            <NavigationControl position="top-left"/>
-        </Map>
-    )
+                <GeolocateControl position="top-left" />
+                {showLoader && (
+                    <IsLoading
+                        classnames={`relative mt-8`}
+                        text={`Loading Events`}
+                    />
+                )}
+                <EventCountButton />
+                <OutsideClickHandlerEvents />
+            </Map>
+        </div>
+    );
 };
-
-export default connectGeoSearch(MapComponent);

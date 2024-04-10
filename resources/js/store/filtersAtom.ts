@@ -1,0 +1,45 @@
+import { atom } from "recoil";
+
+const typeGroupState = atom({
+    key: "TypeGroup",
+    default: <string>"",
+});
+const typesState = atom<number[]>({
+    key: "Type",
+    default: [],
+});
+const sexState = atom({
+    key: "Sex",
+    default: <string>"",
+});
+const radiusState = atom({
+    key: "Radius",
+    default: <number>100,
+});
+const startDateState = atom({
+    key: "StartDate",
+    default: <Date | null>null,
+});
+const endDateState = atom({
+    key: "EndDate",
+    default: <Date | null>null,
+});
+const startDateStringState = atom({
+    key: "StartDateString",
+    default: <string>"",
+});
+const endDateStringState = atom({
+    key: "EndDateString",
+    default: <string>"",
+});
+
+export {
+    typeGroupState,
+    typesState,
+    sexState,
+    radiusState,
+    startDateState,
+    endDateState,
+    startDateStringState,
+    endDateStringState,
+};

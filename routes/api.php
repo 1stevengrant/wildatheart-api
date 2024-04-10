@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\EventController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('events', EventController::class);
+Route::get('events/search', \App\Http\Controllers\API\SearchForEventsController::class);
+Route::get('events/types', function () {
+    return response()->json(\App\Models\EventType::all());
+});

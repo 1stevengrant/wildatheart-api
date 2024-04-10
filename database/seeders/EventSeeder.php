@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Event;
-use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,45 +13,34 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->isProduction()) {
+            return;
+        }
+
         $sql = file_get_contents(database_path('seeders/events.sql'));
+
         \DB::unprepared($sql);
 
-        $user = User::factory()->create();
-        $events = Event::withTrashed()->get()->pluck('id');
+        $user = User::factory()->create([
+            'family_name' => 'Grant',
+            'given_name' => 'Steven',
+            'email' => 'steven@ghijk.co.uk',
+            'password' => bcrypt('password'),
+        ]);
+
+        $user->assignRole(User::ROLE_ADMIN);
+
+        User::factory()->create([
+            'family_name' => 'Morrison',
+            'given_name' => 'Jamie',
+            'email' => 'jamie@wildatheart.org',
+            'password' => bcrypt('password'),
+        ]);
+
         DB::table('events')
-            ->whereIn('id', $events)
             ->update([
                 'user_id' => $user->id,
-                'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
             ]);
-
-        Event::factory()->count(5)->approved()->wahExperiences()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->captivatingExperience()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->becomingAKingExperience()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->captivatingCoreRetreat()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->becomingAKingRetreat()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->basicRetreat()->create([
-            'user_id' => $user->id,
-        ]);
-
-        Event::factory()->count(5)->approved()->survivalSchool()->create([
-            'user_id' => $user->id,
-        ]);
 
     }
 }

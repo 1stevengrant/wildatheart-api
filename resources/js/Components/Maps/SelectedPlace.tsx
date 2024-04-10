@@ -1,14 +1,16 @@
 import React from "react";
-import {selectedPlaceAtom} from "@/store";
-import {useRecoilState} from "recoil";
+
+import { useRecoilState } from "recoil";
+
+import { selectedPlaceState } from "@/store/mapAtom";
 
 const SelectedPlace = () => {
-    const [selectedPlace, setSelectedPlace] = useRecoilState(selectedPlaceAtom);
+    const [selectedPlace] = useRecoilState(selectedPlaceState);
     return (
         <div>
             {selectedPlace ? (
                 <>
-                    <p>Coordinates: {selectedPlace.center.join(', ')}</p>
+                    <p>Coordinates: {selectedPlace.center.join(", ")}</p>
                 </>
             ) : null}
         </div>

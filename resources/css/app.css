@@ -1,10 +1,13 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
+@import "./components/css-colors.css";
 @import "./components/card-grid.css";
 @import "./components/mapbox-geocoder.css";
 @import "./components/mapbox.css";
-@import "./components/ais-hits-list.css";
 @import "./components/phone.css";
+@import "./components/map.css";
+@import "./components/date.css";
+
 @import "tailwindcss/utilities";
 
 @supports (-webkit-overflow-scrolling: touch) {

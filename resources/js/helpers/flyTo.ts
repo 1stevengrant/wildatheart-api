@@ -1,4 +1,4 @@
-import {MapRef} from "react-map-gl";
+import { MapRef } from "react-map-gl";
 
 const flyTo = (
     mapRef: MapRef,
@@ -10,8 +10,8 @@ const flyTo = (
         essential: false,
         center: coordinates,
         duration: duration,
-        zoom: zoom
-    })
-}
+        zoom: zoom,
+    });
+};
 
-export default flyTo
+export default flyTo;

@@ -1,21 +1,38 @@
-import React from 'react';
-import EventCardContent from "./EventCardContent";
-import {GeoHit} from "@/types/EventHit";
-import {Link} from "@inertiajs/react";
+import React from "react";
 
-interface EventCardProps {
-    event: GeoHit;
+import { Link } from "@inertiajs/react";
+import { useRecoilState } from "recoil";
+
+import { EventCardContent } from "./EventCardContent";
+
+import { isSelectedEvent } from "@/helpers/isSelectedEvent";
+import { currentEventState } from "@/store";
+import { Event } from "@/types/Event";
+
+interface IEventCardProps {
+    event: Event;
     className?: string;
+    attrs?: any;
 }
 
-const EventCard: React.FC<EventCardProps> = ({event, className}) => {
+export const EventCard = ({
+    event,
+    className = "",
+    attrs,
+}: IEventCardProps) => {
+    const [currentEvent] = useRecoilState(currentEventState);
+
     return (
-        <div className={`relative hidden rounded-md bg-black p-2 shadow-lg md:block md:p-4 ${className} max-w-[520px]`}>
-            <Link href={event.url}
-               className="clear-both flex items-stretch space-x-4">
-                <EventCardContent event={event}/>
+        <div
+            className={`relative rounded-md bg-black p-2 shadow-lg md:p-4 ${className} max-w-[520px] border-2 ${isSelectedEvent(event, currentEvent)}`}
+            {...attrs}
+        >
+            <Link
+                href={event.url}
+                className={`clear-both flex items-stretch space-x-4 focus:outline-none focus:border-none`}
+            >
+                <EventCardContent event={event} />
             </Link>
         </div>
     );
 };
-export default EventCard

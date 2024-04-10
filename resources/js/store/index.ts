@@ -1,23 +1,20 @@
-import { atom } from 'recoil';
-import {GeoHit} from "@/types/EventHit";
-import {LngLat} from "@/types/LngLat";
+import { atom } from "recoil";
 
-export const currentEventAtom = atom<GeoHit | null | undefined>({
-    key: 'currentEventAtom',
-    default: undefined
+import { Event } from "@/types/Event";
+
+const currentEventState = atom<Event | null | undefined>({
+    key: "currentEvent",
+    default: undefined,
 });
 
-export const selectedPlaceAtom = atom<any | undefined>({
-    key: 'selectedPlaceAtom',
-    default: undefined
+const reactNotificationState = atom<Array<any>>({
+    key: "reactNotification",
+    default: [],
 });
 
-export const flyToLocationAtom = atom<LngLat | undefined>({
-    key: 'flyToLocationAtom',
-    default: undefined
+const showFilterPanelState = atom<boolean>({
+    key: "showFilterPanel",
+    default: false,
 });
 
-export const reactNotificationAtom = atom<Array<any>>({
-    key: 'reactNotificationAtom',
-    default: []
-});
+export { currentEventState, reactNotificationState, showFilterPanelState };

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventType;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -37,6 +38,11 @@ class HomeController extends Controller
 
         JsonLd::generate();
 
-        return inertia('Home');
+        return inertia('HomePage', [
+            'allEventTypes' => EventType::all(),
+            'experienceTypes' => EventType::where('slug', 'like', '%experience%')->get(),
+            'retreatTypes' => EventType::where('slug', 'like', '%retreat%')->orWhere('slug', 'like', '%school%')->get(),
+            'fireTypes' => EventType::where('slug', 'like', '%fire%')->get(),
+        ]);
     }
 }
