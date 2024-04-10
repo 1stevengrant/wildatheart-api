@@ -1,6 +1,6 @@
 import React from "react";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
-import LeftColumn from "@/Layouts/LeftColumn";
+import { LeftColumn } from "@/Layouts/LeftColumn";
 import HeadingOne from "@/Components/Type/HeadingOne";
 import RightColumn from "@/Layouts/RightColumn";
 import {Link, useForm, usePage} from "@inertiajs/react";

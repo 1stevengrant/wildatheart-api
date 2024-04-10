@@ -31,7 +31,6 @@ class EventFactory extends Factory
             'user_id' => User::factory()->create()->id,
             'country' => 'US',
             'name' => $this->faker->sentence,
-            'frequency' => $this->faker->randomElement(['weekly', 'monthly', 'quarterly']),
             'sex' => $this->faker->randomElement([Event::FOR_MEN, Event::FOR_WOMEN]),
         ];
     }

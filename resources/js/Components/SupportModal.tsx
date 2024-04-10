@@ -1,28 +1,32 @@
-import React, {FormEventHandler, Fragment} from 'react'
-import {Dialog, Transition} from '@headlessui/react'
-import InputLabel from "@/Components/Forms/InputLabel";
-import TextInput from "@/Components/Forms/TextInput";
-import TextArea from "@/Components/Forms/TextArea";
-import InputError from "@/Components/Forms/InputError";
-import {useForm, usePage} from "@inertiajs/react";
-import Modal from "@/Components/Ui/Modal";
-import ModalActions from "@/Components/Ui/ModalActions";
+import React, { FormEventHandler } from "react";
+
+import { Dialog } from "@headlessui/react";
+import { useForm, usePage } from "@inertiajs/react";
+
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 import FormFieldsWrapper from "@/Components/Forms/FormFieldsWrapper";
+import InputError from "@/Components/Forms/InputError";
+import InputLabel from "@/Components/Forms/InputLabel";
+import TextArea from "@/Components/Forms/TextArea";
+import TextInput from "@/Components/Forms/TextInput";
+import Modal from "@/Components/Ui/Modal";
+import ModalActions from "@/Components/Ui/ModalActions";
 
 interface SupportModalProps {
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
-const SupportModal: React.FC<SupportModalProps> = ({open, setOpen}) => {
-    const {auth} = usePage<any>().props
-    const {data, setData, post, processing, errors, reset} = useForm({
-        name: auth.user ? `${auth.user.given_name} ${auth.user.family_name}` : '',
-        email: auth.user ? auth.user.email : '',
-        subject: '',
-        description: '',
+const SupportModal: React.FC<SupportModalProps> = ({ open, setOpen }) => {
+    const { auth } = usePage<any>().props;
+    const { data, setData, post, errors, reset } = useForm({
+        name: auth.user
+            ? `${auth.user.given_name} ${auth.user.family_name}`
+            : "",
+        email: auth.user ? auth.user.email : "",
+        subject: "",
+        description: "",
     });
 
     const submit: FormEventHandler = (e) => {
@@ -31,13 +35,13 @@ const SupportModal: React.FC<SupportModalProps> = ({open, setOpen}) => {
         post(route('support.store'), {
             preserveScroll: true,
             onSuccess: () => handleSuccess(),
-        })
+        });
     };
 
     const handleSuccess = () => {
-        setOpen(false)
-        reset()
-    }
+        setOpen(false);
+        reset();
+    };
 
     return (
         <Modal open={open} setOpen={setOpen}>
@@ -48,7 +52,7 @@ const SupportModal: React.FC<SupportModalProps> = ({open, setOpen}) => {
                     </Dialog.Title>
                     <FormFieldsWrapper>
                         <div>
-                            <InputLabel htmlFor="name" value="Name" required/>
+                            <InputLabel htmlFor="name" value="Name" required />
                             <TextInput
                                 id="name"
                                 name="name"
@@ -56,40 +60,60 @@ const SupportModal: React.FC<SupportModalProps> = ({open, setOpen}) => {
                                 className="mt-1 block w-full"
                                 autoComplete="name"
                                 isFocused={true}
-                                onChange={(e) => setData('name', e.target.value)}
+                                onChange={(e) =>
+                                    setData("name", e.target.value)
+                                }
                             />
-                            <InputError message={errors.name}/>
+                            <InputError message={errors.name} />
                         </div>
                         <div>
-                            <InputLabel htmlFor="email" value="Email" required/>
+                            <InputLabel
+                                htmlFor="email"
+                                value="Email"
+                                required
+                            />
                             <TextInput
                                 id="email"
                                 name="email"
                                 value={data.email}
                                 className="mt-1 block w-full"
                                 autoComplete="email"
-                                onChange={(e) => setData('email', e.target.value)}
+                                onChange={(e) =>
+                                    setData("email", e.target.value)
+                                }
                             />
                             <InputError message={errors.email} />
                         </div>
                         <div>
-                            <InputLabel htmlFor="subject" value="Subject" required/>
+                            <InputLabel
+                                htmlFor="subject"
+                                value="Subject"
+                                required
+                            />
                             <TextInput
                                 id="subject"
                                 name="subject"
                                 value={data.subject}
                                 className="mt-1 block w-full"
                                 autoComplete="subject"
-                                onChange={(e) => setData('subject', e.target.value)}
+                                onChange={(e) =>
+                                    setData("subject", e.target.value)
+                                }
                             />
                             <InputError message={errors.subject} />
                         </div>
                         <div>
-                            <InputLabel htmlFor="description" value="Description" required/>
+                            <InputLabel
+                                htmlFor="description"
+                                value="Description"
+                                required
+                            />
                             <TextArea
                                 id="description"
                                 name="description"
-                                onChange={(e) => setData('description', e.target.value)}
+                                onChange={(e) =>
+                                    setData("description", e.target.value)
+                                }
                             />
                             <InputError message={errors.description} />
                         </div>
@@ -103,14 +127,11 @@ const SupportModal: React.FC<SupportModalProps> = ({open, setOpen}) => {
                     >
                         Cancel
                     </SecondaryButton>
-                    <PrimaryButton type="submit">
-                        Submit
-                    </PrimaryButton>
+                    <PrimaryButton type="submit">Submit</PrimaryButton>
                 </ModalActions>
-
             </form>
         </Modal>
-    )
-}
+    );
+};
 
-export default SupportModal
+export default SupportModal;

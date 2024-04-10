@@ -1,10 +1,10 @@
-import {defaultCountries} from "react-international-phone";
+import { defaultCountries } from "react-international-phone";
 const preferredOrder: { [key: string]: number } = {
-    'us': 1,
-    'ca': 2,
-    'gb': 3,
-    'nz': 4,
-    'au': 5
+    us: 1,
+    ca: 2,
+    gb: 3,
+    nz: 4,
+    au: 5,
 };
 
 const sortedCountries = [...defaultCountries].sort((a, b) => {
@@ -15,4 +15,4 @@ const sortedCountries = [...defaultCountries].sort((a, b) => {
     return aOrder - bOrder;
 });
 
-export default sortedCountries
+export default sortedCountries;

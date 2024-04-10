@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
-import AppLayout from "../Layouts/AppLayout";
-import StaticMap from "@/Components/Maps/StaticMap";
+
 import { usePage } from "@inertiajs/react";
-import { Event } from "@/types/Event";
+import Markdown from "react-markdown";
+
 import BackToEvents from "@/Components/Buttons/BackToEvents";
 import ConnectWithHost from "@/Components/Events/ConnectWithHost";
-import UpdateAddress from "@/Components/Events/UpdateAddress";
-import MobileConnect from "@/Components/Events/MobileConnect";
-import { PageProps } from "@/types";
+import Date from "@/Components/Events/Detail/Dates";
 import Host from "@/Components/Events/Detail/Host";
 import Location from "@/Components/Events/Detail/Location";
-import Date from "@/Components/Events/Detail/Dates";
 import VideoPlayer from "@/Components/Events/Detail/VideoPlayer";
-import HeadingOne from "@/Components/Type/HeadingOne";
-import Markdown from "react-markdown";
+import MobileConnect from "@/Components/Events/MobileConnect";
 import PhotoCarousel from "@/Components/Events/PhotoCarousel";
+import ShareEvent from "@/Components/Events/ShareEvent";
+import UpdateAddress from "@/Components/Events/UpdateAddress";
+import { StaticMap } from "@/Components/Maps/StaticMap";
+import HeadingOne from "@/Components/Type/HeadingOne";
 import {
     EventTypeBecomingAKingExperience,
     EventTypeBecomingAKingRetreat,
@@ -24,9 +24,9 @@ import {
     EventTypeWahBasicRetreat,
     EventTypeWahExperience,
 } from "@/helpers/eventNames";
-import ShareEvent from "@/Components/Events/ShareEvent";
-import { ShareIcon } from "@heroicons/react/24/outline";
-import { imageGenerator, userPhoto } from "@/helpers/user";
+import { AppLayout } from "@/Layouts/AppLayout";
+import { PageProps } from "@/types";
+import { Event } from "@/types/Event";
 
 const ViewEvent = () => {
     const page = usePage();
@@ -37,7 +37,7 @@ const ViewEvent = () => {
         if (window.innerWidth < 768) {
             const eventElement = document.getElementById("event"),
                 connectWithHostElement = document.getElementById(
-                    "mobile-connect-with-host",
+                    "mobile-connect-with-host"
                 );
 
             if (!eventElement || !connectWithHostElement) return;
@@ -167,7 +167,7 @@ const ViewEvent = () => {
                                                             </p>
                                                         </div>
                                                     </li>
-                                                ),
+                                                )
                                             )}
                                         </ul>
                                     </div>
@@ -184,9 +184,9 @@ const ViewEvent = () => {
                             {event.eventTypeData.photos.length > 0 && (
                                 <PhotoCarousel
                                     className={`mt-8`}
-                                    images={event?.eventTypeData.photos}/>
+                                    images={event?.eventTypeData.photos}
+                                />
                             )}
-
                         </div>
 
                         <div className="hidden md:block md:w-1/3 relative">

@@ -1,0 +1,37 @@
+import React from "react";
+
+import OutsideClickHandler from "react-outside-click-handler";
+import { useSwipeable } from "react-swipeable";
+import { useRecoilState } from "recoil";
+
+import { EventCardMobile } from "@/Components/Events/EventCardMobile";
+import { currentEventState } from "@/store";
+
+export const OutsideClickHandlerEvents = () => {
+    const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
+    const swipeHandlers = useSwipeable({
+        onSwipedDown: () => setCurrentEvent(undefined),
+        onSwipedUp: () => setCurrentEvent(undefined),
+        onSwipedLeft: () => setCurrentEvent(undefined),
+        onSwipedRight: () => setCurrentEvent(undefined),
+        swipeDuration: 500,
+        preventScrollOnSwipe: true,
+        trackMouse: true,
+    });
+
+    return (
+        <>
+            {currentEvent && (
+                <OutsideClickHandler
+                    onOutsideClick={() => setCurrentEvent(undefined)}
+                >
+                    <div {...swipeHandlers}>
+                        <EventCardMobile
+                            className={`fixed bottom-4 right-4 left-4 xl:hidden z-[1001] md:max-w-[500px] md:mx-auto`}
+                        />
+                    </div>
+                </OutsideClickHandler>
+            )}
+        </>
+    );
+};

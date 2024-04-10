@@ -5,12 +5,14 @@ interface RightColumnProps {
     children: React.ReactNode;
 }
 
-const RightColumn = ({className, children}: RightColumnProps) => {
+const RightColumn = ({ className, children }: RightColumnProps) => {
     return (
-        <div className={className + ' md:w-1/2 md:flex flex-col justify-center'}>
+        <div
+            className={className + " md:w-1/2 md:flex flex-col justify-center"}
+        >
             {children}
         </div>
     );
-}
+};
 
 export default RightColumn;

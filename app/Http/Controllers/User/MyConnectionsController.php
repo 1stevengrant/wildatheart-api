@@ -31,7 +31,7 @@ class MyConnectionsController extends Controller
                 ]),
             ]);
 
-        return inertia('Profile/MyConnections', [
+        return inertia('Profile/MyConnectionsPage', [
             'eventConnections' => $eventConnections,
             'allConnections' => auth()->user()->generalConnections->sortBy('family_name'),
         ]);

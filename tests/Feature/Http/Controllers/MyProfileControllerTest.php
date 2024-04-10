@@ -12,7 +12,7 @@ test('it shows my profile to be edited', function () {
         ->get(route('my.profile'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/MyProfile')
+            ->component('Profile/MyProfilePage')
         );
 });
 

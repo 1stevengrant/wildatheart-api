@@ -22,7 +22,7 @@ test("a gift for an event that hasn't been claimed, can be requested", function 
         ->get(route('gift', $event))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('SendGift')
+            ->component('SendGiftPage')
         );
 });
 
