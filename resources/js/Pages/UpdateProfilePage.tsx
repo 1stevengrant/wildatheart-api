@@ -4,7 +4,7 @@ import { UpdateProfileForm } from "@/Components/Forms/UpdateProfileForm";
 import HeadingOne from "@/Components/Type/HeadingOne";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { LeftColumn } from "@/Layouts/LeftColumn";
-import RightColumn from "@/Layouts/RightColumn";
+import { RightColumn } from "@/Layouts/RightColumn";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 
 const UpdateProfilePage = () => {

@@ -5,7 +5,7 @@ import HeadingOne from "@/Components/Type/HeadingOne";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";
-import RightColumn from "@/Layouts/RightColumn";
+import { RightColumn } from "@/Layouts/RightColumn";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 
 const Host = () => {

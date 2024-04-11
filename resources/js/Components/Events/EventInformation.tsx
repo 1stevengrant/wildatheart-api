@@ -26,7 +26,7 @@ import lookupLocation from "@/helpers/lookupLocation";
 import objectIsEmpty from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
 import { LeftColumn } from "@/Layouts/LeftColumn";
-import RightColumn from "@/Layouts/RightColumn";
+import { RightColumn } from "@/Layouts/RightColumn";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
