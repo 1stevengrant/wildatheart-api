@@ -10,7 +10,7 @@ import EventDisplay from "@/Components/Events/EventDisplay";
 import FormGrid from "@/Components/Forms/FormGrid";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
-import Instruction from "@/Components/Forms/Instruction";
+import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import HeadingOne from "@/Components/Type/HeadingOne";
 import selectClasses from "@/helpers/selectClasses";

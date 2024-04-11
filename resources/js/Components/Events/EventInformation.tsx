@@ -16,7 +16,7 @@ import FireMarker from "@/Components/Events/FireMarker";
 import FireNamingGuidelines from "@/Components/Events/FireNamingGuidelines";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
-import Instruction from "@/Components/Forms/Instruction";
+import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import MapboxSearch from "@/Components/Maps/MapboxSearch";
 import HeadingOne from "@/Components/Type/HeadingOne";
