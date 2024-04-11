@@ -1,6 +1,6 @@
 import React from "react";
 
-import ProfileNav from "@/Components/Layout/ProfileNav";
+import { ProfileNav } from "@/Components/Layout/ProfileNav";
 import HeadingOne from "@/Components/Type/HeadingOne";
 
 interface MyProfileWrapperProps {
