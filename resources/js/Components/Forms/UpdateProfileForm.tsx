@@ -8,10 +8,11 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
-import Instruction from "@/Components/Forms/Instruction";
+import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import UserAvatar from "@/Components/UserAvatar";
 import useRoute from "@/Hooks/useRoute";
+import { SwitchComponent } from "@/Components/SwitchComponent";
 
 const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-orange hover:text-orange transition ease-in-out duration-100 font-semibold text-sm`;
 
@@ -236,29 +237,18 @@ export const UpdateProfileForm = ({
                     <InputLabel
                         htmlFor="emailUpdates"
                         value="Updates & Resources"
+                        className={`mb-2`}
                     />
-                    <div className="flex flex-col space-y-4 md:space-x-4 md:space-y-0 md:flex-row md:items-center">
-                        <div className="flex items-center rounded-full bg-form">
-                            <button
-                                type={"button"}
-                                onClick={() =>
-                                    form.setData("opted_into_marketing", true)
-                                }
-                                className={`w-1/2 px-10 py-3 text-sm font-semibold ${form.data.opted_into_marketing ? "border border-white rounded-l-full" : ""}`}
-                            >
-                                Yes
-                            </button>
-                            <button
-                                type={"button"}
-                                onClick={() =>
-                                    form.setData("opted_into_marketing", false)
-                                }
-                                className={`w-1/2 px-10 py-3 text-sm font-semibold ${!form.data.opted_into_marketing ? "border border-white rounded-r-full" : ""}`}
-                            >
-                                No
-                            </button>
-                        </div>
-                    </div>
+                    <SwitchComponent
+                        checked={form.data.opted_into_marketing === true}
+                        onChange={() => {
+                            if (form.data.opted_into_marketing) {
+                                form.setData("opted_into_marketing", false);
+                            } else {
+                                form.setData("opted_into_marketing", true);
+                            }
+                        }}
+                    />
                     <Instruction>
                         Send me updates and resources from Wild at Heart.
                     </Instruction>
