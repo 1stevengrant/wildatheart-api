@@ -11,7 +11,10 @@ interface TwoColumnWrapperProps {
     children: React.ReactNode;
 }
 
-const TwoColumnWrapper = ({ className, children }: TwoColumnWrapperProps) => {
+export const TwoColumnWrapper = ({
+    className = "",
+    children,
+}: TwoColumnWrapperProps) => {
     const { notifications } = usePage<any>().props;
     const [reactNotifications] = useRecoilState(reactNotificationState);
     return (
@@ -37,5 +40,3 @@ const TwoColumnWrapper = ({ className, children }: TwoColumnWrapperProps) => {
         </>
     );
 };
-
-export default TwoColumnWrapper;

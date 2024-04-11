@@ -6,7 +6,7 @@ import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";
 import { RightColumn } from "@/Layouts/RightColumn";
-import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
+import { TwoColumnWrapper } from "@/Layouts/TwoColumnWrapper";
 
 const Host = () => {
     const page = useTypedPage();
