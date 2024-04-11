@@ -13,7 +13,9 @@ use App\Http\Controllers\Gift\GiftSuccessController;
 use App\Http\Controllers\Gift\HandleSendGiftController;
 use App\Http\Controllers\Gift\SendGiftController;
 use App\Http\Controllers\ResourcesController;
+use App\Http\Controllers\User\AgreeToHostAgreementController;
 use App\Http\Controllers\User\DestroyUserImageController;
+use App\Http\Controllers\User\HostAgreementPageController;
 use App\Http\Controllers\User\HostProfileController;
 use App\Http\Controllers\User\MyConnectionsController;
 use App\Http\Controllers\User\MyEventsController;
@@ -24,9 +26,8 @@ Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.logi
 Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('host/agreement', function () {
-        return inertia('HostAgreementPage');
-    })->name('host.agreement');
+    Route::get('host/agreement', HostAgreementPageController::class)->name('host.agreement');
+    Route::post('host/agreement', AgreeToHostAgreementController::class)->name('host.agreement.store');
 
     Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
     Route::get('host', HostProfileController::class)->name('host');

@@ -11,7 +11,7 @@ import InputLabel from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import { SwitchComponent } from "@/Components/SwitchComponent";
-import UserAvatar from "@/Components/UserAvatar";
+import { UserAvatar } from "@/Components/UserAvatar";
 import useRoute from "@/Hooks/useRoute";
 
 const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-orange hover:text-orange transition ease-in-out duration-100 font-semibold text-sm`;
@@ -244,7 +244,7 @@ export const UpdateProfileForm = ({
                         onChange={() =>
                             form.setData(
                                 "opted_into_marketing",
-                                !form.data.opted_into_marketing,
+                                !form.data.opted_into_marketing
                             )
                         }
                     />

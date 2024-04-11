@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "@inertiajs/react";
 
-import UserAvatar from "@/Components/UserAvatar";
+import { UserAvatar } from "@/Components/UserAvatar";
 import { dateFormatter } from "@/helpers/dateFormatter";
 import { EVENT_FOR_MEN } from "@/helpers/eventSex";
 import {
