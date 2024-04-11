@@ -1,6 +1,6 @@
 import React from "react";
 
-import EventInformation from "@/Components/Events/EventInformation";
+import { EventInformation } from "@/Components/Events/EventInformation";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
