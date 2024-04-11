@@ -10,9 +10,9 @@ import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
+import { SwitchComponent } from "@/Components/SwitchComponent";
 import UserAvatar from "@/Components/UserAvatar";
 import useRoute from "@/Hooks/useRoute";
-import { SwitchComponent } from "@/Components/SwitchComponent";
 
 const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-orange hover:text-orange transition ease-in-out duration-100 font-semibold text-sm`;
 
