@@ -12,7 +12,7 @@ export default {
 
     theme: {
         backgroundImage: {
-            campfire: "url('/resources/img/wah-fires-suburb-1.webp')",
+            campfire: "url('/resources/img/fires-image.webp')",
         },
         fontWeight: {
             hairline: 100,

@@ -8,7 +8,7 @@ import HeadingOne from "@/Components/Type/HeadingOne";
 import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";
-import RightColumn from "@/Layouts/RightColumn";
+import { RightColumn } from "@/Layouts/RightColumn";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 import { reactNotificationState } from "@/store";
 import { PageProps } from "@/types";
