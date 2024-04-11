@@ -11,7 +11,7 @@ export const MainHeader = () => {
     const shouldDisplayMenu = () => {
         return url
             ? ["profile", "events", "connections", "resources"].some((str) =>
-                  url.includes(str)
+                  url.includes(str),
               )
             : false;
     };
@@ -37,7 +37,6 @@ export const MainHeader = () => {
             </div>
 
             {auth.user && shouldDisplayMenu() ? <MyProfileNavMobile /> : <></>}
-
             <div className={`hidden lg:w-1/2 lg:flex lg:justify-end`}>
                 <div className={`flex items-center space-x-4`}>
                     <ToggleSupportRequestButton />
