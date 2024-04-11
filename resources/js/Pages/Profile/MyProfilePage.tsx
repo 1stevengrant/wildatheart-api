@@ -1,6 +1,6 @@
 import React from "react";
 
-import UpdateProfileForm from "@/Components/Forms/UpdateProfileForm";
+import { UpdateProfileForm } from "@/Components/Forms/UpdateProfileForm";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { AppLayout } from "@/Layouts/AppLayout";
 import MyProfileWrapper from "@/Layouts/MyProfileWrapper";
