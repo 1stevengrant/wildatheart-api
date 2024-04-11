@@ -241,13 +241,12 @@ export const UpdateProfileForm = ({
                     />
                     <SwitchComponent
                         checked={form.data.opted_into_marketing === true}
-                        onChange={() => {
-                            if (form.data.opted_into_marketing) {
-                                form.setData("opted_into_marketing", false);
-                            } else {
-                                form.setData("opted_into_marketing", true);
-                            }
-                        }}
+                        onChange={() =>
+                            form.setData(
+                                "opted_into_marketing",
+                                !form.data.opted_into_marketing
+                            )
+                        }
                     />
                     <Instruction>
                         Send me updates and resources from Wild at Heart.
