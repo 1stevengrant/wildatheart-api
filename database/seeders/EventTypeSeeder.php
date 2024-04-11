@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\EventType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class EventTypeSeeder extends Seeder
 {
@@ -27,6 +28,7 @@ class EventTypeSeeder extends Seeder
             'name' => $eventType,
             'summary' => fake()->sentence(5),
             'description' => fake()->paragraphs(6, true),
+            'slug' => Str::slug($eventType),
         ]));
     }
 }
