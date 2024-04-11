@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/react";
 
 import AuthNav from "@/Components/Layout/AuthNav";
-import MyProfileNavMobile from "@/Components/Layout/MyProfileNavMobile";
+import { MyProfileNavMobile } from "@/Components/Layout/MyProfileNavMobile";
 import ToggleSupportRequestButton from "@/Components/Layout/ToggleSupportRequestButton";
 import Logo from "@/Components/Logo";
 
@@ -40,7 +40,7 @@ export const MainHeader = () => {
             <div className={`hidden lg:w-1/2 lg:flex lg:justify-end`}>
                 <div className={`flex items-center space-x-4`}>
                     <ToggleSupportRequestButton />
-                    <Link href={"/host"} className={`${textStyles}`}>
+                    <Link href={`/host`} className={`${textStyles}`}>
                         Host an Event
                     </Link>
                     <button

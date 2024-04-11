@@ -11,7 +11,7 @@ interface MyProfileNavProps {
     className?: string;
 }
 
-const MyProfileNavMobile = ({ className }: MyProfileNavProps) => {
+export const MyProfileNavMobile = ({ className }: MyProfileNavProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     return (
         <div className={`${className} z-10 md:hidden`}>
@@ -40,5 +40,3 @@ const MyProfileNavMobile = ({ className }: MyProfileNavProps) => {
         </div>
     );
 };
-
-export default MyProfileNavMobile;
