@@ -16,7 +16,7 @@ import { Event } from "@/types/Event";
 
 const ConfirmEmailPage = () => {
     const [reactNotifications, setReactNotifications] = useRecoilState(
-        reactNotificationState
+        reactNotificationState,
     );
     const page = usePage();
     const { auth } = page.props as unknown as PageProps;

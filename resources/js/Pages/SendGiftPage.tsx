@@ -83,7 +83,7 @@ const SendGiftPage = () => {
                                         onChange={(e) =>
                                             setData(
                                                 "given_name",
-                                                e.target.value
+                                                e.target.value,
                                             )
                                         }
                                     />
@@ -104,7 +104,7 @@ const SendGiftPage = () => {
                                         onChange={(e) =>
                                             setData(
                                                 "family_name",
-                                                e.target.value
+                                                e.target.value,
                                             )
                                         }
                                     />
@@ -143,7 +143,7 @@ const SendGiftPage = () => {
                                         onChange={(e) =>
                                             setData(
                                                 "street_address",
-                                                e.target.value
+                                                e.target.value,
                                             )
                                         }
                                     />
