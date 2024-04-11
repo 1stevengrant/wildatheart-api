@@ -16,7 +16,7 @@ import HeadingOne from "@/Components/Type/HeadingOne";
 import selectClasses from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";
-import RightColumn from "@/Layouts/RightColumn";
+import { RightColumn } from "@/Layouts/RightColumn";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 import { PageProps } from "@/types";
 import { Event } from "@/types/Event";
