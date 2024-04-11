@@ -29,10 +29,11 @@ export const GetUserLocationModal = ({
 
     const rejectLocationPermissions = () => {
         localStorage.setItem("locationPermissions", "denied");
-        setOpen(false);
         setLatitude(defaultLatLng.latitude);
         setLongitude(defaultLatLng.longitude);
+        onLocationSet(defaultLatLng.latitude, defaultLatLng.longitude);
         console.log("Location Permissions Denied, get default events");
+        setOpen(false);
     };
 
     const useMyLocation = () => {
@@ -42,6 +43,14 @@ export const GetUserLocationModal = ({
             successCallback,
             errorCallback
         );
+    };
+
+    const handleModalClose = () => {
+        setLatitude(defaultLatLng.latitude);
+        setLongitude(defaultLatLng.longitude);
+        onLocationSet(defaultLatLng.latitude, defaultLatLng.longitude);
+        console.log("Location modal closed but not denied, get default events");
+        setOpen(false);
     };
 
     const successCallback = (position: GeolocationPosition) => {
@@ -74,7 +83,7 @@ export const GetUserLocationModal = ({
             </button>
             <Modal open={open} setOpen={setOpen}>
                 <div className={"flex justify-end"}>
-                    <button onClick={() => setOpen(false)}>
+                    <button onClick={handleModalClose}>
                         <XMarkIcon className={"w-6 h-6 text-white"} />
                     </button>
                 </div>
