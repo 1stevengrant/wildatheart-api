@@ -173,4 +173,9 @@ class User extends Authenticatable
     {
         return new UserBuilder($query);
     }
+
+    public function hasAgreedToHostAgreement(): bool
+    {
+        return $this->agreed_to_host_agreement_date !== null;
+    }
 }
