@@ -4,7 +4,7 @@ import GiftComing from "@/Components/GiftComing";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";
 import { RightColumn } from "@/Layouts/RightColumn";
-import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
+import { TwoColumnWrapper } from "@/Layouts/TwoColumnWrapper";
 
 const GiftSuccessPage = () => {
     return (

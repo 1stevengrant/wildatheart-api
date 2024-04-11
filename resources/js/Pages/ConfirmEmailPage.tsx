@@ -9,7 +9,7 @@ import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";
 import { RightColumn } from "@/Layouts/RightColumn";
-import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
+import { TwoColumnWrapper } from "@/Layouts/TwoColumnWrapper";
 import { reactNotificationState } from "@/store";
 import { PageProps } from "@/types";
 import { Event } from "@/types/Event";
