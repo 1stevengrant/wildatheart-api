@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
@@ -13,7 +14,7 @@ it('checks if a user should be an admin', function () {
 
 it('checks if a user with @ghijk.co.uk email address should be an admin', function () {
     $user = User::factory()->create([
-        'email' => 'steven@ghijk.co.uk'
+        'email' => 'steven@ghijk.co.uk',
     ]);
 
     $user2 = User::factory()->create([
@@ -26,4 +27,3 @@ it('checks if a user with @ghijk.co.uk email address should be an admin', functi
     expect($user->hasRole(User::ROLE_ADMIN))->toBeTrue()
         ->and($user2->hasRole(User::ROLE_ADMIN))->toBeTrue();
 });
-

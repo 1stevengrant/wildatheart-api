@@ -1,7 +1,5 @@
 import React from "react";
 
-import { imageGenerator } from "@/helpers/user";
-
 interface IUserAvatarProps {
     className?: string;
     width?: number;
@@ -21,9 +19,7 @@ const UserAvatar = ({
                 className +
                 " rounded-full inline-block flex-shrink-0 object-cover"
             }
-            src={imageGenerator(image, {
-                width: width,
-            })}
+            src={image}
             alt={alt}
         />
     );
