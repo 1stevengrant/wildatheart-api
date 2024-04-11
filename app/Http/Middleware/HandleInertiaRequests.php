@@ -34,7 +34,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth.user' => fn () => $request->user()
-                ? $request->user()->only('id', 'given_name', 'family_name', 'full_name', 'email', 'image', 'phone', 'opted_into_marketing', 'profile_step')
+                ? $this->transformUser($request->user())
                 : null,
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
@@ -42,5 +42,12 @@ class HandleInertiaRequests extends Middleware
             ],
             'notifications' => fn () => Session::get('notifications'),
         ];
+    }
+
+    protected function transformUser($user): array
+    {
+        return array_merge($user->only('id', 'given_name', 'family_name', 'full_name', 'email', 'phone', 'opted_into_marketing', 'profile_step'), [
+            'image' => $user->profilePhoto(),
+        ]);
     }
 }

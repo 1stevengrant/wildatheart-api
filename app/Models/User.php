@@ -93,6 +93,10 @@ class User extends Authenticatable
 
     public function getFullnameAttribute(): string
     {
+        if ($this->given_name === null || $this->family_name === null) {
+            return $this->email;
+        }
+
         return "{$this->given_name} {$this->family_name}";
     }
 
@@ -116,7 +120,7 @@ class User extends Authenticatable
             ]);
         }
 
-        return asset('svgs/user.svg');
+        return \Avatar::create($this->fullname)->toBase64();
 
     }
 
