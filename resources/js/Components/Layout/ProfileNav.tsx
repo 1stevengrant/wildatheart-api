@@ -4,7 +4,7 @@ import { LogoutButtonWithModal } from "@/Components/LogoutButtonWithModal";
 import myProfileNavItems from "@/Components/MyProfileNavItems";
 import ProfileNavItem from "@/Components/Profile/ProfileNavItem";
 
-const ProfileNav = () => {
+export const ProfileNav = () => {
     return (
         <nav
             className={`hidden flex-col items-center space-y-6 border-r border-r-grey-darker p-4 md:flex min-w-[300px] md:px-7 md:py-6`}
@@ -21,5 +21,3 @@ const ProfileNav = () => {
         </nav>
     );
 };
-
-export default ProfileNav;
