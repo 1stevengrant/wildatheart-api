@@ -11,7 +11,7 @@ export const MainHeader = () => {
     const shouldDisplayMenu = () => {
         return url
             ? ["profile", "events", "connections", "resources"].some((str) =>
-                  url.includes(str),
+                  url.includes(str)
               )
             : false;
     };

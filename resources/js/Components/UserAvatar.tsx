@@ -7,7 +7,7 @@ interface IUserAvatarProps {
     alt?: string;
 }
 
-const UserAvatar = ({
+export const UserAvatar = ({
     className = "h-6 w-6",
     width = 200,
     image,
@@ -24,5 +24,3 @@ const UserAvatar = ({
         />
     );
 };
-
-export default UserAvatar;

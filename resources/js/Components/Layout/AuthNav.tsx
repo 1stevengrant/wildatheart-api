@@ -5,7 +5,7 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { usePage } from "@inertiajs/react";
 
 import { LogoutModal } from "@/Components/LogoutModal";
-import UserAvatar from "@/Components/UserAvatar";
+import { UserAvatar } from "@/Components/UserAvatar";
 import classNames from "@/helpers/classNames";
 import { linkClass } from "@/helpers/linkClass";
 
@@ -48,7 +48,7 @@ const AuthNav = () => {
                                         href={route("my.profile")}
                                         className={classNames(
                                             active ? "bg-grey-lighter" : "",
-                                            "block px-4 py-2" + " text-black",
+                                            "block px-4 py-2" + " text-black"
                                         )}
                                     >
                                         My Profile
@@ -62,7 +62,7 @@ const AuthNav = () => {
                                             onClick={() => setOpen(true)}
                                             className={classNames(
                                                 active ? "bg-grey-lighter" : "",
-                                                `block px-4 py-2 text-black hover:bg-grey-lighter w-full text-left`,
+                                                `block px-4 py-2 text-black hover:bg-grey-lighter w-full text-left`
                                             )}
                                         >
                                             Logout

@@ -44,7 +44,7 @@ export const EventInformation = ({ user }: any) => {
     const lookupCurrentLocation = () => {
         if (navigator.geolocation) {
             const locationData = JSON.parse(
-                localStorage.getItem("locationData") || "{}",
+                localStorage.getItem("locationData") || "{}"
             );
 
             if (
@@ -59,16 +59,16 @@ export const EventInformation = ({ user }: any) => {
                         locationData.coords.latitude,
                     ],
                     undefined,
-                    userZoomLevel,
+                    userZoomLevel
                 );
                 addEvent(
                     locationData.coords.longitude,
-                    locationData.coords.latitude,
+                    locationData.coords.latitude
                 );
             } else {
                 navigator.geolocation.getCurrentPosition(
                     getLocationSuccess,
-                    getLocationError,
+                    getLocationError
                 );
             }
         }
@@ -83,12 +83,12 @@ export const EventInformation = ({ user }: any) => {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                 },
-            }),
+            })
         );
         flyTo(
             [position.coords.longitude, position.coords.latitude],
             undefined,
-            userZoomLevel,
+            userZoomLevel
         );
 
         addEvent(position.coords.longitude, position.coords.latitude);
@@ -102,7 +102,7 @@ export const EventInformation = ({ user }: any) => {
     const flyTo = (
         coordinates: [number, number],
         duration: number = 2000,
-        zoom: number = 6,
+        zoom: number = 6
     ) => {
         mapRef.current?.flyTo({
             essential: false,
@@ -163,32 +163,32 @@ export const EventInformation = ({ user }: any) => {
         const location = await lookupLocation(lng, lat);
 
         const country = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("country"),
+                feature.id.includes("country")
             )?.text,
             region = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("region"),
+                feature.id.includes("region")
             )?.text,
             postcode = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("postcode"),
+                feature.id.includes("postcode")
             )?.text,
             district = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("district"),
+                feature.id.includes("district")
             )?.text,
             place = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("place"),
+                feature.id.includes("place")
             )?.text,
             locality = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("locality"),
+                feature.id.includes("locality")
             )?.text,
             neighborhood = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("neighborhood"),
+                feature.id.includes("neighborhood")
             )?.text,
             streetAddress = location.find(
                 (feature: { id: string | string[] }) =>
-                    feature.id.includes("address"),
+                    feature.id.includes("address")
             )?.text,
             poi = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("poi"),
+                feature.id.includes("poi")
             )?.text;
 
         data.country = country;
@@ -301,7 +301,7 @@ export const EventInformation = ({ user }: any) => {
                             mapboxAccessToken={config("services.mapbox.token")}
                             onZoomEnd={() =>
                                 handleUserLevelZoom(
-                                    mapRef.current?.getZoom() || 6,
+                                    mapRef.current?.getZoom() || 6
                                 )
                             }
                             attributionControl={false}

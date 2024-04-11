@@ -8,7 +8,7 @@ import EventInfo from "@/Components/Events/EventInfo";
 import EventLocation from "@/Components/Events/EventLocation";
 import EventTypeBadge from "@/Components/Events/EventTypeBadge";
 import { HostedBy } from "@/Components/Events/HostedBy";
-import UserAvatar from "@/Components/UserAvatar";
+import { UserAvatar } from "@/Components/UserAvatar";
 import { dateFormatter } from "@/helpers/dateFormatter";
 import { EVENT_FOR_MEN } from "@/helpers/eventSex";
 import {

@@ -11,7 +11,7 @@ import { useRecoilState } from "recoil";
 
 import FooterNavLink from "@/Components/Layout/FooterNavLink";
 import SupportModal from "@/Components/SupportModal";
-import UserAvatar from "@/Components/UserAvatar";
+import { UserAvatar } from "@/Components/UserAvatar";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 import { linkClass } from "@/helpers/linkClass";
 import { showFilterPanelState } from "@/store";
