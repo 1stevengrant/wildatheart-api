@@ -85,7 +85,7 @@ const ConnectWithHostPage = () => {
                                         onChange={(e) =>
                                             form.setData(
                                                 "given_name",
-                                                e.target.value,
+                                                e.target.value
                                             )
                                         }
                                     />
@@ -108,7 +108,7 @@ const ConnectWithHostPage = () => {
                                         onChange={(e) =>
                                             form.setData(
                                                 "family_name",
-                                                e.target.value,
+                                                e.target.value
                                             )
                                         }
                                     />
@@ -132,7 +132,7 @@ const ConnectWithHostPage = () => {
                                         onChange={(e) =>
                                             form.setData(
                                                 "email",
-                                                e.target.value,
+                                                e.target.value
                                             )
                                         }
                                     />
@@ -201,7 +201,7 @@ const ConnectWithHostPage = () => {
                                         onChange={(phone: string) =>
                                             form.setData(
                                                 "phone",
-                                                phone ? phone.toString() : "",
+                                                phone ? phone.toString() : ""
                                             )
                                         }
                                     />
@@ -220,7 +220,7 @@ const ConnectWithHostPage = () => {
                                                 onClick={() =>
                                                     form.setData(
                                                         "opted_into_marketing",
-                                                        true,
+                                                        true
                                                     )
                                                 }
                                                 className={`w-1/2 px-10 py-3 text-sm font-semibold ${form.data.opted_into_marketing ? "border border-white rounded-l-full" : ""}`}
@@ -232,7 +232,7 @@ const ConnectWithHostPage = () => {
                                                 onClick={() =>
                                                     form.setData(
                                                         "opted_into_marketing",
-                                                        false,
+                                                        false
                                                     )
                                                 }
                                                 className={`w-1/2 px-10 py-3 text-sm font-semibold ${!form.data.opted_into_marketing ? "border border-white rounded-r-full" : ""}`}

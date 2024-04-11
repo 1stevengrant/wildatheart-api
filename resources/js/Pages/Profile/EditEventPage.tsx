@@ -91,29 +91,29 @@ const EditEventPage = () => {
         const location = await lookupLocation(lng, lat);
 
         const country = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("country"),
+                feature.id.includes("country")
             )?.text,
             region = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("region"),
+                feature.id.includes("region")
             )?.text,
             postcode = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("postcode"),
+                feature.id.includes("postcode")
             )?.text,
             district = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("district"),
+                feature.id.includes("district")
             )?.text,
             place = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("place"),
+                feature.id.includes("place")
             )?.text,
             locality = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("locality"),
+                feature.id.includes("locality")
             )?.text,
             neighborhood = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("neighborhood"),
+                feature.id.includes("neighborhood")
             )?.text,
             streetAddress = location.find(
                 (feature: { id: string | string[] }) =>
-                    feature.id.includes("address"),
+                    feature.id.includes("address")
             )?.text;
 
         data.country = country;
@@ -144,7 +144,7 @@ const EditEventPage = () => {
     const flyTo = (
         coordinates: [number, number],
         duration: number = 2000,
-        zoom: number = 6,
+        zoom: number = 6
     ) => {
         mapRef.current?.flyTo({
             essential: false,
@@ -214,7 +214,7 @@ const EditEventPage = () => {
                             mapboxAccessToken={config("services.mapbox.token")}
                             onZoomEnd={() => {
                                 handleUserLevelZoom(
-                                    mapRef.current?.getZoom() || 6,
+                                    mapRef.current?.getZoom() || 6
                                 );
                             }}
                             attributionControl={false}
