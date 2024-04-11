@@ -23,7 +23,10 @@ class CheckIfUserShouldBeAdmin implements ShouldQueue
      */
     public function handle(): void
     {
-        if (str_contains($this->user->email, '@wildatheart.org') || str_contains($this->user->email, '@ghijk.co.uk') || str_contains($this->user->email, '@servant.io')) {
+        if (
+            str_contains($this->user->email, '@wildatheart.org') ||
+            str_contains($this->user->email, '@ghijk.co.uk')
+        ) {
             $this->user->assignRole(User::ROLE_ADMIN);
         }
     }
