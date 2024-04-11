@@ -249,7 +249,16 @@ export const UpdateProfileForm = ({
                         }
                     />
                     <Instruction>
-                        Send me updates and resources from Wild at Heart.
+                        {form.data.opted_into_marketing && (
+                            <span>Yes! Send</span>
+                        )}
+                        {!form.data.opted_into_marketing && (
+                            <span>No! Don't send</span>
+                        )}
+                        <span>
+                            {" "}
+                            me updates and resources from Wild at Heart.
+                        </span>
                     </Instruction>
                 </div>
             </div>
