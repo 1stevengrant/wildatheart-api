@@ -244,7 +244,7 @@ export const UpdateProfileForm = ({
                         onChange={() =>
                             form.setData(
                                 "opted_into_marketing",
-                                !form.data.opted_into_marketing
+                                !form.data.opted_into_marketing,
                             )
                         }
                     />
