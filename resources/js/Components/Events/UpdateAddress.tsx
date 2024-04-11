@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link, usePage } from "@inertiajs/react";
 
-import primaryButtonClasses from "@/helpers/primaryButtonClasses";
+import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { Event } from "@/types/Event";
 
 interface UpdateAddressProps {

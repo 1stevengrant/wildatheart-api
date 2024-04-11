@@ -4,7 +4,7 @@ import SecondaryButton from "@/Components/Buttons/SecondaryButton";
 import ModalHeading from "@/Components/Type/ModalHeading";
 import Modal from "@/Components/Ui/Modal";
 import ModalActions from "@/Components/Ui/ModalActions";
-import primaryButtonClasses from "@/helpers/primaryButtonClasses";
+import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 
 interface LogoutModalProps {
     open: boolean;

@@ -1,6 +1,6 @@
 import React from "react";
 
-import primaryButtonClasses from "@/helpers/primaryButtonClasses";
+import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import secondaryButtonClasses from "@/helpers/secondaryButtonClasses";
 import { AppLayout } from "@/Layouts/AppLayout";
 import MyProfileWrapper from "@/Layouts/MyProfileWrapper";
