@@ -11,7 +11,7 @@ interface LogoutModalProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const LogoutModal = ({ open, setOpen }: LogoutModalProps) => {
+export const LogoutModal = ({ open, setOpen }: LogoutModalProps) => {
     return (
         <Modal open={open} setOpen={setOpen}>
             <ModalHeading>Logout?</ModalHeading>
@@ -27,5 +27,3 @@ const LogoutModal = ({ open, setOpen }: LogoutModalProps) => {
         </Modal>
     );
 };
-
-export default LogoutModal;
