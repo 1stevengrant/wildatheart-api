@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react";
 
-import primaryButtonClasses from "@/helpers/primaryButtonClasses";
+import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 
 export default function PrimaryButton({
     className = "",
