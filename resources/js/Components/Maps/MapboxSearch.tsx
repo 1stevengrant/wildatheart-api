@@ -15,15 +15,25 @@ export const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
     const { setSelectedPlace, setLongitude, setLatitude } = useMapData();
 
     const debouncedQueryMapbox = useDebounce((inputValue: string) => {
-        queryMapbox(inputValue).then((r) => setResults(r));
+        if (inputValue.length > 0) {
+            // Only call queryMapbox if there's a valid input
+            queryMapbox(inputValue).then((r) => setResults(r));
+        } else {
+            setResults([]); // Clear results if input is empty
+        }
     }, 500);
+
     const { query, queryMapbox, setQuery, setResults, results } =
         useMapboxSearch();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         setQuery(inputValue);
-        debouncedQueryMapbox(inputValue);
+        if (inputValue.length > 0) {
+            debouncedQueryMapbox(inputValue);
+        } else {
+            setResults([]); // Clear results if input is cleared or very short
+        }
     };
 
     const handleSelect = (place: any) => {
