@@ -34,7 +34,7 @@ export const ToggleFilterPanelButton = () => {
                 </div>
 
                 <MagnifyingGlassCircleIcon
-                    className={`flex-shrink-0 w-14 h-14 rounded-full stroke-1 mr-1`}
+                    className={`flex-shrink-0 w-14 h-14 rounded-full stroke-1 stroke-white mr-1`}
                 />
             </button>
         </div>
