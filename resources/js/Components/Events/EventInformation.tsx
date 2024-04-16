@@ -18,7 +18,7 @@ import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
 import Instruction from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
-import MapboxSearch from "@/Components/Maps/MapboxSearch";
+import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import HeadingOne from "@/Components/Type/HeadingOne";
 import Spinner from "@/Components/Ui/Spinner";
 import config from "@/helpers/config";

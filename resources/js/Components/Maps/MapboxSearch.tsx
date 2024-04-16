@@ -10,7 +10,7 @@ import { useMapData } from "@/Hooks/useMapData";
 import { IMapboxSearchProps } from "@/types/IMapboxSearchProps";
 import { MapboxPlace } from "@/types/MapboxPlace";
 
-const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
+export const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
     const [selected, setSelected] = useState<string>("");
     const { setSelectedPlace, setLongitude, setLatitude } = useMapData();
 
@@ -117,5 +117,3 @@ const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
         </div>
     );
 };
-
-export default MapboxSearch;
