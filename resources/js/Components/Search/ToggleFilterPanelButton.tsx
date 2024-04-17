@@ -3,10 +3,8 @@ import { useRecoilState } from "recoil";
 
 import { showFilterPanelState } from "@/store";
 import { radiusState } from "@/store/filtersAtom";
-import { selectedPlaceState } from "@/store/mapAtom";
 
 export const ToggleFilterPanelButton = () => {
-    const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [radius] = useRecoilState(radiusState);
     const [showFilterPanel, setShowFilterPanel] =
         useRecoilState(showFilterPanelState);
@@ -25,12 +23,7 @@ export const ToggleFilterPanelButton = () => {
                     className={`w-full mt-2 ml-8 text-sm leading-tight text-left`}
                 >
                     <div className={`font-semibold`}>Showing events</div>
-                    <div>
-                        Within {radius} miles of{" "}
-                        {selectedPlace
-                            ? selectedPlace?.text
-                            : "chosen location"}
-                    </div>
+                    <div>Within {radius} miles</div>
                 </div>
 
                 <MagnifyingGlassCircleIcon

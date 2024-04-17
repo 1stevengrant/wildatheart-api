@@ -1,8 +1,10 @@
+import { CalendarIcon } from "@heroicons/react/16/solid";
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
 
 import { useDates } from "@/Hooks/useDates";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 
 const DateFilters = () => {
     const maxDate = dayjs().add(1, "year").toDate();
@@ -38,6 +40,7 @@ const DateFilters = () => {
             }
         }
     };
+    const iconCal = <CalendarDaysIcon className="w-5 h-5 text-white" />;
 
     return (
         <div className={`flex flex-col space-y-4`}>
@@ -45,6 +48,10 @@ const DateFilters = () => {
                 <DatePickerInput
                     label="Start date"
                     placeholder="Select start date"
+                    leftSection={iconCal}
+                    leftSectionPointerEvents="none"
+                    hideOutsideDates
+                    dropdownType="modal"
                     minDate={new Date()}
                     value={startDate}
                     maxDate={maxDate}
@@ -55,8 +62,12 @@ const DateFilters = () => {
             <div>
                 {startDate && (
                     <DatePickerInput
+                        dropdownType="modal"
                         label="End date"
                         placeholder="Select end date"
+                        leftSection={iconCal}
+                        leftSectionPointerEvents="none"
+                        hideOutsideDates
                         minDate={dayjs(startDate).add(1, "day").toDate()}
                         value={endDate}
                         maxDate={maxDate}

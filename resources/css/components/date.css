@@ -1,6 +1,10 @@
 .mantine-Popover-dropdown {
-    background: #000 !important;
-    border-color: #000 !important;
+    background: #111 !important;
+    border-color: #111 !important;
+}
+
+.mantine-Modal-content {
+    background: #111 !important;
 }
 
 .mantine-DatePickerInput-calendarHeaderLevel {
@@ -16,7 +20,7 @@
 }
 
 .mantine-DatePickerInput-day {
-    background: #000 !important;
+    background: #111 !important;
     color: #fff !important;
 
     &:hover {
@@ -29,7 +33,7 @@
     }
 
     &[data-outside="true"] {
-        background: #000 !important;
+        background: #111 !important;
         color: #fff !important;
         opacity: unset !important;
     }
@@ -57,12 +61,14 @@
 .mantine-DatePickerInput-wrapper {
     border-radius: 0.5rem !important;
     color: white !important;
-    background: #000 !important;
+    background: #111 !important;
     border: 1px solid #484848 !important;
 }
 
 .mantine-DatePickerInput-input {
-    padding: 0.75rem 1rem !important;
+    /*padding: 0.75rem 1rem !important;*/
+    padding-top: .75rem !important;
+    padding-bottom: .75rem !important;
 }
 
 .mantine-InputPlaceholder-placeholder {

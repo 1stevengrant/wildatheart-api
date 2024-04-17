@@ -22,7 +22,7 @@ export const FiltersPanel = () => {
             as={Fragment}
         >
             <div
-                className={`relative top-0 right-0 left-0 bottom-0 flex flex-col justify-between h-full z-50`}
+                className={`relative top-0 right-0 left-0 bottom-0 md:flex flex-col justify-between h-full z-50 hidden`}
             >
                 <FiltersPanelHeader />
                 <FiltersPanelBody />

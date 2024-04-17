@@ -15,7 +15,7 @@ export const QuickFilters = () => {
                 className={`border-b border-grey-darker py-2 md:py-6 md:px-4 rounded-b-lg`}
             >
                 <div className={`flex items-center justify-center space-x-4`}>
-                    <ResetAll />
+                    {/*<ResetAll />*/}
                     <ToggleTypeGroups />
                     <ToggleSex />
                 </div>

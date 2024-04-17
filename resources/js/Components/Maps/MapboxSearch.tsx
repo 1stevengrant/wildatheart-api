@@ -57,10 +57,10 @@ export const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
                 }}
             >
                 <div className="relative">
-                    <div className="relative flex w-full cursor-default items-center rounded-lg border-2 bg-black pl-4 border-grey-darker focus-within:border-orange">
+                    <div className="relative flex w-full cursor-default items-center rounded-lg border-2 bg-black pl-1.5 border-grey-darker focus-within:border-orange">
                         <MapPinIcon className={`h-5 w-5 text-white`} />
                         <Combobox.Input
-                            className={`w-full border-2 bg-black rounded-lg border-transparent py-2 pl-3 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${query.length > 0 ? `rounded-bl-none rounded-br-none focus:border-b-transparent` : ``}`}
+                            className={`w-full border-2 bg-black rounded-lg border-transparent py-2 pl-2 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${query.length > 0 ? `rounded-bl-none rounded-br-none focus:border-b-transparent` : ``}`}
                             displayValue={(place: MapboxPlace) =>
                                 place.place_name
                             }
