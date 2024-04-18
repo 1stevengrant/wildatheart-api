@@ -229,7 +229,7 @@ class Event extends Model
         }
 
         if ($startDate) {
-            $query->where('start_date', '>=', $startDate);
+            $query->whereRaw('(start_date >= ? OR start_date IS NULL)', [$startDate]);
         }
 
         if ($endDate) {

@@ -30,29 +30,28 @@ export const ToggleTypeGroups = () => {
     const { typeGroups, typeGroup, setTypeGroup } = useTypeGroup();
     const { resetAllDates } = useDates();
 
-    const handleTypeGroup = (group: GroupType) => {
+    const handleTypeGroup = (group: string) => {
         resetAllDates();
         setPopupInfo(null);
         setCurrentSex("");
 
-        // Define a mapping from group to type IDs with explicit typing to satisfy TypeScript.
-        const groupToTypeIds: Record<
-            GroupType,
-            | typeof fireTypeIds
-            | typeof retreatTypeIds
-            | typeof experienceTypeIds
-        > = {
-            [fireTypeGroup]: fireTypeIds,
-            [retreatTypeGroup]: retreatTypeIds,
-            [experienceTypeGroup]: experienceTypeIds,
-        };
-
+        // check if the group is already selected
         if (typeGroup === group) {
-            setTypeGroup(""); // Clears the type group if it's already selected
+            setTypeGroup("");
+            setTypesTo([]);
         } else {
-            setTypeGroup(group);
-            // Use the mapping to set types, with an assertion that group is a key of groupToTypeIds.
-            setTypesTo(groupToTypeIds[group]);
+            setTypeGroup(group as GroupType);
+            switch (group) {
+                case fireTypeGroup:
+                    setTypesTo(fireTypeIds);
+                    break;
+                case retreatTypeGroup:
+                    setTypesTo(retreatTypeIds);
+                    break;
+                case experienceTypeGroup:
+                    setTypesTo(experienceTypeIds);
+                    break;
+            }
         }
     };
 
@@ -61,7 +60,7 @@ export const ToggleTypeGroups = () => {
             {typeGroups.map((group: string, index: number) => {
                 return (
                     <button
-                        onClick={() => handleTypeGroup(group as GroupType)}
+                        onClick={() => handleTypeGroup(group)}
                         key={index}
                         className={`${quickFilterButtonClasses} ${typeGroup === group ? activeQuickFilterClasses : inactiveQuickFilterClasses}`}
                     >
