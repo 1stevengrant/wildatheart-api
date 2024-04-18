@@ -18,9 +18,11 @@ const HomePage = () => {
         >
             {showFilterPanel && <MobileFiltersPanel />}
             <SearchSidebar />
+            {/* mobile map */}
             <MapComponent
                 className={`${showFilterPanel ? `hidden` : ``} md:hidden`}
             />
+            {/* tablet > map */}
             <MapComponent className={`hidden md:block`} />
             <MobileEventList
                 className={`${searchResults ? "block" : "hidden"}`}

@@ -8,9 +8,10 @@ import { Event } from "@/types/Event";
 export const MobileEventList = ({ ...props }) => {
     const [events] = useRecoilState(eventsListState);
     const { className } = props;
+    const hasEvents = events.length > 0;
     return (
         <div
-            className={`${className} md:hidden absolute z-[100000] px-4 py-2 bg-black w-full rounded-t-2xl flex flex-col max-h-[100dvh]`}
+            className={`${className} md:hidden absolute z-[100000] px-4 py-2 bg-black w-full rounded-t-2xl flex flex-col max-h-[100dvh] ${hasEvents ? `` : `bottom-0`}`}
         >
             <div className={`text-center text-base mb-2`}>
                 {events.length} Events

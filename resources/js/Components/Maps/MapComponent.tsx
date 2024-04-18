@@ -19,7 +19,7 @@ import { useLoaderState } from "@/Hooks/useLoaderState";
 import { useMapData } from "@/Hooks/useMapData";
 import { mapFlyTo } from "@/lib/mapFlyTo";
 import { showFilterPanelState } from "@/store";
-import { eventsListLoadingState } from "@/store/eventsAtom";
+import { eventsListLoadingState, eventsListState } from "@/store/eventsAtom";
 import {
     endDateStringState,
     radiusState,
@@ -56,6 +56,7 @@ export const MapComponent = ({ className = "" }: IMapComponentProps) => {
     const { showLoader, handleLoaderState } = useLoaderState();
     const mounted = useRef(false);
     const { getEvents } = useGetEvents();
+    const [events] = useRecoilState(eventsListState);
 
     const handleViewStateChange = async (viewState: ViewState) => {
         if (!showFilterPanel) {
@@ -167,7 +168,7 @@ export const MapComponent = ({ className = "" }: IMapComponentProps) => {
                         text={`Loading Events`}
                     />
                 )}
-                <EventCountButton />
+                {events.length > 0 && <EventCountButton />}
                 <OutsideClickHandlerEvents />
             </Map>
         </div>
