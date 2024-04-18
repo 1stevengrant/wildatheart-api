@@ -191,7 +191,7 @@ class Event extends Model
     ) {
         $sex = $sex ?? '';
         $typeGroup = $typeGroup ?? '';
-        $startDate = $startDate ?? '';
+        $startDate = $startDate ?? now();
         $endDate = $endDate ?? '';
 
         $query
@@ -229,11 +229,11 @@ class Event extends Model
         }
 
         if ($startDate) {
-            $query->whereRaw('(start_date >= ? OR start_date IS NULL)', [$startDate]);
+            $query->where('start_date', '>=', $startDate);
         }
 
         if ($endDate) {
-            $query->whereRaw('(end_date <= ? OR end_date IS NULL)', [$endDate]);
+            $query->where('end_date', '<=', $endDate);
         }
 
         if ($typeGroup) {
