@@ -32,7 +32,8 @@ class ImportEvent implements ShouldQueue
         $event = Event::updateOrCreate(
             ['legacy_drupal_id' => $this->experience['nid']],
             [
-                'event_type_id' => $this->getEventType($this->experience['type']),
+                $eventType = $this->getEventType($this->experience['type']),
+                'event_type_id' => $eventType->id,
                 'approved_at' => $this->getStatus($this->experience['is_published']),
                 'name' => strip_tags($this->experience['title']),
                 'summary' => strip_tags($this->experience['body']),
@@ -49,7 +50,7 @@ class ImportEvent implements ShouldQueue
                 'start_date' => Carbon::createFromFormat('Y-m-d', $this->experience['start_date']),
                 'end_date' => $this->getEndDate($this->experience['end_date']),
                 'created_at' => Carbon::createFromFormat('Y-m-d H:i:s', $this->experience['posted_on']),
-                'sex' => $this->determineEventSex($this->experience['title']),
+                'sex' => $eventType->sex,
             ]
         );
 
@@ -75,26 +76,26 @@ class ImportEvent implements ShouldQueue
     public function getEventType($drupalEventType)
     {
         if ($drupalEventType === 'Becoming a King Retreat') {
-            return EventType::where('name', EventType::BECOMING_A_KING)->first()->id;
+            return EventType::where('name', EventType::BECOMING_A_KING)->first();
         }
         if ($drupalEventType === 'Basic Event') {
-            return EventType::where('name', EventType::WAH_BASIC)->first()->id;
+            return EventType::where('name', EventType::WAH_BASIC)->first();
         }
 
         if ($drupalEventType === 'Core Event') {
-            return EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first()->id;
+            return EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first();
         }
 
         if ($drupalEventType === 'Captivating Small Group') {
-            return EventType::where('name', EventType::CAPTIVATING_EXPERIENCE)->first()->id;
+            return EventType::where('name', EventType::CAPTIVATING_EXPERIENCE)->first();
         }
 
         if ($drupalEventType === 'Wild at Heart Small Group') {
-            return EventType::where('name', EventType::WAH_EXPERIENCE)->first()->id;
+            return EventType::where('name', EventType::WAH_EXPERIENCE)->first();
         }
 
         if ($drupalEventType === 'Becoming a King Group') {
-            return EventType::where('name', EventType::BECOMING_A_KING_EXPERIENCE)->first()->id;
+            return EventType::where('name', EventType::BECOMING_A_KING_EXPERIENCE)->first();
         }
 
         return null;
@@ -103,10 +104,5 @@ class ImportEvent implements ShouldQueue
     public function getStatus($status): ?\Illuminate\Support\Carbon
     {
         return $status === 'true' ? now() : null;
-    }
-
-    public function determineEventSex($haystack): string
-    {
-        return str_contains(strtolower($haystack), 'captivating') ? Event::FOR_WOMEN : Event::FOR_MEN;
     }
 }
