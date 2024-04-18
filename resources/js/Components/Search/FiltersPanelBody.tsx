@@ -14,7 +14,9 @@ export const FiltersPanelBody = () => {
         <div className={`overflow-y-scroll px-4 flex-1`}>
             <div className={`mt-2`}>
                 <InputLabel>Quick Filters</InputLabel>
-                <div className={`flex items-center justify-center space-x-4 mt-4`}>
+                <div
+                    className={`flex items-center justify-center space-x-4 mt-4`}
+                >
                     <ToggleTypeGroups />
                     <ToggleSex />
                 </div>

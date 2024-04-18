@@ -2,11 +2,11 @@ import { useRecoilState } from "recoil";
 
 import { MobileEventList } from "@/Components/API/MobileEventList";
 import { MapComponent } from "@/Components/Maps/MapComponent";
+import { MobileFiltersPanel } from "@/Components/Search/MobileFiltersPanel";
 import { SearchSidebar } from "@/Components/Search/SearchSidebar";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { showFilterPanelState } from "@/store";
 import { searchResultsState } from "@/store/searchResultsAtom";
-import { MobileFiltersPanel } from "@/Components/Search/MobileFiltersPanel";
 
 const HomePage = () => {
     const [searchResults] = useRecoilState(searchResultsState);

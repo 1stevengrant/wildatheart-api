@@ -67,8 +67,8 @@
 
 .mantine-DatePickerInput-input {
     /*padding: 0.75rem 1rem !important;*/
-    padding-top: .75rem !important;
-    padding-bottom: .75rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
 }
 
 .mantine-InputPlaceholder-placeholder {

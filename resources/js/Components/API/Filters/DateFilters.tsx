@@ -1,10 +1,10 @@
 import { CalendarIcon } from "@heroicons/react/16/solid";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
 
 import { useDates } from "@/Hooks/useDates";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
-import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 
 const DateFilters = () => {
     const maxDate = dayjs().add(1, "year").toDate();
