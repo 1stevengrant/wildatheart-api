@@ -5,14 +5,13 @@ type VideoPlayerProps = {
     className?: string;
 };
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, className }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, className }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     return (
         <div className={`${className} rounded-2xl`}>
             <video
                 ref={videoRef}
-                autoPlay
                 muted
                 className={`w-full rounded-2xl`}
                 controls
@@ -23,5 +22,3 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, className }) => {
         </div>
     );
 };
-
-export default VideoPlayer;

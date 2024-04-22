@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class EmailVerify extends Model
+class EmailVerify extends BaseModel
 {
-    protected $guarded = ['id'];
-
     protected $casts = [
         'expires_at' => 'datetime',
     ];

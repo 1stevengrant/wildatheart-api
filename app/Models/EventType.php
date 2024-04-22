@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
-class EventType extends Model
+class EventType extends BaseModel
 {
+
     use HasRunwayResource;
 
     protected $guarded = ['id'];
