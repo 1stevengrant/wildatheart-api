@@ -3,15 +3,16 @@
 use App\Http\Controllers\Attendee\ToggleConnectionContactedController;
 use App\Http\Controllers\Auth\OneTimeLoginController;
 use App\Http\Controllers\Auth\SuccessAuth0CallbackController;
-use App\Http\Controllers\Event\CreateEventController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\EditEventController;
-use App\Http\Controllers\Event\HostEventController;
 use App\Http\Controllers\Event\ToggleEventApprovedAtController;
 use App\Http\Controllers\Event\UpdateEventController;
-use App\Http\Controllers\Gift\GiftSuccessController;
+use App\Http\Controllers\Events\HostEventTypeBeforeController;
+use App\Http\Controllers\Events\HostEventTypeController;
+use App\Http\Controllers\Events\HostEventTypeFaqsController;
+use App\Http\Controllers\Events\HostEventTypeScheduleController;
 use App\Http\Controllers\Gift\HandleSendGiftController;
-use App\Http\Controllers\Gift\SendGiftController;
+use App\Http\Controllers\HostEventTypeMailingAddressController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\User\AgreeToHostAgreementController;
 use App\Http\Controllers\User\DestroyUserImageController;
@@ -30,15 +31,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('host/agreement', AgreeToHostAgreementController::class)->name('host.agreement.store');
 
     Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
-    Route::get('host', HostProfileController::class)->name('host');
 
     Route::middleware(['agreed_to_host_agreement'])->group(function () {
+        Route::get('host', HostProfileController::class)->name('host');
 
-        Route::get('host/event', HostEventController::class)->name('host.event');
-        Route::post('host/store', CreateEventController::class)->name('host.store');
+        Route::name('host.eventType.')->group(function () {
+            Route::prefix('host/{eventType}')->group(function () {
+                Route::get('/', HostEventTypeController::class)->name('index');
+                Route::get('before', HostEventTypeBeforeController::class)->name('before');
+                Route::get('schedule', HostEventTypeScheduleController::class)->name('schedule');
+                Route::get('faqs', HostEventTypeFaqsController::class)->name('faqs');
+                Route::get('mailing', [HostEventTypeMailingAddressController::class, 'index'])->name('mailing');
+                Route::post('mailing', [HostEventTypeMailingAddressController::class, 'store'])->name('mailing.store');
+            });
+        });
 
-        Route::get('gift/{event}/success', GiftSuccessController::class)->name('gift.success');
-        Route::get('gift/{event}', SendGiftController::class)->name('gift');
         Route::post('gift/{event}', HandleSendGiftController::class)->name('gift.store');
 
         Route::get('events', MyEventsController::class)->name('my.events');

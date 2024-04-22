@@ -3,15 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class EmailTemplate extends Model
+class EmailTemplate extends BaseModel
 {
     use HasFactory;
-
-    protected $guarded = ['id'];
 
     protected $casts = [
         'is_active' => 'boolean',
