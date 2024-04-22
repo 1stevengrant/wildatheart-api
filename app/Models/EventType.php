@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class EventType extends Model
+class EventType extends BaseModel
 {
-    protected $guarded = ['id'];
-
     const WAH_BASIC = 'Wild at Heart BASIC (retreat)';
 
     const CAPTIVATING_CORE_RETREAT = 'Captivating CORE (retreat)';
