@@ -28,6 +28,8 @@ class EventType extends Model
     protected $casts = [
         'key_details' => 'array',
         'photos' => 'array',
+        'event_faqs' => 'array',
+        'event_schedule' => 'array',
     ];
 
     public static function boot(): void
@@ -42,5 +44,10 @@ class EventType extends Model
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 }

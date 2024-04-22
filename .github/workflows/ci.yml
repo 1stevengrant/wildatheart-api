@@ -41,7 +41,7 @@ jobs:
         run: |
           composer install --no-scripts
         env:
-          COMPOSER_AUTH: '{ "github-oauth": { "github.com": "${{ secrets.PAT }}" }, "http-basic": { "wire-elements-pro.composer.sh": { "username": "nic@wildatheart.org", "password": "${{ secrets.WIRE_ELEMENTS_PRO_KEY }}" }, "nova.laravel.com": { "username": "nic@wildatheart.org", "password": "${{ secrets.NOVA_KEY }}"}}}'
+          COMPOSER_AUTH: '{ "github-oauth": { "github.com": "${{ secrets.PAT }}" }, "http-basic": { "wire-elements-pro.composer.sh": { "username": "nic@wildatheart.org", "password": "${{ secrets.WIRE_ELEMENTS_PRO_KEY }}" }, "nova.laravel.com": { "username": "tech@wildatheart.org", "password": "${{ secrets.NOVA_KEY }}"}}}'
 
       - name: Prepare Laravel Application
         run: |

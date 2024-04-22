@@ -3,7 +3,13 @@
 namespace App\Nova;
 
 use App\Nova\Repeater\EventTypeDetailItem;
+use App\Nova\Repeater\FaqItem;
+use App\Nova\Repeater\TextBlock;
+use App\Nova\Repeater\VideoBlock;
 use App\Support\PublicVaporImage;
+use Eminiarts\Tabs\Tab;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\Traits\HasTabs;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Markdown;
@@ -14,6 +20,8 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class EventType extends Resource
 {
+    use HasTabs;
+
     /**
      * The model the resource corresponds to.
      *
@@ -43,56 +51,83 @@ class EventType extends Resource
     public function fields(NovaRequest $request): array
     {
         return [
-            ID::make()->sortable()->hideFromIndex(),
+            Tabs::make('Some Title', [
+                Tab::make('General', [
+                    ID::make()->sortable()->hideFromIndex(),
+                    Text::make('Name')
+                        ->sortable()
+                        ->rules('required', 'max:255'),
+                    Select::make('Sex')
+                        ->help('Who is this event type for?')
+                        ->options([
+                            \App\Models\Event::FOR_MEN => ucfirst(\App\Models\Event::FOR_MEN),
+                            \App\Models\Event::FOR_WOMEN => ucfirst(\App\Models\Event::FOR_WOMEN),
+                        ]),
 
-            Text::make('Name')
-                ->sortable()
-                ->rules('required', 'max:255'),
+                    PublicVaporImage::make('Image')
+                        ->path('event_types')
+                        ->help('This image will be used on event cards')
+                        ->thumbnail(static fn ($value, $disk): ?string => $value
+                            ? novaThumbnail($value)
+                            : null)
+                        ->storeAs(static function ($request): string {
+                            $img = $request->input('vaporFile')['image'];
 
-            Select::make('Sex')
-                ->help('Who is this event type for?')
-                ->options([
-                    \App\Models\Event::FOR_MEN => ucfirst(\App\Models\Event::FOR_MEN),
-                    \App\Models\Event::FOR_WOMEN => ucfirst(\App\Models\Event::FOR_WOMEN),
+                            return str_replace('tmp/', '', (string) $img['key']).'.'.$img['extension'];
+                        }),
+
+                    PublicVaporImage::make('Hero Image')
+                        ->hideFromIndex()
+                        ->path('hero_images')
+                        ->help('This image will be used on event detail pages')
+                        ->thumbnail(static fn ($value, $disk): ?string => $value
+                            ? novaThumbnail($value)
+                            : null)
+                        ->storeAs(static function ($request): string {
+                            $img = $request->input('vaporFile')['hero_image'];
+
+                            return str_replace('tmp/', '', (string) $img['key']).'.'.$img['extension'];
+                        }),
+
+                    Text::make('Hero Video')
+                        ->hideFromIndex()
+                        ->help('This video will be used on event detail pages')
+                        ->rules('nullable', 'url', 'max:255'),
+
+                    Repeater::make('Key Details')
+                        ->repeatables([
+                            EventTypeDetailItem::make(),
+                        ]),
+
+                    Markdown::make('Description')
+                        ->sortable(),
                 ]),
+                Tab::make('Registration', [
+                    Text::make('Registration Welcome Video')
+                        ->hideFromIndex()
+                        ->help('This video will be shown on the registration page. It should be an MP4 file url.')
+                        ->rules('nullable', 'url', 'max:255', 'required'),
 
-            PublicVaporImage::make('Image')
-                ->path('event_types')
-                ->help('This image will be used on event cards')
-                ->thumbnail(static fn ($value, $disk): ?string => $value
-                    ? novaThumbnail($value)
-                    : null)
-                ->storeAs(static function ($request): string {
-                    $img = $request->input('vaporFile')['image'];
+                    Markdown::make('Registration Welcome Text')
+                        ->rules('required'),
 
-                    return str_replace('tmp/', '', (string) $img['key']).'.'.$img['extension'];
-                }),
+                    Markdown::make('Registration Before Your Event Text')
+                        ->rules('required'),
 
-            PublicVaporImage::make('Hero Image')
-                ->hideFromIndex()
-                ->path('hero_images')
-                ->help('This image will be used on event detail pages')
-                ->thumbnail(static fn ($value, $disk): ?string => $value
-                    ? novaThumbnail($value)
-                    : null)
-                ->storeAs(static function ($request): string {
-                    $img = $request->input('vaporFile')['hero_image'];
+                    Repeater::make('Event Schedule')
+                        ->hideFromIndex()
+                        ->repeatables([
+                            TextBlock::make(),
+                            VideoBlock::make(),
+                        ]),
 
-                    return str_replace('tmp/', '', (string) $img['key']).'.'.$img['extension'];
-                }),
-
-            Text::make('Hero Video')
-                ->hideFromIndex()
-                ->help('This video will be used on event detail pages')
-                ->rules('nullable', 'url', 'max:255'),
-
-            Repeater::make('Key Details')
-                ->repeatables([
-                    EventTypeDetailItem::make(),
+                    Repeater::make('Event FAQs')
+                        ->hideFromIndex()
+                        ->repeatables([
+                            FaqItem::make(),
+                        ]),
                 ]),
-
-            Markdown::make('Description')
-                ->sortable(),
+            ]),
 
             HasMany::make('Events'),
         ];
