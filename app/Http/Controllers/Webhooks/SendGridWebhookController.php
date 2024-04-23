@@ -15,9 +15,7 @@ class SendGridWebhookController extends Controller
     {
         $data = collect(request()->all());
 
-        $data->filter(function ($item) {
-            return $item['event'] === 'bounce' || $item['event'] === 'dropped';
-        })->each(function ($item) {
+        $data->each(function ($item) {
             SlackAlert::to('events')
                 ->message('email to '.$item['email'].' '.$item['event']);
         });
