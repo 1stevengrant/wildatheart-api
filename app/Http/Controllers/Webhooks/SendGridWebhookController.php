@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Webhooks;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendee;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
@@ -19,8 +21,13 @@ class SendGridWebhookController extends Controller
             ->filter(function ($item) {
                 return $item['event'] === 'dropped' || $item['event'] === 'bounce';
             })->each(function ($item) {
-                SlackAlert::to('events')
-                    ->message('email to '.$item['email'].' '.$item['event']);
+                $attendee = Attendee::where('email', $item['email'])->first();
+                $user = User::where('email', $item['email'])->first();
+
+                if ($attendee || $user) {
+                    SlackAlert::to('events')
+                        ->message('email to '.$item['email'].' '.$item['event']);
+                }
             });
 
         return response()->json(['status' => 'ok']);
