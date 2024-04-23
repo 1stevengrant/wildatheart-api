@@ -73,4 +73,8 @@ return [
         'event_webhook_url' => 'https://hooks.zapier.com/hooks/catch/340972/3tew72r/',
     ],
 
+    'sendgrid' => [
+        'api_key' => env('SENDGRID_API_KEY'),
+    ],
+
 ];

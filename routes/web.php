@@ -26,6 +26,7 @@ use App\Http\Controllers\User\MyProfileController;
 use App\Http\Controllers\User\ResendConfirmationEmail;
 use App\Http\Controllers\User\UpdateUserProfileController;
 use App\Http\Controllers\User\VerifyEmailController;
+use App\Http\Controllers\Webhooks\SendGridWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -105,4 +106,8 @@ Route::get('drupal-events/null', function () {
         return $experience['first_name'] === null || $experience['last_name'] === null;
     });
 
+});
+
+Route::name('webhooks.')->prefix('webhooks')->group(function () {
+    Route::post('sendgrid', SendGridWebhookController::class)->name('sendgrid');
 });

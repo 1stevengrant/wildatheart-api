@@ -53,3 +53,5 @@ Make sure your server meets the minimum requirements before you start. [Official
 10. optionally, you might want to grab a production database backup. For that, add the production database credentials 
    to the `.env` file and run `php artisan app:pull-prod-database`
 11. run the development server `php artisan serve` if not using something like Laravel Valet, Sail or Herd.
+
+## Usage
