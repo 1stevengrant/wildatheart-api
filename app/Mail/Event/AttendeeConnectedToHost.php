@@ -51,6 +51,7 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     {
         $content = $this->emailTemplate->body;
         $content = str_replace('[host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[event_title]', $this->event->name, $content);
         $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);
         $this->emailContent = $content;
 
