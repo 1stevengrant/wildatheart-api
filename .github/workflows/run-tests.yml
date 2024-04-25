@@ -14,8 +14,6 @@ name: CI
 jobs:
   phpunit:
     runs-on: ubuntu-latest
-    container:
-      image: kirschbaumdevelopment/laravel-test-runner:8.1
 
     services:
       mysql:
@@ -24,18 +22,25 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: wahlocal_test
         ports:
-          - 33306:3306
+          - 3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.composer/cache/files
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-${{ matrix.dependency-version }}-${{ matrix.os }}-${{ hashFiles('composer.json') }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer:v2
+          coverage: none
 
       - name: Install composer dependencies
         run: |
@@ -55,3 +60,5 @@ jobs:
 
       - name: Run Testsuite
         run: vendor/bin/pest tests/
+        env:
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}

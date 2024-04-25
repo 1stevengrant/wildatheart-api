@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use App\Nova\Repeater\ImageBlock;
 use App\Nova\Repeater\TextBlock;
 use App\Nova\Repeater\VideoBlock;
 use Illuminate\Http\Request;
