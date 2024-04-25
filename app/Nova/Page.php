@@ -64,7 +64,6 @@ class Page extends Resource
                 ->repeatables([
                     TextBlock::make(),
                     VideoBlock::make(),
-                    ImageBlock::make(),
                 ]),
 
             Markdown::make('Notes')->hideFromIndex(),
