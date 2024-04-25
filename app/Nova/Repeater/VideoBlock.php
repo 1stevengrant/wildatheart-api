@@ -10,6 +10,8 @@ class VideoBlock extends Repeatable
 {
     public static $icon = 'video-camera';
 
+    public $confirmRemoval = true;
+
     /**
      * Get the fields displayed by the repeatable.
      *

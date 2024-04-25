@@ -10,6 +10,8 @@ class TextBlock extends Repeatable
 {
     public static $icon = 'document-text';
 
+    public $confirmRemoval = true;
+
     /**
      * Get the fields displayed by the repeatable.
      *
