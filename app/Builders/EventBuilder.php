@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
 {
+
     public function public(): EventBuilder
     {
         return $this->whereNotNull('approved_at');
@@ -40,5 +41,16 @@ class EventBuilder extends Builder
     public function lastApprovedAt(int $days, string $operator = '>='): EventBuilder
     {
         return $this->where('approved_at', $operator, now()->subDays($days));
+    }
+
+    public function forWomen(): EventBuilder
+    {
+        return $this->whereSex('women');
+    }
+
+    public function forMen(): EventBuilder
+    {
+        return $this->whereSex('men');
+
     }
 }
