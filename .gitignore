@@ -27,3 +27,4 @@ yarn-error.log
 .phpactor.json
 /_ide_helper.php
 /.phpstorm.meta.php
+/.phpactor.json
