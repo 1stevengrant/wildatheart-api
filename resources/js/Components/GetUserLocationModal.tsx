@@ -5,7 +5,6 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
-import { StaticMap } from "@/Components/Maps/StaticMap";
 import ModalHeading from "@/Components/Type/ModalHeading";
 import Modal from "@/Components/Ui/Modal";
 import ModalActions from "@/Components/Ui/ModalActions";
@@ -101,11 +100,10 @@ export const GetUserLocationModal = ({
                     </div>
                 )}
 
-                <StaticMap
-                    className={`rounded-lg mt-4`}
-                    lat={defaultLatLng.latitude}
-                    lng={defaultLatLng.longitude}
-                    event={null}
+                <img
+                    className={`rounded-lg mt-6`}
+                    src={`https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/-104.8081,38.8257,8,0/385x275?access_token=${import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN}`}
+                    alt="Map"
                 />
 
                 <ModalActions>
