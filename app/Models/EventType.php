@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class EventType extends Model
 {
@@ -43,7 +44,7 @@ class EventType extends Model
         parent::boot();
 
         static::creating(function ($eventType) {
-            $eventType->slug = \Str::slug($eventType->name);
+            $eventType->slug = Str::slug($eventType->name);
         });
     }
 
