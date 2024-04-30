@@ -4,6 +4,7 @@ use App\Http\Controllers\Attendee\ConnectWithHostController;
 use App\Http\Controllers\Attendee\ToggleConnectionContactedController;
 use App\Http\Controllers\Auth\OneTimeLoginController;
 use App\Http\Controllers\Auth\SuccessAuth0CallbackController;
+use App\Http\Controllers\CreateSupportTicketController;
 use App\Http\Controllers\Event\CreateEventController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\EditEventController;
@@ -41,7 +42,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', HomeController::class)->name('home');
-Route::post('support', SupportRequestController::class)->name('support');
+Route::post('support', SupportRequestController::class)->name('support.store');
+Route::get('support', CreateSupportTicketController::class)->name('support.create');
 
 Route::get('confirmemail/{event}', ConfirmEmailController::class)->name('confirm.email');
 Route::post('resend-confirmation-email/{event}', ResendConfirmationEmail::class)

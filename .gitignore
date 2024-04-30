@@ -24,3 +24,4 @@ yarn-error.log
 /.vapor
 /public/mix-manifest.json
 /public/js
+/.phpactor.json
