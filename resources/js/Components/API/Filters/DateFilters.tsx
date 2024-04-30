@@ -1,4 +1,3 @@
-import { CalendarIcon } from "@heroicons/react/16/solid";
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";

@@ -1,16 +1,17 @@
-import Home from "@/Pages/Home";
-import SupportModal from "@/Components/SupportModal";
 import { useState } from "react";
 
+import SupportModal from "@/Components/SupportModal";
+import HomePage from "@/Pages/HomePage";
+
 const SupportRequestPage = () => {
-    const [openSupportModal, setOpenSupportModal] = useState(true)
+    const [openSupportModal, setOpenSupportModal] = useState(true);
     return (
-        <Home>
+        <HomePage>
             <SupportModal
                 open={openSupportModal}
                 setOpen={setOpenSupportModal}
             />
-        </Home>
+        </HomePage>
     );
 };
 
