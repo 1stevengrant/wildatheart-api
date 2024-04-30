@@ -2,9 +2,9 @@
 
 namespace App\Nova\Repeater;
 
-use App\Support\PublicVaporImage;
 use Laravel\Nova\Fields\Repeater\Repeatable;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\VaporFile;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ImageBlock extends Repeatable
@@ -21,7 +21,7 @@ class ImageBlock extends Repeatable
     public function fields(NovaRequest $request)
     {
         return [
-            PublicVaporImage::make('Image')
+            VaporFile::make('Image')
                 ->path('pages')
                 ->thumbnail(static fn ($value, $disk): ?string => $value
                     ? novaThumbnail($value)

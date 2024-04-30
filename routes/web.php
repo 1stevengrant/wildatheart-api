@@ -15,6 +15,7 @@ use App\Http\Controllers\Event\ViewEventListingController;
 use App\Http\Controllers\Gift\GiftSuccessController;
 use App\Http\Controllers\Gift\HandleSendGiftController;
 use App\Http\Controllers\Gift\SendGiftController;
+use App\Http\Controllers\HandleMonthlyHostFireEmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\SupportRequestController;
@@ -113,3 +114,12 @@ Route::get('drupal-events/null', function () {
 Route::name('webhooks.')->prefix('webhooks')->group(function () {
     Route::post('sendgrid', SendGridWebhookController::class)->name('sendgrid');
 });
+
+Route::prefix('fire/{event}')
+    ->middleware(['signed'])
+    ->name('fire.')
+    ->group(function () {
+        Route::get('extinguish', [HandleMonthlyHostFireEmailController::class, 'show'])->name('extinguish');
+        Route::post('extinguish', [HandleMonthlyHostFireEmailController::class, 'destroy'])->name('extinguish.destroy');
+        Route::get('burn', [HandleMonthlyHostFireEmailController::class, 'update'])->name('burn');
+    });

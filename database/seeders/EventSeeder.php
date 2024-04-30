@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Event;
-use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class EventSeeder extends Seeder
 {
@@ -15,17 +13,8 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        $sql = file_get_contents(database_path('seeders/events.sql'));
-        \DB::unprepared($sql);
 
         $user = User::factory()->create();
-        $events = Event::withTrashed()->get()->pluck('id');
-        DB::table('events')
-            ->whereIn('id', $events)
-            ->update([
-                'user_id' => $user->id,
-                'event_type_id' => EventType::where('name', EventType::FIRES)->first()->id,
-            ]);
 
         Event::factory()->count(5)->approved()->wahExperiences()->create([
             'user_id' => $user->id,
@@ -53,6 +42,13 @@ class EventSeeder extends Seeder
 
         Event::factory()->count(5)->approved()->survivalSchool()->create([
             'user_id' => $user->id,
+        ]);
+        $days = now()->subDays(100);
+        Event::factory()->count(50)->approved()->fires()->create([
+            'user_id' => $user->id,
+            'updated_at' => $days,
+            'created_at' => $days,
+            'approved_at' => $days,
         ]);
 
     }

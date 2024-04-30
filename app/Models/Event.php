@@ -237,4 +237,16 @@ class Event extends Model
     {
         return $this->belongsTo(EventType::class);
     }
+
+    public function unpublish(): void
+    {
+        $this->approved_at = null;
+        $this->save();
+    }
+
+    public function publish(): void
+    {
+        $this->approved_at = now();
+        $this->save();
+    }
 }

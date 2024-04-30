@@ -24,5 +24,14 @@ class RoleSeeder extends Seeder
         Role::create(['name' => User::ROLE_ADMIN]);
         Role::create(['name' => User::ROLE_HOST]);
         Role::create(['name' => User::ROLE_ATTENDEE]);
+
+        $admin = User::factory()->create([
+            'email' => 'jamie@wildatheart.org',
+            'password' => bcrypt('password'),
+            'family_name' => 'Admin',
+            'given_name' => 'Jamie',
+        ]);
+
+        $admin->assignRole(User::ROLE_ADMIN);
     }
 }

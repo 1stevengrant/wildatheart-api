@@ -14,7 +14,16 @@ class Page extends Model
         'content' => 'array',
     ];
 
-    // create slug from title on boot
+    protected $hidden = [
+        'created_by',
+        'last_updated_by',
+        'notes',
+        'id',
+        'is_active',
+        'created_at',
+        'updated_at',
+    ];
+
     protected static function boot(): void
     {
         parent::boot();
@@ -38,5 +47,10 @@ class Page extends Model
     public function lastUpdatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'last_updated_by');
+    }
+
+    public function scopeBySlug($query, string $slug)
+    {
+        return $query->where('slug', $slug)->first();
     }
 }

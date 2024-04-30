@@ -15,7 +15,7 @@ import FormGrid from "@/Components/Forms/FormGrid";
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import EventDisplay from "@/Components/Events/EventDisplay";
 import {CountryDropdown, RegionDropdown} from 'react-country-region-selector';
-import EmptyLayout from "@/Layouts/EmptyLayout";
+import { EmptyLayout }from "@/Layouts/EmptyLayout";
 import {PageProps} from "@/types";
 import selectClasses from "@/helpers/selectClasses";
 

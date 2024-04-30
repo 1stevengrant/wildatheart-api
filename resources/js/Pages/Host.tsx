@@ -1,7 +1,7 @@
 import React from 'react';
 import useTypedPage from "@/Hooks/useTypedPage";
 import UpdateProfileForm from "@/Components/Forms/UpdateProfileForm";
-import EmptyLayout from "@/Layouts/EmptyLayout";
+import { EmptyLayout }from "@/Layouts/EmptyLayout";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 import LeftColumn from "@/Layouts/LeftColumn";
 import RightColumn from "@/Layouts/RightColumn";

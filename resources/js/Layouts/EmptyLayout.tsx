@@ -10,7 +10,7 @@ interface Props {
     title: string;
 }
 
-const EmptyLayout = ({
+export const EmptyLayout = ({
                        title,
                        children
                    }: PropsWithChildren<Props>) => {
@@ -23,5 +23,3 @@ const EmptyLayout = ({
         </>
     )
 }
-
-export default EmptyLayout

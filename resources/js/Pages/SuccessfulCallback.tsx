@@ -1,5 +1,5 @@
 import React from "react";
-import EmptyLayout from "@/Layouts/EmptyLayout";
+import { EmptyLayout }from "@/Layouts/EmptyLayout";
 import Logo from "@/Components/Logo";
 import FireMarker from "@/Components/Events/FireMarker";
 

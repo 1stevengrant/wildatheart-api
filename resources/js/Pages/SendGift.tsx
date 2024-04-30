@@ -1,6 +1,6 @@
 import React from "react";
 import HeadingOne from "@/Components/Type/HeadingOne";
-import EmptyLayout from "@/Layouts/EmptyLayout";
+import { EmptyLayout }from "@/Layouts/EmptyLayout";
 import {Link, useForm, usePage} from "@inertiajs/react";
 import {PageProps} from "@/types";
 import InputLabel from "@/Components/Forms/InputLabel";

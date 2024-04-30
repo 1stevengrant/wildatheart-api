@@ -1,5 +1,5 @@
 import React from "react";
-import EmptyLayout from "@/Layouts/EmptyLayout";
+import { EmptyLayout }from "@/Layouts/EmptyLayout";
 import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
 import LeftColumn from "@/Layouts/LeftColumn";
 import RightColumn from "@/Layouts/RightColumn";

@@ -2,35 +2,43 @@
 
 namespace App\Builders;
 
+use App\Models\EventType;
 use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
 {
-    public function future(): EventBuilder
-    {
-        return $this->where('approved_at', '!=', null);
-    }
-
-    public function futureState(): EventBuilder
-    {
-        return $this->where('approved_at', '!=', null)
-            ->orderBy('state');
-    }
-
     public function public(): EventBuilder
     {
         return $this->where('approved_at', '!=', null);
     }
 
-    public function inThePast(): EventBuilder
+    public function published(): EventBuilder
     {
-        return $this->where('approved_at', '!=', null)
-            ->where('end_date', '<', now());
+        return $this->whereNotNull('approved_at');
     }
 
-    public function upcoming(): EventBuilder
+    public function unpublished(): EventBuilder
     {
-        return $this->where('approved_at', '!=', null)
-            ->where('start_date', '>=', now());
+        return $this->whereNull('approved_at');
+    }
+
+    public function fires(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::FIRES)->first()->id);
+    }
+
+    public function updatedAgo(int $days): EventBuilder
+    {
+        return $this->where('updated_at', '<', now()->subDays($days));
+    }
+
+    public function lastMonthlyEmailSentAgo(int $days, string $operator = '<'): EventBuilder
+    {
+        return $this->where('last_monthly_email_sent_at', $operator, now()->subDays($days));
+    }
+
+    public function lastApprovedAt(int $days, string $operator = '>='): EventBuilder
+    {
+        return $this->where('approved_at', $operator, now()->subDays($days));
     }
 }

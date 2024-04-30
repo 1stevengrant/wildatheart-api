@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Mail\Fire;
+
+use App\Models\EmailTemplate;
+use App\Models\Event;
+use App\Traits\InteractsWithEmailTemplates;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class ConfirmFireUnpublishedMailable extends Mailable implements ShouldQueue
+{
+    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+
+    public EmailTemplate $emailTemplate;
+
+    public string $emailContent;
+
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(public Event $event)
+    {
+        $this->emailTemplate = $this->getEmailTemplate('fire-made-inactive');
+    }
+
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: $this->emailTemplate->subject,
+        );
+    }
+
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
+    {
+        $content = $this->emailTemplate->body;
+        $this->emailContent = \Str::markdown($content);
+
+        return new Content(
+            markdown: 'emails.fire.confirm-fire-unpublished',
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
+    }
+}
