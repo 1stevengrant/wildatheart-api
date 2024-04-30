@@ -39,6 +39,8 @@ export const MapComponent = ({ className = "" }: IMapComponentProps) => {
             Number(localStorage.getItem("latitude")) ?? defaultLatLng.latitude,
         zoom: 10,
     };
+    const geoControlRef = useRef();
+
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<MapRef>(null);
     const { latitude, setLatitude, longitude, setLongitude, selectedPlace } =
@@ -161,7 +163,24 @@ export const MapComponent = ({ className = "" }: IMapComponentProps) => {
                 />
                 <EventList />
 
-                <GeolocateControl position="top-left" />
+                <GeolocateControl
+                    trackUserLocation={true}
+                    showUserLocation={true}
+                    showAccuracyCircle={true}
+                    onTrackUserLocationStart={(e) => {
+                        console.log("track user location start");
+                        console.log(e);
+                    }}
+                    onTrackUserLocationEnd={(e) => {
+                        console.log("track user location end");
+                        console.log(e);
+                    }}
+                    onGeolocate={(e) => {
+                        console.log("geolocate");
+                        console.log(e);
+                    }}
+                    position="top-left"
+                />
                 {showLoader && (
                     <IsLoading
                         classnames={`relative mt-8`}
