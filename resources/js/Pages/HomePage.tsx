@@ -16,6 +16,7 @@ type HomePageProps = {
 const HomePage = ({ children }: HomePageProps) => {
     const [searchResults] = useRecoilState(searchResultsState);
     const [showFilterPanel] = useRecoilState(showFilterPanelState);
+
     return (
         <AppLayout
             title={"Events"}

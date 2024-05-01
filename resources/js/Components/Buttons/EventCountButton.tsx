@@ -9,12 +9,16 @@ export const EventCountButton = () => {
     const setSearchResults = useSetRecoilState(searchResultsState);
     const [events] = useRecoilState(eventsListState);
     return (
-        <button
-            onClick={() => setSearchResults(true)}
-            className={`absolute left-1/2 transform -translate-x-1/2 ${fabClasses} md:hidden`}
-        >
-            <ListBulletIcon className={`w-6 h-6 stroke-black`} />
-            <div>Show {events.length} Events</div>
-        </button>
+        <>
+            {events.length > 0 && (
+                <button
+                    onClick={() => setSearchResults(true)}
+                    className={`absolute left-1/2 transform -translate-x-1/2 ${fabClasses} md:hidden`}
+                >
+                    <ListBulletIcon className={`w-6 h-6 stroke-black`} />
+                    <div>Show {events.length} Events</div>
+                </button>
+            )}
+        </>
     );
 };

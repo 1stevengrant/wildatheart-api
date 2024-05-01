@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import Map, {
-    GeolocateControl,
-    ViewState,
-    MapRef,
-} from "react-map-gl/maplibre";
+import Map, { ViewState, MapRef } from "react-map-gl/maplibre";
 import { useRecoilState } from "recoil";
 
 import { EventList } from "@/Components/API/EventList";
 import { EventCountButton } from "@/Components/Buttons/EventCountButton";
 import { GetUserLocationModal } from "@/Components/GetUserLocationModal";
-import IsLoading from "@/Components/IsLoading";
+import { IsGettingLocation } from "@/Components/IsGettingLocation";
+import { IsLoading } from "@/Components/IsLoading";
+import { GeolocateControlComponent } from "@/Components/Maps/GeolocateControlComponent";
 import { OutsideClickHandlerEvents } from "@/Components/Ui/OutsideClickHandlerEvents";
 import { defaultLatLng } from "@/helpers/defaultLatLng";
 import { LOCATION_PERMISSIONS_DENIED } from "@/helpers/locationPermissions";
@@ -19,7 +17,7 @@ import { useLoaderState } from "@/Hooks/useLoaderState";
 import { useMapData } from "@/Hooks/useMapData";
 import { mapFlyTo } from "@/lib/mapFlyTo";
 import { showFilterPanelState } from "@/store";
-import { eventsListLoadingState, eventsListState } from "@/store/eventsAtom";
+import { eventsListLoadingState } from "@/store/eventsAtom";
 import {
     endDateStringState,
     radiusState,
@@ -39,7 +37,6 @@ export const MapComponent = ({ className = "" }: IMapComponentProps) => {
             Number(localStorage.getItem("latitude")) ?? defaultLatLng.latitude,
         zoom: 10,
     };
-    const geoControlRef = useRef();
 
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<MapRef>(null);
@@ -55,10 +52,10 @@ export const MapComponent = ({ className = "" }: IMapComponentProps) => {
     const [showFilterPanel] = useRecoilState(showFilterPanelState);
     const [openGetUserLocationModal, setOpenGetUserLocationModal] =
         useState(false);
-    const { showLoader, handleLoaderState } = useLoaderState();
+    const { handleLoaderState } = useLoaderState();
+
     const mounted = useRef(false);
     const { getEvents } = useGetEvents();
-    const [events] = useRecoilState(eventsListState);
 
     const handleViewStateChange = async (viewState: ViewState) => {
         if (!showFilterPanel) {
@@ -163,31 +160,16 @@ export const MapComponent = ({ className = "" }: IMapComponentProps) => {
                 />
                 <EventList />
 
-                <GeolocateControl
-                    trackUserLocation={true}
-                    showUserLocation={true}
-                    showAccuracyCircle={true}
-                    onTrackUserLocationStart={(e) => {
-                        console.log("track user location start");
-                        console.log(e);
-                    }}
-                    onTrackUserLocationEnd={(e) => {
-                        console.log("track user location end");
-                        console.log(e);
-                    }}
-                    onGeolocate={(e) => {
-                        console.log("geolocate");
-                        console.log(e);
-                    }}
-                    position="top-left"
+                <GeolocateControlComponent />
+                <IsLoading
+                    classnames={`relative mt-8`}
+                    text={`Loading Events`}
                 />
-                {showLoader && (
-                    <IsLoading
-                        classnames={`relative mt-8`}
-                        text={`Loading Events`}
-                    />
-                )}
-                {events.length > 0 && <EventCountButton />}
+                <IsGettingLocation
+                    classnames={`relative mt-8`}
+                    text={`Triangulating location`}
+                />
+                <EventCountButton />
                 <OutsideClickHandlerEvents />
             </Map>
         </div>

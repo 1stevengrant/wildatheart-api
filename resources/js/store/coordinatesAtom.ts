@@ -11,3 +11,8 @@ export const longitudeState = atom({
     key: "Longitude",
     default: defaultLatLng.longitude,
 });
+
+export const searchingLocationState = atom({
+    key: "SearchingLocation",
+    default: false,
+});
