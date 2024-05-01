@@ -4,6 +4,7 @@ namespace App\Mail\Fire;
 
 use App\Models\EmailTemplate;
 use App\Models\Event;
+use App\Traits\BurnExtinguishFireActions;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,15 +16,11 @@ use Illuminate\Support\Facades\URL;
 
 class MonthlyFireCleanupEmailToHostMailable extends Mailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use BurnExtinguishFireActions, InteractsWithEmailTemplates, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 
     public string $emailContent;
-
-    public string $extinguishLink;
-
-    public string $burnLink;
 
     /**
      * Create a new message instance.
@@ -69,23 +66,5 @@ class MonthlyFireCleanupEmailToHostMailable extends Mailable implements ShouldQu
     public function attachments(): array
     {
         return [];
-    }
-
-    protected function getInactiveButtonComponent(): string
-    {
-        return view('emails.components.button', [
-            'url' => $this->extinguishLink,
-            'text' => 'Extinguish My Fire',
-            'color' => 'red',
-        ])->render();
-    }
-
-    protected function getActiveButtonComponent(): string
-    {
-        return view('emails.components.button', [
-            'url' => $this->burnLink,
-            'text' => 'Keep My Fire Burning',
-            'color' => 'green',
-        ])->render();
     }
 }

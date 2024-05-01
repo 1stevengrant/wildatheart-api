@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:delete-expired-email-verifications')->hourly();
         $schedule->command('app:send-monthly-email-to-fire-hosts')->daily();
         $schedule->command('app:unpublish-inactive-fires')->daily();
+        $schedule->command('app:send-seven-day-followup')->daily();
         //        $schedule->command('app:resize-uploaded-image')->hourly();
     }
 
