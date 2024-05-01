@@ -2,7 +2,8 @@
 
 namespace App\Nova;
 
-use App\Nova\Actions\ApproveEvent;
+use App\Nova\Actions\PublishEvent;
+use App\Nova\Actions\UnpublishEvent;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -128,7 +129,8 @@ class Event extends Resource
     public function actions(NovaRequest $request): array
     {
         return [
-            new ApproveEvent(),
+            new PublishEvent(),
+            new UnpublishEvent(),
         ];
     }
 }
