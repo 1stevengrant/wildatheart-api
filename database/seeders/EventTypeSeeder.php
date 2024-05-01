@@ -23,7 +23,7 @@ class EventTypeSeeder extends Seeder
             EventType::SURVIVAL_SCHOOL,
         ]);
 
-        $eventTypes->each(fn($eventType) => EventType::create([
+        $eventTypes->each(fn ($eventType) => EventType::create([
             'name' => $eventType,
             'summary' => fake()->sentence(5),
             'description' => fake()->paragraphs(6, true),
@@ -57,6 +57,7 @@ class EventTypeSeeder extends Seeder
         if ($name === EventType::SURVIVAL_SCHOOL) {
             return 'event_types/5fae180b-fd9d-4ba8-8bac-73998008da3e.jpg';
         }
+
         return null;
     }
 }

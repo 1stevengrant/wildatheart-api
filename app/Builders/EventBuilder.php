@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
 {
-
     public function public(): EventBuilder
     {
         return $this->whereNotNull('approved_at');

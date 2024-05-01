@@ -303,7 +303,6 @@ class Event extends Model
         return new EventBuilder($query);
     }
 
-
     public function unpublish(): void
     {
         $this->approved_at = null;
@@ -315,5 +314,4 @@ class Event extends Model
         $this->approved_at = now();
         $this->save();
     }
-
 }
