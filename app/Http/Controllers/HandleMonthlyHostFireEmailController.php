@@ -16,6 +16,11 @@ class HandleMonthlyHostFireEmailController extends Controller
             'approved_at' => now(),
         ]);
 
+        activity('fire')
+            ->performedOn($event)
+            ->causedBy($event->user)
+            ->log('Fire published');
+
         return inertia('FireBurningPage', [
             'pageContent' => Page::bySlug('fire-burning-page'),
         ]);
@@ -23,6 +28,11 @@ class HandleMonthlyHostFireEmailController extends Controller
 
     public function show(Event $event)
     {
+        activity('fire')
+            ->performedOn($event)
+            ->causedBy($event->user)
+            ->log('Fire unpublished page viewed');
+
         return inertia('FireExtinguishedPage', [
             'event' => $event,
             'destroyUrl' => URL::signedRoute('fire.extinguish.destroy', ['event' => $event]),
@@ -33,6 +43,11 @@ class HandleMonthlyHostFireEmailController extends Controller
     public function destroy(Event $event)
     {
         $event->unpublish();
+
+        activity('fire')
+            ->performedOn($event)
+            ->causedBy($event->user)
+            ->log('Fire unpublished');
 
         Mail::to($event->user->email)
             ->send(new ConfirmFireUnpublishedMailable($event));

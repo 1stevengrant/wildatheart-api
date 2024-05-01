@@ -27,6 +27,10 @@ class MonthlyFireCleanupEmailToHostJob implements ShouldQueue
      */
     public function handle(): void
     {
+        activity('fire')
+            ->performedOn($this->event)
+            ->log('Monthly email sent');
+
         Mail::to($this->event->host)
             ->send(new \App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable($this->event));
 

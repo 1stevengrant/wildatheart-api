@@ -27,5 +27,9 @@ class UnpublishFireJob implements ShouldQueue
     public function handle(): void
     {
         $this->event->unpublish();
+
+        activity('fire')
+            ->performedOn($this->event)
+            ->log('Fire unpublished automatically');
     }
 }

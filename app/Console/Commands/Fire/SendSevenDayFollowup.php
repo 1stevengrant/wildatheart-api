@@ -28,10 +28,13 @@ class SendSevenDayFollowup extends Command
     public function handle()
     {
         Event::query()
-            ->lastMonthlyEmailSentAgo(7)
+            ->lastMonthlyEmailSentAgo(0)
             ->lastApprovedAt(90)
             ->get()
             ->each(function ($fire) {
+                activity('fire')
+                    ->performedOn($fire)
+                    ->log('Followup email sent');
                 Mail::to($fire->host->email)
                     ->send(new \App\Mail\Fire\SevenDayFollowupMailable($fire));
             });
