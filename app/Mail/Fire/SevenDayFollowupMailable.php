@@ -53,7 +53,7 @@ class SevenDayFollowupMailable extends Mailable implements ShouldQueue
         $this->emailContent = \Str::markdown($content);
 
         return new Content(
-            markdown: 'mail.fires.three-day-followup',
+            markdown: 'emails.fire.seven-day-followup',
         );
     }
 
