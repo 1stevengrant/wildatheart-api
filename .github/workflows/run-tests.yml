@@ -3,10 +3,12 @@ on:
     branches:
       - prod
       - dev
+      - beta
   pull_request:
     branches:
       - dev
       - prod
+      - beta
     types:
       - opened
 
