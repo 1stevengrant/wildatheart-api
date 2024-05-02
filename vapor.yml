@@ -1,32 +1,46 @@
 id: 46698
 name: fires
 environments:
-  dev:
-    memory: 1024
-    cli-memory: 512
-    runtime: docker
-    storage: wildatheart-campfires-dev
-    cache: wildatheart-campfires-dev
-    database: wildatheart-campfires-dev
-    build:
-      - "COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev"
-      - "php artisan event:cache"
-      - "npm ci && npm run build && rm -rf node_modules"
-    deploy:
-      - "php artisan db:wipe --force"
-      - "php artisan migrate --force"
-      - "php artisan db:seed --force"
-  prod:
-    domain: local.wildatheart.org
-    memory: 1024
-    cli-memory: 512
-    runtime: docker
-    storage: wildatheart-campfires
-    cache: wildatheart-campfires
-    database: wildatheart-campfires
-    build:
-      - "COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev"
-      - "php artisan event:cache"
-      - "npm ci && npm run build && rm -rf node_modules"
-    deploy:
-      - "php artisan migrate --force"
+    beta:
+        memory: 1024
+        cli-memory: 512
+        runtime: docker
+        storage: wildatheart-local-beta
+        cache: wildatheart-campfires-dev
+        database: wildatheart-local-beta
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run build && rm -rf node_modules'
+        deploy:
+            - 'php artisan db:wipe --force'
+            - 'php artisan migrate --force'
+    dev:
+        memory: 1024
+        cli-memory: 512
+        runtime: docker
+        storage: wildatheart-campfires-dev
+        cache: wildatheart-campfires-dev
+        database: wildatheart-campfires-dev
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run build && rm -rf node_modules'
+        deploy:
+            - 'php artisan db:wipe --force'
+            - 'php artisan migrate --force'
+            - 'php artisan db:seed --force'
+    prod:
+        domain: local.wildatheart.org
+        memory: 1024
+        cli-memory: 512
+        runtime: docker
+        storage: wildatheart-campfires
+        cache: wildatheart-campfires
+        database: wildatheart-campfires
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run build && rm -rf node_modules'
+        deploy:
+            - 'php artisan migrate --force'

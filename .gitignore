@@ -20,6 +20,7 @@ yarn-error.log
 .DS_Store
 .env.prod
 .env.dev
+.env.beta
 /dbdumps
 /.vapor
 /public/mix-manifest.json
