@@ -2,8 +2,6 @@
 
 use App\Models\EmailVerify;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
-
 it('logs a user in based on the token', function () {
     $user = \App\Models\User::factory()->create();
     $emailVerify = EmailVerify::create([

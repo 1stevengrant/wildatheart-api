@@ -2,8 +2,6 @@
 
 use App\Models\Event;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
-
 test('an event should not be indexed or searchable if approved_at is null', function () {
     $event = Event::factory()->create([
         'approved_at' => null,

@@ -2,9 +2,6 @@
 
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\UserSeeder::class);

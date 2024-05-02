@@ -2,8 +2,6 @@
 
 use Inertia\Testing\AssertableInertia as Assert;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
-
 beforeEach(function () {
     $this->seed(\Database\Seeders\EventTypeSeeder::class);
     $this->event = \App\Models\Event::factory()->fires()->create();

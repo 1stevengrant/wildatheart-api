@@ -2,9 +2,7 @@
 
 use App\Models\EmailVerify;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
 it('gets an email verification by its token code', function () {
     $user = User::factory()->create();
     $emailVerify = EmailVerify::create([

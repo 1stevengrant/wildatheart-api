@@ -2,7 +2,6 @@
 
 use App\Models\Event;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 beforeEach(function () {
     $this->seed(\Database\Seeders\EventTypeSeeder::class);
     $this->event = Event::factory()->fires()->create();

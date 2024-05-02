@@ -1,9 +1,7 @@
 <?php
 
 use App\Actions\User\CreateUser;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
 it('creates a new user', function () {
     $userAttributes = [
         'given_name' => 'John',

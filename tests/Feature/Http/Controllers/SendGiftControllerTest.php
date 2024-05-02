@@ -1,10 +1,7 @@
 <?php
 
 use App\Models\Event;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
-
-uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\EventTypeSeeder::class);

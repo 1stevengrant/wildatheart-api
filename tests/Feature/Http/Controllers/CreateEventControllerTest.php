@@ -3,9 +3,6 @@
 use App\Mail\Event\SendEmailVerificationEmail;
 use App\Models\EventType;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\UserSeeder::class);

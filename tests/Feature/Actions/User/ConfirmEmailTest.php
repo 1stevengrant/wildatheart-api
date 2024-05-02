@@ -3,9 +3,7 @@
 use App\Actions\User\ConfirmEmail;
 use App\Models\EmailVerify;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
 it('confirms a users email address', function () {
     $user = User::factory()->unverified()->create();
     $token = EmailVerify::create([

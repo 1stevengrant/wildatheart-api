@@ -6,7 +6,7 @@ use App\Models\Event;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class SendSevenDayFollowup extends Command
+class SendSevenDayFollowupCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -28,7 +28,7 @@ class SendSevenDayFollowup extends Command
     public function handle()
     {
         Event::query()
-            ->lastMonthlyEmailSentAgo(0)
+            ->lastMonthlyEmailSentAgo(7)
             ->lastApprovedAt(90)
             ->get()
             ->each(function ($fire) {

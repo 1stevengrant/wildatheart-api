@@ -1,7 +1,5 @@
 <?php
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
-
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {

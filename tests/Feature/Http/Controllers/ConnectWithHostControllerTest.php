@@ -4,10 +4,7 @@ use App\Mail\Event\AttendeeConnectedToHost;
 use App\Mail\Event\AttendeeRegistered;
 use App\Models\EmailTemplate;
 use App\Models\Event;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
-
-uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Mail::fake();
