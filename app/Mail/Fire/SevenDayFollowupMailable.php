@@ -36,8 +36,11 @@ class SevenDayFollowupMailable extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        $subject = $this->emailTemplate->subject;
+        $subject = str_replace('[event_name]', $this->event->name, $subject);
+
         return new Envelope(
-            subject: $this->emailTemplate->subject,
+            subject: $subject,
         );
     }
 

@@ -37,8 +37,11 @@ class MonthlyFireCleanupEmailToHostMailable extends Mailable implements ShouldQu
      */
     public function envelope(): Envelope
     {
+        $subject = $this->emailTemplate->subject;
+        $subject = str_replace('[event_name]', $this->event->name, $subject);
+
         return new Envelope(
-            subject: $this->emailTemplate->subject,
+            subject: $subject,
         );
     }
 
