@@ -216,7 +216,7 @@ const MailingAddressEventTypePage = () => {
                         className={"w-full"}
                         disabled={!isValidPhoneNumber(phone) || processing}
                     >
-                        Create Event
+                        Save Mailing Address & Continue
                     </PrimaryButton>
                 </div>
             </form>
