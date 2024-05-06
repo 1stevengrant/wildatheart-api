@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
+import Map, { MapRef } from "react-map-gl/maplibre";
 
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import MapboxSearch from "@/Components/Maps/MapboxSearch";
@@ -17,6 +18,9 @@ const CreateEventEventTypePage = () => {
     };
     const [isPrivateEvent, setIsPrivateEvent] = useState(false);
     const handleSubmit = (e: React.FormEvent) => {};
+
+    const mapRef = useRef<MapRef>(null);
+
     return (
         <PageContainer>
             <h1>Create Event</h1>
@@ -28,6 +32,16 @@ const CreateEventEventTypePage = () => {
 
             <form onSubmit={(event) => handleSubmit(event)} className="mt-4">
                 <MapboxSearch />
+                <Map
+                    ref={mapRef}
+                    maxPitch={0}
+                    minPitch={0}
+                    pitchWithRotate={false}
+                    dragRotate={false}
+                    touchPitch={false}
+                    customAttribution={``}
+                    mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=sr5EVCtJBfz1IQnASSwn`}
+                />
                 <div className={`mt-4`}>
                     <DatePickerInput
                         label="Start date"
