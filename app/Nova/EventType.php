@@ -8,6 +8,7 @@ use App\Nova\Repeater\TextBlock;
 use App\Nova\Repeater\VideoBlock;
 use App\Support\PublicVaporImage;
 use Eminiarts\Tabs\Traits\HasTabs;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Markdown;
@@ -41,6 +42,7 @@ class EventType extends Resource
      */
     public static $search = [
         'name',
+        'is_active',
     ];
 
     /**
@@ -50,6 +52,7 @@ class EventType extends Resource
     {
         return [
             ID::make()->sortable()->hideFromIndex(),
+            Boolean::make('Is Active'),
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),

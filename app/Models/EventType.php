@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -30,6 +31,7 @@ class EventType extends Model
         'photos' => 'array',
         'event_faqs' => 'array',
         'event_schedule' => 'array',
+        'is_active' => 'boolean',
     ];
 
     public static function boot(): void
@@ -49,5 +51,15 @@ class EventType extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', '=', true);
+    }
+
+    public function scopeInactive(Builder $query): Builder
+    {
+        return $query->where('is_active', '=', false);
     }
 }

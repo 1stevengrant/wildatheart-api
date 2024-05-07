@@ -1,0 +1,42 @@
+<?php
+
+use App\Models\EventType;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    EventType::truncate();
+});
+
+afterEach(function () {
+    EventType::truncate();
+});
+
+it('gets a list of active event types', function () {
+    EventType::create([
+        'name' => 'Wild at Heart BASIC (retreat)',
+        'is_active' => true,
+    ]);
+
+    $eventTypes = EventType::active()->get();
+    ray($eventTypes->count());
+
+    expect($eventTypes->count())->toBe(1);
+});
+
+it('gets a list of inactive event types', function () {
+    EventType::create([
+        'name' => 'Wild at Heart BASIC (retreat)',
+        'is_active' => false,
+    ]);
+
+    EventType::create([
+        'name' => 'Wild at Heart BASIC (retreat)',
+        'is_active' => true,
+    ]);
+
+    $eventTypes = EventType::inactive()->get();
+
+    expect($eventTypes->count())->toBe(1);
+});
