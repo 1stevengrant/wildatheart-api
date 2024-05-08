@@ -1,6 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { Link, useForm } from "@inertiajs/react";
+import { DatePickerInput } from "@mantine/dates";
+import dayjs from "dayjs";
 import mapboxgl from "mapbox-gl";
 import Map, {
     GeolocateControl,
@@ -11,27 +14,25 @@ import Map, {
 import { useRecoilState } from "recoil";
 
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import EventDisplay from "@/Components/Events/EventDisplay";
-import FireMarker from "@/Components/Events/FireMarker";
 import FireNamingGuidelines from "@/Components/Events/FireNamingGuidelines";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import MapboxSearch from "@/Components/Maps/MapboxSearch";
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { SwitchComponent } from "@/Components/SwitchComponent";
 import Spinner from "@/Components/Ui/Spinner";
 import config from "@/helpers/config";
 import lookupLocation from "@/helpers/lookupLocation";
 import objectIsEmpty from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
-import { LeftColumn } from "@/Layouts/LeftColumn";
-import { RightColumn } from "@/Layouts/RightColumn";
-import { TwoColumnWrapper } from "@/Layouts/TwoColumnWrapper";
+import { useDates } from "@/Hooks/useDates";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
 
 export const EventInformation = ({ user }: any) => {
+    const [isPrivate, setIsPrivate] = useState(false);
     const mapRef = useRef<any>(null);
     const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [marker, setMarker] = useState<any>(null);
@@ -135,6 +136,9 @@ export const EventInformation = ({ user }: any) => {
             neighborhood: "",
             street_address: "",
             poi: "",
+            is_private: false,
+            start_date: null,
+            end_date: null,
         });
 
     useEffect(() => {
@@ -230,21 +234,54 @@ export const EventInformation = ({ user }: any) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        post(route("host.store"), {
-            preserveScroll: true,
-        });
+        console.log(data);
+        post(
+            route("host.eventType.create.store", { eventType: eventType.slug }),
+            {
+                preserveScroll: true,
+            }
+        );
     };
 
+    const page = useTypedPage();
+    const eventType = page.props.eventType as any;
+    const handleDateChange = (date: Date | null, type = "start") => {
+        if (type === "start") {
+            setStartDate(date);
+
+            if (date) {
+                setStartDateString(date.toISOString().split("T")[0]);
+                setData("start_date", date);
+            } else {
+                setData("start_date", null);
+                resetAllDates();
+            }
+        } else {
+            setEndDate(date);
+            if (date) {
+                setEndDateString(date.toISOString().split("T")[0]);
+                setData("end_date", date);
+            } else {
+                setData("end_date", null);
+                setEndDateString("");
+                setEndDate(null);
+            }
+        }
+    };
+    const maxDate = dayjs().add(1, "year").toDate();
+    const {
+        startDate,
+        setStartDate,
+        setStartDateString,
+        endDate,
+        setEndDate,
+        setEndDateString,
+        resetAllDates,
+    } = useDates();
     return (
-        <TwoColumnWrapper className={""}>
-            <LeftColumn className={""}>
-                <form
-                    onSubmit={handleSubmit}
-                    className={"max-w-[500px] mx-auto"}
-                >
-                    <HeadingOne className={"my-12"}>
-                        Tell us about your Fire
-                    </HeadingOne>
+        <form onSubmit={handleSubmit}>
+            {eventType.slug === "fires" && (
+                <>
                     <div>
                         <InputLabel
                             htmlFor="fire_name"
@@ -266,7 +303,7 @@ export const EventInformation = ({ user }: any) => {
                                     });
                                 }}
                             />
-                            <div>Fire</div>
+                            <div className={`text-white`}>Fire</div>
                         </div>
                         <Instruction>
                             This is the name that will be displayed on your Fire
@@ -275,84 +312,116 @@ export const EventInformation = ({ user }: any) => {
                         <InputError message={errors.name} />
                     </div>
                     <FireNamingGuidelines />
-                    <EventDisplay event={event} className={"md:hidden mt-4"} />
-                    <MapboxSearch className={"mt-4"} />
-                    <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
-                        <Map
-                            mapLib={mapboxgl}
-                            ref={mapRef}
-                            dragRotate={false}
-                            touchPitch={false}
-                            pitchWithRotate={false}
-                            maxPitch={0}
-                            minPitch={0}
-                            mapStyle="mapbox://styles/mapbox/navigation-day-v1"
-                            initialViewState={{
-                                zoom: 6,
-                            }}
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                borderRadius: "0.5rem",
-                            }}
-                            onClick={(event) => {
-                                handleMapClick(event);
-                            }}
-                            mapboxAccessToken={config("services.mapbox.token")}
-                            onZoomEnd={() =>
-                                handleUserLevelZoom(
-                                    mapRef.current?.getZoom() || 6
-                                )
-                            }
-                            attributionControl={false}
-                        >
-                            <GeolocateControl position="top-left" />
-                            <NavigationControl position="top-left" />
-                            <>
-                                {marker && (
-                                    <Marker
-                                        longitude={marker.lng}
-                                        latitude={marker.lat}
-                                    >
-                                        <FireMarker className={"w-10 h-10"} />
-                                    </Marker>
-                                )}
-                            </>
-                        </Map>
+                </>
+            )}
+
+            <MapboxSearch className={"mt-4"} />
+
+            <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
+                <Map
+                    mapLib={mapboxgl}
+                    ref={mapRef}
+                    dragRotate={false}
+                    touchPitch={false}
+                    pitchWithRotate={false}
+                    maxPitch={0}
+                    minPitch={0}
+                    mapStyle="mapbox://styles/mapbox/navigation-day-v1"
+                    initialViewState={{
+                        zoom: 6,
+                    }}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "0.5rem",
+                    }}
+                    onClick={(event) => {
+                        handleMapClick(event);
+                    }}
+                    mapboxAccessToken={config("services.mapbox.token")}
+                    onZoomEnd={() =>
+                        handleUserLevelZoom(mapRef.current?.getZoom() || 6)
+                    }
+                    attributionControl={false}
+                >
+                    <GeolocateControl position="top-left" />
+                    <NavigationControl position="top-left" />
+                    <>
+                        {marker && (
+                            <Marker
+                                anchor={"bottom"}
+                                longitude={marker.lng}
+                                latitude={marker.lat}
+                            />
+                        )}
+                    </>
+                </Map>
+            </div>
+
+            {eventType.slug !== "fires" && (
+                <>
+                    <div className={`grid grid-cols-2 gap-6 mt-4`}>
+                        <div>
+                            <DatePickerInput
+                                label="Start date"
+                                placeholder="Select start date"
+                                minDate={new Date()}
+                                value={startDate}
+                                maxDate={maxDate}
+                                clearable
+                                onChange={(value) => handleDateChange(value)}
+                            />
+                            <InputError message={errors.start_date} />
+                        </div>
+                        <div>
+                            <DatePickerInput
+                                label="End date"
+                                placeholder="Select end date"
+                                minDate={dayjs(startDate)
+                                    .add(1, "day")
+                                    .toDate()}
+                                value={endDate}
+                                maxDate={maxDate}
+                                clearable
+                                onChange={(value) =>
+                                    handleDateChange(value, "end")
+                                }
+                            />
+                            <InputError message={errors.end_date} />
+                        </div>
                     </div>
 
-                    <div className="mt-4 space-y-4">
-                        <PrimaryButton
-                            disabled={
-                                event.location === "Location TBC" && processing
-                            }
-                            className={`w-full flex items-center justify-center`}
-                        >
-                            {processing ? <Spinner /> : null}
-                            {event.location === "Location TBC"
-                                ? "Pick a location to continue"
-                                : "Next"}
-                        </PrimaryButton>
-                        <Link
-                            className={
-                                "text-grey-200 w-full inline-block text-center"
-                            }
-                            href={route("host")}
-                        >
-                            Cancel
-                        </Link>
-                    </div>
-                </form>
-            </LeftColumn>
+                    <label
+                        className={`flex items-center space-x-4 hover:cursor-pointer`}
+                    >
+                        <SwitchComponent
+                            checked={isPrivate}
+                            onChange={() => {
+                                setIsPrivate(!isPrivate);
+                                setData("is_private", !isPrivate);
+                            }}
+                        />
+                        <div className={`text-white text-sm mt-4`}>
+                            <div>I want this event to be private.</div>
+                            <div>
+                                The event will not be shown on map or directory.
+                            </div>
+                        </div>
+                    </label>
+                </>
+            )}
 
-            <RightColumn className={``}>
-                <div>
-                    <EventDisplay
-                        className={"max-w-[350px] mx-auto hidden lg:flex"}
-                        event={event}
-                    />
-                </div>
-            </RightColumn>
-        </TwoColumnWrapper>
+            <div className="mt-4 space-y-4">
+                <PrimaryButton
+                    disabled={event.location === "Location TBC" && processing}
+                    className={`w-full flex items-center justify-center`}
+                >
+                    {processing ? <Spinner /> : null}
+                    {event.location === "Location TBC"
+                        ? "Pick a location to continue"
+                        : "Create Event & See Dashboard"}
+                </PrimaryButton>
+            </div>
+        </form>
     );
 };
