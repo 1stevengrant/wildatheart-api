@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EventRequest;
+use App\Http\Requests\FireEventRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -12,7 +12,7 @@ class UpdateEventController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(EventRequest $request, Event $event)
+    public function __invoke(FireEventRequest $request, Event $event)
     {
         abort_unless(\Gate::allows('update', $event), 403);
 

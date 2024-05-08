@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ShouldNotEndWithFire;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Repat\LaravelRules\DoesntContainEmojis;
 
 class EventRequest extends FormRequest
 {
@@ -20,22 +17,16 @@ class EventRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'min:2',
-                'max:255',
-                new ShouldNotEndWithFire,
-                new DoesntContainEmojis,
-            ],
             'country' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ];
     }
 }

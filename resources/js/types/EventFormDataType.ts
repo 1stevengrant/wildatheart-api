@@ -12,4 +12,7 @@ export type EventFormDataType = {
     neighborhood?: string | null;
     street_address?: string | null;
     poi?: string | null;
+    is_private?: boolean | null;
+    start_date?: Date | null;
+    end_date?: Date | null;
 };
