@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { CalendarDaysIcon } from "@heroicons/react/24/outline";
-import { Link, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
 import mapboxgl from "mapbox-gl";
@@ -138,7 +137,6 @@ export const EventInformation = ({ user }: any) => {
             poi: "",
             is_private: false,
             start_date: null,
-            end_date: null,
         });
 
     useEffect(() => {
@@ -245,39 +243,20 @@ export const EventInformation = ({ user }: any) => {
 
     const page = useTypedPage();
     const eventType = page.props.eventType as any;
-    const handleDateChange = (date: Date | null, type = "start") => {
-        if (type === "start") {
-            setStartDate(date);
+    const handleDateChange = (date: Date | null) => {
+        setStartDate(date);
 
-            if (date) {
-                setStartDateString(date.toISOString().split("T")[0]);
-                setData("start_date", date);
-            } else {
-                setData("start_date", null);
-                resetAllDates();
-            }
+        if (date) {
+            setStartDateString(date.toISOString().split("T")[0]);
+            setData("start_date", date);
         } else {
-            setEndDate(date);
-            if (date) {
-                setEndDateString(date.toISOString().split("T")[0]);
-                setData("end_date", date);
-            } else {
-                setData("end_date", null);
-                setEndDateString("");
-                setEndDate(null);
-            }
+            setData("start_date", null);
+            resetAllDates();
         }
     };
     const maxDate = dayjs().add(1, "year").toDate();
-    const {
-        startDate,
-        setStartDate,
-        setStartDateString,
-        endDate,
-        setEndDate,
-        setEndDateString,
-        resetAllDates,
-    } = useDates();
+    const { startDate, setStartDate, setStartDateString, resetAllDates } =
+        useDates();
     return (
         <form onSubmit={handleSubmit}>
             {eventType.slug === "fires" && (
@@ -359,37 +338,17 @@ export const EventInformation = ({ user }: any) => {
             </div>
 
             {eventType.slug !== "fires" && (
-                <>
-                    <div className={`grid grid-cols-2 gap-6 mt-4`}>
-                        <div>
-                            <DatePickerInput
-                                label="Start date"
-                                placeholder="Select start date"
-                                minDate={new Date()}
-                                value={startDate}
-                                maxDate={maxDate}
-                                clearable
-                                onChange={(value) => handleDateChange(value)}
-                            />
-                            <InputError message={errors.start_date} />
-                        </div>
-                        <div>
-                            <DatePickerInput
-                                label="End date"
-                                placeholder="Select end date"
-                                minDate={dayjs(startDate)
-                                    .add(1, "day")
-                                    .toDate()}
-                                value={endDate}
-                                maxDate={maxDate}
-                                clearable
-                                onChange={(value) =>
-                                    handleDateChange(value, "end")
-                                }
-                            />
-                            <InputError message={errors.end_date} />
-                        </div>
-                    </div>
+                <div className={`mt-4`}>
+                    <DatePickerInput
+                        label="Start date"
+                        placeholder="Select start date"
+                        minDate={new Date()}
+                        value={startDate}
+                        maxDate={maxDate}
+                        clearable
+                        onChange={(value) => handleDateChange(value)}
+                    />
+                    <InputError message={errors.start_date} />
 
                     <label
                         className={`flex items-center space-x-4 hover:cursor-pointer`}
@@ -408,7 +367,7 @@ export const EventInformation = ({ user }: any) => {
                             </div>
                         </div>
                     </label>
-                </>
+                </div>
             )}
 
             <div className="mt-4 space-y-4">
