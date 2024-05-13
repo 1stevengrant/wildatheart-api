@@ -178,4 +178,9 @@ class User extends Authenticatable
     {
         return $this->agreed_to_host_agreement_date !== null;
     }
+
+    public function address(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
 }
