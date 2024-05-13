@@ -36,7 +36,7 @@ const EventDeleteModal = ({ open, setOpen, event }: EventDeleteModalProps) => {
                 onClick={() => setOpen(true)}
             >
                 <TrashIcon className="h-6 w-6" />
-                <span className="hidden md:inline">Delete Fire</span>
+                <span className="hidden md:inline">Delete Event</span>
             </button>
             <Modal open={open} setOpen={setOpen}>
                 <div className={"flex justify-end"}>
@@ -44,8 +44,8 @@ const EventDeleteModal = ({ open, setOpen, event }: EventDeleteModalProps) => {
                         <XMarkIcon className={"w-6 h-6 text-white"} />
                     </button>
                 </div>
-                <ModalHeading>Delete Fire?</ModalHeading>
-                <p>Are you sure you want to delete this Fire?</p>
+                <ModalHeading>Delete Event?</ModalHeading>
+                <p>Are you sure you want to delete this event?</p>
                 <ModalActions>
                     <SecondaryButton onClick={() => setOpen(false)}>
                         Cancel

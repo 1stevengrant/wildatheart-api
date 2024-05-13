@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     ClipboardDocumentCheckIcon,
@@ -25,6 +25,8 @@ const EventAdminCard = ({ event }: EventAdminCardProps) => {
         reactNotificationState
     );
 
+
+
     const copyToClipboard = async (): Promise<void> => {
         try {
             await navigator.clipboard.writeText(event.url);
@@ -50,6 +52,14 @@ const EventAdminCard = ({ event }: EventAdminCardProps) => {
     const [openEventUnpublishModal, setOpenEvenUnpublishModal] =
         useState(false);
     const [openEventPublishModal, setOpenEventPublishModal] = useState(false);
+
+    useEffect(() => {
+        const params = route().params;
+        if (params && params.event === event.id) {
+            setOpenEventPublishModal(true);
+        }
+    }, [event]);
+
     return (
         <div>
             <Link href={event.url} className="relative z-40">

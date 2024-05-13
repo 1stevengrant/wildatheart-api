@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
 
     Route::middleware(['agreed_to_host_agreement'])->group(function () {
-        Route::get('host', HostProfileController::class)->name('host');
+//        Route::get('host', HostProfileController::class)->name('host');
 
         Route::name('host.eventType.')->group(function () {
             Route::prefix('host/{eventType}')->group(function () {
