@@ -42,6 +42,6 @@ class HostEventTypeCreateEventController extends Controller
             'start_date' => $request->start_date,
         ]);
 
-        ray($event);
+        return redirect()->route('my.events', ['event' => $event]);
     }
 }

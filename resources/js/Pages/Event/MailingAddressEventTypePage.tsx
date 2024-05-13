@@ -20,6 +20,7 @@ import { Event } from "@/types/Event";
 const MailingAddressEventTypePage = () => {
     const page = usePage();
     const { auth } = page.props as unknown as PageProps;
+    const eventType = page.props.eventType as any;
     const event = page.props.event as Event;
     const phoneNumber = auth.user.phone
         ? auth.user.phone.replace(/\s/g, "")
@@ -41,7 +42,7 @@ const MailingAddressEventTypePage = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route("gift.store", event), {
+        post(route("host.eventType.mailing.store", eventType), {
             preserveScroll: true,
         });
     };
