@@ -6,10 +6,9 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 test('that it sets a user as having agreed to the host agreement by adding a timestamp', function () {
     $user = User::factory()->create();
-
     $this->actingAs($user)
         ->post(route('host.agreement.store'))
-        ->assertRedirect(route('host.event'));
+        ->assertRedirect(route('host.eventType.index'));
 
     expect($user->fresh()->hasAgreedToHostAgreement())
         ->toBeTrue()

@@ -27,7 +27,7 @@ it('changes the approved at timestamp for an event to be date', function () {
 });
 
 test('only the owner of an event can change the approved at timestamp', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['agreed_to_host_agreement_date' => now()]);
     $this->actingAs($user)
         ->put(route('toggle-event-approved-at', ['event' => $this->approvedEvent]))
         ->assertForbidden();

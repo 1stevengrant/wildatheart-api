@@ -36,6 +36,8 @@ class ToggleConnectionContactedController extends Controller
             'contacted_on' => now(),
         ]);
 
+        ray($attendee->contacted_on);
+
         activity()
             ->performedOn($attendee)
             ->causedBy(auth()->user())

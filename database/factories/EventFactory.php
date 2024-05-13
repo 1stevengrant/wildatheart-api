@@ -28,7 +28,7 @@ class EventFactory extends Factory
             'zip' => $this->faker->postcode,
             'longitude' => $this->faker->longitude,
             'latitude' => $this->faker->latitude,
-            'user_id' => User::factory()->create()->id,
+            'user_id' => User::factory()->agreedToHostAgreement()->create()->id,
             'country' => 'US',
             'name' => $this->faker->sentence,
             'sex' => $this->faker->randomElement([Event::FOR_MEN, Event::FOR_WOMEN]),

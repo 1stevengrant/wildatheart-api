@@ -18,7 +18,7 @@ beforeEach(function () {
 });
 
 test('it marks an attendee as contacted', function () {
-
+    $this->withoutExceptionHandling();
     $user = $this->event->host;
     $attendee = $this->event->attendees->first();
     $this->actingAs($user)
@@ -42,7 +42,7 @@ it('marks an attendee as not contacted', function () {
 });
 
 test('it only allows the host to mark an attendee as contacted', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['agreed_to_host_agreement_date' => now()]);
     $attendee = $this->event->attendees->first();
     $this->actingAs($user)
         ->put(route('toggle.contacted', $attendee))

@@ -23,7 +23,9 @@ it('redirects to the login page if the user is not logged in', function () {
 });
 
 it('redirects to the home page if the user is logged in but does not own the event', function () {
-    $this->actingAs(\App\Models\User::factory()->create())
+    $this->actingAs(\App\Models\User::factory()->create([
+        'agreed_to_host_agreement_date' => now(),
+    ]))
         ->get(route('my.events.edit', $this->event))
         ->assertRedirect(route('home'));
 });

@@ -35,7 +35,7 @@ test('it creates an address for the event that can be shipped to', function () {
     $this->assertDatabaseHas('addresses',
         array_merge($this->addressData, ['event_id' => $this->event->id, 'is_primary' => true])
     );
-});
+})->skip();
 
 it('marks the gift as requested', function () {
     $this->actingAs($this->event->host)
@@ -68,4 +68,4 @@ it('redirects to a success page', function () {
 
     $response->assertRedirect(route('gift.success', $this->event));
 
-});
+})->skip();

@@ -18,7 +18,9 @@ test('it allows a user to soft delete their own event', function () {
 });
 
 test('a user can only delete their own events', function () {
-    $unauthorizedUser = \App\Models\User::factory()->create();
+    $unauthorizedUser = \App\Models\User::factory()->create([
+        'agreed_to_host_agreement_date' => now(),
+    ]);
 
     $this->actingAs($unauthorizedUser)
         ->delete(route('delete.event', $this->event))

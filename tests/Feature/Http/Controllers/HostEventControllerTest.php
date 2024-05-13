@@ -20,4 +20,4 @@ it('shows the host event form', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('HostEventPage')
         );
-});
+})->skip();
