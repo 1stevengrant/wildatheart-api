@@ -29,7 +29,7 @@ class UnpublishInactiveFires extends Command
     {
         Event::query()
             ->lastMonthlyEmailSentAgo(10)
-            ->lastApprovedAt(90)
+            ->lastApprovedAt(90, '<')
             ->get()
             ->each(function ($fire) {
                 UnpublishFireJob::dispatch($fire);
