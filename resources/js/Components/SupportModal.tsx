@@ -28,7 +28,7 @@ const SupportModal: React.FC<SupportModalProps> = ({open, setOpen}) => {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('support'), {
+        post(route('support.store'), {
             preserveScroll: true,
             onSuccess: () => handleSuccess(),
         })
