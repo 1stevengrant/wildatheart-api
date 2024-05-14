@@ -1,12 +1,12 @@
-import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import HeadingOne from "@/Components/Type/HeadingOne";
-import { CenterContainer } from "@/Components/Pages/CenterContainer";
 import { useForm, usePage } from "@inertiajs/react";
-import { Event } from "@/types/Event";
+
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import VideoPlayer from "@/Components/Events/Detail/VideoPlayer";
-import { usePageContent } from "@/Hooks/usePageContent";
 import { ContentBlocksComponent } from "@/Components/ContentBlocksComponent";
+import { CenterContainer } from "@/Components/Pages/CenterContainer";
+import HeadingOne from "@/Components/Type/HeadingOne";
+import { usePageContent } from "@/Hooks/usePageContent";
+import { EmptyLayout } from "@/Layouts/EmptyLayout";
+import { Event } from "@/types/Event";
 
 const FireExtinguishedPage = () => {
     const page = usePage();
@@ -27,9 +27,14 @@ const FireExtinguishedPage = () => {
             <CenterContainer>
                 <HeadingOne>Extinguish {event.name} Fire?</HeadingOne>
                 {contentBlocks && (
-                    <ContentBlocksComponent className={`mt-6`} contentBlocks={contentBlocks} />
+                    <ContentBlocksComponent
+                        className={`mt-6`}
+                        contentBlocks={contentBlocks}
+                    />
                 )}
-                <div className={` flex items-center justify-between space-x-6 mt-6`}>
+                <div
+                    className={` flex items-center justify-between space-x-6 mt-6`}
+                >
                     <PrimaryButton onClick={extinguishFire}>
                         Extinguish Fire
                     </PrimaryButton>

@@ -15,7 +15,6 @@ const MyEventsPage = () => {
 
     const typedEvents = (events as IMyEvents).data;
 
-
     return (
         <AppLayout title={pageTitle}>
             <MyProfileWrapper title={pageTitle}>

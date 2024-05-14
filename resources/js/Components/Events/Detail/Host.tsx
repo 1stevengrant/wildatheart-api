@@ -10,16 +10,12 @@ type HostProps = {
     hostPhoto?: string;
 };
 
-const Host: React.FC<HostProps> = ({ className, host, hostPhoto }) => {
+const Host = ({ className = "", host, hostPhoto }: HostProps) => {
     return (
         <div className={`${className}`}>
             <div className="flex items-start space-x-4">
                 {hostPhoto ? (
-                    <UserAvatar
-                        image={hostPhoto}
-                        width={400}
-                        className={`w-20 h-20`}
-                    />
+                    <UserAvatar image={hostPhoto} className={`w-20 h-20`} />
                 ) : (
                     <UserCircleIcon className={"w-20 h-20"} />
                 )}

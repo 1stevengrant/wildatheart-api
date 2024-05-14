@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useRecoilState } from "recoil";
 
 import { MobileEventList } from "@/Components/API/MobileEventList";
@@ -6,7 +8,10 @@ import { SearchSidebar } from "@/Components/Search/SearchSidebar";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { searchResultsState } from "@/store/searchResultsAtom";
 
-const HomePage = () => {
+type HomePageProps = {
+    children: React.ReactNode;
+};
+const HomePage = ({ children }: HomePageProps) => {
     const [searchResults] = useRecoilState(searchResultsState);
     return (
         <AppLayout
@@ -18,6 +23,7 @@ const HomePage = () => {
             <MobileEventList
                 className={`${searchResults ? "block" : "hidden"}`}
             />
+            {children}
         </AppLayout>
     );
 };

@@ -18,7 +18,7 @@ interface SupportModalProps {
     setOpen: (open: boolean) => void;
 }
 
-const SupportModal: React.FC<SupportModalProps> = ({ open, setOpen }) => {
+export const SupportModal = ({ open, setOpen }: SupportModalProps) => {
     const { auth } = usePage<any>().props;
     const { data, setData, post, errors, reset } = useForm({
         name: auth.user
@@ -133,5 +133,3 @@ const SupportModal: React.FC<SupportModalProps> = ({ open, setOpen }) => {
         </Modal>
     );
 };
-
-export default SupportModal;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input/min";
@@ -15,13 +15,11 @@ import sortedCountries from "@/helpers/countryList";
 import priorityCountries from "@/helpers/priorityCountries";
 import selectClasses from "@/helpers/selectClasses";
 import { PageProps } from "@/types";
-import { Event } from "@/types/Event";
 
 const MailingAddressEventTypePage = () => {
     const page = usePage();
     const { auth } = page.props as unknown as PageProps;
     const eventType = page.props.eventType as any;
-    const event = page.props.event as Event;
     const phoneNumber = auth.user.phone
         ? auth.user.phone.replace(/\s/g, "")
         : "";

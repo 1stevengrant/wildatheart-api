@@ -4,7 +4,7 @@ interface RetreatIconProps {
     className?: string;
 }
 
-const RetreatIcon: React.FC<RetreatIconProps> = ({ className = "" }) => {
+const RetreatIcon = ({ className = "" }: RetreatIconProps) => {
     return (
         <svg
             className={`${className}`}

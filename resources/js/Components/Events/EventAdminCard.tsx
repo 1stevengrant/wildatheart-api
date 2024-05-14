@@ -25,8 +25,6 @@ const EventAdminCard = ({ event }: EventAdminCardProps) => {
         reactNotificationState
     );
 
-
-
     const copyToClipboard = async (): Promise<void> => {
         try {
             await navigator.clipboard.writeText(event.url);

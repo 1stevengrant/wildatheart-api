@@ -5,10 +5,7 @@ interface FireMarkerBlackProps {
     onClick?: () => void;
 }
 
-const FireMarkerBlack: React.FC<FireMarkerBlackProps> = ({
-    className,
-    onClick,
-}) => {
+const FireMarkerBlack = ({ className = "", onClick }: FireMarkerBlackProps) => {
     return (
         <svg
             className={className}
