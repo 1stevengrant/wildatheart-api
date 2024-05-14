@@ -4,7 +4,7 @@ interface ExperienceIconProps {
     className?: string;
 }
 
-const ExperienceIcon: React.FC<ExperienceIconProps> = ({ className = "" }) => {
+const ExperienceIcon = ({ className = "" }: ExperienceIconProps) => {
     return (
         <svg
             className={`${className}`}

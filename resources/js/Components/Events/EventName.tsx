@@ -4,7 +4,7 @@ type EventProps = {
     name: string | undefined;
 };
 
-const EventName: React.FC<EventProps> = ({ name }) => {
+const EventName = ({ name }: EventProps) => {
     return <p className="font-semibold text-white">{name} Fire</p>;
 };
 

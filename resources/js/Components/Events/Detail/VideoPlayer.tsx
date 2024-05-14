@@ -5,7 +5,7 @@ type VideoPlayerProps = {
     className?: string;
 };
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, className }) => {
+export const VideoPlayer = ({ src, className = "" }: VideoPlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     return (

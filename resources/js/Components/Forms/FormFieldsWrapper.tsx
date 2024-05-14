@@ -4,7 +4,7 @@ interface FormFieldsWrapperProps {
     children: React.ReactNode;
 }
 
-const FormFieldsWrapper: React.FC<FormFieldsWrapperProps> = ({ children }) => {
+const FormFieldsWrapper = ({ children }: FormFieldsWrapperProps) => {
     return <div className="mt-2 space-y-4">{children}</div>;
 };
 

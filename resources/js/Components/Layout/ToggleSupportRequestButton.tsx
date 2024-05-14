@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
-import SupportModal from "@/Components/SupportModal";
+import { SupportModal } from "@/Components/SupportModal";
 import { linkClass } from "@/helpers/linkClass";
 
 const ToggleSupportRequestButton = () => {

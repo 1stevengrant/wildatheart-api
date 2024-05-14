@@ -6,7 +6,7 @@ import { LogoutModal } from "@/Components/LogoutModal";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 import profileNavItemClasses from "@/helpers/profileNavItemClasses";
 
-export const LogoutButtonWithModal: React.FC = () => {
+export const LogoutButtonWithModal = () => {
     const [open, setOpen] = useState(false);
 
     return (

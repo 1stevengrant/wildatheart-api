@@ -1,6 +1,5 @@
 import { usePage } from "@inertiajs/react";
 
-
 type PageContent = {
     title: string;
     slug: string;
