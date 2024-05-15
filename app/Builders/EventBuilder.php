@@ -27,6 +27,38 @@ class EventBuilder extends Builder
         return $this->where('event_type_id', EventType::where('name', EventType::FIRES)->first()->id);
     }
 
+    public function retreats(): EventBuilder
+    {
+        $eventTypes = EventType::whereIn('name', [
+            EventType::WAH_BASIC,
+            EventType::CAPTIVATING_CORE_RETREAT,
+            EventType::BECOMING_A_KING,
+        ])->pluck('id');
+
+        return $this->whereIn('event_type_id', $eventTypes);
+    }
+
+    public function experiences(): EventBuilder
+    {
+        $eventTypes = EventType::whereIn('name', [
+            EventType::WAH_EXPERIENCE,
+            EventType::CAPTIVATING_EXPERIENCE,
+            EventType::BECOMING_A_KING_EXPERIENCE,
+        ])->pluck('id');
+
+        return $this->whereIn('event_type_id', $eventTypes);
+    }
+
+    public function upcoming(): EventBuilder
+    {
+        return $this->where('start_date', '>=', now());
+    }
+
+    public function inTheLastYear(): EventBuilder
+    {
+        return $this->whereBetween('start_date', [now()->subYear(), now()]);
+    }
+
     public function updatedAgo(int $days): EventBuilder
     {
         return $this->where('updated_at', '<', now()->subDays($days));
