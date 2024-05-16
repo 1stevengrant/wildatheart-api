@@ -1,0 +1,40 @@
+title: Images
+fields:
+  -
+    handle: images
+    field:
+      type: group
+      display: Images
+      fields:
+        -
+          handle: square
+          field:
+            max_files: 1
+            container: s3
+            folder: wp-app/uploads
+            type: assets
+            display: Square
+        -
+          handle: wide
+          field:
+            max_files: 1
+            container: s3
+            folder: wp-app/uploads
+            type: assets
+            display: Wide
+        -
+          handle: banner
+          field:
+            max_files: 1
+            container: s3
+            folder: wp-app/uploads
+            type: assets
+            display: Banner
+        -
+          handle: vertical
+          field:
+            max_files: 1
+            container: s3
+            folder: wp-app/uploads
+            type: assets
+            display: Vertical

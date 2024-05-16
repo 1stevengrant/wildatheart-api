@@ -1,0 +1,24 @@
+title: Content
+fields:
+  -
+    handle: title
+    field:
+      type: text
+      display: Title
+  -
+    handle: subtitle
+    field:
+      type: text
+      display: Subtitle
+  -
+    handle: description
+    field:
+      type: bard
+      display: Description
+  -
+    handle: topics
+    field:
+      taxonomies:
+        - topics
+      type: terms
+      display: Topics

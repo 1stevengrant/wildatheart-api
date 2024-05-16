@@ -2,13 +2,14 @@ title: Experiences
 template: experience
 layout: layout
 revisions: false
-route: "/{slug}"
-sort_dir: asc
+route: 'experiences/{slug}'
 date: true
+sort_dir: asc
 date_behavior:
   past: public
   future: private
 preview_targets:
-  - label: Entry
-    url: "http://localhost:4321/experiences/{slug}?preview=true"
+  -
+    label: Entry
+    url: 'http://localhost:4321/experiences/{slug}?preview=true'
     refresh: true

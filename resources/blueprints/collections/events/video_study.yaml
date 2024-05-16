@@ -1,0 +1,43 @@
+title: 'Video Study'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        display: Content
+        fields:
+          -
+            import: content
+            config:
+              title:
+                required: true
+          -
+            handle: related_content
+            field:
+              type: entries
+              display: 'Related Content'
+              max_items: 1
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required
+      -
+        display: Images
+        fields:
+          -
+            import: images

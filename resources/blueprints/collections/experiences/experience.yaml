@@ -4,21 +4,16 @@ tabs:
     display: Main
     sections:
       -
+        display: Content
         fields:
           -
-            handle: title
-            field:
-              type: text
-              required: true
-              validate:
-                - required
-              instructions_position: above
-              listable: hidden
-              visibility: visible
-              replicator_preview: true
-              input_type: text
-              antlers: false
-              hide_display: false
+            import: content
+            config:
+              title:
+                required: true
+  hero:
+    display: Hero
+    sections:
       -
         display: Hero
         fields:
@@ -35,3 +30,16 @@ tabs:
               type: slug
               localizable: true
               validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required
+      -
+        display: Images
+        fields:
+          -
+            import: images
