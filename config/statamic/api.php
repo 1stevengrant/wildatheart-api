@@ -14,19 +14,19 @@ return [
     |
     */
 
-    "enabled" => env("STATAMIC_API_ENABLED", true),
+    'enabled' => env('STATAMIC_API_ENABLED', true),
 
-    "resources" => [
-        "collections" => true,
-        "navs" => true,
-        "taxonomies" => false,
-        "assets" => true,
-        "globals" => false,
-        "forms" => false,
-        "users" => false,
+    'resources' => [
+        'collections' => true,
+        'navs' => true,
+        'taxonomies' => false,
+        'assets' => true,
+        'globals' => false,
+        'forms' => false,
+        'users' => false,
     ],
 
-    "route" => env("STATAMIC_API_ROUTE", "content-api"),
+    'route' => env('STATAMIC_API_ROUTE', 'content-api'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return [
     |
     */
 
-    "middleware" => env("STATAMIC_API_MIDDLEWARE", "api"),
+    'middleware' => env('STATAMIC_API_MIDDLEWARE', 'api'),
 
     /*
     |--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ return [
     |
     */
 
-    "pagination_size" => 50,
+    'pagination_size' => 50,
 
     /*
     |--------------------------------------------------------------------------
@@ -65,8 +65,8 @@ return [
     |
     */
 
-    "cache" => [
-        "expiry" => 60,
+    'cache' => [
+        'expiry' => 60,
     ],
 
     /*
@@ -79,7 +79,7 @@ return [
     |
     */
 
-    "excluded_keys" => [
+    'excluded_keys' => [
         //
     ],
 ];

@@ -13,17 +13,17 @@ return [
     |
     */
 
-    "enabled" => env("STATAMIC_GRAPHQL_ENABLED", true),
+    'enabled' => env('STATAMIC_GRAPHQL_ENABLED', true),
 
-    "resources" => [
-        "collections" => true,
-        "navs" => true,
-        "taxonomies" => true,
-        "assets" => false,
-        "globals" => false,
-        "forms" => false,
-        "sites" => false,
-        "users" => false,
+    'resources' => [
+        'collections' => true,
+        'navs' => true,
+        'taxonomies' => true,
+        'assets' => false,
+        'globals' => false,
+        'forms' => false,
+        'sites' => false,
+        'users' => false,
     ],
 
     /*
@@ -37,7 +37,7 @@ return [
     |
     */
 
-    "queries" => [
+    'queries' => [
         //
     ],
 
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    "middleware" => [
+    'middleware' => [
         //
     ],
 
@@ -69,7 +69,7 @@ return [
     |
     */
 
-    "cache" => [
-        "expiry" => 60,
+    'cache' => [
+        'expiry' => 60,
     ],
 ];

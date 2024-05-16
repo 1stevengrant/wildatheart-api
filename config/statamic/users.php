@@ -14,19 +14,19 @@ return [
     |
     */
 
-    "repository" => "eloquent",
+    'repository' => 'eloquent',
 
-    "repositories" => [
-        "file" => [
-            "driver" => "file",
-            "paths" => [
-                "roles" => resource_path("users/roles.yaml"),
-                "groups" => resource_path("users/groups.yaml"),
+    'repositories' => [
+        'file' => [
+            'driver' => 'file',
+            'paths' => [
+                'roles' => resource_path('users/roles.yaml'),
+                'groups' => resource_path('users/groups.yaml'),
             ],
         ],
 
-        "eloquent" => [
-            "driver" => "eloquent",
+        'eloquent' => [
+            'driver' => 'eloquent',
         ],
     ],
 
@@ -42,7 +42,7 @@ return [
     |
     */
 
-    "avatars" => "initials",
+    'avatars' => 'initials',
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
     |
     */
 
-    "new_user_roles" => [
+    'new_user_roles' => [
         //
     ],
 
@@ -68,7 +68,7 @@ return [
     |
     */
 
-    "new_user_groups" => [
+    'new_user_groups' => [
         //
     ],
 
@@ -82,7 +82,7 @@ return [
     |
     */
 
-    "registration_form_honeypot_field" => null,
+    'registration_form_honeypot_field' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ return [
     |
     */
 
-    "wizard_invitation" => true,
+    'wizard_invitation' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -109,9 +109,9 @@ return [
     |
     */
 
-    "passwords" => [
-        "resets" => "users",
-        "activations" => "activations",
+    'passwords' => [
+        'resets' => 'users',
+        'activations' => 'activations',
     ],
 
     /*
@@ -123,14 +123,14 @@ return [
     |
     */
 
-    "database" => config("database.default"),
+    'database' => config('database.default'),
 
-    "tables" => [
-        "users" => "users",
-        "role_user" => "role_user",
-        "roles" => false,
-        "group_user" => "group_user",
-        "groups" => false,
+    'tables' => [
+        'users' => 'users',
+        'role_user' => 'role_user',
+        'roles' => false,
+        'group_user' => 'group_user',
+        'groups' => false,
     ],
 
     /*
@@ -144,9 +144,9 @@ return [
     |
     */
 
-    "guards" => [
-        "cp" => "web",
-        "web" => "web",
+    'guards' => [
+        'cp' => 'web',
+        'web' => 'web',
     ],
 
     /*
@@ -159,9 +159,9 @@ return [
     |
     */
 
-    "impersonate" => [
-        "enabled" => env("STATAMIC_IMPERSONATE_ENABLED", true),
-        "redirect" => env("STATAMIC_IMPERSONATE_REDIRECT", null),
+    'impersonate' => [
+        'enabled' => env('STATAMIC_IMPERSONATE_ENABLED', true),
+        'redirect' => env('STATAMIC_IMPERSONATE_REDIRECT', null),
     ],
 
     /*
@@ -173,6 +173,6 @@ return [
     |
     */
 
-    "sort_field" => "email",
-    "sort_direction" => "asc",
+    'sort_field' => 'email',
+    'sort_direction' => 'asc',
 ];
