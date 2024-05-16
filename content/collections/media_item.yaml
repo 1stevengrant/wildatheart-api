@@ -1,5 +1,6 @@
-title: 'Media Item'
+title: "Media Item"
 revisions: false
+date: true
 date_behavior:
   past: public
   future: private

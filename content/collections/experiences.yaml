@@ -4,6 +4,7 @@ layout: layout
 revisions: false
 route: "/{slug}"
 sort_dir: asc
+date: true
 date_behavior:
   past: public
   future: private
