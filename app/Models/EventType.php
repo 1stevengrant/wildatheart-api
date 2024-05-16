@@ -13,17 +13,17 @@ class EventType extends BaseModel
 
     protected $guarded = ['id'];
 
-    const WAH_BASIC = 'Wild at Heart BASIC (retreat)';
+    const WAH_BASIC = 'Wild at Heart Retreat';
 
-    const CAPTIVATING_CORE_RETREAT = 'Captivating CORE (retreat)';
+    const CAPTIVATING_CORE_RETREAT = 'Captivating Retreat';
 
-    const BECOMING_A_KING = 'Becoming A King (retreat)';
+    const BECOMING_A_KING = 'Becoming A King Retreat';
 
-    const WAH_EXPERIENCE = 'Wild at Heart (experience)';
+    const WAH_EXPERIENCE = 'Wild at Heart Experience';
 
-    const CAPTIVATING_EXPERIENCE = 'Captivating (experience)';
+    const CAPTIVATING_EXPERIENCE = 'Captivating Experience';
 
-    const BECOMING_A_KING_EXPERIENCE = 'Becoming A King (experience)';
+    const BECOMING_A_KING_EXPERIENCE = 'Becoming A King Experience';
 
     const SURVIVAL_SCHOOL = 'Survival School';
 
