@@ -38,6 +38,7 @@
     "spatie/laravel-slack-alerts": "^1.2",
     "squirephp/countries-en": "^3.4",
     "statamic/cms": "*",
+    "statamic/eloquent-driver": "^4.0",
     "stepanenko3/nova-command-runner": "^4.3",
     "symfony/http-client": "^6.3",
     "symfony/postmark-mailer": "^6.3",
