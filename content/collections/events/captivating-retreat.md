@@ -1,9 +1,9 @@
 ---
 id: f42e74d0-d4d4-44d9-a6d3-a8cd9b9208b0
 blueprint: event
-title: 'Captivating Retreat'
-subtitle: 'An introductory, multi-day retreat for the recovery of a woman’s heart and discovering how God sees us as his belo'
-event_type: multiday
+title: "Captivating Retreat"
+subtitle: "An introductory, multi-day retreat for the recovery of a woman’s heart and discovering how God sees us as his belo"
+event_type: retreats
 topics:
   - for-women
   - beginner-friendly

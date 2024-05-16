@@ -1,9 +1,9 @@
 ---
 id: 780ea95b-5ab7-4cf5-8da2-49783b01426f
 blueprint: event
-title: 'Wild at Heart Experience'
-subtitle: 'A six-session video series by John Eldredge, based on his best selling book Wild At Heart. Watch the series on your own or in a group setting.'
-event_type: videoStudy
+title: "Wild at Heart Experience"
+subtitle: "A six-session video series by John Eldredge, based on his best selling book Wild At Heart. Watch the series on your own or in a group setting."
+event_type: experiences
 topics:
   - for-men
   - beginner-friendly

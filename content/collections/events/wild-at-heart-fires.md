@@ -1,9 +1,9 @@
 ---
 id: b339bd80-16f3-4664-9836-4997ce58c466
 blueprint: event
-title: 'Wild at Heart Fires'
-subtitle: 'A small, recurring gathering for men to share life and story in confidence-all around a fire.'
-event_type: localGathering
+title: "Wild at Heart Fires"
+subtitle: "A small, recurring gathering for men to share life and story in confidence-all around a fire."
+event_type: fires
 topics:
   - beginner-friendly
   - for-men

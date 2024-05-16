@@ -1,70 +1,80 @@
 title: Hero
 fields:
   -
-    handle: hero_1_text
+    handle: leader_text
     field:
-      input_type: text
-      antlers: false
       type: text
-      display: 'Hero 1 Text'
-      icon: text
-      listable: hidden
-      instructions_position: above
-      visibility: visible
-      replicator_preview: true
-      hide_display: false
+      display: 'Leader Text'
   -
-    handle: video_url
+    handle: hero_title
     field:
-      input_type: url
-      placeholder: 'https://player.vimeo.com'
-      default: 'https://player.vimeo.com/external/503912510.hd.mp4?s=814f24119f83c7c5e1a6a50dc1cf165d3af3c327&profile_id=175'
-      antlers: false
-      type: text
-      display: 'Video Url'
-      icon: text
-      listable: hidden
-      instructions_position: above
-      visibility: visible
-      replicator_preview: true
-      hide_display: false
-      validate:
-        - sometimes
-        - url
+      type: replicator
+      display: 'Hero Title'
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            text_line:
+              display: 'Text Line'
+              fields:
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: Text
+                -
+                  handle: text_style
+                  field:
+                    options:
+                      solid: Solid
+                      hollow: Hollow
+                    type: select
+                    display: 'Text Style'
   -
-    handle: video_fallback_image
+    handle: hero_subtitle
+    field:
+      save_html: true
+      antlers: true
+      type: bard
+      display: 'Hero Subtitle'
+  -
+    handle: background_video_url
+    field:
+      type: link
+      display: 'Background Video Url'
+  -
+    handle: background_video_fallback_image
     field:
       max_files: 1
-      mode: list
       container: s3
-      restrict: false
-      allow_uploads: true
-      show_filename: true
-      show_set_alt: true
       type: assets
-      display: 'Video Fallback Image'
-      icon: assets
-      listable: hidden
-      instructions_position: above
-      visibility: visible
-      replicator_preview: true
-      hide_display: false
+      display: 'Background Video Fallback Image'
       validate:
         - image
       if:
-        video_url: 'not empty'
+        background_video_url: 'not empty'
+  -
+    handle: featured_video_url
+    field:
+      type: link
+      display: 'Featured Video Url'
+  -
+    handle: featured_video_fallback_image
+    field:
+      max_files: 1
+      container: s3
+      type: assets
+      display: 'Featured Video Fallback Image'
+      validate:
+        - image
+      if:
+        featured_video_url: 'not empty'
   -
     handle: button_text
     field:
-      input_type: text
-      antlers: false
       type: text
       display: 'Button Text'
-      icon: text
-      listable: hidden
-      instructions_position: above
-      visibility: visible
-      replicator_preview: true
-      hide_display: false
+  -
+    import: buttons
   -
     import: modal_button

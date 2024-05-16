@@ -1,9 +1,9 @@
 ---
 id: 2a481ed1-bf59-41c0-95d4-70e228c94a14
 blueprint: event
-title: 'Wild at Heart Retreat'
+title: "Wild at Heart Retreat"
 subtitle: "An introductory, multi-day retreat for the recovery of a man's heart and his true God-given and wild nature and desires."
-event_type: multiday
+event_type: retreats
 topics:
   - for-men
   - beginner-friendly

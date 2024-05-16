@@ -1,0 +1,35 @@
+title: Icon
+fields:
+  - handle: icon
+    field:
+      options:
+        playOutline: "Play Outline"
+        location: "location"
+        locationOutline: "locationOutline"
+        youtube: "youtube"
+        search: "search"
+        menu: "menu"
+        instagram: "instagram"
+        facebook: "facebook"
+        arrow-right: "arrow-right"
+        wildatheart: "wildatheart"
+        sun: "sun"
+        tree: "tree"
+        wildatheart_no_slogan: "wildatheart_no_slogan"
+        chevron-right: "chevron-right"
+        chevron-left: "chevron-left"
+        wave: "wave"
+        play: "play"
+        hamburger: "hamburger"
+      type: select
+      display: Icon
+  - handle: width
+    field:
+      input_type: number
+      type: text
+      display: Width
+  - handle: height
+    field:
+      input_type: number
+      type: text
+      display: Height

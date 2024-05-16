@@ -1,9 +1,9 @@
 ---
 id: 77e67b23-27de-45ba-ad96-99f804465bf2
 blueprint: event
-title: 'Becoming A King Retreat'
+title: "Becoming A King Retreat"
 subtitle: "A deep level, multi-day men's retreat where men dive deep into their stories to excavate the man that God is forming in"
-event_type: multiday
+event_type: retreats
 topics:
   - for-men
   - advanced-level
