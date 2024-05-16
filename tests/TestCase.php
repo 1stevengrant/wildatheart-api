@@ -9,9 +9,4 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     use LazilyRefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
 }

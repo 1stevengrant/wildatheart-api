@@ -1,14 +1,17 @@
 <?php
 
+use App\Jobs\CheckIfUserShouldBeAdmin;
 use App\Models\User;
+use Database\Seeders\DatabaseSeeder;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    $this->seed(DatabaseSeeder::class);
 });
 it('checks if a user should be an admin', function () {
-    $user = User::factory()->create();
-    \App\Jobs\CheckIfUserShouldBeAdmin::dispatch($user);
+    $user = User::factory()->create([
+        'email' => 'steven@msn.com',
+    ]);
+    CheckIfUserShouldBeAdmin::dispatch($user);
     expect($user->hasRole(User::ROLE_ADMIN))->toBeFalse();
 });
 
@@ -21,8 +24,8 @@ it('checks if a user with @ghijk.co.uk email address should be an admin', functi
         'email' => 'steven@wildatheart.org',
     ]);
 
-    \App\Jobs\CheckIfUserShouldBeAdmin::dispatch($user);
-    \App\Jobs\CheckIfUserShouldBeAdmin::dispatch($user2);
+    CheckIfUserShouldBeAdmin::dispatch($user);
+    CheckIfUserShouldBeAdmin::dispatch($user2);
 
     expect($user->hasRole(User::ROLE_ADMIN))->toBeTrue()
         ->and($user2->hasRole(User::ROLE_ADMIN))->toBeTrue();
