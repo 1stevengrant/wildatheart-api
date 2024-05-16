@@ -29,7 +29,7 @@ class SendSevenDayFollowupCommand extends Command
     {
         Event::query()
             ->lastMonthlyEmailSentAgo(7)
-            ->lastApprovedAt(90)
+            ->lastApprovedAt(90, '<')
             ->get()
             ->each(function ($fire) {
                 activity('fire')
@@ -37,6 +37,9 @@ class SendSevenDayFollowupCommand extends Command
                     ->log('Followup email sent');
                 Mail::to($fire->host->email)
                     ->send(new \App\Mail\Fire\SevenDayFollowupMailable($fire));
+                if (config('app.env') === 'local') {
+                    dd();
+                }
             });
     }
 }

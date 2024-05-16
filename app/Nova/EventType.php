@@ -104,7 +104,7 @@ class EventType extends Resource
             Text::make('Registration Welcome Video')
                 ->hideFromIndex()
                 ->help('This video will be shown on the registration page. It should be an MP4 file url.')
-                ->rules('nullable', 'url', 'max:255', 'required'),
+                ->rules('nullable', 'url', 'max:255'),
 
             Markdown::make('Registration Welcome Text')
                 ->rules('required'),

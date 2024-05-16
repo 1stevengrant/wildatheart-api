@@ -17,16 +17,17 @@ afterEach(function () {
     EmailTemplate::truncate();
 });
 
-it('only sends an email to a fire approved more than 90 days ago', function () {
+it('sends an email to a fire host last approved more than 90 days ago and last monthly email was 8 days ago', function () {
     Mail::fake();
 
-    $event = Event::factory()->fires()->create([
+    Event::factory()->fires()->create([
+        'last_monthly_email_sent_at' => now()->subDays(8),
         'approved_at' => now()->subDays(91),
     ]);
 
     $this->artisan('app:send-seven-day-followup');
 
-    Mail::assertNotQueued(SevenDayFollowupMailable::class);
+    Mail::assertQueued(SevenDayFollowupMailable::class);
 });
 
 it('does not send an email to a fire updated in the last 90 days', function () {
@@ -39,21 +40,6 @@ it('does not send an email to a fire updated in the last 90 days', function () {
     $this->artisan('app:send-seven-day-followup');
 
     Mail::assertNotQueued(SevenDayFollowupMailable::class);
-});
-
-it('only sends an email to those who have not been contacted in the last 7 days', function () {
-    Mail::fake();
-
-    $event = Event::factory()->fires()->create([
-        'last_monthly_email_sent_at' => now()->subDays(8),
-        'approved_at' => now()->subDays(8),
-    ]);
-
-    $this->artisan('app:send-seven-day-followup');
-
-    Mail::assertQueued(SevenDayFollowupMailable::class, function ($mail) use ($event) {
-        return $mail->hasTo($event->host->email);
-    });
 });
 
 it('does not send an email to those who have been contacted in the last 7 days', function () {

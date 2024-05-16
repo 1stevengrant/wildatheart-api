@@ -76,6 +76,9 @@
     "scripts": {
         "pre-update-cmd": [
             "Statamic\\Console\\Composer\\Scripts::preUpdateCmd"
+        "test": [
+            "php artisan config:clear",
+            "pest"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

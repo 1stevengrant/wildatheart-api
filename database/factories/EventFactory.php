@@ -62,7 +62,7 @@ class EventFactory extends Factory
             return [
                 'event_type_id' => EventType::where('name', EventType::CAPTIVATING_EXPERIENCE)->first()->id,
                 'start_date' => now()->addDay(),
-                'sex' => 'f',
+                'sex' => Event::FOR_WOMEN,
             ];
         });
     }
@@ -85,7 +85,7 @@ class EventFactory extends Factory
                 'event_type_id' => EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first()->id,
                 'start_date' => now()->addDay(),
                 'end_date' => now()->addDays(3),
-                'sex' => 'f',
+                'sex' => Event::FOR_WOMEN,
             ];
         });
     }
