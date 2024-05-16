@@ -29,7 +29,7 @@ it('redirects to the create an event page if the user has already completed the 
 
     $this->actingAs($this->user)
         ->get(route('host'))
-        ->assertRedirect(route('host.event'));
+        ->assertRedirect(route('host.eventType.select'));
 });
 
 it('redirects to the login page if the user is not logged in', function () {
