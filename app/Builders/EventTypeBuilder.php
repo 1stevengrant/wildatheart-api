@@ -2,7 +2,6 @@
 
 namespace App\Builders;
 
-use App\Models\EventType;
 use Illuminate\Database\Eloquent\Builder;
 
 class EventTypeBuilder extends Builder
