@@ -1,21 +1,25 @@
 import React, { useState } from "react";
 
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { Link } from "@inertiajs/react";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { CircularButton } from "@/Components/Buttons/CircularButton";
 import { EventGroupWrapper } from "@/Components/EventGroupWrapper";
 import { EventTypeSelectButton } from "@/Components/EventTypeSelectButton";
+import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
+import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
+import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
+import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
+import { SnapGrid } from "@/Components/SnapGrid";
 import HeadingOne from "@/Components/Type/HeadingOne";
 import {
     experienceTypeDescription,
     fireTypeDescription,
     retreatTypeDescription,
 } from "@/helpers/eventTypes";
+import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EventType } from "@/types/EventType";
-import { SnapGrid } from "@/Components/SnapGrid";
-import { Link } from "@inertiajs/react";
-import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 
 interface HostEventTypeSelectPageProps {
     experienceTypes: Array<EventType>;
@@ -29,15 +33,13 @@ const HostEventTypeSelectPage = () => {
 
     const [selectedType, setSelectedType] = useState<EventType | null>(null);
     return (
-        <div className={`flex flex-col h-full`}>
-            <header
-                className={`bg-black text-white text-center p-4 fixed top-0 inset-x-0 z-10 border-b border-grey-border`}
-            >
+        <EmptyLayoutWrapper>
+            <EmptyLayoutHeader>
                 <HeadingOne className={`text-left`}>
                     Select an Event Type
                 </HeadingOne>
-            </header>
-            <main className={`pt-[73px] pb-[63px] px-4`}>
+            </EmptyLayoutHeader>
+            <EmptyLayoutBody>
                 <EventGroupWrapper
                     title={`Fires`}
                     description={fireTypeDescription}
@@ -82,17 +84,11 @@ const HostEventTypeSelectPage = () => {
                         ))}
                     </SnapGrid>
                 </EventGroupWrapper>
-            </main>
-            <footer
-                className={`border-t border-grey-border bg-black text-white text-center p-4 fixed bottom-0 inset-x-0 z-10 flex items-center justify-between`}
-            >
-                <button
-                    className={`inline-flex items-center text-sm md:text-base border w-10 h-10 justify-center
-        border-transparent rounded-full bg-white hover:bg-orange text-black hover:text-white text-center font-medium transition no-underline
-        ease-in-out duration-150 disabled:bg-grey-dark disabled:text-grey-white disabled:cursor-not-allowed focus:ring-0`}
-                >
+            </EmptyLayoutBody>
+            <EmptyLayoutFooter>
+                <CircularButton>
                     <ArrowLeftIcon className={`w-4 h-4`} />
-                </button>
+                </CircularButton>
                 {selectedType && (
                     <Link
                         className={`${primaryButtonClasses}`}
@@ -101,8 +97,8 @@ const HostEventTypeSelectPage = () => {
                         Create Your {selectedType?.name}
                     </Link>
                 )}
-            </footer>
-        </div>
+            </EmptyLayoutFooter>
+        </EmptyLayoutWrapper>
     );
 };
 
