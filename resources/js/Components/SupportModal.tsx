@@ -32,7 +32,7 @@ export const SupportModal = ({ open, setOpen }: SupportModalProps) => {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('support.store'), {
+        post(route("support.store"), {
             preserveScroll: true,
             onSuccess: () => handleSuccess(),
         });

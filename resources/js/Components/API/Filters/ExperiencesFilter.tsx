@@ -4,8 +4,8 @@ import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
 import { ExperiencesIcon } from "@/Components/Icons/NewIcons/ExperiencesIcon";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/SwitchComponentWrapper";
-import { useTypes } from "@/Hooks/useTypes";
 import { experienceTypeDescription } from "@/helpers/eventTypes";
+import { useTypes } from "@/Hooks/useTypes";
 
 export const ExperiencesFilter = () => {
     const { types, handleTypesChange, experienceEventTypes } = useTypes();

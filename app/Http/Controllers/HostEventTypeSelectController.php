@@ -12,15 +12,13 @@ class HostEventTypeSelectController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $query = EventType::query();
-
         return inertia('Event/HostEventTypeSelectPage', [
-            'experienceTypes' => $query->slug('%experience%')->active()->get(),
-            'retreatTypes' => $query->slug('%retreat%')
+            'experienceTypes' => EventType::query()->slug('%experience%')->active()->get(),
+            'retreatTypes' => EventType::query()->slug('%retreat%')
                 ->slugOr('%school%')
                 ->active()
                 ->get(),
-            'fireTypes' => $query->slug('%fire%')->active()->get(),
+            'fireTypes' => EventType::query()->slug('%fire%')->active()->get(),
         ]);
     }
 }
