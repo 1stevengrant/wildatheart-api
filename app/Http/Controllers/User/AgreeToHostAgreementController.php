@@ -13,7 +13,6 @@ class AgreeToHostAgreementController extends Controller
      */
     public function __invoke(Request $request)
     {
-        ray('AgreeToHostAgreementController', auth()->user());
         auth()->user()->update(['agreed_to_host_agreement_date' => now()]);
 
         return redirect()->route('host.eventType.index', ['eventType' => EventType::first()->slug]);

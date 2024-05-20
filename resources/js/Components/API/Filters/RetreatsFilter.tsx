@@ -4,6 +4,7 @@ import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
 import { RetreatsIcon } from "@/Components/Icons/NewIcons/RetreatsIcon";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/SwitchComponentWrapper";
+import { retreatTypeDescription } from "@/helpers/eventTypes";
 import { useTypes } from "@/Hooks/useTypes";
 
 export const RetreatsFilter = () => {
@@ -14,7 +15,7 @@ export const RetreatsFilter = () => {
             <FilterTypeWrapper
                 icon={<RetreatsIcon className={`stroke-white w-8 h-8`} />}
                 title={`Multi-Day Retreats`}
-                text={`Onsite group events with multiple sessions and lodging included.`}
+                text={retreatTypeDescription}
             />
             {retreatEventTypes.map((eventType: any, index: number) => {
                 return (

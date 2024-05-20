@@ -1,10 +1,12 @@
-import { fireTypeGroup } from "@/helpers/eventTypeGroups";
+const retreatTypeDescription: string =
+    "Onsite group events with multiple sessions and lodging included.";
+const experienceTypeDescription: string =
+    "A small, group series that meets at a regular cadence to explore our 6-Session Video Experiences.";
+const fireTypeDescription: string =
+    "A casual, organic meetup to share life and stories.";
 
-export const wildAtHeartBASICRetreatType = "wild-at-heart-basic-retreat",
-    captivatingCoreRetreatType = "captivating-core-retreat",
-    becomingAKingRetreatType = "becoming-a-king-retreat",
-    wildAtHeartExperienceType = "wild-at-heart-experience",
-    captivatingCoreExperienceType = "captivating-core-experience",
-    becomingAKingExperienceType = "becoming-a-king-experience",
-    survivalSchoolType = "survival-school",
-    fireType = fireTypeGroup;
+export {
+    retreatTypeDescription,
+    experienceTypeDescription,
+    fireTypeDescription,
+};

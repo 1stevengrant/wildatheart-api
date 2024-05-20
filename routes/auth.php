@@ -23,6 +23,7 @@ use App\Http\Controllers\User\MyConnectionsController;
 use App\Http\Controllers\User\MyEventsController;
 use App\Http\Controllers\User\MyProfileController;
 use App\Http\Controllers\User\UpdateUserProfileController;
+use App\Models\EventType;
 
 Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.login');
 Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');
@@ -32,6 +33,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('host/agreement', AgreeToHostAgreementController::class)->name('host.agreement.store');
 
     Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
+
+    Route::get('host/select', function () {
+        return inertia('HostEventTypeSelectPage', [
+            'experienceTypes' => EventType::query()->slug('%experience%')->active()->get(),
+            'retreatTypes' => EventType::query()
+                ->slug('%retreat%')
+                ->slugOr('%school%')
+                ->active()
+                ->get(),
+            'fireTypes' => EventType::query()->slug('%fire%')->active()->get(),
+        ]);
+    })->name('host.eventType.select');
 
     Route::middleware(['agreed_to_host_agreement'])->group(function () {
         Route::get('host', HostProfileController::class)->name('host');
