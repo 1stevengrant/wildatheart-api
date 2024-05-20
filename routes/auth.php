@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
 
     Route::get('host/select', function () {
-        return inertia('HostEventTypeSelectPage', [
+        return inertia('Event/HostEventTypeSelectPage', [
             'experienceTypes' => EventType::query()->slug('%experience%')->active()->get(),
             'retreatTypes' => EventType::query()
                 ->slug('%retreat%')
