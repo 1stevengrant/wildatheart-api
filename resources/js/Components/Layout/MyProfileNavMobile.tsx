@@ -11,10 +11,10 @@ interface MyProfileNavProps {
     className?: string;
 }
 
-export const MyProfileNavMobile = ({ className }: MyProfileNavProps) => {
+export const MyProfileNavMobile = ({ className = "" }: MyProfileNavProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     return (
-        <div className={`${className} z-10 md:hidden`}>
+        <div className={`${className} z-50 md:hidden`}>
             <button onClick={() => setMenuOpen(!menuOpen)}>
                 {menuOpen ? (
                     <XMarkIcon className={`w-8 h-8`} />
