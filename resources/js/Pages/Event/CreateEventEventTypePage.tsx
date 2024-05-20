@@ -28,6 +28,7 @@ import MapboxSearch from "@/Components/Maps/MapboxSearch";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import Spinner from "@/Components/Ui/Spinner";
+import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import config from "@/helpers/config";
 import lookupLocation from "@/helpers/lookupLocation";
 import objectIsEmpty from "@/helpers/objectIsEmpty";
@@ -37,7 +38,6 @@ import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
-import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();
