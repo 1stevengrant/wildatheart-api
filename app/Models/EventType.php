@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Builders\EventTypeBuilder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class EventType extends BaseModel
 {
 
-    use HasRunwayResource;
+    use HasRunwayResource, HasFactory;
 
     protected $guarded = ['id'];
 
@@ -62,13 +63,8 @@ class EventType extends BaseModel
         return 'slug';
     }
 
-    public function scopeActive(Builder $query): Builder
+    public function newEloquentBuilder($query): EventTypeBuilder
     {
-        return $query->where('is_active', '=', true);
-    }
-
-    public function scopeInactive(Builder $query): Builder
-    {
-        return $query->where('is_active', '=', false);
+        return new EventTypeBuilder($query);
     }
 }

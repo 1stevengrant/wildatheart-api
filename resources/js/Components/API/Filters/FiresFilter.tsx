@@ -6,6 +6,7 @@ import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
 import { FiresIcon } from "@/Components/Icons/NewIcons/FiresIcon";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/SwitchComponentWrapper";
+import { fireTypeDescription } from "@/helpers/eventTypes";
 import { useTypes } from "@/Hooks/useTypes";
 import { FiresFilterProps } from "@/types/FiresFilterProps";
 
@@ -19,7 +20,7 @@ export const FiresFilter = () => {
             <FilterTypeWrapper
                 icon={<FiresIcon className={`stroke-white w-8 h-8`} />}
                 title={`Fires`}
-                text={`A casual, organic meetup to share life and stories.`}
+                text={fireTypeDescription}
             />
             {fireTypes.map((eventType: any, index: number) => {
                 return (

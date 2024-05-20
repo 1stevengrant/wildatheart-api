@@ -10,7 +10,7 @@ export const PageContainer = ({
 }: PageContainerProps) => {
     return (
         <div
-            className={`container mx-auto py-20 prose prose-p:text-white prose-h1:text-white ${className}`}
+            className={`container mx-auto px-6 py-20 prose prose-p:text-white prose-h1:text-white prose-li:text-white prose-ul:text-white prose-ol:text-white ${className} marker:text-white `}
         >
             {children}
         </div>
