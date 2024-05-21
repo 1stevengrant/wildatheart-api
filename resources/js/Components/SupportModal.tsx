@@ -5,7 +5,7 @@ import { useForm, usePage } from "@inertiajs/react";
 
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
 import SecondaryButton from "@/Components/Buttons/SecondaryButton";
-import FormFieldsWrapper from "@/Components/Forms/FormFieldsWrapper";
+import { FormFieldsWrapper } from "@/Components/Forms/FormFieldsWrapper";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
 import TextArea from "@/Components/Forms/TextArea";
