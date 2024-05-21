@@ -7,7 +7,7 @@ import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input/min";
 
 import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import FormGrid from "@/Components/Forms/FormGrid";
+import { FormGrid } from "@/Components/Forms/FormGrid";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
 import TextInput from "@/Components/Forms/TextInput";
