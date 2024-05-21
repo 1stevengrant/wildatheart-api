@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\SearchForEventsRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -11,13 +12,9 @@ class SearchForEventsController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(SearchForEventsRequest $request)
     {
-        $request->validate([
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'radius' => 'required|numeric|min:100|max:600',
-        ]);
+        $request->validated();
 
         $latitude = request('latitude');
         $longitude = request('longitude');
