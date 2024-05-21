@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ConnectWithHostRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
-use Illuminate\Http\Request;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class ConnectWithHostController extends Controller
