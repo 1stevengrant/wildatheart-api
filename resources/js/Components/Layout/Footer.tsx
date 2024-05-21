@@ -60,10 +60,7 @@ export const Footer = ({ showFooter = true }: IFooterProps) => {
                                     className={linkClass}
                                 >
                                     {auth.user.image ? (
-                                        <UserAvatar
-                                            image={auth.user.image}
-                                            width={64}
-                                        />
+                                        <UserAvatar image={auth.user.image} />
                                     ) : (
                                         <UserCircleIcon
                                             className={defaultIconSize}
