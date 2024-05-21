@@ -15,6 +15,7 @@ import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import sortedCountries from "@/helpers/countryList";
@@ -22,7 +23,6 @@ import priorityCountries from "@/helpers/priorityCountries";
 import selectClasses from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const MailingAddressEventTypePage = () => {
     const page = usePage();
