@@ -3,7 +3,7 @@ import React from "react";
 import { usePage } from "@inertiajs/react";
 import { useRecoilState } from "recoil";
 
-import Notification from "@/Components/Layout/Notification";
+import { Notification } from "@/Components/Layout/Notification";
 import { reactNotificationState } from "@/store";
 
 interface TwoColumnWrapperProps {
