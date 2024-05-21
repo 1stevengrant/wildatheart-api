@@ -24,7 +24,6 @@ export const AuthNav = () => {
                             {auth.user.image ? (
                                 <UserAvatar
                                     className={"h-10 w-10"}
-                                    width={64}
                                     image={auth.user.image}
                                 />
                             ) : (
