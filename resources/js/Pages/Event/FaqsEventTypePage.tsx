@@ -10,12 +10,12 @@ import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const FaqsEventTypePage = () => {
     const page = usePage();
@@ -29,38 +29,40 @@ const FaqsEventTypePage = () => {
                 <EmptyLayoutBody>
                     <PageContainer>
                         {eventType.event_faqs &&
-                            eventType.event_faqs.map((faq: FlattenedType) => {
-                                return (
-                                    <Disclosure>
-                                        {({ open }) => (
-                                            /* Use the `open` state to conditionally change the direction of an icon. */
-                                            <>
-                                                <Disclosure.Button className="border-t border-grey-border py-2 text-white flex items-center justify-between w-full">
-                                                    <div
-                                                        className={`flex items-center text-grey font-semibold`}
-                                                    >
-                                                        <ShieldCheckIcon className="h-6 w-6 mr-2 flex-shrink-0" />
-                                                        <span
-                                                            className={`text-left leading-tight`}
+                            eventType.event_faqs.map(
+                                (faq: FlattenedType, index: number) => {
+                                    return (
+                                        <Disclosure key={index}>
+                                            {({ open }) => (
+                                                /* Use the `open` state to conditionally change the direction of an icon. */
+                                                <>
+                                                    <Disclosure.Button className="border-t border-grey-border py-2 text-white flex items-center justify-between w-full">
+                                                        <div
+                                                            className={`flex items-center text-grey font-semibold`}
                                                         >
-                                                            {
-                                                                faq.fields
-                                                                    .question
-                                                            }
-                                                        </span>
-                                                    </div>
-                                                    <ChevronRightIcon
-                                                        className={`w-6 h-6 text-grey flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
-                                                    />
-                                                </Disclosure.Button>
-                                                <Disclosure.Panel className="text-grey py-4 text-sm border-t border-t-grey-border">
-                                                    {faq.fields.answer}
-                                                </Disclosure.Panel>
-                                            </>
-                                        )}
-                                    </Disclosure>
-                                );
-                            })}
+                                                            <ShieldCheckIcon className="h-6 w-6 mr-2 flex-shrink-0" />
+                                                            <span
+                                                                className={`text-left leading-tight`}
+                                                            >
+                                                                {
+                                                                    faq.fields
+                                                                        .question
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        <ChevronRightIcon
+                                                            className={`w-6 h-6 text-grey flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
+                                                        />
+                                                    </Disclosure.Button>
+                                                    <Disclosure.Panel className="text-grey py-4 text-sm border-t border-t-grey-border">
+                                                        {faq.fields.answer}
+                                                    </Disclosure.Panel>
+                                                </>
+                                            )}
+                                        </Disclosure>
+                                    );
+                                }
+                            )}
                     </PageContainer>
                 </EmptyLayoutBody>
                 <EmptyLayoutFooter>
