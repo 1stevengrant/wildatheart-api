@@ -16,6 +16,7 @@ import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const WelcomeEventTypePage = () => {
     const page = usePage();
@@ -30,7 +31,9 @@ const WelcomeEventTypePage = () => {
     return (
         <EmptyLayout title={`Welcome`}>
             <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>progress</EmptyLayoutHeader>
+                <EmptyLayoutHeader>
+                    <EventCreateProgressMobile />
+                </EmptyLayoutHeader>
                 <EmptyLayoutBody>
                     <PageContainer>
                         {eventType.registration_welcome_video &&

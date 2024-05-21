@@ -38,6 +38,7 @@ import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();
@@ -271,7 +272,9 @@ const CreateEventEventTypePage = () => {
     return (
         <EmptyLayout title={`Create Event`}>
             <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>progress</EmptyLayoutHeader>
+                <EmptyLayoutHeader>
+                    <EventCreateProgressMobile />
+                </EmptyLayoutHeader>
                 <EmptyLayoutBody>
                     <PageContainer>
                         <h1>Create Event</h1>

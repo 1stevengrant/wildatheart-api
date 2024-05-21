@@ -15,6 +15,7 @@ import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const ScheduleEventTypePage = () => {
     const page = usePage();
@@ -33,7 +34,9 @@ const ScheduleEventTypePage = () => {
     return (
         <EmptyLayout title={`Schedule`}>
             <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>progress</EmptyLayoutHeader>
+                <EmptyLayoutHeader>
+                    <EventCreateProgressMobile />
+                </EmptyLayoutHeader>
                 <EmptyLayoutBody>
                     <PageContainer>
                         {eventTypeSchedule &&
