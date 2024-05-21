@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ConnectWithHostRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
@@ -17,18 +18,9 @@ class ConnectWithHostController extends Controller
         ]);
     }
 
-    public function store(Request $request, Event $event)
+    public function store(ConnectWithHostRequest $request, Event $event)
     {
-        $request->validate([
-            'family_name' => 'required|string|max:255|min:2',
-            'given_name' => 'required|string|max:255|min:2',
-            'email' => 'required|email|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'phone' => 'required|min:9|max:20',
-            'opted_into_marketing' => 'required|boolean',
-        ]);
+        $request->validated();
 
         $attendee = $event->attendees()->create([
             'user_id' => $event->host->id,
