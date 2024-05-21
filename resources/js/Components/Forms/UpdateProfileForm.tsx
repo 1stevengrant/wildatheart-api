@@ -189,7 +189,6 @@ export const UpdateProfileForm = ({
                                     <UserAvatar
                                         image={user.image}
                                         className={"w-[134px] h-[134px]"}
-                                        width={134}
                                     />
                                     <div
                                         className={`flex flex-col justify-center`}
