@@ -56,6 +56,12 @@ class EventType extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
+
+            Text::make('Tags')
+                ->sortable()
+                ->rules('nullable', 'max:255')
+                ->help('Comma separated list of tags'),
+
             Select::make('Sex')
                 ->help('Who is this event type for?')
                 ->options([
