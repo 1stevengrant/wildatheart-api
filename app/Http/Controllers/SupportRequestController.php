@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SupportRequest;
 use App\Models\Issue;
-use Illuminate\Http\Request;
 
 class SupportRequestController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(SupportRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email|max:255',
-            'name' => 'required|max:255',
-            'subject' => 'required|max:255',
-            'description' => 'required',
-        ]);
+        $request->validated();
 
         activity()->log('Create Issue');
 
