@@ -22,6 +22,7 @@ import priorityCountries from "@/helpers/priorityCountries";
 import selectClasses from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const MailingAddressEventTypePage = () => {
     const page = usePage();
@@ -57,7 +58,9 @@ const MailingAddressEventTypePage = () => {
     return (
         <EmptyLayout title={`Add Mailing Address`}>
             <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>progress</EmptyLayoutHeader>
+                <EmptyLayoutHeader>
+                    <EventCreateProgressMobile />
+                </EmptyLayoutHeader>
                 <EmptyLayoutBody>
                     <PageContainer>
                         <h1>Mailing Address</h1>
