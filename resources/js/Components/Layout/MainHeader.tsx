@@ -1,6 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
 
-import AuthNav from "@/Components/Layout/AuthNav";
+import { AuthNav } from "@/Components/Layout/AuthNav";
 import { MyProfileNavMobile } from "@/Components/Layout/MyProfileNavMobile";
 import ToggleSupportRequestButton from "@/Components/Layout/ToggleSupportRequestButton";
 import Logo from "@/Components/Logo";

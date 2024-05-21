@@ -9,7 +9,7 @@ import { UserAvatar } from "@/Components/UserAvatar";
 import classNames from "@/helpers/classNames";
 import { linkClass } from "@/helpers/linkClass";
 
-const AuthNav = () => {
+export const AuthNav = () => {
     const { auth } = usePage<any>().props;
     const [open, setOpen] = React.useState(false);
     return (
@@ -85,5 +85,3 @@ const AuthNav = () => {
         </>
     );
 };
-
-export default AuthNav;
