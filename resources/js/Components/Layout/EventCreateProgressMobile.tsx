@@ -8,11 +8,12 @@ export const EventCreateProgressMobile = () => {
         eventCreateProgressState
     );
     return (
-        <div className={`lg:hidden`}>
+        <div className={`flex items-center lg:hidden `}>
             <Bars3Icon
                 onClick={() => setEventCreateProgressShow(true)}
                 className={`w-8 h-8`}
             />
+            <div>hello</div>
         </div>
     );
 };

@@ -14,6 +14,7 @@ import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const BeforeEventTypePage = () => {
     const page = usePage();
@@ -22,7 +23,9 @@ const BeforeEventTypePage = () => {
     return (
         <EmptyLayout title={`Before The Event`}>
             <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>progress</EmptyLayoutHeader>
+                <EmptyLayoutHeader>
+                    <EventCreateProgressMobile />
+                </EmptyLayoutHeader>
                 <EmptyLayoutBody>
                     <PageContainer>
                         {eventType.registration_before_your_event_text && (

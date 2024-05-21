@@ -12,6 +12,7 @@ import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const HostAgreementPage = () => {
     const handleAgree = (event: React.FormEvent) => {
@@ -25,7 +26,9 @@ const HostAgreementPage = () => {
 
     return (
         <EmptyLayoutWrapper>
-            <EmptyLayoutHeader>header</EmptyLayoutHeader>
+            <EmptyLayoutHeader>
+                <EventCreateProgressMobile />
+            </EmptyLayoutHeader>
             <EmptyLayoutBody>
                 <PageContainer>
                     <label
