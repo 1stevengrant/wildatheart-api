@@ -16,7 +16,7 @@ interface INotificationProps {
     duration?: number;
 }
 
-const Notification = ({
+export const Notification = ({
     message,
     type = "success",
     duration = 2500,
@@ -95,5 +95,3 @@ const Notification = ({
         </>
     );
 };
-
-export default Notification;

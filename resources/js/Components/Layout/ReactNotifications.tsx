@@ -2,8 +2,8 @@ import React from "react";
 
 import { useRecoilState } from "recoil";
 
-import Notification from "@/Components/Layout/Notification";
-import NotificationWrapper from "@/Components/Layout/NotificationWrapper";
+import { Notification } from "@/Components/Layout/Notification";
+import { NotificationWrapper } from "@/Components/Layout/NotificationWrapper";
 import { reactNotificationState } from "@/store";
 
 export const ReactNotifications = () => {
