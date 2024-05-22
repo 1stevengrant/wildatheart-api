@@ -11,12 +11,12 @@ import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const WelcomeEventTypePage = () => {
     const page = usePage();

@@ -24,6 +24,7 @@ import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import MapboxSearch from "@/Components/Maps/MapboxSearch";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
@@ -38,7 +39,6 @@ import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();

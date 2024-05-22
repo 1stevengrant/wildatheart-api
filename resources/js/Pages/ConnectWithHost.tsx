@@ -47,9 +47,9 @@ const ConnectWithHost = () => {
                 setProcessing(false);
             },
         });
-    }
+    };
 
-    const hostFirstName = event.host.split(' ')[0];
+    const hostFirstName = event.host.split(" ")[0];
 
     return (
         <EmptyLayout
@@ -249,8 +249,13 @@ const ConnectWithHost = () => {
                                         at Heart.
                                     </Instruction>
                                 </div>
-                                <div className={`text-sm text-grey-200 col-span-2`}>
-                                    By connecting with {hostFirstName}, you are expressing interest in their event and will not solicit or promote other events or offerings.
+                                <div
+                                    className={`text-sm text-grey-200 col-span-2`}
+                                >
+                                    By connecting with {hostFirstName}, you are
+                                    expressing interest in their event and will
+                                    not solicit or promote other events or
+                                    offerings.
                                 </div>
                             </FormGrid>
                             <div className="mt-12">

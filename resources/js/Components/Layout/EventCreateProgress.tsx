@@ -1,3 +1,5 @@
+import React from "react";
+
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { usePage } from "@inertiajs/react";
 import { useRecoilState } from "recoil";
@@ -6,7 +8,6 @@ import { CircleIcon } from "@/Components/Icons/NewIcons/CircleIcon";
 import Logo from "@/Components/Logo";
 import { imageGenerator } from "@/helpers/user";
 import { eventCreateProgressState } from "@/store/uiAtom";
-import React from "react";
 
 const EventStep = ({ step }: { step: number }) => {
     return <div className={`text-xs text-grey-200`}>Step {step}</div>;
