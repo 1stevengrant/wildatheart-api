@@ -48,6 +48,8 @@ const ConnectWithHost = () => {
             }
         });
     }
+
+    const hostFirstName = event.host.split(' ')[0];
     return (
         <EmptyLayout title={`Connect with ${event.host} for ${event.name} in ${event.location}`}>
             <TwoColumnWrapper>
@@ -185,6 +187,9 @@ const ConnectWithHost = () => {
                                     <Instruction>
                                         Send me updates and resources from Wild at Heart.
                                     </Instruction>
+                                </div>
+                                <div className={`text-sm text-grey-200 col-span-2`}>
+                                    By connecting with {hostFirstName}, you are expressing interest in their event and will not solicit or promote other events or offerings.
                                 </div>
                             </FormGrid>
                             <div className="mt-12">
