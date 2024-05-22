@@ -9,10 +9,10 @@ import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
+import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 
 const HostAgreementPage = () => {
     const handleAgree = (event: React.FormEvent) => {

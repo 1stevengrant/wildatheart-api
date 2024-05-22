@@ -11,7 +11,7 @@ export const EmptyLayoutBody = ({
 }: EmptyLayoutBodyProps) => {
     return (
         <main
-            className={`pt-[73px] md:pt-[93px] pb-[63px] md:pb-[93px] md:mx-auto ${className}`}
+            className={`pt-[73px] pb-[63px] md:pb-[93px] md:mx-auto ${className}`}
         >
             {children}
         </main>
