@@ -5,45 +5,13 @@ fields:
     field:
       type: replicator
       display: Buttons
+      max_sets: 2
       sets:
         new_set_group:
           display: 'New Set Group'
           sets:
-            new_set:
-              display: 'New Set'
+            button:
+              display: Button
               fields:
                 -
-                  handle: text
-                  field:
-                    type: text
-                    display: Text
-                -
-                  handle: link
-                  field:
-                    type: link
-                    display: Link
-                -
-                  handle: variant
-                  field:
-                    options:
-                      primary: Primary
-                      secondary: Secondary
-                      cta: 'Call to Action'
-                    type: select
-                    display: Variant
-                -
-                  handle: left_icon
-                  field:
-                    type: section
-                    display: 'Left Icon'
-                -
-                  import: icon
-                  prefix: button_left_
-                -
-                  handle: right_icon
-                  field:
-                    type: section
-                    display: 'Right Icon'
-                -
-                  import: icon
-                  prefix: button_right_
+                  import: button

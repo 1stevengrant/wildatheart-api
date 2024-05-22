@@ -51,6 +51,7 @@ fields:
       display: 'Background Video Fallback Image'
       validate:
         - image
+      folder: wp-app/uploads
       if:
         background_video_url: 'not empty'
   -
@@ -69,12 +70,6 @@ fields:
         - image
       if:
         featured_video_url: 'not empty'
-  -
-    handle: button_text
-    field:
-      type: text
-      display: 'Button Text'
+      folder: wp-app/uploads
   -
     import: buttons
-  -
-    import: modal_button

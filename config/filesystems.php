@@ -55,6 +55,7 @@ return [
                 false
             ),
             'throw' => false,
+            'visibility' => 'public', 
         ],
         's3' => [
             'driver' => 's3',

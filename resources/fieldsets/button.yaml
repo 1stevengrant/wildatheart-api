@@ -1,0 +1,38 @@
+title: Button
+fields:
+  -
+    handle: text
+    field:
+      type: text
+      display: Text
+  -
+    handle: href
+    field:
+      type: link
+      display: Link
+  -
+    handle: variant
+    field:
+      options:
+        primary: Primary
+        secondary: Secondary
+        cta: 'Call to Action'
+      default: primary
+      type: select
+      display: Variant
+  -
+    handle: left_icon
+    field:
+      type: group
+      display: 'Left Icon'
+      fields:
+        -
+          import: icon
+  -
+    handle: right_icon
+    field:
+      type: group
+      display: 'Right Icon'
+      fields:
+        -
+          import: icon

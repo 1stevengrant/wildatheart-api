@@ -16,6 +16,12 @@ tabs:
               folder: wp-app/uploads
               type: assets
               display: 'Event Logo'
+              max_files: 1
+      -
+        display: Testimonials
+        fields:
+          -
+            import: testimonials
   sidebar:
     display: Sidebar
     sections:
