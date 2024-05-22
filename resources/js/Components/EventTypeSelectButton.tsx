@@ -18,8 +18,13 @@ export const EventTypeSelectButton = ({
             className={`border-4 rounded-2xl ${isSelected ? "border-white" : "border-grey-border"}`}
         >
             <img
-                className={`rounded-xl`}
+                className={`rounded-xl md:hidden`}
                 src={imageGenerator(type.image, { width: 100, height: 100 })}
+                alt={type.name}
+            />
+            <img
+                className={`rounded-xl hidden md:block`}
+                src={imageGenerator(type.image, { width: 200, height: 200 })}
                 alt={type.name}
             />
         </button>
