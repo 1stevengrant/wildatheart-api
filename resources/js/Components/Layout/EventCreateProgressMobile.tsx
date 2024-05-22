@@ -31,7 +31,10 @@ export const EventCreateProgressMobile = () => {
                 className={`w-8 h-8`}
             />
             <div className={`ml-8 text-left leading-tight`}>
-                <p className={`text-white text-xs`}>Step</p>
+                <p className={`text-white text-xs`}>
+                    Step{" "}
+                    {isEventGuideStep ? `1` : isMailingAddressStep ? `2` : `3`}
+                </p>
                 <p className={`text-white`}>Event Type</p>
                 <div className={`flex items-center mt-2 space-x-2`}>
                     <Stepper isActive={isEventGuideStep} />
