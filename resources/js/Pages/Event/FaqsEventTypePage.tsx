@@ -8,24 +8,40 @@ import { Link, usePage } from "@inertiajs/react";
 
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
-import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
-import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
+import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
+const FaqsEventTypePageFooter = ({ eventType }: { eventType: any }) => {
+    return (
+        <EmptyLayoutFooter>
+            <Link
+                className={circularButtonClasses}
+                href={route("host.eventType.schedule", eventType)}
+            >
+                <ArrowLeftIcon className="h-4 w-4" />
+            </Link>
+            <Link
+                className={primaryButtonClasses}
+                href={route("host.eventType.mailing", eventType)}
+            >
+                Mailing Address
+                <ArrowRightIcon className="h-4 w-4 ml-2" />
+            </Link>
+        </EmptyLayoutFooter>
+    );
+};
 const FaqsEventTypePage = () => {
     const page = usePage();
     const eventType = page.props.eventType as any;
     return (
-        <EmptyLayout title={`FAQs`}>
-            <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>
-                    <EventCreateProgressMobile />
-                </EmptyLayoutHeader>
+        <EmptyLayout title={`Event FAQs`}>
+            <SidebarLayout
+                footer={<FaqsEventTypePageFooter eventType={eventType} />}
+            >
                 <EmptyLayoutBody>
                     <PageContainer>
                         {eventType.event_faqs &&
@@ -65,22 +81,7 @@ const FaqsEventTypePage = () => {
                             )}
                     </PageContainer>
                 </EmptyLayoutBody>
-                <EmptyLayoutFooter>
-                    <Link
-                        className={circularButtonClasses}
-                        href={route("host.eventType.schedule", eventType)}
-                    >
-                        <ArrowLeftIcon className="h-4 w-4" />
-                    </Link>
-                    <Link
-                        className={primaryButtonClasses}
-                        href={route("host.eventType.mailing", eventType)}
-                    >
-                        Mailing Address
-                        <ArrowRightIcon className="h-4 w-4 ml-2" />
-                    </Link>
-                </EmptyLayoutFooter>
-            </EmptyLayoutWrapper>
+            </SidebarLayout>
         </EmptyLayout>
     );
 };
