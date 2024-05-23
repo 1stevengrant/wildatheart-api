@@ -13,15 +13,13 @@ import InputLabel from "@/Components/Forms/InputLabel";
 import TextInput from "@/Components/Forms/TextInput";
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
-import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
-import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import sortedCountries from "@/helpers/countryList";
 import priorityCountries from "@/helpers/priorityCountries";
 import selectClasses from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
+import { SidebarLayout } from "@/Layouts/SidebarLayout";
 import { PageProps } from "@/types";
 
 const MailingAddressEventTypePage = () => {
@@ -56,11 +54,26 @@ const MailingAddressEventTypePage = () => {
     };
 
     return (
-        <EmptyLayout title={`Add Mailing Address`}>
-            <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>
-                    <EventCreateProgressMobile />
-                </EmptyLayoutHeader>
+        <EmptyLayout title={`Event Mailing Address`}>
+            <SidebarLayout
+                footer={
+                    <EmptyLayoutFooter>
+                        <Link
+                            className={circularButtonClasses}
+                            href={route("host.eventType.faqs", eventType)}
+                        >
+                            <ArrowLeftIcon className="h-4 w-4" />
+                        </Link>
+                        <PrimaryButton
+                            onClick={handleSubmit}
+                            disabled={!isValidPhoneNumber(phone) || processing}
+                        >
+                            Save Mailing Address
+                            <ArrowRightIcon className="h-4 w-4 ml-2" />
+                        </PrimaryButton>
+                    </EmptyLayoutFooter>
+                }
+            >
                 <EmptyLayoutBody>
                     <PageContainer>
                         <h1>Mailing Address</h1>
@@ -256,22 +269,7 @@ const MailingAddressEventTypePage = () => {
                         </form>
                     </PageContainer>
                 </EmptyLayoutBody>
-                <EmptyLayoutFooter>
-                    <Link
-                        className={circularButtonClasses}
-                        href={route("host.eventType.faqs", eventType)}
-                    >
-                        <ArrowLeftIcon className="h-4 w-4" />
-                    </Link>
-                    <PrimaryButton
-                        onClick={handleSubmit}
-                        disabled={!isValidPhoneNumber(phone) || processing}
-                    >
-                        Save Mailing Address
-                        <ArrowRightIcon className="h-4 w-4 ml-2" />
-                    </PrimaryButton>
-                </EmptyLayoutFooter>
-            </EmptyLayoutWrapper>
+            </SidebarLayout>
         </EmptyLayout>
     );
 };

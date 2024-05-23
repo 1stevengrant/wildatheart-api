@@ -10,10 +10,8 @@ export const EmptyLayoutBody = ({
     className = "",
 }: EmptyLayoutBodyProps) => {
     return (
-        <main
-            className={`pt-[73px] pb-[63px] md:pb-[93px] md:mx-auto ${className}`}
-        >
+        <div className={`pb-[63px] md:pb-[93px] md:mx-auto ${className}`}>
             {children}
-        </main>
+        </div>
     );
 };

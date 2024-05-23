@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta
@@ -26,7 +26,7 @@
     @vite(['resources/js/local.tsx', "resources/js/Pages/{$page['component']}.tsx"])
     @inertiaHead
 </head>
-<body class="font-sans antialiased bg-blue-900 text-white selection:bg-orange selection:text-white">
+<body class="font-sans antialiased bg-black text-white selection:bg-orange selection:text-white h-full">
 @inertia
 </body>
 </html>

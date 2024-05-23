@@ -41,7 +41,7 @@ const HostEventTypeSelectPage = () => {
                 <EmptyLayoutHeader>
                     <HeadingOne className={`text-left`}>{title}</HeadingOne>
                 </EmptyLayoutHeader>
-                <EmptyLayoutBody className={`px-4`}>
+                <EmptyLayoutBody className={`px-4 pt-20`}>
                     <EventGroupWrapper
                         title={`Fires`}
                         description={fireTypeDescription}

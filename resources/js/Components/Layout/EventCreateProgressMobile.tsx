@@ -1,8 +1,3 @@
-import { Bars3Icon } from "@heroicons/react/24/solid";
-import { useSetRecoilState } from "recoil";
-
-import { eventCreateProgressState } from "@/store/uiAtom";
-
 const Stepper = ({ isActive }: { isActive: boolean }) => {
     return (
         <div
@@ -12,10 +7,6 @@ const Stepper = ({ isActive }: { isActive: boolean }) => {
 };
 
 export const EventCreateProgressMobile = () => {
-    const setEventCreateProgressShow = useSetRecoilState(
-        eventCreateProgressState
-    );
-
     const isEventGuideStep =
         route().current("host.eventType.index") ||
         route().current("host.eventType.before") ||
@@ -26,10 +17,6 @@ export const EventCreateProgressMobile = () => {
 
     return (
         <div className={`flex items-center lg:hidden `}>
-            <Bars3Icon
-                onClick={() => setEventCreateProgressShow(true)}
-                className={`w-8 h-8`}
-            />
             <div className={`ml-8 text-left leading-tight`}>
                 <p className={`text-white text-xs`}>
                     Step{" "}

@@ -22,9 +22,6 @@ import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
-import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
-import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
 import MapboxSearch from "@/Components/Maps/MapboxSearch";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
@@ -37,6 +34,7 @@ import { oneHour } from "@/helpers/timeConstants";
 import { useDates } from "@/Hooks/useDates";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
+import { SidebarLayout } from "@/Layouts/SidebarLayout";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
 
@@ -270,11 +268,31 @@ const CreateEventEventTypePage = () => {
         useDates();
 
     return (
-        <EmptyLayout title={`Create Event`}>
-            <EmptyLayoutWrapper>
-                <EmptyLayoutHeader>
-                    <EventCreateProgressMobile />
-                </EmptyLayoutHeader>
+        <EmptyLayout title={`Build Your Event`}>
+            <SidebarLayout
+                footer={
+                    <EmptyLayoutFooter>
+                        <Link
+                            href={route("host.eventType.mailing", eventType)}
+                            className={circularButtonClasses}
+                        >
+                            <ArrowLeftIcon className="h-4 w-4" />
+                        </Link>
+                        <PrimaryButton
+                            onClick={handleSubmit}
+                            disabled={
+                                event.location === "Location TBC" && processing
+                            }
+                        >
+                            {processing ? <Spinner /> : null}
+                            {event.location === "Location TBC"
+                                ? "Pick a location to continue"
+                                : "Create Event & See Dashboard"}
+                            <ArrowRightIcon className="h-4 w-4 ml-2" />
+                        </PrimaryButton>
+                    </EmptyLayoutFooter>
+                }
+            >
                 <EmptyLayoutBody>
                     <PageContainer>
                         <h1>Create Event</h1>
@@ -419,27 +437,7 @@ const CreateEventEventTypePage = () => {
                         </form>
                     </PageContainer>
                 </EmptyLayoutBody>
-                <EmptyLayoutFooter>
-                    <Link
-                        href={route("host.eventType.mailing", eventType)}
-                        className={circularButtonClasses}
-                    >
-                        <ArrowLeftIcon className="h-4 w-4" />
-                    </Link>
-                    <PrimaryButton
-                        onClick={handleSubmit}
-                        disabled={
-                            event.location === "Location TBC" && processing
-                        }
-                    >
-                        {processing ? <Spinner /> : null}
-                        {event.location === "Location TBC"
-                            ? "Pick a location to continue"
-                            : "Create Event & See Dashboard"}
-                        <ArrowRightIcon className="h-4 w-4 ml-2" />
-                    </PrimaryButton>
-                </EmptyLayoutFooter>
-            </EmptyLayoutWrapper>
+            </SidebarLayout>
         </EmptyLayout>
     );
 };

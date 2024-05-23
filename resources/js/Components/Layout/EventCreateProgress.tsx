@@ -1,13 +1,9 @@
 import React from "react";
 
-import { XMarkIcon } from "@heroicons/react/24/solid";
 import { usePage } from "@inertiajs/react";
-import { useRecoilState } from "recoil";
 
 import { CircleIcon } from "@/Components/Icons/NewIcons/CircleIcon";
-import Logo from "@/Components/Logo";
 import { imageGenerator } from "@/helpers/user";
-import { eventCreateProgressState } from "@/store/uiAtom";
 
 const EventStep = ({ step }: { step: number }) => {
     return <div className={`text-xs text-grey-200`}>Step {step}</div>;
@@ -30,8 +26,6 @@ const EventListItem = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const EventCreateProgress = () => {
-    const [eventCreateProgressShow, setEventCreateProgressShow] =
-        useRecoilState(eventCreateProgressState);
     const { eventType } = usePage().props as any;
 
     const isEventGuideStep =
@@ -43,20 +37,7 @@ export const EventCreateProgress = () => {
     const isEventRegistrationStep = route().current("host.eventType.create");
 
     return (
-        <div
-            className={`z-50 p-4 absolute top-0 left-0 bg-black h-[100dvh] w-full ${eventCreateProgressShow ? `block` : `hidden`}`}
-        >
-            <div className={`flex justify-between`}>
-                <Logo
-                    className={
-                        "w-[125px] flex-shrink-0 md:w-[100px] lg:w-[150px] mr-2"
-                    }
-                />
-                <XMarkIcon
-                    onClick={() => setEventCreateProgressShow(false)}
-                    className={`w-8 h-8`}
-                />
-            </div>
+        <>
             {eventType && (
                 <>
                     <div
@@ -64,10 +45,18 @@ export const EventCreateProgress = () => {
                     >
                         <div>
                             <img
-                                className={`rounded-lg`}
+                                className={`rounded-lg md:hidden`}
                                 src={imageGenerator(eventType.image, {
                                     width: 100,
                                     height: 100,
+                                })}
+                                alt={eventType.name}
+                            />
+                            <img
+                                className={`hidden rounded-lg lg:block`}
+                                src={imageGenerator(eventType.image, {
+                                    width: 150,
+                                    height: 150,
                                 })}
                                 alt={eventType.name}
                             />
@@ -92,27 +81,35 @@ export const EventCreateProgress = () => {
                                 className={`text-sm mt-4 ml-14 space-y-2 font-medium ${isEventGuideStep ? `block` : `hidden`}`}
                             >
                                 <EventListItem>
-                                    <CircleIcon
-                                        fill={`${route().current("host.eventType.index") ? `white` : ``}`}
-                                    />
+                                    <span>
+                                        <CircleIcon
+                                            fill={`${route().current("host.eventType.index") ? `white` : ``}`}
+                                        />
+                                    </span>
                                     <span>Welcome</span>
                                 </EventListItem>
                                 <EventListItem>
-                                    <CircleIcon
-                                        fill={`${route().current("host.eventType.before") ? `white` : ``}`}
-                                    />
+                                    <span>
+                                        <CircleIcon
+                                            fill={`${route().current("host.eventType.before") ? `white` : ``}`}
+                                        />
+                                    </span>
                                     <span>Before Your {eventType.name}</span>
                                 </EventListItem>
                                 <EventListItem>
-                                    <CircleIcon
-                                        fill={`${route().current("host.eventType.schedule") ? `white` : ``}`}
-                                    />
+                                    <span>
+                                        <CircleIcon
+                                            fill={`${route().current("host.eventType.schedule") ? `white` : ``}`}
+                                        />
+                                    </span>
                                     <span>{eventType.name} Schedule</span>
                                 </EventListItem>
                                 <EventListItem>
-                                    <CircleIcon
-                                        fill={`${route().current("host.eventType.faqs") ? `white` : ``}`}
-                                    />
+                                    <span>
+                                        <CircleIcon
+                                            fill={`${route().current("host.eventType.faqs") ? `white` : ``}`}
+                                        />
+                                    </span>
                                     <span>{eventType.name} FAQs</span>
                                 </EventListItem>
                             </ul>
@@ -134,6 +131,6 @@ export const EventCreateProgress = () => {
                     </ul>
                 </>
             )}
-        </div>
+        </>
     );
 };
