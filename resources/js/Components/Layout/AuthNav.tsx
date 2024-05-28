@@ -4,7 +4,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { usePage } from "@inertiajs/react";
 
-import { LogoutModal } from "@/Components/LogoutModal";
+import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { UserAvatar } from "@/Components/UserAvatar";
 import classNames from "@/helpers/classNames";
 import { linkClass } from "@/helpers/linkClass";

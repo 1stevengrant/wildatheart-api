@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { SupportModal } from "@/Components/SupportModal";
+import { SupportModal } from "@/Components/Modals/SupportModal";
 import HomePage from "@/Pages/HomePage";
 
 const SupportRequestPage = () => {
