@@ -15,6 +15,7 @@ export const imageGenerator = (
     const stringParams: Record<string, string> = Object.fromEntries(
         Object.entries(params).map(([key, value]) => [key, String(value)])
     );
+    console.log(image);
 
     const queryString = new URLSearchParams(stringParams).toString();
     return `${apiUrl}/${image}?${queryString}`;
