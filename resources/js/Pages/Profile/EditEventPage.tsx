@@ -24,7 +24,7 @@ import { lookupLocation } from "@/helpers/lookupLocation";
 import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { MyProfileWrapper } from "@/Layouts/MyProfileWrapper";
+import { MyProfileWrapper } from "@/Components/Layout/MyProfileWrapper";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { Event } from "@/types/Event";
 

@@ -4,7 +4,7 @@ import { EventCreateProgress } from "@/Components/Layout/EventCreateProgress";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
-import { SidebarUserMenuItems } from "@/Layouts/SidebarUserMenuItems";
+import { SidebarUserMenuItems } from "@/Components/Layout/SidebarUserMenuItems";
 import { Menu } from "@headlessui/react";
 
 export const SidebarLayoutDesktopSidebar = ({ auth }: { auth: any }) => {

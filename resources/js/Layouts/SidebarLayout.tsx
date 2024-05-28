@@ -4,8 +4,8 @@ import { Bars3Icon } from "@heroicons/react/24/outline";
 import { usePage } from "@inertiajs/react";
 
 import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
-import { SidebarLayoutDesktopSidebar } from "@/Layouts/SidebarLayoutDesktopSidebar";
-import { SidebarLayoutMobileSidebar } from "@/Layouts/SidebarLayoutMobileSidebar";
+import { SidebarLayoutDesktopSidebar } from "@/Components/Layout/SidebarLayoutDesktopSidebar";
+import { SidebarLayoutMobileSidebar } from "@/Components/Layout/SidebarLayoutMobileSidebar";
 
 export const SidebarLayout = ({
     children,
