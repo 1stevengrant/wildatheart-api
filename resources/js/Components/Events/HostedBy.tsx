@@ -1,9 +1,3 @@
-import React from "react";
-
-type HostedByProps = {
-    host: string | undefined;
-};
-
-export const HostedBy = ({ host }: HostedByProps) => {
+export const HostedBy = ({ host }: { host: string | undefined }) => {
     return <div>Hosted by {host}</div>;
 };

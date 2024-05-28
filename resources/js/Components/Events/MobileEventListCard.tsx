@@ -13,11 +13,7 @@ import {
 import { imageGenerator } from "@/helpers/user";
 import { Event } from "@/types/Event";
 
-interface IMobileEventListCardProps {
-    event: Event;
-}
-
-export const MobileEventListCard = ({ event }: IMobileEventListCardProps) => {
+export const MobileEventListCard = ({ event }: { event: Event }) => {
     return (
         <li className={`border border-grey-darker rounded-lg p-4`}>
             <Link className={`flex space-x-4`} href={event.url}>
@@ -53,7 +49,7 @@ export const MobileEventListCard = ({ event }: IMobileEventListCardProps) => {
                         </span>
                     </div>
                     <div className={`flex items-center space-x-2 mt-1`}>
-                        <UserAvatar image={event.host_photo} width={25} />
+                        <UserAvatar image={event.host_photo} />
                         <div
                             className={`flex flex-col text-grey-200 leading-tighter text-sm`}
                         >

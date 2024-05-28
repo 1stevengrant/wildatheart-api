@@ -6,8 +6,8 @@ import { FiresFilter } from "@/Components/API/Filters/FiresFilter";
 import { RetreatsFilter } from "@/Components/API/Filters/RetreatsFilter";
 import { ToggleSex } from "@/Components/API/Toggles/ToggleSex";
 import { ToggleTypeGroups } from "@/Components/API/Toggles/ToggleTypeGroups";
-import InputLabel from "@/Components/Forms/InputLabel";
-import MapboxSearch from "@/Components/Maps/MapboxSearch";
+import { InputLabel } from "@/Components/Forms/InputLabel";
+import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 
 export const FiltersPanelBody = () => {
     return (

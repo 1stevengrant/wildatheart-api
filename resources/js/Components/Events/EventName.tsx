@@ -1,11 +1,3 @@
-import React from "react";
-
-type EventProps = {
-    name: string | undefined;
-};
-
-const EventName = ({ name }: EventProps) => {
+export const EventName = ({ name }: { name: string | undefined }) => {
     return <p className="font-semibold text-white">{name} Fire</p>;
 };
-
-export default EventName;

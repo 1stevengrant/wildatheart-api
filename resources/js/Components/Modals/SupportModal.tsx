@@ -6,19 +6,20 @@ import { useForm, usePage } from "@inertiajs/react";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { FormFieldsWrapper } from "@/Components/Forms/FormFieldsWrapper";
-import InputError from "@/Components/Forms/InputError";
-import InputLabel from "@/Components/Forms/InputLabel";
+import { InputError } from "@/Components/Forms/InputError";
+import { InputLabel } from "@/Components/Forms/InputLabel";
 import TextArea from "@/Components/Forms/TextArea";
 import TextInput from "@/Components/Forms/TextInput";
-import Modal from "@/Components/Ui/Modal";
-import ModalActions from "@/Components/Ui/ModalActions";
+import { Modal } from "@/Components/Ui/Modal";
+import { ModalActions } from "@/Components/Ui/ModalActions";
 
-interface SupportModalProps {
+export const SupportModal = ({
+    open,
+    setOpen,
+}: {
     open: boolean;
     setOpen: (open: boolean) => void;
-}
-
-export const SupportModal = ({ open, setOpen }: SupportModalProps) => {
+}) => {
     const { auth } = usePage<any>().props;
     const { data, setData, post, errors, reset } = useForm({
         name: auth.user

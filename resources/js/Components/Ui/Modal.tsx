@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import React, { Fragment } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 
@@ -8,7 +8,7 @@ interface ModalProps {
     children: React.ReactNode;
 }
 
-const Modal: FC<ModalProps> = ({ open, setOpen, children }) => {
+export const Modal = ({ open, setOpen, children }: ModalProps) => {
     return (
         <Transition.Root show={open} as={Fragment}>
             <Dialog as="div" className="relative z-[10001]" onClose={setOpen}>
@@ -45,5 +45,3 @@ const Modal: FC<ModalProps> = ({ open, setOpen, children }) => {
         </Transition.Root>
     );
 };
-
-export default Modal;

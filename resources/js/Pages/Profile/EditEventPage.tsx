@@ -12,13 +12,13 @@ import Map, {
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import FireMarker from "@/Components/Events/FireMarker";
-import FireNamingGuidelines from "@/Components/Events/FireNamingGuidelines";
-import InputError from "@/Components/Forms/InputError";
-import InputLabel from "@/Components/Forms/InputLabel";
+import { FireMarker } from "@/Components/Events/FireMarker";
+import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
+import { InputError } from "@/Components/Forms/InputError";
+import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
-import MapboxSearch from "@/Components/Maps/MapboxSearch";
+import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import config from "@/helpers/config";
 import lookupLocation from "@/helpers/lookupLocation";
 import useRoute from "@/Hooks/useRoute";

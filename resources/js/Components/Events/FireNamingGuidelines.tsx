@@ -1,10 +1,4 @@
-import React from "react";
-
-interface FireNamingGuidelinesProps {
-    className?: string;
-}
-
-const FireNamingGuidelines = ({ className }: FireNamingGuidelinesProps) => {
+export const FireNamingGuidelines = ({ className }: { className?: string }) => {
     return (
         <div className={`${className} text-sm text-grey-200 mt-4`}>
             <p>Fire Naming Guidelines</p>
@@ -19,5 +13,3 @@ const FireNamingGuidelines = ({ className }: FireNamingGuidelinesProps) => {
         </div>
     );
 };
-
-export default FireNamingGuidelines;
