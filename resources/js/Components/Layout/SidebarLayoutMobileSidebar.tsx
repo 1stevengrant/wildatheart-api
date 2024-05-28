@@ -7,7 +7,7 @@ import { EventCreateProgress } from "@/Components/Layout/EventCreateProgress";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
-import { SidebarUserMenu } from "@/Layouts/SidebarUserMenu";
+import { SidebarUserMenu } from "@/Components/Layout/SidebarUserMenu";
 
 export const SidebarLayoutMobileSidebar = ({
     auth,
