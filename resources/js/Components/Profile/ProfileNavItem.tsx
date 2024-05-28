@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Link } from "@inertiajs/react";
-import { classNames } from "classnames";
 
+import { classNames } from "@/helpers/classNames";
 import { profileNavItemClasses } from "@/helpers/profileNavItemClasses";
 
 interface ProfileNavItemProps {
@@ -16,7 +16,7 @@ export const ProfileNavItem = ({ icon, link, text }: ProfileNavItemProps) => {
 
     const textClasses = classNames({
         "text-orange bg-white/10": isActive,
-        "text-indigo-200 group-hover:text-white": !isActive,
+        "text-black group-hover:text-white": !isActive,
     });
 
     return (

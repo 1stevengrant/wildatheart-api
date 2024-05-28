@@ -1,5 +1,3 @@
-export const classNames = (
-    ...classes: (string | false | null | undefined)[]
-): string => {
+export const classNames = (...classes: any): string => {
     return classes.filter(Boolean).join(" ");
 };

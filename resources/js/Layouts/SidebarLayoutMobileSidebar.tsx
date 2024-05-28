@@ -7,6 +7,7 @@ import { EventCreateProgress } from "@/Components/Layout/EventCreateProgress";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
+import { SidebarUserMenu } from "@/Layouts/SidebarUserMenu";
 
 export const SidebarLayoutMobileSidebar = ({
     auth,
@@ -86,18 +87,7 @@ export const SidebarLayoutMobileSidebar = ({
                                         className="flex flex-1 flex-col gap-y-7"
                                     >
                                         <li className="mt-auto">
-                                            <a
-                                                href="#"
-                                                className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
-                                            >
-                                                <AuthUserAvatar auth={auth} />
-                                                <span className="sr-only">
-                                                    Your profile
-                                                </span>
-                                                <span aria-hidden="true">
-                                                    {auth.user.full_name}
-                                                </span>
-                                            </a>
+                                            <SidebarUserMenu auth={auth} />
                                         </li>
                                     </ul>
                                 </nav>
