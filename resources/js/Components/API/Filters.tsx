@@ -3,7 +3,7 @@ import React from "react";
 import { useRecoilState } from "recoil";
 
 import { EventCount } from "@/Components/API/EventCount";
-import DateFilters from "@/Components/API/Filters/DateFilters";
+import { DateFilters } from "@/Components/API/Filters/DateFilters";
 import { ExperiencesFilter } from "@/Components/API/Filters/ExperiencesFilter";
 import { FiresFilter } from "@/Components/API/Filters/FiresFilter";
 import { RetreatsFilter } from "@/Components/API/Filters/RetreatsFilter";

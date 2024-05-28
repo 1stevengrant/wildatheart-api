@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useDates } from "@/Hooks/useDates";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
 
-const DateFilters = () => {
+export const DateFilters = () => {
     const maxDate = dayjs().add(1, "year").toDate();
     const {
         startDate,
@@ -68,5 +68,3 @@ const DateFilters = () => {
         </div>
     );
 };
-
-export default DateFilters;
