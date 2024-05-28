@@ -39,7 +39,7 @@ const MyEventsPage = () => {
                         href={route("host")}
                         className={`${primaryButtonClasses}`}
                     >
-                        Start a New Fire
+                        Host a New Event
                     </Link>
                 </div>
             </MyProfileWrapper>
