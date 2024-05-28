@@ -10,7 +10,7 @@ import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
 import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
-import { PageContainer } from "@/Components/Page/Event/PageContainer";
+import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 

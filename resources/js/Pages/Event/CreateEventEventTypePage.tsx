@@ -23,7 +23,7 @@ import TextInput from "@/Components/Forms/TextInput";
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
-import { PageContainer } from "@/Components/Page/Event/PageContainer";
+import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";

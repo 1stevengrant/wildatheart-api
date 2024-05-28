@@ -3,16 +3,19 @@ import React from "react";
 import { EventCreateProgress } from "@/Components/Layout/EventCreateProgress";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { Logo } from "@/Components/Ui/Logo";
+import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
 
 export const SidebarLayoutDesktopSidebar = ({ auth }: { auth: any }) => {
     return (
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
             <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6">
-                <Logo
-                    className={
-                        "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mt-6"
-                    }
-                />
+                <a href={wahWebsiteUrl}>
+                    <Logo
+                        className={
+                            "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mt-6"
+                        }
+                    />
+                </a>
                 <EventCreateProgress />
                 <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
