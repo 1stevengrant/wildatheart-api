@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 
-import { LogoutModal } from "@/Components/LogoutModal";
+import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 import profileNavItemClasses from "@/helpers/profileNavItemClasses";
 

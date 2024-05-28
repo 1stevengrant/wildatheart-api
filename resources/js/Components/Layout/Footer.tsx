@@ -10,7 +10,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { useRecoilState } from "recoil";
 
 import FooterNavLink from "@/Components/Layout/FooterNavLink";
-import { SupportModal } from "@/Components/SupportModal";
+import { SupportModal } from "@/Components/Modals/SupportModal";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 import { linkClass } from "@/helpers/linkClass";
