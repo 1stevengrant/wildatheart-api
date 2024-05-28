@@ -2,9 +2,11 @@ import React, { Fragment, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { usePage } from "@inertiajs/react";
 
 import { EventCreateProgress } from "@/Components/Layout/EventCreateProgress";
 import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
+import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import Logo from "@/Components/Ui/Logo";
 
 export const SidebarLayout = ({
@@ -15,6 +17,7 @@ export const SidebarLayout = ({
     footer: React.ReactNode;
 }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { auth } = usePage<any>().props;
 
     return (
         <>
@@ -91,16 +94,17 @@ export const SidebarLayout = ({
                                                         href="#"
                                                         className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
                                                     >
-                                                        <img
-                                                            className="h-8 w-8 rounded-full bg-gray-800"
-                                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                                            alt=""
+                                                        <AuthUserAvatar
+                                                            auth={auth}
                                                         />
                                                         <span className="sr-only">
                                                             Your profile
                                                         </span>
                                                         <span aria-hidden="true">
-                                                            Tom Cook
+                                                            {
+                                                                auth.user
+                                                                    .full_name
+                                                            }
                                                         </span>
                                                     </a>
                                                 </li>
@@ -133,15 +137,13 @@ export const SidebarLayout = ({
                                         href="#"
                                         className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
                                     >
-                                        <img
-                                            className="h-8 w-8 rounded-full bg-gray-800"
-                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                            alt=""
-                                        />
+                                        <AuthUserAvatar auth={auth} />
                                         <span className="sr-only">
                                             Your profile
                                         </span>
-                                        <span aria-hidden="true">Tom Cook</span>
+                                        <span aria-hidden="true">
+                                            {auth.user.full_name}
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
