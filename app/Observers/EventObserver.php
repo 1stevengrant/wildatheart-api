@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\SendNewEventSlackAlert;
-use App\Mail\Event\NewEventCreated;
+use App\Mail\Event\NewEventCreatedMailable;
 use App\Models\Event;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
@@ -16,7 +16,7 @@ class EventObserver
             SendNewEventSlackAlert::dispatch($event);
         }
 
-        Mail::to($event->user)->send(new NewEventCreated($event));
+        Mail::to($event->user)->send(new NewEventCreatedMailable($event));
 
         Artisan::call('app:clear-event-cache');
     }

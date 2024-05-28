@@ -13,11 +13,13 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewEventCreated extends Mailable
+class NewEventCreatedMailable extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels, InteractsWithEmailTemplates;
+    use InteractsWithEmailTemplates, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
+    public string $emailContent;
+
     /**
      * Create a new message instance.
      */
@@ -50,6 +52,11 @@ class NewEventCreated extends Mailable
      */
     public function content(): Content
     {
+        $content = $this->emailTemplate->body;
+        $content = str_replace('[event_url]', $this->event->url, $content);
+        $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
+        $this->emailContent = \Str::markdown($content);
+
         return new Content(
             markdown: 'mail.event.new-event-created',
         );
