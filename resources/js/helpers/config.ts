@@ -1,4 +1,4 @@
-export default function config(key: string): string | undefined {
+export const config = (key: string): string | undefined => {
     const configs: { [key: string]: string | undefined } = {
         "services.bunny.api_url": import.meta.env.VITE_BUNNY_CDN_URL,
         "services.mapbox.api_url":
@@ -8,4 +8,4 @@ export default function config(key: string): string | undefined {
     };
 
     return configs[key];
-}
+};

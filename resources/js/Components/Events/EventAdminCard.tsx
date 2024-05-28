@@ -132,4 +132,3 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
         </div>
     );
 };
-;

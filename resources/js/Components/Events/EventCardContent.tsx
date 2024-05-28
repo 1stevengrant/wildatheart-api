@@ -18,9 +18,11 @@ import {
 } from "@/helpers/eventTypeGroups";
 import { imageGenerator } from "@/helpers/user";
 import { currentEventState } from "@/store";
-import { IEventCardContentProps } from "@/types/IEventCardContentProps";
+import { Event } from "@/types/Event";
 
-export const EventCardContent = (props: IEventCardContentProps) => {
+export const EventCardContent = (props: {
+    event: Event | undefined | null;
+}) => {
     const eventTypeClasses = `text-grey-200 font-semibold text-sm`;
     const eventTypeNameClasses = `flex items-center justify-between space-x-4`;
     const { event } = props;

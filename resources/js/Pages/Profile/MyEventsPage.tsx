@@ -7,13 +7,17 @@ import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { MyProfileWrapper } from "@/Layouts/MyProfileWrapper";
 import { Event } from "@/types/Event";
-import { IMyEvents } from "@/types/IMyEvents";
 
 const MyEventsPage = () => {
     const pageTitle = `My Events`;
     const { events } = usePage().props;
 
-    const typedEvents = (events as IMyEvents).data;
+    const typedEvents = (
+        events as {
+            data: Event[];
+            meta: { links: any };
+        }
+    ).data;
 
     return (
         <AppLayout title={pageTitle}>

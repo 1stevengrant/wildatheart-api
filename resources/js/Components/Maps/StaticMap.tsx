@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import mapboxgl from "mapbox-gl";
 
-import config from "@/helpers/config";
+import { config } from "@/helpers/config";
 import { Event } from "@/types/Event";
 
 interface IStaticMapProps {

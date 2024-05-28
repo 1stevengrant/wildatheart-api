@@ -1,11 +1,12 @@
 import React from "react";
 
-interface RightColumnProps {
+export const RightColumn = ({
+    className = "",
+    children,
+}: {
     className?: string;
     children: React.ReactNode;
-}
-
-export const RightColumn = ({ className = "", children }: RightColumnProps) => {
+}) => {
     return (
         <div
             className={className + " md:w-1/2 md:flex flex-col justify-center"}
