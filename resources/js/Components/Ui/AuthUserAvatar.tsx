@@ -1,5 +1,3 @@
-import React from "react";
-
 import { UserAvatar } from "@/Components/UserAvatar";
 
 export const AuthUserAvatar = ({ auth }: { auth: any }) => {
