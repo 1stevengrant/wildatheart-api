@@ -10,7 +10,7 @@ import { useRecoilState } from "recoil";
 import { EventList } from "@/Components/API/EventList";
 import { EventCountButton } from "@/Components/Buttons/EventCountButton";
 import { GetUserLocationModal } from "@/Components/Modals/GetUserLocationModal";
-import IsLoading from "@/Components/IsLoading";
+import IsLoading from "@/Components/Ui/IsLoading";
 import { OutsideClickHandlerEvents } from "@/Components/Ui/OutsideClickHandlerEvents";
 import { defaultLatLng } from "@/helpers/defaultLatLng";
 import { LOCATION_PERMISSIONS_DENIED } from "@/helpers/locationPermissions";
