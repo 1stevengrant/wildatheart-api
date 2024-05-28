@@ -1,0 +1,36 @@
+import React from "react";
+
+import { EventCreateProgress } from "@/Components/Layout/EventCreateProgress";
+import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
+import { Logo } from "@/Components/Ui/Logo";
+
+export const SidebarLayoutDesktopSidebar = ({ auth }: { auth: any }) => {
+    return (
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+            <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6">
+                <Logo
+                    className={
+                        "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mt-6"
+                    }
+                />
+                <EventCreateProgress />
+                <nav className="flex flex-1 flex-col">
+                    <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                        <li className="-mx-6 mt-auto">
+                            <a
+                                href="#"
+                                className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
+                            >
+                                <AuthUserAvatar auth={auth} />
+                                <span className="sr-only">Your profile</span>
+                                <span aria-hidden="true">
+                                    {auth.user.full_name}
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    );
+};
