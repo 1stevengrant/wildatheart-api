@@ -1,17 +1,16 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 
 import { Menu, Transition } from "@headlessui/react";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { usePage } from "@inertiajs/react";
 
 import { LogoutModal } from "@/Components/Modals/LogoutModal";
-import { UserAvatar } from "@/Components/UserAvatar";
+import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import classNames from "@/helpers/classNames";
 import { linkClass } from "@/helpers/linkClass";
 
 export const AuthNav = () => {
     const { auth } = usePage<any>().props;
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     return (
         <>
             {auth.user ? (
@@ -21,14 +20,7 @@ export const AuthNav = () => {
                             <span className="absolute -inset-1.5" />
                             <span className="sr-only">Open user menu</span>
 
-                            {auth.user.image ? (
-                                <UserAvatar
-                                    className={"h-10 w-10"}
-                                    image={auth.user.image}
-                                />
-                            ) : (
-                                <UserCircleIcon className={"w-8 h-8"} />
-                            )}
+                            <AuthUserAvatar auth={auth} />
                         </Menu.Button>
                     </div>
                     <Transition
