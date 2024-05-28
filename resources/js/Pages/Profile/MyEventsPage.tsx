@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link, usePage } from "@inertiajs/react";
 
-import EventAdminCard from "@/Components/Events/EventAdminCard";
+import { EventAdminCard } from "@/Components/Events/EventAdminCard";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { AppLayout } from "@/Layouts/AppLayout";
 import MyProfileWrapper from "@/Layouts/MyProfileWrapper";

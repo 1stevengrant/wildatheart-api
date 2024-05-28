@@ -10,12 +10,13 @@ import { HostedBy } from "@/Components/Events/HostedBy";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { imageGenerator } from "@/helpers/user";
 
-interface EventDisplayProps {
+export const EventDisplay = ({
+    event,
+    className,
+}: {
     event: any;
     className?: string;
-}
-
-const EventDisplay = ({ event, className }: EventDisplayProps) => {
+}) => {
     useEffect(() => {}, [event]);
     return (
         <div
@@ -39,7 +40,7 @@ const EventDisplay = ({ event, className }: EventDisplayProps) => {
                 <EventHostInfo>
                     <>
                         {event.hostPhoto ? (
-                            <UserAvatar image={event.hostPhoto} width={32} />
+                            <UserAvatar image={event.hostPhoto} />
                         ) : (
                             <UserCircleIcon className={"w-6 h-6 text-white"} />
                         )}
@@ -50,5 +51,3 @@ const EventDisplay = ({ event, className }: EventDisplayProps) => {
         </div>
     );
 };
-
-export default EventDisplay;
