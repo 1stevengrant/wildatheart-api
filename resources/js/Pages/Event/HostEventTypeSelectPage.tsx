@@ -5,7 +5,7 @@ import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link } from "@inertiajs/react";
 
 import { EventGroupWrapper } from "@/Components/EventGroupWrapper";
-import { EventTypeSelectButton } from "@/Components/EventTypeSelectButton";
+import { EventTypeSelectButton } from "@/Components/Buttons/EventTypeSelectButton";
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
