@@ -5,7 +5,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { EventCreateProgress } from "@/Components/Layout/EventCreateProgress";
 import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
-import Logo from "@/Components/Logo";
+import Logo from "@/Components/Ui/Logo";
 
 export const SidebarLayout = ({
     children,
