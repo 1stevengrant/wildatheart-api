@@ -9,7 +9,7 @@ import {
 
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 
-const myProfileNavItems = [
+export const myProfileNavItems = [
     {
         icon: <UserCircleIcon className={defaultIconSize} />,
         title: "My Fire Host Profile",
@@ -31,5 +31,3 @@ const myProfileNavItems = [
         url: "resources",
     },
 ];
-
-export default myProfileNavItems;
