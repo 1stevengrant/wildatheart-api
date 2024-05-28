@@ -2,12 +2,12 @@ import { ButtonHTMLAttributes } from "react";
 
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 
-export default function PrimaryButton({
+export const PrimaryButton = ({
     className = "",
     disabled,
     children,
     ...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) {
+}: ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
         <button
             {...props}
@@ -17,4 +17,4 @@ export default function PrimaryButton({
             {children}
         </button>
     );
-}
+};

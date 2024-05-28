@@ -21,5 +21,3 @@ export const BackToEvents = ({
         </Link>
     );
 };
-
-export default BackToEvents;

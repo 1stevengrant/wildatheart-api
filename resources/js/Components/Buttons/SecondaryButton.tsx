@@ -1,11 +1,11 @@
 import { ButtonHTMLAttributes } from "react";
 
-export default function SecondaryButton({
+export const SecondaryButton = ({
     className = "",
     disabled,
     children,
     ...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) {
+}: ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
         <button
             {...props}
@@ -19,4 +19,4 @@ export default function SecondaryButton({
             {children}
         </button>
     );
-}
+};

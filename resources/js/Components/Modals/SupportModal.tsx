@@ -3,8 +3,8 @@ import React, { FormEventHandler } from "react";
 import { Dialog } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import SecondaryButton from "@/Components/Buttons/SecondaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
+import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { FormFieldsWrapper } from "@/Components/Forms/FormFieldsWrapper";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
