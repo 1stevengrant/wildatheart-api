@@ -15,7 +15,6 @@ class HasAgreedToHostAgreementMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        ray('HasAgreedToHostAgreementMiddleware', auth()->user()->hasAgreedToHostAgreement());
         if (! auth()->user()->hasAgreedToHostAgreement()) {
             return redirect()->route('host.agreement');
         }
