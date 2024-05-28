@@ -1,6 +1,6 @@
 import React from "react";
 
-import SecondaryButton from "@/Components/Buttons/SecondaryButton";
+import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import ModalHeading from "@/Components/Type/ModalHeading";
 import Modal from "@/Components/Ui/Modal";
 import ModalActions from "@/Components/Ui/ModalActions";

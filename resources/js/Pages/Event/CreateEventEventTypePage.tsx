@@ -14,7 +14,7 @@ import Map, {
 } from "react-map-gl";
 import { useRecoilState } from "recoil";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import FireNamingGuidelines from "@/Components/Events/FireNamingGuidelines";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";

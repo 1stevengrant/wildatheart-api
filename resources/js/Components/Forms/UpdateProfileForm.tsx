@@ -5,7 +5,7 @@ import { Link, router, useForm } from "@inertiajs/react";
 import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";

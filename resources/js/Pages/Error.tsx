@@ -1,6 +1,6 @@
 import React from "react";
 
-import BackToEvents from "@/Components/Buttons/BackToEvents";
+import { BackToEvents } from "@/Components/Buttons/BackToEvents";
 import { Logo } from "@/Components/Ui/Logo";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 

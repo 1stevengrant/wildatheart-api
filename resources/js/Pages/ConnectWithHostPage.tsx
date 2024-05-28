@@ -5,7 +5,7 @@ import { Link, useForm, usePage } from "@inertiajs/react";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import EventDisplay from "@/Components/Events/EventDisplay";
 import { FormGrid } from "@/Components/Forms/FormGrid";
 import InputError from "@/Components/Forms/InputError";

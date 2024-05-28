@@ -4,7 +4,7 @@ import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, router } from "@inertiajs/react";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";

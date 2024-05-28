@@ -6,7 +6,7 @@ import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input/min";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FormGrid } from "@/Components/Forms/FormGrid";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";

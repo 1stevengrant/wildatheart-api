@@ -4,8 +4,8 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useForm } from "@inertiajs/react";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import SecondaryButton from "@/Components/Buttons/SecondaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
+import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import ModalHeading from "@/Components/Type/ModalHeading";
 import Modal from "@/Components/Ui/Modal";
 import ModalActions from "@/Components/Ui/ModalActions";

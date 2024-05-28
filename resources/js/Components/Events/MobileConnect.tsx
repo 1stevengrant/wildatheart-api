@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link, usePage } from "@inertiajs/react";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { whiteButtonClasses } from "@/helpers/whiteButtonClasses";
 import { Event } from "@/types/Event";
 

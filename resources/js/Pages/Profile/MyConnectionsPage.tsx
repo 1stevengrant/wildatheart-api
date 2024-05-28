@@ -3,7 +3,7 @@ import React from "react";
 import { usePage } from "@inertiajs/react";
 import { useSetRecoilState } from "recoil";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import ConnectionCard from "@/Components/ConnectionCard";
 import { AppLayout } from "@/Layouts/AppLayout";
 import MyProfileWrapper from "@/Layouts/MyProfileWrapper";

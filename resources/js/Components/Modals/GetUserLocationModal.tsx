@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
-import PrimaryButton from "@/Components/Buttons/PrimaryButton";
-import SecondaryButton from "@/Components/Buttons/SecondaryButton";
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
+import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { StaticMap } from "@/Components/Maps/StaticMap";
 import ModalHeading from "@/Components/Type/ModalHeading";
 import Modal from "@/Components/Ui/Modal";
