@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { EventCreateProgress } from "@/Components/EventCreateProgress";
+import { EventCreateProgress } from "@/Components/Events/EventCreateProgress";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";

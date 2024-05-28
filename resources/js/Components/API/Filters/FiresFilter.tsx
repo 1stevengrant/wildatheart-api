@@ -4,8 +4,8 @@ import { usePage } from "@inertiajs/react";
 
 import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
 import { FiresIcon } from "@/Components/Icons/FiresIcon";
-import { SwitchComponent } from "@/Components/SwitchComponent";
-import { SwitchComponentWrapper } from "@/Components/SwitchComponentWrapper";
+import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
+import { SwitchComponentWrapper } from "@/Components/Forms/SwitchComponentWrapper";
 import { fireTypeDescription } from "@/helpers/eventTypes";
 import { useTypes } from "@/Hooks/useTypes";
 import { FiresFilterProps } from "@/types/FiresFilterProps";

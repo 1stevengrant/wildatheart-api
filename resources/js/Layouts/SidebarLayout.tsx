@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { usePage } from "@inertiajs/react";
 
-import { EventCreateProgressMobile } from "@/Components/EventCreateProgressMobile";
+import { EventCreateProgressMobile } from "@/Components/Events/EventCreateProgressMobile";
 import { SidebarLayoutDesktopSidebar } from "@/Components/Layout/Elements/SidebarLayoutDesktopSidebar";
 import { SidebarLayoutMobileSidebar } from "@/Components/Layout/Elements/SidebarLayoutMobileSidebar";
 
