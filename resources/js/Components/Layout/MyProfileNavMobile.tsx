@@ -7,11 +7,11 @@ import { LogoutButtonWithModal } from "@/Components/Modals/LogoutButtonWithModal
 import { myProfileNavItems } from "@/Components/MyProfileNavItems";
 import ProfileNavItem from "@/Components/Profile/ProfileNavItem";
 
-interface MyProfileNavProps {
+export const MyProfileNavMobile = ({
+    className = "",
+}: {
     className?: string;
-}
-
-export const MyProfileNavMobile = ({ className = "" }: MyProfileNavProps) => {
+}) => {
     const [menuOpen, setMenuOpen] = useState(false);
     return (
         <div className={`${className} z-50 md:hidden`}>
