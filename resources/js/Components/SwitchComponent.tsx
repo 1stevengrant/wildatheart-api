@@ -1,6 +1,5 @@
 import { Switch } from "@headlessui/react";
-
-import { classNames } from "@/helpers/classNames";
+import classNames from "classnames";
 
 interface SwitchComponentProps {
     checked: boolean;

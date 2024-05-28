@@ -2,10 +2,10 @@ import React, { Fragment, useState } from "react";
 
 import { Menu, Transition } from "@headlessui/react";
 import { usePage } from "@inertiajs/react";
+import classNames from "classnames";
 
 import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
-import { classNames } from "@/helpers/classNames";
 import { linkClass } from "@/helpers/linkClass";
 
 export const AuthNav = () => {

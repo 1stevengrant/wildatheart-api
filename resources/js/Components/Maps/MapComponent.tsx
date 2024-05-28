@@ -162,7 +162,7 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
                 <GeolocateControl position="top-left" />
                 {showLoader && (
                     <IsLoading
-                        classnames={`relative mt-8`}
+                        className={`relative mt-8`}
                         text={`Loading Events`}
                     />
                 )}
