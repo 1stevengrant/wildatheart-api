@@ -24,6 +24,8 @@ export const UserAvatar = ({
             imageString.includes("data:image/png;base64,")
         );
     };
+
+    console.log(image);
     return (
         <img
             className={

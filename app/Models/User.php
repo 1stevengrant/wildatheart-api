@@ -115,9 +115,7 @@ class User extends Authenticatable
         if ($this->image) {
             makeImagePublic($this->image);
 
-            return bunnyImage($this->image, [
-                'width' => 200,
-            ]);
+            return $this->image;
         }
 
         return \Avatar::create($this->fullname)->toBase64();
