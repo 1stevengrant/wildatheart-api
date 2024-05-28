@@ -4,6 +4,7 @@ import { AuthNav } from "@/Components/Layout/AuthNav";
 import { MyProfileNavMobile } from "@/Components/Layout/MyProfileNavMobile";
 import { ToggleSupportRequestButton } from "@/Components/Layout/ToggleSupportRequestButton";
 import { Logo } from "@/Components/Ui/Logo";
+import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
 
 export const MainHeader = () => {
     const { auth } = usePage<any>().props;
@@ -23,11 +24,13 @@ export const MainHeader = () => {
             className={`px-2 py-4 md:p-4 bg-black text-white flex items-center justify-between space-x-2 md:space-x-4 w-full`}
         >
             <div className={`flex items-center xl:w-1/2`}>
-                <Logo
-                    className={
-                        "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mr-2"
-                    }
-                />
+                <a href={wahWebsiteUrl}>
+                    <Logo
+                        className={
+                            "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mr-2"
+                        }
+                    />
+                </a>
                 <Link
                     className={`ml-4 border-b-2 pb-2 ${url?.includes("home") ? `border-white` : `border-transparent`}`}
                     href={"/"}

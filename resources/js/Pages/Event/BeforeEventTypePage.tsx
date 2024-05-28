@@ -7,7 +7,7 @@ import Markdown from "react-markdown";
 
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
-import { PageContainer } from "@/Components/Page/Event/PageContainer";
+import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import useRoute from "@/Hooks/useRoute";
