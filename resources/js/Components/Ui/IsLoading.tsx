@@ -1,6 +1,6 @@
-export const IsLoading = ({ classnames = "", text = "" }) => {
+export const IsLoading = ({ className = "", text = "" }) => {
     return (
-        <div className={`flex justify-center items-center ${classnames}`}>
+        <div className={`flex justify-center items-center ${className}`}>
             <div
                 className={`bg-white px-4 py-2 inline-flex items-center text-black rounded shadow-md`}
             >
