@@ -216,12 +216,6 @@ const ViewEventPage = () => {
                             />
 
                             <ConnectWithHost className={"mt-6 sticky top-4"} />
-
-                            {!event.gift_requested &&
-                                auth.user &&
-                                auth.user.id === event.hostId && (
-                                    <UpdateAddress />
-                                )}
                         </div>
                     </div>
                 </div>
