@@ -1,7 +1,7 @@
 import React from "react";
 
 import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
-import { RetreatsIcon } from "@/Components/Icons/NewIcons/RetreatsIcon";
+import { RetreatsIcon } from "@/Components/Icons/RetreatsIcon";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/SwitchComponentWrapper";
 import { retreatTypeDescription } from "@/helpers/eventTypes";

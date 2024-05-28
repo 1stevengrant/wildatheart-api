@@ -2,7 +2,7 @@ import React from "react";
 
 import { usePage } from "@inertiajs/react";
 
-import { CircleIcon } from "@/Components/Icons/NewIcons/CircleIcon";
+import { CircleIcon } from "@/Components/Icons/CircleIcon";
 import { imageGenerator } from "@/helpers/user";
 
 const EventStep = ({ step }: { step: number }) => {

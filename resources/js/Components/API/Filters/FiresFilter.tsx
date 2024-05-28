@@ -3,7 +3,7 @@ import React from "react";
 import { usePage } from "@inertiajs/react";
 
 import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
-import { FiresIcon } from "@/Components/Icons/NewIcons/FiresIcon";
+import { FiresIcon } from "@/Components/Icons/FiresIcon";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/SwitchComponentWrapper";
 import { fireTypeDescription } from "@/helpers/eventTypes";

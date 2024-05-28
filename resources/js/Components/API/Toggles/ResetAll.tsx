@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AllIcon } from "@/Components/Icons/NewIcons/AllIcon";
+import { AllIcon } from "@/Components/Icons/AllIcon";
 import { useDates } from "@/Hooks/useDates";
 import { useMapData } from "@/Hooks/useMapData";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";

@@ -6,8 +6,8 @@ import { Link, usePage } from "@inertiajs/react";
 import Markdown from "react-markdown";
 
 import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
-import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
-import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
+import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
+import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";

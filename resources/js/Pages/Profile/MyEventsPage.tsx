@@ -5,7 +5,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { EventAdminCard } from "@/Components/Events/EventAdminCard";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { MyProfileWrapper } from "@/Components/Layout/MyProfileWrapper";
+import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
 import { Event } from "@/types/Event";
 
 const MyEventsPage = () => {

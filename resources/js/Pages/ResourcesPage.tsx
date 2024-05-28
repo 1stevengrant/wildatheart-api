@@ -3,7 +3,7 @@ import React from "react";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { secondaryButtonClasses } from "@/helpers/secondaryButtonClasses";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { MyProfileWrapper } from "@/Components/Layout/MyProfileWrapper";
+import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
 
 const ResourcesPage = () => {
     const pageTitle = "Resources";
