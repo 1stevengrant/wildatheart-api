@@ -2,7 +2,7 @@ import React from "react";
 
 import { LogoutButtonWithModal } from "@/Components/Modals/LogoutButtonWithModal";
 import { myProfileNavItems } from "@/Components/MyProfileNavItems";
-import ProfileNavItem from "@/Components/Profile/ProfileNavItem";
+import { ProfileNavItem } from "@/Components/Profile/ProfileNavItem";
 
 export const ProfileNav = () => {
     return (

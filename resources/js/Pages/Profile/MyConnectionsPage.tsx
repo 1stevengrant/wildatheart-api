@@ -6,7 +6,7 @@ import { useSetRecoilState } from "recoil";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import ConnectionCard from "@/Components/ConnectionCard";
 import { AppLayout } from "@/Layouts/AppLayout";
-import MyProfileWrapper from "@/Layouts/MyProfileWrapper";
+import { MyProfileWrapper } from "@/Layouts/MyProfileWrapper";
 import { reactNotificationState } from "@/store";
 import { Connection } from "@/types/Connection";
 

@@ -4,7 +4,7 @@ import { usePage } from "@inertiajs/react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";

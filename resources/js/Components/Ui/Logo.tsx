@@ -1,10 +1,4 @@
-import React from "react";
-
-interface LogoProps {
-    className?: string;
-}
-
-export const Logo = ({ className = "" }: LogoProps) => {
+export const Logo = ({ className = "" }: { className?: string }) => {
     return (
         <>
             <svg

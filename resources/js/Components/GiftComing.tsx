@@ -2,11 +2,11 @@ import React from "react";
 
 import { Link, usePage } from "@inertiajs/react";
 
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useRoute from "@/Hooks/useRoute";
 import { Event } from "@/types/Event";
 
-const GiftComing = () => {
+export const GiftComing = () => {
     const page = usePage();
     const event = page.props.event as Event;
     const route = useRoute();
@@ -29,5 +29,3 @@ const GiftComing = () => {
         </div>
     );
 };
-
-export default GiftComing;

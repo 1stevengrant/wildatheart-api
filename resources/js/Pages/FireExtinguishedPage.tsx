@@ -3,7 +3,7 @@ import { useForm, usePage } from "@inertiajs/react";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { ContentBlocksComponent } from "@/Components/ContentBlocksComponent";
 import { CenterContainer } from "@/Components/Pages/CenterContainer";
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { usePageContent } from "@/Hooks/usePageContent";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { Event } from "@/types/Event";

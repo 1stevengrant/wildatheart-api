@@ -1,13 +1,12 @@
 import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
 
-type ContentBlocksComponentProps = {
-    contentBlocks: any[];
-    className?: string;
-};
 export const ContentBlocksComponent = ({
     contentBlocks,
     className = "",
-}: ContentBlocksComponentProps) => {
+}: {
+    contentBlocks: any[];
+    className?: string;
+}) => {
     return (
         <>
             {contentBlocks && (

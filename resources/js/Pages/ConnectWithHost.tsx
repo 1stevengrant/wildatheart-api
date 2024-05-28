@@ -12,7 +12,7 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import selectClasses from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Layouts/LeftColumn";

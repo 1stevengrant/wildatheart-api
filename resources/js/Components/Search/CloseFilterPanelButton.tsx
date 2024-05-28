@@ -5,7 +5,7 @@ import { useSetRecoilState } from "recoil";
 
 import { showFilterPanelState } from "@/store";
 
-const CloseFilterPanelButton = () => {
+export const CloseFilterPanelButton = () => {
     const setShowFilterPanel = useSetRecoilState(showFilterPanelState);
     return (
         <button className={`w-1/3`} onClick={() => setShowFilterPanel(false)}>
@@ -13,5 +13,3 @@ const CloseFilterPanelButton = () => {
         </button>
     );
 };
-
-export default CloseFilterPanelButton;
