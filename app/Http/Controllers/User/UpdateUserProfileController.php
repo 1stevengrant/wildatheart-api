@@ -21,7 +21,6 @@ class UpdateUserProfileController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            ray('has file');
             $request->user()->updateProfilePhoto($request->file('image'));
         }
 

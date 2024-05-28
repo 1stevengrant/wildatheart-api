@@ -28,8 +28,6 @@ class ZendeskCreateTicket
 
             $statusCode = $response->status();
             $responseData = $response->json();
-
-            ray($statusCode, $responseData);
         } else {
             ray('Zendesk ticket creation is disabled in non-production environments.', $issue->toArray());
         }

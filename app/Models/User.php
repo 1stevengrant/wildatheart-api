@@ -153,7 +153,6 @@ class User extends Authenticatable
 
     public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'users'): void
     {
-        ray('update profile photo');
         $this->forceFill([
             'image' => $photo->storePublicly(
                 $storagePath,
