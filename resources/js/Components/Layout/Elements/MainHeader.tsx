@@ -1,8 +1,8 @@
 import { Link, usePage } from "@inertiajs/react";
 
-import { AuthNav } from "@/Components/Layout/AuthNav";
-import { MyProfileNavMobile } from "@/Components/Layout/MyProfileNavMobile";
-import { ToggleSupportRequestButton } from "@/Components/Layout/ToggleSupportRequestButton";
+import { AuthNav } from "@/Components/Layout/Navs/AuthNav";
+import { MyProfileNavMobile } from "@/Components/Layout/Navs/MyProfileNavMobile";
+import { ToggleSupportRequestButton } from "@/Components/Buttons/ToggleSupportRequestButton";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
 

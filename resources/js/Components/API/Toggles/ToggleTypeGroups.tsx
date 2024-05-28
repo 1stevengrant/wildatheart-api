@@ -1,6 +1,6 @@
-import { ExperiencesIcon } from "@/Components/Icons/NewIcons/ExperiencesIcon";
-import { FiresIcon } from "@/Components/Icons/NewIcons/FiresIcon";
-import { RetreatsIcon } from "@/Components/Icons/NewIcons/RetreatsIcon";
+import { ExperiencesIcon } from "@/Components/Icons/ExperiencesIcon";
+import { FiresIcon } from "@/Components/Icons/FiresIcon";
+import { RetreatsIcon } from "@/Components/Icons/RetreatsIcon";
 import {
     experienceTypeGroup,
     fireTypeGroup,

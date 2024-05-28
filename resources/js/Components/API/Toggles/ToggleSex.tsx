@@ -1,7 +1,7 @@
 import React from "react";
 
-import { FemaleIcon } from "@/Components/Icons/NewIcons/FemaleIcon";
-import { MaleIcon } from "@/Components/Icons/NewIcons/MaleIcon";
+import { FemaleIcon } from "@/Components/Icons/FemaleIcon";
+import { MaleIcon } from "@/Components/Icons/MaleIcon";
 import { EVENT_FOR_MEN } from "@/helpers/eventSex";
 import {
     activeQuickFilterClasses,

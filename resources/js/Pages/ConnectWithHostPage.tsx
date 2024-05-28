@@ -15,9 +15,9 @@ import TextInput from "@/Components/Forms/TextInput";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { selectClasses } from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { LeftColumn } from "@/Components/Layout/LeftColumn";
+import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
 import { RightColumn } from "@/Components/Layout/RightColumn";
-import { TwoColumnWrapper } from "@/Components/Layout/TwoColumnWrapper";
+import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
 import { PageProps } from "@/types";
 import { Event } from "@/types/Event";
 

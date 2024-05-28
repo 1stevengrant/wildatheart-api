@@ -5,11 +5,11 @@ import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, router } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
-import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
-import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
-import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
-import { EventCreateProgressMobile } from "@/Components/Layout/EventCreateProgressMobile";
+import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
+import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
+import { EmptyLayoutHeader } from "@/Components/Layout/Elements/EmptyLayoutHeader";
+import { EmptyLayoutWrapper } from "@/Components/Layout/Elements/EmptyLayoutWrapper";
+import { EventCreateProgressMobile } from "@/Components/EventCreateProgressMobile";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";

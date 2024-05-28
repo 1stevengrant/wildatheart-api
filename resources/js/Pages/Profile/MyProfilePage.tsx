@@ -3,7 +3,7 @@ import React from "react";
 import { UpdateProfileForm } from "@/Components/Forms/UpdateProfileForm";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { MyProfileWrapper } from "@/Components/Layout/MyProfileWrapper";
+import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
 
 const MyProfilePage = () => {
     const pageTitle = `My Profile`;

@@ -6,10 +6,10 @@ import { Link } from "@inertiajs/react";
 
 import { EventTypeSelectButton } from "@/Components/Buttons/EventTypeSelectButton";
 import { EventGroupWrapper } from "@/Components/EventGroupWrapper";
-import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
-import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
-import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
-import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
+import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
+import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
+import { EmptyLayoutHeader } from "@/Components/Layout/Elements/EmptyLayoutHeader";
+import { EmptyLayoutWrapper } from "@/Components/Layout/Elements/EmptyLayoutWrapper";
 import { SnapGrid } from "@/Components/SnapGrid";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";

@@ -2,10 +2,10 @@ import React, { PropsWithChildren } from "react";
 
 import { Head } from "@inertiajs/react";
 
-import { BackendNotifications } from "@/Components/Layout/BackendNotifications";
-import { Footer } from "@/Components/Layout/Footer";
-import { MainHeader } from "@/Components/Layout/MainHeader";
-import { ReactNotifications } from "@/Components/Layout/ReactNotifications";
+import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
+import { Footer } from "@/Components/Layout/Elements/Footer";
+import { MainHeader } from "@/Components/Layout/Elements/MainHeader";
+import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
 
 interface IAppLayoutProps {
     title: string;

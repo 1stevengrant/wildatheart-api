@@ -1,7 +1,7 @@
 import React from "react";
 
 import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
-import { ExperiencesIcon } from "@/Components/Icons/NewIcons/ExperiencesIcon";
+import { ExperiencesIcon } from "@/Components/Icons/ExperiencesIcon";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/SwitchComponentWrapper";
 import { experienceTypeDescription } from "@/helpers/eventTypes";

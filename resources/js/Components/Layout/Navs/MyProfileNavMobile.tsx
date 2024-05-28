@@ -4,7 +4,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 
 import { LogoutButtonWithModal } from "@/Components/Modals/LogoutButtonWithModal";
-import { myProfileNavItems } from "@/Components/MyProfileNavItems";
+import { myProfileNavItems } from "@/Components/Layout/Navs/MyProfileNavItems";
 import { ProfileNavItem } from "@/Components/Profile/ProfileNavItem";
 
 export const MyProfileNavMobile = ({
