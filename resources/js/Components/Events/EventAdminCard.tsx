@@ -16,11 +16,7 @@ import { imageGenerator } from "@/helpers/user";
 import { reactNotificationState } from "@/store";
 import { Event } from "@/types/Event";
 
-interface EventAdminCardProps {
-    event: Event;
-}
-
-const EventAdminCard = ({ event }: EventAdminCardProps) => {
+export const EventAdminCard = ({ event }: { event: Event }) => {
     const [reactNotifications, setReactNotifications] = useRecoilState(
         reactNotificationState
     );
@@ -136,5 +132,4 @@ const EventAdminCard = ({ event }: EventAdminCardProps) => {
         </div>
     );
 };
-
-export default EventAdminCard;
+;

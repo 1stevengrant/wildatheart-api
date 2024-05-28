@@ -6,11 +6,7 @@ import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { whiteButtonClasses } from "@/helpers/whiteButtonClasses";
 import { Event } from "@/types/Event";
 
-interface ConnectWithHostProps {
-    className?: string;
-}
-
-const ConnectWithHost = ({ className }: ConnectWithHostProps) => {
+export const ConnectWithHost = ({ className }: { className?: string }) => {
     const page = usePage();
     const event = page.props.event as Event;
     const hasConnectedWithHost =
@@ -50,5 +46,3 @@ const ConnectWithHost = ({ className }: ConnectWithHostProps) => {
         </div>
     );
 };
-
-export default ConnectWithHost;

@@ -4,7 +4,7 @@ import { usePage } from "@inertiajs/react";
 import Markdown from "react-markdown";
 
 import { BackToEvents } from "@/Components/Buttons/BackToEvents";
-import ConnectWithHost from "@/Components/Events/ConnectWithHost";
+import { ConnectWithHost } from "@/Components/Events/ConnectWithHost";
 import { Date } from "@/Components/Events/Detail/Dates";
 import Host from "@/Components/Events/Detail/Host";
 import Location from "@/Components/Events/Detail/Location";

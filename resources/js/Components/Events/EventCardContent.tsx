@@ -119,7 +119,7 @@ export const EventCardContent = (props: IEventCardContentProps) => {
                 <EventHostInfo>
                     <>
                         {event?.host_photo ? (
-                            <UserAvatar image={event.host_photo} width={32} />
+                            <UserAvatar image={event.host_photo} />
                         ) : (
                             <UserCircleIcon className={"w-6 h-6 text-white"} />
                         )}

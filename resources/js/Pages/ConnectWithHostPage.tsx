@@ -6,7 +6,7 @@ import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import EventDisplay from "@/Components/Events/EventDisplay";
+import { EventDisplay } from "@/Components/Events/EventDisplay";
 import { FormGrid } from "@/Components/Forms/FormGrid";
 import InputError from "@/Components/Forms/InputError";
 import InputLabel from "@/Components/Forms/InputLabel";
