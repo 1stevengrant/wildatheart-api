@@ -15,14 +15,14 @@ import Map, {
 import { useRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import FireNamingGuidelines from "@/Components/Events/FireNamingGuidelines";
-import InputError from "@/Components/Forms/InputError";
-import InputLabel from "@/Components/Forms/InputLabel";
+import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
+import { InputError } from "@/Components/Forms/InputError";
+import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import { EmptyLayoutBody } from "@/Components/Layout/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
-import MapboxSearch from "@/Components/Maps/MapboxSearch";
+import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
 import Spinner from "@/Components/Ui/Spinner";

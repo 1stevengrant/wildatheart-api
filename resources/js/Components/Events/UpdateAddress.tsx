@@ -5,11 +5,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { Event } from "@/types/Event";
 
-interface UpdateAddressProps {
-    className?: string;
-}
-
-const UpdateAddress = ({ className }: UpdateAddressProps) => {
+export const UpdateAddress = ({ className }: { className?: string }) => {
     const page = usePage();
     const event = page.props.event as Event;
     return (
@@ -29,5 +25,3 @@ const UpdateAddress = ({ className }: UpdateAddressProps) => {
         </div>
     );
 };
-
-export default UpdateAddress;

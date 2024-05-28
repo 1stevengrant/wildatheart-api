@@ -8,8 +8,8 @@ import { Link } from "@inertiajs/react";
 import { useRecoilState } from "recoil";
 
 import EventDeleteModal from "@/Components/Events/EventDeleteModal";
-import EventPublishModal from "@/Components/Events/EventPublishModal";
-import EventUnpublishModal from "@/Components/Events/EventUnpublishModal";
+import { EventPublishModal } from "@/Components/Events/EventPublishModal";
+import { EventUnpublishModal } from "@/Components/Events/EventUnpublishModal";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 import { EventTypeFires } from "@/helpers/eventNames";
 import { imageGenerator } from "@/helpers/user";

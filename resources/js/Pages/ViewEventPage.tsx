@@ -9,10 +9,10 @@ import { Date } from "@/Components/Events/Detail/Dates";
 import Host from "@/Components/Events/Detail/Host";
 import Location from "@/Components/Events/Detail/Location";
 import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
-import MobileConnect from "@/Components/Events/MobileConnect";
-import PhotoCarousel from "@/Components/Events/PhotoCarousel";
-import ShareEvent from "@/Components/Events/ShareEvent";
-import UpdateAddress from "@/Components/Events/UpdateAddress";
+import { MobileConnect } from "@/Components/Events/MobileConnect";
+import { PhotoCarousel } from "@/Components/Events/PhotoCarousel";
+import { ShareEvent } from "@/Components/Events/ShareEvent";
+import { UpdateAddress } from "@/Components/Events/UpdateAddress";
 import { StaticMap } from "@/Components/Maps/StaticMap";
 import HeadingOne from "@/Components/Type/HeadingOne";
 import {

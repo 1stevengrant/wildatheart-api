@@ -28,9 +28,8 @@ import {
     typeGroupState,
     typesState,
 } from "@/store/filtersAtom";
-import { IMapComponentProps } from "@/types/IMapComponentProps";
 
-export const MapComponent = ({ className = "" }: IMapComponentProps) => {
+export const MapComponent = ({ className = "" }: { className?: string }) => {
     const initialViewState = {
         longitude:
             Number(localStorage.getItem("longitude")) ??

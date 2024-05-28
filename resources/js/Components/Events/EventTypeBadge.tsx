@@ -1,9 +1,12 @@
 import React from "react";
-interface EventTypeBadgeProps {
+
+export const EventTypeBadge = ({
+    children,
+    className = "",
+}: {
     children: React.ReactNode;
     className?: string;
-}
-const EventTypeBadge = ({ children, className = "" }: EventTypeBadgeProps) => {
+}) => {
     return (
         <div
             className={`rounded-full py-0.5 px-4 text-sm text-grey-200 border border-white ${className}`}
@@ -12,5 +15,3 @@ const EventTypeBadge = ({ children, className = "" }: EventTypeBadgeProps) => {
         </div>
     );
 };
-
-export default EventTypeBadge;

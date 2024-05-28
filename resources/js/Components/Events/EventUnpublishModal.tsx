@@ -5,22 +5,20 @@ import { useForm } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
-import ModalHeading from "@/Components/Type/ModalHeading";
-import Modal from "@/Components/Ui/Modal";
-import ModalActions from "@/Components/Ui/ModalActions";
+import { ModalHeading } from "@/Components/Type/ModalHeading";
+import { Modal } from "@/Components/Ui/Modal";
+import { ModalActions } from "@/Components/Ui/ModalActions";
 import { Event } from "@/types/Event";
 
-interface EventUnpublishModalProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    event: Event;
-}
-
-const EventUnpublishModal = ({
+export const EventUnpublishModal = ({
     open,
     setOpen,
     event,
-}: EventUnpublishModalProps) => {
+}: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    event: Event;
+}) => {
     const form = useForm({
         approved_at: null,
     });
@@ -67,5 +65,3 @@ const EventUnpublishModal = ({
         </>
     );
 };
-
-export default EventUnpublishModal;

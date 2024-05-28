@@ -6,7 +6,7 @@ import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { whiteButtonClasses } from "@/helpers/whiteButtonClasses";
 import { Event } from "@/types/Event";
 
-const MobileConnect = () => {
+export const MobileConnect = () => {
     const page = usePage();
     const event = page.props.event as Event;
     const hasConnectedWithHost =
@@ -35,5 +35,3 @@ const MobileConnect = () => {
         </div>
     );
 };
-
-export default MobileConnect;

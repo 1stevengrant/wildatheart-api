@@ -5,15 +5,11 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { usePage } from "@inertiajs/react";
 import { useSetRecoilState } from "recoil";
 
-import Modal from "@/Components/Ui/Modal";
+import { Modal } from "@/Components/Ui/Modal";
 import { reactNotificationState } from "@/store";
 import { Event } from "@/types/Event";
 
-interface IShareEventProps {
-    className?: string;
-}
-
-const ShareEvent = ({ className = "" }: IShareEventProps) => {
+export const ShareEvent = ({ className = "" }: { className?: string }) => {
     const [isOpen, setOpen] = useState(false);
     const setReactNotifications = useSetRecoilState(reactNotificationState);
     const page = usePage();
@@ -106,5 +102,3 @@ const ShareEvent = ({ className = "" }: IShareEventProps) => {
         </div>
     );
 };
-
-export default ShareEvent;

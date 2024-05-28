@@ -3,14 +3,14 @@ import React, { useState, Fragment } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 
-import InputLabel from "@/Components/Forms/InputLabel";
+import { InputLabel } from "@/Components/Forms/InputLabel";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
 import { useMapData } from "@/Hooks/useMapData";
 import { IMapboxSearchProps } from "@/types/IMapboxSearchProps";
 import { MapboxPlace } from "@/types/MapboxPlace";
 
-const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
+export const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
     const [selected, setSelected] = useState<string>("");
     const { setSelectedPlace, setLongitude, setLatitude } = useMapData();
 
@@ -117,5 +117,3 @@ const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
         </div>
     );
 };
-
-export default MapboxSearch;

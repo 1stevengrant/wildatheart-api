@@ -5,22 +5,20 @@ import { useForm } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
-import ModalHeading from "@/Components/Type/ModalHeading";
-import Modal from "@/Components/Ui/Modal";
-import ModalActions from "@/Components/Ui/ModalActions";
+import { ModalHeading } from "@/Components/Type/ModalHeading";
+import { Modal } from "@/Components/Ui/Modal";
+import { ModalActions } from "@/Components/Ui/ModalActions";
 import { Event } from "@/types/Event";
 
-interface EventPublishModalProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    event: Event;
-}
-
-const EventPublishModal = ({
+export const EventPublishModal = ({
     open,
     setOpen,
     event,
-}: EventPublishModalProps) => {
+}: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    event: Event;
+}) => {
     const form = useForm({
         approved_at: new Date().toISOString(),
     });
@@ -67,5 +65,3 @@ const EventPublishModal = ({
         </>
     );
 };
-
-export default EventPublishModal;

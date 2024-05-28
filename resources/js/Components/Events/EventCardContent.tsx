@@ -3,10 +3,10 @@ import React from "react";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useRecoilState } from "recoil";
 
-import EventHostInfo from "@/Components/Events/EventHostInfo";
-import EventInfo from "@/Components/Events/EventInfo";
-import EventLocation from "@/Components/Events/EventLocation";
-import EventTypeBadge from "@/Components/Events/EventTypeBadge";
+import { EventHostInfo } from "@/Components/Events/EventHostInfo";
+import { EventInfo } from "@/Components/Events/EventInfo";
+import { EventLocation } from "@/Components/Events/EventLocation";
+import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { dateFormatter } from "@/helpers/dateFormatter";

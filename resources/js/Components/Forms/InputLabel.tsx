@@ -6,13 +6,13 @@ interface ExtendedLabelAttributes
     required?: boolean;
 }
 
-export default function InputLabel({
+export const InputLabel = ({
     value,
     className = "",
     children,
     required,
     ...props
-}: ExtendedLabelAttributes) {
+}: ExtendedLabelAttributes) => {
     return (
         <label
             {...props}
@@ -22,4 +22,4 @@ export default function InputLabel({
             {required ? <span className="text-red"> *</span> : null}
         </label>
     );
-}
+};

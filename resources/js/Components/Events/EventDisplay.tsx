@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
-import EventHostInfo from "@/Components/Events/EventHostInfo";
-import EventInfo from "@/Components/Events/EventInfo";
-import EventLocation from "@/Components/Events/EventLocation";
-import EventName from "@/Components/Events/EventName";
+import { EventHostInfo } from "@/Components/Events/EventHostInfo";
+import { EventInfo } from "@/Components/Events/EventInfo";
+import { EventLocation } from "@/Components/Events/EventLocation";
+import { EventName } from "@/Components/Events/EventName";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { imageGenerator } from "@/helpers/user";

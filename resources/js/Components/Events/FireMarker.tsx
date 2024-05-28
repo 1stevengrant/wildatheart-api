@@ -1,11 +1,10 @@
-import React from "react";
-
-interface FireMarkerProps {
+export const FireMarker = ({
+    className = "",
+    onClick,
+}: {
     className?: string;
     onClick?: () => void;
-}
-
-const FireMarker = ({ className = "", onClick }: FireMarkerProps) => {
+}) => {
     return (
         <svg
             className={className}
@@ -31,5 +30,3 @@ const FireMarker = ({ className = "", onClick }: FireMarkerProps) => {
         </svg>
     );
 };
-
-export default FireMarker;
