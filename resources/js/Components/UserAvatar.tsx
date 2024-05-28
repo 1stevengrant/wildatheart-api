@@ -25,7 +25,6 @@ export const UserAvatar = ({
         );
     };
 
-    console.log(image);
     return (
         <img
             className={
