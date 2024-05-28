@@ -1,7 +1,7 @@
 import React from "react";
 
 import FireMarker from "@/Components/Events/FireMarker";
-import Logo from "@/Components/Ui/Logo";
+import { Logo } from "@/Components/Ui/Logo";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 const SuccessfulCallbackPage = () => {

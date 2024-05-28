@@ -4,7 +4,7 @@ interface LogoProps {
     className?: string;
 }
 
-const Logo = ({ className = "" }: LogoProps) => {
+export const Logo = ({ className = "" }: LogoProps) => {
     return (
         <>
             <svg
@@ -48,5 +48,3 @@ const Logo = ({ className = "" }: LogoProps) => {
         </>
     );
 };
-
-export default Logo;
