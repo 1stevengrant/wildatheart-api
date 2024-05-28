@@ -5,7 +5,7 @@ import { usePage } from "@inertiajs/react";
 
 import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
-import classNames from "@/helpers/classNames";
+import { classNames } from "@/helpers/classNames";
 import { linkClass } from "@/helpers/linkClass";
 
 export const AuthNav = () => {

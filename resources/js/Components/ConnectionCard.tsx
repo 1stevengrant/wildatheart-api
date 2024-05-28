@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
     CheckCircleIcon,
     ExclamationCircleIcon,
@@ -8,9 +6,9 @@ import {
 import { useForm } from "@inertiajs/react";
 
 import { defaultIconSize } from "@/helpers/defaultIconSize";
-import { ConnectionCardProps } from "@/types/ConnectionCardProps";
+import { Connection } from "@/types/Connection";
 
-const ConnectionCard = ({ connection }: ConnectionCardProps) => {
+export const ConnectionCard = ({ connection }: { connection: Connection }) => {
     const form = useForm();
 
     return (

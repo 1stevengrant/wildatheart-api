@@ -11,7 +11,7 @@ import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/EmptyLayoutWrapper";
 import { SnapGrid } from "@/Components/SnapGrid";
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import {
     experienceTypeDescription,

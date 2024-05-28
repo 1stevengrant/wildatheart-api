@@ -1,4 +1,4 @@
-const IsLoading = ({ classnames = "", text = "" }) => {
+export const IsLoading = ({ classnames = "", text = "" }) => {
     return (
         <div className={`flex justify-center items-center ${classnames}`}>
             <div
@@ -29,5 +29,3 @@ const IsLoading = ({ classnames = "", text = "" }) => {
         </div>
     );
 };
-
-export default IsLoading;

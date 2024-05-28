@@ -25,7 +25,7 @@ import { EmptyLayoutFooter } from "@/Components/Layout/EmptyLayoutFooter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { PageContainer } from "@/Components/Page/Event/PageContainer";
 import { SwitchComponent } from "@/Components/SwitchComponent";
-import Spinner from "@/Components/Ui/Spinner";
+import { Spinner } from "@/Components/Ui/Spinner";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import config from "@/helpers/config";
 import lookupLocation from "@/helpers/lookupLocation";

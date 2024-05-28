@@ -1,6 +1,4 @@
-import React from "react";
-
-const Spinner = ({ className = "" }) => {
+export const Spinner = ({ className = "" }) => {
     const defaultClassName =
         className === "" ? "text-white h-5 w-5 -ml-1 mr-3" : "";
 
@@ -27,5 +25,3 @@ const Spinner = ({ className = "" }) => {
         </svg>
     );
 };
-
-export default Spinner;

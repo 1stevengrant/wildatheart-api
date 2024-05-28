@@ -1,7 +1,7 @@
 import React from "react";
 
 import { UpdateProfileForm } from "@/Components/Forms/UpdateProfileForm";
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { LeftColumn } from "@/Layouts/LeftColumn";
 import { RightColumn } from "@/Layouts/RightColumn";

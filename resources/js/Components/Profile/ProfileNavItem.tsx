@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Link } from "@inertiajs/react";
-import classNames from "classnames";
+import { classNames } from "classnames";
 
-import profileNavItemClasses from "@/helpers/profileNavItemClasses";
+import { profileNavItemClasses } from "@/helpers/profileNavItemClasses";
 
 interface ProfileNavItemProps {
     icon: React.ReactNode;
@@ -11,7 +11,7 @@ interface ProfileNavItemProps {
     text: string;
 }
 
-const ProfileNavItem = ({ icon, link, text }: ProfileNavItemProps) => {
+export const ProfileNavItem = ({ icon, link, text }: ProfileNavItemProps) => {
     const isActive = route().current(link + "*");
 
     const textClasses = classNames({
@@ -29,5 +29,3 @@ const ProfileNavItem = ({ icon, link, text }: ProfileNavItemProps) => {
         </Link>
     );
 };
-
-export default ProfileNavItem;

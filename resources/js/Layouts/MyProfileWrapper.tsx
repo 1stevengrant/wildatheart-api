@@ -1,14 +1,15 @@
 import React from "react";
 
 import { ProfileNav } from "@/Components/Layout/ProfileNav";
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 
-interface MyProfileWrapperProps {
+export const MyProfileWrapper = ({
+    children,
+    title,
+}: {
     children: React.ReactNode;
     title: string | React.ReactNode;
-}
-
-const MyProfileWrapper = ({ children, title }: MyProfileWrapperProps) => {
+}) => {
     return (
         <div className="md:flex md:flex-row">
             <ProfileNav />
@@ -19,5 +20,3 @@ const MyProfileWrapper = ({ children, title }: MyProfileWrapperProps) => {
         </div>
     );
 };
-
-export default MyProfileWrapper;

@@ -5,7 +5,7 @@ import { Bars3Icon } from "@heroicons/react/24/solid";
 
 import { LogoutButtonWithModal } from "@/Components/Modals/LogoutButtonWithModal";
 import { myProfileNavItems } from "@/Components/MyProfileNavItems";
-import ProfileNavItem from "@/Components/Profile/ProfileNavItem";
+import { ProfileNavItem } from "@/Components/Profile/ProfileNavItem";
 
 export const MyProfileNavMobile = ({
     className = "",
