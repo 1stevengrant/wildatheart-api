@@ -4,9 +4,8 @@ import { useRecoilState } from "recoil";
 import { EventCardContent } from "./EventCardContent";
 
 import { currentEventState } from "@/store";
-import { IEventCardMobileProps } from "@/types/IEventCardMobileProps";
 
-export const EventCardMobile = ({ className }: IEventCardMobileProps) => {
+export const EventCardMobile = ({ className }: { className?: string }) => {
     const [currentEvent] = useRecoilState(currentEventState);
 
     return (

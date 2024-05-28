@@ -7,10 +7,9 @@ import { InputLabel } from "@/Components/Forms/InputLabel";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
 import { useMapData } from "@/Hooks/useMapData";
-import { IMapboxSearchProps } from "@/types/IMapboxSearchProps";
 import { MapboxPlace } from "@/types/MapboxPlace";
 
-export const MapboxSearch = ({ className = "" }: IMapboxSearchProps) => {
+export const MapboxSearch = ({ className = "" }: { className?: string }) => {
     const [selected, setSelected] = useState<string>("");
     const { setSelectedPlace, setLongitude, setLatitude } = useMapData();
 

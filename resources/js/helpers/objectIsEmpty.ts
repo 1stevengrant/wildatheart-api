@@ -1,5 +1,2 @@
-function objectIsEmpty(object: Record<string, unknown>): boolean {
-    return Object.keys(object).length === 0;
-}
-
-export default objectIsEmpty;
+export const objectIsEmpty = (object: Record<string, unknown>): boolean =>
+    Object.keys(object).length === 0;

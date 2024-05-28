@@ -1,6 +1,6 @@
-import config from "@/helpers/config";
+import { config } from "@/helpers/config";
 
-const lookupLocation = async (longitude: number, latitude: number) => {
+export const lookupLocation = async (longitude: number, latitude: number) => {
     try {
         const response = await fetch(
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${config("services.mapbox.token")}`
@@ -19,5 +19,3 @@ const lookupLocation = async (longitude: number, latitude: number) => {
         return null;
     }
 };
-
-export default lookupLocation;

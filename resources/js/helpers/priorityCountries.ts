@@ -1,2 +1,1 @@
-const priorityCountries = ["US", "CA", "GB", "NZ", "AU"];
-export default priorityCountries;
+export const priorityCountries = ["US", "CA", "GB", "NZ", "AU"];

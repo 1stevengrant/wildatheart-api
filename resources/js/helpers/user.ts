@@ -1,12 +1,10 @@
-import config from "./config";
-
-interface Params {
-    [key: string]: string | number;
-}
+import { config } from "./config";
 
 export const imageGenerator = (
     image: string | undefined,
-    params: Params = {}
+    params: {
+        [key: string]: string | number;
+    } = {}
 ): string => {
     if (!image) {
         return "";
