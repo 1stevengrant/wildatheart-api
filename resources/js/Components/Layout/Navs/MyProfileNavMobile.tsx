@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 
-import { LogoutButtonWithModal } from "@/Components/Modals/LogoutButtonWithModal";
 import { myProfileNavItems } from "@/Components/Layout/Navs/MyProfileNavItems";
+import { LogoutButtonWithModal } from "@/Components/Modals/LogoutButtonWithModal";
 import { ProfileNavItem } from "@/Components/Profile/ProfileNavItem";
 
 export const MyProfileNavMobile = ({

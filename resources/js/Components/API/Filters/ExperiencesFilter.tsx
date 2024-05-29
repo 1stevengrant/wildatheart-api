@@ -1,9 +1,9 @@
 import React from "react";
 
 import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
-import { ExperiencesIcon } from "@/Components/Icons/ExperiencesIcon";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/Forms/SwitchComponentWrapper";
+import { ExperiencesIcon } from "@/Components/Icons/ExperiencesIcon";
 import { experienceTypeDescription } from "@/helpers/eventTypes";
 import { useTypes } from "@/Hooks/useTypes";
 

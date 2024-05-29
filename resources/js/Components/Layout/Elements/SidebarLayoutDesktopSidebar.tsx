@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
+import { Menu } from "@headlessui/react";
+
 import { EventCreateProgress } from "@/Components/Events/EventCreateProgress";
+import { SidebarUserMenuItems } from "@/Components/Layout/Navs/SidebarUserMenuItems";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
-import { SidebarUserMenuItems } from "@/Components/Layout/Navs/SidebarUserMenuItems";
-import { Menu } from "@headlessui/react";
 
 export const SidebarLayoutDesktopSidebar = ({ auth }: { auth: any }) => {
     const [showUserMenu, setShowUserMenu] = useState(false);

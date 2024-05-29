@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItems } from "@headlessui/react";
 
-import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { SidebarUserMenuItems } from "@/Components/Layout/Navs/SidebarUserMenuItems";
+import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 
 export const SidebarUserMenu = ({ auth }: { auth: any }) => {
     return (

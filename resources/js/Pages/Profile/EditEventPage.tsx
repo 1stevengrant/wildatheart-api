@@ -18,13 +18,13 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
+import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { config } from "@/helpers/config";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { Event } from "@/types/Event";
 

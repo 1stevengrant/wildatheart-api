@@ -4,12 +4,12 @@ import { usePage } from "@inertiajs/react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 
+import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
+import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
+import { RightColumn } from "@/Components/Layout/RightColumn";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
-import { RightColumn } from "@/Components/Layout/RightColumn";
-import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
 import { reactNotificationState } from "@/store";
 import { PageProps } from "@/types";
 import { Event } from "@/types/Event";

@@ -1,10 +1,10 @@
 import React from "react";
 
 import { GiftComing } from "@/Components/GiftComing";
-import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
-import { RightColumn } from "@/Components/Layout/RightColumn";
 import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
+import { RightColumn } from "@/Components/Layout/RightColumn";
+import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 const GiftSuccessPage = () => {
     return (

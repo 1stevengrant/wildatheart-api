@@ -9,8 +9,8 @@ import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
-import TextInput from "@/Components/Forms/TextInput";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
+import TextInput from "@/Components/Forms/TextInput";
 import { UserAvatar } from "@/Components/UserAvatar";
 import useRoute from "@/Hooks/useRoute";
 
