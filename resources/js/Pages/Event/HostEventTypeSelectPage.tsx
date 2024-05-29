@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link } from "@inertiajs/react";
+import Markdown from "react-markdown";
 
 import { EventTypeSelectButton } from "@/Components/Buttons/EventTypeSelectButton";
 import { EventGroupWrapper } from "@/Components/Events/EventGroupWrapper";
@@ -34,14 +35,34 @@ const HostEventTypeSelectPage = () => {
     const { experienceTypes, retreatTypes, fireTypes } = props;
 
     const [selectedType, setSelectedType] = useState<EventType | null>(null);
-    const title = `Select an Event Type`;
+    const pageTitle = `Select an Event Type`;
+
+    const tags = selectedType?.tags.split(",") || [];
+
     return (
-        <EmptyLayout title={title}>
+        <EmptyLayout title={pageTitle}>
             <EmptyLayoutWrapper>
                 <EmptyLayoutHeader>
-                    <HeadingOne className={`text-left`}>{title}</HeadingOne>
+                    <HeadingOne className={`text-left`}>{pageTitle}</HeadingOne>
                 </EmptyLayoutHeader>
-                <EmptyLayoutBody className={`px-4 pt-20`}>
+                <EmptyLayoutBody className={`px-4 pt-20 relative`}>
+                    {selectedType && (
+                        <div
+                            className={`absolute bottom-0 p-6 bg-black w-full rounded-2xl`}
+                        >
+                            <h2>{selectedType.name}</h2>
+                            <ul className={`flex items-center flex-wrap`}>
+                                {tags.map((tag: string) => (
+                                    <li
+                                        key={tag}
+                                        className={`rounded-full px-4 py-1 border-white border text-sm`}
+                                    >
+                                        {tag}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                     <EventGroupWrapper
                         title={`Fires`}
                         description={fireTypeDescription}
