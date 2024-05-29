@@ -11,19 +11,19 @@ import {
 export const eventTypeBackground = (eventTypeSlug: string) => {
     switch (eventTypeSlug) {
         case EventTypeFires:
-            return "from-amber-700";
+            return "from-[#8E3920]";
         case EventTypeCaptivatingRetreat:
-            return "from-pink-500";
+            return "from-[#73919C]";
         case EventTypeCaptivatingExperience:
-            return "from-green-400";
+            return "from-[#73919C]";
         case EventTypeWahRetreat:
-            return "from-[#C1440E]";
+            return "from-[#8E3920]";
         case EventTypeBecomingAKingRetreat:
-            return "from-green-400";
+            return "from-[#343628]";
         case EventTypeWahExperience:
-            return "from-green-400";
+            return "from-[#2C2024]";
         case EventTypeBecomingAKingExperience:
-            return "from-green-400";
+            return "from-[#343628]";
         default:
             return "from-amber-700";
     }
