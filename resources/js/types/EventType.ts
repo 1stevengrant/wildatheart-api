@@ -6,4 +6,5 @@ export type EventType = {
     image: string;
     tags: string;
     sex: string;
+    card_teaser_text: string;
 };
