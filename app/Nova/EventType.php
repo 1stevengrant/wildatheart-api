@@ -134,6 +134,10 @@ class EventType extends Resource
                     FaqItem::make(),
                 ]),
 
+            Text::make('Video Link')
+                ->hideFromIndex()
+                ->rules('nullable', 'url', 'max:255'),
+
             HasMany::make('Events'),
         ];
     }
