@@ -78,12 +78,9 @@ class User extends Authenticatable
         return $this->hasMany(Event::class);
     }
 
-    public function addresses(): HasManyThrough
+    public function addresses(): HasMany
     {
-        return $this->hasManyThrough(
-            Address::class,
-            Event::class,
-        );
+        return $this->hasMany(Address::class);
     }
 
     public function isAttending(Event $event): bool

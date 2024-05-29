@@ -15,7 +15,9 @@ class HostEventTypeMailingAddressController extends Controller
     {
         return inertia('Event/MailingAddressEventTypePage', [
             'eventType' => $eventType,
-            'address' => auth()->user()->addresses()->first(),
+            'address' => auth()->user()->addresses()
+                ->where('is_primary', true)
+                ->first(),
         ]);
     }
 
@@ -24,6 +26,10 @@ class HostEventTypeMailingAddressController extends Controller
      */
     public function store(EventType $eventType, MailingAddressRequest $request)
     {
+        auth()->user()->addresses()->update([
+            'is_primary' => false,
+        ]);
+
         auth()->user()->addresses()->create([
             'user_id' => auth()->id(),
             'given_name' => $request->given_name,
