@@ -3,7 +3,7 @@ import React from "react";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
-import Vimeo from "@u-wave/react-vimeo";
+// import Vimeo from "@u-wave/react-vimeo";
 import Markdown from "react-markdown";
 
 import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
@@ -62,13 +62,14 @@ const WelcomeEventTypePage = () => {
                                     src={eventType.registration_welcome_video}
                                 />
                             ) : (
-                                <Vimeo
-                                    className={`rounded-2xl`}
-                                    responsive={true}
-                                    video={getVimeoId(
-                                        eventType.registration_welcome_video
-                                    )}
-                                />
+                                <div>Vimeo Player</div>
+                                // <Vimeo
+                                //     className={`rounded-2xl`}
+                                //     responsive={true}
+                                //     video={getVimeoId(
+                                //         eventType.registration_welcome_video
+                                //     )}
+                                // />
                             ))}
                         {eventType.registration_welcome_text && (
                             <Markdown>

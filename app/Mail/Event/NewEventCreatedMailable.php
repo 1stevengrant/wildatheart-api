@@ -18,6 +18,7 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
     use InteractsWithEmailTemplates, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
+
     public string $emailContent;
 
     /**
