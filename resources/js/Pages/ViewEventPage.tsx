@@ -12,26 +12,23 @@ import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
 import { MobileConnect } from "@/Components/Events/MobileConnect";
 import { PhotoCarousel } from "@/Components/Events/PhotoCarousel";
 import { ShareEvent } from "@/Components/Events/ShareEvent";
-import { UpdateAddress } from "@/Components/Events/UpdateAddress";
 import { StaticMap } from "@/Components/Maps/StaticMap";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import {
     EventTypeBecomingAKingExperience,
     EventTypeBecomingAKingRetreat,
-    EventTypeCaptivatingCoreRetreat,
+    EventTypeCaptivatingRetreat,
     EventTypeCaptivatingExperience,
     EventTypeFires,
-    EventTypeWahBasicRetreat,
+    EventTypeWahRetreat,
     EventTypeWahExperience,
 } from "@/helpers/eventNames";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { PageProps } from "@/types";
 import { Event } from "@/types/Event";
 
 const ViewEventPage = () => {
     const page = usePage();
     const event = page.props.event as Event;
-    const { auth } = page.props as unknown as PageProps;
 
     useEffect(() => {
         if (window.innerWidth < 768) {
@@ -51,9 +48,9 @@ const ViewEventPage = () => {
         switch (event.eventType) {
             case EventTypeFires:
                 return `${event.name} Fire`;
-            case EventTypeWahBasicRetreat:
+            case EventTypeWahRetreat:
                 return `Wild at Heart BASIC Retreat`;
-            case EventTypeCaptivatingCoreRetreat:
+            case EventTypeCaptivatingRetreat:
                 return `Captivating CORE Retreat`;
             case EventTypeBecomingAKingRetreat:
                 return `Becoming a King Retreat`;
