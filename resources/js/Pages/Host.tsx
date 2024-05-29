@@ -1,12 +1,12 @@
 import React from "react";
 
 import { UpdateProfileForm } from "@/Components/Forms/UpdateProfileForm";
+import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
+import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
+import { RightColumn } from "@/Components/Layout/RightColumn";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
-import { RightColumn } from "@/Components/Layout/RightColumn";
-import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
 
 const Host = () => {
     const page = useTypedPage();

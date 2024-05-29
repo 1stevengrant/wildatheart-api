@@ -1,57 +1,58 @@
 import React from "react";
 
-import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
-import { secondaryButtonClasses } from "@/helpers/secondaryButtonClasses";
-import { AppLayout } from "@/Layouts/AppLayout";
+import { FolderPlusIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
+
 import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
+import { eventTypeBackground } from "@/helpers/eventTypeBackground";
+import { imageGenerator } from "@/helpers/user";
+import useTypedPage from "@/Hooks/useTypedPage";
+import { AppLayout } from "@/Layouts/AppLayout";
+import { EventType } from "@/types/EventType";
 
 const ResourcesPage = () => {
-    const pageTitle = "Resources";
+    const page = useTypedPage();
+    const eventTypes = page.props.eventTypes as EventType[];
+    const pageTitle = "Event Resources";
     return (
         <AppLayout title={pageTitle}>
             <MyProfileWrapper title={pageTitle}>
-                <h2 className={`font-semibold text-lg mb-4`}>
-                    Firestarter Kit
-                </h2>
-                <p>
-                    Access the electronic version of the Firestarter Kit here:
-                </p>
-                <div className={`mt-4`}>
-                    <a
-                        href={`https://wildatheart.org/firestarter`}
-                        className={`${primaryButtonClasses} inline-block`}
-                    >
-                        Electronic Firestarter Kit
-                    </a>
-                </div>
-
-                <h2 className={`font-semibold text-lg my-4`}>
-                    Order Additional Books
-                </h2>
-                <p>
-                    Need more copies of Wild at Heart or Becoming a King to give
-                    to your Fire attendees? Order more copies here and a coupon
-                    will be applied at checkout:
-                </p>
-                <div className={`mt-4`}>
-                    <a
-                        href={`https://shop.wildatheart.org/discount/RCFH23RNRE8J`}
-                        className={`${primaryButtonClasses} inline-block`}
-                    >
-                        Order Books
-                    </a>
-                </div>
-                <p className={`mt-4`}>
-                    If you'd like to donate to help cover the cost of additional
-                    books, click here:
-                </p>
-                <div className={`mt-4`}>
-                    <a
-                        href={`https://my.wildatheart.org/`}
-                        className={`${secondaryButtonClasses} inline-block`}
-                    >
-                        Donate
-                    </a>
+                <div
+                    className={`grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4 max-w-5xl`}
+                >
+                    {eventTypes.map((eventType: EventType) => (
+                        <div
+                            className={`p-6 bg-gradient-to-br ${eventTypeBackground(eventType.slug)} end-zinc-900 rounded-2xl shadow-xl`}
+                        >
+                            <img
+                                alt={eventType.name}
+                                className={`rounded-xl`}
+                                src={imageGenerator(eventType.image, {
+                                    width: 200,
+                                    height: 200,
+                                })}
+                            />
+                            <ul
+                                className={`text-sm font-medium mt-4 space-y-3`}
+                            >
+                                <li>
+                                    <a href="" className={`flex items-center`}>
+                                        <FolderPlusIcon
+                                            className={`w-6 h-6 mr-2`}
+                                        />
+                                        <div>Event Guide</div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" className={`flex items-center`}>
+                                        <VideoCameraIcon
+                                            className={`w-6 h-6 mr-2`}
+                                        />
+                                        <div>Videos</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    ))}
                 </div>
             </MyProfileWrapper>
         </AppLayout>

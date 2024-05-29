@@ -4,10 +4,9 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { EventCreateProgress } from "@/Components/Events/EventCreateProgress";
-import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
+import { SidebarUserMenu } from "@/Components/Layout/Navs/SidebarUserMenu";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
-import { SidebarUserMenu } from "@/Components/Layout/Navs/SidebarUserMenu";
 
 export const SidebarLayoutMobileSidebar = ({
     auth,

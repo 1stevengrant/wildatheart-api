@@ -12,12 +12,12 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
+import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
+import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
+import { RightColumn } from "@/Components/Layout/RightColumn";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { selectClasses } from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
-import { RightColumn } from "@/Components/Layout/RightColumn";
-import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
 import { PageProps } from "@/types";
 import { Event } from "@/types/Event";
 
