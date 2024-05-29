@@ -4,4 +4,6 @@ export type EventType = {
     slug: string;
     description: string;
     image: string;
+    tags: string;
+    sex: string;
 };
