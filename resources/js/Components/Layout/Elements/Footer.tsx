@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
     FireIcon,
     HandRaisedIcon,
+    HomeIcon,
     QuestionMarkCircleIcon,
     UserCircleIcon,
 } from "@heroicons/react/24/outline";
@@ -17,11 +18,7 @@ import { linkClass } from "@/helpers/linkClass";
 import { showFilterPanelState } from "@/store";
 import { searchResultsState } from "@/store/searchResultsAtom";
 
-interface IFooterProps {
-    showFooter?: boolean;
-}
-
-export const Footer = ({ showFooter = true }: IFooterProps) => {
+export const Footer = ({ showFooter = true }: { showFooter?: boolean }) => {
     const { auth } = usePage<any>().props;
     const [open, setOpen] = useState(false);
     const [searchResults] = useRecoilState(searchResultsState);
@@ -35,15 +32,18 @@ export const Footer = ({ showFooter = true }: IFooterProps) => {
                     >
                         <FooterNavLink
                             href={route("home")}
-                            className={linkClass}
+                            className={` ${linkClass} `}
                             active={route().current("home")}
                         >
-                            <FireIcon className={defaultIconSize} />
-                            <span>Fires</span>
+                            <HomeIcon className={`w-6`} />
+                            <span>Home</span>
                         </FooterNavLink>
 
                         {auth.user ? (
-                            <Link href={route("host")} className={linkClass}>
+                            <Link
+                                href={route("host")}
+                                className={` ${linkClass} `}
+                            >
                                 <HandRaisedIcon className={"w-6"} />
                                 <span>Host</span>
                             </Link>

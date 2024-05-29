@@ -8,7 +8,9 @@ export const FiltersFooter = () => {
     const setShowFilterPanel = useSetRecoilState(showFilterPanelState);
     const { resetAll } = useSearchEvents();
     return (
-        <div className={`flex items-center justify-between p-4`}>
+        <div
+            className={`flex items-center justify-between p-4 border-t border-grey-darker`}
+        >
             <button
                 onClick={() => {
                     setShowFilterPanel(false);
