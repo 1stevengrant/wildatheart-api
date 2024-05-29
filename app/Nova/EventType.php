@@ -104,8 +104,12 @@ class EventType extends Resource
                     EventTypeDetailItem::make(),
                 ]),
 
-            Markdown::make('Description')
-                ->sortable(),
+            Markdown::make('Description'),
+
+            Text::make('Card Teaser Text')
+                ->hideFromIndex()
+                ->help('This text will be shown on the event type card when selecting an event type and should be 255 characters max')
+                ->rules('nullable', 'max:255'),
 
             Text::make('Registration Welcome Video')
                 ->hideFromIndex()
