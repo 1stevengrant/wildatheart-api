@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcf0830c04ed5c1d666fe9b46cff9c81",
+    "content-hash": "bae4b222e52c9b7db961387ffbc51f9f",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -507,16 +507,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.308.5",
+            "version": "3.308.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "81386b0d0fd18ae8015f279247f714c5d5acb696"
+                "reference": "d119265faba226b3fab1514b6fa27a2986b91453"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/81386b0d0fd18ae8015f279247f714c5d5acb696",
-                "reference": "81386b0d0fd18ae8015f279247f714c5d5acb696",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d119265faba226b3fab1514b6fa27a2986b91453",
+                "reference": "d119265faba226b3fab1514b6fa27a2986b91453",
                 "shasum": ""
             },
             "require": {
@@ -596,9 +596,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.308.5"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.308.6"
             },
-            "time": "2024-05-29T18:08:33+00:00"
+            "time": "2024-05-30T18:08:56+00:00"
         },
         {
             "name": "brick/math",
@@ -9950,6 +9950,75 @@
                 "source": "https://github.com/squirephp/squire"
             },
             "time": "2024-03-11T11:06:11+00:00"
+        },
+        {
+            "name": "statamic-rad-pack/runway",
+            "version": "v7.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/statamic-rad-pack/runway.git",
+                "reference": "68d4df6a6367a14826bd11b6cc12f5db054b2e4d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/statamic-rad-pack/runway/zipball/68d4df6a6367a14826bd11b6cc12f5db054b2e4d",
+                "reference": "68d4df6a6367a14826bd11b6cc12f5db054b2e4d",
+                "shasum": ""
+            },
+            "require": {
+                "ajthinking/archetype": "^1.0.3 || ^2.0",
+                "laravel/framework": "^10.25.0 || ^11.0",
+                "laravel/prompts": "^0.1.17",
+                "php": "^8.2",
+                "pixelfear/composer-dist-plugin": "^0.1.5",
+                "spatie/ignition": "^1.14",
+                "statamic/cms": "^5.3.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "orchestra/testbench": "^8.0 || ^9.0",
+                "phpunit/phpunit": "^10.0",
+                "spatie/test-time": "^1.2"
+            },
+            "type": "library",
+            "extra": {
+                "statamic": {
+                    "name": "Runway",
+                    "description": "Eloquently manage your database models in Statamic."
+                },
+                "laravel": {
+                    "providers": [
+                        "StatamicRadPack\\Runway\\ServiceProvider"
+                    ]
+                },
+                "download-dist": {
+                    "url": "https://github.com/statamic-rad-pack/runway/releases/download/{$version}/dist.tar.gz",
+                    "path": "dist"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "StatamicRadPack\\Runway\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "mit"
+            ],
+            "authors": [
+                {
+                    "name": "Duncan McClean",
+                    "email": "duncan@doublethree.digital",
+                    "homepage": "https://duncanmcclean.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Eloquently manage your database models in Statamic.",
+            "support": {
+                "issues": "https://github.com/statamic-rad-pack/runway/issues",
+                "source": "https://github.com/statamic-rad-pack/runway/tree/v7.1.0"
+            },
+            "time": "2024-05-20T16:33:48+00:00"
         },
         {
             "name": "statamic/cms",
