@@ -65,9 +65,11 @@ return [
     |
     */
 
-    'cache' => [
-        'expiry' => 60,
-    ],
+    'cache' => false, //intended for local development only
+
+    // 'cache' => [
+    //     'expiry' => 60,
+    // ],
 
     /*
     |--------------------------------------------------------------------------
