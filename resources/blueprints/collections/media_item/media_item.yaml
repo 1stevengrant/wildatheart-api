@@ -5,82 +5,24 @@ tabs:
       -
         fields:
           -
-            handle: title
-            field:
-              type: text
-              required: true
-              validate:
-                - required
-          -
-            handle: content
-            field:
-              type: markdown
-              localizable: true
+            import: content
+            config:
+              title:
+                required: true
           -
             handle: media_type
             field:
               options:
                 audio: Audio
                 video: Video
-              taggable: false
-              push_tags: false
-              multiple: false
-              clearable: false
-              searchable: true
-              cast_booleans: false
               type: select
               display: 'Media Type'
-              icon: select
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
-          -
-            handle: categories
-            field:
-              mode: default
-              create: true
-              collections:
-                - categories
-              type: entries
-              display: Categories
-              icon: entries
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
-          -
-            handle: main_image
-            field:
-              mode: list
-              container: assets
-              restrict: false
-              allow_uploads: true
-              show_filename: true
-              show_set_alt: true
-              type: assets
-              display: 'Main Image'
-              icon: assets
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
           -
             handle: audio_source_url
             field:
               input_type: url
-              antlers: false
               type: text
               display: 'Audio Source URL'
-              icon: text
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
               validate:
                 - sometimes
                 - url
@@ -90,15 +32,8 @@ tabs:
             handle: video_source_url
             field:
               input_type: url
-              antlers: false
               type: text
               display: 'Video Source URL'
-              icon: text
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
               validate:
                 - sometimes
                 - url
@@ -107,18 +42,10 @@ tabs:
           -
             handle: series
             field:
-              mode: default
-              create: true
               collections:
                 - media_series
               type: entries
               display: Series
-              icon: entries
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
   sidebar:
     display: Sidebar
     sections:
@@ -130,4 +57,14 @@ tabs:
               type: slug
               localizable: true
               validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required
+          -
+            import: images
 title: 'Media Item'

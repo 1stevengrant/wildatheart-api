@@ -1,0 +1,57 @@
+title: 'Experience Session'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            import: content
+            config:
+              title:
+                required: true
+          -
+            handle: experience
+            field:
+              max_items: 1
+              collections:
+                - experiences
+              type: entries
+              display: Experience
+          -
+            handle: subsplash_media_item_id
+            field:
+              type: text
+              display: 'Subsplash Media Item ID'
+  hero:
+    display: Hero
+    sections:
+      -
+        display: 'New Section'
+        fields:
+          -
+            import: hero
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required
+      -
+        display: Images
+        fields:
+          -
+            import: images

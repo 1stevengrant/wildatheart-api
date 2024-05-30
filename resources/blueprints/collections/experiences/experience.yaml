@@ -11,6 +11,18 @@ tabs:
             config:
               title:
                 required: true
+          -
+            import: testimonials
+      -
+        display: Sessions
+        fields:
+          -
+            handle: sessions
+            field:
+              collections:
+                - media_item
+              type: entries
+              display: Sessions
   hero:
     display: Hero
     sections:
