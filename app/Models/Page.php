@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Str;
 
 class Page extends Model
 {
+    use HasRunwayResource;
+
     protected $guarded = ['id'];
 
     protected $casts = [

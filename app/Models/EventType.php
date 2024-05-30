@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class EventType extends Model
 {
+    use HasRunwayResource;
+
     protected $guarded = ['id'];
 
     const WAH_BASIC = 'Wild at Heart BASIC (retreat)';
