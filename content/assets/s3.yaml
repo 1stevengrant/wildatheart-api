@@ -1,4 +1,4 @@
-title: S3
+title: 'WordPress S3'
 disk: wordpress
 allow_uploads: true
 allow_downloading: true
