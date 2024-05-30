@@ -2,20 +2,17 @@ tabs:
   main:
     display: Main
     sections:
-      -
-        fields:
-          -
-            handle: title
+      - fields:
+          - handle: title
             field:
               type: text
               required: true
-          -
-            handle: author_name
+          - handle: author_name
             field:
               type: text
               validate:
                 - required
-              display: 'Author Name'
+              display: "Author Name"
               instructions_position: above
               listable: hidden
               visibility: visible
@@ -23,25 +20,23 @@ tabs:
               input_type: text
               antlers: false
               hide_display: false
-          -
-            handle: author_image
+          - handle: author_image
             field:
               mode: list
-              container: assets
+              container: s3
               restrict: false
               allow_uploads: true
               show_filename: true
               show_set_alt: true
               type: assets
-              display: 'Author Image'
+              display: "Author Image"
               icon: assets
               listable: hidden
               instructions_position: above
               visibility: visible
               replicator_preview: true
               hide_display: false
-          -
-            handle: author_bio
+          - handle: author_bio
             field:
               restrict: false
               buttons:
@@ -56,7 +51,7 @@ tabs:
               table_of_contents: false
               antlers: false
               type: markdown
-              display: 'Author Bio'
+              display: "Author Bio"
               icon: markdown
               listable: hidden
               instructions_position: above
@@ -66,12 +61,10 @@ tabs:
   sidebar:
     display: Sidebar
     sections:
-      -
-        fields:
-          -
-            handle: slug
+      - fields:
+          - handle: slug
             field:
               type: slug
               localizable: true
-              validate: 'max:200'
+              validate: "max:200"
 title: Author
