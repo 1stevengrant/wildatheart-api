@@ -1,0 +1,42 @@
+title: "Link or web"
+fields:
+  - handle: link_to_content
+    field:
+      type: link
+      display: "Link to content"
+      icon: link
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+      unless:
+        enter_url_manually: "equals true"
+  - handle: enter_url_manually
+    field:
+      default: false
+      type: toggle
+      display: "Enter URL manually"
+      icon: toggle
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+  - handle: web_link
+    field:
+      input_type: text
+      antlers: false
+      type: text
+      display: "Web link"
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+      validate:
+        - sometimes
+        - url
+      if:
+        enter_url_manually: "equals true"

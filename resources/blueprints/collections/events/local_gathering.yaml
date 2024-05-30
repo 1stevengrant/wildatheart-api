@@ -1,0 +1,44 @@
+title: 'Local Gathering'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        display: Content
+        fields:
+          -
+            import: content
+            config:
+              title:
+                required: true
+          -
+            handle: related_content
+            field:
+              type: link
+              display: 'Related Content'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate:
+                - 'max:200'
+                - 'new \Statamic\Rules\UniqueEntryValue({collection}, {id}, {site})'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required
+      -
+        display: Images
+        fields:
+          -
+            import: images

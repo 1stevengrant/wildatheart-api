@@ -1,0 +1,25 @@
+title: Testimonials
+fields:
+  -
+    handle: testimonials
+    field:
+      type: replicator
+      display: Testimonials
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            testimonial:
+              display: Testimonial
+              fields:
+                -
+                  handle: body
+                  field:
+                    type: textarea
+                    display: Quote
+                -
+                  handle: name
+                  field:
+                    placeholder: 'A. York, New Hampshire, USA'
+                    type: text
+                    display: Name

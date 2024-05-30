@@ -1,0 +1,31 @@
+title: 'Modal Button'
+fields:
+  -
+    handle: button_text
+    field:
+      input_type: text
+      antlers: false
+      type: text
+      display: 'Button Text'
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+  -
+    handle: button_link
+    field:
+      input_type: url
+      antlers: false
+      type: text
+      display: 'Button Link'
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+      validate:
+        - sometimes
+        - url

@@ -1,0 +1,17 @@
+title: Buttons
+fields:
+  -
+    handle: buttons
+    field:
+      type: replicator
+      display: Buttons
+      max_sets: 2
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            button:
+              display: Button
+              fields:
+                -
+                  import: button
