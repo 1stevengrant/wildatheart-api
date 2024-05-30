@@ -1,0 +1,46 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Title
+          -
+            handle: new_content
+            field:
+              type: replicator
+              display: Content
+              sets:
+                new_set_group:
+                  display: 'New Set Group'
+                  sets:
+                    text_block:
+                      display: 'Text Block'
+                      fields:
+                        -
+                          handle: text
+                          field:
+                            type: markdown
+                            display: Text
+                    video_block:
+                      display: 'Video Block'
+                      fields:
+                        -
+                          handle: video
+                          field:
+                            type: video
+                            display: Video
+                    image_block:
+                      display: 'Image Block'
+                      fields:
+                        -
+                          handle: image
+                          field:
+                            container: app
+                            type: assets
+                            display: Image
+title: Page

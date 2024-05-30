@@ -40,6 +40,7 @@
         "spatie/laravel-ray": "^1.36",
         "spatie/laravel-slack-alerts": "^1.2",
         "squirephp/countries-en": "^3.4",
+        "statamic-rad-pack/runway": "^7.1",
         "statamic/cms": "^5.6",
         "statamic/eloquent-driver": "^4.0",
         "stepanenko3/nova-command-runner": "^4.3",

@@ -5,7 +5,7 @@ return [
     'table_prefix' => env('STATAMIC_ELOQUENT_PREFIX', ''),
 
     'asset_containers' => [
-        'driver' => 'eloquent',
+        'driver' => 'file',
         'model' => \Statamic\Eloquent\Assets\AssetContainerModel::class,
     ],
 

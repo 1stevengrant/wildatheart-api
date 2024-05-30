@@ -1,0 +1,262 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: is_active
+            field:
+              type: toggle
+              display: 'Is Active'
+          -
+            handle: name
+            field:
+              type: text
+              display: Name
+              validate:
+                - required
+          -
+            handle: key_details
+            field:
+              type: grid
+              display: 'Key Details'
+              instructions: 'This shows on the Event Type detail page'
+              fields:
+                -
+                  handle: icon
+                  field:
+                    type: textarea
+                    display: Icon
+                -
+                  handle: headline
+                  field:
+                    type: text
+                    display: Headline
+                -
+                  handle: description
+                  field:
+                    type: text
+                    display: Description
+          -
+            handle: description
+            field:
+              buttons:
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - link
+              type: markdown
+              display: Description
+              instructions: 'The general description of the event'
+          -
+            handle: card_teaser_text
+            field:
+              buttons:
+                - bold
+                - italic
+              type: markdown
+              display: 'Card Teaser Text'
+              instructions: 'Used when someone choose to host this Event Type'
+          -
+            handle: tags
+            field:
+              type: text
+              display: Tags
+              instructions: 'A comma-separated list of tags, shown when someone chooses to host this Event Type'
+          -
+            handle: sex
+            field:
+              options:
+                men: men
+                women: women
+              default: men
+              type: radio
+              display: Sex
+  media:
+    display: Media
+    sections:
+      -
+        fields:
+          -
+            handle: image
+            field:
+              max_files: 1
+              container: app
+              type: assets
+              display: Image
+              validate:
+                - required
+                - image
+              instructions: 'This is the main image of the Event Type, used on content cards etc'
+          -
+            handle: hero_image
+            field:
+              max_files: 1
+              container: app
+              type: assets
+              display: 'Hero Image'
+              instructions: 'This is the image shown on the detail page for an Event Type in the local platform'
+          -
+            handle: hero_video
+            field:
+              type: video
+              display: 'Hero Video'
+              instructions: 'This is the hero video shown on the Event Type detail page on the Local Platform'
+          -
+            handle: photos
+            field:
+              container: app
+              folder: event_types
+              type: assets
+              display: Photos
+              instructions: 'These are generic photos from this kind of Event Type'
+  registration:
+    display: Registration
+    sections:
+      -
+        instructions: 'The information that will appear when choosing to host this Event Type'
+        fields:
+          -
+            handle: registration_welcome_video
+            field:
+              type: text
+              display: 'Registration Welcome Video'
+              validate:
+                - nullable
+                - url
+              instructions: 'This video will appear on the welcome screen when choosing to host this Event Type'
+          -
+            handle: registration_welcome_text
+            field:
+              buttons:
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - quote
+                - link
+              type: markdown
+              display: 'Registration Welcome Text'
+              instructions: 'This text will show on the welcome when choosing to host this Event Type'
+          -
+            handle: registration_before_your_event_text
+            field:
+              type: markdown
+              display: 'Registration Before Your Event Text'
+              instructions: 'This will show on the `Before your event` screen when choosing to host this Event Type'
+          -
+            handle: event_schedule
+            field:
+              type: replicator
+              display: 'Event Schedule'
+              instructions: 'This will show the schedule for this Event Type'
+              sets:
+                new_set_group:
+                  display: 'New Set Group'
+                  sets:
+                    text:
+                      display: Text
+                      icon: text-formatting-all-caps
+                      fields:
+                        -
+                          handle: text_block
+                          field:
+                            buttons:
+                              - bold
+                              - italic
+                              - unorderedlist
+                              - orderedlist
+                              - quote
+                            type: markdown
+                            display: 'Text Block'
+                    video:
+                      display: Video
+                      icon: media-webcam-video
+                      fields:
+                        -
+                          handle: embed_code
+                          field:
+                            type: code
+                            display: 'Embed Code'
+                        -
+                          handle: video_url
+                          field:
+                            type: video
+                            display: 'Video URL'
+          -
+            handle: event_faqs
+            field:
+              type: grid
+              display: 'Event FAQs'
+              instructions: 'These are frequently asked questions about the Event Type'
+              fields:
+                -
+                  handle: question
+                  field:
+                    type: text
+                    display: Question
+                    validate:
+                      - required
+                -
+                  handle: answer
+                  field:
+                    buttons:
+                      - bold
+                      - italic
+                      - unorderedlist
+                      - orderedlist
+                    type: markdown
+                    display: Answer
+                    validate:
+                      - required
+  resources:
+    display: Resources
+    sections:
+      -
+        fields:
+          -
+            handle: action_buttons
+            field:
+              type: grid
+              display: 'Action Buttons'
+              add_row: 'Add Button'
+              fields:
+                -
+                  handle: button_label
+                  field:
+                    type: text
+                    display: 'Button Label'
+                -
+                  handle: button_url
+                  field:
+                    type: text
+                    display: 'Button URL'
+                -
+                  handle: button_entry
+                  field:
+                    max_items: 1
+                    collections:
+                      - authors
+                      - blogs
+                      - categories
+                      - events
+                      - experiences
+                      - media_item
+                      - media_series
+                      - pages
+                      - prayer
+                      - sessions
+                    type: entries
+                    display: 'Button Entry'
+          -
+            handle: video_link
+            field:
+              type: text
+              display: 'Video Link'
+              validate:
+                - nullable
+                - url
+              instructions: 'A link to the video content for the Event Type'
+title: 'Event Type'

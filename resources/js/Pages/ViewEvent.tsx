@@ -139,14 +139,14 @@ const ViewEvent = () => {
                                 <div>
                                     <HeadingOne className={`mt-[48px]`}>Key Details</HeadingOne>
                                     <ul className={`my-8`}>
-                                        {event.eventTypeData.key_details.map((item: any, index: number) => (
-                                            <li className="flex items-start mb-4" key={index}>
-                                                <div dangerouslySetInnerHTML={{__html: item.fields.icon}}
+                                        {event.eventTypeData.key_details.map((item: any) => (
+                                            <li className="flex items-start mb-4" key={item.id}>
+                                                <div dangerouslySetInnerHTML={{__html: item.icon}}
                                                      className={`w-6 h-6`}/>
                                                 <div className="ml-[24px] leading-[24px]">
-                                                    <p className="font-medium">{item.fields.headline}</p>
+                                                    <p className="font-medium">{item.headline}</p>
                                                     <p className="text-sm text-[#B8B8B8]">
-                                                        {item.fields.description}
+                                                        {item.description}
                                                     </p>
                                                 </div>
                                             </li>
