@@ -105,7 +105,7 @@ class Event extends Resource
 
             HasMany::make('Attendees'),
 
-            BelongsTo::make('Event Type', 'eventType', EventType::class)->filterable(),
+            Text::make('Event Type', 'eventType->name'),
 
         ];
     }
