@@ -3,17 +3,18 @@ import React from "react";
 import {
     FolderPlusIcon,
     LinkIcon,
+    SquaresPlusIcon,
     VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 
 import { ListItem } from "@/Components/EventResources/ListItem";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { eventTypeBackground } from "@/helpers/eventTypeBackground";
 import { imageGenerator } from "@/helpers/user";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { EventType } from "@/types/EventType";
 import { EventTypeActionButton } from "@/types/EventTypeActionButton";
-import { HeadingOne } from "@/Components/Type/HeadingOne";
 
 const ResourcesPage = () => {
     const page = useTypedPage();
@@ -49,6 +50,16 @@ const ResourcesPage = () => {
                                 }
                                 text={`Event Guide`}
                                 url={``}
+                            />
+
+                            <ListItem
+                                icon={
+                                    <SquaresPlusIcon
+                                        className={`w-6 h-6 mr-2 shrink-0`}
+                                    />
+                                }
+                                text={`Host New ${eventType.name}`}
+                                url={route("host.eventType.index", eventType)}
                             />
 
                             <ListItem
