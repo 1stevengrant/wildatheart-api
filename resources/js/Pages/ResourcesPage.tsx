@@ -41,7 +41,6 @@ const ResourcesPage = () => {
                             <ul
                                 className={`text-sm font-medium mt-4 space-y-3`}
                             >
-
                                 <ListItem
                                     icon={
                                         <FolderPlusIcon
