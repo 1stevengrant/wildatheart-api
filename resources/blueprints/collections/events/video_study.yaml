@@ -27,9 +27,7 @@ tabs:
             field:
               type: slug
               localizable: true
-              validate:
-                - 'max:200'
-                - 'new \Statamic\Rules\UniqueEntryValue({collection}, {id}, {site})'
+              validate: 'max:200'
           -
             handle: date
             field:
