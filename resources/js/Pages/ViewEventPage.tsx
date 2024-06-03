@@ -49,9 +49,9 @@ const ViewEventPage = () => {
             case EventTypeFires:
                 return `${event.name} Fire`;
             case EventTypeWahRetreat:
-                return `Wild at Heart BASIC Retreat`;
+                return `Wild at Heart Retreat`;
             case EventTypeCaptivatingRetreat:
-                return `Captivating CORE Retreat`;
+                return `Captivating Retreat`;
             case EventTypeBecomingAKingRetreat:
                 return `Becoming a King Retreat`;
             case EventTypeWahExperience:
