@@ -155,6 +155,7 @@ const ViewEventPage = () => {
                                             Key Details
                                         </HeadingOne>
                                         <ul className={`my-8`}>
+                                            {console.log(event.eventTypeData.key_details)}
                                             {event.eventTypeData.key_details.map(
                                                 (item: any, index: number) => (
                                                     <li

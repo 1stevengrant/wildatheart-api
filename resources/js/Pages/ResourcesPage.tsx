@@ -1,6 +1,10 @@
 import React from "react";
 
-import { FolderPlusIcon, VideoCameraIcon } from "@heroicons/react/24/outline";
+import {
+    FolderPlusIcon,
+    LinkIcon,
+    VideoCameraIcon,
+} from "@heroicons/react/24/outline";
 
 import { ListItem } from "@/Components/EventResources/ListItem";
 import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
@@ -9,6 +13,7 @@ import { imageGenerator } from "@/helpers/user";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { EventType } from "@/types/EventType";
+import { EventTypeActionButton } from "@/types/EventTypeActionButton";
 
 const ResourcesPage = () => {
     const page = useTypedPage();
@@ -23,7 +28,7 @@ const ResourcesPage = () => {
                     {eventTypes.map((eventType: EventType) => (
                         <div
                             key={eventType.id}
-                            className={`p-6 bg-gradient-to-br ${eventTypeBackground(eventType.slug)} end-zinc-900 rounded-2xl shadow-xl`}
+                            className={`p-6 bg-gradient-to-br ${eventTypeBackground(eventType.slug)} end-zinc-900 rounded-2xl shadow-xl flex space-x-4 md:flex-col md:space-x-0`}
                         >
                             <img
                                 alt={eventType.name}
@@ -36,6 +41,7 @@ const ResourcesPage = () => {
                             <ul
                                 className={`text-sm font-medium mt-4 space-y-3`}
                             >
+
                                 <ListItem
                                     icon={
                                         <FolderPlusIcon
@@ -55,6 +61,32 @@ const ResourcesPage = () => {
                                     text={`Videos`}
                                     url={``}
                                 />
+                                {eventType.action_buttons &&
+                                    eventType.action_buttons.length > 0 && (
+                                        <>
+                                            {eventType.action_buttons.map(
+                                                (
+                                                    button: EventTypeActionButton
+                                                ) => (
+                                                    <ListItem
+                                                        key={button.id}
+                                                        url={
+                                                            button.button_url ??
+                                                            ``
+                                                        }
+                                                        text={
+                                                            button.button_label
+                                                        }
+                                                        icon={
+                                                            <LinkIcon
+                                                                className={`w-6 h-6 mr-2`}
+                                                            />
+                                                        }
+                                                    />
+                                                )
+                                            )}
+                                        </>
+                                    )}
                             </ul>
                         </div>
                     ))}

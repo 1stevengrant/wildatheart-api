@@ -42,6 +42,8 @@ class EventType extends BaseModel
         'event_faqs' => 'array',
         'event_schedule' => 'array',
         'is_active' => 'boolean',
+        'action_buttons' => 'array',
+        'new_content' => 'array',
     ];
 
     public static function boot(): void
