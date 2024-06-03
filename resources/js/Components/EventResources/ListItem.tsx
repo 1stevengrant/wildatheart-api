@@ -10,7 +10,7 @@ export const ListItem = ({
     url: string;
 }) => {
     return (
-        <li>
+        <li className={`leading-normal`}>
             <a
                 href={url}
                 className={`flex items-center hover:text-orange transition duration-150 ease-in-out`}
