@@ -19,7 +19,7 @@ tabs:
           -
             handle: image
             field:
-              container: s3
+              container: app
               type: assets
               display: Image
   sidebar:
