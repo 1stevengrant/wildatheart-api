@@ -5,8 +5,7 @@ import { useSetRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import ConnectionCard from "@/Components/ConnectionCard";
-import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
-import { AppLayout } from "@/Layouts/AppLayout";
+import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { reactNotificationState } from "@/store";
 import { Connection } from "@/types/Connection";
 
@@ -75,84 +74,78 @@ const MyConnectionsPage = () => {
     };
 
     return (
-        <AppLayout title={pageTitle}>
-            <MyProfileWrapper title={pageTitle}>
-                {connections.length > 0 ? (
-                    <>
-                        <div className="flex items-center space-x-4">
-                            <h2 className="text-lg font-medium">
-                                All Connections
-                            </h2>
-                            <PrimaryButton
-                                onClick={copyAllEmailAddressesToClipboard}
-                            >
-                                Copy Email Addresses
-                            </PrimaryButton>
-                        </div>
-                        <ul
-                            role="list"
-                            className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2"
+        <HostDashboardLayout pageTitle={pageTitle}>
+            {connections.length > 0 ? (
+                <>
+                    <div className="flex items-center space-x-4">
+                        <h2 className="text-lg font-medium">All Connections</h2>
+                        <PrimaryButton
+                            onClick={copyAllEmailAddressesToClipboard}
                         >
-                            {connections.map(
-                                (connection: Connection, index) => (
-                                    <ConnectionCard
-                                        key={index}
-                                        connection={connection}
-                                    />
-                                )
-                            )}
-                        </ul>
-                    </>
-                ) : (
-                    <p>No connections available.</p>
-                )}
-
-                {eventConnectionData.length > 0 && (
-                    <div className={`space-y-8 mt-8`}>
-                        {eventConnectionData.map((event: any, index) => (
-                            <div key={index}>
-                                <div className="flex items-center space-x-4">
-                                    <h2 className="text-lg font-medium">
-                                        {event.name} Fire
-                                    </h2>
-                                    {event.attendees?.length > 0 && (
-                                        <PrimaryButton
-                                            onClick={(event) =>
-                                                copyFireEmailAddressesToClipboard(
-                                                    event
-                                                )
-                                            }
-                                        >
-                                            Copy Email Addresses
-                                        </PrimaryButton>
-                                    )}
-                                </div>
-                                <ul
-                                    role="list"
-                                    className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2"
-                                >
-                                    {event.attendees?.length > 0 ? (
-                                        event.attendees.map(
-                                            (
-                                                attendee: any,
-                                                attendeeIndex: number
-                                            ) => (
-                                                <ConnectionCard
-                                                    key={attendeeIndex}
-                                                    connection={attendee}
-                                                />
-                                            )
-                                        )
-                                    ) : (
-                                        <p>No connections for this Fire.</p>
-                                    )}
-                                </ul>
-                            </div>
-                        ))}
+                            Copy Email Addresses
+                        </PrimaryButton>
                     </div>
-                )}
-            </MyProfileWrapper>
-        </AppLayout>
+                    <ul
+                        role="list"
+                        className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2"
+                    >
+                        {connections.map((connection: Connection, index) => (
+                            <ConnectionCard
+                                key={index}
+                                connection={connection}
+                            />
+                        ))}
+                    </ul>
+                </>
+            ) : (
+                <p>No connections available.</p>
+            )}
+
+            {eventConnectionData.length > 0 && (
+                <div className={`space-y-8 mt-8`}>
+                    {eventConnectionData.map((event: any, index) => (
+                        <div key={index}>
+                            <div className="flex items-center space-x-4">
+                                <h2 className="text-lg font-medium">
+                                    {event.name}
+                                </h2>
+                                {event.attendees?.length > 0 && (
+                                    <PrimaryButton
+                                        onClick={(event) =>
+                                            copyFireEmailAddressesToClipboard(
+                                                event
+                                            )
+                                        }
+                                    >
+                                        Copy Email Addresses
+                                    </PrimaryButton>
+                                )}
+                            </div>
+                            <ul
+                                role="list"
+                                className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2"
+                            >
+                                {event.attendees?.length > 0 ? (
+                                    event.attendees.map(
+                                        (
+                                            attendee: any,
+                                            attendeeIndex: number
+                                        ) => (
+                                            <ConnectionCard
+                                                key={attendeeIndex}
+                                                connection={attendee}
+                                            />
+                                        )
+                                    )
+                                ) : (
+                                    <p>No connections for this Fire.</p>
+                                )}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </HostDashboardLayout>
     );
 };
 

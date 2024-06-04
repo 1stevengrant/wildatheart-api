@@ -13,33 +13,12 @@ import {
     UsersIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import classNames from "classnames";
 
 import { AuthUserMenu } from "@/Components/Layout/Elements/AuthUserMenu";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
-
-const navigation = [
-    {
-        name: "Event Resources",
-        href: route("resources"),
-        icon: PuzzlePieceIcon,
-        current: route().current("resources"),
-    },
-    {
-        name: "My Events",
-        href: route("my.events"),
-        icon: CalendarDaysIcon,
-        current: route().current("my.events"),
-    },
-    {
-        name: "My Attendees",
-        href: route("my.connections"),
-        icon: UsersIcon,
-        current: route().current("my.connections"),
-    },
-];
 
 export const HostDashboardLayout = ({
     children,
@@ -50,6 +29,27 @@ export const HostDashboardLayout = ({
 }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { auth } = usePage<any>().props;
+
+    const navigation = [
+        {
+            name: "Event Resources",
+            href: route("resources"),
+            icon: PuzzlePieceIcon,
+            current: route().current("resources"),
+        },
+        {
+            name: "My Events",
+            href: route("my.events"),
+            icon: CalendarDaysIcon,
+            current: route().current("my.events"),
+        },
+        {
+            name: "My Connections",
+            href: route("my.connections"),
+            icon: UsersIcon,
+            current: route().current("my.connections"),
+        },
+    ];
 
     return (
         <>
@@ -133,7 +133,7 @@ export const HostDashboardLayout = ({
                                                                         item.name
                                                                     }
                                                                 >
-                                                                    <a
+                                                                    <Link
                                                                         href={
                                                                             item.href
                                                                         }
@@ -156,7 +156,7 @@ export const HostDashboardLayout = ({
                                                                         {
                                                                             item.name
                                                                         }
-                                                                    </a>
+                                                                    </Link>
                                                                 </li>
                                                             )
                                                         )}
@@ -193,7 +193,7 @@ export const HostDashboardLayout = ({
                                     <ul role="list" className="-mx-2 space-y-1">
                                         {navigation.map((item) => (
                                             <li key={item.name}>
-                                                <a
+                                                <Link
                                                     href={item.href}
                                                     className={classNames(
                                                         item.current
@@ -212,7 +212,7 @@ export const HostDashboardLayout = ({
                                                         aria-hidden="true"
                                                     />
                                                     {item.name}
-                                                </a>
+                                                </Link>
                                             </li>
                                         ))}
                                     </ul>
