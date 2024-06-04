@@ -59,13 +59,20 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
             <Link href={event.url} className="relative z-40">
                 <div className="rounded-md border bg-black p-2 shadow-lg border-grey-darker md:p-4">
                     <div className="flex items-stretch space-x-4">
-                        <img
-                            src={imageGenerator(event?.eventTypeImage, {
-                                height: 100,
-                                width: 100,
-                            })}
-                            alt=""
-                        />
+                        {event.eventTypeImage ? (
+                            <img
+                                src={imageGenerator(event.eventTypeImage, {
+                                    height: 100,
+                                    width: 100,
+                                })}
+                                className="rounded-lg"
+                                alt=""
+                            />
+                        ) : (
+                            <div className="border border-white rounded-lg w-[100px] h-[100px] bg-cover bg-center object-fill">
+                                {event.eventType}
+                            </div>
+                        )}
                         <div className="relative flex flex-col justify-between">
                             <div>
                                 <p className="text-white">
