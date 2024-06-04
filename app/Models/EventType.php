@@ -9,8 +9,7 @@ use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class EventType extends BaseModel
 {
-
-    use HasRunwayResource, HasFactory;
+    use HasFactory, HasRunwayResource;
 
     protected $guarded = ['id'];
 

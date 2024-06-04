@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\EventType;
 use Illuminate\Http\Request;
 
 class AgreeToHostAgreementController extends Controller
@@ -15,6 +14,8 @@ class AgreeToHostAgreementController extends Controller
     {
         auth()->user()->update(['agreed_to_host_agreement_date' => now()]);
 
-        return redirect()->route('host.eventType.index', ['eventType' => EventType::first()->slug]);
+        $redirectTo = session()->pull('host_agreement_redirect_to');
+
+        return redirect()->route($redirectTo);
     }
 }
