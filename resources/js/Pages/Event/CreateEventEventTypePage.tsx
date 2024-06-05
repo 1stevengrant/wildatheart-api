@@ -33,7 +33,6 @@ import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
 import { useDates } from "@/Hooks/useDates";
 import useTypedPage from "@/Hooks/useTypedPage";
-import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
