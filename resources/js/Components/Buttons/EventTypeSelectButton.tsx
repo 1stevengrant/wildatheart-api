@@ -17,16 +17,23 @@ export const EventTypeSelectButton = ({
             onClick={() => setSelectedType(type)}
             className={`border-4 rounded-2xl relative ${isSelected ? "border-white" : "border-grey-border"}`}
         >
-            <img
-                className={`rounded-xl`}
-                srcSet={`${imageGenerator(type.image, {
-                    width: 100,
-                    height: 100,
-                })} 100w, ${imageGenerator(type.image, { width: 200, height: 200 })} 200w`}
-                sizes={`(max-width: 640px) 100px, 200px`}
-                src={imageGenerator(type.image, { width: 100, height: 100 })}
-                alt={type.name}
-            />
+            {type.image ? (
+                <img
+                    className={`rounded-xl`}
+                    srcSet={`${imageGenerator(type.image, {
+                        width: 100,
+                        height: 100,
+                    })} 100w, ${imageGenerator(type.image, { width: 200, height: 200 })} 200w`}
+                    sizes={`(max-width: 640px) 100px, 200px`}
+                    src={imageGenerator(type.image, {
+                        width: 100,
+                        height: 100,
+                    })}
+                    alt={type.name}
+                />
+            ) : (
+                <div>{type.name}</div>
+            )}
         </button>
     );
 };

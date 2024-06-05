@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
 import mapboxgl from "mapbox-gl";
@@ -268,7 +268,8 @@ const CreateEventEventTypePage = () => {
         useDates();
 
     return (
-        <EmptyLayout title={`Build Your Event`}>
+        <>
+            <Head title={`Create Event`} />
             <SidebarLayout
                 footer={
                     <EmptyLayoutFooter>
@@ -438,7 +439,7 @@ const CreateEventEventTypePage = () => {
                     </PageContainer>
                 </EmptyLayoutBody>
             </SidebarLayout>
-        </EmptyLayout>
+        </>
     );
 };
 
