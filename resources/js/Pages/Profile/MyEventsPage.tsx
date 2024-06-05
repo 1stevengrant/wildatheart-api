@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import { usePage } from "@inertiajs/react";
 
 import { EventAdminCard } from "@/Components/Events/EventAdminCard";
@@ -42,21 +42,21 @@ const MyEventsPage = () => {
         <HostDashboardLayout pageTitle={pageTitle}>
             <HeadingOne>{pageTitle}</HeadingOne>
 
-            <TabGroup selectedIndex={selectedTab} onChange={setSelectedTab}>
-                <TabList
+            <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
+                <Tab.List
                     className={`-mb-px flex space-x-8 border-b border-grey-darker`}
                 >
                     {tabs.map((tab, index) => (
                         <Tab
-                            className={`border-transparent text-white hover:border-orange hover:text-orange whitespace-nowrap border-b-2 py-4 px-1 focus:border-transparent focus:outline-none focus:ring-0 data-[selected]:border-white data-[selected]:font-bold`}
+                            className={`border-transparent text-white hover:border-orange hover:text-orange whitespace-nowrap border-b-2 py-4 px-1 focus:border-transparent focus:outline-none focus:ring-0 ui-selected:border-white ui-selected:font-bold`}
                             key={index}
                         >
                             {tab}
                         </Tab>
                     ))}
-                </TabList>
-                <TabPanels className={`py-6`}>
-                    <TabPanel>
+                </Tab.List>
+                <Tab.Panels className={`py-6`}>
+                    <Tab.Panel>
                         {typedEvents.length > 0 ? (
                             <EventGrid>
                                 {typedEvents
@@ -73,8 +73,8 @@ const MyEventsPage = () => {
                         )}
 
                         <HostNewEvent />
-                    </TabPanel>
-                    <TabPanel>
+                    </Tab.Panel>
+                    <Tab.Panel>
                         {typedEvents.length > 0 ? (
                             <EventGrid>
                                 {typedEvents
@@ -93,9 +93,9 @@ const MyEventsPage = () => {
                         )}
 
                         <HostNewEvent />
-                    </TabPanel>
-                </TabPanels>
-            </TabGroup>
+                    </Tab.Panel>
+                </Tab.Panels>
+            </Tab.Group>
         </HostDashboardLayout>
     );
 };
