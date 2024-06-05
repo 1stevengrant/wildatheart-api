@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import debounce from "lodash.debounce";
+import debounce from "lodash/debounce";
 
 export const useDebounce = (
     callback: (...args: any[]) => void,
