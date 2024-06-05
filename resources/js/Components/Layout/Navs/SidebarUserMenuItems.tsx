@@ -1,31 +1,39 @@
-import { MenuItem } from "@headlessui/react";
+import { Menu } from "@headlessui/react";
 import { HomeIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
 
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
 
 const linkClasses = `flex items-center space-x-3 hover:text-orange`;
+
+const navItems = [
+    {
+        icon: <MapIcon className={`w-6 h-6`} />,
+        title: `Back to Map`,
+        href: route("home"),
+    },
+    {
+        icon: <HomeIcon className={`w-6 h-6`} />,
+        title: `Wild at Heart`,
+        href: wahWebsiteUrl,
+    },
+    {
+        icon: <UserCircleIcon className={`w-6 h-6`} />,
+        title: `My Profile`,
+        href: route("my.profile"),
+    },
+];
 export const SidebarUserMenuItems = () => {
     return (
         <>
-            <MenuItem>
-                <Link className={linkClasses} href={route("home")}>
-                    <MapIcon className={`w-6 h-6`} />
-                    <div>Back to Map</div>
-                </Link>
-            </MenuItem>
-            <MenuItem>
-                <a className={linkClasses} href={wahWebsiteUrl}>
-                    <HomeIcon className={`w-6 h-6`} />
-                    <div>Wild at Heart</div>
-                </a>
-            </MenuItem>
-            <MenuItem>
-                <Link className={linkClasses} href={route("my.profile")}>
-                    <UserCircleIcon className={`w-6 h-6`} />
-                    <div>My Profile</div>
-                </Link>
-            </MenuItem>
+            {navItems.map((item, index) => (
+                <Menu.Item key={index}>
+                    <Link className={linkClasses} href={item.href}>
+                        {item.icon}
+                        <div>{item.title}</div>
+                    </Link>
+                </Menu.Item>
+            ))}
         </>
     );
 };
