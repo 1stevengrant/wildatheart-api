@@ -65,20 +65,6 @@ const ViewEventPage = () => {
         }
     };
 
-    const eventImages = (event: Event) => {
-        switch (event.eventType) {
-            case EventTypeFires:
-                return [
-                    "/img/fires/Image2.webp",
-                    "/img/fires/Image3.webp",
-                    "/img/fires/Image.webp",
-                    "/img/fires/Image4.webp",
-                ];
-            default:
-                return [];
-        }
-    };
-
     const eventDate = (event: Event) => {
         switch (event.eventType) {
             case EventTypeFires:
@@ -155,7 +141,6 @@ const ViewEventPage = () => {
                                             Key Details
                                         </HeadingOne>
                                         <ul className={`my-8`}>
-                                            {console.log(event.eventTypeData.key_details)}
                                             {event.eventTypeData.key_details.map(
                                                 (item: any, index: number) => (
                                                     <li
@@ -199,10 +184,10 @@ const ViewEventPage = () => {
                                 </Markdown>
                             </div>
 
-                            {eventImages(event).length > 0 && (
+                            {event.eventTypeData.photos.length > 0 && (
                                 <PhotoCarousel
                                     className={`mt-8`}
-                                    images={eventImages(event)}
+                                    images={event?.eventTypeData.photos}
                                 />
                             )}
                         </div>
