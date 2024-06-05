@@ -27,7 +27,7 @@ export const SidebarLayoutDesktopSidebar = ({ auth }: { auth: any }) => {
                 <EventCreateProgress />
                 <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                        <li className="-mx-6 mt-auto relative">
+                        <li className="relative -mx-6 mt-auto">
                             {showUserMenu && (
                                 <div className={`absolute left-6 -top-20`}>
                                     <Menu>
@@ -38,7 +38,7 @@ export const SidebarLayoutDesktopSidebar = ({ auth }: { auth: any }) => {
 
                             <button
                                 onClick={() => toggleMenu()}
-                                className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white w-full"
+                                className="flex w-full items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white"
                             >
                                 <AuthUserAvatar auth={auth} />
                                 <span className="sr-only">Your profile</span>

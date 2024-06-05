@@ -288,7 +288,7 @@ const CreateEventEventTypePage = () => {
                             {event.location === "Location TBC"
                                 ? "Pick a location to continue"
                                 : "Create Event & See Dashboard"}
-                            <ArrowRightIcon className="h-4 w-4 ml-2" />
+                            <ArrowRightIcon className="ml-2 h-4 w-4" />
                         </PrimaryButton>
                     </EmptyLayoutFooter>
                 }

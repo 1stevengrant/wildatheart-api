@@ -29,7 +29,7 @@ const FaqsEventTypePageFooter = ({ eventType }: { eventType: any }) => {
                 href={route("host.eventType.mailing", eventType)}
             >
                 Mailing Address
-                <ArrowRightIcon className="h-4 w-4 ml-2" />
+                <ArrowRightIcon className="ml-2 h-4 w-4" />
             </Link>
         </EmptyLayoutFooter>
     );
@@ -52,11 +52,11 @@ const FaqsEventTypePage = () => {
                                             {({ open }) => (
                                                 /* Use the `open` state to conditionally change the direction of an icon. */
                                                 <>
-                                                    <Disclosure.Button className="border-t border-grey-border py-2 text-white flex items-center justify-between w-full">
+                                                    <Disclosure.Button className="flex w-full items-center justify-between border-t py-2 text-white border-grey-border">
                                                         <div
                                                             className={`flex items-center text-grey font-semibold`}
                                                         >
-                                                            <ShieldCheckIcon className="h-6 w-6 mr-2 flex-shrink-0" />
+                                                            <ShieldCheckIcon className="mr-2 h-6 w-6 flex-shrink-0" />
                                                             <span
                                                                 className={`text-left leading-tight`}
                                                             >
@@ -70,7 +70,7 @@ const FaqsEventTypePage = () => {
                                                             className={`w-6 h-6 text-grey flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
                                                         />
                                                     </Disclosure.Button>
-                                                    <Disclosure.Panel className="text-grey py-4 text-sm border-t border-t-grey-border">
+                                                    <Disclosure.Panel className="border-t py-4 text-sm text-grey border-t-grey-border">
                                                         {faq.fields.answer}
                                                     </Disclosure.Panel>
                                                 </>

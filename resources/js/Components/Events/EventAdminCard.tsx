@@ -69,7 +69,7 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                                 alt=""
                             />
                         ) : (
-                            <div className="border border-white rounded-lg w-[100px] h-[100px] bg-cover bg-center object-fill">
+                            <div className="rounded-lg border border-white bg-cover bg-center object-fill w-[100px] h-[100px]">
                                 {event.eventType}
                             </div>
                         )}

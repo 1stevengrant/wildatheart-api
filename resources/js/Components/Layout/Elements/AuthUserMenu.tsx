@@ -12,7 +12,7 @@ export const AuthUserMenu = ({ auth }: { auth: any }) => {
         setShowUserMenu(!showUserMenu);
     };
     return (
-        <li className="-mx-6 mt-auto relative">
+        <li className="relative -mx-6 mt-auto">
             <OutsideClickHandler onOutsideClick={() => setShowUserMenu(false)}>
                 {showUserMenu && (
                     <div className={`absolute left-6 -top-28 space-y-4`}>
@@ -24,7 +24,7 @@ export const AuthUserMenu = ({ auth }: { auth: any }) => {
 
                 <button
                     onClick={() => toggleMenu()}
-                    className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white w-full"
+                    className="flex w-full items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white"
                 >
                     <AuthUserAvatar auth={auth} />
                     <span className="sr-only">Your profile</span>
