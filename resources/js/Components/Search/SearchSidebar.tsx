@@ -13,7 +13,7 @@ export const SearchSidebar = () => {
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
     const [showFilterPanel] = useRecoilState(showFilterPanelState);
     return (
-        <aside className="relative flex flex-col md:w-[557px] rounded-b-2xl bg-black">
+        <aside className="relative flex flex-col rounded-b-2xl bg-black md:w-[557px]">
             {showFilterPanel ? <FiltersPanel /> : <QuickFilters />}
             {!showFilterPanel && (
                 <div className="flex-1 overflow-y-auto px-4">

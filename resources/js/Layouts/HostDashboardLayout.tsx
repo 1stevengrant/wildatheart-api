@@ -84,7 +84,7 @@ export const HostDashboardLayout = ({
                                         leaveFrom="opacity-100"
                                         leaveTo="opacity-0"
                                     >
-                                        <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                                        <div className="absolute top-0 left-full flex w-16 justify-center pt-5">
                                             <button
                                                 type="button"
                                                 className="-m-2.5 p-2.5"
@@ -219,10 +219,10 @@ export const HostDashboardLayout = ({
                 </div>
 
                 <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 bg-black">
+                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-black px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
                         <button
                             type="button"
-                            className="-m-2.5 p-2.5 text-white lg:hidden"
+                            className="text-white -m-2.5 p-2.5 lg:hidden"
                             onClick={() => setSidebarOpen(true)}
                         >
                             <span className="sr-only">Open sidebar</span>

@@ -31,7 +31,7 @@ export const SidebarLayout = ({
                 <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-black px-4 py-4 shadow-sm sm:px-6 lg:hidden">
                     <button
                         type="button"
-                        className="-m-2.5 p-2.5 text-white lg:hidden"
+                        className="text-white -m-2.5 p-2.5 lg:hidden"
                         onClick={() => setSidebarOpen(true)}
                     >
                         <span className="sr-only">Open sidebar</span>
