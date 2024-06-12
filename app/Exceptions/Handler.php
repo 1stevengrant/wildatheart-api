@@ -30,6 +30,11 @@ class Handler extends ExceptionHandler
         });
     }
 
+    public function isNotStatamicAPIRequest($request): bool
+    {
+        return !str_starts_with($request->path(), env('STATAMIC_API_ROUTE', 'content-api'));
+    }
+
     public function render($request, Throwable $e)
     {
         if ($e instanceof TooManyRequestsHttpException) {
@@ -38,7 +43,7 @@ class Handler extends ExceptionHandler
 
         $response = parent::render($request, $e);
 
-        if (! app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404, 403])) {
+        if ($this->isNotStatamicAPIRequest($request) && !app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404, 403])) {
             return inertia('Error', ['status' => $response->status()])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
