@@ -69,4 +69,33 @@ class Attendee extends BaseModel
     {
         return $this->contacted_on !== null;
     }
+
+    public function scopeOrderByName($query): void
+    {
+        $query->orderBy('family_name')->orderBy('given_name');
+    }
+
+    public function scopeWhereEventId($query, $eventId)
+    {
+        return $query->where('event_id', $eventId);
+    }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('given_name', 'like', '%'.$search.'%')
+                    ->orWhere('family_name_name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
+            });
+        })->when($filters['event_id'] ?? null, function ($query, $eventId) {
+            $query->whereRole($eventId);
+        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
+        });
+    }
 }

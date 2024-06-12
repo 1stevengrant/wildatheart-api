@@ -3,37 +3,27 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Resources\AttendeeCollection;
+use Illuminate\Support\Facades\Request;
+use Inertia\Response;
 
 class MyConnectionsController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): Response
     {
-        $eventConnections = auth()->user()
-            ->events()
-            ->with('attendees')
-            ->paginate(100)
-            ->through(fn ($event) => [
-                'id' => $event->id,
-                'name' => $event->name,
-                'attendees' => $event->attendees->map(fn ($attendee) => [
-                    'family_name' => $attendee->family_name,
-                    'given_name' => $attendee->given_name,
-                    'phone' => $attendee->phone,
-                    'email' => $attendee->email,
-                    'contacted_on' => $attendee->contacted_on,
-                    'city' => $attendee->city,
-                    'state' => $attendee->state,
-                    'country' => $attendee->country,
-                ]),
-            ]);
 
         return inertia('Profile/MyConnectionsPage', [
-            'eventConnections' => $eventConnections,
-            'allConnections' => auth()->user()->generalConnections->sortBy('family_name'),
+            'filters' => Request::all('search', 'event_id', 'trashed'),
+            'attendees' => new AttendeeCollection(
+                auth()->user()->attendees()
+                    ->orderByName()
+                    ->filter(Request::only('search', 'event_id', 'trashed'))
+                    ->paginate()
+                    ->appends(Request::all())
+            ),
         ]);
     }
 }
