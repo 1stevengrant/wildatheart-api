@@ -1,6 +1,14 @@
 title: Pages
+template: default
+layout: layout
+revisions: false
+route: '{parent_uri}/{slug}'
+date: true
+sort_dir: desc
+preview_targets:
+  -
+    label: Local
+    url: 'http://localhost:4321/preview/{id}?preview=true'
+    refresh: false
 structure:
   root: true
-route: "{parent_uri}/{slug}"
-date: true
-propagate: true
