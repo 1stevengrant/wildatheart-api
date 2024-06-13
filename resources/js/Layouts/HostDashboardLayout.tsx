@@ -171,7 +171,7 @@ export const HostDashboardLayout = ({
                 {/* Static sidebar for desktop */}
                 <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6 pb-4">
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6 pb-4 border-r border-grey-border">
                         <a href={wahWebsiteUrl}>
                             <Logo
                                 className={
@@ -194,7 +194,7 @@ export const HostDashboardLayout = ({
                                                         item.current
                                                             ? "bg-white/10 text-white"
                                                             : "hover:text-white hover:bg-white/10",
-                                                        "group flex gap-x-3 rounded-md p-2 leading-6 font-semibold"
+                                                        "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold"
                                                     )}
                                                 >
                                                     <item.icon
@@ -219,7 +219,7 @@ export const HostDashboardLayout = ({
                 </div>
 
                 <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-black px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-black px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 md:hidden">
                         <button
                             type="button"
                             className="text-white -m-2.5 p-2.5 lg:hidden"
@@ -231,7 +231,9 @@ export const HostDashboardLayout = ({
                     </div>
 
                     <main>
-                        <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+                        <div className="px-4 sm:px-6 lg:px-8 md:pt-12">
+                            {children}
+                        </div>
                     </main>
                 </div>
             </div>
