@@ -3,7 +3,10 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Sentry\Laravel\Integration;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Throwable;
 
@@ -30,9 +33,16 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function isNotStatamicAPIRequest($request): bool
+    public function isAPIRequest(Request $request): bool
     {
-        return ! str_starts_with($request->path(), env('STATAMIC_API_ROUTE', 'content-api'));
+        return str_starts_with($request->path(), 'api');
+    }
+
+    public function createInertiaErrorResponse(Request $request, HttpFoundationResponse $response): Response
+    {
+        return inertia('Error', ['status' => $response->getStatusCode()])
+            ->toResponse($request)
+            ->setStatusCode($response->getStatusCode());
     }
 
     public function render($request, Throwable $e)
@@ -43,23 +53,19 @@ class Handler extends ExceptionHandler
 
         $response = parent::render($request, $e);
 
-        if ($this->isNotStatamicAPIRequest($request) && ! app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404, 403])) {
-            return inertia('Error', ['status' => $response->status()])
-                ->toResponse($request)
-                ->setStatusCode($response->status());
-        } elseif ($response->status() === 419) {
+        if ($this->isAPIRequest($request)) {
+            return $response;
+        }
+
+        if ($response->getStatusCode() === 419) {
             return back()->with([
                 'message' => 'The page expired, please try again.',
             ]);
         }
 
-        activity()
-            ->withProperties([
-                'request' => $request,
-                'response' => $response,
-                'exception' => $e,
-            ])
-            ->log('error');
+        if (in_array($response->getStatusCode(), [500, 503, 404, 403])) {
+            return $this->createInertiaErrorResponse($request, $response);
+        }
 
         return $response;
     }
