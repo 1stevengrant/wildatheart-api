@@ -13,6 +13,19 @@ tabs:
                 required: true
           -
             import: testimonials
+          -
+            handle: subsplash_series_id
+            field:
+              type: text
+              display: 'Subsplash Series ID'
+          -
+            handle: experience_logo
+            field:
+              container: s3
+              folder: wp-app/uploads
+              type: assets
+              display: 'Experience Logo'
+              max_files: 1
       -
         display: Sessions
         fields:
