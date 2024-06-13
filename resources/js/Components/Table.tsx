@@ -19,7 +19,7 @@ export default function Table<T>({
     getRowDetailsUrl,
 }: TableProps<T>) {
     return (
-        <div className="overflow-x-auto bg-white rounded shadow">
+        <div className="overflow-x-auto rounded shadow">
             <table className="w-full whitespace-nowrap">
                 <thead>
                     <tr className="font-bold text-left">
@@ -39,7 +39,7 @@ export default function Table<T>({
                     {rows?.length === 0 && (
                         <tr>
                             <td
-                                className="px-6 py-24 border-t text-center"
+                                className="px-6 py-24 border-t border-grey-border text-center"
                                 colSpan={columns.length}
                             >
                                 No data found.
@@ -50,13 +50,13 @@ export default function Table<T>({
                         return (
                             <tr
                                 key={index}
-                                className="hover:bg-gray-100 focus-within:bg-gray-100"
+                                className="hover:bg-grey-darker focus-within:bg-gray-darker"
                             >
                                 {columns.map((column) => {
                                     return (
                                         <td
                                             key={column.name}
-                                            className="border-t"
+                                            className="border-t border-grey-border"
                                         >
                                             <Link
                                                 tabIndex={-1}
@@ -74,7 +74,7 @@ export default function Table<T>({
                                         </td>
                                     );
                                 })}
-                                <td className="w-px border-t">
+                                <td className="w-px border-t border-grey-border">
                                     <Link
                                         href={getRowDetailsUrl?.(row) ?? `#`}
                                         className="flex items-center px-4 focus:outline-none"

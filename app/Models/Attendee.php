@@ -89,7 +89,7 @@ class Attendee extends BaseModel
                     ->orWhere('email', 'like', '%'.$search.'%');
             });
         })->when($filters['event_id'] ?? null, function ($query, $eventId) {
-            $query->whereRole($eventId);
+            $query->whereEventId($eventId);
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {
             if ($trashed === 'with') {
                 $query->withTrashed();

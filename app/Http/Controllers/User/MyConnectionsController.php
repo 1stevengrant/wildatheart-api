@@ -16,11 +16,12 @@ class MyConnectionsController extends Controller
     {
 
         return inertia('Profile/MyConnectionsPage', [
-            'filters' => Request::all('search', 'event_id', 'trashed'),
+            'filters' => Request::all('event_id'),
+            'myEvents' => auth()->user()->events()->get(),
             'attendees' => new AttendeeCollection(
                 auth()->user()->attendees()
                     ->orderByName()
-                    ->filter(Request::only('search', 'event_id', 'trashed'))
+                    ->filter(Request::only('event_id'))
                     ->paginate()
                     ->appends(Request::all())
             ),
