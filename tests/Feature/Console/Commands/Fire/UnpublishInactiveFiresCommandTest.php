@@ -1,18 +1,9 @@
 <?php
 
-use App\Models\EmailTemplate;
 use App\Models\Event;
 
 beforeEach(function () {
-    $this->seed([
-        \Database\Seeders\RoleSeeder::class,
-        \Database\Seeders\StateSeeder::class,
-        \Database\Seeders\EventTypeSeeder::class,
-    ]);
-
-    $this->emailTemplate = EmailTemplate::factory()->create([
-        'name' => 'Fire deactivating soon',
-    ]);
+    $this->seed();
 });
 
 it('unpublishes fires where last monthly email was more than 10 days ago and last approved was  ', function () {
