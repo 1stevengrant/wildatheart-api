@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\EmailTemplate;
 use App\Models\Event;
 
 beforeEach(function () {
