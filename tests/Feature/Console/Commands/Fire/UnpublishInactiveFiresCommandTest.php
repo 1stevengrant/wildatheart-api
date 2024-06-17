@@ -5,10 +5,6 @@ use App\Models\Event;
 
 beforeEach(function () {
     $this->seed();
-
-    $this->emailTemplate = EmailTemplate::factory()->create([
-        'name' => 'Fire deactivating soon',
-    ]);
 });
 
 afterEach(function () {
