@@ -1,5 +1,6 @@
-import { Connection } from "@/types/Connection";
+import { Config } from "ziggy-js";
 
+import { Connection } from "@/types/Connection";
 export type Nullable<T> = T | null;
 
 export interface Ziggy {
@@ -27,7 +28,7 @@ export type PageProps<
     auth: {
         user: User;
     };
-    allConnections: Connection[] | [];
+    ziggy: Config & { location: string };
 };
 
 export interface Auth {
@@ -56,6 +57,7 @@ export interface Attendee {
     created_at: string;
     updated_at: string;
     event_type_name: string;
+    event_name: string;
     full_name: string;
 }
 

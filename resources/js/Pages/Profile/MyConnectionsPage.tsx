@@ -1,12 +1,12 @@
 import React from "react";
 
-import { router, usePage } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 
-import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import FilterBar from "@/Components/FilterBar";
 import Pagination from "@/Components/Pagination";
 import Table from "@/Components/Table";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
+import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { Attendee, PaginatedData } from "@/types";
 
@@ -22,17 +22,6 @@ const MyConnectionsPage = () => {
 
     const pageTitle = `My Connections`;
 
-    const handleExport = () => {
-        const url = new URL(window.location.href);
-        const searchParams = new URLSearchParams(url.search);
-        const eventId = searchParams.get("event_id");
-
-        router.get(route("export.connections", { event_id: eventId }), {
-            replace: true,
-            preserveState: true,
-        });
-    };
-
     return (
         <HostDashboardLayout pageTitle={pageTitle}>
             <div className="flex items-center justify-between border-grey-border border-b pb-6">
@@ -42,9 +31,14 @@ const MyConnectionsPage = () => {
                     </HeadingOne>
                     <FilterBar />
                 </div>
-                <PrimaryButton onClick={handleExport}>
+                <a
+                    className={primaryButtonClasses}
+                    href={route("export.connections", {
+                        event: route().params.event_id,
+                    })}
+                >
                     Export Connections
-                </PrimaryButton>
+                </a>
             </div>
 
             <Table
@@ -78,6 +72,12 @@ const MyConnectionsPage = () => {
                                 <>{row.phone}</>
                             </>
                         ),
+                    },
+                    {
+                        label: "Event",
+                        name: "event_name",
+
+                        renderCell: (row) => <>{row.event_name}</>,
                     },
                     {
                         label: "Event Type",

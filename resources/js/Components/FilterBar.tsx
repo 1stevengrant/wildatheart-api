@@ -19,9 +19,7 @@ export default function FilterBar() {
     ];
 
     const [values, setValues] = useState({
-        event_id: filters.event_id || "", // role is used only on users page
-        search: filters.search || "",
-        trashed: filters.trashed || "",
+        event_id: filters.event_id || "",
     });
 
     const prevValues = usePrevious(values);
@@ -29,8 +27,6 @@ export default function FilterBar() {
     const reset = () => {
         setValues({
             event_id: "",
-            search: "",
-            trashed: "",
         });
     };
 
