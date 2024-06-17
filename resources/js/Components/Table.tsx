@@ -56,32 +56,14 @@ export default function Table<T>({
                                     return (
                                         <td
                                             key={column.name}
-                                            className="border-t border-grey-border"
+                                            className="border-t border-grey-border px-6 py-4"
                                         >
-                                            <Link
-                                                tabIndex={-1}
-                                                href={
-                                                    getRowDetailsUrl?.(
-                                                        row
-                                                    ) as string
-                                                }
-                                                className="flex items-center px-6 py-4 focus:text-indigo focus:outline-none"
-                                            >
-                                                {column.renderCell?.(row) ??
-                                                    get(row, column.name) ??
-                                                    "N/A"}
-                                            </Link>
+                                            {column.renderCell?.(row) ??
+                                                get(row, column.name) ??
+                                                "N/A"}
                                         </td>
                                     );
                                 })}
-                                <td className="w-px border-t border-grey-border">
-                                    <Link
-                                        href={getRowDetailsUrl?.(row) ?? `#`}
-                                        className="flex items-center px-4 focus:outline-none"
-                                    >
-                                        <ChevronRightIcon className="text-gray-400" />
-                                    </Link>
-                                </td>
                             </tr>
                         );
                     })}
