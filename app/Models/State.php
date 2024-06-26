@@ -2,6 +2,4 @@
 
 namespace App\Models;
 
-class State extends BaseModel
-{
-}
+class State extends BaseModel {}

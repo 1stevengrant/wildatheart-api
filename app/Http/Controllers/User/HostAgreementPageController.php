@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Statamic\Facades\GlobalSet;
 
 class HostAgreementPageController extends Controller
 {
@@ -12,6 +13,11 @@ class HostAgreementPageController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return inertia('HostAgreementPage');
+        $hostAgreement = GlobalSet::findByHandle('local_platform');
+        $hostAgreement = $hostAgreement->in('default')->get('host_agreement');
+
+        return inertia('HostAgreementPage', [
+            'hostAgreement' => $hostAgreement,
+        ]);
     }
 }

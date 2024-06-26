@@ -2,11 +2,13 @@ title: 'Local Platform'
 data:
   host_agreement:
     -
-      type: paragraph
+      type: heading
+      attrs:
+        level: 2
       content:
         -
           type: text
-          text: 'Bacon ipsum dolor sit amet rump turkey spare ribs shank, hamburger boudin frankfurter ham hock pancetta salami. Jerky porchetta salami, fatback swine chicken pastrami beef ribs landjaeger biltong. Capicola prosciutto leberkas landjaeger. Flank turducken chuck pork loin drumstick tongue ground round ham hock fatback short ribs pancetta turkey. Shank beef ribs frankfurter ribeye cow fatback swine kielbasa biltong. Pork pork chop prosciutto pig.'
+          text: 'Hello Steven'
     -
       type: paragraph
       content:
@@ -14,14 +16,35 @@ data:
           type: text
           text: 'Shoulder andouille hamburger sausage. Andouille tri-tip chicken kevin shankle shank, pancetta hamburger t-bone. Pancetta short loin meatloaf beef ribs. Turkey chuck strip steak rump brisket meatloaf tenderloin venison jowl pig hamburger sausage flank corned beef. Drumstick hamburger filet mignon chicken, porchetta ground round swine rump turkey strip steak.'
     -
+      type: set
+      attrs:
+        id: lxvte6kc
+        values:
+          type: video
+          video: 'https://www.youtube.com/watch?v=NfuAPqVNk_0'
+    -
       type: paragraph
       content:
         -
           type: text
           text: 'Bacon ipsum dolor sit amet rump turkey spare ribs shank, hamburger boudin frankfurter ham hock pancetta salami. Jerky porchetta salami, fatback swine chicken pastrami beef ribs landjaeger biltong. Capicola prosciutto leberkas landjaeger. Flank turducken chuck pork loin drumstick tongue ground round ham hock fatback short ribs pancetta turkey. Shank beef ribs frankfurter ribeye cow fatback swine kielbasa biltong. Pork pork chop prosciutto pig.'
     -
+      type: set
+      attrs:
+        id: lxvv6w1f
+        values:
+          type: video
+          video: 'https://vimeo.com/505766418'
+    -
       type: paragraph
       content:
         -
           type: text
           text: 'Shoulder andouille hamburger sausage. Andouille tri-tip chicken kevin shankle shank, pancetta hamburger t-bone. Pancetta short loin meatloaf beef ribs. Turkey chuck strip steak rump brisket meatloaf tenderloin venison jowl pig hamburger sausage flank corned beef. Drumstick hamburger filet mignon chicken, porchetta ground round swine rump turkey strip steak.'
+    -
+      type: set
+      attrs:
+        id: lxvtc8rn
+        values:
+          type: image
+          image: hero_images/priscilla-du-preez-apa843frizi-unsplash.jpg

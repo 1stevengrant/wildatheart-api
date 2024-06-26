@@ -2,6 +2,4 @@
 
 namespace App\Models;
 
-class Issue extends BaseModel
-{
-}
+class Issue extends BaseModel {}

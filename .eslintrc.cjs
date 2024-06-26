@@ -23,6 +23,7 @@ module.exports = {
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/ban-ts-comment": "warn",
         "prefer-const": "warn",
+        "no-case-declarations": "off",
         "import/order": ["error", {
             "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
             "pathGroups": [

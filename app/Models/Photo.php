@@ -2,6 +2,4 @@
 
 namespace App\Models;
 
-class Photo extends BaseModel
-{
-}
+class Photo extends BaseModel {}

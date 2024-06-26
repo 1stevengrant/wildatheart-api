@@ -17,9 +17,7 @@ class CreateEvent implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public array $record, public int $userId)
-    {
-    }
+    public function __construct(public array $record, public int $userId) {}
 
     /**
      * Execute the job.

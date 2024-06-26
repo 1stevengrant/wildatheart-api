@@ -2,7 +2,8 @@ import React, { useState } from "react";
 
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
+import ReactPlayer from "react-player";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { EventCreateProgressMobile } from "@/Components/Events/EventCreateProgressMobile";
@@ -11,10 +12,14 @@ import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/Elements/EmptyLayoutHeader";
 import { EmptyLayoutWrapper } from "@/Components/Layout/Elements/EmptyLayoutWrapper";
+import { Image } from "@/Components/Media/Image";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
+import { Heading } from "@/Components/Type/Heading";
+import { Paragraph } from "@/Components/Type/Paragraph";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 
 const HostAgreementPage = () => {
+    const { hostAgreement } = usePage().props as any;
     const handleAgree = (event: React.FormEvent) => {
         event.preventDefault();
         router.post(route("host.agreement.store"), {
@@ -32,7 +37,39 @@ const HostAgreementPage = () => {
                     <EventCreateProgressMobile />
                 </EmptyLayoutHeader>
                 <EmptyLayoutBody>
-                    <PageContainer>
+                    <PageContainer className={`pt-12`}>
+                        {hostAgreement.map((item: any, index: number) => {
+                            switch (item.type) {
+                                case "heading":
+                                    return <Heading item={item} key={index} />;
+                                case "paragraph":
+                                    return (
+                                        <Paragraph item={item} key={index} />
+                                    );
+                                case "set":
+                                    if (item.attrs.values.type === "video") {
+                                        return (
+                                            <ReactPlayer
+                                                url={item.attrs.values.video}
+                                                key={index}
+                                                controls={true}
+                                            />
+                                        );
+                                    } else if (
+                                        item.attrs.values.type === "image"
+                                    ) {
+                                        return (
+                                            <Image
+                                                key={index}
+                                                url={item.attrs.values.image}
+                                            />
+                                        );
+                                    }
+                                    return null;
+                                default:
+                                    return null;
+                            }
+                        })}
                         <label
                             className={`flex items-center space-x-2 hover:cursor-pointer`}
                         >

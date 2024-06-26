@@ -25,3 +25,27 @@ tabs:
               display: 'Host Agreement'
               validate:
                 - required
+              sets:
+                '':
+                  display: null
+                  sets:
+                    image:
+                      display: Image
+                      icon: media-image-picture-orientation
+                      fields:
+                        -
+                          handle: image
+                          field:
+                            max_files: 1
+                            container: app
+                            type: assets
+                            display: Image
+                    video:
+                      display: Video
+                      icon: media-webcam-video
+                      fields:
+                        -
+                          handle: video
+                          field:
+                            type: video
+                            display: Video
