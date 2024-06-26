@@ -3,6 +3,8 @@ tabs:
     display: Main
     sections:
       -
+        display: 'Host Agreement'
+        instructions: 'The host agreement for Wild at Heart Events'
         fields:
           -
             handle: host_agreement
@@ -18,6 +20,8 @@ tabs:
                 - quote
                 - anchor
                 - table
-              remove_empty_nodes: false
+              remove_empty_nodes: true
               type: bard
               display: 'Host Agreement'
+              validate:
+                - required
