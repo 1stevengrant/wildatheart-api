@@ -18,10 +18,7 @@ class UpdateExistingEvent implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Event $event, public User $user)
-    {
-
-    }
+    public function __construct(public Event $event, public User $user) {}
 
     /**
      * Execute the job.
