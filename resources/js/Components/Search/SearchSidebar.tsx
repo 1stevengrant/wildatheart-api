@@ -17,8 +17,12 @@ export const SearchSidebar = () => {
             {showFilterPanel ? <FiltersPanel /> : <QuickFilters />}
             {!showFilterPanel && (
                 <div className="flex-1 overflow-y-auto px-4">
-                    {events.map((event: Event, index: number) => {
-                        return (
+                    {events.length === 0 ? (
+                        <p className="text-white text-center">
+                            No events matching your search
+                        </p>
+                    ) : (
+                        events.map((event: Event, index: number) => (
                             <EventResult
                                 event={event}
                                 key={index}
@@ -26,8 +30,8 @@ export const SearchSidebar = () => {
                                 onMouseEnter={() => setCurrentEvent(event)}
                                 onMouseLeave={() => setCurrentEvent(null)}
                             />
-                        );
-                    })}
+                        ))
+                    )}
                 </div>
             )}
         </aside>
