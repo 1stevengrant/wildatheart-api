@@ -6,6 +6,7 @@ import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
+import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
@@ -209,10 +210,9 @@ export const UpdateProfileForm = ({
                                             "inline-flex justify-center space-x-4"
                                         }
                                     >
-                                        <UserCircleIcon
-                                            className={
-                                                "w-24 h-24 flex-shrink-0"
-                                            }
+                                        <FallbackAvatar
+                                            user={user}
+                                            size={135}
                                         />
                                         <div
                                             className={`flex flex-col justify-center`}

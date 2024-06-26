@@ -107,7 +107,7 @@ class User extends Authenticatable
         return $this->email_verified_at !== null;
     }
 
-    public function profilePhoto(): string
+    public function profilePhoto(): ?string
     {
         if ($this->image) {
             makeImagePublic($this->image);
@@ -115,7 +115,7 @@ class User extends Authenticatable
             return $this->image;
         }
 
-        return \Avatar::create($this->fullname)->toBase64();
+        return null;
 
     }
 
