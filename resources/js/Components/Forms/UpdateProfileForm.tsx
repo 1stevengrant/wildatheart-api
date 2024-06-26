@@ -162,7 +162,11 @@ export const UpdateProfileForm = ({
                         onChange={updatePhotoPreview}
                     />
 
-                    <InputLabel htmlFor="image" value="Profile Photo" />
+                    <InputLabel
+                        htmlFor="image"
+                        value="Profile Photo"
+                        className={`mb-4`}
+                    />
                     {photoPreview ? (
                         <div className="mt-2 inline-flex justify-center space-x-4">
                             <div

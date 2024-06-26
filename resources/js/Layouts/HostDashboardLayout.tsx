@@ -4,6 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import {
     Bars3Icon,
     CalendarDaysIcon,
+    LifebuoyIcon,
     PuzzlePieceIcon,
     UsersIcon,
     XMarkIcon,
@@ -12,6 +13,7 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import classNames from "classnames";
 
 import { AuthUserMenu } from "@/Components/Layout/Elements/AuthUserMenu";
+import { SupportModal } from "@/Components/Modals/SupportModal";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
 
@@ -23,6 +25,7 @@ export const HostDashboardLayout = ({
     pageTitle: string;
 }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [openSupportModal, setOpenSupportModal] = useState(false);
     const { auth } = usePage<any>().props;
 
     const navigation = [
@@ -44,12 +47,23 @@ export const HostDashboardLayout = ({
             icon: UsersIcon,
             current: route().current("my.connections"),
         },
+        {
+            name: "Support",
+            href: null,
+            action: () => setOpenSupportModal(true),
+            icon: LifebuoyIcon,
+            current: false,
+        },
     ];
 
     return (
         <>
             <Head title={pageTitle} />
             <div>
+                <SupportModal
+                    open={openSupportModal}
+                    setOpen={setOpenSupportModal}
+                />
                 <Transition show={sidebarOpen}>
                     <Dialog
                         className="relative z-50 lg:hidden"
@@ -103,7 +117,7 @@ export const HostDashboardLayout = ({
                                         </div>
                                     </Transition.Child>
                                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6 pb-4">
+                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6 pb-4 h-screen">
                                         <a href={wahWebsiteUrl}>
                                             <Logo
                                                 className={
@@ -128,30 +142,54 @@ export const HostDashboardLayout = ({
                                                                         item.name
                                                                     }
                                                                 >
-                                                                    <Link
-                                                                        href={
-                                                                            item.href
-                                                                        }
-                                                                        className={classNames(
-                                                                            item.current
-                                                                                ? "bg-white/10 text-white"
-                                                                                : "hover:text-white hover:bg-white/100",
-                                                                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                                                                        )}
-                                                                    >
-                                                                        <item.icon
+                                                                    {item.action && (
+                                                                        <button
+                                                                            onClick={
+                                                                                item.action
+                                                                            }
+                                                                            className={classNames(
+                                                                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                                                                                "hover:text-white hover:bg-white/100"
+                                                                            )}
+                                                                        >
+                                                                            <item.icon
+                                                                                className={classNames(
+                                                                                    "text-white group-hover:text-white",
+                                                                                    "h-6 w-6 shrink-0"
+                                                                                )}
+                                                                                aria-hidden="true"
+                                                                            />
+                                                                            {
+                                                                                item.name
+                                                                            }
+                                                                        </button>
+                                                                    )}
+                                                                    {item.href && (
+                                                                        <Link
+                                                                            href={
+                                                                                item.href
+                                                                            }
                                                                             className={classNames(
                                                                                 item.current
-                                                                                    ? "text-white"
-                                                                                    : "text-white group-hover:text-white",
-                                                                                "h-6 w-6 shrink-0"
+                                                                                    ? "bg-white/10 text-white"
+                                                                                    : "hover:text-white hover:bg-white/100",
+                                                                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                                                             )}
-                                                                            aria-hidden="true"
-                                                                        />
-                                                                        {
-                                                                            item.name
-                                                                        }
-                                                                    </Link>
+                                                                        >
+                                                                            <item.icon
+                                                                                className={classNames(
+                                                                                    item.current
+                                                                                        ? "text-white"
+                                                                                        : "text-white group-hover:text-white",
+                                                                                    "h-6 w-6 shrink-0"
+                                                                                )}
+                                                                                aria-hidden="true"
+                                                                            />
+                                                                            {
+                                                                                item.name
+                                                                            }
+                                                                        </Link>
+                                                                    )}
                                                                 </li>
                                                             )
                                                         )}
@@ -188,26 +226,50 @@ export const HostDashboardLayout = ({
                                     <ul role="list" className="-mx-2 space-y-1">
                                         {navigation.map((item) => (
                                             <li key={item.name}>
-                                                <Link
-                                                    href={item.href}
-                                                    className={classNames(
-                                                        item.current
-                                                            ? "bg-white/10 text-white"
-                                                            : "hover:text-white hover:bg-white/10",
-                                                        "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold"
-                                                    )}
-                                                >
-                                                    <item.icon
+                                                {item.action && (
+                                                    <button
+                                                        onClick={item.action}
                                                         className={classNames(
                                                             item.current
-                                                                ? "text-white"
-                                                                : "group-hover:text-white",
-                                                            "h-6 w-6 shrink-0"
+                                                                ? " bg-white/10 text-white"
+                                                                : "hover:text-white hover:bg-white/10",
+                                                            "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold w-full"
                                                         )}
-                                                        aria-hidden="true"
-                                                    />
-                                                    {item.name}
-                                                </Link>
+                                                    >
+                                                        <item.icon
+                                                            className={classNames(
+                                                                item.current
+                                                                    ? "text-white"
+                                                                    : "group-hover:text-white",
+                                                                "h-6 w-6 shrink-0"
+                                                            )}
+                                                            aria-hidden="true"
+                                                        />
+                                                        {item.name}
+                                                    </button>
+                                                )}
+                                                {item.href && (
+                                                    <Link
+                                                        href={item.href}
+                                                        className={classNames(
+                                                            item.current
+                                                                ? "bg-white/10 text-white"
+                                                                : "hover:text-white hover:bg-white/10",
+                                                            "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold"
+                                                        )}
+                                                    >
+                                                        <item.icon
+                                                            className={classNames(
+                                                                item.current
+                                                                    ? "text-white"
+                                                                    : "group-hover:text-white",
+                                                                "h-6 w-6 shrink-0"
+                                                            )}
+                                                            aria-hidden="true"
+                                                        />
+                                                        {item.name}
+                                                    </Link>
+                                                )}
                                             </li>
                                         ))}
                                     </ul>
