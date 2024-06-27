@@ -17,7 +17,11 @@ interface EventDeleteModalProps {
     event: Event;
 }
 
-const EventDeleteModal = ({ open, setOpen, event }: EventDeleteModalProps) => {
+export const EventDeleteModal = ({
+    open,
+    setOpen,
+    event,
+}: EventDeleteModalProps) => {
     const form = useForm({});
     const deleteEvent = async () => {
         form.delete(route("delete.event", [event]), {
@@ -56,5 +60,3 @@ const EventDeleteModal = ({ open, setOpen, event }: EventDeleteModalProps) => {
         </>
     );
 };
-
-export default EventDeleteModal;

@@ -1,10 +1,10 @@
 import { Link } from "@inertiajs/react";
 
 import { EventAdminActions } from "@/Components/Events/EventAdminActions";
+import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { EventTypeFires } from "@/helpers/eventNames";
 import { imageGenerator } from "@/helpers/user";
 import { Event } from "@/types/Event";
-import { FallbackAvatar } from "@/Components/FallbackAvatar";
 
 export const EventAdminCard = ({ event }: { event: Event }) => {
     return (
@@ -54,6 +54,14 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                 </div>
             </Link>
             <div className="relative -mt-2 flex justify-end rounded-lg bg-white/10 p-6 text-sm space-x-4">
+                <div className={`flex items-center space-x-4`}>
+                    <button>resources</button>
+                    <Link
+                        href={route("my.connections", { event_id: event.id })}
+                    >
+                        contacts
+                    </Link>
+                </div>
                 <EventAdminActions event={event} />
             </div>
         </div>

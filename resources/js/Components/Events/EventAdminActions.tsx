@@ -7,9 +7,9 @@ import {
 import { Link } from "@inertiajs/react";
 import { useRecoilState } from "recoil";
 
-import EventDeleteModal from "@/Components/Events/EventDeleteModal";
-import { EventPublishModal } from "@/Components/Events/EventPublishModal";
-import { EventUnpublishModal } from "@/Components/Events/EventUnpublishModal";
+import { EventDeleteModal } from "@/Components/Events/Modals/EventDeleteModal";
+import { EventPublishModal } from "@/Components/Events/Modals/EventPublishModal";
+import { EventUnpublishModal } from "@/Components/Events/Modals/EventUnpublishModal";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 import { reactNotificationState } from "@/store";
 import { Event } from "@/types/Event";
