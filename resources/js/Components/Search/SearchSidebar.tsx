@@ -18,9 +18,11 @@ export const SearchSidebar = () => {
             {!showFilterPanel && (
                 <div className="flex-1 overflow-y-auto px-4">
                     {events.length === 0 ? (
-                        <p className="text-white text-center">
-                            No events matching your search
-                        </p>
+                        <div className={`py-8`}>
+                            <p className="text-white text-center">
+                                No events matching your search
+                            </p>
+                        </div>
                     ) : (
                         events.map((event: Event, index: number) => (
                             <EventResult
