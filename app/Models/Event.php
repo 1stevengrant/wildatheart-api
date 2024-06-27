@@ -29,7 +29,7 @@ class Event extends BaseModel
         'sex' => EventSexEnum::class,
     ];
 
-    protected $appends = ['url', 'type_group', 'event_type_image', 'host_name', 'host_photo', 'location'];
+    protected $appends = ['url', 'type_group', 'event_type_image', 'host_name', 'host_photo', 'location', 'hostObject'];
 
     protected $hidden = ['user_id', 'host', 'eventType'];
 

@@ -1,6 +1,5 @@
 import { Config } from "ziggy-js";
 
-import { Connection } from "@/types/Connection";
 export type Nullable<T> = T | null;
 
 export interface Ziggy {

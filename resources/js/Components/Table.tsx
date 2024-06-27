@@ -1,5 +1,3 @@
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { Link } from "@inertiajs/react";
 import get from "lodash/get";
 
 interface TableProps<T> {

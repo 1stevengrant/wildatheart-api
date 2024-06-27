@@ -2,6 +2,7 @@ import React from "react";
 
 import { Link } from "@inertiajs/react";
 
+import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { dateFormatter } from "@/helpers/dateFormatter";
 import { EVENT_FOR_MEN } from "@/helpers/eventSex";
@@ -49,7 +50,17 @@ export const MobileEventListCard = ({ event }: { event: Event }) => {
                         </span>
                     </div>
                     <div className={`flex items-center space-x-2 mt-1`}>
-                        <UserAvatar image={event.host_photo} />
+                        <>
+                            {event?.host_photo ? (
+                                <UserAvatar image={event.host_photo} />
+                            ) : (
+                                <FallbackAvatar
+                                    size={30}
+                                    name={event.hostObject.full_name}
+                                    md5email={event.hostObject.md5email}
+                                />
+                            )}
+                        </>
                         <div
                             className={`flex flex-col text-grey-200 leading-tighter text-sm`}
                         >

@@ -1,11 +1,9 @@
 import React from "react";
 
 import { UpdateProfileForm } from "@/Components/Forms/UpdateProfileForm";
-import { MyProfileWrapper } from "@/Components/Layout/Elements/MyProfileWrapper";
-import useTypedPage from "@/Hooks/useTypedPage";
-import { AppLayout } from "@/Layouts/AppLayout";
-import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
+import useTypedPage from "@/Hooks/useTypedPage";
+import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
 const MyProfilePage = () => {
     const pageTitle = `My Profile`;

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useRecoilState } from "recoil";
 
 import { EventHostInfo } from "@/Components/Events/EventHostInfo";
@@ -8,6 +7,7 @@ import { EventInfo } from "@/Components/Events/EventInfo";
 import { EventLocation } from "@/Components/Events/EventLocation";
 import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
 import { HostedBy } from "@/Components/Events/HostedBy";
+import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { dateFormatter } from "@/helpers/dateFormatter";
 import { EVENT_FOR_MEN } from "@/helpers/eventSex";
@@ -20,9 +20,7 @@ import { imageGenerator } from "@/helpers/user";
 import { currentEventState } from "@/store";
 import { Event } from "@/types/Event";
 
-export const EventCardContent = (props: {
-    event: Event | undefined | null;
-}) => {
+export const EventCardContent = (props: { event: Event }) => {
     const eventTypeClasses = `text-grey-200 font-semibold text-sm`;
     const eventTypeNameClasses = `flex items-center justify-between space-x-4`;
     const { event } = props;
@@ -123,7 +121,11 @@ export const EventCardContent = (props: {
                         {event?.host_photo ? (
                             <UserAvatar image={event.host_photo} />
                         ) : (
-                            <UserCircleIcon className={"w-6 h-6 text-white"} />
+                            <FallbackAvatar
+                                size={30}
+                                name={event.hostObject.full_name}
+                                md5email={event.hostObject.md5email}
+                            />
                         )}
                     </>
                     <div className="text-xs text-grey-200 leading-tighter">

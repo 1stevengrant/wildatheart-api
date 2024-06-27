@@ -8,7 +8,7 @@ interface SelectInputProps extends ComponentProps<"select"> {
 export default function SelectInput({
     name,
     error,
-    className = '',
+    className = "",
     options = [],
     ...props
 }: SelectInputProps) {

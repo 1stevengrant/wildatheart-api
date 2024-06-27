@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 
-import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { Link, router, useForm } from "@inertiajs/react";
 import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input";
@@ -215,7 +214,8 @@ export const UpdateProfileForm = ({
                                         }
                                     >
                                         <FallbackAvatar
-                                            user={user}
+                                            name={user.full_name}
+                                            md5email={user.md5email}
                                             size={135}
                                         />
                                         <div
