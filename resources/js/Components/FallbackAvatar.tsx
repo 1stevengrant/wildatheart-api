@@ -1,13 +1,11 @@
 import { createUseStyles } from "react-jss";
-import { Md5 } from "ts-md5";
 
 import { getColorAndBackground } from "@/lib/getColorAndBackground";
 import { getInitials } from "@/lib/getInitials";
-import { User } from "@/types";
 
 const useStyles = createUseStyles({
-    parent: ({ md5, size }) => ({
-        ...getColorAndBackground(md5),
+    parent: ({ md5email, size }) => ({
+        ...getColorAndBackground(md5email),
         position: "relative",
         width: size,
         height: size,
@@ -36,22 +34,21 @@ const useStyles = createUseStyles({
 });
 
 export const FallbackAvatar = ({
-    user,
+    name,
+    md5email,
     size = 50,
 }: {
-    user: User;
+    name: string;
+    md5email: string;
     size?: number;
 }) => {
-    const email = user.email;
-    const name = `${user.given_name} ${user.family_name}`;
-    const md5 = Md5.hashStr(email);
-    const url = `https://www.gravatar.com/avatar/${md5}?s=${String(
+    const url = `https://www.gravatar.com/avatar/${md5email}?s=${String(
         Math.max(50, 250)
     )}&d=blank`;
 
     const initials = getInitials(`${name}`);
 
-    const c = useStyles({ md5, size, initials });
+    const c = useStyles({ md5email, size, initials });
 
     return (
         <div className={c.parent}>

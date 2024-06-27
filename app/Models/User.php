@@ -177,4 +177,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Address::class);
     }
+
+    public function getMd5EmailAttribute(): string
+    {
+        return md5($this->email);
+    }
 }

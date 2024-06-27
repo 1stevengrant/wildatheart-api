@@ -3,7 +3,13 @@ import { UserAvatar } from "@/Components/UserAvatar";
 
 export const AuthUserAvatar = ({ auth }: { auth: any }) => {
     if (!auth.user.image) {
-        return <FallbackAvatar user={auth.user} />;
+        return (
+            <FallbackAvatar
+                name={auth.user.full_name}
+                md5email={auth.user.md5email}
+            />
+            // <div>hello</div>
+        );
     }
     return (
         <UserAvatar

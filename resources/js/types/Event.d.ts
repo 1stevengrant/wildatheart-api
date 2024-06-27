@@ -1,3 +1,5 @@
+import { HostType } from "@/types/HostType";
+
 export type Event = {
     eventTypeImage: string;
     approved_at: string;
@@ -42,4 +44,5 @@ export type Event = {
     endDate?: string;
     sex?: string;
     type_group?: string;
+    hostObject: HostType;
 };

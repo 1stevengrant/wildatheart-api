@@ -16,6 +16,7 @@ class EventResource extends JsonResource
     {
         return [
             'host' => $this->host_name,
+            'hostObject' => HostResource::make($this->user)->resolve(),
             'hostFriendlyName' => $this->host->given_name,
             'location' => $this->location,
             'name' => $this->name,
