@@ -184,19 +184,22 @@ const ViewEventPage = () => {
                                 </Markdown>
                             </div>
 
-                            {event.eventTypeData.photos.length > 0 && (
-                                <PhotoCarousel
-                                    className={`mt-8`}
-                                    images={event?.eventTypeData.photos}
-                                />
-                            )}
+                            {event.eventTypeData.photos &&
+                                event.eventTypeData.photos.length > 0 && (
+                                    <PhotoCarousel
+                                        className={`mt-8`}
+                                        images={event?.eventTypeData.photos}
+                                    />
+                                )}
                         </div>
 
                         <div className="relative hidden md:block md:w-1/3">
+
                             <Host
                                 host={event.host}
                                 hostPhoto={event.hostPhoto}
                             />
+
 
                             <ConnectWithHost className={"mt-6 sticky top-4"} />
                         </div>

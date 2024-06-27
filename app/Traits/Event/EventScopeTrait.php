@@ -42,6 +42,7 @@ trait EventScopeTrait
                 '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
                 [$latitude, $longitude, $latitude]
             )
+            ->whereNotNull('approved_at')
             ->whereNull('deleted_at')
             ->having('distance', '<=', $radius)
             ->orderBy('distance');
