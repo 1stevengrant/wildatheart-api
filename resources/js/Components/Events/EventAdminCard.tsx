@@ -4,6 +4,7 @@ import { EventAdminActions } from "@/Components/Events/EventAdminActions";
 import { EventTypeFires } from "@/helpers/eventNames";
 import { imageGenerator } from "@/helpers/user";
 import { Event } from "@/types/Event";
+import { FallbackAvatar } from "@/Components/FallbackAvatar";
 
 export const EventAdminCard = ({ event }: { event: Event }) => {
     return (
@@ -39,12 +40,11 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                                 </p>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <div
-                                    className="h-6 w-6 flex-shrink-0 rounded-full bg-cover bg-center object-fill"
-                                    style={{
-                                        backgroundImage: `url('/svgs/user.svg')`,
-                                    }}
-                                ></div>
+                                <FallbackAvatar
+                                    size={24}
+                                    name={event.hostObject.full_name}
+                                    md5email={event.hostObject.md5email}
+                                />
                                 <div className="text-sm leading-tighter text-grey-200">
                                     Hosted by {event.host}
                                 </div>
