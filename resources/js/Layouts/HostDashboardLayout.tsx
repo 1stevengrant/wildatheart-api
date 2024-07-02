@@ -13,11 +13,11 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import classNames from "classnames";
 
 import { AuthUserMenu } from "@/Components/Layout/Elements/AuthUserMenu";
+import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
+import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
 import { SupportModal } from "@/Components/Modals/SupportModal";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
-import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
-import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
 
 export const HostDashboardLayout = ({
     children,

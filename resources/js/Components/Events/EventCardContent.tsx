@@ -1,9 +1,9 @@
 import React from "react";
 
+import { EventTypeGroupIndicator } from "@/Components/Events/EventAdminCard/EventTypeGroupIndicator";
 import { EventHostInfo } from "@/Components/Events/EventHostInfo";
 import { EventInfo } from "@/Components/Events/EventInfo";
 import { EventLocation } from "@/Components/Events/EventLocation";
-import { EventTypeGroupIndicator } from "@/Components/Events/EventAdminCard/EventTypeGroupIndicator";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { UserAvatar } from "@/Components/UserAvatar";
