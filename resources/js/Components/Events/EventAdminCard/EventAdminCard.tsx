@@ -1,7 +1,7 @@
 import { NewspaperIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
 
-import { EventAdminActions } from "@/Components/Events/EventAdminActions";
+import { EventAdminActions } from "@/Components/Events/EventAdminCard/EventAdminActions";
 import { EventPublicPrivate } from "@/Components/Events/EventAdminCard/EventPublicPrivate";
 import { EventTypeGroupIndicator } from "@/Components/Events/EventAdminCard/EventTypeGroupIndicator";
 import { EventTypeImage } from "@/Components/Events/EventTypeImage";
