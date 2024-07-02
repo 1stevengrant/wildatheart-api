@@ -4,14 +4,14 @@ import { usePage } from "@inertiajs/react";
 import Markdown from "react-markdown";
 
 import { BackToEvents } from "@/Components/Buttons/BackToEvents";
-import { ConnectWithHost } from "@/Components/Events/ConnectWithHost";
+import { ConnectWithHost } from "@/Components/Events/Detail/ConnectWithHost";
 import { Date } from "@/Components/Events/Detail/Dates";
 import Host from "@/Components/Events/Detail/Host";
 import Location from "@/Components/Events/Detail/Location";
+import { MobileConnect } from "@/Components/Events/Detail/MobileConnect";
+import { PhotoCarousel } from "@/Components/Events/Detail/PhotoCarousel";
+import { ShareEvent } from "@/Components/Events/Detail/ShareEvent";
 import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
-import { MobileConnect } from "@/Components/Events/MobileConnect";
-import { PhotoCarousel } from "@/Components/Events/PhotoCarousel";
-import { ShareEvent } from "@/Components/Events/ShareEvent";
 import { StaticMap } from "@/Components/Maps/StaticMap";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import {
