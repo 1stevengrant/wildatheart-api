@@ -4,6 +4,7 @@ import { Tab } from "@headlessui/react";
 import { usePage } from "@inertiajs/react";
 
 import { EventAdminCard } from "@/Components/Events/EventAdminCard/EventAdminCard";
+import Pagination from "@/Components/Pagination";
 import { HostNewEvent } from "@/Components/Profile/HostNewEvent";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
@@ -68,7 +69,12 @@ const MyEventsPage = () => {
                         {typedEvents.length > 0 ? (
                             <EventGrid className={`mt-4`}>
                                 {typedEvents
-                                    .filter((event: Event) => event.approved_at)
+                                    .filter(
+                                        (event: Event) =>
+                                            !event.start_date ||
+                                            new Date(event.start_date) >
+                                                new Date()
+                                    )
                                     .map((event: Event, index: number) => (
                                         <EventAdminCard
                                             event={event}
@@ -87,7 +93,10 @@ const MyEventsPage = () => {
                             <EventGrid>
                                 {typedEvents
                                     .filter(
-                                        (event: Event) => !event.approved_at
+                                        (event: Event) =>
+                                            event.start_date &&
+                                            new Date(event.start_date) <
+                                                new Date()
                                     )
                                     .map((event: Event, index: number) => (
                                         <EventAdminCard

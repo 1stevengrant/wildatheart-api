@@ -91,6 +91,7 @@ const MyConnectionsPage = () => {
                     },
                 ]}
                 rows={data}
+                noDataMessage={"No connections for this event."}
             />
             <Pagination links={links} />
         </HostDashboardLayout>

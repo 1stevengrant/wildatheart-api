@@ -31,6 +31,19 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                                 {event.eventType === EventTypeFires && (
                                     <span>Fire</span>
                                 )}
+                                {event.approved_at ? (
+                                    <span
+                                        className={`text-xs bg-orange text-white px-2 py-1 rounded-full ml-2`}
+                                    >
+                                        Published
+                                    </span>
+                                ) : (
+                                    <span
+                                        className={`text-xs bg-grey-darker text-white px-2 py-1 rounded-full ml-2`}
+                                    >
+                                        Unpublished
+                                    </span>
+                                )}
                             </p>
 
                             <p className="text-sm text-white">

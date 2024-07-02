@@ -9,12 +9,14 @@ interface TableProps<T> {
     }[];
     rows: T[];
     getRowDetailsUrl?: (row: T) => string;
+    noDataMessage?: string;
 }
 
 export default function Table<T>({
     columns = [],
     rows = [],
     getRowDetailsUrl,
+    noDataMessage = "No data found.",
 }: TableProps<T>) {
     return (
         <div className="overflow-x-auto rounded shadow">
@@ -40,7 +42,7 @@ export default function Table<T>({
                                 className="px-6 py-24 border-t border-grey-border text-center"
                                 colSpan={columns.length}
                             >
-                                No data found.
+                                {noDataMessage}
                             </td>
                         </tr>
                     )}
