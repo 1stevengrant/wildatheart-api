@@ -45,4 +45,5 @@ export type Event = {
     sex?: string;
     type_group?: string;
     hostObject: HostType;
+    isPrivate: boolean;
 };

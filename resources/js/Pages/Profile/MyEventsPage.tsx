@@ -3,15 +3,23 @@ import React, { useState } from "react";
 import { Tab } from "@headlessui/react";
 import { usePage } from "@inertiajs/react";
 
-import { EventAdminCard } from "@/Components/Events/EventAdminCard";
+import { EventAdminCard } from "@/Components/Events/EventAdminCard/EventAdminCard";
 import { HostNewEvent } from "@/Components/Profile/HostNewEvent";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { Event } from "@/types/Event";
 
-const EventGrid = ({ children }: { children: React.ReactNode }) => {
+const EventGrid = ({
+    children,
+    className = "",
+}: {
+    children: React.ReactNode;
+    className?: string;
+}) => {
     return (
-        <div className={`grid gap-6 md:grid-cols-2 clear-both`}>{children}</div>
+        <div className={`grid gap-6 md:grid-cols-2 clear-both ${className}`}>
+            {children}
+        </div>
     );
 };
 
@@ -58,7 +66,7 @@ const MyEventsPage = () => {
                 <Tab.Panels className={`py-6`}>
                     <Tab.Panel>
                         {typedEvents.length > 0 ? (
-                            <EventGrid>
+                            <EventGrid className={`mt-4`}>
                                 {typedEvents
                                     .filter((event: Event) => event.approved_at)
                                     .map((event: Event, index: number) => (

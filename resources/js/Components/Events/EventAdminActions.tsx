@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import {
     ClipboardDocumentCheckIcon,
+    EllipsisHorizontalIcon,
     PencilIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
+import OutsideClickHandler from "react-outside-click-handler";
 import { useRecoilState } from "recoil";
 
 import { EventDeleteModal } from "@/Components/Events/Modals/EventDeleteModal";
@@ -15,6 +17,7 @@ import { reactNotificationState } from "@/store";
 import { Event } from "@/types/Event";
 
 export const EventAdminActions = ({ event }: { event: Event }) => {
+    const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
     const [reactNotifications, setReactNotifications] = useRecoilState(
         reactNotificationState
     );
@@ -52,40 +55,64 @@ export const EventAdminActions = ({ event }: { event: Event }) => {
         }
     }, [event]);
     return (
-        <>
-            {event.approved_at ? (
-                <EventUnpublishModal
-                    open={openEventUnpublishModal}
-                    setOpen={setOpenEvenUnpublishModal}
-                    event={event}
-                />
-            ) : (
-                <EventPublishModal
-                    open={openEventPublishModal}
-                    setOpen={setOpenEventPublishModal}
-                    event={event}
-                />
-            )}
-            <EventDeleteModal
-                open={openEventDeleteModal}
-                setOpen={setOpenEventDeleteModal}
-                event={event}
-            />
-            <Link
-                href={route("my.events.edit", event)}
-                className="flex items-center space-x-2 hover:text-orange"
-            >
-                <PencilIcon className={defaultIconSize} />
-
-                <span className="hidden md:inline">Edit Event</span>
-            </Link>
+        <div className={`relative z-50 flex items-center justify-center `}>
             <button
-                className="flex items-center space-x-2 hover:text-orange"
-                onClick={copyToClipboard}
+                className={`flex items-center space-x-1`}
+                onClick={() => setActionDrawerOpen(true)}
             >
-                <ClipboardDocumentCheckIcon className={defaultIconSize} />
-                <span className={`hidden md:inline`}>Copy Link</span>
+                <EllipsisHorizontalIcon className={defaultIconSize} />
+                <span>Options</span>
             </button>
-        </>
+            {actionDrawerOpen && (
+                <OutsideClickHandler
+                    onOutsideClick={() => setActionDrawerOpen(false)}
+                >
+                    <div
+                        className={`border-black border bg-[#292929] p-4 rounded-lg z-20 w-[200px] shadow-lg absolute -bottom-[151px] right-0 space-y-1.5`}
+                    >
+                        {event.approved_at ? (
+                            <EventUnpublishModal
+                                open={openEventUnpublishModal}
+                                setOpen={setOpenEvenUnpublishModal}
+                                event={event}
+                            />
+                        ) : (
+                            <EventPublishModal
+                                open={openEventPublishModal}
+                                setOpen={setOpenEventPublishModal}
+                                event={event}
+                            />
+                        )}
+                        <EventDeleteModal
+                            open={openEventDeleteModal}
+                            setOpen={setOpenEventDeleteModal}
+                            event={event}
+                        />
+                        <Link
+                            href={route("my.events.edit", event)}
+                            className="flex items-center space-x-2 hover:text-orange"
+                        >
+                            <PencilIcon className={defaultIconSize} />
+
+                            <span className="hidden md:inline">Edit Event</span>
+                        </Link>
+                        <button
+                            className="flex items-center space-x-2 hover:text-orange"
+                            onClick={() => {
+                                copyToClipboard().then(() => {});
+                                setActionDrawerOpen(false);
+                            }}
+                        >
+                            <ClipboardDocumentCheckIcon
+                                className={defaultIconSize}
+                            />
+                            <span className={`hidden md:inline`}>
+                                Copy Link
+                            </span>
+                        </button>
+                    </div>
+                </OutsideClickHandler>
+            )}
+        </div>
     );
 };

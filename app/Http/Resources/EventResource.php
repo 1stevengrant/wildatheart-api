@@ -38,6 +38,8 @@ class EventResource extends JsonResource
             'endDate' => $this->end_date ? $this->end_date->format('M j') : null,
             'heroImage' => $this->hero_image ?? null,
             'heroVideo' => $this->hero_video ?? null,
+            'isPrivate' => $this->is_private,
+            'type_group' => $this->typeGroup
         ];
     }
 }
