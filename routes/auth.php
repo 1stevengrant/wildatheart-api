@@ -13,6 +13,7 @@ use App\Http\Controllers\Event\HostEventTypeMailingAddressController;
 use App\Http\Controllers\Event\HostEventTypeScheduleController;
 use App\Http\Controllers\Event\HostEventTypeSelectController;
 use App\Http\Controllers\Event\ToggleEventApprovedAtController;
+use App\Http\Controllers\Event\ToggleEventPrivacyController;
 use App\Http\Controllers\Event\UpdateEventController;
 use App\Http\Controllers\Gift\HandleSendGiftController;
 use App\Http\Controllers\ResourcesController;
@@ -64,5 +65,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('destroy-photo', DestroyUserImageController::class)->name('user.profile-photo.destroy');
         Route::get('resources', ResourcesController::class)->name('resources');
         Route::put('toggle-contacted/{attendee}', ToggleConnectionContactedController::class)->name('toggle.contacted');
+        Route::put('toggle-privacy/{event}', ToggleEventPrivacyController::class)->name('toggle-event-privacy');
     });
 });

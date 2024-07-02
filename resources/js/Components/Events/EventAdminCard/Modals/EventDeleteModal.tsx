@@ -9,6 +9,11 @@ import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { ModalHeading } from "@/Components/Type/ModalHeading";
 import { Modal } from "@/Components/Ui/Modal";
 import { ModalActions } from "@/Components/Ui/ModalActions";
+import { defaultIconSize } from "@/helpers/defaultIconSize";
+import {
+    eventAdminActionButtonClass,
+    eventAdminActionButtonTextClass,
+} from "@/helpers/eventAdminActionButtonClass";
 import { Event } from "@/types/Event";
 
 interface EventDeleteModalProps {
@@ -36,11 +41,13 @@ export const EventDeleteModal = ({
     return (
         <>
             <button
-                className="flex items-center space-x-2 hover:text-orange"
+                className={eventAdminActionButtonClass}
                 onClick={() => setOpen(true)}
             >
-                <TrashIcon className="h-6 w-6" />
-                <span className="hidden md:inline">Delete Event</span>
+                <TrashIcon className={defaultIconSize} />
+                <span className={eventAdminActionButtonTextClass}>
+                    Delete Event
+                </span>
             </button>
             <Modal open={open} setOpen={setOpen}>
                 <div className={"flex justify-end"}>

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { EyeSlashIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { EyeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useForm } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
@@ -8,9 +8,14 @@ import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { ModalHeading } from "@/Components/Type/ModalHeading";
 import { Modal } from "@/Components/Ui/Modal";
 import { ModalActions } from "@/Components/Ui/ModalActions";
+import { defaultIconSize } from "@/helpers/defaultIconSize";
+import {
+    eventAdminActionButtonClass,
+    eventAdminActionButtonTextClass,
+} from "@/helpers/eventAdminActionButtonClass";
 import { Event } from "@/types/Event";
 
-export const EventUnpublishModal = ({
+export const EventPublishModal = ({
     open,
     setOpen,
     event,
@@ -20,10 +25,10 @@ export const EventUnpublishModal = ({
     event: Event;
 }) => {
     const form = useForm({
-        approved_at: null,
+        approved_at: new Date().toISOString(),
     });
 
-    const unpublishEvent = async () => {
+    const publishEvent = async () => {
         form.put(route("toggle-event-approved-at", [event]), {
             preserveScroll: true,
             preserveState: false,
@@ -36,29 +41,33 @@ export const EventUnpublishModal = ({
     return (
         <>
             <button
-                className="flex items-center space-x-2 hover:text-orange"
+                className={eventAdminActionButtonClass}
                 onClick={() => setOpen(true)}
             >
-                <EyeSlashIcon className="h-6 w-6" />
-                <span className="hidden md:inline">Unpublish Event</span>
+                <EyeIcon className={defaultIconSize} />
+                <span className={eventAdminActionButtonTextClass}>
+                    Publish Event
+                </span>
             </button>
             <Modal open={open} setOpen={setOpen}>
                 <div className={"flex justify-end"}>
                     <button onClick={() => setOpen(false)}>
-                        <XMarkIcon className={"w-6 h-6 text-white"} />
+                        <XMarkIcon
+                            className={`${defaultIconSize} text-white`}
+                        />
                     </button>
                 </div>
-                <ModalHeading>Unpublish {event.name}?</ModalHeading>
+                <ModalHeading>Publish {event.name} Event?</ModalHeading>
                 <p>
-                    Are you sure you want to unpublish this Event and make it
-                    invisible to the public?
+                    Are you sure you want to publish this Event and allow
+                    connections to make contact?
                 </p>
                 <ModalActions>
                     <SecondaryButton onClick={() => setOpen(false)}>
                         Cancel
                     </SecondaryButton>
-                    <PrimaryButton onClick={unpublishEvent}>
-                        Unpublish
+                    <PrimaryButton onClick={publishEvent}>
+                        Publish
                     </PrimaryButton>
                 </ModalActions>
             </Modal>

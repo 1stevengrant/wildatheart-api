@@ -9,10 +9,15 @@ import { Link } from "@inertiajs/react";
 import OutsideClickHandler from "react-outside-click-handler";
 import { useRecoilState } from "recoil";
 
-import { EventDeleteModal } from "@/Components/Events/Modals/EventDeleteModal";
-import { EventPublishModal } from "@/Components/Events/Modals/EventPublishModal";
-import { EventUnpublishModal } from "@/Components/Events/Modals/EventUnpublishModal";
+import { EventDeleteModal } from "@/Components/Events/EventAdminCard/Modals/EventDeleteModal";
+import { EventPublicPrivateModal } from "@/Components/Events/EventAdminCard/Modals/EventPublicPrivateModal";
+import { EventPublishModal } from "@/Components/Events/EventAdminCard/Modals/EventPublishModal";
+import { EventUnpublishModal } from "@/Components/Events/EventAdminCard/Modals/EventUnpublishModal";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
+import {
+    eventAdminActionButtonClass,
+    eventAdminActionButtonTextClass,
+} from "@/helpers/eventAdminActionButtonClass";
 import { reactNotificationState } from "@/store";
 import { Event } from "@/types/Event";
 
@@ -47,6 +52,8 @@ export const EventAdminActions = ({ event }: { event: Event }) => {
     const [openEventUnpublishModal, setOpenEvenUnpublishModal] =
         useState(false);
     const [openEventPublishModal, setOpenEventPublishModal] = useState(false);
+    const [openEventPublicPrivateModal, setOpenEventPublicPrivateModal] =
+        useState(false);
 
     useEffect(() => {
         const params = route().params;
@@ -63,56 +70,64 @@ export const EventAdminActions = ({ event }: { event: Event }) => {
                 <EllipsisHorizontalIcon className={defaultIconSize} />
                 <span>Options</span>
             </button>
-            {actionDrawerOpen && (
-                <OutsideClickHandler
-                    onOutsideClick={() => setActionDrawerOpen(false)}
+
+            <OutsideClickHandler
+                onOutsideClick={() => setActionDrawerOpen(false)}
+            >
+                <div
+                    className={`border-black border bg-[#292929] p-4 rounded-lg z-20 w-[200px] shadow-lg absolute right-0 space-y-1.5 ${event.type_group !== "fire" ? `-bottom-[191px]` : `-bottom-[145px]`} ${actionDrawerOpen ? `block` : `hidden`}`}
                 >
-                    <div
-                        className={`border-black border bg-[#292929] p-4 rounded-lg z-20 w-[200px] shadow-lg absolute -bottom-[151px] right-0 space-y-1.5`}
-                    >
-                        {event.approved_at ? (
-                            <EventUnpublishModal
-                                open={openEventUnpublishModal}
-                                setOpen={setOpenEvenUnpublishModal}
-                                event={event}
-                            />
-                        ) : (
-                            <EventPublishModal
-                                open={openEventPublishModal}
-                                setOpen={setOpenEventPublishModal}
-                                event={event}
-                            />
-                        )}
-                        <EventDeleteModal
-                            open={openEventDeleteModal}
-                            setOpen={setOpenEventDeleteModal}
+                    {event.approved_at ? (
+                        <EventUnpublishModal
+                            open={openEventUnpublishModal}
+                            setOpen={setOpenEvenUnpublishModal}
                             event={event}
                         />
-                        <Link
-                            href={route("my.events.edit", event)}
-                            className="flex items-center space-x-2 hover:text-orange"
-                        >
-                            <PencilIcon className={defaultIconSize} />
+                    ) : (
+                        <EventPublishModal
+                            open={openEventPublishModal}
+                            setOpen={setOpenEventPublishModal}
+                            event={event}
+                        />
+                    )}
+                    <EventDeleteModal
+                        open={openEventDeleteModal}
+                        setOpen={setOpenEventDeleteModal}
+                        event={event}
+                    />
+                    <Link
+                        href={route("my.events.edit", event)}
+                        className={eventAdminActionButtonClass}
+                    >
+                        <PencilIcon className={defaultIconSize} />
 
-                            <span className="hidden md:inline">Edit Event</span>
-                        </Link>
-                        <button
-                            className="flex items-center space-x-2 hover:text-orange"
-                            onClick={() => {
-                                copyToClipboard().then(() => {});
-                                setActionDrawerOpen(false);
-                            }}
-                        >
-                            <ClipboardDocumentCheckIcon
-                                className={defaultIconSize}
-                            />
-                            <span className={`hidden md:inline`}>
-                                Copy Link
-                            </span>
-                        </button>
-                    </div>
-                </OutsideClickHandler>
-            )}
+                        <span className={eventAdminActionButtonTextClass}>
+                            Edit Event
+                        </span>
+                    </Link>
+                    <button
+                        className={eventAdminActionButtonClass}
+                        onClick={() => {
+                            copyToClipboard().then(() => {});
+                            setActionDrawerOpen(false);
+                        }}
+                    >
+                        <ClipboardDocumentCheckIcon
+                            className={defaultIconSize}
+                        />
+                        <span className={eventAdminActionButtonTextClass}>
+                            Copy Link
+                        </span>
+                    </button>
+                    {event.type_group !== "fire" && (
+                        <EventPublicPrivateModal
+                            open={openEventPublicPrivateModal}
+                            setOpen={setOpenEventPublicPrivateModal}
+                            event={event}
+                        />
+                    )}
+                </div>
+            </OutsideClickHandler>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { EyeIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { EyeSlashIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useForm } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
@@ -8,9 +8,14 @@ import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { ModalHeading } from "@/Components/Type/ModalHeading";
 import { Modal } from "@/Components/Ui/Modal";
 import { ModalActions } from "@/Components/Ui/ModalActions";
+import { defaultIconSize } from "@/helpers/defaultIconSize";
+import {
+    eventAdminActionButtonClass,
+    eventAdminActionButtonTextClass,
+} from "@/helpers/eventAdminActionButtonClass";
 import { Event } from "@/types/Event";
 
-export const EventPublishModal = ({
+export const EventUnpublishModal = ({
     open,
     setOpen,
     event,
@@ -20,10 +25,10 @@ export const EventPublishModal = ({
     event: Event;
 }) => {
     const form = useForm({
-        approved_at: new Date().toISOString(),
+        approved_at: null,
     });
 
-    const publishEvent = async () => {
+    const unpublishEvent = async () => {
         form.put(route("toggle-event-approved-at", [event]), {
             preserveScroll: true,
             preserveState: false,
@@ -36,11 +41,13 @@ export const EventPublishModal = ({
     return (
         <>
             <button
-                className="flex items-center space-x-2 hover:text-orange"
+                className={eventAdminActionButtonClass}
                 onClick={() => setOpen(true)}
             >
-                <EyeIcon className="h-6 w-6" />
-                <span className="hidden md:inline">Publish Event</span>
+                <EyeSlashIcon className={defaultIconSize} />
+                <span className={eventAdminActionButtonTextClass}>
+                    Unpublish Event
+                </span>
             </button>
             <Modal open={open} setOpen={setOpen}>
                 <div className={"flex justify-end"}>
@@ -48,17 +55,17 @@ export const EventPublishModal = ({
                         <XMarkIcon className={"w-6 h-6 text-white"} />
                     </button>
                 </div>
-                <ModalHeading>Publish {event.name} Event?</ModalHeading>
+                <ModalHeading>Unpublish {event.name}?</ModalHeading>
                 <p>
-                    Are you sure you want to publish this Event and allow
-                    connections to make contact?
+                    Are you sure you want to unpublish this Event and make it
+                    invisible to the public?
                 </p>
                 <ModalActions>
                     <SecondaryButton onClick={() => setOpen(false)}>
                         Cancel
                     </SecondaryButton>
-                    <PrimaryButton onClick={publishEvent}>
-                        Publish
+                    <PrimaryButton onClick={unpublishEvent}>
+                        Unpublish
                     </PrimaryButton>
                 </ModalActions>
             </Modal>
