@@ -42,17 +42,15 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
                             <span>Women</span>
                         )}
                     </div>
-                    <EventTypeBadge className={`hidden md:inline-flex`}>
-                        {dateFormatter(event.start_date, "MMM D")} -{" "}
-                        {dateFormatter(event.end_date, "MMM D")}
-                    </EventTypeBadge>
+                    {event?.startDate && (
+                        <EventTypeBadge className={`hidden md:inline-flex`}>
+                            Starts {event.startDate}
+                            {event.endDate && ` - ${event.endDate}`}
+                        </EventTypeBadge>
+                    )}
                 </div>
             )}
-            {event?.type_group === retreatTypeGroup && (
-                <EventTypeBadge className={`my-2 inline-flex md:hidden`}>
-                    Starts {dateFormatter(event.start_date, "MMM D")}
-                </EventTypeBadge>
-            )}
+
             {event?.type_group === experienceTypeGroup && (
                 <div className={eventTypeNameClasses}>
                     <div className={`${eventTypeClasses} ${isActiveEvent}`}>

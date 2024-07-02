@@ -38,7 +38,7 @@ const EditEventPage = () => {
     const publishedStatus = event.approved_at ? "published" : "unpublished";
 
     const pageTitle = `Editing ${event.name} Fire`;
-    const pageName = `Editing ${event.name} Fire <span class="ml-2 rounded px-2 py-1 text-sm font-semibold uppercase text-white bg-orange">${publishedStatus}</span>`;
+
     const [marker, setMarker] = useState<any>({
         lat: event.latitude,
         lng: event.longitude,
