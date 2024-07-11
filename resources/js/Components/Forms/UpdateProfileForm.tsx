@@ -234,6 +234,7 @@ export const UpdateProfileForm = ({
                             )}
                         </>
                     )}
+                    <InputError message={form.errors.image} />
                 </div>
 
                 <div className="col-span-2">
