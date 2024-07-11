@@ -46,10 +46,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('before', HostEventTypeBeforeController::class)->name('before');
                 Route::get('schedule', HostEventTypeScheduleController::class)->name('schedule');
                 Route::get('faqs', HostEventTypeFaqsController::class)->name('faqs');
-                Route::get('create', [HostEventTypeCreateEventController::class, 'index'])->name('create');
-                Route::post('create', [HostEventTypeCreateEventController::class, 'store'])->name('create.store');
                 Route::get('mailing', [HostEventTypeMailingAddressController::class, 'index'])->name('mailing');
                 Route::post('mailing', [HostEventTypeMailingAddressController::class, 'store'])->name('mailing.store');
+                Route::get('create', [HostEventTypeCreateEventController::class, 'index'])->name('create');
+                Route::post('create', [HostEventTypeCreateEventController::class, 'store'])->name('create.store');
             });
         });
 

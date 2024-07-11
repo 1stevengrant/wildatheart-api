@@ -5,19 +5,30 @@ namespace App\Http\Controllers\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MailingAddressRequest;
 use App\Models\EventType;
+use App\Services\EventCreationStepHandlerService;
 
 class HostEventTypeMailingAddressController extends Controller
 {
+    protected EventCreationStepHandlerService $eventCreationStepHandlerService;
+
+    public function __construct(EventCreationStepHandlerService $eventCreationStepHandlerService)
+    {
+        $this->eventCreationStepHandlerService = $eventCreationStepHandlerService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(EventType $eventType)
     {
+        $this->eventCreationStepHandlerService->markStepComplete('guide', 'faqs');
+
         return inertia('Event/MailingAddressEventTypePage', [
             'eventType' => $eventType,
             'address' => auth()->user()->addresses()
                 ->where('is_primary', true)
                 ->first(),
+            'eventSteps' => session('event_steps'),
         ]);
     }
 

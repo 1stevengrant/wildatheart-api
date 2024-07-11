@@ -1,6 +1,7 @@
 import React from "react";
 
 import { usePage } from "@inertiajs/react";
+import pluralize from "pluralize";
 
 import { CircleIcon } from "@/Components/Icons/CircleIcon";
 import { imageGenerator } from "@/helpers/user";
@@ -9,10 +10,16 @@ const EventStep = ({ step }: { step: number }) => {
     return <div className={`text-xs text-grey-200`}>Step {step}</div>;
 };
 
-const EventStepBar = ({ isActive }: { isActive: boolean }) => {
+const EventStepBar = ({
+    isActive,
+    isComplete,
+}: {
+    isActive: boolean;
+    isComplete: boolean;
+}) => {
     return (
         <div
-            className={`rounded h-[50px] border border-white w-[5px] ${isActive ? `bg-white` : `bg-transparent`}`}
+            className={`rounded h-[50px] border w-[5px] ${isActive ? `bg-white` : `${isComplete ? `bg-orange border-orange` : ``}`} `}
         />
     );
 };
@@ -22,11 +29,15 @@ const EventStepTitle = ({ title }: { title: string }) => {
 };
 
 const EventListItem = ({ children }: { children: React.ReactNode }) => {
-    return <li className={`flex items-center space-x-2`}>{children}</li>;
+    return (
+        <li className={`flex items-center space-x-2 leading-tight`}>
+            {children}
+        </li>
+    );
 };
 
 export const EventCreateProgress = () => {
-    const { eventType } = usePage().props as any;
+    const { eventType, eventSteps } = usePage().props as any;
 
     const isEventGuideStep =
         route().current("host.eventType.index") ||
@@ -35,6 +46,12 @@ export const EventCreateProgress = () => {
         route().current("host.eventType.schedule");
     const isMailingAddressStep = route().current("host.eventType.mailing");
     const isEventRegistrationStep = route().current("host.eventType.create");
+
+    const isGuideComplete = (guide: any) => {
+        return guide.welcome && guide.before && guide.schedule && guide.faqs;
+    };
+
+    const eventName = pluralize.singular(eventType.name);
 
     return (
         <>
@@ -58,12 +75,12 @@ export const EventCreateProgress = () => {
                                     width: 150,
                                     height: 150,
                                 })}
-                                alt={eventType.name}
+                                alt={eventName}
                             />
                         </div>
                         <div className={`ml-6`}>
                             <h2 className={`text-sm font-medium`}>
-                                {eventType.name}
+                                {eventName}
                             </h2>
                             <p className={`text-sm`}>Event setup</p>
                         </div>
@@ -71,7 +88,12 @@ export const EventCreateProgress = () => {
                     <ul className={`ml-10 mt-10 space-y-6`}>
                         <li>
                             <div className={`flex`}>
-                                <EventStepBar isActive={isEventGuideStep} />
+                                <EventStepBar
+                                    isActive={isEventGuideStep}
+                                    isComplete={isGuideComplete(
+                                        eventSteps.guide
+                                    )}
+                                />
                                 <div className={`ml-6`}>
                                     <EventStep step={1} />
                                     <EventStepTitle title={`Event Guide`} />
@@ -83,7 +105,7 @@ export const EventCreateProgress = () => {
                                 <EventListItem>
                                     <span>
                                         <CircleIcon
-                                            fill={`${route().current("host.eventType.index") ? `white` : ``}`}
+                                            className={`${route().current("host.eventType.index") ? `fill-white` : `${eventSteps.guide.welcome ? `fill-orange` : `stroke-white`}`}`}
                                         />
                                     </span>
                                     <span>Welcome</span>
@@ -91,38 +113,44 @@ export const EventCreateProgress = () => {
                                 <EventListItem>
                                     <span>
                                         <CircleIcon
-                                            fill={`${route().current("host.eventType.before") ? `white` : ``}`}
+                                            className={`${route().current("host.eventType.before") ? `fill-white` : `${eventSteps.guide.before ? `fill-orange` : `stroke-white`}`}`}
                                         />
                                     </span>
-                                    <span>Before Your {eventType.name}</span>
+                                    <span>Before Your {eventName}</span>
                                 </EventListItem>
                                 <EventListItem>
                                     <span>
                                         <CircleIcon
-                                            fill={`${route().current("host.eventType.schedule") ? `white` : ``}`}
+                                            className={`${route().current("host.eventType.schedule") ? `fill-white` : `${eventSteps.guide.schedule ? `fill-orange` : `stroke-white`}`}`}
                                         />
                                     </span>
-                                    <span>{eventType.name} Schedule</span>
+                                    <span>{eventName} Schedule</span>
                                 </EventListItem>
                                 <EventListItem>
                                     <span>
                                         <CircleIcon
-                                            fill={`${route().current("host.eventType.faqs") ? `white` : ``}`}
+                                            className={`${route().current("host.eventType.faqs") ? `fill-white` : `${eventSteps.guide.faqs ? `fill-orange` : `stroke-white`}`}`}
                                         />
                                     </span>
-                                    <span>{eventType.name} FAQs</span>
+                                    <span>{eventName} FAQs</span>
                                 </EventListItem>
                             </ul>
                         </li>
                         <li className={`flex`}>
-                            <EventStepBar isActive={isMailingAddressStep} />
+                            <EventStepBar
+                                isActive={isMailingAddressStep}
+                                isComplete={eventSteps.mailing_address}
+                            />
                             <div className={`ml-6`}>
                                 <EventStep step={2} />
-                                <EventStepTitle title={` Mailing Address`} />
+                                <EventStepTitle title={`Mailing Address`} />
                             </div>
                         </li>
                         <li className={`flex`}>
-                            <EventStepBar isActive={isEventRegistrationStep} />
+                            <EventStepBar
+                                isActive={isEventRegistrationStep}
+                                isComplete={eventSteps.event_registration}
+                            />
                             <div className="ml-6">
                                 <EventStep step={3} />
                                 <EventStepTitle title={`Event Registration`} />

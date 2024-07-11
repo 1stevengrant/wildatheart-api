@@ -6,19 +6,31 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Http\Requests\FireEventRequest;
 use App\Models\EventType;
+use App\Services\EventCreationStepHandlerService;
 use Illuminate\Http\Request;
 
 class HostEventTypeCreateEventController extends Controller
 {
+    protected EventCreationStepHandlerService $eventCreationStepHandlerService;
+
+    public function __construct(EventCreationStepHandlerService $eventCreationStepHandlerService)
+    {
+        $this->eventCreationStepHandlerService = $eventCreationStepHandlerService;
+    }
+
     public function index(EventType $eventType)
     {
+        $this->eventCreationStepHandlerService->markStepComplete('mailing_address');
+
         return inertia('Event/CreateEventEventTypePage', [
             'eventType' => $eventType,
+            'eventSteps' => session('event_steps'),
         ]);
     }
 
     public function store(Request $request, EventType $eventType)
     {
+        ray(session('event_steps'));
         if ($eventType->name === EventType::FIRES) {
             $request->validate((new FireEventRequest())->rules());
         } else {

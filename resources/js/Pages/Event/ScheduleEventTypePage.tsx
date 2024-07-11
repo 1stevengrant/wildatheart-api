@@ -78,6 +78,7 @@ const ScheduleEventTypePage = () => {
                                         default:
                                             return (
                                                 <span
+                                                    key={index}
                                                     className={`unknown-block-type`}
                                                 />
                                             );
