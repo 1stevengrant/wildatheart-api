@@ -6,7 +6,6 @@ import { Link } from "@inertiajs/react";
 
 import { EventTypeSelectButton } from "@/Components/Buttons/EventTypeSelectButton";
 import { EventGroupWrapper } from "@/Components/Events/EventGroupWrapper";
-import { SelectedEventType } from "@/Components/Events/SelectedEventType";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { EmptyLayoutHeader } from "@/Components/Layout/Elements/EmptyLayoutHeader";
@@ -44,12 +43,12 @@ const HostEventTypeSelectPage = () => {
                     <HeadingOne className={`text-left`}>{pageTitle}</HeadingOne>
                 </EmptyLayoutHeader>
                 <EmptyLayoutBody className={`px-4 pt-20 relative`}>
-                    {selectedType && (
-                        <SelectedEventType
-                            setSelectedType={setSelectedType}
-                            eventType={selectedType}
-                        />
-                    )}
+                    {/*{selectedType && (*/}
+                    {/*    <SelectedEventType*/}
+                    {/*        setSelectedType={setSelectedType}*/}
+                    {/*        eventType={selectedType}*/}
+                    {/*    />*/}
+                    {/*)}*/}
                     <EventGroupWrapper
                         title={`Fires`}
                         description={fireTypeDescription}

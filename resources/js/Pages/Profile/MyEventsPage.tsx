@@ -4,7 +4,6 @@ import { Tab } from "@headlessui/react";
 import { usePage } from "@inertiajs/react";
 
 import { EventAdminCard } from "@/Components/Events/EventAdminCard/EventAdminCard";
-import Pagination from "@/Components/Pagination";
 import { HostNewEvent } from "@/Components/Profile/HostNewEvent";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";

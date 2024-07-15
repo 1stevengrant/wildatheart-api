@@ -12,10 +12,12 @@ import { EventType } from "@/types/EventType";
 
 export const SelectedEventType = ({
     eventType,
-    setSelectedType,
+    attrs,
+    hideTippy,
 }: {
     eventType: EventType;
-    setSelectedType: (type: EventType | null) => void;
+    attrs?: any;
+    hideTippy: () => void;
 }) => {
     const tags = eventType.tags ? eventType.tags.split(",") : [];
 
@@ -31,13 +33,17 @@ export const SelectedEventType = ({
                 leaveTo="opacity-0"
             >
                 <div
-                    className={`right-6 left-6 absolute bottom-0 p-6 rounded-2xl z-[100] shadow-xl bg-gradient-to-br ${eventTypeBackground(eventType.slug)} to-zinc-800`}
+                    className={`w-full md:w-[350px] p-6 rounded-2xl z-[100] shadow-xl bg-gradient-to-br ${eventTypeBackground(eventType.slug)} to-zinc-800 ${attrs}`}
                 >
-                    <XCircleIcon
-                        className={`absolute top-6 right-6 cursor-pointer w-8`}
-                        onClick={() => setSelectedType(null)}
-                    />
-                    <h2 className={`font-bold`}>{eventType.name}</h2>
+                    <div
+                        className={`flex items-center justify-between space-x-4`}
+                    >
+                        <h2 className={`font-bold`}>{eventType.name}</h2>
+                        <XCircleIcon
+                            className={`absolute top-6 right-6 cursor-pointer w-8`}
+                            onClick={hideTippy}
+                        />
+                    </div>
                     {eventType.image && (
                         <img
                             className={`rounded-xl my-4`}

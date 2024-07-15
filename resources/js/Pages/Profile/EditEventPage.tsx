@@ -35,8 +35,6 @@ const EditEventPage = () => {
     const event = page.props.event as Event;
     const route = useRoute();
 
-    const publishedStatus = event.approved_at ? "published" : "unpublished";
-
     const pageTitle = `Editing ${event.name} Fire`;
 
     const [marker, setMarker] = useState<any>({
