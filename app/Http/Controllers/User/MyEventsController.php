@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
+use App\Models\EventType;
 
 class MyEventsController extends Controller
 {
@@ -14,10 +15,11 @@ class MyEventsController extends Controller
     {
         $events = auth()->user()->events()->with('host')
             ->paginate()
-            ->through(fn ($event) => EventResource::make($event)->resolve());
+            ->through(fn($event) => EventResource::make($event)->resolve());
 
         return inertia('Profile/MyEventsPage', [
             'events' => $events,
+            'eventTypes' => EventType::query()->active()->get(),
         ]);
     }
 }

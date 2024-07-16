@@ -4,6 +4,7 @@ import { Tab } from "@headlessui/react";
 import { usePage } from "@inertiajs/react";
 
 import { EventAdminCard } from "@/Components/Events/EventAdminCard/EventAdminCard";
+import { NoEvents } from "@/Components/Events/NoEvents";
 import { HostNewEvent } from "@/Components/Profile/HostNewEvent";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
@@ -20,14 +21,6 @@ const EventGrid = ({
         <div className={`grid gap-6 md:grid-cols-2 clear-both ${className}`}>
             {children}
         </div>
-    );
-};
-
-const NoEvents = ({ type }: { type: string }) => {
-    return (
-        <p className="clear-both text-center text-2xl">
-            You have no {type} events currently
-        </p>
     );
 };
 
