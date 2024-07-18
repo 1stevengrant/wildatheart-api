@@ -27,7 +27,7 @@ export const EventList = () => {
                             setPopupInfo(event);
                         }}
                     >
-                        <div className={`hidden md:block`}>
+                        <div className={`hidden lg:block`}>
                             <Tippy
                                 trigger="click mouseenter"
                                 key={event.id}

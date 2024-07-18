@@ -9,17 +9,15 @@ import { isSelectedEvent } from "@/helpers/isSelectedEvent";
 import { currentEventState } from "@/store";
 import { Event } from "@/types/Event";
 
-interface IEventCardProps {
-    event: Event;
-    className?: string;
-    attrs?: any;
-}
-
 export const EventCard = ({
     event,
     className = "",
     attrs,
-}: IEventCardProps) => {
+}: {
+    event: Event;
+    className?: string;
+    attrs?: any;
+}) => {
     const [currentEvent] = useRecoilState(currentEventState);
 
     return (

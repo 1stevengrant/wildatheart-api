@@ -27,7 +27,7 @@ export const OutsideClickHandlerEvents = () => {
                 >
                     <div {...swipeHandlers}>
                         <EventCardMobile
-                            className={`fixed bottom-4 right-4 left-4 xl:hidden z-[1001] md:max-w-[500px] md:mx-auto`}
+                            className={`fixed bottom-4 right-4 left-4 lg:hidden z-[1001] md:max-w-[500px] md:mx-auto`}
                         />
                     </div>
                 </OutsideClickHandler>

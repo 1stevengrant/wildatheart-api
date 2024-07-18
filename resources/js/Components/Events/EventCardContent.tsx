@@ -13,7 +13,6 @@ import { Event } from "@/types/Event";
 
 export const EventCardContent = (props: { event: Event }) => {
     const { event } = props;
-
     return (
         <>
             {event?.event_type_image && (
