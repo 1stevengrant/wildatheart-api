@@ -11,11 +11,13 @@ import { FormGrid } from "@/Components/Forms/FormGrid";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
+import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import TextInput from "@/Components/Forms/TextInput";
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
 import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
 import { RightColumn } from "@/Components/Layout/RightColumn";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
+import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
@@ -42,8 +44,12 @@ const ConnectWithHostPage = () => {
         setProcessing(true);
         e.preventDefault();
         form.post(route("connect.store", event.id), {
-            preserveScroll: true,
+            preserveScroll: "errors",
             onFinish: () => {
+                setProcessing(false);
+            },
+            onError: () => {
+                scrollToError(form.errors);
                 setProcessing(false);
             },
         });
@@ -212,36 +218,18 @@ const ConnectWithHostPage = () => {
                                     <InputLabel
                                         htmlFor="emailUpdates"
                                         value="Updates & Resources"
+                                        className={`mb-2`}
                                     />
-                                    <div className="flex flex-col space-y-4 md:space-x-4 md:space-y-0 md:flex-row md:items-center">
-                                        <div className="flex items-center rounded-full bg-form">
-                                            <button
-                                                type={"button"}
-                                                onClick={() =>
-                                                    form.setData(
-                                                        "opted_into_marketing",
-                                                        true
-                                                    )
-                                                }
-                                                className={`w-1/2 px-10 py-3 text-sm font-semibold ${form.data.opted_into_marketing ? "border border-white rounded-l-full" : ""}`}
-                                            >
-                                                Yes
-                                            </button>
-                                            <button
-                                                type={"button"}
-                                                onClick={() =>
-                                                    form.setData(
-                                                        "opted_into_marketing",
-                                                        false
-                                                    )
-                                                }
-                                                className={`w-1/2 px-10 py-3 text-sm font-semibold ${!form.data.opted_into_marketing ? "border border-white rounded-r-full" : ""}`}
-                                            >
-                                                No
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <Instruction>
+                                    <SwitchComponent
+                                        checked={form.data.opted_into_marketing}
+                                        onChange={() =>
+                                            form.setData(
+                                                "opted_into_marketing",
+                                                !form.data.opted_into_marketing
+                                            )
+                                        }
+                                    />
+                                    <Instruction className={`mt-1`}>
                                         Send me updates and resources from Wild
                                         at Heart.
                                     </Instruction>

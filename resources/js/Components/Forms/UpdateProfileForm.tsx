@@ -40,12 +40,8 @@ export const UpdateProfileForm = ({
     const updateProfileInformation = (event: React.FormEvent) => {
         event.preventDefault();
 
-        // if () {
-        //     return; // Stop further execution if there are errors
-        // }
-
         form.post(route("user.profile"), {
-            preserveScroll: true,
+            preserveScroll: "errors",
             onSuccess: () => {
                 clearPhotoFileInput();
                 router.get(redirectTo);

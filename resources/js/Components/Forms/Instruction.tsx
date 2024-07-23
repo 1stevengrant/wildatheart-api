@@ -1,5 +1,13 @@
 import React from "react";
 
-export const Instruction = ({ children }: { children: React.ReactNode }) => {
-    return <div className={"text-sm text-grey-200 mt-4"}>{children}</div>;
+export const Instruction = ({
+    children,
+    className = "mt-4",
+}: {
+    children: React.ReactNode;
+    className?: string;
+}) => {
+    return (
+        <div className={`text-sm text-grey-200 ${className} `}>{children}</div>
+    );
 };
