@@ -8,10 +8,10 @@ export const EventTypeBadge = ({
     className?: string;
 }) => {
     return (
-        <div
+        <span
             className={`rounded-full py-0.5 px-4 text-sm text-grey-200 border border-white ${className}`}
         >
             {children}
-        </div>
+        </span>
     );
 };

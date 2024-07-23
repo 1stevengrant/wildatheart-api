@@ -12,6 +12,7 @@ import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import TextInput from "@/Components/Forms/TextInput";
 import { UserAvatar } from "@/Components/UserAvatar";
+import { scrollToError } from "@/helpers/scrollToError";
 import useRoute from "@/Hooks/useRoute";
 
 const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-orange hover:text-orange transition ease-in-out duration-100 font-semibold text-sm`;
@@ -38,11 +39,19 @@ export const UpdateProfileForm = ({
 
     const updateProfileInformation = (event: React.FormEvent) => {
         event.preventDefault();
+
+        // if () {
+        //     return; // Stop further execution if there are errors
+        // }
+
         form.post(route("user.profile"), {
             preserveScroll: true,
             onSuccess: () => {
                 clearPhotoFileInput();
                 router.get(redirectTo);
+            },
+            onError: () => {
+                scrollToError(form.errors);
             },
         });
     };

@@ -11,7 +11,7 @@ import { EventTypeFires } from "@/helpers/eventNames";
 import { Event } from "@/types/Event";
 
 export const EventAdminCard = ({ event }: { event: Event }) => {
-    const eventLinkClasses = `hover:bg-orange bg-[#353535] rounded flex items-center space-x-2 capitalize px-4 py-2 font-semibold`;
+    const eventLinkClasses = `hover:bg-orange bg-[#353535] rounded flex items-center space-x-2 capitalize px-2 md:px-4 py-2 font-semibold`;
 
     return (
         <div>
@@ -23,7 +23,9 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                 )}
                 <div className={`flex space-x-4 mt-2`}>
                     <EventTypeImage event={event} />
-                    <div className={`flex-1 flex flex-col justify-between`}>
+                    <div
+                        className={`md:flex-1 md:flex md:flex-col md:justify-between`}
+                    >
                         <EventTypeGroupIndicator event={event} />
                         <div>
                             <p className="text-white">
