@@ -32,9 +32,9 @@ class HostEventTypeCreateEventController extends Controller
     {
         ray(session('event_steps'));
         if ($eventType->name === EventType::FIRES) {
-            $request->validate((new FireEventRequest())->rules());
+            $request->validate((new FireEventRequest)->rules());
         } else {
-            $request->validate((new EventRequest())->rules());
+            $request->validate((new EventRequest)->rules());
         }
 
         $event = auth()->user()->events()->create([
