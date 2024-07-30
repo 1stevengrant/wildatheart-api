@@ -4,6 +4,8 @@ use App\Actions\Event\ApproveEvent;
 use App\Models\Event;
 
 beforeEach(function () {
+    \App\Models\User::factory()->create();
+    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
     $this->seed(\Database\Seeders\EventTypeSeeder::class);
 });
 it('it approves an event', function () {
