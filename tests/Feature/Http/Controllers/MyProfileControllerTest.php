@@ -4,9 +4,12 @@ use App\Models\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
+    \App\Models\User::factory()->create();
+    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
     $this->seed(\Database\Seeders\EventTypeSeeder::class);
     $this->event = Event::factory()->fires()->create();
 });
+
 test('it shows my profile to be edited', function () {
     $this->actingAs($this->event->host)
         ->get(route('my.profile'))
