@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             StateSeeder::class,
             EventTypeSeeder::class,
-            //            EventSeeder::class,
             EmailTemplateSeeder::class,
         ]);
     }

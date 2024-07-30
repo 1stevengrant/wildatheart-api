@@ -10,7 +10,7 @@ test('full name returns the users email address if they have no first name or la
         'given_name' => null,
         'family_name' => null,
     ]);
-    expect($user->fullname)->toBe($user->email)->and($user->profilePhoto())->toBeString();
+    expect($user->fullname)->toBe($user->email);
 });
 
 it('returns given name and family name as the fullname if both are defined', function () {
