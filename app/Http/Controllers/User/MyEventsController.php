@@ -15,7 +15,7 @@ class MyEventsController extends Controller
     {
         $events = auth()->user()->events()->with('host')
             ->paginate()
-            ->through(fn($event) => EventResource::make($event)->resolve());
+            ->through(fn ($event) => EventResource::make($event)->resolve());
 
         return inertia('Profile/MyEventsPage', [
             'events' => $events,
