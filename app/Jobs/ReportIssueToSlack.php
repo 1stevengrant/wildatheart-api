@@ -14,10 +14,7 @@ class ReportIssueToSlack implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public Issue $issue)
-    {
-
-    }
+    public function __construct(public Issue $issue) {}
 
     public function handle(): void
     {

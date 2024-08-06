@@ -20,9 +20,7 @@ class ImportEvent implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public $experience)
-    {
-    }
+    public function __construct(public $experience) {}
 
     /**
      * Execute the job.
