@@ -37,7 +37,7 @@ class ImportSubsplashMediaSeries extends Command
             ->where('id', $media['dest_id'])
             ->first();
 
-        if (!$entry) {
+        if (! $entry) {
             $entry = Entry::make()
                 ->published(true)
                 ->blueprint('subsplash_media_series')

@@ -18,10 +18,10 @@ class Main extends Dashboard
     public function cards()
     {
         return [
-            new UsersPerDay(),
-            new EventsPerDay(),
-            new AttendeesPerDay(),
-            new EventsByStatus(),
+            new UsersPerDay,
+            new EventsPerDay,
+            new AttendeesPerDay,
+            new EventsByStatus,
         ];
     }
 }

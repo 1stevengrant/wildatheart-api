@@ -129,8 +129,8 @@ class Event extends Resource
     public function actions(NovaRequest $request): array
     {
         return [
-            new PublishEvent(),
-            new UnpublishEvent(),
+            new PublishEvent,
+            new UnpublishEvent,
         ];
     }
 }

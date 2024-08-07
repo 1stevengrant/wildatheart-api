@@ -19,8 +19,7 @@ class ApproveEvent implements ShouldQueue
     public function __construct(
         public Event $event,
         public User $user
-    ) {
-    }
+    ) {}
 
     public function handle(): void
     {
