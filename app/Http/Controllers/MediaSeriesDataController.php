@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Cache;
-use Statamic\Entries\Entry;
-use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Statamic\Entries\Entry;
 
 class MediaSeriesDataController extends Controller
 {
-
     public function getAccessToken()
     {
         $SUBSPLASH_CLIENT_ID = env('SUBSPLASH_CLIENT_ID');
@@ -26,6 +25,7 @@ class MediaSeriesDataController extends Controller
 
         if ($response->successful()) {
             $data = $response->json();
+
             return $data['access_token'];
         }
 
@@ -35,7 +35,7 @@ class MediaSeriesDataController extends Controller
     public function subsplashFetch($url)
     {
         $accessToken = $this->getAccessToken();
-        $token = "Bearer " . $accessToken;
+        $token = 'Bearer '.$accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
@@ -58,9 +58,9 @@ class MediaSeriesDataController extends Controller
     public function show($slug)
     {
 
-
         if (Cache::has($slug)) {
             $value = Cache::get($slug);
+
             return response()->json($value);
         }
 
@@ -70,32 +70,29 @@ class MediaSeriesDataController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-
-        $responseData["id"] = $series->id;
-        $responseData["title"] = $series->title;
-        $responseData["slug"] = $series->slug;
-        $responseData["uri"]    = $series->uri;
-
+        $responseData['id'] = $series->id;
+        $responseData['title'] = $series->title;
+        $responseData['slug'] = $series->slug;
+        $responseData['uri'] = $series->uri;
 
         $subsplashSeries = $this->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->id}");
-        $responseData["subtitle"] = $subsplashSeries["subtitle"];
+        $responseData['subtitle'] = $subsplashSeries['subtitle'];
 
-        $series["subsplash_data"] = $subsplashSeries;
+        $series['subsplash_data'] = $subsplashSeries;
 
-        $relatedMediaItemsUrl = $subsplashSeries["_links"]["media-items"]["href"];
-        $responseData["_embedded"] = $subsplashSeries["_embedded"];
+        $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
+        $responseData['_embedded'] = $subsplashSeries['_embedded'];
 
         $subsplashMediaItems = $this->subsplashFetch($relatedMediaItemsUrl);
 
         $subsplashMediaItemMap = [];
 
-        foreach ($subsplashMediaItems["_embedded"]["media-items"] as $mediaItem) {
+        foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
 
-            $subsplashMediaItemMap[$mediaItem["id"]] = $mediaItem;
+            $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
 
             $mediaItemEntry = Entry::query()
-                ->find($mediaItem["id"]);
-
+                ->find($mediaItem['id']);
 
             if ($mediaItemEntry == null) {
 
@@ -108,17 +105,15 @@ class MediaSeriesDataController extends Controller
 
                 $date = Carbon::now();
 
-
                 $entry->date($date);
                 $data = [
                     'title' => $mediaItem['title'],
-                    'subsplash_media_item_id' => $mediaItem["id"],
+                    'subsplash_media_item_id' => $mediaItem['id'],
                 ];
 
-
-                if (isset($mediaItem["_embedded"]) && isset($mediaItem["_embedded"]["media-series"])) {
-                    $seriesId = $mediaItem["_embedded"]["media-series"]["id"];
-                    $data["series"] = "entry::$seriesId";
+                if (isset($mediaItem['_embedded']) && isset($mediaItem['_embedded']['media-series'])) {
+                    $seriesId = $mediaItem['_embedded']['media-series']['id'];
+                    $data['series'] = "entry::$seriesId";
                 }
 
                 $entry->data($data);
@@ -129,23 +124,20 @@ class MediaSeriesDataController extends Controller
 
         $mediaItemEntries = Entry::query()
             ->where('collection', 'media_item')
-            ->where('data->series', "like", "%{$series->id}")
+            ->where('data->series', 'like', "%{$series->id}")
             ->get();
 
-
-        $responseData["mediaItems"] = [];
+        $responseData['mediaItems'] = [];
 
         foreach ($mediaItemEntries as $mediaItemEntry) {
 
-            $responseData["mediaItems"][] = [
+            $responseData['mediaItems'][] = [
                 ...$subsplashMediaItemMap[$mediaItemEntry->id],
-                "slug" => $mediaItemEntry->slug,
-                "uri" => $mediaItemEntry->uri,
+                'slug' => $mediaItemEntry->slug,
+                'uri' => $mediaItemEntry->uri,
             ];
         }
         Cache::put($slug, $responseData, $minutes = 10);
-
-
 
         // Return the view with the merged data
         return response()->json($responseData);
