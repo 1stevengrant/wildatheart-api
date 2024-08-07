@@ -32,4 +32,4 @@ Route::prefix('v1')->group(function () {
     });
 });
 
-Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('entries.show');
+Route::get('/content/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('entries.show');
