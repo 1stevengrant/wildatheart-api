@@ -26,6 +26,20 @@ tabs:
               type: assets
               display: 'Experience Logo'
               max_files: 1
+          -
+            handle: host_a_group_link
+            field:
+              placeholder: 'https://local.wildatheart.org'
+              default: 'https://local.wildatheart.org'
+              type: text
+              display: 'Host a group link'
+          -
+            handle: find_a_group_link
+            field:
+              placeholder: 'https://local.wildatheart.org'
+              default: 'https://local.wildatheart.org'
+              type: text
+              display: 'Find a group link'
       -
         display: Sessions
         fields:

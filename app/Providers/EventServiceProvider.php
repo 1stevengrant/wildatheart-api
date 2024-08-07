@@ -28,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         Login::class => [
             UpdateLastLoginDateTime::class,
         ],
+        \Statamic\Events\EntrySaved::class => [
+            \App\Listeners\SaveSubsplashItemEntryWithId::class,
+        ],
     ];
 
     /**

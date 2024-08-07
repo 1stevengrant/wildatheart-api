@@ -17,7 +17,13 @@ return [
     'enabled' => env('STATAMIC_API_ENABLED', true),
 
     'resources' => [
-        'collections' => true,
+
+        'collections' => [
+            '*' => [
+                'enabled' => true,
+                'allowed_filters' => ['subsplash_media_item_id', 'title', 'blueprint']
+            ],
+        ],
         'navs' => true,
         'taxonomies' => false,
         'assets' => true,
