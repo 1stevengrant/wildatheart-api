@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use Cache;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
-use Statamic\Entries\Entry;
 use App\Http\Controllers\Controller;
 use App\Services\SubsplashService;
+use Carbon\Carbon;
+use Statamic\Entries\Entry;
 
 class MediaItemDataController extends Controller
 {
@@ -17,7 +15,7 @@ class MediaItemDataController extends Controller
     $responseData = [];
 
     $mediaItem = Entry::query()
-      ->where("collection", "media_item")
+      ->where('collection', 'media_item')
       ->where('slug', $slug)
       ->firstOrFail();
 
@@ -25,13 +23,11 @@ class MediaItemDataController extends Controller
     $responseData['slug'] = $mediaItem->slug;
     $responseData['uri'] = $mediaItem->uri;
 
-    $subsplash = new SubsplashService();
-
+    $subsplash = new SubsplashService;
 
     $subsplashMediaItem = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItem->id}");
 
-
-    $subsplashSeries = $subsplashMediaItem["_embedded"]["media-series"];
+    $subsplashSeries = $subsplashMediaItem['_embedded']['media-series'];
 
     $seriesId = $subsplashSeries['id'];
 
@@ -45,16 +41,13 @@ class MediaItemDataController extends Controller
       ->where("id", $seriesId)
       ->firstOrFail();
     $responseData['series']['uri'] = $seriesEntry->uri;
-
-
-
     $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
     $responseData['_embedded'] = $subsplashMediaItem['_embedded'];
+
 
     $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl);
 
     $subsplashMediaItemMap = [];
-
 
     foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
       $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
@@ -88,7 +81,7 @@ class MediaItemDataController extends Controller
 
         $entry->save();
       }
-      if (!isset($mediaItemEntry["title"]) || !isset($mediaItemEntry["subsplash_media_item_id"]) || !isset($mediaItemEntry["series"])) {
+      if (!isset($mediaItemEntry['title']) || !isset($mediaItemEntry['subsplash_media_item_id']) || !isset($mediaItemEntry['series'])) {
         $data = [
           'title' => $mediaItem['title'],
           'subsplash_media_item_id' => $mediaItem['id'],
@@ -98,7 +91,6 @@ class MediaItemDataController extends Controller
         $mediaItemEntry->save();
       }
     }
-
 
     $mediaItemEntries = Entry::query()
       ->where('collection', 'media_item')
