@@ -31,7 +31,7 @@ class ImportSubsplashMediaItems extends Command
 
     protected function createEntry(array $media): void
     {
-        if (!isset($media['dest_id'])) {
+        if (! isset($media['dest_id'])) {
             return;
         }
 
@@ -40,7 +40,7 @@ class ImportSubsplashMediaItems extends Command
             ->where('id', $media['dest_id'])
             ->first();
 
-        if (!$entry) {
+        if (! $entry) {
             $entry = Entry::make()
                 ->published(true)
                 ->blueprint('subsplash_media_item')
@@ -58,10 +58,9 @@ class ImportSubsplashMediaItems extends Command
             'drupal_url' => $media['source_data']['url'],
         ];
 
-
-        if (isset($media['dest_data']) && isset($media['dest_data']["_embedded"]) && isset($media['dest_data']["_embedded"]["media-series"])) {
-            $seriesId = $media['dest_data']["_embedded"]["media-series"]["id"];
-            $data["series"] = "entry::$seriesId";
+        if (isset($media['dest_data']) && isset($media['dest_data']['_embedded']) && isset($media['dest_data']['_embedded']['media-series'])) {
+            $seriesId = $media['dest_data']['_embedded']['media-series']['id'];
+            $data['series'] = "entry::$seriesId";
         }
 
         $entry->data($data);

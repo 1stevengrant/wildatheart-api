@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
-use Cache;
-use Carbon\Carbon;
-use Statamic\Entries\Entry;
 use App\Http\Controllers\Controller;
 use App\Services\SubsplashService;
+use Carbon\Carbon;
+use Statamic\Entries\Entry;
 
 class MediaSeriesDataController extends Controller
 {
-
     public function show($slug)
     {
-
 
         $responseData = [];
 
         $series = Entry::query()
-            ->where("collection", "media_series")
+            ->where('collection', 'media_series')
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -27,7 +24,7 @@ class MediaSeriesDataController extends Controller
         $responseData['slug'] = $series->slug;
         $responseData['uri'] = $series->uri;
 
-        $subsplash = new SubsplashService();
+        $subsplash = new SubsplashService;
 
         $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->id}");
         $responseData['subtitle'] = $subsplashSeries['subtitle'];
