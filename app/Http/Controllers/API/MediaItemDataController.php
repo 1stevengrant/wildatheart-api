@@ -41,6 +41,11 @@ class MediaItemDataController extends Controller
     $responseData['summary_text'] = $subsplashMediaItem['summary_text'];
     $responseData['short_code'] = $subsplashMediaItem['short_code'];
     $responseData['series'] = $subsplashSeries;
+    $seriesEntry = Entry::query()
+      ->where("id", $seriesId)
+      ->firstOrFail();
+    $responseData['series']['uri'] = $seriesEntry->uri;
+
 
 
     $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
