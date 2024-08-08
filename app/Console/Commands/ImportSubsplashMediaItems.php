@@ -59,10 +59,10 @@ class ImportSubsplashMediaItems extends Command
         ];
 
 
-        // if (isset($media['dest_data']) && isset($media['dest_data']["_embedded"]) && isset($media['dest_data']["_embedded"]["media-series"])) {
-        //     $seriesId = $media['dest_data']["_embedded"]["media-series"]["id"];
-        //     $data["series"] = "entry::$seriesId";
-        // }
+        if (isset($media['dest_data']) && isset($media['dest_data']["_embedded"]) && isset($media['dest_data']["_embedded"]["media-series"])) {
+            $seriesId = $media['dest_data']["_embedded"]["media-series"]["id"];
+            $data["series"] = "entry::$seriesId";
+        }
 
         $entry->data($data);
 

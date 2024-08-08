@@ -1,72 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use Cache;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
 use Statamic\Entries\Entry;
+use App\Http\Controllers\Controller;
+use App\Services\SubsplashService;
 
 class MediaSeriesDataController extends Controller
 {
-    public function getAccessToken()
-    {
-        $SUBSPLASH_CLIENT_ID = env('SUBSPLASH_CLIENT_ID');
-        $SUBSPLASH_CLIENT_SECRET = env('SUBSPLASH_CLIENT_SECRET');
-        $SUBSPLASH_SCOPE = env('SUBSPLASH_SCOPE');
-        $SUBSPLASH_AUTHENTICATION_TOKEN_URL = env('SUBSPLASH_AUTHENTICATION_TOKEN_URL');
-
-        $response = Http::asForm()->post('https://core.subsplash.com/tokens/v1/token', [
-            'grant_type' => 'client_credentials',
-            'client_id' => $SUBSPLASH_CLIENT_ID,
-            'client_secret' => $SUBSPLASH_CLIENT_SECRET,
-            'scope' => "app:{$SUBSPLASH_SCOPE}",
-        ]);
-
-        if ($response->successful()) {
-            $data = $response->json();
-
-            return $data['access_token'];
-        }
-
-        throw new \Exception('Failed to fetch access token');
-    }
-
-    public function subsplashFetch($url)
-    {
-        $accessToken = $this->getAccessToken();
-        $token = 'Bearer '.$accessToken;
-
-        $response = Http::withHeaders([
-            'Accept' => 'application/vnd.api+json',
-            'Accept-Language' => 'en-US,en;q=0.9',
-            'Authorization' => $token,
-            'Cache-Control' => 'no-cache',
-        ])->withOptions([
-            'mode' => 'cors',
-            'credentials' => 'include',
-        ])->get($url);
-
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        // Handle error appropriately
-        throw new \Exception('Failed to fetch data from Subsplash API');
-    }
 
     public function show($slug)
     {
 
-        if (Cache::has($slug)) {
-            $value = Cache::get($slug);
-
-            return response()->json($value);
-        }
 
         $responseData = [];
 
         $series = Entry::query()
+            ->where("collection", "media_series")
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -75,7 +27,9 @@ class MediaSeriesDataController extends Controller
         $responseData['slug'] = $series->slug;
         $responseData['uri'] = $series->uri;
 
-        $subsplashSeries = $this->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->id}");
+        $subsplash = new SubsplashService();
+
+        $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->id}");
         $responseData['subtitle'] = $subsplashSeries['subtitle'];
 
         $series['subsplash_data'] = $subsplashSeries;
@@ -83,7 +37,7 @@ class MediaSeriesDataController extends Controller
         $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
         $responseData['_embedded'] = $subsplashSeries['_embedded'];
 
-        $subsplashMediaItems = $this->subsplashFetch($relatedMediaItemsUrl);
+        $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl);
 
         $subsplashMediaItemMap = [];
 
@@ -137,7 +91,6 @@ class MediaSeriesDataController extends Controller
                 'uri' => $mediaItemEntry->uri,
             ];
         }
-        Cache::put($slug, $responseData, $minutes = 10);
 
         // Return the view with the merged data
         return response()->json($responseData);
