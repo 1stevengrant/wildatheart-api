@@ -14,7 +14,7 @@ class ImportSubsplashMediaItems extends Command
 
     public function handle()
     {
-        $jsonData = json_decode(file_get_contents(storage_path('app/public/video.json')), true);
+        $jsonData = json_decode(file_get_contents(storage_path('app/public/audio.json')), true);
         $collection = collect($jsonData);
         $chunks = $collection->chunk(100);
 
@@ -31,6 +31,9 @@ class ImportSubsplashMediaItems extends Command
 
     protected function createEntry(array $media): void
     {
+        if (!isset($media['dest_id'])) {
+            return;
+        }
 
         $entry = Entry::query()
             ->where('collection', 'media_item')
@@ -48,6 +51,7 @@ class ImportSubsplashMediaItems extends Command
         $date = Carbon::now();
 
         $entry->date($date);
+        $entry->slug($media['source_data']['title']);
         $data = [
             'title' => $media['source_data']['title'],
             'subsplash_media_item_id' => $media['dest_id'],
@@ -55,10 +59,10 @@ class ImportSubsplashMediaItems extends Command
         ];
 
 
-        if (isset($media['dest_data']) && isset($media['dest_data']["_embedded"]) && isset($media['dest_data']["_embedded"]["media-series"])) {
-            $seriesId = $media['dest_data']["_embedded"]["media-series"]["id"];
-            $data["series"] = "entry::$seriesId";
-        }
+        // if (isset($media['dest_data']) && isset($media['dest_data']["_embedded"]) && isset($media['dest_data']["_embedded"]["media-series"])) {
+        //     $seriesId = $media['dest_data']["_embedded"]["media-series"]["id"];
+        //     $data["series"] = "entry::$seriesId";
+        // }
 
         $entry->data($data);
 
