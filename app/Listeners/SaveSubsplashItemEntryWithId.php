@@ -17,7 +17,7 @@ class SaveSubsplashItemEntryWithId
 
             // $prevId = $entry->id();
             // Ensure the new ID is unique
-            if (!$entry->collection()->queryEntries()->where('id', $newId)->first()) {
+            if (! $entry->collection()->queryEntries()->where('id', $newId)->first()) {
                 $newEntry = Entry::make()
                     ->blueprint('subsplash_media_item')
                     ->slug($entry->slug())
@@ -27,10 +27,10 @@ class SaveSubsplashItemEntryWithId
                 $data = $entry->data()->except(['id'])->all();
                 $newEntry->data($data);
 
-
                 $newEntry->id($newId);
                 $newEntry->save();
                 $entry->delete();
+
                 return redirect($newEntry->edit_url());
                 // $oldEntry = Entry::find($prevId);
                 // if ($oldEntry) {
