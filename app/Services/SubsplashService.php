@@ -26,6 +26,7 @@ class SubsplashService
 
             return $data['access_token'];
         }
+        return $response->json();
 
         throw new \Exception('Failed to fetch access token');
     }

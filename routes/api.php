@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
+use App\Services\SubsplashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,5 +34,16 @@ Route::prefix('v1')->group(function () {
     });
 });
 
-Route::get('/content/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('entries.show');
-Route::get('/content/media/{slug}', [MediaItemDataController::class, 'show'])->name('entries.show');
+
+Route::prefix('content')->group(function () {
+    Route::name('content.')->group(function () {
+    Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('entries.show');
+    Route::get('/media/{slug}', [MediaItemDataController::class, 'show'])->name('entries.show');
+    Route::get('/subsplash', function(){
+    $subsplash = new SubsplashService;
+    $token = $subsplash->getAccessToken();
+    dd($token);
+
+    });
+    });
+});
