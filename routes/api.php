@@ -38,11 +38,5 @@ Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
         Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('entries.show');
         Route::get('/media/{slug}', [MediaItemDataController::class, 'show'])->name('entries.show');
-        Route::get('/subsplash', function () {
-            $subsplash = new SubsplashService;
-            $token = $subsplash->getAccessToken();
-            dd($token);
-
-        });
     });
 });
