@@ -56,7 +56,7 @@ class MediaItemDataController extends Controller
 
             if ($mediaItemEntry == null) {
 
-                $entry = Entry::make()
+                $mediaItemEntry = Entry::make()
                     ->published(true)
                     ->blueprint('subsplash_media_item')
                     ->collection('media_item')
@@ -65,7 +65,7 @@ class MediaItemDataController extends Controller
 
                 $date = Carbon::now();
 
-                $entry->date($date);
+                $mediaItemEntry->date($date);
                 $data = [
                     'title' => $mediaItem['title'],
                     'subsplash_media_item_id' => $mediaItem['id'],
@@ -76,9 +76,9 @@ class MediaItemDataController extends Controller
                     $data['series'] = "entry::$seriesId";
                 }
 
-                $entry->data($data);
+                $mediaItemEntry->data($data);
 
-                $entry->save();
+                $mediaItemEntry->save();
             }
             if (! isset($mediaItemEntry['title']) || ! isset($mediaItemEntry['subsplash_media_item_id']) || ! isset($mediaItemEntry['series'])) {
                 $data = [
@@ -99,6 +99,12 @@ class MediaItemDataController extends Controller
         $responseData['mediaItems'] = [];
 
         foreach ($mediaItemEntries as $mediaItemEntry) {
+
+            // Handle scenario where Subsplash API isn't returning accurately
+            if (!isset($subsplashMediaItemMap[$mediaItemEntry->id])) {
+                $mediaItem = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItemEntry->id}");
+                $subsplashMediaItemMap[$mediaItemEntry->id] = $mediaItem;
+            }
 
             $responseData['mediaItems'][] = [
                 ...$subsplashMediaItemMap[$mediaItemEntry->id],
