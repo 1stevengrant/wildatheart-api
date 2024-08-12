@@ -11,7 +11,6 @@ class MediaSeriesDataController extends Controller
 {
     public function show($slug)
     {
-
         $responseData = [];
 
         $series = Entry::query()
@@ -42,7 +41,6 @@ class MediaSeriesDataController extends Controller
         $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl);
 
         $subsplashMediaItemMap = [];
-
         foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
 
             $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
@@ -86,6 +84,16 @@ class MediaSeriesDataController extends Controller
         $responseData['mediaItems'] = [];
 
         foreach ($mediaItemEntries as $mediaItemEntry) {
+
+
+        // Handle scenario where Subsplash API isn't returning accurately
+        if(!isset($subsplashMediaItemMap[$mediaItemEntry->id])){
+
+        $mediaItem = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItemEntry->id}");
+        $subsplashMediaItemMap[$mediaItemEntry->id] = $mediaItem;
+
+
+        }
 
             $responseData['mediaItems'][] = [
                 ...$subsplashMediaItemMap[$mediaItemEntry->id],
