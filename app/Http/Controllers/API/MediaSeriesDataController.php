@@ -85,6 +85,8 @@ class MediaSeriesDataController extends Controller
 
         foreach ($mediaItemEntries as $mediaItemEntry) {
 
+            // Handle scenario where Subsplash API isn't returning accurately
+            if (! isset($subsplashMediaItemMap[$mediaItemEntry->id])) {
 
             // Handle scenario where Subsplash API isn't returning accurately
             if (!isset($subsplashMediaItemMap[$mediaItemEntry->id])) {
