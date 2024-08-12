@@ -16,7 +16,7 @@ class SubsplashService
 
         $response = Http::asForm()->post('https://core.subsplash.com/tokens/v1/token', [
             'grant_type' => 'client_credentials',
-            'client_id' => $SUBSPLASH_CLIENT_ID .'test',
+            'client_id' => $SUBSPLASH_CLIENT_ID . 'test',
             'client_secret' => $SUBSPLASH_CLIENT_SECRET,
             'scope' => "app:{$SUBSPLASH_SCOPE}",
         ]);
@@ -28,7 +28,7 @@ class SubsplashService
         }
 
 
-        return [...$response->json(),[
+        return [...$response->json(), [
             'grant_type' => 'client_credentials',
             'client_id' => $SUBSPLASH_CLIENT_ID,
             'client_secret' => $SUBSPLASH_CLIENT_SECRET,
@@ -47,7 +47,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer '.$accessToken;
+        $token = 'Bearer ' . $accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
