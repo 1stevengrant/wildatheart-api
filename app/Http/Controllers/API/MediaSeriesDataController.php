@@ -24,6 +24,11 @@ class MediaSeriesDataController extends Controller
         $responseData['slug'] = $series->slug;
         $responseData['uri'] = $series->uri;
 
+        if($series->blueprint === "the_series"){
+
+        return $series;
+        }
+
         $subsplash = new SubsplashService;
 
         $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->id}");
