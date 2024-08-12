@@ -3,7 +3,6 @@
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
-use App\Services\SubsplashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

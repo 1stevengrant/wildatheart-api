@@ -27,7 +27,6 @@ class SubsplashService
             return $data['access_token'];
         }
 
-
         throw new \Exception('Failed to fetch access token');
     }
 
@@ -40,7 +39,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer ' . $accessToken;
+        $token = 'Bearer '.$accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
