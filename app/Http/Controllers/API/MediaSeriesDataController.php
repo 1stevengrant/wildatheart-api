@@ -31,7 +31,7 @@ class MediaSeriesDataController extends Controller
 
         $subsplash = new SubsplashService;
 
-        $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->id}");
+        $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->subsplash_media_series_id}");
         $responseData['subtitle'] = $subsplashSeries['subtitle'];
 
         $series['subsplash_data'] = $subsplashSeries;
