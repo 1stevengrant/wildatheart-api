@@ -16,7 +16,7 @@ class SubsplashService
 
         $response = Http::asForm()->post('https://core.subsplash.com/tokens/v1/token', [
             'grant_type' => 'client_credentials',
-            'client_id' => $SUBSPLASH_CLIENT_ID,
+            'client_id' => $SUBSPLASH_CLIENT_ID .'test',
             'client_secret' => $SUBSPLASH_CLIENT_SECRET,
             'scope' => "app:{$SUBSPLASH_SCOPE}",
         ]);
@@ -26,7 +26,14 @@ class SubsplashService
 
             return $data['access_token'];
         }
-        return $response->json();
+
+
+        return [...$response->json(),[
+            'grant_type' => 'client_credentials',
+            'client_id' => $SUBSPLASH_CLIENT_ID,
+            'client_secret' => $SUBSPLASH_CLIENT_SECRET,
+            'scope' => "app:{$SUBSPLASH_SCOPE}",
+        ]];
 
         throw new \Exception('Failed to fetch access token');
     }
