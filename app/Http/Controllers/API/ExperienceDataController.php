@@ -27,9 +27,11 @@ class ExperienceDataController extends Controller
 
             $experienceSession = Entry::query()
                 ->find($session);
+            $sessionSlug = "session-" . ($index + 1);
             $sessions[$index] = [
                 "sessionNumber" => $index + 1,
-                "sessionSlug" => "session-" . ($index + 1),
+                "sessionSlug" => $sessionSlug,
+                "sessionUri" => $experience->uri . "/" . $sessionSlug,
                 ...$experienceSession->toArray(),
                 ...$relatedMediaMap[$experienceSession->subsplash_media_item_id],
             ];
