@@ -29,6 +29,7 @@ class ExperienceDataController extends Controller
                 ->find($session);
             $sessions[$index] = [
                 "sessionNumber" => $index + 1,
+                "sessionSlug" => "session-" . ($index + 1),
                 ...$experienceSession->toArray(),
                 ...$relatedMediaMap[$experienceSession->subsplash_media_item_id],
             ];
