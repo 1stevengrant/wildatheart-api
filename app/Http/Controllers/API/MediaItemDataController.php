@@ -31,8 +31,6 @@ class MediaItemDataController extends Controller
             return response()->json($mediaItem);
         }
 
-
-
         $responseData['title'] = $subsplashMediaItem['title'];
         $responseData['_embedded'] = $subsplashMediaItem['_embedded'];
 
