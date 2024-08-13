@@ -41,6 +41,7 @@ class MediaSeriesDataController extends Controller
         $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl);
 
         $subsplashMediaItemMap = [];
+        $responseData['mediaItems'] = [];
         foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
 
             $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
@@ -74,28 +75,9 @@ class MediaSeriesDataController extends Controller
 
                 $entry->save();
             }
-        }
-
-        $mediaItemEntries = Entry::query()
-            ->where('collection', 'media_item')
-            ->where('data->series', 'like', "%{$series->id}")
-            ->get();
-
-        $responseData['mediaItems'] = [];
-
-        foreach ($mediaItemEntries as $mediaItemEntry) {
-
-            // Handle scenario where Subsplash API isn't returning accurately
-            if (! isset($subsplashMediaItemMap[$mediaItemEntry->id])) {
-
-            // Handle scenario where Subsplash API isn't returning accurately
-            if (!isset($subsplashMediaItemMap[$mediaItemEntry->id])) {
-                $mediaItem = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItemEntry->id}");
-                $subsplashMediaItemMap[$mediaItemEntry->id] = $mediaItem;
-            }
 
             $responseData['mediaItems'][] = [
-                ...$subsplashMediaItemMap[$mediaItemEntry->id],
+                ...$mediaItem,
                 'slug' => $mediaItemEntry->slug,
                 'uri' => $mediaItemEntry->uri,
             ];
