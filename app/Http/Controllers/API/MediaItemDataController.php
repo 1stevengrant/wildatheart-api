@@ -37,7 +37,6 @@ class MediaItemDataController extends Controller
 
         $responseData['title'] = $subsplashMediaItem['title'];
 
-
         // Handle scenario where Subsplash API isn't returning subtitle
         if (isset($subsplashMediaItem['subtitle'])) {
             $responseData['subtitle'] = $subsplashMediaItem['subtitle'];
