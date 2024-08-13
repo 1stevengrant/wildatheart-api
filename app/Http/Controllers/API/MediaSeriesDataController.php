@@ -74,6 +74,8 @@ class MediaSeriesDataController extends Controller
                 $entry->data($data);
 
                 $entry->save();
+
+                $mediaItemEntry = $entry;
             }
 
             $responseData['mediaItems'][] = [
