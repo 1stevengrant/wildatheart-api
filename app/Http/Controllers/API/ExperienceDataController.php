@@ -28,7 +28,7 @@ class ExperienceDataController extends Controller
             $experienceSession = Entry::query()
                 ->find($session);
             $sessions[$index] = [
-                "sessionNumber"=>$index + 1,
+                'sessionNumber' => $index + 1,
                 ...$experienceSession->toArray(),
                 ...$relatedMediaMap[$experienceSession->subsplash_media_item_id],
             ];
@@ -37,6 +37,7 @@ class ExperienceDataController extends Controller
         $experience->sessionData = $sessions;
 
         dd($experience);
+
         return $experience;
     }
 
