@@ -31,6 +31,7 @@ class MediaItemDataController extends Controller
 
         $seriesId = $subsplashSeries['id'];
 
+
         $responseData['title'] = $subsplashMediaItem['title'];
         $responseData['subtitle'] = $subsplashMediaItem['subtitle'];
         $responseData['summary'] = $subsplashMediaItem['summary'];
@@ -39,7 +40,29 @@ class MediaItemDataController extends Controller
         $responseData['series'] = $subsplashSeries;
         $seriesEntry = Entry::query()
             ->where('id', $seriesId)
-            ->firstOrFail();
+            ->first();
+
+        if (!$seriesEntry) {
+            $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$seriesId}");
+            $entry = Entry::make()
+                ->published(true)
+                ->blueprint('subsplash_media_series')
+                ->collection('media_series')
+                ->id($subsplashSeries['id'])
+                ->slug($subsplashSeries['title']);
+            $date = Carbon::now();
+
+            $entry->date($date);
+
+            $entry->data([
+                'title' => $subsplashSeries['title'],
+                'subsplash_media_series_id' => $subsplashSeries['id'],
+            ]);
+
+            $entry->save();
+            $seriesEntry = $entry;
+        }
+
         $responseData['series']['uri'] = $seriesEntry->uri;
         $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
         $responseData['_embedded'] = $subsplashMediaItem['_embedded'];
