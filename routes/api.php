@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use Illuminate\Http\Request;
@@ -35,7 +36,8 @@ Route::prefix('v1')->group(function () {
 
 Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
-        Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('entries.show');
-        Route::get('/media/{slug}', [MediaItemDataController::class, 'show'])->name('entries.show');
+        Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
+        Route::get('/media/{slug}', [MediaItemDataController::class, 'show'])->name('media.show');
+        Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
     });
 });

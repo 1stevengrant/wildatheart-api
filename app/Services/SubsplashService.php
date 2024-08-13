@@ -39,7 +39,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer '.$accessToken;
+        $token = 'Bearer ' . $accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
@@ -60,5 +60,19 @@ class SubsplashService
 
         // Handle error appropriately
         throw new \Exception('Failed to fetch data from Subsplash API');
+    }
+
+    public function getRelatedMediaItems($seriesId)
+    {
+        if (!$seriesId) return null;
+
+        $subsplashSeries = $this->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$seriesId}");
+
+        $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
+
+        $subsplashMediaItems = $this->subsplashFetch($relatedMediaItemsUrl);
+
+
+        return $subsplashMediaItems['_embedded']['media-items'];
     }
 }
