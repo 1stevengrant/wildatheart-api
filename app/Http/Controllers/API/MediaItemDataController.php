@@ -31,7 +31,6 @@ class MediaItemDataController extends Controller
 
         $seriesId = $subsplashSeries['id'];
 
-
         $responseData['title'] = $subsplashMediaItem['title'];
         $responseData['subtitle'] = $subsplashMediaItem['subtitle'];
         $responseData['summary'] = $subsplashMediaItem['summary'];
@@ -42,7 +41,7 @@ class MediaItemDataController extends Controller
             ->where('id', $seriesId)
             ->first();
 
-        if (!$seriesEntry) {
+        if (! $seriesEntry) {
             $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$seriesId}");
             $entry = Entry::make()
                 ->published(true)
