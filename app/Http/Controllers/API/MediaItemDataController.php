@@ -39,8 +39,16 @@ class MediaItemDataController extends Controller
             $responseData['subtitle'] = $subsplashMediaItem['subtitle'];
         }
 
-        $responseData['summary'] = $subsplashMediaItem['summary'];
-        $responseData['summary_text'] = $subsplashMediaItem['summary_text'];
+        // Handle scenario where Subsplash API isn't returning summary
+        if (isset($subsplashMediaItem['summary'])) {
+            $responseData['summary'] = $subsplashMediaItem['summary'];
+        }
+
+        // Handle scenario where Subsplash API isn't returning summary_text
+        if (isset($subsplashMediaItem['summary_text'])) {
+            $responseData['summary_text'] = $subsplashMediaItem['summary_text'];
+        }
+
         $responseData['short_code'] = $subsplashMediaItem['short_code'];
 
         // Handle scenario where Media Item is NOT part of a series
