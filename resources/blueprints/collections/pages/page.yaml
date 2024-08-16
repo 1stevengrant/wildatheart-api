@@ -48,4 +48,9 @@ tabs:
               max_items: 1
               listable: false
               localizable: true
+          -
+            handle: hide_navigation
+            field:
+              type: toggle
+              display: 'Hide Navigation'
 title: Page
