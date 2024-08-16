@@ -158,6 +158,7 @@ class MediaItemDataController extends Controller
         // Return the view with the merged data
         return response()->json($responseData);
     }
+
     public function getRedirects()
     {
 
@@ -165,12 +166,13 @@ class MediaItemDataController extends Controller
             ->where('collection', 'media_item')
             ->get();
 
-        $output = "";
+        $output = '';
         foreach ($mediaItem as $item) {
             if ($item->drupal_url) {
                 $output .= "{$item->drupal_url} {$item->uri} 301\n";
             }
         }
+
         return response($output)->header('Content-Type', 'text/plain');
     }
 }
