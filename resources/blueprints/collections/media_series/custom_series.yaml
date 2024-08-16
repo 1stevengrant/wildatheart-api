@@ -46,3 +46,8 @@ tabs:
               default: now
               validate:
                 - required
+          -
+            handle: hide_navigation
+            field:
+              type: toggle
+              display: 'Hide Navigation'

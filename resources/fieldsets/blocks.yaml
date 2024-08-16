@@ -1,0 +1,17 @@
+title: Blocks
+fields:
+  -
+    handle: blocks
+    field:
+      remove_empty_nodes: false
+      type: bard
+      display: Blocks
+      sets:
+        hero:
+          display: Hero
+          sets:
+            hero:
+              display: Hero
+              fields:
+                -
+                  import: hero

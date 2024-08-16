@@ -22,6 +22,7 @@ fields:
         wave: wave
         play: play
         hamburger: hamburger
+        download: download
       type: select
       display: Icon
       clearable: true

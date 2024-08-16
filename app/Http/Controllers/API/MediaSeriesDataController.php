@@ -23,7 +23,7 @@ class MediaSeriesDataController extends Controller
         $responseData['slug'] = $series->slug;
         $responseData['uri'] = $series->uri;
 
-        if ($series->blueprint === 'the_series') {
+        if ($series->blueprint === 'custom_series') {
 
             return $series;
         }
