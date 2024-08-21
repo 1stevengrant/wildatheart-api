@@ -1,7 +1,15 @@
 title: 'Custom Media Item'
 tabs:
+  custom_layout:
+    display: 'Custom Layout'
+    sections:
+      -
+        display: 'New Section'
+        fields:
+          -
+            import: blocks
   main:
-    display: Main
+    display: 'Media Item'
     sections:
       -
         fields:
@@ -18,8 +26,6 @@ tabs:
               type: textarea
               display: Description
           -
-            import: blocks
-          -
             handle: subsplash_media_item_id
             field:
               type: text
@@ -31,6 +37,18 @@ tabs:
                 - media_series
               type: link
               display: Series
+          -
+            handle: position
+            field:
+              type: integer
+              display: Position
+          -
+            handle: media_type
+            field:
+              default: Session
+              type: text
+              display: 'Media Type'
+              instructions: 'How you want this item to be labeled. (i.e. "Episode", "Session", etc.)'
   sidebar:
     display: Sidebar
     sections:

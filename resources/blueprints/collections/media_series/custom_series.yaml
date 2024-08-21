@@ -27,6 +27,13 @@ tabs:
                       fields:
                         -
                           import: hero
+          -
+            handle: media_items
+            field:
+              collections:
+                - media_item
+              type: entries
+              display: 'Media Items'
   sidebar:
     display: Sidebar
     sections:

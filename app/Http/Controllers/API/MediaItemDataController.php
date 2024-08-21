@@ -9,6 +9,16 @@ use Statamic\Entries\Entry;
 
 class MediaItemDataController extends Controller
 {
+    public function mediaBySeriesId($seriesId)
+    {
+        $mediaItemsInSeries = Entry::query()
+            ->where('collection', 'media_item')
+            ->where('data->series', 'like', "%{$seriesId}")
+            ->get();
+
+        return response()->json($mediaItemsInSeries);
+    }
+
     public function media($slug)
     {
         $mediaItem = Entry::query()
@@ -21,7 +31,7 @@ class MediaItemDataController extends Controller
             ->where('data->series', 'like', "%{$mediaItem->series}")
             ->get();
 
-        $mediaItem = $mediaItem->toArray();
+        // $mediaItem = $mediaItem->toArray();
         $mediaItem['mediaItems'] = $mediaItemsInSeries->toArray();
 
         return response()->json($mediaItem);

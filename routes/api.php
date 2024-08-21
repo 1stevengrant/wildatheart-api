@@ -37,8 +37,9 @@ Route::prefix('v1')->group(function () {
 Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
         Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
+        Route::get('/media-by-series-id/{slug}', [MediaItemDataController::class, 'mediaBySeriesId'])->name('media.bySeriesId');
         Route::get('/media/redirects', [MediaItemDataController::class, 'getRedirects'])->name('media.getRedirects');
-        Route::get('/media/{slug}', [MediaItemDataController::class, 'media'])->name('media.getRedirects');
+        Route::get('/media/{slug}', [MediaItemDataController::class, 'media'])->name('media');
         Route::get('/subsplash-media/{slug}', [MediaItemDataController::class, 'subsplashMedia'])->name('media.show');
         Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');

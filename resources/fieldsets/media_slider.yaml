@@ -11,16 +11,17 @@ fields:
       type: link
       display: 'Link to more'
   -
-    handle: series
+    handle: media_series
     field:
+      max_items: 1
       collections:
         - media_series
-      type: link
-      display: Series
+      type: entries
+      display: 'Media Series'
   -
     handle: media_items
     field:
       collections:
         - media_item
-      type: link
+      type: entries
       display: 'Media Items'
