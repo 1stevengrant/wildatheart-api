@@ -18,6 +18,11 @@ tabs:
               localizable: true
               display: Description
           -
+            handle: subsplash_series_id
+            field:
+              type: text
+              display: 'Subsplash Series Id'
+          -
             handle: speakers
             field:
               collections:
