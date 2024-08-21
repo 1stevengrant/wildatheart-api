@@ -23,6 +23,7 @@ class MediaItemDataController extends Controller
 
         $mediaItem = $mediaItem->toArray();
         $mediaItem['mediaItems'] = $mediaItemsInSeries->toArray();
+
         return response()->json($mediaItem);
     }
 
