@@ -18,17 +18,17 @@ tabs:
               localizable: true
               display: Description
           -
-            handle: subsplash_series_id
-            field:
-              type: text
-              display: 'Subsplash Series Id'
-          -
             handle: speakers
             field:
               collections:
                 - authors
-              type: link
+              type: entries
               display: Speakers
+          -
+            handle: subsplash_series_id
+            field:
+              type: text
+              display: 'Subsplash Series Id'
           -
             handle: publish_schedule
             field:
