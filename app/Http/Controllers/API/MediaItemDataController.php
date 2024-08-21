@@ -14,6 +14,7 @@ class MediaItemDataController extends Controller
         $mediaItemsInSeries = Entry::query()
             ->where('collection', 'media_item')
             ->where('data->series', 'like', "%{$seriesId}")
+            ->orderBy('data->position', 'asc')
             ->get();
 
         return response()->json($mediaItemsInSeries);
