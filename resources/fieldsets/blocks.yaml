@@ -15,3 +15,8 @@ fields:
               fields:
                 -
                   import: hero
+            media_slider:
+              display: 'Media Slider'
+              fields:
+                -
+                  import: media_slider

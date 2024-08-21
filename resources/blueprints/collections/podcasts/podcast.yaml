@@ -1,0 +1,73 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: description
+            field:
+              type: markdown
+              localizable: true
+              display: Description
+          -
+            handle: speakers
+            field:
+              collections:
+                - authors
+              type: link
+              display: Speakers
+          -
+            handle: publish_schedule
+            field:
+              default: weekly
+              type: text
+              display: 'How often is it updated?'
+              instructions: 'Leave blank if no longer releasing new episodes.'
+          -
+            handle: video_or_audio
+            field:
+              options:
+                video: 'Video Podcast'
+                audio: 'Audio Podcast'
+              type: select
+              display: 'Video or Audio'
+          -
+            handle: spotify_url
+            field:
+              type: link
+              display: 'Spotify URL'
+          -
+            handle: itunes_url
+            field:
+              type: link
+              display: 'iTunes URL'
+          -
+            handle: youtube_url
+            field:
+              type: link
+              display: 'YouTube URL'
+          -
+            handle: rss_feed_url
+            field:
+              type: link
+              display: 'RSS Feed URL'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+title: Podcast

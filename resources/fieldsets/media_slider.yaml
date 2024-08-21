@@ -1,0 +1,26 @@
+title: 'Media Slider'
+fields:
+  -
+    handle: section_title
+    field:
+      type: text
+      display: 'Section Title'
+  -
+    handle: link_to_more
+    field:
+      type: link
+      display: 'Link to more'
+  -
+    handle: series
+    field:
+      collections:
+        - media_series
+      type: link
+      display: Series
+  -
+    handle: media_items
+    field:
+      collections:
+        - media_item
+      type: link
+      display: 'Media Items'

@@ -9,7 +9,24 @@ use Statamic\Entries\Entry;
 
 class MediaItemDataController extends Controller
 {
-    public function show($slug)
+    public function media($slug)
+    {
+        $mediaItem = Entry::query()
+            ->where('collection', 'media_item')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $mediaItemsInSeries = Entry::query()
+            ->where('collection', 'media_item')
+            ->where('data->series', 'like', "%{$mediaItem->series}")
+            ->get();
+
+        $mediaItem = $mediaItem->toArray();
+        $mediaItem['mediaItems'] = $mediaItemsInSeries->toArray();
+        return response()->json($mediaItem);
+    }
+
+    public function subsplashMedia($slug)
     {
 
         $responseData = [];
@@ -22,6 +39,7 @@ class MediaItemDataController extends Controller
         $responseData['id'] = $mediaItem->id;
         $responseData['slug'] = $mediaItem->slug;
         $responseData['uri'] = $mediaItem->uri;
+        $responseData['blueprint'] = $mediaItem->blueprint;
 
         $subsplash = new SubsplashService;
 

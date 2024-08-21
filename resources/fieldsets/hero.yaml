@@ -39,7 +39,10 @@ fields:
                                   options:
                                     solid: 'Hero 1 Solid'
                                     hollow: 'Hero 1 Hollow'
+                                    hollow-italic: 'Hero 1 Hollow Italic'
                                     hero2: 'Hero 2'
+                                    leader: Leader
+                                    body-large: 'Body Large'
                                   type: select
                                   display: 'Text Style'
             image_title:
@@ -62,6 +65,16 @@ fields:
               fields:
                 -
                   import: buttons
+  -
+    handle: hero_variant
+    field:
+      options:
+        center: Center-aligned
+        left: Left-aligned
+      max_items: 3
+      default: center
+      type: select
+      display: 'Hero Variant'
   -
     handle: leader_text
     field:

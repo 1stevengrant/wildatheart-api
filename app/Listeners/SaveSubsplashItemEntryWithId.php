@@ -12,7 +12,7 @@ class SaveSubsplashItemEntryWithId
         $entry = $event->entry;
 
         // Check if the entry has an 'id' field and it's not already set as the entry ID
-        if ($entry->has('subsplash_media_item_id') && $entry->get('subsplash_media_item_id') != $entry->id()) {
+        if ($entry->has('subsplash_media_item_id') &&  !!$entry->get('subsplash_media_item_id') && $entry->get('subsplash_media_item_id') != $entry->id()) {
             $newId = $entry->get('subsplash_media_item_id');
 
             // $prevId = $entry->id();
