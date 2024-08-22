@@ -25,3 +25,9 @@ fields:
         - media_item
       type: entries
       display: 'Media Items'
+  -
+    handle: focused_item
+    field:
+      type: integer
+      display: 'Focused Item'
+      instructions: 'Enter the integer of the item you would like the slider to start on.'
