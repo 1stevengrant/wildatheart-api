@@ -171,6 +171,31 @@ class MediaItemDataController extends Controller
                 ->where('data->series', 'like', "%{$seriesId}")
                 ->get();
 
+
+            if ($mediaItemEntries->isEmpty()) {
+                // Connect them to their series 
+                foreach ($subsplashMediaItems["_embedded"]["media-items"] as $subsplashMediaItem) {
+
+                    $mediaItemEntry = Entry::query()
+                        ->find($subsplashMediaItem['id']);
+
+
+                    if (!$mediaItemEntry) {
+                        continue;
+                    }
+
+                    $mediaItemEntry->data([
+                        'series' => "entry::$seriesId",
+                    ]);
+                    $mediaItemEntry->save();
+                }
+
+                $mediaItemEntries = Entry::query()
+                    ->where('collection', 'media_item')
+                    ->where('data->series', 'like', "%{$seriesId}")
+                    ->get();
+            }
+
             $responseData['mediaItems'] = [];
 
             foreach ($mediaItemEntries as $mediaItemEntry) {
