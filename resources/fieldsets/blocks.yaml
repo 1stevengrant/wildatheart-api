@@ -20,3 +20,25 @@ fields:
               fields:
                 -
                   import: media_slider
+            countdown:
+              display: Countdown
+              fields:
+                -
+                  import: countdown
+            buttons:
+              display: Buttons
+              fields:
+                -
+                  import: buttons
+            hero_title:
+              display: 'Hero Title'
+              fields:
+                -
+                  handle: hero_title
+                  field: hero.hero_title
+            hero_logo:
+              display: 'Hero Logo'
+              fields:
+                -
+                  handle: hero_logo
+                  field: hero.hero_logo
