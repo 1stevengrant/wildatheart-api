@@ -1,0 +1,66 @@
+title: Actions
+fields:
+  -
+    handle: buttons
+    field:
+      type: replicator
+      display: 'Action Buttons'
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            open_in_app:
+              display: 'Open in app'
+              fields:
+                -
+                  import: icon
+                -
+                  handle: text
+                  field:
+                    default: 'Watch on the App'
+                    type: text
+                    display: 'Button Text'
+                -
+                  handle: subsplash_media_id
+                  field:
+                    type: text
+                    display: 'Subsplash Media Id'
+                -
+                  handle: subsplash_series_id
+                  field:
+                    type: text
+                    display: 'Subsplash Series Id'
+                -
+                  handle: custom_deep_link
+                  field:
+                    placeholder: 'sap5289pv://sap/'
+                    type: text
+                    display: 'Custom Deep Link'
+            share:
+              display: Share
+              fields:
+                -
+                  import: icon
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: 'Button Text'
+                -
+                  handle: title
+                  field:
+                    type: text
+                    display: 'Content Title'
+                    instructions: 'Enter the title you want people to share.'
+                -
+                  handle: custom_share_text
+                  field:
+                    placeholder: 'Watch Wild at Heart: The Series on YouTube today!'
+                    type: text
+                    display: 'Custom Share Text'
+                -
+                  handle: custom_link
+                  field:
+                    type: text
+                    display: 'Custom Link'
+                    instructions: 'By default the share button links to the current page, but you can override if needed.'

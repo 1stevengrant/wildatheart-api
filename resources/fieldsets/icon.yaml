@@ -23,6 +23,9 @@ fields:
         play: play
         hamburger: hamburger
         download: download
+        share: share
+        iphone: iphone
+        molecule: molecule
       type: select
       display: Icon
       clearable: true

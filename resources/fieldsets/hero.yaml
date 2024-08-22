@@ -65,6 +65,11 @@ fields:
               fields:
                 -
                   import: buttons
+            actions:
+              display: Actions
+              fields:
+                -
+                  import: actions
   -
     handle: hero_variant
     field:
