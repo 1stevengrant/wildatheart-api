@@ -15,6 +15,11 @@ fields:
               fields:
                 -
                   import: hero
+            hero_slider:
+              display: 'Hero Slider'
+              fields:
+                -
+                  import: hero_slider
             media_slider:
               display: 'Media Slider'
               fields:

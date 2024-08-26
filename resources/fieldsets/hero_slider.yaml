@@ -1,0 +1,28 @@
+title: 'Hero Slider'
+fields:
+  -
+    handle: title
+    field:
+      type: text
+      display: Title
+  -
+    handle: delay
+    field:
+      default: '4000'
+      type: integer
+      display: Delay
+      instructions: 'Delay between transitions in milliseconds.'
+  -
+    handle: slides
+    field:
+      type: replicator
+      display: Slides
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            slide:
+              display: Slide
+              fields:
+                -
+                  import: slide

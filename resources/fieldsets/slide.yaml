@@ -1,0 +1,39 @@
+title: Slide
+fields:
+  -
+    handle: leader
+    field:
+      placeholder: New
+      type: text
+      display: Leader
+      instructions: 'Appears above the Title'
+  -
+    handle: title
+    field:
+      type: text
+      display: Title
+  -
+    handle: description
+    field:
+      type: text
+      display: Description
+  -
+    handle: background_image
+    field:
+      container: s3
+      type: assets
+      display: 'Background Image'
+      max_files: 1
+  -
+    handle: background_video_url
+    field:
+      type: text
+      display: 'Background Video URL'
+  -
+    handle: button
+    field:
+      type: group
+      display: Button
+      fields:
+        -
+          import: button
