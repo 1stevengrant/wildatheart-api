@@ -15,6 +15,7 @@ class SubsplashService
 
         if (Cache::has($SUBSPLASH_CLIENT_ID)) {
             $value = Cache::get($SUBSPLASH_CLIENT_ID);
+
             return $value;
         }
 
@@ -30,7 +31,7 @@ class SubsplashService
 
         if ($response->successful()) {
             $data = $response->json();
-            Cache::put($SUBSPLASH_CLIENT_ID, $data['access_token'], $data["expires_in"]);
+            Cache::put($SUBSPLASH_CLIENT_ID, $data['access_token'], $data['expires_in']);
 
             return $data['access_token'];
         }
