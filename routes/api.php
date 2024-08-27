@@ -43,7 +43,7 @@ Route::prefix('content')->group(function () {
         Route::get('/media/{slug}', [MediaItemDataController::class, 'media'])->name('media');
         Route::get('/subsplash/{any}', [SubsplashController::class, 'getProxy'])->name('subsplash.getProxy')->where('any', '.*');;
         Route::get('/subsplash-media/{slug}', [MediaItemDataController::class, 'subsplashMedia'])->name('media.show');
-        Route::get('/experiences/all', [ExpeienceDataController::class, 'all'])->name('experience.all');
+        Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
     });
 });
