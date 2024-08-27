@@ -9,8 +9,15 @@ class SubsplashService
 {
     public function getAccessToken()
     {
+
         $SUBSPLASH_CLIENT_ID = env('SUBSPLASH_CLIENT_ID');
         $SUBSPLASH_CLIENT_SECRET = env('SUBSPLASH_CLIENT_SECRET');
+
+        if (Cache::has($SUBSPLASH_CLIENT_ID)) {
+            $value = Cache::get($SUBSPLASH_CLIENT_ID);
+            return $value;
+        }
+
         $SUBSPLASH_SCOPE = env('SUBSPLASH_SCOPE');
         $SUBSPLASH_AUTHENTICATION_TOKEN_URL = env('SUBSPLASH_AUTHENTICATION_TOKEN_URL');
 
@@ -23,6 +30,7 @@ class SubsplashService
 
         if ($response->successful()) {
             $data = $response->json();
+            Cache::put($SUBSPLASH_CLIENT_ID, $data['access_token'], $data["expires_in"]);
 
             return $data['access_token'];
         }
