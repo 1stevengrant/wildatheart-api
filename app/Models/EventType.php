@@ -35,6 +35,7 @@ class EventType extends Model
         'event_faqs' => 'array',
         'event_schedule' => 'array',
         'is_active' => 'boolean',
+        'event_guide_pages' => 'array',
     ];
 
     public static function boot(): void
