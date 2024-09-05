@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\API\V1\StatsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,9 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('events', EventController::class);
+Route::get('users', UserController::class);
 
 Route::prefix('v1')->group(function () {
     Route::name('v1.')->group(function () {
-        Route::get('stats', \App\Http\Controllers\API\V1\StatsController::class)->name('stats');
+        Route::get('stats', StatsController::class)->name('stats');
     });
 });
