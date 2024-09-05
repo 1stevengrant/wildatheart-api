@@ -26,4 +26,3 @@ yarn-error.log
 /public/mix-manifest.json
 /public/js
 .phpactor.json
-/storage/framework/cache
