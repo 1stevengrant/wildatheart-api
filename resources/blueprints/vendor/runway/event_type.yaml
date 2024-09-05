@@ -259,4 +259,100 @@ tabs:
                 - nullable
                 - url
               instructions: 'A link to the video content for the Event Type'
+  event_guide:
+    display: 'Event Guide'
+    sections:
+      -
+        display: 'Event Guide Pages'
+        fields:
+          -
+            handle: event_guide_pages
+            field:
+              type: replicator
+              display: Pages
+              sets:
+                page_set:
+                  display: 'Page Set'
+                  sets:
+                    page:
+                      display: Page
+                      icon: layout-page-break
+                      fields:
+                        -
+                          handle: page_title
+                          field:
+                            type: text
+                            display: 'Page Title'
+                        -
+                          handle: page_content
+                          field:
+                            type: replicator
+                            display: 'Page Content'
+                            sets:
+                              new_set_group:
+                                display: 'New Set Group'
+                                sets:
+                                  body_set:
+                                    display: 'Body Set'
+                                    icon: text-formatting-paragraph
+                                    fields:
+                                      -
+                                        handle: body
+                                        field:
+                                          buttons:
+                                            - bold
+                                            - italic
+                                            - unorderedlist
+                                            - orderedlist
+                                            - quote
+                                            - table
+                                          type: markdown
+                                          display: Body
+                                  video_set:
+                                    display: 'Video Set'
+                                    icon: media-webcam-video
+                                    fields:
+                                      -
+                                        handle: video
+                                        field:
+                                          type: video
+                                          display: Video
+                                  image_set:
+                                    display: 'Image Set'
+                                    icon: media-image-picture-orientation
+                                    fields:
+                                      -
+                                        handle: image
+                                        field:
+                                          max_files: 1
+                                          container: app
+                                          type: assets
+                                          display: Image
+                                  accordion_set:
+                                    display: 'Accordion Set'
+                                    icon: addon-boxes-stack
+                                    fields:
+                                      -
+                                        handle: accordion
+                                        field:
+                                          mode: stacked
+                                          type: grid
+                                          display: Accordion
+                                          fields:
+                                            -
+                                              handle: accordion_box_title
+                                              field:
+                                                type: text
+                                                display: 'Accordion Box Title'
+                                            -
+                                              handle: accordion_box_text
+                                              field:
+                                                buttons:
+                                                  - bold
+                                                  - italic
+                                                  - unorderedlist
+                                                  - orderedlist
+                                                  - quote
+                                                type: markdown
+                                                display: 'Accordion Box Text'
 title: 'Event Type'
