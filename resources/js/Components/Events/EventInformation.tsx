@@ -163,6 +163,12 @@ const EventInformation = ({user}: any) => {
             }) => feature.id.includes('address'))?.text,
             poi = location.find((feature: { id: string | string[]; }) => feature.id.includes('poi'))?.text;
 
+        // this is janky because Mapbox might return Puerto Rico as a region instead of a country
+        // but this will work for now
+        if (region === 'Puerto Rico') {
+            country = 'United States'
+        }
+
         data.country = country
         data.region = region
         data.district = district

@@ -1,0 +1,27 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        display: 'Host Agreement'
+        instructions: 'The host agreement for Wild at Heart Events'
+        fields:
+          -
+            handle: host_agreement
+            field:
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - removeformat
+                - quote
+                - anchor
+                - table
+              remove_empty_nodes: true
+              type: bard
+              display: 'Host Agreement'
+              validate:
+                - required

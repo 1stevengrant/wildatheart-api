@@ -51,7 +51,7 @@ class MonthlyFireCleanupEmailToHostMailable extends Mailable implements ShouldQu
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
-        $content = str_replace('[host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
         $content = str_replace('[button_inactive]', $this->getInactiveButtonComponent(), $content);
         $content = str_replace('[button_active]', $this->getActiveButtonComponent(), $content);
         $this->emailContent = \Str::markdown($content);

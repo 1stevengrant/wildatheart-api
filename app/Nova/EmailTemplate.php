@@ -69,6 +69,10 @@ class EmailTemplate extends Resource
                 ->exceptOnForms()
                 ->sortable()
                 ->displayUsing(function ($value) {
+                    if (! $value) {
+                        return null;
+                    }
+
                     return $value->format('Y-m-d H:i');
                 }),
 
