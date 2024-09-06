@@ -25,10 +25,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('events', EventController::class);
 
-Route::get('exception2', function () {
-    throw new Exception('Test exception');
-});
-
 Route::prefix('v1')->group(function () {
     Route::name('v1.')->group(function () {
         Route::get('stats', \App\Http\Controllers\API\V1\StatsController::class)->name('stats');
