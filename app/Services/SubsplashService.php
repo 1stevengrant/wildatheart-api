@@ -10,8 +10,10 @@ class SubsplashService
     public function getAccessToken()
     {
 
-        $SUBSPLASH_CLIENT_ID = env('SUBSPLASH_CLIENT_ID');
-        $SUBSPLASH_CLIENT_SECRET = env('SUBSPLASH_CLIENT_SECRET');
+        $SUBSPLASH_CLIENT_ID = config('services.subsplash.client_id');
+        $SUBSPLASH_CLIENT_SECRET = config('services.subsplash.client_secret');
+        $SUBSPLASH_SCOPE = config('services.subsplash.scope');
+        $SUBSPLASH_AUTHENTICATION_TOKEN_URL = config('services.subsplash.authentication_token_url');
 
         if (Cache::has($SUBSPLASH_CLIENT_ID)) {
             $value = Cache::get($SUBSPLASH_CLIENT_ID);
@@ -19,10 +21,7 @@ class SubsplashService
             return $value;
         }
 
-        $SUBSPLASH_SCOPE = env('SUBSPLASH_SCOPE');
-        $SUBSPLASH_AUTHENTICATION_TOKEN_URL = env('SUBSPLASH_AUTHENTICATION_TOKEN_URL');
-
-        $response = Http::asForm()->post('https://core.subsplash.com/tokens/v1/token', [
+        $response = Http::asForm()->post($SUBSPLASH_AUTHENTICATION_TOKEN_URL, [
             'grant_type' => 'client_credentials',
             'client_id' => $SUBSPLASH_CLIENT_ID,
             'client_secret' => $SUBSPLASH_CLIENT_SECRET,
@@ -48,7 +47,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer '.$accessToken;
+        $token = 'Bearer ' . $accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
