@@ -14,6 +14,7 @@ class SubsplashService
         $SUBSPLASH_CLIENT_SECRET = config('services.subsplash.client_secret');
         $SUBSPLASH_SCOPE = config('services.subsplash.scope');
         $SUBSPLASH_AUTHENTICATION_TOKEN_URL = config('services.subsplash.authentication_token_url');
+        $SUBSPLASH_CACHE_DURATION = config('services.subsplash.cache_duration');
 
         if (Cache::has($SUBSPLASH_CLIENT_ID)) {
             $value = Cache::get($SUBSPLASH_CLIENT_ID);
@@ -61,7 +62,7 @@ class SubsplashService
 
         if ($response->successful()) {
             $json = $response->json();
-            Cache::put($url, $json, 600);
+            Cache::put($url, $json, $SUBSPLASH_CACHE_DURATION);
 
             return $json;
         }
