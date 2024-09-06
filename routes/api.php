@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\API\ExperienceDataController;
+use App\Http\Controllers\API\MediaItemDataController;
+use App\Http\Controllers\API\MediaSeriesDataController;
+use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -27,5 +31,18 @@ Route::get('users', UserController::class);
 Route::prefix('v1')->group(function () {
     Route::name('v1.')->group(function () {
         Route::get('stats', StatsController::class)->name('stats');
+    });
+});
+
+Route::prefix('content')->group(function () {
+    Route::name('content.')->group(function () {
+        Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
+        Route::get('/media-by-series-id/{slug}', [MediaItemDataController::class, 'mediaBySeriesId'])->name('media.bySeriesId');
+        Route::get('/media/redirects', [MediaItemDataController::class, 'getRedirects'])->name('media.getRedirects');
+        Route::get('/media/{slug}', [MediaItemDataController::class, 'media'])->name('media');
+        Route::get('/subsplash/{any}', [SubsplashController::class, 'getProxy'])->name('subsplash.getProxy')->where('any', '.*');
+        Route::get('/subsplash-media/{slug}', [MediaItemDataController::class, 'subsplashMedia'])->name('media.show');
+        Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
+        Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
     });
 });

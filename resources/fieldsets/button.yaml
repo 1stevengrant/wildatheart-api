@@ -36,3 +36,8 @@ fields:
       fields:
         -
           import: icon
+  -
+    handle: open_in_modal
+    field:
+      type: toggle
+      display: 'Open In Modal'

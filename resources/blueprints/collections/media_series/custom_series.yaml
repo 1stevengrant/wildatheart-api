@@ -1,0 +1,60 @@
+title: 'Custom Series'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: blocks
+            field:
+              remove_empty_nodes: false
+              type: bard
+              display: Blocks
+              sets:
+                new_set_group:
+                  display: 'New Set Group'
+                  sets:
+                    hero:
+                      display: Hero
+                      fields:
+                        -
+                          import: hero
+          -
+            handle: media_items
+            field:
+              collections:
+                - media_item
+              type: entries
+              display: 'Media Items'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required
+          -
+            handle: hide_navigation
+            field:
+              type: toggle
+              display: 'Hide Navigation'

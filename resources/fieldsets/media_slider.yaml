@@ -1,0 +1,33 @@
+title: 'Media Slider'
+fields:
+  -
+    handle: section_title
+    field:
+      type: text
+      display: 'Section Title'
+  -
+    handle: link_to_more
+    field:
+      type: link
+      display: 'Link to more'
+  -
+    handle: media_series
+    field:
+      max_items: 1
+      collections:
+        - media_series
+      type: entries
+      display: 'Media Series'
+  -
+    handle: media_items
+    field:
+      collections:
+        - media_item
+      type: entries
+      display: 'Media Items'
+  -
+    handle: focused_item
+    field:
+      type: integer
+      display: 'Focused Item'
+      instructions: 'Enter the integer of the item you would like the slider to start on.'

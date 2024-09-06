@@ -1,0 +1,80 @@
+title: 'Subsplash Media Item'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: subsplash_media_item_id
+            field:
+              type: text
+              display: 'Subsplash Media Item ID'
+          -
+            handle: drupal_url
+            field:
+              type: text
+              display: 'Drupal URL'
+          -
+            handle: override_subsplash_content
+            field:
+              type: toggle
+              display: 'Override Subsplash Content'
+          -
+            handle: group_field
+            field:
+              type: group
+              display: 'Override Subsplash Content'
+              if:
+                override_subsplash_content: 'equals true'
+              fields:
+                -
+                  handle: subtitle
+                  field:
+                    type: text
+                    display: Subtitle
+                -
+                  handle: description
+                  field:
+                    type: bard
+                    display: Description
+                -
+                  handle: topics
+                  field:
+                    taxonomies:
+                      - topics
+                    type: terms
+                    display: Topics
+          -
+            handle: series
+            field:
+              collections:
+                - media_series
+              type: link
+              display: Series
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required

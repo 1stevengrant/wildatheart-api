@@ -1,0 +1,15 @@
+title: Countdown
+fields:
+  -
+    handle: title
+    field:
+      default: 'Episodes available in'
+      type: text
+      display: Title
+  -
+    handle: end_date_time
+    field:
+      time_enabled: true
+      time_seconds_enabled: true
+      type: date
+      display: 'End date/time'

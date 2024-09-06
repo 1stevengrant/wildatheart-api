@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'enabled' => env('STATAMIC_GRAPHQL_ENABLED', true),
+    'enabled' => env('STATAMIC_GRAPHQL_ENABLED', false),
 
     'resources' => [
         'collections' => true,

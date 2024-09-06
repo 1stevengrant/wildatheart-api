@@ -15,3 +15,14 @@ fields:
               fields:
                 -
                   import: button
+  -
+    handle: position
+    field:
+      options:
+        start: Align-left
+        center: Align-center
+        end: Align-right
+      max_items: 1
+      default: center
+      type: select
+      display: Alignment

@@ -1,0 +1,49 @@
+title: Blocks
+fields:
+  -
+    handle: blocks
+    field:
+      remove_empty_nodes: false
+      type: bard
+      display: Blocks
+      sets:
+        hero:
+          display: Hero
+          sets:
+            hero:
+              display: Hero
+              fields:
+                -
+                  import: hero
+            hero_slider:
+              display: 'Hero Slider'
+              fields:
+                -
+                  import: hero_slider
+            media_slider:
+              display: 'Media Slider'
+              fields:
+                -
+                  import: media_slider
+            countdown:
+              display: Countdown
+              fields:
+                -
+                  import: countdown
+            buttons:
+              display: Buttons
+              fields:
+                -
+                  import: buttons
+            hero_title:
+              display: 'Hero Title'
+              fields:
+                -
+                  handle: hero_title
+                  field: hero.hero_title
+            hero_logo:
+              display: 'Hero Logo'
+              fields:
+                -
+                  handle: hero_logo
+                  field: hero.hero_logo

@@ -17,7 +17,13 @@ return [
     'enabled' => env('STATAMIC_API_ENABLED', true),
 
     'resources' => [
-        'collections' => true,
+
+        'collections' => [
+            '*' => [
+                'enabled' => true,
+                'allowed_filters' => ['subsplash_media_item_id', 'title', 'blueprint'],
+            ],
+        ],
         'navs' => true,
         'taxonomies' => false,
         'assets' => true,
@@ -26,7 +32,7 @@ return [
         'users' => false,
     ],
 
-    'route' => env('STATAMIC_API_ROUTE', 'content-api'),
+    'route' => env('STATAMIC_API_ROUTE', 'api/content'),
 
     /*
     |--------------------------------------------------------------------------
