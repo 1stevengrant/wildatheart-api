@@ -82,5 +82,6 @@ return [
         "client_secret" => env('SUBSPLASH_CLIENT_SECRET'),
         "scope" => env('SUBSPLASH_SCOPE'),
         "authentication_token_url" => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL'),
+        "cache_duration" => env('SUBSPLASH_CACHE_DURATION'),
     ]
 ];
