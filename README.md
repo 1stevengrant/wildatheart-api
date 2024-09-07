@@ -50,8 +50,5 @@ Make sure your server meets the minimum requirements before you start. [Official
 9. run the database seeders `php artisan db:seed`
    
     These commands set the database back up to a default state with a few sample events to work with. 
-10. optionally, you might want to grab a production database backup. For that, add the production database credentials 
-   to the `.env` file and run `php artisan app:pull-prod-database`
+10. optionally, you might want to grab a production database backup. For that, see the [database](docs/database.md) docs.
 11. run the development server `php artisan serve` if not using something like Laravel Valet, Sail or Herd.
-
-## Usage
