@@ -41,3 +41,12 @@ fields:
     field:
       type: toggle
       display: 'Open In Modal'
+      if:
+        open_in_new_tab: 'equals false'
+  -
+    handle: open_in_new_tab
+    field:
+      type: toggle
+      display: 'Open In New Tab'
+      if:
+        open_in_modal: 'equals false'
