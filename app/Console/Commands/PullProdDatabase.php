@@ -19,17 +19,25 @@ class PullProdDatabase extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Copies the production database to the local database';
 
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
+        if (app()->isProduction()) {
+            $this->error('This command cannot be run in production!');
+
+            return 1;
+        }
+
         Artisan::call('db:wipe');
         $this->info('Local database wiped successfully!');
-        shell_exec('./scripts/pullproddb.sh');
+        shell_exec('./scripts/pullProductionDatabase.sh');
 
-        $this->info('Prod Database pulled successfully!');
+        $this->info('Production database pulled successfully!');
+
+        return 1;
     }
 }
