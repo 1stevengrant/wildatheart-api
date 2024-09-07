@@ -1,0 +1,34 @@
+title: 'Subscribe Form'
+fields:
+  -
+    handle: title
+    field:
+      type: text
+      display: Title
+  -
+    handle: subtitle
+    field:
+      type: text
+      display: Subtitle
+  -
+    handle: form_action
+    field:
+      type: text
+      display: 'Form Action'
+  -
+    handle: disclaimer
+    field:
+      type: text
+      display: Disclaimer
+  -
+    handle: success_title
+    field:
+      default: "You're almost there!"
+      type: text
+      display: 'Success Title'
+  -
+    handle: success_subtitle
+    field:
+      default: 'Please confirm your subscription by clicking the link we just emailed you.'
+      type: text
+      display: 'Success Subtitle'

@@ -47,3 +47,8 @@ fields:
                 -
                   handle: hero_logo
                   field: hero.hero_logo
+            subscribe_form:
+              display: 'Subscribe Form'
+              fields:
+                -
+                  import: subscribe_form
