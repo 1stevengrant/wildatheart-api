@@ -345,14 +345,49 @@ tabs:
                                                 type: text
                                                 display: 'Accordion Box Title'
                                             -
-                                              handle: accordion_box_text
+                                              handle: accordion_box_content
                                               field:
-                                                buttons:
-                                                  - bold
-                                                  - italic
-                                                  - unorderedlist
-                                                  - orderedlist
-                                                  - quote
-                                                type: markdown
-                                                display: 'Accordion Box Text'
+                                                type: replicator
+                                                display: 'Accordion Box Content'
+                                                sets:
+                                                  new_set_group:
+                                                    display: 'New Set Group'
+                                                    sets:
+                                                      text_set:
+                                                        display: 'Text Set'
+                                                        icon: text-formatting-image-left
+                                                        fields:
+                                                          -
+                                                            handle: body
+                                                            field:
+                                                              buttons:
+                                                                - bold
+                                                                - italic
+                                                                - unorderedlist
+                                                                - orderedlist
+                                                                - quote
+                                                                - link
+                                                              type: markdown
+                                                              display: Body
+                                                      video_set:
+                                                        display: 'Video Set'
+                                                        icon: media-computer-screen-tv
+                                                        fields:
+                                                          -
+                                                            handle: video
+                                                            field:
+                                                              type: video
+                                                              display: Video
+                                                      image_set:
+                                                        display: 'Image Set'
+                                                        icon: media-image-picture-orientation
+                                                        fields:
+                                                          -
+                                                            handle: image
+                                                            field:
+                                                              max_files: 1
+                                                              container: app
+                                                              folder: event_types
+                                                              type: assets
+                                                              display: Image
 title: 'Event Type'
