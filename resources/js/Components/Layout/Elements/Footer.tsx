@@ -38,20 +38,20 @@ export const Footer = ({ showFooter = true }: { showFooter?: boolean }) => {
                             <span>Home</span>
                         </FooterNavLink>
 
-                        {auth.user ? (
-                            <Link
-                                href={route("host")}
-                                className={` ${linkClass} `}
-                            >
-                                <HandRaisedIcon className={"w-6"} />
-                                <span>Host</span>
-                            </Link>
-                        ) : (
-                            <a href={route("login")} className={linkClass}>
-                                <HandRaisedIcon className={"w-6"} />
-                                <span>Host</span>
-                            </a>
-                        )}
+                        {/*{auth.user ? (*/}
+                        {/*    <Link*/}
+                        {/*        href={route("host")}*/}
+                        {/*        className={` ${linkClass} `}*/}
+                        {/*    >*/}
+                        {/*        <HandRaisedIcon className={"w-6"} />*/}
+                        {/*        <span>Host</span>*/}
+                        {/*    </Link>*/}
+                        {/*) : (*/}
+                        {/*    <a href={route("login")} className={linkClass}>*/}
+                        {/*        <HandRaisedIcon className={"w-6"} />*/}
+                        {/*        <span>Host</span>*/}
+                        {/*    </a>*/}
+                        {/*)}*/}
                         <>
                             {auth.user ? (
                                 <Link

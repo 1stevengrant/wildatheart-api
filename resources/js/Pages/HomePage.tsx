@@ -8,10 +8,7 @@ import { SearchSidebar } from "@/Components/Search/SearchSidebar";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { searchResultsState } from "@/store/searchResultsAtom";
 
-type HomePageProps = {
-    children: React.ReactNode;
-};
-const HomePage = ({ children }: HomePageProps) => {
+const HomePage = ({ children }: { children: React.ReactNode }) => {
     const [searchResults] = useRecoilState(searchResultsState);
     return (
         <AppLayout
