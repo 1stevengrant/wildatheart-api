@@ -91,35 +91,36 @@ class Event extends BaseModel
         return implode(', ', $this->attendees->pluck('email')->toArray());
     }
 
-    private function isUsAndHasCity(): bool
-    {
-        return strtolower($this->country) === self::DEFAULT_COUNTRY && $this->state !== '-' && ! empty($this->city);
-    }
-
-    private function isMissingCity(): bool
-    {
-        return ! $this->city || empty($this->city);
-    }
-
-    private function isUsAndHasRegion(): bool
-    {
-        return strtolower($this->country) === self::DEFAULT_COUNTRY && ! empty($this->region);
-    }
-
-    private function formatLocationWithStateAbbreviation($location, $state = null): string
-    {
-        $state = $state ?? $this->state;
-
-        return $location.', '.getStateAbbreviation(strtoupper($state));
-    }
-
-    private function defaultLocation(): string
-    {
-        return $this->city.', '.strtoupper($this->country);
-    }
-
     public function newEloquentBuilder($query): EventBuilder
     {
         return new EventBuilder($query);
+    }
+
+    public function getLocationAttribute()
+    {
+        if (strtolower($this->country) === self::DEFAULT_COUNTRY || strtolower($this->country) === 'united states') {
+            if ($this->city && $this->region) {
+                return $this->city.', '.getStateAbbreviation($this->region);
+            }
+        }
+
+        if (strtolower($this->country) === 'new zealand') {
+            if ($this->city && $this->region) {
+                return $this->city.', NZ';
+            }
+        }
+
+        if (strtolower($this->country) === 'gb') {
+            if ($this->city && $this->region) {
+                return $this->city.', UK';
+            }
+        }
+
+        return $this->city.', '.strtoupper($this->country);
+    }
+
+    public function getCityAttribute(): array|string
+    {
+        return str_replace(',', '', $this->attributes['city']);
     }
 }

@@ -42,23 +42,6 @@ trait EventAttributesTrait
         $this->attributes['state'] = getStateAbbreviation(strtoupper($value));
     }
 
-    public function getLocationAttribute(): string
-    {
-        if ($this->isUsAndHasCity()) {
-            return $this->formatLocationWithStateAbbreviation($this->city);
-        }
-
-        if ($this->isMissingCity()) {
-            return $this->formatLocationWithStateAbbreviation($this->district);
-        }
-
-        if ($this->isUsAndHasRegion()) {
-            return $this->formatLocationWithStateAbbreviation($this->city, $this->region);
-        }
-
-        return $this->defaultLocation();
-    }
-
     public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
     {
         return url('manager/resources/camp-fires/'.$this->id);

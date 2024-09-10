@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Event;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Statamic\Statamic;
@@ -32,5 +34,21 @@ class AppServiceProvider extends ServiceProvider
             'resources/js/cp.js',
             'resources/css/cp.css',
         ]);
+
+        QueryBuilder::macro(
+            'whereNotEmpty',
+            function (string $column) {
+                return $this->whereNotNull($column)
+                    ->where($column, '<>', '');
+            }
+        );
+
+        EloquentBuilder::macro(
+            'whereNotEmpty',
+            function (string $column) {
+                return $this->getQuery()
+                    ->whereNotEmpty($column);
+            }
+        );
     }
 }
