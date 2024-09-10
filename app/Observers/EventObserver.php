@@ -12,8 +12,8 @@ class EventObserver
 {
     public function created(Event $event): void
     {
-        if (config('app.env') === 'production') {
-            SendNewEventSlackAlert::dispatch($event);
+        if (app()->isProduction()) {
+//            SendNewEventSlackAlert::dispatch($event);
         }
 
         Mail::to($event->user)->send(new NewEventCreatedMailable($event));
