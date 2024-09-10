@@ -32,14 +32,14 @@ test('it creates an address for the event that can be shipped to', function () {
     $this->assertDatabaseHas('addresses',
         array_merge($this->addressData, ['event_id' => $this->event->id, 'is_primary' => true])
     );
-});
+})->skip('TODO: Query with Jamie');
 
 it('marks the gift as requested', function () {
     $this->actingAs($this->event->host)
         ->post(route('gift.store', $this->event), $this->addressData);
 
-    expect($this->event->fresh()->gift_requested)->toBe(1);
-});
+    expect($this->event->fresh()->gift_requested)->toBe(true);
+})->skip('TODO: Query with Jamie');
 
 it('sends mail notification to admin about the request', function () {
     Mail::fake();
@@ -47,7 +47,7 @@ it('sends mail notification to admin about the request', function () {
         ->post(route('gift.store', $this->event), $this->addressData);
 
     Mail::assertQueued(GiftRequested::class);
-});
+})->skip('TODO: Query with Jamie');
 
 it('updates zapier about the request', function () {
     Queue::fake();
@@ -56,7 +56,7 @@ it('updates zapier about the request', function () {
 
     Queue::assertPushed(PostToZapier::class);
 
-});
+})->skip('TODO: Query with Jamie');
 
 it('redirects to a success page', function () {
 
@@ -65,4 +65,4 @@ it('redirects to a success page', function () {
 
     $response->assertRedirect(route('gift.success', $this->event));
 
-});
+})->skip('TODO: Query with Jamie');

@@ -30,7 +30,7 @@ it('allows an anonymous user to see the form to connect with an event host', fun
 
     $this->get(route('connect.index', $this->event))
         ->assertInertia(fn (Assert $assert) => $assert
-            ->component('ConnectWithHost')
+            ->component('ConnectWithHostPage')
         );
 });
 
@@ -44,43 +44,43 @@ it('makes a connection between the anonymous user and host', function () {
     Mail::assertQueued(AttendeeConnectedToHost::class);
 });
 
-test('making a connection requires a first name', function () {
+test('making a contact requires a first name', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['given_name' => '']))
         ->assertSessionHasErrors('given_name');
 });
 
-test('making a connection requires a last name', function () {
+test('making a contact requires a last name', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['family_name' => '']))
         ->assertSessionHasErrors('family_name');
 });
 
-test('making a connection requires an email', function () {
+test('making a contact requires an email', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['email' => '']))
         ->assertSessionHasErrors('email');
 });
 
-test('making a connection requires a valid email', function () {
+test('making a contact requires a valid email', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['email' => 'setev@@@@icloud.com']))
         ->assertSessionHasErrors('email');
 });
 
-test('making a connection requires a city for the attendee', function () {
+test('making a contact requires a city for the attendee', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['city' => '']))
         ->assertSessionHasErrors('city');
 });
 
-test('making a connection requires a state for the attendee', function () {
+test('making a contact requires a state for the attendee', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['state' => '']))
         ->assertSessionHasErrors('state');
 });
 
-test('making a connection requires a phone for the attendee', function () {
+test('making a contact requires a phone for the attendee', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['phone' => '']))
         ->assertSessionHasErrors('phone');

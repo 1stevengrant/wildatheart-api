@@ -1,15 +1,13 @@
 import React from "react";
 
-interface InstructionProps {
+export const Instruction = ({
+    children,
+    className = "mt-4",
+}: {
     children: React.ReactNode;
-}
-
-const Instruction: React.FC<InstructionProps> = ({children}) => {
+    className?: string;
+}) => {
     return (
-        <div className={'text-sm text-grey-200 mt-4'}>
-            {children}
-        </div>
-    )
+        <div className={`text-sm text-grey-200 ${className} `}>{children}</div>
+    );
 };
-
-export default Instruction;

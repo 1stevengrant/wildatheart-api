@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "144799fc6ce544dd35c561de4ba446aa",
+    "content-hash": "398ac84d41c6f716088307e468a57cfa",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -124,161 +124,6 @@
                 "source": "https://github.com/AlexAzartsev/heroicon/tree/v2.0.0"
             },
             "time": "2022-08-10T13:59:04+00:00"
-        },
-        {
-            "name": "algolia/algoliasearch-client-php",
-            "version": "3.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/algolia/algoliasearch-client-php.git",
-                "reference": "cf87b649f745479c0800299481d91dc303e23cea"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/cf87b649f745479c0800299481d91dc303e23cea",
-                "reference": "cf87b649f745479c0800299481d91dc303e23cea",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": "^7.3 || ^8.0",
-                "psr/http-message": "^1.1 || ^2.0",
-                "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "fzaninotto/faker": "^1.8",
-                "phpunit/phpunit": "^8.0 || ^9.0",
-                "symfony/yaml": "^2.0 || ^4.0"
-            },
-            "suggest": {
-                "guzzlehttp/guzzle": "If you prefer to use Guzzle HTTP client instead of the Http Client implementation provided by the package"
-            },
-            "bin": [
-                "bin/algolia-doctor"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-2.0": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/Http/Psr7/functions.php",
-                    "src/functions.php"
-                ],
-                "psr-4": {
-                    "Algolia\\AlgoliaSearch\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Algolia Team",
-                    "email": "contact@algolia.com"
-                }
-            ],
-            "description": "Algolia Search API Client for PHP",
-            "keywords": [
-                "algolia",
-                "api",
-                "client",
-                "php",
-                "search"
-            ],
-            "support": {
-                "issues": "https://github.com/algolia/algoliasearch-client-php/issues",
-                "source": "https://github.com/algolia/algoliasearch-client-php/tree/3.4.1"
-            },
-            "time": "2023-08-28T14:34:04+00:00"
-        },
-        {
-            "name": "algolia/scout-extended",
-            "version": "v3.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/algolia/scout-extended.git",
-                "reference": "74d8c73955c07ce52633f74005624545239a9522"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/algolia/scout-extended/zipball/74d8c73955c07ce52633f74005624545239a9522",
-                "reference": "74d8c73955c07ce52633f74005624545239a9522",
-                "shasum": ""
-            },
-            "require": {
-                "algolia/algoliasearch-client-php": "^3.0.0",
-                "ext-json": "*",
-                "illuminate/console": "^9.0|^10.0|^11.0",
-                "illuminate/contracts": "^9.0|^10.0|^11.0",
-                "illuminate/database": "^9.0|^10.0|^11.0",
-                "illuminate/filesystem": "^9.0|^10.0|^11.0",
-                "illuminate/support": "^9.0|^10.0|^11.0",
-                "laravel/scout": "^9.0|^10.0",
-                "php": "^8.0",
-                "riimu/kit-phpencoder": "^2.4"
-            },
-            "require-dev": {
-                "fakerphp/faker": "^1.13",
-                "laravel/legacy-factories": "^1.1",
-                "mockery/mockery": "^1.4",
-                "nunomaduro/larastan": "^1.0|^2.0",
-                "orchestra/testbench": "^4.9|^5.9|^6.6|^7.0|^8.0|^9.0",
-                "phpstan/phpstan": "^1.3",
-                "phpunit/phpunit": "^8.0|^9.0|^10.5"
-            },
-            "suggest": {
-                "ext-dom": "Required to use the HTML Splitter."
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Algolia\\ScoutExtended\\ScoutExtendedServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Algolia\\ScoutExtended\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nuno Maduro",
-                    "email": "enunomaduro@gmail.com"
-                },
-                {
-                    "name": "Algolia Team",
-                    "email": "contact@algolia.com"
-                }
-            ],
-            "description": "Scout Extended extends Laravel Scout adding algolia-specific features",
-            "keywords": [
-                "algolia",
-                "analytics",
-                "extended",
-                "laravel",
-                "places",
-                "scout",
-                "search"
-            ],
-            "support": {
-                "issues": "https://github.com/algolia/scout-extended/issues",
-                "source": "https://github.com/algolia/scout-extended/tree/v3.1.0"
-            },
-            "time": "2024-03-21T14:34:08+00:00"
         },
         {
             "name": "artesaos/seotools",
@@ -3493,6 +3338,84 @@
             "time": "2024-09-02T14:45:09+00:00"
         },
         {
+            "name": "laravel/pail",
+            "version": "v1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/pail.git",
+                "reference": "c22fe771277971eb9cd224955996bcf39c1a710d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/pail/zipball/c22fe771277971eb9cd224955996bcf39c1a710d",
+                "reference": "c22fe771277971eb9cd224955996bcf39c1a710d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-pcntl": "*",
+                "illuminate/console": "^10.24|^11.0",
+                "illuminate/contracts": "^10.24|^11.0",
+                "illuminate/log": "^10.24|^11.0",
+                "illuminate/process": "^10.24|^11.0",
+                "illuminate/support": "^10.24|^11.0",
+                "nunomaduro/termwind": "^1.15|^2.0",
+                "php": "^8.2",
+                "symfony/console": "^6.0|^7.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.13",
+                "orchestra/testbench": "^8.12|^9.0",
+                "pestphp/pest": "^2.20",
+                "pestphp/pest-plugin-type-coverage": "^2.3",
+                "phpstan/phpstan": "^1.10",
+                "symfony/var-dumper": "^6.3|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Pail\\PailServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Pail\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Nuno Maduro",
+                    "email": "enunomaduro@gmail.com"
+                }
+            ],
+            "description": "Easily delve into your Laravel application's log files directly from the command line.",
+            "homepage": "https://github.com/laravel/pail",
+            "keywords": [
+                "laravel",
+                "logs",
+                "php",
+                "tail"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/pail/issues",
+                "source": "https://github.com/laravel/pail"
+            },
+            "time": "2024-05-08T18:19:39+00:00"
+        },
+        {
             "name": "laravel/pint",
             "version": "v1.17.3",
             "source": {
@@ -4115,6 +4038,91 @@
                 "source": "https://github.com/laravel/vapor-core/tree/v2.37.1"
             },
             "time": "2024-03-26T16:55:06+00:00"
+        },
+        {
+            "name": "laravolt/avatar",
+            "version": "5.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravolt/avatar.git",
+                "reference": "e01beadcd0a98a08cce10cb71e7acaf4e52062cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravolt/avatar/zipball/e01beadcd0a98a08cce10cb71e7acaf4e52062cd",
+                "reference": "e01beadcd0a98a08cce10cb71e7acaf4e52062cd",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "^8.0|^9.0|^10.0|^11.0",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "intervention/image": "^2.7",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.3",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "~9.0",
+                "roave/security-advisories": "dev-latest"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravolt\\Avatar\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "Avatar": "Laravolt\\Avatar\\Facade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravolt\\Avatar\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bayu Hendra Winata",
+                    "email": "uyab.exe@gmail.com",
+                    "homepage": "https://laravolt.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Turn name, email, and any other string into initial-based avatar or gravatar.",
+            "homepage": "https://github.com/laravolt/avatar",
+            "keywords": [
+                "avatar",
+                "gravatar",
+                "laravel",
+                "laravolt"
+            ],
+            "support": {
+                "issues": "https://github.com/laravolt/avatar/issues",
+                "source": "https://github.com/laravolt/avatar/tree/5.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/bayuhendra",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://ko-fi.com/bayuhendra",
+                    "type": "ko_fi"
+                },
+                {
+                    "url": "https://www.patreon.com/uyab",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2024-04-05T02:43:25+00:00"
         },
         {
             "name": "league/commonmark",
@@ -8476,55 +8484,6 @@
                 "source": "https://github.com/rhukster/dom-sanitizer/tree/1.0.7"
             },
             "time": "2023-11-06T16:46:48+00:00"
-        },
-        {
-            "name": "riimu/kit-phpencoder",
-            "version": "v2.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Riimu/Kit-PHPEncoder.git",
-                "reference": "72ff7825de193b272e17b228394819dbfc638e72"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Riimu/Kit-PHPEncoder/zipball/72ff7825de193b272e17b228394819dbfc638e72",
-                "reference": "72ff7825de193b272e17b228394819dbfc638e72",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Riimu\\Kit\\PHPEncoder\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Riikka Kalliomäki",
-                    "email": "riikka.kalliomaki@gmail.com",
-                    "homepage": "http://riimu.net"
-                }
-            ],
-            "description": "Highly customizable alternative to var_export for PHP code generation",
-            "homepage": "http://kit.riimu.net",
-            "keywords": [
-                "code",
-                "encoder",
-                "export",
-                "generator",
-                "variable"
-            ],
-            "support": {
-                "issues": "https://github.com/Riimu/Kit-PHPEncoder/issues",
-                "source": "https://github.com/Riimu/Kit-PHPEncoder/tree/v2.4.2"
-            },
-            "time": "2022-12-10T18:12:25+00:00"
         },
         {
             "name": "riverline/multipart-parser",

@@ -1,13 +1,3 @@
-import React from 'react';
-
-type EventProps = {
-    name: string | undefined;
+export const EventName = ({ name }: { name: string | undefined }) => {
+    return <p className="font-semibold text-white">{name} Fire</p>;
 };
-
-const EventName: React.FC<EventProps> = ({ name }) => {
-    return (
-        <p className="font-semibold text-white">{name} Fire</p>
-    );
-};
-
-export default EventName;

@@ -3,64 +3,41 @@
 namespace App\Models;
 
 use App\Builders\EventBuilder;
-use App\Enums\EventFrequency;
-use App\Transformers\EventInertiaTransformer;
-use App\Transformers\Search\EventSearchTransformer;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\UrlGenerator;
+use App\Enums\EventSexEnum;
+use App\Traits\Event\EventActionsTrait;
+use App\Traits\Event\EventAttributesTrait;
+use App\Traits\Event\EventRelationshipsTrait;
+use App\Traits\Event\EventScopeTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Scout\Searchable;
 
-class Event extends Model
+class Event extends BaseModel
 {
-    use HasFactory, HasUuids, Searchable, SoftDeletes;
-
-    protected $guarded = ['id'];
-
-    protected $with = ['eventType'];
+    use EventActionsTrait, EventAttributesTrait, EventRelationshipsTrait, EventScopeTrait, HasFactory, HasUuids, SoftDeletes;
 
     protected $casts = [
         'approved_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'legacy_drupal_location' => 'array',
+        'longitude' => 'float',
+        'latitude' => 'float',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
-        'frequency' => EventFrequency::class,
-        'legacy_drupal_location' => 'array',
+        'welcome_sent' => 'boolean',
+        'gift_requested' => 'boolean',
+        'sex' => EventSexEnum::class,
     ];
 
-    protected $appends = ['url'];
+    protected $appends = ['url', 'type_group', 'event_type_image', 'host_name', 'host_photo', 'location', 'hostObject'];
+
+    protected $hidden = ['user_id', 'host', 'eventType'];
 
     const FOR_MEN = 'men';
 
     const FOR_WOMEN = 'women';
 
     const DEFAULT_COUNTRY = 'us';
-
-    public function newEloquentBuilder($query): EventBuilder
-    {
-        return new EventBuilder($query);
-    }
-
-    public function attendees(): HasMany
-    {
-        return $this->hasMany(Attendee::class);
-    }
-
-    public function getAttendeeCountAttribute(): int
-    {
-        return $this->attendees->count();
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function isHost(): bool
     {
@@ -70,77 +47,6 @@ class Event extends Model
     public function isApproved(): bool
     {
         return (bool) $this->approved_at;
-    }
-
-    public function getCoordinatesAttribute(): string
-    {
-        return $this->longitude.', '.$this->latitude;
-    }
-
-    public function getEmailAttribute(): string
-    {
-        return $this->user->email;
-    }
-
-    public function getUrlAttribute(): string
-    {
-        return route('view.event', ['event' => $this]);
-    }
-
-    public function bookShipments(): HasMany
-    {
-        return $this->hasMany(BookShipment::class);
-    }
-
-    public function getHostNameAttribute()
-    {
-        return $this->host->full_name;
-    }
-
-    public function getBookShipmentsCountAttribute()
-    {
-        return $this->bookShipments->count();
-    }
-
-    public function host(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function getTitleAttribute(): ?string
-    {
-        if ($this->name) {
-            return $this->name.' Fire';
-        }
-
-        return null;
-    }
-
-    public function setStateCodeAttribute($value): void
-    {
-        $this->attributes['state'] = getStateAbbreviation(strtoupper($value));
-    }
-
-    public function getLocationAttribute(): string
-    {
-        if (strtolower($this->country) === self::DEFAULT_COUNTRY && $this->state && $this->state !== '-' && ! empty($this->city)) {
-            return $this->city.', '.getStateAbbreviation($this->state);
-        }
-
-        if (! $this->city or empty($this->city)) {
-            return $this->district.', '.getStateAbbreviation($this->state);
-        }
-
-        if (strtolower($this->country) === self::DEFAULT_COUNTRY && ! empty($this->region)) {
-            return $this->city.', '.getStateAbbreviation($this->region);
-        }
-
-        return $this->city.', '.strtoupper($this->country);
-    }
-
-    public function address(): HasOne
-    {
-        return $this->hasOne(Address::class);
     }
 
     public function hasRequestedGift(): bool
@@ -180,73 +86,40 @@ class Event extends Model
         return null;
     }
 
-    public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
-    {
-        return url('manager/resources/camp-fires/'.$this->id);
-    }
-
     public function allAttendeeEmails(): string
     {
         return implode(', ', $this->attendees->pluck('email')->toArray());
     }
 
-    public function searchableAs(): string
+    private function isUsAndHasCity(): bool
     {
-        return config('scout.prefix').'wah_local';
+        return strtolower($this->country) === self::DEFAULT_COUNTRY && $this->state !== '-' && ! empty($this->city);
     }
 
-    public function toSearchableArray(): array
+    private function isMissingCity(): bool
     {
-        return $this->transform($this->toArray(), [
-            EventSearchTransformer::class,
-        ]);
+        return ! $this->city || empty($this->city);
     }
 
-    public function getScoutKey(): mixed
+    private function isUsAndHasRegion(): bool
     {
-        return $this->id;
+        return strtolower($this->country) === self::DEFAULT_COUNTRY && ! empty($this->region);
     }
 
-    public function getScoutKeyName(): string
+    private function formatLocationWithStateAbbreviation($location, $state = null): string
     {
-        return 'id';
+        $state = $state ?? $this->state;
+
+        return $location.', '.getStateAbbreviation(strtoupper($state));
     }
 
-    public function inertiaFilter(): array
+    private function defaultLocation(): string
     {
-        return $this->transform($this->toArray(), [
-            EventInertiaTransformer::class,
-        ]);
+        return $this->city.', '.strtoupper($this->country);
     }
 
-    public function shouldBeSearchable(): bool
+    public function newEloquentBuilder($query): EventBuilder
     {
-        if ($this->eventType->name === EventType::FIRES) {
-            return (bool) $this->approved_at;
-        }
-
-        // all other event types
-        if ($this->approved_at !== null && ($this->start_date !== null && $this->start_date->isFuture())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function eventType(): BelongsTo
-    {
-        return $this->belongsTo(EventType::class);
-    }
-
-    public function unpublish(): void
-    {
-        $this->approved_at = null;
-        $this->save();
-    }
-
-    public function publish(): void
-    {
-        $this->approved_at = now();
-        $this->save();
+        return new EventBuilder($query);
     }
 }

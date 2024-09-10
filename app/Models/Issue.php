@@ -2,9 +2,4 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Issue extends Model
-{
-    protected $guarded = ['id'];
-}
+class Issue extends BaseModel {}

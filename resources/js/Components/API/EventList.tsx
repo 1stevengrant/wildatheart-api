@@ -1,0 +1,58 @@
+import React from "react";
+
+import Tippy from "@tippyjs/react/headless";
+import { Marker } from "react-map-gl";
+import { useRecoilState } from "recoil";
+
+import { EventCard } from "@/Components/Events/EventCard";
+import { EventMarkerButton } from "@/Components/Events/EventMarkerButton";
+import { usePopupInfo } from "@/Hooks/usePopupInfo";
+import { eventsListState } from "@/store/eventsAtom";
+import { Event } from "@/types/Event";
+
+export const EventList = () => {
+    const { setPopupInfo } = usePopupInfo();
+    const [events] = useRecoilState(eventsListState);
+    return (
+        <>
+            {events.length > 0 &&
+                events.map((event: Event, index: number) => (
+                    <Marker
+                        key={index}
+                        longitude={event.longitude}
+                        latitude={event.latitude}
+                        anchor="bottom"
+                        onClick={(e) => {
+                            e.originalEvent.stopPropagation();
+                            setPopupInfo(event);
+                        }}
+                    >
+                        <div className={`hidden lg:block`}>
+                            <Tippy
+                                trigger="click mouseenter"
+                                key={event.id}
+                                placement={`bottom`}
+                                interactive={true}
+                                touch={true}
+                                delay={250}
+                                appendTo={() => document.body}
+                                render={(attrs) => (
+                                    <EventCard event={event} attrs={attrs} />
+                                )}
+                            >
+                                <span>
+                                    {" "}
+                                    <EventMarkerButton event={event} />
+                                </span>
+                            </Tippy>
+                        </div>
+                        <div className={`md:hidden`}>
+                            <span>
+                                <EventMarkerButton event={event} />
+                            </span>
+                        </div>
+                    </Marker>
+                ))}
+        </>
+    );
+};

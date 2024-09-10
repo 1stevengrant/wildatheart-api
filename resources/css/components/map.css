@@ -1,0 +1,23 @@
+.maplibregl-popup-close-button {
+    font-size: 16px;
+}
+
+.maplibregl-popup {
+    max-width: 500px !important;
+}
+
+.maplibregl-popup-content {
+    all: unset !important;
+}
+
+.maplibregl-popup-anchor-top {
+    margin-top: 0 !important;
+}
+
+.maplibregl-popup-tip {
+    display: none;
+}
+
+.maplibregl-ctrl-bottom-right {
+    display: none !important;
+}

@@ -12,6 +12,6 @@ class HostEventController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return inertia('HostEvent');
+        return inertia('HostEventPage');
     }
 }

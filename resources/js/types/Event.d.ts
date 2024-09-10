@@ -1,3 +1,5 @@
+import { HostType } from "@/types/HostType";
+
 export type Event = {
     eventTypeImage: string;
     approved_at: string;
@@ -7,12 +9,15 @@ export type Event = {
     created_at: string;
     deleted_at?: string;
     district?: string;
-    frequency: string;
     gift_requested: boolean;
     id: string;
     eventType: string;
+    event_type: unknown;
+    event_type_image?: string;
     eventTypeData: any;
     host: string;
+    host_name: string;
+    host_photo: string;
     hostId: number;
     is_existing: boolean;
     latitude: number;
@@ -33,7 +38,12 @@ export type Event = {
     welcome_sent: boolean;
     zip?: string;
     hostPhoto?: string;
+    start_date?: string;
     startDate?: string;
+    end_date?: string;
     endDate?: string;
     sex?: string;
-}
+    type_group?: string;
+    hostObject: HostType;
+    isPrivate: boolean;
+};

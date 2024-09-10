@@ -15,24 +15,23 @@ afterEach(function () {
 
 it('gets a list of active event types', function () {
     EventType::create([
-        'name' => 'Wild at Heart BASIC (retreat)',
+        'name' => 'Wild at Heart Retreat',
         'is_active' => true,
     ]);
 
     $eventTypes = EventType::active()->get();
-    ray($eventTypes->count());
 
     expect($eventTypes->count())->toBe(1);
 });
 
 it('gets a list of inactive event types', function () {
     EventType::create([
-        'name' => 'Wild at Heart BASIC (retreat)',
+        'name' => 'Wild at Heart Retreat',
         'is_active' => false,
     ]);
 
     EventType::create([
-        'name' => 'Wild at Heart BASIC (retreat)',
+        'name' => 'Wild at Heart Retreat',
         'is_active' => true,
     ]);
 

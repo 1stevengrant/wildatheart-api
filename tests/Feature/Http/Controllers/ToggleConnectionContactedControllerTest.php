@@ -20,7 +20,7 @@ test('it marks an attendee as contacted', function () {
     $attendee = $this->event->attendees->first();
     $this->actingAs($user)
         ->put(route('toggle.contacted', $attendee))
-        ->assertSessionHas('notifications.message', 'Connection updated');
+        ->assertSessionHas('notifications.message', 'Contact updated');
 
     expect($attendee->fresh()->contacted_on)->not->toBeNull();
 });
@@ -33,7 +33,7 @@ it('marks an attendee as not contacted', function () {
     ]);
     $this->actingAs($user)
         ->put(route('toggle.contacted', $attendee))
-        ->assertSessionHas('notifications.message', 'Connection updated');
+        ->assertSessionHas('notifications.message', 'Contact updated');
 
     expect($attendee->fresh()->contacted_on)->toBeNull();
 });

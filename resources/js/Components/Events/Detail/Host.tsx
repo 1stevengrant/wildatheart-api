@@ -1,27 +1,32 @@
 import React from "react";
-import {UserCircleIcon} from "@heroicons/react/24/outline";
-import UserAvatar from "@/Components/UserAvatar";
+
+import { usePage } from "@inertiajs/react";
+
+import { FallbackAvatar } from "@/Components/FallbackAvatar";
+import { UserAvatar } from "@/Components/UserAvatar";
+import { Event } from "@/types/Event";
 
 type HostProps = {
     className?: string;
     host: string;
     hostPhoto?: string;
-}
+};
 
-const Host: React.FC<HostProps> = ({
-                                       className,
-                                       host,
-                                       hostPhoto
-                                   }) => {
+const Host = ({ className = "", host, hostPhoto }: HostProps) => {
+    const page = usePage();
+    const event = page.props.event as Event;
+    const { full_name, md5email } = event.hostObject;
     return (
         <div className={`${className}`}>
             <div className="flex items-start space-x-4">
                 {hostPhoto ? (
-                    <UserAvatar
-                        image={hostPhoto}
-                        width={400}
-                        className={`w-20 h-20`}/>) : (
-                    <UserCircleIcon className={'w-20 h-20'}/>
+                    <UserAvatar image={hostPhoto} className={`w-20 h-20`} />
+                ) : (
+                    <FallbackAvatar
+                        name={full_name}
+                        md5email={md5email}
+                        size={60}
+                    />
                 )}
 
                 <div>
@@ -30,7 +35,7 @@ const Host: React.FC<HostProps> = ({
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Host;

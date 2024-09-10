@@ -20,8 +20,6 @@ class ContactGetByEmail
                 'Email' => $email,
                 'Phone' => '+447766494949',
             ]);
-
-            ray($response);
         } else {
             $salesforceId = $result['records'][0]['Id'];
 

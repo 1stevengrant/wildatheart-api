@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Address extends Model
+class Address extends BaseModel
 {
-    protected $guarded = ['id'];
+    protected $casts = [
+        'is_primary' => 'boolean',
+    ];
 
     public function event(): BelongsTo
     {
@@ -17,5 +18,10 @@ class Address extends Model
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

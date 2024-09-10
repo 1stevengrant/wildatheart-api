@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
-
-{{--    {!! SEOMeta::generate() !!}--}}
-{{--    {!! OpenGraph::generate() !!}--}}
-{{--    {!! Twitter::generate() !!}--}}
-{{--    {!! JsonLd::generate() !!}--}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     @include('partials.analytics')
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link
@@ -30,7 +26,7 @@
     @vite(['resources/js/local.tsx', "resources/js/Pages/{$page['component']}.tsx"])
     @inertiaHead
 </head>
-<body class="font-sans antialiased bg-blue-900 text-white selection:bg-orange selection:text-white">
+<body class="font-sans antialiased bg-black text-white selection:bg-orange selection:text-white h-full">
 @inertia
 </body>
 </html>

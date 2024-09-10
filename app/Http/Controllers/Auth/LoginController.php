@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Auth0\SDK\Auth0 as Auth0SDK;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
@@ -25,6 +26,6 @@ class LoginController extends Controller
         activity()
             ->log('Redirecting to Auth0 Login');
 
-        return redirect($this->auth0->login());
+        return Inertia::location($this->auth0->login());
     }
 }

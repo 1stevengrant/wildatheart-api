@@ -1,5 +1,6 @@
-import React, {FC, Fragment} from 'react';
-import {Dialog, Transition} from "@headlessui/react";
+import React, { Fragment } from "react";
+
+import { Dialog, Transition } from "@headlessui/react";
 
 interface ModalProps {
     open: boolean;
@@ -7,7 +8,7 @@ interface ModalProps {
     children: React.ReactNode;
 }
 
-const Modal: FC<ModalProps> = ({open, setOpen, children}) => {
+export const Modal = ({ open, setOpen, children }: ModalProps) => {
     return (
         <Transition.Root show={open} as={Fragment}>
             <Dialog as="div" className="relative z-[10001]" onClose={setOpen}>
@@ -20,7 +21,7 @@ const Modal: FC<ModalProps> = ({open, setOpen, children}) => {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-black bg-opacity-60 transition-opacity"/>
+                    <div className="fixed inset-0 bg-black bg-opacity-60 transition-opacity" />
                 </Transition.Child>
 
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -34,8 +35,7 @@ const Modal: FC<ModalProps> = ({open, setOpen, children}) => {
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
-                            <Dialog.Panel
-                                className="relative transform overflow-hidden rounded-lg bg-blue-900 px-4 pt-5 pb-4 text-left text-white shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                            <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-blue-900 px-4 pt-5 pb-4 text-left text-white shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                                 {children}
                             </Dialog.Panel>
                         </Transition.Child>
@@ -45,5 +45,3 @@ const Modal: FC<ModalProps> = ({open, setOpen, children}) => {
         </Transition.Root>
     );
 };
-
-export default Modal;

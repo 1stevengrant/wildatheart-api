@@ -1,8 +1,8 @@
-import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import HeadingOne from "@/Components/Type/HeadingOne";
-import { CenterContainer } from "@/Components/Pages/CenterContainer";
-import { usePageContent } from "@/Hooks/usePageContent";
 import { ContentBlocksComponent } from "@/Components/ContentBlocksComponent";
+import { CenterContainer } from "@/Components/Pages/CenterContainer";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
+import { usePageContent } from "@/Hooks/usePageContent";
+import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 const FireBurningPage = () => {
     const { contentBlocks } = usePageContent();
@@ -11,7 +11,10 @@ const FireBurningPage = () => {
             <CenterContainer>
                 <HeadingOne>Fire is still burning</HeadingOne>
                 {contentBlocks && (
-                    <ContentBlocksComponent className={`mt-6`} contentBlocks={contentBlocks} />
+                    <ContentBlocksComponent
+                        className={`mt-6`}
+                        contentBlocks={contentBlocks}
+                    />
                 )}
             </CenterContainer>
         </EmptyLayout>

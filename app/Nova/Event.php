@@ -20,7 +20,7 @@ class Event extends Resource
      */
     public static $model = \App\Models\Event::class;
 
-    public static $with = ['bookShipments', 'attendees', 'user', 'eventType'];
+    public static $with = ['attendees', 'user', 'eventType'];
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -100,8 +100,6 @@ class Event extends Resource
 
             DateTime::make('Deleted At')
                 ->hideFromIndex(),
-
-            HasMany::make('Book Shipments'),
 
             HasMany::make('Attendees'),
 

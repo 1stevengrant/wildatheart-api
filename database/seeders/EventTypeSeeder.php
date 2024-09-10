@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\EventType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class EventTypeSeeder extends Seeder
 {
@@ -23,13 +24,11 @@ class EventTypeSeeder extends Seeder
             EventType::SURVIVAL_SCHOOL,
         ]);
 
-        $eventTypes->each(function ($eventType) {
-            \App\Models\EventType::create([
-                'name' => $eventType,
-                'slug' => \Illuminate\Support\Str::slug($eventType),
-                'summary' => fake()->sentence(5),
-                'description' => fake()->paragraphs(6, true),
-            ]);
-        });
+        $eventTypes->each(fn ($eventType) => EventType::create([
+            'name' => $eventType,
+            'summary' => fake()->sentence(5),
+            'description' => fake()->paragraphs(6, true),
+            'slug' => Str::slug($eventType),
+        ]));
     }
 }

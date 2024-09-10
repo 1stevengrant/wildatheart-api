@@ -1,0 +1,92 @@
+<?php
+
+namespace App\Traits\Event;
+
+use App\Models\EventType;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\UrlGenerator;
+
+trait EventAttributesTrait
+{
+    public function getCoordinatesAttribute(): string
+    {
+        return $this->longitude.', '.$this->latitude;
+    }
+
+    public function getEmailAttribute(): string
+    {
+        return $this->user->email;
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('view.event', ['event' => $this]);
+    }
+
+    public function getHostNameAttribute()
+    {
+        return $this->host->full_name;
+    }
+
+    public function getTitleAttribute(): ?string
+    {
+        if ($this->name) {
+            return $this->name.' Fire';
+        }
+
+        return null;
+    }
+
+    public function setStateCodeAttribute($value): void
+    {
+        $this->attributes['state'] = getStateAbbreviation(strtoupper($value));
+    }
+
+    public function getLocationAttribute(): string
+    {
+        if ($this->isUsAndHasCity()) {
+            return $this->formatLocationWithStateAbbreviation($this->city);
+        }
+
+        if ($this->isMissingCity()) {
+            return $this->formatLocationWithStateAbbreviation($this->district);
+        }
+
+        if ($this->isUsAndHasRegion()) {
+            return $this->formatLocationWithStateAbbreviation($this->city, $this->region);
+        }
+
+        return $this->defaultLocation();
+    }
+
+    public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
+    {
+        return url('manager/resources/camp-fires/'.$this->id);
+    }
+
+    public function getTypeGroupAttribute(): string
+    {
+        $eventName = strtolower($this->eventType->name);
+
+        if (str_contains($eventName, EventType::TYPE_RETREAT) || str_contains($eventName, 'school')) {
+            return EventType::TYPE_RETREAT;
+        }
+
+        if (str_contains($eventName, EventType::TYPE_EXPERIENCE)) {
+            return EventType::TYPE_EXPERIENCE;
+        }
+
+        return EventType::TYPE_FIRE;
+
+    }
+
+    public function getEventTypeImageAttribute(): string
+    {
+        return $this->eventType->image ?? '';
+    }
+
+    public function getHostPhotoAttribute(): ?string
+    {
+        return $this->host->image ?? null;
+    }
+}

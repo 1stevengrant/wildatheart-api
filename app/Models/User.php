@@ -78,12 +78,9 @@ class User extends Authenticatable
         return $this->hasMany(Event::class);
     }
 
-    public function addresses(): HasManyThrough
+    public function addresses(): HasMany
     {
-        return $this->hasManyThrough(
-            Address::class,
-            Event::class,
-        );
+        return $this->hasMany(Address::class);
     }
 
     public function isAttending(Event $event): bool
@@ -93,6 +90,10 @@ class User extends Authenticatable
 
     public function getFullnameAttribute(): string
     {
+        if ($this->given_name === null || $this->family_name === null) {
+            return $this->email;
+        }
+
         return "{$this->given_name} {$this->family_name}";
     }
 
@@ -106,17 +107,15 @@ class User extends Authenticatable
         return $this->email_verified_at !== null;
     }
 
-    public function profilePhoto(): string
+    public function profilePhoto(): ?string
     {
         if ($this->image) {
             makeImagePublic($this->image);
 
-            return bunnyImage($this->image, [
-                'width' => 200,
-            ]);
+            return $this->image;
         }
 
-        return asset('svgs/user.svg');
+        return null;
 
     }
 
@@ -128,7 +127,7 @@ class User extends Authenticatable
         );
     }
 
-    public function connections(): HasManyThrough
+    public function contacts(): HasManyThrough
     {
         return $this->hasManyThrough(
             Attendee::class,
@@ -151,7 +150,6 @@ class User extends Authenticatable
 
     public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'users'): void
     {
-        ray('update profile photo');
         $this->forceFill([
             'image' => $photo->storePublicly(
                 $storagePath,
@@ -160,7 +158,7 @@ class User extends Authenticatable
         ])->save();
     }
 
-    public function generalConnections(): HasMany
+    public function generalContacts(): HasMany
     {
         return $this->hasMany(Attendee::class);
     }
@@ -168,5 +166,20 @@ class User extends Authenticatable
     public function newEloquentBuilder($query): UserBuilder
     {
         return new UserBuilder($query);
+    }
+
+    public function hasAgreedToHostAgreement(): bool
+    {
+        return $this->agreed_to_host_agreement_date !== null;
+    }
+
+    public function address(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function getMd5EmailAttribute(): string
+    {
+        return md5($this->email);
     }
 }

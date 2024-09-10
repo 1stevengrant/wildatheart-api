@@ -2,32 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use App\Builders\EventTypeBuilder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
-class EventType extends Model
+class EventType extends BaseModel
 {
-    use HasRunwayResource;
+    use HasFactory, HasRunwayResource;
 
     protected $guarded = ['id'];
 
-    const WAH_BASIC = 'Wild at Heart BASIC (retreat)';
+    const WAH_BASIC = 'Wild at Heart Retreat';
 
-    const CAPTIVATING_CORE_RETREAT = 'Captivating CORE (retreat)';
+    const CAPTIVATING_CORE_RETREAT = 'Captivating Retreat';
 
-    const BECOMING_A_KING = 'Becoming A King (retreat)';
+    const BECOMING_A_KING = 'Becoming A King Retreat';
 
-    const WAH_EXPERIENCE = 'Wild at Heart (experience)';
+    const WAH_EXPERIENCE = 'Wild at Heart Experience';
 
-    const CAPTIVATING_EXPERIENCE = 'Captivating (experience)';
+    const CAPTIVATING_EXPERIENCE = 'Captivating Experience';
 
-    const BECOMING_A_KING_EXPERIENCE = 'Becoming A King (experience)';
+    const BECOMING_A_KING_EXPERIENCE = 'Becoming A King Experience';
 
     const SURVIVAL_SCHOOL = 'Survival School';
 
     const FIRES = 'Fires';
+
+    const TYPE_RETREAT = 'retreat';
+
+    const TYPE_EXPERIENCE = 'experience';
+
+    const TYPE_FIRE = 'fire';
 
     protected $casts = [
         'key_details' => 'array',
@@ -36,6 +42,8 @@ class EventType extends Model
         'event_schedule' => 'array',
         'is_active' => 'boolean',
         'event_guide_pages' => 'array',
+        'action_buttons' => 'array',
+        'new_content' => 'array',
     ];
 
     public static function boot(): void
@@ -57,13 +65,8 @@ class EventType extends Model
         return 'slug';
     }
 
-    public function scopeActive(Builder $query): Builder
+    public function newEloquentBuilder($query): EventTypeBuilder
     {
-        return $query->where('is_active', '=', true);
-    }
-
-    public function scopeInactive(Builder $query): Builder
-    {
-        return $query->where('is_active', '=', false);
+        return new EventTypeBuilder($query);
     }
 }

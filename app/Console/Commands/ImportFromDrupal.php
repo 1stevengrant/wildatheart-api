@@ -34,9 +34,7 @@ class ImportFromDrupal extends Command
     {
         // filter events with first and last name
         $drupalEvents = collect(Http::get('https://wildatheart.org/json/allies')->json())
-            ->filter(function ($experience) {
-                return $experience['first_name'] && $experience['last_name'];
-            })
+            ->filter(fn ($experience) => $experience['first_name'] && $experience['last_name'])
             ->toArray();
 
         $this->output->progressStart(count($drupalEvents));

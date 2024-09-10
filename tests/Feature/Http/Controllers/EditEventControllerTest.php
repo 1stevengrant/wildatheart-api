@@ -11,7 +11,7 @@ it('loads the edit event page for an authenticated user that owns the event', fu
         ->get(route('my.events.edit', $this->event))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/EditEvent')
+            ->component('Profile/EditEventPage')
         );
 });
 

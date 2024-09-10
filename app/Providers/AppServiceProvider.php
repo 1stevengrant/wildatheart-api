@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Statamic\Statamic;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +27,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('viewPulse', function ($user) {
             return $user->hasRole(User::ROLE_ADMIN);
         });
+
+        Statamic::vite('app', [
+            'resources/js/cp.js',
+            'resources/css/cp.css',
+        ]);
     }
 }

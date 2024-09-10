@@ -1,5 +1,50 @@
 title: 'Local Platform'
 data:
+  host_agreement_content: |-
+    Hello,
+
+    Please review our host agreement and accept to continue. 
+
+    ## TERMS OF USE
+
+    Date of Last Revision: January 26, 2018
+
+    ## INTRODUCTION
+
+    We at Wild at Heart are providing you a copy of our Event Resource (Wild at Heart BASIC, Captivating CORE, Becoming A King Retreat, Survival School, Wild at Heart Experience, Captivating Experience, and Becoming A King Experience, collectively referred to as the “Event Resource”) subject to the following Terms of Use, as amended from time to time at our sole discretion. The Event Resource may be viewed for your personal and non-commercial use.
+
+    ## CONDITIONS OF USE
+
+    You agree you will not modify the Event Resource in any way. You agree you will not share, disperse, or transfer the Event Resource except for face-to-face education instruction as described in our Facilitator’s Guide, incorporated by reference, and found here:
+
+    [Facilitator's Guide](https://www.dropbox.com/sh/bhip64lc7hemxdq/AACtcwGgdXhztig8ZV3JmBKZa?dl=0)
+
+    To the extent you use the Event Resource for face-to-face educational instruction with others, you agree to first legally obtain a copy of the following movies listed on the Video Cues, incorporated by reference, and found here:
+
+    [Video Cues](https://www.dropbox.com/sh/bhip64lc7hemxdq/AACtcwGgdXhztig8ZV3JmBKZa?dl=0)
+
+    You agree to immediately comply with any request from Wild at Heart to delete any copies you possess of the Event Resource.
+
+    ## INDEMNITY AND RELEASE
+
+    You acknowledge and understand that there are certain dangers and risks to which you may be exposed by utilizing the Event Resource around or near a fire or some other outdoor setting, including the risk of serious physical injury, temporary or permanent disability, and death. The risks may arise not only from your own actions, inactions, or negligence, but also from the actions, inactions, or negligence of others. You also acknowledge and understand that there may be other risks not presently known or reasonably foreseeable. 
+
+    You understand that you are not required to use the Event Resource or host a group with or without a fire, but that you freely choose to do so, despite the possible dangers and risks and despite this release, waiver, and assumption of risk. You hereby assume all risks from your participation in any such activities.
+
+    You agree, on behalf of your family, heirs, and personal representative(s), to assume all risks and responsibilities surrounding your participation in any activities using the Event Resource. To the maximum extent permitted by law, you release and indemnify Wild at Heart, and its trustees, officers, employees, and agents from and against any and all liability, actions, debts, claims, and demands of every kind whatsoever, specifically including any claim for negligence or negligent acts or omissions and any present or future claim, loss, or liability or injury to person or property that you may suffer, or for which you may be liable to any other person, that may or does arise out of your participation in any activities using the Event Resource.
+
+    ## COPYRIGHT COMPLAINTS
+
+    If you believe that your work has been copied in a way that constitutes copyright infringement, notify us of your infringement claim in accordance with the procedure set forth below.
+
+    You may contact us here:
+
+    Wild at Heart
+    PO Box 51065
+    Colorado Springs, CO 808949 
+
+    To be effective, the notification must be in writing and contain the following information: an electronic or physical signature of the person authorized to act on behalf of the owner of the copyright or other intellectual property interest; a description of the copyrighted work or other intellectual property that you claim has been infringed; a description of where the material that you claim is infringing is located in the sessions, with enough detail that we may find it in the sessions; your address, telephone number, and email address; a statement by you that you have a good faith belief that the disputed use is not authorized by the copyright or intellectual property owner, its agent, or the law; a statement by you, made under penalty of perjury, that the above information in your Notice is accurate and that you are the copyright or intellectual property owner or authorized to act on the copyright or intellectual property owner’s behalf.
+
   host_agreement:
     -
       type: paragraph

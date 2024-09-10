@@ -21,9 +21,12 @@ yarn-error.log
 .DS_Store
 .env.prod
 .env.dev
-/dbdumps
+/dbdumps/*.sql
 /.vapor
 /public/mix-manifest.json
 /public/js
+/_ide_helper.php
+/.phpstorm.meta.php
+/.env.testing
 .phpactor.json
 scripts/.env.sh

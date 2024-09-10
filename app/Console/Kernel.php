@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->command('app:import-from-drupal')->hourly();
         $schedule->command('app:delete-expired-email-verifications')->hourly();
         $schedule->command('app:send-monthly-email-to-fire-hosts')->daily();
         $schedule->command('app:unpublish-inactive-fires')->daily();

@@ -46,3 +46,8 @@ Route::prefix('content')->group(function () {
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
     });
 });
+
+Route::get('events/search', \App\Http\Controllers\API\SearchForEventsController::class);
+Route::get('events/types', function () {
+    return response()->json(\App\Models\EventType::all());
+});

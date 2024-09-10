@@ -1,13 +1,7 @@
-import React from 'react';
-
-type EventLocationProps = {
+export const EventLocation = ({
+    location,
+}: {
     location: string | undefined;
+}) => {
+    return <p className="font-semibold text-white">{location}</p>;
 };
-
-const EventLocation: React.FC<EventLocationProps> = ({ location }) => {
-    return (
-        <p className="font-semibold text-white">{location}</p>
-    );
-};
-
-export default EventLocation;

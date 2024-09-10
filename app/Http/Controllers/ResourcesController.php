@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventType;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -11,6 +12,8 @@ class ResourcesController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return inertia('Resources');
+        return inertia('ResourcesPage', [
+            'eventTypes' => EventType::query()->active()->get(),
+        ]);
     }
 }

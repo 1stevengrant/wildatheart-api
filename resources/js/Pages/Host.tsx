@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
+
+import { UpdateProfileForm } from "@/Components/Forms/UpdateProfileForm";
+import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
+import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
+import { RightColumn } from "@/Components/Layout/RightColumn";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useTypedPage from "@/Hooks/useTypedPage";
-import UpdateProfileForm from "@/Components/Forms/UpdateProfileForm";
-import { EmptyLayout }from "@/Layouts/EmptyLayout";
-import TwoColumnWrapper from "@/Layouts/TwoColumnWrapper";
-import LeftColumn from "@/Layouts/LeftColumn";
-import RightColumn from "@/Layouts/RightColumn";
-import HeadingOne from "@/Components/Type/HeadingOne";
+import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 const Host = () => {
     const page = useTypedPage();
@@ -15,18 +16,18 @@ const Host = () => {
                 <LeftColumn>
                     <div className={`max-w-[500px] mx-auto`}>
                         <HeadingOne className={`mb-8`}>
-                            We're stoked you want to start a Fire! Just a few questions.
+                            We're stoked you want to start a Fire! Just a few
+                            questions.
                         </HeadingOne>
-                        <UpdateProfileForm user={page.props.auth.user!}/>
+                        <UpdateProfileForm user={page.props.auth.user!} />
                     </div>
                 </LeftColumn>
                 <RightColumn className={`bg-campfire bg-cover bg-center`}>
                     <></>
                 </RightColumn>
             </TwoColumnWrapper>
-
         </EmptyLayout>
-    )
-}
+    );
+};
 
 export default Host;

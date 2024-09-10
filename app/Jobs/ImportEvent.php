@@ -27,32 +27,54 @@ class ImportEvent implements ShouldQueue
      */
     public function handle(): void
     {
+        // Fetch the existing event by legacy_drupal_id
+        $existingEvent = Event::where('legacy_drupal_id', $this->experience['nid'])->first();
+
+        // Prepare the new data for comparison
+        $newData = [
+            'event_type_id' => $this->getEventType($this->experience['type']),
+            'approved_at' => $this->getStatus($this->experience['is_published']),
+            'name' => strip_tags($this->experience['title']),
+            'summary' => strip_tags($this->experience['body']),
+            'legacy_drupal_id' => $this->experience['nid'],
+            'legacy_drupal_user_id' => $this->experience['user_id'],
+            'user_id' => $this->updateOrCreateUser(
+                $this->experience['email'],
+                $this->experience['first_name'],
+                $this->experience['last_name'],
+                $this->experience['phone']
+            ),
+            'legacy_drupal_location' => $this->experience['location'],
+            'legacy_drupal_url' => $this->experience['url'],
+            'start_date' => Carbon::createFromFormat('Y-m-d', $this->experience['start_date']),
+            'end_date' => $this->getEndDate($this->experience['end_date']),
+            'created_at' => Carbon::createFromFormat('Y-m-d H:i:s', $this->experience['posted_on']),
+            'sex' => $this->determineEventSex($this->experience['title']),
+        ];
+
+        // If the event exists and the data hasn't changed, skip the update
+        if ($existingEvent && empty(array_diff_assoc($newData, $existingEvent->toArray()))) {
+            return;
+        }
+
+        // Otherwise, update or create the event
         $event = Event::updateOrCreate(
             ['legacy_drupal_id' => $this->experience['nid']],
-            [
-                'event_type_id' => $this->getEventType($this->experience['type']),
-                'approved_at' => $this->getStatus($this->experience['is_published']),
-                'name' => strip_tags($this->experience['title']),
-                'summary' => strip_tags($this->experience['body']),
-                'legacy_drupal_id' => $this->experience['nid'],
-                'legacy_drupal_user_id' => $this->experience['user_id'],
-                'user_id' => User::updateOrCreate(['email' => $this->experience['email']], [
-                    'family_name' => $this->experience['last_name'],
-                    'given_name' => $this->experience['first_name'],
-                    'email' => $this->experience['email'],
-                    'phone' => $this->experience['phone'],
-                    'password' => bcrypt(Str::random()),
-                ])->id,
-                'legacy_drupal_location' => $this->experience['location'],
-                'legacy_drupal_url' => $this->experience['url'],
-                'start_date' => Carbon::createFromFormat('Y-m-d', $this->experience['start_date']),
-                'end_date' => $this->getEndDate($this->experience['end_date']),
-                'created_at' => Carbon::createFromFormat('Y-m-d H:i:s', $this->experience['posted_on']),
-                'sex' => $this->determineEventSex($this->experience['title']),
-            ]
+            $newData
         );
 
         dispatch(new UpdateEvent($event));
+    }
+
+    public function updateOrCreateUser($email, $firstName, $lastName, $phone): int
+    {
+        return User::updateOrCreate(['email' => $email], [
+            'family_name' => $lastName,
+            'given_name' => $firstName,
+            'email' => $email,
+            'phone' => $phone,
+            'password' => bcrypt(Str::random()),
+        ])->id;
     }
 
     public function getEndDate($endDate): bool|Carbon|null

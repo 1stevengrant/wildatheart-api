@@ -1,0 +1,27 @@
+import React from "react";
+
+import { Link } from "@inertiajs/react";
+import pluralize from "pluralize";
+import { useRecoilState } from "recoil";
+
+import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
+import { selectedEventTypeState } from "@/store/eventsAtom";
+
+export const HostNewEvent = () => {
+    const [selectedEventType] = useRecoilState(selectedEventTypeState);
+
+    const eventTypeName = pluralize.singular(
+        selectedEventType?.name ?? `Event`
+    );
+
+    return (
+        <div className="mt-6 flex items-center justify-center">
+            <Link
+                href={`${selectedEventType ? route("host.eventType.index", selectedEventType.slug) : route("host")}`}
+                className={`${primaryButtonClasses}`}
+            >
+                Host a New {eventTypeName}
+            </Link>
+        </div>
+    );
+};

@@ -1,13 +1,8 @@
 import React from "react";
-type EventHostInfoProps = {
-    children: React.ReactNode;
-}
-const EventInfo = ({children}: EventHostInfoProps) => {
+export const EventInfo = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className={'flex flex-col justify-between relative'}>
+        <div className={"flex flex-col flex-1 justify-between relative"}>
             {children}
         </div>
-    )
-}
-
-export default EventInfo
+    );
+};

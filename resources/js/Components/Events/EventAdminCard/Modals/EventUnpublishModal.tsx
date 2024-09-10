@@ -1,0 +1,74 @@
+import React from "react";
+
+import { EyeSlashIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useForm } from "@inertiajs/react";
+
+import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
+import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
+import { ModalHeading } from "@/Components/Type/ModalHeading";
+import { Modal } from "@/Components/Ui/Modal";
+import { ModalActions } from "@/Components/Ui/ModalActions";
+import { defaultIconSize } from "@/helpers/defaultIconSize";
+import {
+    eventAdminActionButtonClass,
+    eventAdminActionButtonTextClass,
+} from "@/helpers/eventAdminActionButtonClass";
+import { Event } from "@/types/Event";
+
+export const EventUnpublishModal = ({
+    open,
+    setOpen,
+    event,
+}: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    event: Event;
+}) => {
+    const form = useForm({
+        approved_at: null,
+    });
+
+    const unpublishEvent = async () => {
+        form.put(route("toggle-event-approved-at", [event]), {
+            preserveScroll: true,
+            preserveState: false,
+            onSuccess: () => {
+                setOpen(false);
+            },
+        });
+    };
+
+    return (
+        <>
+            <button
+                className={eventAdminActionButtonClass}
+                onClick={() => setOpen(true)}
+            >
+                <EyeSlashIcon className={defaultIconSize} />
+                <span className={eventAdminActionButtonTextClass}>
+                    Unpublish Event
+                </span>
+            </button>
+            <Modal open={open} setOpen={setOpen}>
+                <div className={"flex justify-end"}>
+                    <button onClick={() => setOpen(false)}>
+                        <XMarkIcon className={"w-6 h-6 text-white"} />
+                    </button>
+                </div>
+                <ModalHeading>Unpublish {event.name}?</ModalHeading>
+                <p>
+                    Are you sure you want to unpublish this Event and make it
+                    invisible to the public?
+                </p>
+                <ModalActions>
+                    <SecondaryButton onClick={() => setOpen(false)}>
+                        Cancel
+                    </SecondaryButton>
+                    <PrimaryButton onClick={unpublishEvent}>
+                        Unpublish
+                    </PrimaryButton>
+                </ModalActions>
+            </Modal>
+        </>
+    );
+};

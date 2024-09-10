@@ -4,14 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Attendee extends Model
+class Attendee extends BaseModel
 {
     use HasFactory;
-
-    protected $guarded = ['id'];
 
     public function getFullnameAttribute(): string
     {
@@ -71,5 +68,34 @@ class Attendee extends Model
     public function hasBeenContacted(): bool
     {
         return $this->contacted_on !== null;
+    }
+
+    public function scopeOrderByName($query): void
+    {
+        $query->orderBy('family_name')->orderBy('given_name');
+    }
+
+    public function scopeWhereEventId($query, $eventId)
+    {
+        return $query->where('event_id', $eventId);
+    }
+
+    public function scopeFilter($query, array $filters): void
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('given_name', 'like', '%'.$search.'%')
+                    ->orWhere('family_name_name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
+            });
+        })->when($filters['event_id'] ?? null, function ($query, $eventId) {
+            $query->whereEventId($eventId);
+        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
+            if ($trashed === 'with') {
+                $query->withTrashed();
+            } elseif ($trashed === 'only') {
+                $query->onlyTrashed();
+            }
+        });
     }
 }

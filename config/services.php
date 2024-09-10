@@ -49,7 +49,7 @@ return [
     ],
 
     'zendesk' => [
-        'ticket_api' => 'https://' . env('ZENDESK_SUBDOMAIN') . '.zendesk.com/api/v2/tickets.json',
+        'ticket_api' => 'https://'.env('ZENDESK_SUBDOMAIN').'.zendesk.com/api/v2/tickets.json',
         'token' => env('ZENDESK_TOKEN'),
         'user' => env('ZENDESK_USERNAME'),
     ],
@@ -77,11 +77,11 @@ return [
         'api_key' => env('SENDGRID_API_KEY'),
     ],
 
-    'subsplash' =>  [
-        "client_id" => env('SUBSPLASH_CLIENT_ID'),
-        "client_secret" => env('SUBSPLASH_CLIENT_SECRET'),
-        "scope" => env('SUBSPLASH_SCOPE'),
-        "authentication_token_url" => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL'),
-        "cache_duration" => env('SUBSPLASH_CACHE_DURATION'),
-    ]
+    'subsplash' => [
+        'client_id' => env('SUBSPLASH_CLIENT_ID'),
+        'client_secret' => env('SUBSPLASH_CLIENT_SECRET'),
+        'scope' => env('SUBSPLASH_SCOPE'),
+        'authentication_token_url' => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL'),
+        'cache_duration' => env('SUBSPLASH_CACHE_DURATION'),
+    ],
 ];

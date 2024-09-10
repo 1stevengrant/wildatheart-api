@@ -1,53 +1,36 @@
-import React, {PropsWithChildren} from "react";
-import MainHeader from "@/Components/MainHeader";
-import Footer from "@/Components/Footer";
-import Notification from "@/Components/Notification";
-import {Head, usePage} from "@inertiajs/react";
-import {useRecoilState} from "recoil";
-import {reactNotificationAtom} from "@/store";
-import NotificationWrapper from "@/Components/NotificationWrapper";
+import React, { PropsWithChildren } from "react";
 
-interface Props {
+import { Head } from "@inertiajs/react";
+
+import { Footer } from "@/Components/Layout/Elements/Footer";
+import { MainHeader } from "@/Components/Layout/Elements/MainHeader";
+import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
+import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
+
+interface IAppLayoutProps {
     title: string;
     showFooter?: boolean;
+    className?: string;
+    childClassName?: string;
 }
 
-const AppLayout = ({
-                       title,
-                       children,
-                       showFooter = true,
-                   }: PropsWithChildren<Props>) => {
-
-    const {notifications} = usePage<any>().props;
-    const [reactNotifications] = useRecoilState(reactNotificationAtom);
-
+export const AppLayout = ({
+    title,
+    children,
+    showFooter,
+    className = "",
+    childClassName = "",
+}: PropsWithChildren<IAppLayoutProps>) => {
     return (
-        <div className="flex flex-col h-[100dvh]">
-            <Head title={title}/>
-            <MainHeader/>
-            <main className={'flex-1 overflow-y-auto'}>{children}</main>
-            {showFooter && <Footer/>}
-            {notifications && (
-                <NotificationWrapper>
-                    <Notification
-                        message={notifications.message}
-                    />
-                </NotificationWrapper>
-            )}
-            {reactNotifications.length > 0 && (
-                <NotificationWrapper>
-                    {reactNotifications && reactNotifications.map((notification, index) => (
-                        <Notification
-                            key={index}
-                            message={notification.message}
-                            type={notification.type}
-                        />
-
-                    ))}
-                </NotificationWrapper>
-            )}
+        <div className={`flex flex-col h-[100dvh] ${className}`}>
+            <Head title={title} />
+            <MainHeader />
+            <main className={`flex-1 overflow-y-auto ${childClassName}`}>
+                {children}
+            </main>
+            <Footer showFooter={showFooter} />
+            <BackendNotifications />
+            <ReactNotifications />
         </div>
-    )
-}
-
-export default AppLayout
+    );
+};

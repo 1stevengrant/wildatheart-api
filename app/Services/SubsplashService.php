@@ -49,7 +49,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer ' . $accessToken;
+        $token = 'Bearer '.$accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
@@ -63,7 +63,7 @@ class SubsplashService
 
         if ($response->successful()) {
             $json = $response->json();
-            Cache::put($url, $json, (int)$SUBSPLASH_CACHE_DURATION);
+            Cache::put($url, $json, (int) $SUBSPLASH_CACHE_DURATION);
 
             return $json;
         }
