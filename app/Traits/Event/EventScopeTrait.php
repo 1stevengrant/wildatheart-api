@@ -59,6 +59,8 @@ trait EventScopeTrait
 
         if ($startDate) {
             $query->whereRaw('(start_date >= ? OR start_date IS NULL)', [$startDate]);
+        } else {
+            $query->whereRaw('(start_date >= CURDATE() OR start_date IS NULL)');
         }
 
         if ($endDate) {
