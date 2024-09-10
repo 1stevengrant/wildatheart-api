@@ -1,6 +1,8 @@
 <p align="center"><a href="https://local.wildatheart.org" target="_blank"><img src="public/favicon.svg" alt="Wild at 
 Heart Fires Logo"></a></p>
 
+[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2Fa72658a2-4156-4bbb-bdd7-69082094396d%3Fdate%3D1%26label%3D1&style=for-the-badge)](https://forge.laravel.com/servers/830827/sites/2459991)
+
 # Wild at Heart Local
 
 A Laravel-based platform for connecting like-hearted friends of Wild at Heart to events around the world.
