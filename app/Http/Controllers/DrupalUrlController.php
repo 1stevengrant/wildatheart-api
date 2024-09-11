@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 
 class DrupalUrlController extends Controller
 {
-    public function index()
+
+    public function index(string $any)
     {
         return redirect()->route('home');
     }
+
+
     /**
      * This controller is used to redirect legacy Drupal URLs to the new Laravel URLs.
      */

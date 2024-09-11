@@ -39,6 +39,6 @@ Route::prefix('fire/{event}')
         Route::get('burn', [HandleMonthlyHostFireEmailController::class, 'update'])->name('burn');
     });
 
-Route::get('drupal/{any}', [DrupalUrlController::class, 'index'])->where('drupal.index');
-Route::get('drupal', [DrupalUrlController::class, 'index'])->where('drupal.index');
+Route::get('drupal/{any}', [DrupalUrlController::class, 'index'])->name('drupal.any');
+Route::get('drupal', [DrupalUrlController::class, 'index'])->name('drupal.index');
 Route::get('drupal/{type}/{legacyDrupalUrl}', [DrupalUrlController::class, 'redirect'])->name('drupal.redirect');
