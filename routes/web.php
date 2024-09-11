@@ -4,6 +4,7 @@ use App\Http\Controllers\Attendee\ConnectWithHostController;
 use App\Http\Controllers\Auth\OneTimeLoginController;
 use App\Http\Controllers\Auth\SuccessAuth0CallbackController;
 use App\Http\Controllers\CreateSupportTicketController;
+use App\Http\Controllers\DrupalUrlController;
 use App\Http\Controllers\Event\ViewEventListingController;
 use App\Http\Controllers\HandleMonthlyHostFireEmailController;
 use App\Http\Controllers\HomeController;
@@ -38,4 +39,6 @@ Route::prefix('fire/{event}')
         Route::get('burn', [HandleMonthlyHostFireEmailController::class, 'update'])->name('burn');
     });
 
-include 'drupal.php';
+Route::get('drupal/{any}', [DrupalUrlController::class, 'index'])->where('drupal.index');
+Route::get('drupal', [DrupalUrlController::class, 'index'])->where('drupal.index');
+Route::get('drupal/{type}/{legacyDrupalUrl}', [DrupalUrlController::class, 'redirect'])->name('drupal.redirect');
