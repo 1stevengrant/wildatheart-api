@@ -38,44 +38,25 @@ export const Footer = ({ showFooter = true }: { showFooter?: boolean }) => {
                             <span>Home</span>
                         </FooterNavLink>
 
-                        {/*{auth.user ? (*/}
-                        {/*    <Link*/}
-                        {/*        href={route("host")}*/}
-                        {/*        className={` ${linkClass} `}*/}
-                        {/*    >*/}
-                        {/*        <HandRaisedIcon className={"w-6"} />*/}
-                        {/*        <span>Host</span>*/}
-                        {/*    </Link>*/}
-                        {/*) : (*/}
-                        {/*    <a href={route("login")} className={linkClass}>*/}
-                        {/*        <HandRaisedIcon className={"w-6"} />*/}
-                        {/*        <span>Host</span>*/}
-                        {/*    </a>*/}
-                        {/*)}*/}
-                        <>
-                            {auth.user ? (
-                                <Link
-                                    href={route("my.profile")}
-                                    className={linkClass}
-                                >
-                                    {auth.user.image ? (
-                                        <UserAvatar image={auth.user.image} />
-                                    ) : (
-                                        <UserCircleIcon
-                                            className={defaultIconSize}
-                                        />
-                                    )}
-                                    <span>My Profile</span>
-                                </Link>
+                        <Link
+                            href={route(auth.user ? "host" : "login")}
+                            className={linkClass}
+                        >
+                            <HandRaisedIcon className="w-6" />
+                            <span>Host</span>
+                        </Link>
+
+                        <Link
+                            href={route(auth.user ? "my.profile" : "login")}
+                            className={linkClass}
+                        >
+                            {auth.user?.image ? (
+                                <UserAvatar image={auth.user.image} />
                             ) : (
-                                <a href={route("login")} className={linkClass}>
-                                    <UserCircleIcon
-                                        className={defaultIconSize}
-                                    />
-                                    <span>Login</span>
-                                </a>
+                                <UserCircleIcon className={defaultIconSize} />
                             )}
-                        </>
+                            <span>{auth.user ? "My Profile" : "Login"}</span>
+                        </Link>
                         <button
                             className={linkClass}
                             onClick={() => setOpen(true)}

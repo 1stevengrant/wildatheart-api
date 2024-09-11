@@ -5,8 +5,8 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
+import { RightColumn } from "@/Components/Layout/Elements/RightColumn";
 import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
-import { RightColumn } from "@/Components/Layout/RightColumn";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";

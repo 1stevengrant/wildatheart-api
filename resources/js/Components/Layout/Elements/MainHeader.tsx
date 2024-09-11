@@ -43,10 +43,9 @@ export const MainHeader = () => {
             <div className={`hidden lg:w-1/2 lg:flex lg:justify-end`}>
                 <div className={`flex items-center space-x-4`}>
                     <ToggleSupportRequestButton />
-                    {/* TODO: SG 09/10/24 add this back when we're ready */}
-                    {/*<Link href={`/host`} className={`${textStyles}`}>*/}
-                    {/*    Host an Event*/}
-                    {/*</Link>*/}
+                    <Link href={route("host")} className={`${textStyles}`}>
+                        Host an Event
+                    </Link>
                     <a
                         href={`https://wildatheart.org/events`}
                         className={`rounded-full  border border-white px-4 py-2 ${textStyles}`}

@@ -13,6 +13,7 @@ import { EmptyLayoutWrapper } from "@/Components/Layout/Elements/EmptyLayoutWrap
 import { SnapGrid } from "@/Components/SnapGrid";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
+import { EventTypeFires } from "@/helpers/eventNames";
 import {
     experienceTypeDescription,
     fireTypeDescription,
@@ -106,15 +107,21 @@ const HostEventTypeSelectPage = () => {
                     >
                         <ArrowLeftIcon className={`w-4 h-4`} />
                     </Link>
+
                     {selectedType && (
                         <Link
                             className={`${primaryButtonClasses}`}
                             href={route(
-                                "host.eventType.index",
+                                selectedType.slug === EventTypeFires
+                                    ? "host.fire"
+                                    : "host.eventType.index",
                                 selectedType.slug
                             )}
                         >
-                            Create Your {selectedType?.name}
+                            Create Your{" "}
+                            {selectedType.slug === EventTypeFires
+                                ? "Fire"
+                                : selectedType.name}
                             <ArrowRightIcon className={`w-4 h-4 ml-2`} />
                         </Link>
                     )}

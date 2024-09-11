@@ -58,15 +58,15 @@ const ResourcesPage = () => {
                                     />
                                 )}
 
-                            {/*<ListItem*/}
-                            {/*    icon={*/}
-                            {/*        <SquaresPlusIcon*/}
-                            {/*            className={`w-6 h-6 mr-2 shrink-0`}*/}
-                            {/*        />*/}
-                            {/*    }*/}
-                            {/*    text={`Host New ${eventType.name}`}*/}
-                            {/*    url={route("host.eventType.index", eventType)}*/}
-                            {/*/>*/}
+                            <ListItem
+                                icon={
+                                    <SquaresPlusIcon
+                                        className={`w-6 h-6 mr-2 shrink-0`}
+                                    />
+                                }
+                                text={`Host New ${eventType.name}`}
+                                url={route("host.eventType.index", eventType)}
+                            />
                             {eventType.video_link && (
                                 <ListItem
                                     icon={

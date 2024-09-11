@@ -77,8 +77,8 @@ const MyEventsPage = () => {
                         ) : (
                             <NoEvents type="active" />
                         )}
-                        {/* TODO: SG 09/10/24 put this back when ready */}
-                        {/*<HostNewEvent />*/}
+
+                        <HostNewEvent />
                     </Tab.Panel>
                     <Tab.Panel>
                         {typedEvents.length > 0 ? (
@@ -101,8 +101,7 @@ const MyEventsPage = () => {
                             <NoEvents type="inactive" />
                         )}
 
-                        {/* TODO: SG 09/10/24 put this back when ready */}
-                        {/*<HostNewEvent />*/}
+                        <HostNewEvent />
                     </Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>

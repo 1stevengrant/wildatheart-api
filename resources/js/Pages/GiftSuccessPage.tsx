@@ -2,8 +2,8 @@ import React from "react";
 
 import { GiftComing } from "@/Components/GiftComing";
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
+import { RightColumn } from "@/Components/Layout/Elements/RightColumn";
 import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
-import { RightColumn } from "@/Components/Layout/RightColumn";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 const GiftSuccessPage = () => {

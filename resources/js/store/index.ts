@@ -17,4 +17,14 @@ const showFilterPanelState = atom<boolean>({
     default: false,
 });
 
-export { currentEventState, reactNotificationState, showFilterPanelState };
+const reactNotificationAtom = atom<Array<any>>({
+    key: "reactNotificationAtom",
+    default: [],
+});
+
+export {
+    currentEventState,
+    reactNotificationState,
+    showFilterPanelState,
+    reactNotificationAtom,
+};

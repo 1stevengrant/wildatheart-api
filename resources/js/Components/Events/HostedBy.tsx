@@ -1,3 +1,3 @@
 export const HostedBy = ({ host }: { host: string | undefined }) => {
-    return <div>Hosted by {host}</div>;
+    return <div className={`leading-tighter`}>Hosted by {host}</div>;
 };

@@ -19,6 +19,7 @@ export interface User {
     city: string;
     state: string;
     postal_code: string;
+    md5email: string;
 }
 
 export type PageProps<

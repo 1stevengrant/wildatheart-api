@@ -17,11 +17,12 @@ class HandleSendGiftController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(HandleSendGiftRequest $request, Event $event)
+    public function __invoke(Event $event, HandleSendGiftRequest $request)
     {
         $request->validated();
 
         CreateAddress::run([
+            'user_id' => auth()->user()->id,
             'given_name' => request('given_name'),
             'family_name' => request('family_name'),
             'company' => request('company'),

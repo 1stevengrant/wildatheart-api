@@ -12,11 +12,14 @@ use App\Http\Controllers\Event\HostEventTypeFaqsController;
 use App\Http\Controllers\Event\HostEventTypeMailingAddressController;
 use App\Http\Controllers\Event\HostEventTypeScheduleController;
 use App\Http\Controllers\Event\HostEventTypeSelectController;
+use App\Http\Controllers\Event\HostFireController;
 use App\Http\Controllers\Event\ToggleEventApprovedAtController;
 use App\Http\Controllers\Event\ToggleEventPrivacyController;
 use App\Http\Controllers\Event\UpdateEventController;
 use App\Http\Controllers\EventGuideController;
+use App\Http\Controllers\Gift\GiftSuccessController;
 use App\Http\Controllers\Gift\HandleSendGiftController;
+use App\Http\Controllers\Gift\SendGiftController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\User\AgreeToHostAgreementController;
 use App\Http\Controllers\User\DestroyUserImageController;
@@ -39,7 +42,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('host/select', HostEventTypeSelectController::class)->name('host.eventType.select');
 
     Route::middleware(['agreed_to_host_agreement'])->group(function () {
+
         Route::get('host', HostProfileController::class)->name('host');
+        Route::get('host/fire', [HostFireController::class, 'index'])->name('host.fire');
+        Route::post('host/fire', [HostFireController::class, 'store'])->name('host.fire.store');
+
+        Route::get('gift/{event}', SendGiftController::class)->name('gift');
+        Route::post('gift/{event}', HandleSendGiftController::class)->name('gift.store');
+        Route::get('gift/{event}/success', GiftSuccessController::class)->name('gift.success');
 
         Route::name('host.eventType.')->group(function () {
             Route::prefix('host/{eventType}')->group(function () {

@@ -7,22 +7,27 @@ import { EventName } from "@/Components/Events/EventName";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { imageGenerator } from "@/helpers/user";
+import useTypedPage from "@/Hooks/useTypedPage";
 
 export const EventDisplay = ({
     event,
-    className,
+    className = "",
 }: {
     event: any;
     className?: string;
 }) => {
+    const page = useTypedPage();
+    const { auth } = page.props;
+
     useEffect(() => {}, [event]);
+
     return (
         <div
             className={`${className} p-4 flex space-x-4 border rounded-md cursor-pointer border-grey-border`}
         >
-            {event.eventTypeImage && (
+            {event.eventType.image && (
                 <img
-                    src={imageGenerator(event.eventTypeImage, {
+                    src={imageGenerator(event.eventType.image, {
                         width: 100,
                         height: 100,
                     })}
@@ -31,16 +36,18 @@ export const EventDisplay = ({
                 />
             )}
             <EventInfo>
-                <div>
+                <div className={`leading-tight`}>
                     <EventName name={event.name} />
                     <EventLocation location={event.location} />
                 </div>
                 <EventHostInfo>
-                    <FallbackAvatar
-                        name={event.hostObject.full_name}
-                        md5email={event.hostObject.md5email}
-                        size={24}
-                    />
+                    {auth.user && (
+                        <FallbackAvatar
+                            name={event.host}
+                            md5email={auth.user.md5email}
+                            size={24}
+                        />
+                    )}
 
                     <HostedBy host={event.host} />
                 </EventHostInfo>
