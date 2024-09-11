@@ -127,15 +127,7 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
             return;
         }
         getEvents();
-    }, [
-        latitude,
-        longitude,
-        sex,
-        typeGroup,
-        types,
-        startDate,
-        endDate,
-    ]);
+    }, [latitude, longitude, sex, typeGroup, types, startDate, endDate]);
 
     useEffect(() => {
         handleLoaderState();

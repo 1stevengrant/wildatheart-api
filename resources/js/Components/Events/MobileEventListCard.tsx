@@ -44,9 +44,9 @@ export const MobileEventListCard = ({ event }: { event: Event }) => {
                         >
                             {event.type_group === fireTypeGroup && `Monthly`}
                             {event.type_group === retreatTypeGroup &&
-                                `${dateFormatter(event.start_date, "MMM D")} - ${dateFormatter(event.end_date, "MMM D")}`}
+                                `${dateFormatter(event.start_date)} - ${dateFormatter(event.end_date)}`}
                             {event.type_group === experienceTypeGroup &&
-                                `${dateFormatter(event.start_date, "MMM D")}`}
+                                `${dateFormatter(event.start_date)}`}
                         </span>
                     </div>
                     <div className={`flex items-center space-x-2 mt-1`}>
