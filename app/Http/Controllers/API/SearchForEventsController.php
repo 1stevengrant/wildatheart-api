@@ -18,17 +18,24 @@ class SearchForEventsController extends Controller
 
         $latitude = request('latitude');
         $longitude = request('longitude');
-        $radius = request('radius', 10);
+        $swLatitude = request('sw_latitude');
+        $swLongitude = request('sw_longitude');
+        $neLatitude = request('ne_latitude');
+        $neLongitude = request('ne_longitude');
+        //        $radius = request('radius', 10);
         $sex = request('sex');
         $typeGroup = request('type_group');
         $types = request('types');
         $startDate = request('start_date');
         $endDate = request('end_date');
 
-        $events = Event::withinDistance(
+        $events = Event::withinBoundingBox(
             latitude: $latitude,
             longitude: $longitude,
-            radius: $radius,
+            swLatitude: $swLatitude,
+            swLongitude: $swLongitude,
+            neLatitude: $neLatitude,
+            neLongitude: $neLongitude,
             sex: $sex,
             typeGroup: $typeGroup,
             types: $types,

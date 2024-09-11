@@ -15,7 +15,7 @@ import {
 export const useGetEvents = () => {
     const setEvents = useSetRecoilState(eventsListState);
     const setEventsListLoading = useSetRecoilState(eventsListLoadingState);
-    const { latitude, longitude } = useMapData();
+    const { latitude, longitude, bounds } = useMapData();
     const [radius] = useRecoilState(radiusState);
     const [sex] = useRecoilState(sexState);
     const [typeGroup] = useRecoilState(typeGroupState);
@@ -25,8 +25,9 @@ export const useGetEvents = () => {
 
     const getEvents = async () => {
         try {
+            const { swLatitude, swLongitude, neLatitude, neLongitude } = bounds;
             console.log(
-                `latitude: ${latitude}, longitude: ${longitude}, radius: ${radius}, sex: ${sex}, typeGroup: ${typeGroup}, types: ${types}, startDate: ${startDate}, endDate: ${endDate}`
+                `latitude: ${latitude}, longitude: ${longitude}, bounds: ${bounds}, sex: ${sex}, typeGroup: ${typeGroup}, types: ${types}, startDate: ${startDate}, endDate: ${endDate}`
             );
 
             setEventsListLoading(true);
@@ -34,7 +35,10 @@ export const useGetEvents = () => {
             const response = await eventAPIQuery({
                 latitude,
                 longitude,
-                radius,
+                swLatitude,
+                swLongitude,
+                neLatitude,
+                neLongitude,
                 sex,
                 typeGroup,
                 types,

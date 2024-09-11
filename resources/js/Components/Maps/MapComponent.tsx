@@ -22,7 +22,6 @@ import { showFilterPanelState } from "@/store";
 import { eventsListLoadingState } from "@/store/eventsAtom";
 import {
     endDateStringState,
-    radiusState,
     sexState,
     startDateStringState,
     typeGroupState,
@@ -40,9 +39,14 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
     };
     const mapContainerRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<MapRef>(null);
-    const { latitude, setLatitude, longitude, setLongitude, selectedPlace } =
-        useMapData();
-    const [radius] = useRecoilState(radiusState);
+    const {
+        latitude,
+        setLatitude,
+        longitude,
+        setLongitude,
+        selectedPlace,
+        setBounds,
+    } = useMapData();
     const [sex] = useRecoilState(sexState);
     const [typeGroup] = useRecoilState(typeGroupState);
     const [types] = useRecoilState(typesState);
@@ -61,6 +65,16 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
             const { latitude, longitude } = viewState;
             setLatitude(latitude);
             setLongitude(longitude);
+
+            if (mapRef.current) {
+                const newBounds = mapRef.current?.getMap().getBounds();
+                setBounds({
+                    swLatitude: newBounds._sw.lat,
+                    swLongitude: newBounds._sw.lng,
+                    neLatitude: newBounds._ne.lat,
+                    neLongitude: newBounds._ne.lng,
+                });
+            }
         }
     };
 
@@ -116,7 +130,6 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
     }, [
         latitude,
         longitude,
-        radius,
         sex,
         typeGroup,
         types,
@@ -147,8 +160,7 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
                 dragRotate={false}
                 touchPitch={false}
                 customAttribution={``}
-                onDragEnd={async (e) => handleViewStateChange(e.viewState)}
-                onZoomEnd={async (e) => handleViewStateChange(e.viewState)}
+                onMoveEnd={async (e) => handleViewStateChange(e.viewState)}
                 style={{ width: "100%", height: "100%" }}
                 mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=sr5EVCtJBfz1IQnASSwn`}
             >

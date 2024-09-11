@@ -1,7 +1,10 @@
 export type ISearchEventsParams = {
     latitude: number;
     longitude: number;
-    radius: number;
+    swLatitude: number;
+    swLongitude: number;
+    neLatitude: number;
+    neLongitude: number;
     sex: string;
     typeGroup: string;
     types: Array<number>;

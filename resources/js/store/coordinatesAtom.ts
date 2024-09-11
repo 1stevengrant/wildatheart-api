@@ -11,3 +11,13 @@ export const longitudeState = atom({
     key: "Longitude",
     default: defaultLatLng.longitude,
 });
+
+export const boundsState = atom({
+    key: "Bounds",
+    default: {
+        swLatitude: defaultLatLng.latitude,
+        swLongitude: defaultLatLng.longitude,
+        neLatitude: defaultLatLng.latitude,
+        neLongitude: defaultLatLng.longitude,
+    },
+});

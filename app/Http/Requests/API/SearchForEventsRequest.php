@@ -24,7 +24,7 @@ class SearchForEventsRequest extends FormRequest
         return [
             'latitude' => 'required',
             'longitude' => 'required',
-            'radius' => 'required|numeric|min:100|max:600',
+            //            'radius' => 'required|numeric|min:100|max:600',
         ];
     }
 }

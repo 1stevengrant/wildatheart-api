@@ -4,11 +4,14 @@ namespace App\Traits\Event;
 
 trait EventScopeTrait
 {
-    public function scopeWithinDistance(
+    public function scopeWithinBoundingBox(
         $query,
         $latitude,
         $longitude,
-        $radius = 10,
+        $swLatitude,
+        $swLongitude,
+        $neLatitude,
+        $neLongitude,
         $sex = null,
         $typeGroup = null,
         $types = null,
@@ -36,18 +39,12 @@ trait EventScopeTrait
                 'region',
                 'city',
                 'district',
-                'state',
-                'is_private',
-            )
-            ->selectRaw(
-                '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
-                [$latitude, $longitude, $latitude]
+                'state'
             )
             ->whereNotNull('approved_at')
             ->whereNull('deleted_at')
-            ->where('is_private', false)
-            ->having('distance', '<=', $radius)
-            ->orderBy('distance');
+            ->whereBetween('latitude', [$swLatitude, $neLatitude])
+            ->whereBetween('longitude', [$swLongitude, $neLongitude]);
 
         if ($sex) {
             $query->where('sex', $sex);

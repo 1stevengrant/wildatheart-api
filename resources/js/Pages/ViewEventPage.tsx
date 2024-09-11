@@ -1,24 +1,26 @@
 import React, { useEffect } from "react";
 
 import { usePage } from "@inertiajs/react";
-import Vimeo from "@u-wave/react-vimeo";
 import Markdown from "react-markdown";
 
 import { BackToEvents } from "@/Components/Buttons/BackToEvents";
 import { ConnectWithHost } from "@/Components/Events/Detail/ConnectWithHost";
 import { Date } from "@/Components/Events/Detail/Dates";
 import Host from "@/Components/Events/Detail/Host";
-import { Location } from "@/Components/Events/Detail/Location";
+import Location from "@/Components/Events/Detail/Location";
 import { MobileConnect } from "@/Components/Events/Detail/MobileConnect";
 import { PhotoCarousel } from "@/Components/Events/Detail/PhotoCarousel";
 import { ShareEvent } from "@/Components/Events/Detail/ShareEvent";
+import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
 import { StaticMap } from "@/Components/Maps/StaticMap";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import { dateFormatter } from "@/helpers/dateFormatter";
 import {
     EventTypeBecomingAKingExperience,
+    EventTypeBecomingAKingRetreat,
+    EventTypeCaptivatingRetreat,
     EventTypeCaptivatingExperience,
     EventTypeFires,
+    EventTypeWahRetreat,
     EventTypeWahExperience,
 } from "@/helpers/eventNames";
 import { AppLayout } from "@/Layouts/AppLayout";
@@ -43,25 +45,36 @@ const ViewEventPage = () => {
     });
 
     const eventTitle = (event: Event) => {
-        console.log(event);
         switch (event.eventType) {
             case EventTypeFires:
                 return `${event.name} Fire`;
+            case EventTypeWahRetreat:
+                return `Wild at Heart Retreat`;
+            case EventTypeCaptivatingRetreat:
+                return `Captivating Retreat`;
+            case EventTypeBecomingAKingRetreat:
+                return `Becoming a King Retreat`;
+            case EventTypeWahExperience:
+                return `Wild at Heart Experience`;
+            case EventTypeCaptivatingExperience:
+                return `Captivating Experience`;
+            case EventTypeBecomingAKingExperience:
+                return `Becoming a King Experience`;
             default:
-                return event.eventTypeData.name;
+                return `${event.name} hosted by ${event.host} in ${event.location}`;
         }
     };
 
-    const eventDate = (event: Event): string => {
+    const eventDate = (event: Event) => {
         switch (event.eventType) {
             case EventTypeFires:
                 return "";
-            case EventTypeCaptivatingExperience:
-            case EventTypeWahExperience:
-            case EventTypeBecomingAKingExperience:
-                return `Starts on ${dateFormatter(event.startDate)}`;
+            case EventTypeCaptivatingExperience ||
+                EventTypeWahExperience ||
+                EventTypeBecomingAKingExperience:
+                return `${event.startDate}`;
             default:
-                return `${dateFormatter(event.startDate)} - ${dateFormatter(event.endDate)}`;
+                return `${event.startDate} - ${event.endDate}`;
         }
     };
 
@@ -107,11 +120,9 @@ const ViewEventPage = () => {
                             </div>
 
                             {event.eventTypeData.hero_video && (
-                                <Vimeo
-                                    responsive={true}
+                                <VideoPlayer
+                                    src={event.eventTypeData.hero_video}
                                     className={`mt-[48px]`}
-                                    video={event.eventTypeData.hero_video}
-                                    autoplay
                                 />
                             )}
 
