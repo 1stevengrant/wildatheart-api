@@ -13,7 +13,7 @@ export const eventAPIQuery = async ({
     startDate,
     endDate,
 }: ISearchEventsParams): Promise<any> => {
-    const query = `/api/events/search?latitude=${latitude}&longitude=${longitude}&sw_latitude=${swLatitude}&sw_longitude=${swLongitude}&ne_latitude=${neLatitude}&ne_longitude=${neLongitude}&sex=${sex}&type_group=${typeGroup}&types=${types.join(",")}&start_date=${startDate}&end_date=${endDate}`;
+    const query = `/api/v1/events/search?latitude=${latitude}&longitude=${longitude}&sw_latitude=${swLatitude}&sw_longitude=${swLongitude}&ne_latitude=${neLatitude}&ne_longitude=${neLongitude}&sex=${sex}&type_group=${typeGroup}&types=${types.join(",")}&start_date=${startDate}&end_date=${endDate}`;
     try {
         const response = await fetch(query);
         if (!response.ok) {

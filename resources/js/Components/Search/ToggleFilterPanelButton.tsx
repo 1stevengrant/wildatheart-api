@@ -26,7 +26,7 @@ export const ToggleFilterPanelButton = () => {
                 >
                     <div className={`font-semibold`}>Showing events</div>
                     <div>
-                        Within {radius} miles of{" "}
+                        Near{" "}
                         {selectedPlace
                             ? selectedPlace?.text
                             : "chosen location"}

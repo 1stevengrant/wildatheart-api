@@ -4,9 +4,9 @@ use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
+use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\StatsController;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,11 +26,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('events', EventController::class);
-Route::get('users', UserController::class);
 
 Route::prefix('v1')->group(function () {
     Route::name('v1.')->group(function () {
         Route::get('stats', StatsController::class)->name('stats');
+
+        Route::get('events/search', SearchForEventsController::class);
     });
 });
 
@@ -45,9 +46,4 @@ Route::prefix('content')->group(function () {
         Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
     });
-});
-
-Route::get('events/search', \App\Http\Controllers\API\SearchForEventsController::class);
-Route::get('events/types', function () {
-    return response()->json(\App\Models\EventType::all());
 });
