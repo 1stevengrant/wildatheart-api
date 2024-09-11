@@ -12,6 +12,19 @@ tabs:
               validate:
                 - required
           -
+            handle: subtitle
+            field:
+              type: text
+              display: Subtitle
+              instructions: 'A phrase that appears below the title.'
+          -
+            handle: cover_image
+            field:
+              container: s3
+              type: assets
+              display: 'Cover Image'
+              instructions: 'An image of the book cover.'
+          -
             handle: author
             field:
               collections:
@@ -22,15 +35,21 @@ tabs:
             handle: description
             field:
               type: textarea
-              display: Description
-              instructions: 'Displays in Header and in previews of book in search.'
+              display: 'Quick Description'
+              instructions: 'Displays in Header and in previews of book in search. Usually one paragraph or less.'
           -
-            import: blocks
+            handle: detail_description
+            field:
+              type: markdown
+              display: 'Detail Description'
+              instructions: 'A detailed markdown description. Always displayed in combination with the Quick Description.'
           -
             handle: buy_book_url
             field:
               type: link
               display: 'Buy Book URL'
+          -
+            import: blocks
   sidebar:
     display: Sidebar
     sections:
