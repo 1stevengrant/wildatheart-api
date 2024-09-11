@@ -20,12 +20,12 @@ tabs:
           -
             import: images
           -
-            handle: author
+            handle: authors
             field:
               collections:
                 - authors
               type: entries
-              display: Author
+              display: Authors
           -
             handle: description
             field:
