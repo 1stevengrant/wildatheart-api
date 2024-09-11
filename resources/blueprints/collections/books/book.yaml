@@ -18,12 +18,7 @@ tabs:
               display: Subtitle
               instructions: 'A phrase that appears below the title.'
           -
-            handle: cover_image
-            field:
-              container: s3
-              type: assets
-              display: 'Cover Image'
-              instructions: 'An image of the book cover.'
+            import: images
           -
             handle: author
             field:
