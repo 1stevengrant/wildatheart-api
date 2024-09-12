@@ -6,7 +6,7 @@ jobs:
   harbor-teardown:
     if: |
       github.event.pull_request.draft == false &&
-      contains(github.event.pull_request.title, '[wws]')
+      contains(github.event.pull_request.title, '[wah]')
     runs-on: ubuntu-latest
     container:
       image: kirschbaumdevelopment/laravel-test-runner:8.1
