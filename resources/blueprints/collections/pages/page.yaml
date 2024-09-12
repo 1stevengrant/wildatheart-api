@@ -18,6 +18,11 @@ tabs:
             field:
               type: markdown
               localizable: true
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:
@@ -48,6 +53,8 @@ tabs:
               max_items: 1
               listable: false
               localizable: true
+          -
+            import: images
           -
             handle: hide_navigation
             field:

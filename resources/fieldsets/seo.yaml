@@ -1,0 +1,19 @@
+title: SEO
+fields:
+  -
+    handle: seo_title
+    field:
+      type: text
+      display: Title
+  -
+    handle: seo_description
+    field:
+      type: textarea
+      display: Description
+  -
+    handle: seo_image
+    field:
+      max_files: 1
+      container: s3
+      type: assets
+      display: Image

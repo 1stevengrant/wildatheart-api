@@ -8,6 +8,11 @@ tabs:
         fields:
           -
             import: blocks
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   main:
     display: 'Media Item'
     sections:
