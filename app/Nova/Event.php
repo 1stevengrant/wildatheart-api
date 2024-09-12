@@ -105,6 +105,8 @@ class Event extends Resource
 
             BelongsTo::make('Event Type'),
 
+            Boolean::make('Is Private'),
+
         ];
     }
 
