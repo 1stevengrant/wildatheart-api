@@ -16,15 +16,6 @@ class DrupalUrlController extends Controller
         return redirect()->route('home');
     }
 
-    public function any(Request $request, string $any)
-    {
-        activity()
-            ->causedBy($request->user())
-            ->log('Redirected legacy Drupal URL to Laravel URL: drupal/'.$any);
-
-        return redirect()->route('home');
-    }
-
     public function courses(Request $request, string $course)
     {
         $eventTypes = [
@@ -54,14 +45,26 @@ class DrupalUrlController extends Controller
     /**
      * This controller is used to redirect legacy Drupal URLs to the new Laravel URLs.
      */
-    public function redirect(Request $request, string $type, string $legacyDrupalUrl)
+    public function any(Request $request, string $any)
     {
-        $event = \App\Models\Event::whereLegacyDrupalUrl('/'.$legacyDrupalUrl)->first();
+        $eventTypes = [
+            'captivating-small-group' => 'captivating/small-group',
+            'wild-heart-small-group' => 'wildatheart/small-group',
+            'becoming-king-group' => 'allies/becoming-king-group',
+        ];
 
+        foreach ($eventTypes as $key => $value) {
+            if (str_contains($any, $key)) {
+                $any = str_replace($key, $eventTypes[$key], $any);
+
+            }
+        }
+
+        $event = \App\Models\Event::whereLegacyDrupalUrl('/'.$any)->first();
         if (! $event) {
             activity()
                 ->causedBy($request->user())
-                ->log('Redirected legacy Drupal URL to Laravel URL: drupal/'.$type.'/'.$legacyDrupalUrl);
+                ->log('Redirected legacy Drupal URL to Laravel URL: drupal/'.$any);
 
             return redirect()->route('home');
         }
