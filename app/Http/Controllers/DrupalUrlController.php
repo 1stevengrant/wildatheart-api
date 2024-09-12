@@ -51,9 +51,9 @@ class DrupalUrlController extends Controller
             'captivating-small-group' => 'captivating/small-group',
             'wild-heart-small-group' => 'wildatheart/small-group',
             'becoming-king-group' => 'allies/becoming-king-group',
+            'becoming-king-retreat/' => '',
         ];
-
-        https://wahfires.test/drupal/becoming-king-group/becoming-king-geneva-il-us-brian-valentini
+        
         foreach ($eventTypes as $key => $value) {
             if (str_contains($any, $key)) {
                 $any = str_replace($key, $eventTypes[$key], $any);
