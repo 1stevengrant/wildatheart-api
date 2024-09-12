@@ -9,6 +9,7 @@ beforeEach(function () {
     $this->actingAs($this->user);
     $this->seed(EventTypeSeeder::class);
 });
+
 it('redirects legacy Drupal URL to Laravel URL and logs activity', function () {
 
     $response = $this->get('/drupal');
@@ -60,8 +61,8 @@ it('logs activity and redirects to the event when event is found', function () {
         'legacy_drupal_url' => $legacyDrupalUrl,
     ]);
 
-    // Make a GET request to the /drupal/{type}/{legacyDrupalUrl} route
-    $response = $this->get('/drupal/basic/'.$legacyDrupalUrl);
+    // Make a GET request to the /drupal/{legacyDrupalUrl} route
+    $response = $this->get('/drupal'.$legacyDrupalUrl);
 
     // Assert the response redirects to the event's view route
     $response->assertRedirect(route('view.event', $event));

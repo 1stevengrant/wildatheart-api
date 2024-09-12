@@ -40,8 +40,5 @@ Route::prefix('fire/{event}')
     });
 
 Route::get('drupal/courses/{course}', [DrupalUrlController::class, 'courses'])->name('drupal.course');
-Route::get('drupal/{type}/{legacyDrupalUrl}', [DrupalUrlController::class, 'redirect'])
-    ->where('type', '^(?!courses$).*')
-    ->name('drupal.redirect');
 Route::get('drupal/{any}', [DrupalUrlController::class, 'any'])->where('any', '.*')->name('drupal.any');
 Route::get('drupal', [DrupalUrlController::class, 'index'])->name('drupal.index');
