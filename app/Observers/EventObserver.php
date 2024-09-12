@@ -16,7 +16,7 @@ class EventObserver
             SendNewEventSlackAlert::dispatch($event);
         }
 
-        //        Mail::to($event->user)->send(new NewEventCreatedMailable($event));
+        Mail::to($event->user)->send(new NewEventCreatedMailable($event));
 
         Artisan::call('app:clear-event-cache');
     }
