@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "398ac84d41c6f716088307e468a57cfa",
+    "content-hash": "58dd473cdbf7cdfb17fb0cdb382c37a6",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -700,82 +700,6 @@
                 }
             ],
             "time": "2023-12-20T15:40:13+00:00"
-        },
-        {
-            "name": "composer/ca-bundle",
-            "version": "1.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "063d9aa8696582f5a41dffbbaf3c81024f0a604a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/063d9aa8696582f5a41dffbbaf3c81024f0a604a",
-                "reference": "063d9aa8696582f5a41dffbbaf3c81024f0a604a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*",
-                "ext-pcre": "*",
-                "php": "^7.2 || ^8.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^1.10",
-                "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "symfony/phpunit-bridge": "^4.2 || ^5",
-                "symfony/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Composer\\CaBundle\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be"
-                }
-            ],
-            "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
-            "keywords": [
-                "cabundle",
-                "cacert",
-                "certificate",
-                "ssl",
-                "tls"
-            ],
-            "support": {
-                "irc": "irc://irc.freenode.org/composer",
-                "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.1"
-            },
-            "funding": [
-                {
-                    "url": "https://packagist.com",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/composer",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-07-08T15:28:20+00:00"
         },
         {
             "name": "composer/semver",
@@ -1887,64 +1811,6 @@
             "time": "2023-10-12T05:21:21+00:00"
         },
         {
-            "name": "geoip2/geoip2",
-            "version": "v2.13.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "6a41d8fbd6b90052bc34dff3b4252d0f88067b23"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/6a41d8fbd6b90052bc34dff3b4252d0f88067b23",
-                "reference": "6a41d8fbd6b90052bc34dff3b4252d0f88067b23",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "maxmind-db/reader": "~1.8",
-                "maxmind/web-service-common": "~0.8",
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.*",
-                "phpstan/phpstan": "*",
-                "phpunit/phpunit": "^8.0 || ^9.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "GeoIp2\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Gregory J. Oschwald",
-                    "email": "goschwald@maxmind.com",
-                    "homepage": "https://www.maxmind.com/"
-                }
-            ],
-            "description": "MaxMind GeoIP2 PHP API",
-            "homepage": "https://github.com/maxmind/GeoIP2-php",
-            "keywords": [
-                "IP",
-                "geoip",
-                "geoip2",
-                "geolocation",
-                "maxmind"
-            ],
-            "support": {
-                "issues": "https://github.com/maxmind/GeoIP2-php/issues",
-                "source": "https://github.com/maxmind/GeoIP2-php/tree/v2.13.0"
-            },
-            "time": "2022-08-05T20:32:58+00:00"
-        },
-        {
             "name": "graham-campbell/manager",
             "version": "v5.1.0",
             "source": {
@@ -2555,56 +2421,6 @@
                 "source": "https://github.com/vinkla/hashids/tree/5.0.2"
             },
             "time": "2023-02-23T15:00:54+00:00"
-        },
-        {
-            "name": "hollodotme/fast-cgi-client",
-            "version": "v3.1.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hollodotme/fast-cgi-client.git",
-                "reference": "062182d4eda73c161cc2839783acc83096ec0f37"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hollodotme/fast-cgi-client/zipball/062182d4eda73c161cc2839783acc83096ec0f37",
-                "reference": "062182d4eda73c161cc2839783acc83096ec0f37",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "ext-xdebug": ">=2.6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "hollodotme\\FastCGI\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Holger Woltersdorf",
-                    "email": "hw@hollo.me"
-                }
-            ],
-            "description": "A PHP fast CGI client to send requests (a)synchronously to PHP-FPM.",
-            "keywords": [
-                "Socket",
-                "async",
-                "fastcgi",
-                "php-fpm"
-            ],
-            "support": {
-                "issues": "https://github.com/hollodotme/fast-cgi-client/issues",
-                "source": "https://github.com/hollodotme/fast-cgi-client/tree/v3.1.7"
-            },
-            "time": "2021-12-07T10:10:20+00:00"
         },
         {
             "name": "http-interop/http-factory-guzzle",
@@ -3961,85 +3777,6 @@
             "time": "2024-05-08T18:07:10+00:00"
         },
         {
-            "name": "laravel/vapor-core",
-            "version": "v2.37.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/vapor-core.git",
-                "reference": "9fac8cd0f9b6979887253dd676e04ecb868be615"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/vapor-core/zipball/9fac8cd0f9b6979887253dd676e04ecb868be615",
-                "reference": "9fac8cd0f9b6979887253dd676e04ecb868be615",
-                "shasum": ""
-            },
-            "require": {
-                "aws/aws-sdk-php": "^3.80",
-                "guzzlehttp/guzzle": "^6.3|^7.0",
-                "guzzlehttp/promises": "^1.4|^2.0",
-                "hollodotme/fast-cgi-client": "^3.0",
-                "illuminate/container": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "illuminate/http": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "illuminate/queue": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "monolog/monolog": "^1.12|^2.0|^3.2",
-                "nyholm/psr7": "^1.0",
-                "php": "^7.2|^8.0",
-                "riverline/multipart-parser": "^2.0.9",
-                "symfony/process": "^4.3|^5.0|^6.0|^7.0",
-                "symfony/psr-http-message-bridge": "^1.0|^2.0|^6.4|^7.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "orchestra/testbench": "^4.0|^5.0|^6.0|^7.0|^8.0|^9.0",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^8.0|^9.0|^10.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Laravel\\Vapor\\VaporServiceProvider"
-                    ],
-                    "aliases": {
-                        "Vapor": "Laravel\\Vapor\\Vapor"
-                    }
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/debug.php"
-                ],
-                "psr-4": {
-                    "Laravel\\Vapor\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "The kernel and invocation handlers for Laravel Vapor",
-            "homepage": "https://github.com/laravel/vapor-core",
-            "keywords": [
-                "laravel",
-                "vapor"
-            ],
-            "support": {
-                "source": "https://github.com/laravel/vapor-core/tree/v2.37.1"
-            },
-            "time": "2024-03-26T16:55:06+00:00"
-        },
-        {
             "name": "laravolt/avatar",
             "version": "5.1.0",
             "source": {
@@ -5012,122 +4749,6 @@
                 }
             ],
             "time": "2023-06-21T14:59:35+00:00"
-        },
-        {
-            "name": "maxmind-db/reader",
-            "version": "v1.11.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/maxmind/MaxMind-DB-Reader-php.git",
-                "reference": "1e66f73ffcf25e17c7a910a1317e9720a95497c7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/MaxMind-DB-Reader-php/zipball/1e66f73ffcf25e17c7a910a1317e9720a95497c7",
-                "reference": "1e66f73ffcf25e17c7a910a1317e9720a95497c7",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "conflict": {
-                "ext-maxminddb": "<1.11.1,>=2.0.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.*",
-                "php-coveralls/php-coveralls": "^2.1",
-                "phpstan/phpstan": "*",
-                "phpunit/phpcov": ">=6.0.0",
-                "phpunit/phpunit": ">=8.0.0,<10.0.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "suggest": {
-                "ext-bcmath": "bcmath or gmp is required for decoding larger integers with the pure PHP decoder",
-                "ext-gmp": "bcmath or gmp is required for decoding larger integers with the pure PHP decoder",
-                "ext-maxminddb": "A C-based database decoder that provides significantly faster lookups"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "MaxMind\\Db\\": "src/MaxMind/Db"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Gregory J. Oschwald",
-                    "email": "goschwald@maxmind.com",
-                    "homepage": "https://www.maxmind.com/"
-                }
-            ],
-            "description": "MaxMind DB Reader API",
-            "homepage": "https://github.com/maxmind/MaxMind-DB-Reader-php",
-            "keywords": [
-                "database",
-                "geoip",
-                "geoip2",
-                "geolocation",
-                "maxmind"
-            ],
-            "support": {
-                "issues": "https://github.com/maxmind/MaxMind-DB-Reader-php/issues",
-                "source": "https://github.com/maxmind/MaxMind-DB-Reader-php/tree/v1.11.1"
-            },
-            "time": "2023-12-02T00:09:23+00:00"
-        },
-        {
-            "name": "maxmind/web-service-common",
-            "version": "v0.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/maxmind/web-service-common-php.git",
-                "reference": "4dc5a3e8df38aea4ca3b1096cee3a038094e9b53"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/4dc5a3e8df38aea4ca3b1096cee3a038094e9b53",
-                "reference": "4dc5a3e8df38aea4ca3b1096cee3a038094e9b53",
-                "shasum": ""
-            },
-            "require": {
-                "composer/ca-bundle": "^1.0.3",
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "3.*",
-                "phpstan/phpstan": "*",
-                "phpunit/phpunit": "^8.0 || ^9.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "MaxMind\\Exception\\": "src/Exception",
-                    "MaxMind\\WebService\\": "src/WebService"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Gregory Oschwald",
-                    "email": "goschwald@maxmind.com"
-                }
-            ],
-            "description": "Internal MaxMind Web Service API",
-            "homepage": "https://github.com/maxmind/web-service-common-php",
-            "support": {
-                "issues": "https://github.com/maxmind/web-service-common-php/issues",
-                "source": "https://github.com/maxmind/web-service-common-php/tree/v0.9.0"
-            },
-            "time": "2022-03-28T17:43:20+00:00"
         },
         {
             "name": "michelf/php-smartypants",
@@ -8484,62 +8105,6 @@
                 "source": "https://github.com/rhukster/dom-sanitizer/tree/1.0.7"
             },
             "time": "2023-11-06T16:46:48+00:00"
-        },
-        {
-            "name": "riverline/multipart-parser",
-            "version": "2.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Riverline/multipart-parser.git",
-                "reference": "7a9f4646db5181516c61b8e0225a343189beedcd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Riverline/multipart-parser/zipball/7a9f4646db5181516c61b8e0225a343189beedcd",
-                "reference": "7a9f4646db5181516c61b8e0225a343189beedcd",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=5.6.0"
-            },
-            "require-dev": {
-                "laminas/laminas-diactoros": "^1.8.7 || ^2.11.1",
-                "phpunit/phpunit": "^5.7 || ^9.0",
-                "psr/http-message": "^1.0",
-                "symfony/psr-http-message-bridge": "^1.1 || ^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Riverline\\MultiPartParser\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Romain Cambien",
-                    "email": "romain@cambien.net"
-                },
-                {
-                    "name": "Riverline",
-                    "homepage": "http://www.riverline.fr"
-                }
-            ],
-            "description": "One class library to parse multipart content with encoding and charset support.",
-            "keywords": [
-                "http",
-                "multipart",
-                "parser"
-            ],
-            "support": {
-                "issues": "https://github.com/Riverline/multipart-parser/issues",
-                "source": "https://github.com/Riverline/multipart-parser/tree/2.1.2"
-            },
-            "time": "2024-03-12T16:46:05+00:00"
         },
         {
             "name": "scrivo/highlight.php",
