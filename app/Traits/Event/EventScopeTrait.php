@@ -17,7 +17,8 @@ trait EventScopeTrait
         $types = null,
         $startDate = null,
         $endDate = null
-    ) {
+    )
+    {
         $sex = $sex ?? '';
         $typeGroup = $typeGroup ?? '';
         $endDate = $endDate ?? '';
@@ -45,13 +46,14 @@ trait EventScopeTrait
             ->whereNull('deleted_at')
             ->whereBetween('latitude', [$swLatitude, $neLatitude])
             ->whereBetween('longitude', [$swLongitude, $neLongitude])
-            ->where('start_date', '>=', $startDate);
+            ->where('start_date', '>=', $startDate)
+            ->orderBy('start_date', 'asc');
 
         if ($sex) {
             $query->where('sex', $sex);
         }
 
-        if (! empty($types)) {
+        if (!empty($types)) {
             $query->whereIn('event_type_id', explode(',', $types));
         }
 
@@ -61,7 +63,7 @@ trait EventScopeTrait
 
         if ($typeGroup) {
             $query->whereHas('eventType', function ($query) use ($typeGroup) {
-                $query->where('name', 'like', '%'.$typeGroup.'%');
+                $query->where('name', 'like', '%' . $typeGroup . '%');
             });
         }
 
