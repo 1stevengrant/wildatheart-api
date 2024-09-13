@@ -2,12 +2,10 @@ import { MagnifyingGlassCircleIcon } from "@heroicons/react/20/solid";
 import { useRecoilState } from "recoil";
 
 import { showFilterPanelState } from "@/store";
-import { radiusState } from "@/store/filtersAtom";
 import { selectedPlaceState } from "@/store/mapAtom";
 
 export const ToggleFilterPanelButton = () => {
     const [selectedPlace] = useRecoilState(selectedPlaceState);
-    const [radius] = useRecoilState(radiusState);
     const [showFilterPanel, setShowFilterPanel] =
         useRecoilState(showFilterPanelState);
 

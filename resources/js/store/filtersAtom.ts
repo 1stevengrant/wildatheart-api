@@ -12,10 +12,6 @@ const sexState = atom({
     key: "Sex",
     default: <string>"",
 });
-const radiusState = atom({
-    key: "Radius",
-    default: <number>100,
-});
 const startDateState = atom({
     key: "StartDate",
     default: <Date | null>null,
@@ -37,7 +33,6 @@ export {
     typeGroupState,
     typesState,
     sexState,
-    radiusState,
     startDateState,
     endDateState,
     startDateStringState,

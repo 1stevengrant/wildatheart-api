@@ -22,7 +22,6 @@ class SearchForEventsController extends Controller
         $swLongitude = request('sw_longitude');
         $neLatitude = request('ne_latitude');
         $neLongitude = request('ne_longitude');
-        //        $radius = request('radius', 10);
         $sex = request('sex');
         $typeGroup = request('type_group');
         $types = request('types');
