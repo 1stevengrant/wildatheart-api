@@ -20,8 +20,8 @@ trait EventScopeTrait
     ) {
         $sex = $sex ?? '';
         $typeGroup = $typeGroup ?? '';
-        $startDate = $startDate ?? '';
         $endDate = $endDate ?? '';
+        $startDate = $startDate ?? now()->format('Y-m-d');
 
         $query
             ->select(
@@ -44,7 +44,8 @@ trait EventScopeTrait
             ->whereNotNull('approved_at')
             ->whereNull('deleted_at')
             ->whereBetween('latitude', [$swLatitude, $neLatitude])
-            ->whereBetween('longitude', [$swLongitude, $neLongitude]);
+            ->whereBetween('longitude', [$swLongitude, $neLongitude])
+            ->where('start_date', '>=', $startDate);
 
         if ($sex) {
             $query->where('sex', $sex);
@@ -52,12 +53,6 @@ trait EventScopeTrait
 
         if (! empty($types)) {
             $query->whereIn('event_type_id', explode(',', $types));
-        }
-
-        if ($startDate) {
-            $query->whereRaw('(start_date >= ? OR start_date IS NULL)', [$startDate]);
-        } else {
-            $query->whereRaw('(start_date >= CURDATE() OR start_date IS NULL)');
         }
 
         if ($endDate) {
