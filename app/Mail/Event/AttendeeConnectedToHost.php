@@ -5,6 +5,7 @@ namespace App\Mail\Event;
 use App\Models\Attendee;
 use App\Models\EmailTemplate;
 use App\Models\Event;
+use App\Models\EventType;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -50,8 +51,15 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
+        $eventName = $this->event->eventType->name;
         $content = str_replace('[host_name]', $this->event->host->given_name, $content);
-        $content = str_replace('[event_title]', $this->event->name, $content);
+        $link = route('view.event', $this->event);
+        if ($eventName === EventType::FIRES) {
+            $eventName = '<a href="'.$link.'">'.$this->event->name.' Fire</a>';
+        } else {
+            $eventName = '<a href="'.$link.'">'.$this->event->eventType->name.'</a>';
+        }
+        $content = str_replace('[event_title]', $eventName, $content);
         $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);
         $this->emailContent = $content;
 

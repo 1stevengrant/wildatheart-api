@@ -5,6 +5,7 @@ namespace App\Mail\Event;
 use App\Models\Attendee;
 use App\Models\EmailTemplate;
 use App\Models\Event;
+use App\Models\EventType;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -36,6 +37,7 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        $content = $this->emailTemplate->body;
         $subject = $this->emailTemplate->subject;
         $subject = str_replace('[attendee_name]', $this->attendee->fullname, $subject);
 
@@ -58,6 +60,14 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
         $content = str_replace('[attendee_phone]', $this->attendee->phone ?? 'no phone number', $content);
         $content = str_replace('[attendee_city]', $this->attendee->city, $content);
         $content = str_replace('[attendee_state]', $this->attendee->state ?? 'no state', $content);
+        $eventName = $this->event->eventType->name;
+        $link = route('view.event', $this->event);
+        if ($eventName === EventType::FIRES) {
+            $eventName = 'Fire (<a href="'.$link.'">'.$this->event->name.' Fire</a>)';
+        } else {
+            $eventName = '<a href="'.$link.'">'.$this->event->eventType->name.'</a>';
+        }
+        $content = str_replace('[event_name]', $eventName, $content);
         $this->emailContent = $content;
 
         return new Content(

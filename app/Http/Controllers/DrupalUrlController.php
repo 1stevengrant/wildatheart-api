@@ -53,7 +53,7 @@ class DrupalUrlController extends Controller
             'becoming-king-group' => 'allies/becoming-king-group',
             'becoming-king-retreat/' => '',
         ];
-        
+
         foreach ($eventTypes as $key => $value) {
             if (str_contains($any, $key)) {
                 $any = str_replace($key, $eventTypes[$key], $any);
@@ -62,8 +62,8 @@ class DrupalUrlController extends Controller
         }
 
         // Handle edge case where all urls in db end in 0 for some reason.
-        if(str_contains($any, "becoming-king-group")){
-            $any .= "-0";
+        if (str_contains($any, 'becoming-king-group')) {
+            $any .= '-0';
         }
 
         $event = \App\Models\Event::whereLegacyDrupalUrl('/'.$any)->first();
