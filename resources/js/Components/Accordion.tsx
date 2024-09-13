@@ -38,46 +38,60 @@ export const Accordion = ({
                                     </Disclosure.Button>
                                     <Disclosure.Panel className="border-t py-4 border-t-grey-border">
                                         {item.accordion_box_content &&
-                                            item.accordion_box_content.map(
-                                                (block: any, index: number) => {
-                                                    switch (block.type) {
-                                                        case "text_set":
-                                                            return (
-                                                                <TextSet
-                                                                    key={index}
-                                                                    text={
-                                                                        block.body
-                                                                    }
-                                                                />
-                                                            );
-                                                        case "video_set":
-                                                            return (
-                                                                <VideoSet
-                                                                    key={index}
-                                                                    video={
-                                                                        block.video
-                                                                    }
-                                                                />
-                                                            );
+                                            item.accordion_box_content
+                                                .filter(
+                                                    (block: any) =>
+                                                        block.enabled === true
+                                                )
+                                                .map(
+                                                    (
+                                                        block: any,
+                                                        index: number
+                                                    ) => {
+                                                        switch (block.type) {
+                                                            case "text_set":
+                                                                return (
+                                                                    <TextSet
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        text={
+                                                                            block.body
+                                                                        }
+                                                                    />
+                                                                );
+                                                            case "video_set":
+                                                                return (
+                                                                    <VideoSet
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        video={
+                                                                            block.video
+                                                                        }
+                                                                    />
+                                                                );
 
-                                                        case "image_set":
-                                                            return (
-                                                                <ImageSet
-                                                                    key={index}
-                                                                    image={
-                                                                        block.image
-                                                                    }
-                                                                    className={`rounded-xl`}
-                                                                    params={{
-                                                                        height: 400,
-                                                                    }}
-                                                                />
-                                                            );
-                                                        default:
-                                                            return null;
+                                                            case "image_set":
+                                                                return (
+                                                                    <ImageSet
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        image={
+                                                                            block.image
+                                                                        }
+                                                                        className={`rounded-xl`}
+                                                                        params={{
+                                                                            height: 400,
+                                                                        }}
+                                                                    />
+                                                                );
+                                                            default:
+                                                                return null;
+                                                        }
                                                     }
-                                                }
-                                            )}
+                                                )}
                                     </Disclosure.Panel>
                                 </>
                             )}

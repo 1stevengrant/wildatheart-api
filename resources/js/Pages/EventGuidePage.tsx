@@ -60,56 +60,61 @@ const EventGuidePage = () => {
                             (page: any, index: number) => (
                                 <Tab.Panel key={index} className={`prose`}>
                                     {page.page_content &&
-                                        page.page_content.map(
-                                            (block: any, index: number) => {
-                                                switch (block.type) {
-                                                    case "body_set":
-                                                        return (
-                                                            <TextSet
-                                                                text={
-                                                                    block.body
-                                                                }
-                                                                key={index}
-                                                                className={`prose-p:text-white prose-strong:text-white prose-ol:text-white prose-ul:text-white prose-li:text-white prose-li:marker:text-white`}
-                                                            />
-                                                        );
+                                        page.page_content
+                                            .filter(
+                                                (block: any) =>
+                                                    block.enabled === true
+                                            )
+                                            .map(
+                                                (block: any, index: number) => {
+                                                    switch (block.type) {
+                                                        case "body_set":
+                                                            return (
+                                                                <TextSet
+                                                                    text={
+                                                                        block.body
+                                                                    }
+                                                                    key={index}
+                                                                    className={`prose-p:text-white prose-strong:text-white prose-ol:text-white prose-ul:text-white prose-li:text-white prose-li:marker:text-white`}
+                                                                />
+                                                            );
 
-                                                    case "video_set":
-                                                        return (
-                                                            <VideoSet
-                                                                key={index}
-                                                                video={
-                                                                    block.video
-                                                                }
-                                                            />
-                                                        );
-                                                    case "image_set":
-                                                        return (
-                                                            <ImageSet
-                                                                key={index}
-                                                                image={
-                                                                    block.image
-                                                                }
-                                                                params={{
-                                                                    height: 400,
-                                                                }}
-                                                            />
-                                                        );
+                                                        case "video_set":
+                                                            return (
+                                                                <VideoSet
+                                                                    key={index}
+                                                                    video={
+                                                                        block.video
+                                                                    }
+                                                                />
+                                                            );
+                                                        case "image_set":
+                                                            return (
+                                                                <ImageSet
+                                                                    key={index}
+                                                                    image={
+                                                                        block.image
+                                                                    }
+                                                                    params={{
+                                                                        height: 400,
+                                                                    }}
+                                                                />
+                                                            );
 
-                                                    case "accordion_set":
-                                                        return (
-                                                            <Accordion
-                                                                key={index}
-                                                                accordion={
-                                                                    block.accordion
-                                                                }
-                                                            />
-                                                        );
-                                                    default:
-                                                        return null;
+                                                        case "accordion_set":
+                                                            return (
+                                                                <Accordion
+                                                                    key={index}
+                                                                    accordion={
+                                                                        block.accordion
+                                                                    }
+                                                                />
+                                                            );
+                                                        default:
+                                                            return null;
+                                                    }
                                                 }
-                                            }
-                                        )}
+                                            )}
                                 </Tab.Panel>
                             )
                         )}
