@@ -42,6 +42,7 @@ class EventResource extends JsonResource
             'heroVideo' => $this->hero_video ?? null,
             'isPrivate' => $this->is_private,
             'type_group' => $this->typeGroup,
+            'sex' => $this->sex,
         ];
     }
 }

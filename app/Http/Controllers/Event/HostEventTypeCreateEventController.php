@@ -53,8 +53,14 @@ class HostEventTypeCreateEventController extends Controller
             'is_private' => $request->is_private,
             'state' => $request->state,
             'start_date' => $request->start_date,
+            'sex' => $this->determineSexOfEvent($eventType),
         ]);
 
         return redirect()->route('my.events', ['event' => $event]);
+    }
+
+    private function determineSexOfEvent(EventType $eventType)
+    {
+        return $gender = in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT]) ? 'women' : 'men';
     }
 }

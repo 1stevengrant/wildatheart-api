@@ -96,7 +96,7 @@ class Event extends BaseModel
         return new EventBuilder($query);
     }
 
-    public function getLocationAttribute()
+    public function getLocationAttribute(): string
     {
         if (strtolower($this->country) === self::DEFAULT_COUNTRY || strtolower($this->country) === 'united states') {
             if ($this->city && $this->region) {
