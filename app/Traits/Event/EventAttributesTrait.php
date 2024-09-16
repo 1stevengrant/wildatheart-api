@@ -2,7 +2,9 @@
 
 namespace App\Traits\Event;
 
+use App\Http\Resources\HostResource;
 use App\Models\EventType;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\UrlGenerator;
 
@@ -71,5 +73,20 @@ trait EventAttributesTrait
     public function getHostPhotoAttribute(): ?string
     {
         return $this->host->image ?? null;
+    }
+
+    public function getStartDateAttribute($value): string
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getEndDateAttribute($value): string
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getHostObjectAttribute()
+    {
+        return HostResource::make($this->host);
     }
 }

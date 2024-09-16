@@ -2,8 +2,6 @@
 
 namespace App\Traits\Event;
 
-use App\Http\Resources\HostResource;
-
 trait EventScopeTrait
 {
     public function scopeWithinDistance(
@@ -74,10 +72,5 @@ trait EventScopeTrait
         }
 
         return $query;
-    }
-
-    public function getHostObjectAttribute()
-    {
-        return HostResource::make($this->host);
     }
 }
