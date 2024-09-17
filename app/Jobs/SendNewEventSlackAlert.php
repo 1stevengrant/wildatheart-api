@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class SendNewEventSlackAlert implements ShouldQueue
@@ -18,10 +19,12 @@ class SendNewEventSlackAlert implements ShouldQueue
 
     public function handle(): void
     {
+        if (app()->isProduction()) {
+            return;
+        }
         $event = $this->event;
         $hostName = $event->host->fullName;
         $location = $event->location;
-        $country = $event->country;
         $name = $event->name;
 
         SlackAlert::to('events')
@@ -30,18 +33,18 @@ class SendNewEventSlackAlert implements ShouldQueue
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => 'We have a new Event',
+                        'text' => 'We have a new '.Str::singular($event->eventType->name).'!',
                     ],
                 ],
                 [
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => "*Name:*\n $name Event \n*Where:*\n$location \n*Who:* $hostName ",
+                        'text' => "*Name:*\n $name \n*Where:*\n$location \n*Who:* $hostName ",
                     ],
                     'accessory' => [
                         'type' => 'image',
-                        'image_url' => asset('img/wah-fires-suburb-1.webp'),
+                        'image_url' => bunnyImage($event->eventType->image),
                         'alt_text' => 'fire thumbnail',
                     ],
                 ],
@@ -52,7 +55,7 @@ class SendNewEventSlackAlert implements ShouldQueue
                             'type' => 'button',
                             'text' => [
                                 'type' => 'plain_text',
-                                'text' => 'View Event',
+                                'text' => 'View Event In Admin',
                                 'emoji' => true,
                             ],
                             'value' => 'View In Admin',
@@ -63,10 +66,10 @@ class SendNewEventSlackAlert implements ShouldQueue
                             'type' => 'button',
                             'text' => [
                                 'type' => 'plain_text',
-                                'text' => 'View Listing',
+                                'text' => 'View Public Listing',
                                 'emoji' => true,
                             ],
-                            'value' => 'View Listing',
+                            'value' => 'View Public Listing',
                             'url' => route('view.event', $event),
                             'action_id' => 'view-listing',
                         ],

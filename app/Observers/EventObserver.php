@@ -12,9 +12,7 @@ class EventObserver
 {
     public function created(Event $event): void
     {
-        if (app()->isProduction()) {
-            SendNewEventSlackAlert::dispatch($event);
-        }
+        SendNewEventSlackAlert::dispatch($event);
 
         Mail::to($event->user)->send(new NewEventCreatedMailable($event));
 
