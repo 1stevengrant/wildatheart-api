@@ -22,6 +22,7 @@ import {
 } from "@/helpers/eventNames";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { Event } from "@/types/Event";
+import { dateFormatter } from "@/helpers/dateFormatter";
 
 const ViewEventPage = () => {
     const page = usePage();
@@ -51,18 +52,18 @@ const ViewEventPage = () => {
         }
     };
 
-    // const eventDate = (event: Event) => {
-    //     switch (event.eventType) {
-    //         case EventTypeFires:
-    //             return "";
-    //         case EventTypeCaptivatingExperience ||
-    //             EventTypeWahExperience ||
-    //             EventTypeBecomingAKingExperience:
-    //             return `Starts on ${event.startDate}`;
-    //         default:
-    //             return `${event.startDate} - ${event.endDate}`;
-    //     }
-    // };
+    const eventDate = (event: Event): string => {
+        switch (event.eventType) {
+            case EventTypeFires:
+                return "";
+            case EventTypeCaptivatingExperience:
+            case EventTypeWahExperience:
+            case EventTypeBecomingAKingExperience:
+                return `Starts on ${dateFormatter(event.startDate)}`;
+            default:
+                return `${dateFormatter(event.startDate)} - ${dateFormatter(event.endDate)}`;
+        }
+    };
 
     return (
         <AppLayout
@@ -100,9 +101,9 @@ const ViewEventPage = () => {
 
                             <div className="mt-4 space-y-4 md:space-x-4 md:space-y-0 md:flex md:items-start">
                                 <Location location={event.location} />
-                                {/*{eventDate(event) && (*/}
-                                {/*    <Date date={eventDate(event)} />*/}
-                                {/*)}*/}
+                                {eventDate(event) && (
+                                    <Date date={eventDate(event)} />
+                                )}
                             </div>
 
                             {event.eventTypeData.hero_video && (
