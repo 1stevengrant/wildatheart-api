@@ -21,3 +21,13 @@ it('returns given name and family name as the fullname if both are defined', fun
 
     expect($user->fullname)->toBe('John Doe');
 });
+
+test('a family and given name can be nullable', function () {
+    $user = User::factory()->create([
+        'given_name' => null,
+        'family_name' => null,
+    ]);
+
+    expect($user->family_name)->toBeNull()
+        ->and($user->given_name)->toBeNull();
+});

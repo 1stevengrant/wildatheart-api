@@ -29,6 +29,7 @@ class EventTypeSeeder extends Seeder
             'summary' => fake()->sentence(5),
             'description' => fake()->paragraphs(6, true),
             'slug' => Str::slug($eventType),
+            'image' => \Pest\Faker\fake()->imageUrl(),
         ]));
     }
 }
