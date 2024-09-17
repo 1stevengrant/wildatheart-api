@@ -10,7 +10,7 @@ import { defaultIconSize } from "@/helpers/defaultIconSize";
 export const myProfileNavItems = [
     {
         icon: <UserCircleIcon className={defaultIconSize} />,
-        title: "My Fire Host Profile",
+        title: "My Host Profile",
         url: "my.profile",
     },
     {

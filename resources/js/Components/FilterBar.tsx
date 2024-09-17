@@ -6,7 +6,7 @@ import { usePrevious } from "react-use";
 
 import SelectInput from "@/Components/Forms/SelectInput";
 
-export default function FilterBar() {
+export const FilterBar = () => {
     const { filters, myEvents } = usePage<{
         filters: { event_id?: string; search?: string; trashed?: string };
         myEvents: { id: string; name: string }[];
@@ -74,4 +74,4 @@ export default function FilterBar() {
             </button>
         </div>
     );
-}
+};

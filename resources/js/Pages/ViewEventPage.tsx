@@ -8,12 +8,13 @@ import { BackToEvents } from "@/Components/Buttons/BackToEvents";
 import { ConnectWithHost } from "@/Components/Events/Detail/ConnectWithHost";
 import { Date } from "@/Components/Events/Detail/Dates";
 import Host from "@/Components/Events/Detail/Host";
-import Location from "@/Components/Events/Detail/Location";
+import { Location } from "@/Components/Events/Detail/Location";
 import { MobileConnect } from "@/Components/Events/Detail/MobileConnect";
 import { PhotoCarousel } from "@/Components/Events/Detail/PhotoCarousel";
 import { ShareEvent } from "@/Components/Events/Detail/ShareEvent";
 import { StaticMap } from "@/Components/Maps/StaticMap";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
+import { dateFormatter } from "@/helpers/dateFormatter";
 import {
     EventTypeBecomingAKingExperience,
     EventTypeCaptivatingExperience,
@@ -22,7 +23,6 @@ import {
 } from "@/helpers/eventNames";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { Event } from "@/types/Event";
-import { dateFormatter } from "@/helpers/dateFormatter";
 
 const ViewEventPage = () => {
     const page = usePage();

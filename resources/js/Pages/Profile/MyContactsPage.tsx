@@ -2,7 +2,7 @@ import React from "react";
 
 import { usePage } from "@inertiajs/react";
 
-import FilterBar from "@/Components/FilterBar";
+import { FilterBar } from "@/Components/FilterBar";
 import Pagination from "@/Components/Pagination";
 import Table from "@/Components/Table";
 import { HeadingOne } from "@/Components/Type/HeadingOne";

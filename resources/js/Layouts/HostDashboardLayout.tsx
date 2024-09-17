@@ -6,6 +6,7 @@ import {
     CalendarDaysIcon,
     LifebuoyIcon,
     PuzzlePieceIcon,
+    UserIcon,
     UsersIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -31,6 +32,12 @@ export const HostDashboardLayout = ({
     const { auth } = usePage<any>().props;
 
     const navigation = [
+        {
+            name: "My Host Profile",
+            href: route("my.profile"),
+            icon: UserIcon,
+            current: route().current("my.profile"),
+        },
         {
             name: "Event Resources",
             href: route("resources"),

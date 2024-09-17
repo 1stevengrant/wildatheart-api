@@ -3,14 +3,7 @@ import React, { useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 
 import { config } from "@/helpers/config";
-import { Event } from "@/types/Event";
-
-interface IStaticMapProps {
-    lat: number;
-    lng: number;
-    event: Event | null;
-    className?: string;
-}
+import { IStaticMapProps } from "@/interfaces/IStaticMapProps";
 
 export const StaticMap = ({
     lat,

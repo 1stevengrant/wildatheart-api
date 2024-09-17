@@ -8,7 +8,7 @@ interface LocationProps {
     className?: string;
 }
 
-const Location: FC<LocationProps> = ({ location, children, className }) => {
+export const Location: FC<LocationProps> = ({ location, children, className }) => {
     return (
         <div className={`flex items-center space-x-1 ${className}`}>
             <MapPinIcon className={`w-6 h-6`} />
@@ -18,5 +18,3 @@ const Location: FC<LocationProps> = ({ location, children, className }) => {
         </div>
     );
 };
-
-export default Location;
