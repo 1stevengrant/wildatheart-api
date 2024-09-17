@@ -36,7 +36,8 @@ trait EventScopeTrait
                 'region',
                 'city',
                 'district',
-                'state'
+                'state',
+                'is_private',
             )
             ->selectRaw(
                 '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
@@ -44,6 +45,7 @@ trait EventScopeTrait
             )
             ->whereNotNull('approved_at')
             ->whereNull('deleted_at')
+            ->where('is_private', false)
             ->having('distance', '<=', $radius)
             ->orderBy('distance');
 

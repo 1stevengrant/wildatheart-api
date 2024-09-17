@@ -20,36 +20,39 @@ class ImportEvent implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public $experience) {}
+    public function __construct(public $drupalEvent) {}
 
     /**
      * Execute the job.
      */
     public function handle(): void
     {
+        $dispatcher = Event::getEventDispatcher();
+        Event::unsetEventDispatcher();
         // Fetch the existing event by legacy_drupal_id
-        $existingEvent = Event::where('legacy_drupal_id', $this->experience['nid'])->first();
+        $existingEvent = Event::where('legacy_drupal_id', $this->drupalEvent['nid'])->first();
 
         // Prepare the new data for comparison
         $newData = [
-            'event_type_id' => $this->getEventType($this->experience['type']),
-            'approved_at' => $this->getStatus($this->experience['is_published']),
-            'name' => strip_tags($this->experience['title']),
-            'summary' => strip_tags($this->experience['body']),
-            'legacy_drupal_id' => $this->experience['nid'],
-            'legacy_drupal_user_id' => $this->experience['user_id'],
+            'event_type_id' => $this->getEventType($this->drupalEvent['type']),
+            'approved_at' => $this->getStatus($this->drupalEvent['is_published']),
+            'name' => strip_tags($this->drupalEvent['title']),
+            'summary' => strip_tags($this->drupalEvent['body']),
+            'legacy_drupal_id' => $this->drupalEvent['nid'],
+            'legacy_drupal_user_id' => $this->drupalEvent['user_id'],
             'user_id' => $this->updateOrCreateUser(
-                $this->experience['email'],
-                $this->experience['first_name'],
-                $this->experience['last_name'],
-                $this->experience['phone']
+                $this->drupalEvent['email'],
+                $this->drupalEvent['first_name'],
+                $this->drupalEvent['last_name'],
+                $this->drupalEvent['phone']
             ),
-            'legacy_drupal_location' => $this->experience['location'],
-            'legacy_drupal_url' => $this->experience['url'],
-            'start_date' => Carbon::createFromFormat('Y-m-d', $this->experience['start_date']),
-            'end_date' => $this->getEndDate($this->experience['end_date']),
-            'created_at' => Carbon::createFromFormat('Y-m-d H:i:s', $this->experience['posted_on']),
-            'sex' => $this->determineEventSex($this->experience['title']),
+            'legacy_drupal_location' => $this->drupalEvent['location'],
+            'legacy_drupal_url' => $this->drupalEvent['url'],
+            'start_date' => Carbon::createFromFormat('Y-m-d', $this->drupalEvent['start_date']),
+            'end_date' => $this->getEndDate($this->drupalEvent['end_date']),
+            'created_at' => Carbon::createFromFormat('Y-m-d H:i:s', $this->drupalEvent['posted_on']),
+            'sex' => $this->determineEventSex($this->drupalEvent['title']),
+            'is_private' => $this->determinePrivacySetting($this->drupalEvent['privacy_setting']),
         ];
 
         // If the event exists and the data hasn't changed, skip the update
@@ -59,11 +62,13 @@ class ImportEvent implements ShouldQueue
 
         // Otherwise, update or create the event
         $event = Event::updateOrCreate(
-            ['legacy_drupal_id' => $this->experience['nid']],
+            ['legacy_drupal_id' => $this->drupalEvent['nid']],
             $newData
         );
 
         dispatch(new UpdateEvent($event));
+
+        Event::setEventDispatcher($dispatcher);
     }
 
     public function updateOrCreateUser($email, $firstName, $lastName, $phone): int
@@ -117,6 +122,22 @@ class ImportEvent implements ShouldQueue
 
     public function determineEventSex($haystack): string
     {
-        return str_contains(strtolower($haystack), 'captivating') ? Event::FOR_WOMEN : Event::FOR_MEN;
+        if (str_contains(strtolower($haystack), 'captivating')) {
+            return Event::FOR_WOMEN;
+        }
+        if (str_contains(strtolower($haystack), 'core')) {
+            return Event::FOR_WOMEN;
+        }
+
+        return Event::FOR_MEN;
+    }
+
+    public function determinePrivacySetting(string $privacySetting): bool
+    {
+        if (str_contains(strtolower($privacySetting), 'private')) {
+            return true;
+        }
+
+        return false;
     }
 }
