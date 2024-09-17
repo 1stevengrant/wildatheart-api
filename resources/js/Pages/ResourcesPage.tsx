@@ -75,6 +75,7 @@ const ResourcesPage = () => {
                                         />
                                     }
                                     text={`Videos`}
+                                    openInNewTab={true}
                                     url={eventType.video_link}
                                 />
                             )}
@@ -85,6 +86,9 @@ const ResourcesPage = () => {
                                         {eventType.action_buttons.map(
                                             (button: EventTypeActionButton) => (
                                                 <ListItem
+                                                    openInNewTab={
+                                                        button.open_in_new_tab
+                                                    }
                                                     key={button.id}
                                                     url={
                                                         button.button_url ?? ``

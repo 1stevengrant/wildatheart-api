@@ -250,6 +250,11 @@ tabs:
                       - sessions
                     type: entries
                     display: 'Button Entry'
+                -
+                  handle: open_in_new_tab
+                  field:
+                    type: toggle
+                    display: 'Open In New Tab?'
           -
             handle: video_link
             field:
