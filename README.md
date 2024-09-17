@@ -22,20 +22,17 @@ To run this locally you will need to make sure you have a SQL db and PHP running
 You will also need to make sure you have the following tools installed:
 
 -   [Composer](https://getcomposer.org/) for dependency management.
--   [Vapor CLI](https://docs.vapor.build/1.0/introduction.html#installing-the-vapor-cli) - for manual deployments and
-    getting local .env files.
 
 ## Installation
 
 Make sure your server meets the minimum requirements before you start. [Official Documentation](https://laravel.com/docs/10.x/installation).
 
 1. clone the repository `git clone git@github.com:wild-at-heart/local.wildatheart.org.git`
-1. change into the directory `cd local.wildatheart.org`
-1. install composer dependencies `composer install`
-1. install npm dependencies `npm install`
-1. run build script `npm run build`
-1. copy the `.env.example` file to `.env` and fill in the database credentials `cp .env.example .env`
-
+2. change into the directory `cd local.wildatheart.org`
+3. install composer dependencies `composer install`
+4. copy the `.env.example` file to `.env` and fill in the database credentials `cp .env.example .env`
+5. install npm dependencies `npm install`
+6. run build script `npm run build`
     ```bash
      DB_HOST=your_local_db_host
      DB_PORT=your_local_db_port
@@ -44,7 +41,7 @@ Make sure your server meets the minimum requirements before you start. [Official
      DB_PASSWORD=your_local_db_password
     ```
 
-1. populate AWS credentials in `.env` file
+7. populate AWS credentials in `.env` file
 
     ```bash
     AWS_ACCESS_KEY_ID=
@@ -54,14 +51,14 @@ Make sure your server meets the minimum requirements before you start. [Official
     AWS_USE_PATH_STYLE_ENDPOINT=false
     ```
 
-1. generate an application key `php artisan key:generate`
-1. run the database migrations `php artisan migrate`
-1. run the database seeders `php artisan db:seed`
+8. generate an application key `php artisan key:generate`
+9. run the database migrations `php artisan migrate`
+10. run the database seeders `php artisan db:seed`
 
     These commands set the database back up to a default state with a few sample events to work with.
 
-1. optionally, you might want to grab a production database backup. For that, see the [database](docs/database.md) docs.
-1. run the development server `php artisan serve` if not using something like Laravel Valet, Sail or Herd.
+11. optionally, you might want to grab a production database backup. For that, see the [database](docs/database.md) docs.
+12. run the development server `php artisan serve` if not using something like Laravel Valet, Sail or Herd.
 
 ## Notes
 

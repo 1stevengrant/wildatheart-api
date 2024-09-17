@@ -7,11 +7,11 @@ use Illuminate\Validation\Rules;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\VaporImage;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Vyuldashev\NovaPermission\Permission;
 use Vyuldashev\NovaPermission\Role;
@@ -76,14 +76,10 @@ class User extends Resource
                 ->sortable()
                 ->onlyOnIndex(),
 
-            VaporImage::make('Image')
+            Image::make('Image')
+                ->disk('s3')
                 ->hideFromIndex()
-                ->path('users')
-                ->storeAs(static function ($request): string {
-                    $img = $request->input('vaporFile')['image'];
-
-                    return str_replace('tmp/', '', (string) $img['key']).'.'.$img['extension'];
-                }),
+                ->path('users'),
 
             Password::make('Password')
                 ->onlyOnForms()
