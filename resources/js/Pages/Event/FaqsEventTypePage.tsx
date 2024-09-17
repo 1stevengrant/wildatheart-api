@@ -54,7 +54,7 @@ const FaqsEventTypePage = () => {
                                                 <>
                                                     <Disclosure.Button className="flex w-full items-center justify-between border-t py-2 text-white border-grey-border">
                                                         <div
-                                                            className={`flex items-center text-grey font-semibold`}
+                                                            className={`flex items-center font-semibold`}
                                                         >
                                                             <ShieldCheckIcon className="mr-2 h-6 w-6 flex-shrink-0" />
                                                             <span
@@ -64,10 +64,10 @@ const FaqsEventTypePage = () => {
                                                             </span>
                                                         </div>
                                                         <ChevronRightIcon
-                                                            className={`w-6 h-6 text-grey flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
+                                                            className={`w-6 h-6 flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
                                                         />
                                                     </Disclosure.Button>
-                                                    <Disclosure.Panel className="border-t py-4 text-sm text-grey border-t-grey-border">
+                                                    <Disclosure.Panel className="border-t py-4  border-t-grey-border text-white">
                                                         {faq.answer}
                                                     </Disclosure.Panel>
                                                 </>
