@@ -6,9 +6,11 @@ import {
     SquaresPlusIcon,
     VideoCameraIcon,
 } from "@heroicons/react/24/outline";
+import { singular } from "pluralize";
 
 import { ListItem } from "@/Components/EventResources/ListItem";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
+import { EventTypeFires } from "@/helpers/eventNames";
 import { eventTypeBackground } from "@/helpers/eventTypeBackground";
 import { imageGenerator } from "@/helpers/user";
 import useTypedPage from "@/Hooks/useTypedPage";
@@ -57,15 +59,21 @@ const ResourcesPage = () => {
                                         )}
                                     />
                                 )}
-
                             <ListItem
                                 icon={
                                     <SquaresPlusIcon
                                         className={`w-6 h-6 mr-2 shrink-0`}
                                     />
                                 }
-                                text={`Host New ${eventType.name}`}
-                                url={route("host.eventType.index", eventType)}
+                                text={`Host New ${singular(eventType.name)}`}
+                                url={
+                                    eventType.slug === EventTypeFires
+                                        ? route("host.fire")
+                                        : route(
+                                              "host.eventType.index",
+                                              eventType
+                                          )
+                                }
                             />
                             {eventType.video_link && (
                                 <ListItem
