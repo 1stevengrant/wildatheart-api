@@ -51,7 +51,7 @@ class ImportEvent implements ShouldQueue
             'start_date' => Carbon::createFromFormat('Y-m-d', $this->drupalEvent['start_date']),
             'end_date' => $this->getEndDate($this->drupalEvent['end_date']),
             'created_at' => Carbon::createFromFormat('Y-m-d H:i:s', $this->drupalEvent['posted_on']),
-            'sex' => $this->determineEventSex($this->drupalEvent['title']),
+            'sex' => determineEventSex($this->drupalEvent['title']),
             'is_private' => $this->determinePrivacySetting($this->drupalEvent['privacy_setting']),
         ];
 
@@ -118,18 +118,6 @@ class ImportEvent implements ShouldQueue
     public function getStatus($status): ?\Illuminate\Support\Carbon
     {
         return $status === 'true' ? now() : null;
-    }
-
-    public function determineEventSex($haystack): string
-    {
-        if (str_contains(strtolower($haystack), 'captivating')) {
-            return Event::FOR_WOMEN;
-        }
-        if (str_contains(strtolower($haystack), 'core')) {
-            return Event::FOR_WOMEN;
-        }
-
-        return Event::FOR_MEN;
     }
 
     public function determinePrivacySetting(string $privacySetting): bool

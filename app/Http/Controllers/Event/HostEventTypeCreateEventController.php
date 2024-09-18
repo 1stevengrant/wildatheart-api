@@ -7,6 +7,7 @@ use App\Http\Requests\EventRequest;
 use App\Http\Requests\FireEventRequest;
 use App\Models\EventType;
 use App\Services\EventCreationStepHandlerService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HostEventTypeCreateEventController extends Controller
@@ -37,6 +38,12 @@ class HostEventTypeCreateEventController extends Controller
             $request->validate((new EventRequest)->rules());
         }
 
+        if (str_contains(strtolower($eventType->name), 'retreat')) {
+            $request->merge([
+                'end_date' => Carbon::parse($request->start_date)->addDays(3)->format('Y-m-d'),
+            ]);
+        }
+
         $event = auth()->user()->events()->create([
             'event_type_id' => $eventType->id,
             'name' => $request->name,
@@ -53,14 +60,11 @@ class HostEventTypeCreateEventController extends Controller
             'is_private' => $request->is_private,
             'state' => $request->state,
             'start_date' => $request->start_date,
-            'sex' => $this->determineSexOfEvent($eventType),
+            'end_date' => $request->end_date,
+            'sex' => determineSexOfEvent($eventType),
         ]);
 
         return redirect()->route('my.events.active', ['event' => $event]);
     }
 
-    private function determineSexOfEvent(EventType $eventType)
-    {
-        return $gender = in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT]) ? 'women' : 'men';
-    }
 }

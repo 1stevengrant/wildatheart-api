@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Event;
+use App\Models\EventType;
 use App\Models\State;
 
 if (! function_exists('generateTimeList')) {
@@ -343,11 +345,9 @@ if (! function_exists('getCountryCode')) {
     }
 }
 
-if (! function_exists('novaThumbnail')) {
-    function novaThumbnail($value): string
+if (! function_exists('determineSexOfEvent')) {
+    function determineSexOfEvent(EventType $eventType): string
     {
-        return bunnyImage($value, [
-            'width' => 50,
-        ]);
+        return in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT]) ? Event::FOR_WOMEN : Event::FOR_MEN;
     }
 }
