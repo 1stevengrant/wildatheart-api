@@ -16,7 +16,7 @@ export const myProfileNavItems = [
     {
         icon: <FireIcon className={defaultIconSize} />,
         title: "My Events",
-        url: "my.events",
+        url: "my.events.active",
     },
     {
         icon: <LinkIcon className={defaultIconSize} />,

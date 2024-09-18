@@ -73,4 +73,22 @@ class EventBuilder extends Builder
     {
         return $this->where('approved_at', $operator, now()->subDays($days));
     }
+
+    public function active(): EventBuilder
+    {
+        return $this->where(function ($query) {
+            $query->whereNull('start_date')
+                ->orWhere('start_date', '>=', now());
+        });
+    }
+
+    public function inactive(): EventBuilder
+    {
+        return $this->where('start_date', '<', now());
+    }
+
+    public function user(int $userId): EventBuilder
+    {
+        return $this->where('user_id', $userId);
+    }
 }

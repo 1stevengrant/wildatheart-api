@@ -59,9 +59,6 @@ const ScheduleEventTypePage = () => {
                         {eventTypeSchedule &&
                             eventTypeSchedule.map(
                                 (schedule: FlattenedType, index: number) => {
-                                    {
-                                        console.log(schedule);
-                                    }
                                     switch (schedule.type) {
                                         case "video":
                                             return (

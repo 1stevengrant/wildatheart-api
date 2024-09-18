@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 
 import { MapPinIcon } from "@heroicons/react/24/outline";
 
@@ -8,7 +8,11 @@ interface LocationProps {
     className?: string;
 }
 
-export const Location: FC<LocationProps> = ({ location, children, className }) => {
+export const Location = ({
+    location,
+    children,
+    className = "",
+}: LocationProps) => {
     return (
         <div className={`flex items-center space-x-1 ${className}`}>
             <MapPinIcon className={`w-6 h-6`} />

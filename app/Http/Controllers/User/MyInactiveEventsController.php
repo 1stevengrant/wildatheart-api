@@ -5,19 +5,22 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Models\EventType;
+use Illuminate\Http\Request;
 
-class MyEventsController extends Controller
+class MyInactiveEventsController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        $events = auth()->user()->events()->with('host')
+        $events = auth()->user()
+            ->events()->inactive()
+            ->with('host')
             ->paginate()
             ->through(fn ($event) => EventResource::make($event)->resolve());
 
-        return inertia('Profile/MyEventsPage', [
+        return inertia('Profile/MyInactiveEventsPage', [
             'events' => $events,
             'eventTypes' => EventType::query()->active()->get(),
         ]);

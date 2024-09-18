@@ -56,7 +56,7 @@ class HostEventTypeCreateEventController extends Controller
             'sex' => $this->determineSexOfEvent($eventType),
         ]);
 
-        return redirect()->route('my.events', ['event' => $event]);
+        return redirect()->route('my.events.active', ['event' => $event]);
     }
 
     private function determineSexOfEvent(EventType $eventType)

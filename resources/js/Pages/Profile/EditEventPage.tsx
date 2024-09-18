@@ -230,7 +230,7 @@ const EditEventPage = () => {
                     <PrimaryButton>Save</PrimaryButton>
                     <Link
                         className={"text-grey-200 inline-block text-center"}
-                        href={route("my.events")}
+                        href={route("my.events.active")}
                     >
                         Cancel
                     </Link>

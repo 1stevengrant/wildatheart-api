@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
 use App\Models\Event;
-use Illuminate\Http\Request;
 
 class UpdateEventController extends Controller
 {
@@ -25,7 +24,7 @@ class UpdateEventController extends Controller
             ->causedBy(auth()->user())
             ->log('Update Event');
 
-        return to_route('my.events')->with(['notifications' => [
+        return to_route('my.events.active')->with(['notifications' => [
             'message' => 'Event updated successfully!',
             'type' => 'success',
         ],

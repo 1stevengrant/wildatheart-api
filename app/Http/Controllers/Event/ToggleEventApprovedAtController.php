@@ -24,7 +24,7 @@ class ToggleEventApprovedAtController extends Controller
             ->causedBy(auth()->user())
             ->log('Toggle Event Approved At');
 
-        return to_route('my.events')->with(['notifications' => [
+        return to_route('my.events.active')->with(['notifications' => [
             'message' => 'Event updated successfully!',
             'type' => 'success',
         ]]);

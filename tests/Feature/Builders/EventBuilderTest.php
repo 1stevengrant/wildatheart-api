@@ -1,9 +1,13 @@
 <?php
 
 use App\Models\Event;
+use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
+uses(RefreshDatabase::class);
 beforeEach(function () {
-    $this->seed('EventTypeSeeder');
+    $this->seed(DatabaseSeeder::class);
+    Event::truncate();
 });
 
 it('gets events that were last approved more than 90 days ago', function () {
@@ -116,4 +120,36 @@ it('gets retreats that are upcoming', function () {
         ->get();
 
     expect($upcomingRetreats->count())->toBe(1);
+});
+
+it('gets inactive events', function () {
+    Event::factory()->basicRetreat()->create([
+        'start_date' => now()->subDay(),
+    ]);
+
+    Event::factory()->basicRetreat()->create([
+        'start_date' => now()->subDays(2),
+    ]);
+
+    $inactiveEvents = Event::query()
+        ->inactive()
+        ->get();
+
+    expect($inactiveEvents->count())->toBe(2);
+});
+
+it('gets active events', function () {
+    Event::factory()->basicRetreat()->create([
+        'start_date' => now()->addDay(),
+    ]);
+
+    Event::factory()->basicRetreat()->create([
+        'start_date' => now()->subDay(),
+    ]);
+
+    $activeEvents = Event::query()
+        ->active()
+        ->get();
+
+    expect($activeEvents->count())->toBe(1);
 });

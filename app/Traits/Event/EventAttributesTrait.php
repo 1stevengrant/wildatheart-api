@@ -75,14 +75,15 @@ trait EventAttributesTrait
         return $this->host->image ?? null;
     }
 
-    public function getStartDateAttribute($value): string
+
+    public function getStartDateAttribute($value): ?string
     {
-        return Carbon::parse($value)->format('Y-m-d');
+        return $value ? Carbon::parse($value)->format('Y-m-d') : null;
     }
 
-    public function getEndDateAttribute($value): string
+    public function getEndDateAttribute($value): ?string
     {
-        return Carbon::parse($value)->format('Y-m-d');
+        return $value ? Carbon::parse($value)->format('Y-m-d') : null;
     }
 
     public function getHostObjectAttribute()

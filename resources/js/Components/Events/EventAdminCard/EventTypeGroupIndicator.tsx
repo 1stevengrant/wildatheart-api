@@ -42,12 +42,11 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
                             <span>Women</span>
                         )}
                     </div>
-
                     {event?.start_date && (
                         <EventTypeBadge className={`hidden md:inline-flex`}>
-                            Starts {dateFormatter(event.start_date, "MMM D")}
+                            {dateFormatter(event.start_date, "MMM Do")}
                             {event.end_date &&
-                                ` - ${dateFormatter(event.end_date, "MMM D")}`}
+                                ` - ${dateFormatter(event.end_date, "MMM Do YYYY")}`}
                         </EventTypeBadge>
                     )}
                 </div>

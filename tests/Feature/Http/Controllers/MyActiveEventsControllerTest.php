@@ -10,10 +10,10 @@ beforeEach(function () {
 
 test('it shows a list of events belonging to the authenticated user', function () {
     $this->actingAs($this->event->host)
-        ->get(route('my.events'))
+        ->get(route('my.events.active'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/MyEventsPage')
+            ->component('Profile/MyActiveEventsPage')
             ->has('events.data', 1)
         );
 });

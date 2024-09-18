@@ -33,6 +33,7 @@ Make sure your server meets the minimum requirements before you start. [Official
 4. copy the `.env.example` file to `.env` and fill in the database credentials `cp .env.example .env`
 5. install npm dependencies `npm install`
 6. run build script `npm run build`
+
     ```bash
      DB_HOST=your_local_db_host
      DB_PORT=your_local_db_port

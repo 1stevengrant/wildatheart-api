@@ -25,8 +25,9 @@ use App\Http\Controllers\User\AgreeToHostAgreementController;
 use App\Http\Controllers\User\DestroyUserImageController;
 use App\Http\Controllers\User\HostAgreementPageController;
 use App\Http\Controllers\User\HostProfileController;
+use App\Http\Controllers\User\MyActiveEventsController;
 use App\Http\Controllers\User\MyContactsController;
-use App\Http\Controllers\User\MyEventsController;
+use App\Http\Controllers\User\MyInactiveEventsController;
 use App\Http\Controllers\User\MyProfileController;
 use App\Http\Controllers\User\UpdateUserProfileController;
 
@@ -66,7 +67,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('gift/{event}', HandleSendGiftController::class)->name('gift.store');
 
-        Route::get('events', MyEventsController::class)->name('my.events');
+        Route::get('events/active', MyActiveEventsController::class)->name('my.events.active');
+        Route::get('events/inactive', MyInactiveEventsController::class)->name('my.events.inactive');
         Route::delete('events/{event}', DeleteEventController::class)->name('delete.event');
         Route::put('events/{event}', UpdateEventController::class)->name('update.event');
         Route::get('events/{event}', EditEventController::class)->name('my.events.edit');
