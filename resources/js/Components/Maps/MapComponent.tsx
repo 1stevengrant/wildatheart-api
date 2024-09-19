@@ -1,10 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import Map, {
-    GeolocateControl,
-    ViewState,
-    MapRef,
-} from "react-map-gl/maplibre";
+import Map, { GeolocateControl, ViewState } from "react-map-gl/maplibre";
 import { useRecoilState } from "recoil";
 
 import { EventList } from "@/Components/API/EventList";
