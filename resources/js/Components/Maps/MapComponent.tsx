@@ -38,7 +38,6 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
         zoom: 10,
     };
     const mapContainerRef = useRef<HTMLDivElement>(null);
-    const mapRef = useRef<MapRef>(null);
     const {
         latitude,
         setLatitude,
@@ -46,6 +45,7 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
         setLongitude,
         selectedPlace,
         setBounds,
+        mapRef,
     } = useMapData();
     const [sex] = useRecoilState(sexState);
     const [typeGroup] = useRecoilState(typeGroupState);
