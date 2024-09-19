@@ -36,6 +36,7 @@ import useTypedPage from "@/Hooks/useTypedPage";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
+import { commonMapProps } from "@/helpers/commonMapProps";
 
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();
@@ -316,32 +317,18 @@ const CreateEventEventTypePage = () => {
                                 <Map
                                     mapLib={mapboxgl}
                                     ref={mapRef}
-                                    dragRotate={false}
-                                    touchPitch={false}
-                                    pitchWithRotate={false}
-                                    maxPitch={0}
-                                    minPitch={0}
-                                    mapStyle="mapbox://styles/mapbox/navigation-day-v1"
+                                    {...commonMapProps}
                                     initialViewState={{
                                         zoom: 6,
-                                    }}
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        borderRadius: "0.5rem",
                                     }}
                                     onClick={(event) => {
                                         handleMapClick(event);
                                     }}
-                                    mapboxAccessToken={config(
-                                        "services.mapbox.token"
-                                    )}
                                     onZoomEnd={() =>
                                         handleUserLevelZoom(
                                             mapRef.current?.getZoom() || 6
                                         )
                                     }
-                                    attributionControl={false}
                                 >
                                     <GeolocateControl position="top-left" />
                                     <NavigationControl position="top-left" />
