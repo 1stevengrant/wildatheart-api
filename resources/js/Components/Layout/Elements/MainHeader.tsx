@@ -33,7 +33,7 @@ export const MainHeader = () => {
                 </a>
                 <Link
                     className={`ml-4 border-b-2 pb-2 ${url?.includes("home") ? `border-white` : `border-transparent`}`}
-                    href={"/"}
+                    href={route("home")}
                 >
                     Events
                 </Link>
@@ -43,7 +43,10 @@ export const MainHeader = () => {
             <div className={`hidden lg:w-1/2 lg:flex lg:justify-end`}>
                 <div className={`flex items-center space-x-4`}>
                     <ToggleSupportRequestButton />
-                    <Link href={route("host.index")} className={`${textStyles}`}>
+                    <Link
+                        href={route("host.index")}
+                        className={`${textStyles}`}
+                    >
                         Host an Event
                     </Link>
                     <a
