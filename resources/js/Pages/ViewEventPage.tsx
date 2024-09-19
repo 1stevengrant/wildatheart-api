@@ -61,7 +61,7 @@ const ViewEventPage = () => {
             case EventTypeBecomingAKingExperience:
                 return `Starts on ${dateFormatter(event.startDate, "MMM Do YYYY")}`;
             default:
-                return `${dateFormatter(event.startDate)} - ${dateFormatter(event.endDate)}`;
+                return `${dateFormatter(event.startDate)} - ${dateFormatter(event.endDate, "MMM Do YYYY")}`;
         }
     };
 
