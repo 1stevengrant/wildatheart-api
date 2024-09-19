@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Sentry\Laravel\Integration;
@@ -38,7 +39,7 @@ class Handler extends ExceptionHandler
         return str_starts_with($request->path(), 'api');
     }
 
-    public function createInertiaErrorResponse(Request $request, HttpFoundationResponse $response): Response
+    public function createInertiaErrorResponse(Request $request, HttpFoundationResponse $response): JsonResponse|HttpFoundationResponse
     {
         return inertia('Error', ['status' => $response->getStatusCode()])
             ->toResponse($request)
