@@ -23,6 +23,7 @@ import {
     typeGroupState,
     typesState,
 } from "@/store/filtersAtom";
+import { commonMapProps } from "@/helpers/commonMapProps";
 
 export const MapComponent = ({ className = "" }: { className?: string }) => {
     const initialViewState = {
@@ -140,17 +141,8 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
             <Map
                 ref={mapRef}
                 initialViewState={initialViewState}
-                minZoom={0}
-                maxZoom={13}
-                maxPitch={0}
-                minPitch={0}
-                pitchWithRotate={false}
-                dragRotate={false}
-                touchPitch={false}
-                customAttribution={``}
                 onMoveEnd={async (e) => handleViewStateChange(e.viewState)}
-                style={{ width: "100%", height: "100%" }}
-                mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=sr5EVCtJBfz1IQnASSwn`}
+                {...commonMapProps}
             >
                 <GetUserLocationModal
                     open={openGetUserLocationModal}
