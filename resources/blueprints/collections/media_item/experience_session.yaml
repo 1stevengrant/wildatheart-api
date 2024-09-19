@@ -1,78 +1,99 @@
-title: "Experience Session"
+title: 'Experience Session'
 tabs:
   main:
     display: Main
     sections:
-      - fields:
-          - import: content
+      -
+        fields:
+          -
+            import: content
             config:
               title:
                 required: true
-          - handle: experience
+          -
+            handle: experience
             field:
               max_items: 1
               collections:
                 - experiences
               type: entries
-              display: "Related Experience"
-          - handle: session_trailer
+              display: 'Related Experience'
+          -
+            handle: session_trailer
             field:
               type: link
-              display: "Session Trailer"
-          - handle: background_video_url
+              display: 'Session Trailer'
+          -
+            handle: experience_video
             field:
               type: link
-              display: "Background Video"
-          - handle: background_video_fallback_image
+              display: 'Experience Session Video'
+              instructions: 'Enter the iframe embed you want to load. Defaults to embed of provided Subsplash ID'
+          -
+            handle: background_video_url
+            field:
+              type: link
+              display: 'Background Video'
+          -
+            handle: background_video_fallback_image
             field:
               max_files: 1
               container: s3
               type: assets
-              display: "Background Video Fallback Image"
+              display: 'Background Video Fallback Image'
               validate:
                 - image
               folder: wp-app/uploads
-          - handle: subsplash_media_item_id
+          -
+            handle: subsplash_media_item_id
             field:
               type: text
-              display: "Subsplash Media Item ID"
-          - handle: questions
+              display: 'Subsplash Media Item ID'
+          -
+            handle: questions
             field:
               type: replicator
               display: Questions
               sets:
                 new_set_group:
-                  display: "New Set Group"
+                  display: 'New Set Group'
                   sets:
                     question:
                       display: Question
                       fields:
-                        - handle: question_text
+                        -
+                          handle: question_text
                           field:
-                            placeholder: "What adventures or games did you play as a boy?"
+                            placeholder: 'What adventures or games did you play as a boy?'
                             type: textarea
-                            display: "Question Text"
-          - handle: description_legacy
+                            display: 'Question Text'
+          -
+            handle: description_legacy
             field:
               remove_empty_nodes: false
               type: bard
-              display: "Description - Legacy"
+              display: 'Description - Legacy'
   sidebar:
     display: Sidebar
     sections:
-      - fields:
-          - handle: slug
+      -
+        fields:
+          -
+            handle: slug
             field:
               type: slug
               localizable: true
-              validate: "max:200"
-          - handle: date
+              validate: 'max:200'
+          -
+            handle: date
             field:
               type: date
               required: true
               default: now
               validate:
                 - required
-      - display: Images
+      -
+        display: Images
         fields:
-          - import: images
+          -
+            import: images
