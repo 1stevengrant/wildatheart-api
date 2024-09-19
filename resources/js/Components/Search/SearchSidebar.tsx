@@ -7,6 +7,7 @@ import { isSelectedEvent } from "@/helpers/isSelectedEvent";
 import { currentEventState, showFilterPanelState } from "@/store";
 import { eventsListState } from "@/store/eventsAtom";
 import { Event } from "@/types/Event";
+import { NoSearchResults } from "@/Components/NoSearchResults";
 
 export const SearchSidebar = () => {
     const [events] = useRecoilState(eventsListState);
@@ -18,11 +19,7 @@ export const SearchSidebar = () => {
             {!showFilterPanel && (
                 <div className="flex-1 overflow-y-auto px-4">
                     {events.length === 0 ? (
-                        <div className={`py-8`}>
-                            <p className="text-white text-center">
-                                No events matching your search
-                            </p>
-                        </div>
+                        <NoSearchResults />
                     ) : (
                         events.map((event: Event, index: number) => (
                             <EventResult
