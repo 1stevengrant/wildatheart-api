@@ -66,5 +66,4 @@ class HostEventTypeCreateEventController extends Controller
 
         return redirect()->route('my.events.active', ['event' => $event]);
     }
-
 }

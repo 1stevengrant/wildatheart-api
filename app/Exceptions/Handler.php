@@ -5,7 +5,6 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Sentry\Laravel\Integration;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
