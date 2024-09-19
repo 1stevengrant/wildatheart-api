@@ -48,7 +48,7 @@ export const HostDashboardLayout = ({
             name: "My Events",
             href: route("my.events.active"),
             icon: CalendarDaysIcon,
-            current: route().current("my.events.active"),
+            current: route().current("my.events.*"),
         },
         {
             name: "My Contacts",

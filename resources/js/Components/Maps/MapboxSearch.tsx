@@ -36,8 +36,10 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
     };
 
     return (
-        <div className={className + " relative w-full z-10"}>
-            <InputLabel className={`mb-1`}>Event Location</InputLabel>
+        <div className={`${className} relative w-full z-10`}>
+            <InputLabel htmlFor={"event_location"} className={`mb-1`}>
+                Event Location
+            </InputLabel>
             <Combobox
                 value={selected}
                 onChange={(value: string) => {
@@ -49,6 +51,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                     <div className="relative flex w-full cursor-default items-center rounded-lg border-2 bg-black pl-4 border-grey-darker focus-within:border-orange">
                         <MapPinIcon className={`h-5 w-5 text-white`} />
                         <Combobox.Input
+                            id={"event_location"}
                             className={`w-full border-2 bg-black rounded-lg border-transparent py-2 pl-3 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${query.length > 0 ? `rounded-bl-none rounded-br-none focus:border-b-transparent` : ``}`}
                             displayValue={(place: MapboxPlace) =>
                                 place.place_name

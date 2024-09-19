@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
-use App\Http\Requests\FireEventRequest;
 use App\Models\EventType;
 use App\Services\EventCreationStepHandlerService;
-use Carbon\Carbon;
+use App\Support\EventDateHelper;
 use Illuminate\Http\Request;
 
 class HostEventTypeCreateEventController extends Controller
@@ -32,17 +31,10 @@ class HostEventTypeCreateEventController extends Controller
     public function store(Request $request, EventType $eventType)
     {
         ray(session('event_steps'));
-        if ($eventType->name === EventType::FIRES) {
-            $request->validate((new FireEventRequest)->rules());
-        } else {
-            $request->validate((new EventRequest)->rules());
-        }
 
-        if (str_contains(strtolower($eventType->name), 'retreat')) {
-            $request->merge([
-                'end_date' => Carbon::parse($request->start_date)->addDays(3)->format('Y-m-d'),
-            ]);
-        }
+        $request->validate((new EventRequest)->rules());
+
+        EventDateHelper::adjustEndDateForRetreat($request, $eventType->name);
 
         $event = auth()->user()->events()->create([
             'event_type_id' => $eventType->id,
@@ -66,5 +58,4 @@ class HostEventTypeCreateEventController extends Controller
 
         return redirect()->route('my.events.active', ['event' => $event]);
     }
-
 }

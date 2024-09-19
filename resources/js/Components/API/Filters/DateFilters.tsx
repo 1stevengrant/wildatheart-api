@@ -5,7 +5,7 @@ import { useDates } from "@/Hooks/useDates";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
 
 export const DateFilters = () => {
-    const maxDate = dayjs().add(1, "year").toDate();
+    const { maxDate } = useDates();
     const {
         startDate,
         setStartDate,

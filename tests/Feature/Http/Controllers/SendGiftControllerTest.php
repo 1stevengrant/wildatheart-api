@@ -12,14 +12,14 @@ test('a user cannot claim a gift for an event that has already claimed a gift', 
         'gift_requested' => true,
     ]);
     $this->actingAs($event->host)
-        ->get(route('gift', $event))
+        ->get(route('gift.index', $event))
         ->assertStatus(403);
 });
 
 test("a gift for an event that hasn't been claimed, can be requested", function () {
     $event = Event::factory()->fires()->create();
     $this->actingAs($event->host)
-        ->get(route('gift', $event))
+        ->get(route('gift.index', $event))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
             ->component('SendGiftPage')
@@ -28,6 +28,6 @@ test("a gift for an event that hasn't been claimed, can be requested", function 
 
 test('logged out user cannot request a gift', function () {
     $event = Event::factory()->fires()->create();
-    $this->get(route('gift', $event))
+    $this->get(route('gift.index', $event))
         ->assertRedirect(route('login'));
 });

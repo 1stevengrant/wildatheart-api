@@ -17,7 +17,7 @@ export const HostNewEvent = () => {
     return (
         <div className="mt-6 flex items-center justify-center">
             <Link
-                href={`${selectedEventType ? route("host.eventType.index", selectedEventType.slug) : route("host")}`}
+                href={`${selectedEventType ? route("host.eventType.index", selectedEventType.slug) : route("host.index")}`}
                 className={`${primaryButtonClasses}`}
             >
                 Host a New {eventTypeName}

@@ -262,9 +262,14 @@ const CreateEventEventTypePage = () => {
             resetAllDates();
         }
     };
-    const maxDate = dayjs().add(1, "year").toDate();
-    const { startDate, setStartDate, setStartDateString, resetAllDates } =
-        useDates();
+
+    const {
+        startDate,
+        setStartDate,
+        setStartDateString,
+        resetAllDates,
+        maxDate,
+    } = useDates();
 
     return (
         <>
@@ -303,46 +308,6 @@ const CreateEventEventTypePage = () => {
                             more info.
                         </p>
                         <form>
-                            {eventType.slug === "fires" && (
-                                <>
-                                    <div>
-                                        <InputLabel
-                                            htmlFor="fire_name"
-                                            value="Name Your Fire"
-                                            required
-                                        />
-                                        <div className="flex items-center space-x-4">
-                                            <TextInput
-                                                id="name"
-                                                name="name"
-                                                value={data.name}
-                                                autoComplete="off"
-                                                isFocused={true}
-                                                onChange={(e) => {
-                                                    setData(
-                                                        "name",
-                                                        e.target.value
-                                                    );
-                                                    setEvent({
-                                                        ...event,
-                                                        name: e.target.value,
-                                                    });
-                                                }}
-                                            />
-                                            <div className={`text-white`}>
-                                                Fire
-                                            </div>
-                                        </div>
-                                        <Instruction>
-                                            This is the name that will be
-                                            displayed on your Fire page.
-                                        </Instruction>
-                                        <InputError message={errors.name} />
-                                    </div>
-                                    <FireNamingGuidelines />
-                                </>
-                            )}
-
                             <MapboxSearch className={"mt-4"} />
 
                             <div
@@ -392,48 +357,41 @@ const CreateEventEventTypePage = () => {
                                 </Map>
                             </div>
 
-                            {eventType.slug !== "fires" && (
-                                <div className={`mt-4`}>
-                                    <DatePickerInput
-                                        label="Start date"
-                                        placeholder="Select start date"
-                                        minDate={new Date()}
-                                        value={startDate}
-                                        maxDate={maxDate}
-                                        clearable
-                                        onChange={(value) =>
-                                            handleDateChange(value)
-                                        }
-                                    />
-                                    <InputError message={errors.start_date} />
+                            <div className={`mt-4`}>
+                                <DatePickerInput
+                                    label="Start date"
+                                    placeholder="Select start date"
+                                    minDate={new Date()}
+                                    value={startDate}
+                                    maxDate={maxDate}
+                                    clearable
+                                    onChange={(value) =>
+                                        handleDateChange(value)
+                                    }
+                                />
+                                <InputError message={errors.start_date} />
 
-                                    <label
-                                        className={`flex items-center space-x-4 hover:cursor-pointer`}
-                                    >
-                                        <SwitchComponent
-                                            checked={isPrivate}
-                                            onChange={() => {
-                                                setIsPrivate(!isPrivate);
-                                                setData(
-                                                    "is_private",
-                                                    !isPrivate
-                                                );
-                                            }}
-                                        />
-                                        <div
-                                            className={`text-white text-sm mt-4`}
-                                        >
-                                            <div>
-                                                I want this event to be private.
-                                            </div>
-                                            <div>
-                                                The event will not be shown on
-                                                map or directory.
-                                            </div>
+                                <label
+                                    className={`flex items-center space-x-4 hover:cursor-pointer`}
+                                >
+                                    <SwitchComponent
+                                        checked={isPrivate}
+                                        onChange={() => {
+                                            setIsPrivate(!isPrivate);
+                                            setData("is_private", !isPrivate);
+                                        }}
+                                    />
+                                    <div className={`text-white text-sm mt-4`}>
+                                        <div>
+                                            I want this event to be private.
                                         </div>
-                                    </label>
-                                </div>
-                            )}
+                                        <div>
+                                            The event will not be shown on map
+                                            or directory.
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
                         </form>
                     </PageContainer>
                 </EmptyLayoutBody>
