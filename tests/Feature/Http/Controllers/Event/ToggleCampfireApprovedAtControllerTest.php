@@ -1,10 +1,11 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Carbon;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(DatabaseSeeder::class);
     $this->approvedEvent = \App\Models\Event::factory()->approved()->fires()->create();
     $this->notApprovedEvent = \App\Models\Event::factory()->fires()->create();
 });
@@ -34,7 +35,7 @@ test('a user cannot see an event that is unpublished', function () {
     $user = User::factory()->create();
     $this->actingAs($user)
         ->get(route('view.event', ['event' => $this->notApprovedEvent]))
-        ->assertStatus(404);
+        ->assertRedirectToRoute('login');
 });
 
 test('only the host can see their unpublished event', function () {

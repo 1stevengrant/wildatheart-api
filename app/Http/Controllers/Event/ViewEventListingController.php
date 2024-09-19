@@ -14,10 +14,9 @@ class ViewEventListingController extends Controller
      */
     public function __invoke(Request $request, Event $event)
     {
-        abort_unless(
-            $event->user_id === optional(auth()->user())->id || $event->approved_at,
-            404
-        );
+        if (! $event->isApproved() && $event->user_id !== auth()->id()) {
+            return redirect()->route('login');
+        }
 
         return inertia('ViewEventPage', [
             'event' => EventResource::make($event)->resolve(),
