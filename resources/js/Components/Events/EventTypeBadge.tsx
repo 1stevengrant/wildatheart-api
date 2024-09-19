@@ -9,7 +9,7 @@ export const EventTypeBadge = ({
 }) => {
     return (
         <span
-            className={`rounded-full py-0.5 px-4 text-sm text-grey-200 border border-white ${className}`}
+            className={`rounded-full py-0.5 px-4 text-sm text-grey-200 border border-white flex-shrink-0 ${className}`}
         >
             {children}
         </span>

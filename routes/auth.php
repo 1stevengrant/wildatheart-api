@@ -35,43 +35,48 @@ Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.logi
 Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('host/agreement', HostAgreementPageController::class)->name('host.agreement');
-    Route::post('host/agreement', AgreeToHostAgreementController::class)->name('host.agreement.store');
+
+    Route::prefix('host')->name('host.')->group(function () {
+        Route::get('agreement', HostAgreementPageController::class)->name('agreement');
+        Route::post('agreement', AgreeToHostAgreementController::class)->name('agreement.store');
+        Route::get('select', HostEventTypeSelectController::class)->name('eventType.select');
+    });
 
     Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
 
-    Route::get('host/select', HostEventTypeSelectController::class)->name('host.eventType.select');
-
     Route::middleware(['agreed_to_host_agreement'])->group(function () {
 
-        Route::get('host', HostProfileController::class)->name('host');
-        Route::get('host/fire', [HostFireController::class, 'index'])->name('host.fire');
-        Route::post('host/fire', [HostFireController::class, 'store'])->name('host.fire.store');
-
-        Route::get('gift/{event}', SendGiftController::class)->name('gift');
-        Route::post('gift/{event}', HandleSendGiftController::class)->name('gift.store');
-        Route::get('gift/{event}/success', GiftSuccessController::class)->name('gift.success');
-
-        Route::name('host.eventType.')->group(function () {
-            Route::prefix('host/{eventType}')->group(function () {
-                Route::get('/', HostEventTypeController::class)->name('index');
-                Route::get('before', HostEventTypeBeforeController::class)->name('before');
-                Route::get('schedule', HostEventTypeScheduleController::class)->name('schedule');
-                Route::get('faqs', HostEventTypeFaqsController::class)->name('faqs');
-                Route::get('mailing', [HostEventTypeMailingAddressController::class, 'index'])->name('mailing');
-                Route::post('mailing', [HostEventTypeMailingAddressController::class, 'store'])->name('mailing.store');
-                Route::get('create', [HostEventTypeCreateEventController::class, 'index'])->name('create');
-                Route::post('create', [HostEventTypeCreateEventController::class, 'store'])->name('create.store');
-            });
+        Route::prefix('host')->name('host.')->group(function () {
+            Route::get('/', HostProfileController::class)->name('index');
+            Route::get('fire', [HostFireController::class, 'index'])->name('fire');
+            Route::post('fire', [HostFireController::class, 'store'])->name('fire.store');
         });
 
-        Route::post('gift/{event}', HandleSendGiftController::class)->name('gift.store');
+        Route::prefix('gift')->name('gift.')->group(function () {
+            Route::get('{event}', SendGiftController::class)->name('index');
+            Route::post('{event}', HandleSendGiftController::class)->name('store');
+            Route::get('{event}/success', GiftSuccessController::class)->name('success');
+        });
 
-        Route::get('events/active', MyActiveEventsController::class)->name('my.events.active');
-        Route::get('events/inactive', MyInactiveEventsController::class)->name('my.events.inactive');
-        Route::delete('events/{event}', DeleteEventController::class)->name('delete.event');
-        Route::put('events/{event}', UpdateEventController::class)->name('update.event');
-        Route::get('events/{event}', EditEventController::class)->name('my.events.edit');
+        Route::prefix('host/{eventType}')->name('host.eventType.')->group(function () {
+            Route::get('/', HostEventTypeController::class)->name('index');
+            Route::get('before', HostEventTypeBeforeController::class)->name('before');
+            Route::get('schedule', HostEventTypeScheduleController::class)->name('schedule');
+            Route::get('faqs', HostEventTypeFaqsController::class)->name('faqs');
+            Route::get('mailing', [HostEventTypeMailingAddressController::class, 'index'])->name('mailing');
+            Route::post('mailing', [HostEventTypeMailingAddressController::class, 'store'])->name('mailing.store');
+            Route::get('create', [HostEventTypeCreateEventController::class, 'index'])->name('create');
+            Route::post('create', [HostEventTypeCreateEventController::class, 'store'])->name('create.store');
+        });
+
+        Route::prefix('events')->group(function () {
+            Route::get('active', MyActiveEventsController::class)->name('my.events.active');
+            Route::get('inactive', MyInactiveEventsController::class)->name('my.events.inactive');
+            Route::delete('{event}', DeleteEventController::class)->name('delete.event');
+            Route::put('{event}', UpdateEventController::class)->name('update.event');
+            Route::get('{event}', EditEventController::class)->name('my.events.edit');
+        });
+
         Route::put('approved/{event}', ToggleEventApprovedAtController::class)->name('toggle-event-approved-at');
         Route::get('contacts', MyContactsController::class)->name('my.contacts');
         Route::get('profile', MyProfileController::class)->name('my.profile');

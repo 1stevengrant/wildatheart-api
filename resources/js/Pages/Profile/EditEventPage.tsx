@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { MapPinIcon } from "@heroicons/react/24/solid";
 import { Link, useForm } from "@inertiajs/react";
+import { DatePickerInput } from "@mantine/dates";
+import dayjs from "dayjs";
 import mapboxgl from "mapbox-gl";
+import { singular } from "pluralize";
 import Map, {
     GeolocateControl,
     MapLayerMouseEvent,
@@ -16,10 +20,14 @@ import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
+import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import TextInput from "@/Components/Forms/TextInput";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { config } from "@/helpers/config";
+import { eventIsAFire } from "@/helpers/eventIsAFire";
 import { lookupLocation } from "@/helpers/lookupLocation";
+import { useDates } from "@/Hooks/useDates";
 import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
@@ -27,15 +35,18 @@ import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { Event } from "@/types/Event";
 
 const EditEventPage = () => {
+    const { startDate, setStartDate, resetAllDates, maxDate } = useDates();
     const mapRef = useRef<any>(null);
     const [selectedPlace] = useRecoilState(selectedPlaceState);
+    const [isPrivate, setIsPrivate] = useState(false);
     const setUserZoomLevel = useSetRecoilState<number>(zoomState);
     const page = useTypedPage();
     const user = page.props.auth.user!;
     const event = page.props.event as Event;
+    const eventTypeName = event.eventTypeData.name;
     const route = useRoute();
 
-    const pageTitle = `Editing ${event.name} Fire`;
+    const pageTitle = `Editing ${event.name} ${singular(eventTypeName)}`;
 
     const [marker, setMarker] = useState<any>({
         lat: event.latitude,
@@ -55,6 +66,8 @@ const EditEventPage = () => {
         street_address: event.street_address,
         city: event.city,
         zip: event.zip,
+        is_private: event.isPrivate,
+        start_date: event.start_date,
     });
 
     useEffect(() => {
@@ -135,7 +148,24 @@ const EditEventPage = () => {
         setTimeout(() => {
             flyTo([event.longitude, event.latitude], 0, 6);
         }, 50);
+
+        dayjs(event.start_date).isValid() &&
+            setStartDate(dayjs(event.start_date).toDate());
+
+        setIsPrivate(event.isPrivate);
     }, []);
+
+    const handleDateChange = (date: Date | null) => {
+        setStartDate(date);
+
+        if (date) {
+            const transformedDate = dayjs(date).format("YYYY-MM-DD");
+            setData("start_date", transformedDate);
+        } else {
+            setData("start_date", "");
+            resetAllDates();
+        }
+    };
 
     const flyTo = (
         coordinates: [number, number],
@@ -156,11 +186,12 @@ const EditEventPage = () => {
 
     return (
         <HostDashboardLayout pageTitle={pageTitle}>
+            <HeadingOne>{pageTitle}</HeadingOne>
             <form onSubmit={handleSubmit}>
                 <div>
                     <InputLabel
-                        htmlFor="fire_name"
-                        value="Name Your Fire"
+                        htmlFor="name"
+                        value={`Name of ${eventTypeName}`}
                         required
                     />
                     <div className="flex items-center space-x-4">
@@ -174,15 +205,17 @@ const EditEventPage = () => {
                                 setData("name", e.target.value);
                             }}
                         />
-                        <div>Fire</div>
+                        {eventIsAFire(event.eventType) && <div>Fire</div>}
                     </div>
-                    <Instruction>
-                        This is the name that will be displayed on your Fire
-                        page.
-                    </Instruction>
+                    {eventIsAFire(event.eventType) && (
+                        <Instruction>
+                            This is the name that will be displayed on your Fire
+                            page.
+                        </Instruction>
+                    )}
                     <InputError message={errors.name} />
                 </div>
-                <FireNamingGuidelines />
+                {eventIsAFire(event.eventType) && <FireNamingGuidelines />}
 
                 <MapboxSearch className={"mt-4"} />
                 <div className="mt-4 w-full h-[300px] md:h-[600px]">
@@ -220,14 +253,56 @@ const EditEventPage = () => {
                                     longitude={marker.lng}
                                     latitude={marker.lat}
                                 >
-                                    <FireMarker className={"w-10 h-10"} />
+                                    {eventIsAFire(event.eventType) ? (
+                                        <FireMarker className={"w-10 h-10"} />
+                                    ) : (
+                                        <MapPinIcon
+                                            className={"w-10 h-10 text-orange"}
+                                        />
+                                    )}
                                 </Marker>
                             )}
                         </>
                     </Map>
                 </div>
+                {!eventIsAFire(event.eventType) && (
+                    <div className={`mt-4`}>
+                        <DatePickerInput
+                            label="Start date"
+                            placeholder="Select start date"
+                            minDate={new Date()}
+                            value={startDate}
+                            maxDate={maxDate}
+                            clearable
+                            onChange={(value) => handleDateChange(value)}
+                        />
+                        <InputError message={errors.start_date} />
+
+                        <label
+                            className={`flex items-center space-x-4 hover:cursor-pointer`}
+                        >
+                            <SwitchComponent
+                                checked={isPrivate}
+                                onChange={() => {
+                                    setIsPrivate(!isPrivate);
+                                    setData("is_private", !isPrivate);
+                                    console.log(data.is_private);
+                                }}
+                            />
+                            <div className={`text-white text-sm mt-4`}>
+                                <div>I want this event to be private.</div>
+                                <div>
+                                    The event will not be shown on map or
+                                    directory.
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                )}
                 <div className={`mt-4 space-x-4`}>
-                    <PrimaryButton>Save</PrimaryButton>
+                    <PrimaryButton>
+                        Update This {singular(eventTypeName)}
+                    </PrimaryButton>
                     <Link
                         className={"text-grey-200 inline-block text-center"}
                         href={route("my.events.active")}

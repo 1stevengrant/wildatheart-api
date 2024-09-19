@@ -39,7 +39,7 @@ export const Footer = ({ showFooter = true }: { showFooter?: boolean }) => {
                         </FooterNavLink>
 
                         <Link
-                            href={route(auth.user ? "host" : "login")}
+                            href={route(auth.user ? "host.index" : "login")}
                             className={linkClass}
                         >
                             <HandRaisedIcon className="w-6" />

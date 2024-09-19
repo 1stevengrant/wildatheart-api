@@ -43,7 +43,10 @@ export const MainHeader = () => {
             <div className={`hidden lg:w-1/2 lg:flex lg:justify-end`}>
                 <div className={`flex items-center space-x-4`}>
                     <ToggleSupportRequestButton />
-                    <Link href={route("host")} className={`${textStyles}`}>
+                    <Link
+                        href={route("host.index")}
+                        className={`${textStyles}`}
+                    >
                         Host an Event
                     </Link>
                     <a

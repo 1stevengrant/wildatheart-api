@@ -6,6 +6,7 @@ import {
     startDateState,
     startDateStringState,
 } from "@/store/filtersAtom";
+import dayjs from "dayjs";
 
 export const useDates = () => {
     const [startDate, setStartDate] = useRecoilState(startDateState);
@@ -14,7 +15,7 @@ export const useDates = () => {
         useRecoilState(startDateStringState);
     const [endDateString, setEndDateString] =
         useRecoilState(endDateStringState);
-
+    const maxDate = dayjs().add(1, "year").toDate();
     const resetAllDates = () => {
         setStartDate(null);
         setEndDate(null);
@@ -32,5 +33,6 @@ export const useDates = () => {
         endDateString,
         setEndDateString,
         resetAllDates,
+        maxDate,
     };
 };

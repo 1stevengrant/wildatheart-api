@@ -67,6 +67,6 @@ class HostFireController extends Controller
 
         CheckWelcomeStatus::run(event: $event);
 
-        return Inertia::location(to_route('gift', ['event' => $event]));
+        return Inertia::location(to_route('gift.index', ['event' => $event]));
     }
 }

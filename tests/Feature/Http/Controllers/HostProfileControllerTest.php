@@ -17,7 +17,7 @@ beforeEach(function () {
 it('shows the update profile form', function () {
 
     $this->actingAs($this->user)
-        ->get(route('host'))
+        ->get(route('host.index'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
             ->component('Host')
@@ -28,12 +28,12 @@ it('redirects to the create an event page if the user has already completed the 
     $this->user->update(['profile_step' => 2]);
 
     $this->actingAs($this->user)
-        ->get(route('host'))
+        ->get(route('host.index'))
         ->assertRedirect(route('host.eventType.select'));
 });
 
 it('redirects to the login page if the user is not logged in', function () {
-    $this->get(route('host'))
+    $this->get(route('host.index'))
         ->assertRedirect(route('login'));
 });
 

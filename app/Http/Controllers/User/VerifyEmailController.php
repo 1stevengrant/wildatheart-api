@@ -32,6 +32,6 @@ class VerifyEmailController extends Controller
 
         auth()->login($token->user);
 
-        return to_route('gift', ['event' => $token->event]);
+        return to_route('gift.index', ['event' => $token->event]);
     }
 }
