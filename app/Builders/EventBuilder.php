@@ -151,4 +151,15 @@ class EventBuilder extends Builder
 
         return $this;
     }
+
+    public function filterByEventTypes(?string $eventTypeIds): EventBuilder
+    {
+        if ($eventTypeIds) {
+            $eventTypeIds = explode(',', $eventTypeIds);
+
+            return $this->whereIn('event_type_id', $eventTypeIds);
+        }
+
+        return $this;
+    }
 }

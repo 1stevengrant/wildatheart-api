@@ -17,14 +17,10 @@ class SearchForEventsController extends Controller
     {
         $request->validated();
 
-        $latitude = request('latitude');
-        $longitude = request('longitude');
         $swLatitude = request('sw_latitude');
         $swLongitude = request('sw_longitude');
         $neLatitude = request('ne_latitude');
         $neLongitude = request('ne_longitude');
-
-        $radius = request('radius', 10);
         $sex = request('sex');
         $typeGroup = request('type_group');
         $types = request('types');
@@ -38,6 +34,7 @@ class SearchForEventsController extends Controller
             ->betweenDates($startDate, $endDate)
             ->filterBySex($sex)
             ->filterByTypeGroup($typeGroup)
+            ->filterByEventTypes($types)
             ->orderBy('start_date')
             ->get();
 
