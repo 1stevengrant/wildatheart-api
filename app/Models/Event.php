@@ -120,16 +120,4 @@ class Event extends BaseModel
     {
         return ucwords($this->host->full_name);
     }
-
-    public function getTypeGroupAttribute(): string
-    {
-        $eventTypeName = $this->eventType->name;
-        if (str_contains(strtolower($eventTypeName), 'retreat')) {
-            return 'retreat';
-        }
-        if (str_contains(strtolower($eventTypeName), 'experience')) {
-            return 'experience';
-        }
-        return 'fire';
-    }
 }
