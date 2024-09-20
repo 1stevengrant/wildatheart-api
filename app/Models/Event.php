@@ -116,31 +116,20 @@ class Event extends BaseModel
         return new EventBuilder($query);
     }
 
-    public function getLocationAttribute(): string
+    public function hostFullName(): string
     {
-        if (strtolower($this->country) === self::DEFAULT_COUNTRY || strtolower($this->country) === 'united states') {
-            if ($this->city && $this->region) {
-                return $this->city.', '.getStateAbbreviation($this->region);
-            }
-        }
-
-        if (strtolower($this->country) === 'new zealand') {
-            if ($this->city && $this->region) {
-                return $this->city.', NZ';
-            }
-        }
-
-        if (strtolower($this->country) === 'gb') {
-            if ($this->city && $this->region) {
-                return $this->city.', UK';
-            }
-        }
-
-        return $this->city.', '.strtoupper($this->country);
+        return ucwords($this->host->full_name);
     }
 
-    public function getCityAttribute(): array|string
+    public function getTypeGroupAttribute(): string
     {
-        return str_replace(',', '', $this->attributes['city']);
+        $eventTypeName = $this->eventType->name;
+        if (str_contains(strtolower($eventTypeName), 'retreat')) {
+            return 'retreat';
+        }
+        if (str_contains(strtolower($eventTypeName), 'experience')) {
+            return 'experience';
+        }
+        return 'fire';
     }
 }

@@ -90,13 +90,31 @@ trait EventAttributesTrait
         return HostResource::make($this->host);
     }
 
-    public function getLongitudeAttribute(): float
+    public function getLocationAttribute(): string
     {
-        return round($this->attributes['longitude'], 2);
+        if (strtolower($this->country) === self::DEFAULT_COUNTRY || strtolower($this->country) === 'united states') {
+            if ($this->city && $this->region) {
+                return $this->city.', '.getStateAbbreviation($this->region);
+            }
+        }
+
+        if (strtolower($this->country) === 'new zealand') {
+            if ($this->city && $this->region) {
+                return $this->city.', NZ';
+            }
+        }
+
+        if (strtolower($this->country) === 'gb') {
+            if ($this->city && $this->region) {
+                return $this->city.', UK';
+            }
+        }
+
+        return $this->city.', '.strtoupper($this->country);
     }
 
-    public function getLatitudeAttribute(): float
+    public function getCityAttribute(): array|string
     {
-        return round($this->attributes['latitude'], 2);
+        return str_replace(',', '', $this->attributes['city']);
     }
 }
