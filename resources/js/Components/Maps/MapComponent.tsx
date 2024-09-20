@@ -12,6 +12,7 @@ import { EventCountButton } from "@/Components/Buttons/EventCountButton";
 import { GetUserLocationModal } from "@/Components/Modals/GetUserLocationModal";
 import { IsLoading } from "@/Components/Ui/IsLoading";
 import { OutsideClickHandlerEvents } from "@/Components/Ui/OutsideClickHandlerEvents";
+import { commonMapProps } from "@/helpers/commonMapProps";
 import { defaultLatLng } from "@/helpers/defaultLatLng";
 import { LOCATION_PERMISSIONS_DENIED } from "@/helpers/locationPermissions";
 import { useGetEvents } from "@/Hooks/useGetEvents";
@@ -28,7 +29,6 @@ import {
     typeGroupState,
     typesState,
 } from "@/store/filtersAtom";
-import { commonMapProps } from "@/helpers/commonMapProps";
 
 export const MapComponent = ({ className = "" }: { className?: string }) => {
     const initialViewState = {

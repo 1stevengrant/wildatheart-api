@@ -24,14 +24,13 @@ import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper"
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
-import { config } from "@/helpers/config";
+import { commonMapProps } from "@/helpers/commonMapProps";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
-import { commonMapProps } from "@/helpers/commonMapProps";
 
 export const FireInformation = ({ user }: any) => {
     const page = useTypedPage();
