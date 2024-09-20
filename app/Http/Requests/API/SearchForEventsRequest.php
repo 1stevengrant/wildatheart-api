@@ -22,9 +22,9 @@ class SearchForEventsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'radius' => 'required|numeric|min:100|max:600',
+            //            'latitude' => 'required',
+            //            'longitude' => 'required',
+            //            'radius' => 'required|numeric|min:100|max:600',
         ];
     }
 }
