@@ -19,7 +19,7 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
 
     const [currentEvent] = useRecoilState(currentEventState);
     const isActiveEvent =
-        event?.id === currentEvent?.id ? "text-orange" : "text-grey-200";
+        event.id === currentEvent?.id ? "text-orange" : "text-grey-200";
     return (
         <>
             {event?.type_group === fireTypeGroup && (
