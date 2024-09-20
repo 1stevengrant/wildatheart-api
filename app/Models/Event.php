@@ -16,6 +16,26 @@ class Event extends BaseModel
 {
     use EventActionsTrait, EventAttributesTrait, EventRelationshipsTrait, EventScopeTrait, HasFactory, HasUuids, SoftDeletes;
 
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::saving(function ($event) {
+            if ($event->eventType) {
+                $eventTypeName = $event->eventType->name;
+                if (str_contains(strtolower($eventTypeName), 'retreat')) {
+                    $event->type_group = 'retreat';
+                }
+                if (str_contains(strtolower($eventTypeName), 'experience')) {
+                    $event->type_group = 'experience';
+                }
+                if (str_contains(strtolower($eventTypeName), 'fire')) {
+                    $event->type_group = 'fire';
+                }
+
+            }
+        });
+    }
+
     protected $casts = [
         'approved_at' => 'datetime',
         'deleted_at' => 'datetime',
