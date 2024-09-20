@@ -150,7 +150,7 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
                 onDragEnd={async (e) => handleViewStateChange(e.viewState)}
                 onZoomEnd={async (e) => handleViewStateChange(e.viewState)}
                 style={{ width: "100%", height: "100%" }}
-                mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=sr5EVCtJBfz1IQnASSwn`}
+                mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=1kAGKS8dAMyREqM1ZFrT`}
             >
                 <GetUserLocationModal
                     open={openGetUserLocationModal}
