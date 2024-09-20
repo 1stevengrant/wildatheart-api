@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\SearchForEventsRequest;
+use App\Http\Resources\API\EventAPIResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -18,6 +19,11 @@ class SearchForEventsController extends Controller
 
         $latitude = request('latitude');
         $longitude = request('longitude');
+        $swLatitude = request('sw_latitude');
+        $swLongitude = request('sw_longitude');
+        $neLatitude = request('ne_latitude');
+        $neLongitude = request('ne_longitude');
+
         $radius = request('radius', 10);
         $sex = request('sex');
         $typeGroup = request('type_group');
@@ -25,17 +31,15 @@ class SearchForEventsController extends Controller
         $startDate = request('start_date');
         $endDate = request('end_date');
 
-        $events = Event::withinDistance(
-            latitude: $latitude,
-            longitude: $longitude,
-            radius: $radius,
-            sex: $sex,
-            typeGroup: $typeGroup,
-            types: $types,
-            startDate: $startDate,
-            endDate: $endDate
-        )->get();
+        $events = Event::query()
+            ->approved()
+            ->active()
+            ->withinBoundingBox($swLatitude, $swLongitude, $neLatitude, $neLongitude)
+            ->betweenDates($startDate, $endDate)
+            ->filterBySex($sex)
+            ->orderBy('start_date')
+            ->get();
 
-        return response()->json(['events' => $events]);
+        return EventAPIResource::collection($events);
     }
 }
