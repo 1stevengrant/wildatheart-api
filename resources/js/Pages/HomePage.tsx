@@ -7,6 +7,7 @@ import { MapComponent } from "@/Components/Maps/MapComponent";
 import { SearchSidebar } from "@/Components/Search/SearchSidebar";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { searchResultsState } from "@/store/searchResultsAtom";
+import { InteractiveMap } from "@/Components/Maps/InteractiveMap";
 
 const HomePage = ({ children }: { children: React.ReactNode }) => {
     const [searchResults] = useRecoilState(searchResultsState);
@@ -16,7 +17,8 @@ const HomePage = ({ children }: { children: React.ReactNode }) => {
             childClassName={`flex flex-col md:flex-row`}
         >
             <SearchSidebar />
-            <MapComponent className={`${searchResults ? "hidden" : ""}`} />
+            {/*<MapComponent className={`${searchResults ? "hidden" : ""}`} />*/}
+            <InteractiveMap className={`${searchResults ? "hidden" : ""}`} />
             <MobileEventList
                 className={`${searchResults ? "block" : "hidden"}`}
             />

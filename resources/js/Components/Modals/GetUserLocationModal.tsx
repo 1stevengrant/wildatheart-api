@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -9,67 +9,33 @@ import { StaticMap } from "@/Components/Maps/StaticMap";
 import { ModalHeading } from "@/Components/Type/ModalHeading";
 import { Modal } from "@/Components/Ui/Modal";
 import { ModalActions } from "@/Components/Ui/ModalActions";
-import { Spinner } from "@/Components/Ui/Spinner";
 import { defaultLatLng } from "@/helpers/defaultLatLng";
 import { useMapData } from "@/Hooks/useMapData";
+import { mapFlyTo } from "@/lib/mapFlyTo";
 
 interface GetUserLocationModalProps {
     open: boolean;
     setOpen: (open: boolean) => void;
-    onLocationSet: (latitude: number, longitude: number) => void;
 }
 
 export const GetUserLocationModal = ({
     open,
     setOpen,
-    onLocationSet,
 }: GetUserLocationModalProps) => {
-    const { setLatitude, setLongitude } = useMapData();
-    const [gettingLocation, setGettingLocation] = useState(false);
-
-    const rejectLocationPermissions = () => {
-        localStorage.setItem("locationPermissions", "denied");
-        setLatitude(defaultLatLng.latitude);
-        setLongitude(defaultLatLng.longitude);
-        onLocationSet(defaultLatLng.latitude, defaultLatLng.longitude);
-        console.log("Location Permissions Denied, get default events");
-        setOpen(false);
-    };
-
-    const useMyLocation = () => {
-        setGettingLocation(true);
-        localStorage.setItem("locationPermissions", "granted");
-        navigator.geolocation.getCurrentPosition(
-            successCallback,
-            errorCallback
-        );
-    };
-
     const handleModalClose = () => {
-        setLatitude(defaultLatLng.latitude);
-        setLongitude(defaultLatLng.longitude);
-        onLocationSet(defaultLatLng.latitude, defaultLatLng.longitude);
-        console.log("Location modal closed but not denied, get default events");
         setOpen(false);
     };
+    const { mapRef } = useMapData();
 
-    const successCallback = (position: GeolocationPosition) => {
-        setGettingLocation(false);
-        console.log("Latitude:", position.coords.latitude);
-        console.log("Longitude:", position.coords.longitude);
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-        localStorage.setItem("latitude", position.coords.latitude.toString());
-        localStorage.setItem("longitude", position.coords.longitude.toString());
-        onLocationSet(position.coords.latitude, position.coords.longitude);
-        setOpen(false);
-    };
+    const { setLatitude, setLongitude } = useMapData();
 
-    const errorCallback = (error: GeolocationPositionError) => {
-        console.error("Error getting location:", error.message);
-        setLatitude(defaultLatLng.latitude);
-        setLongitude(defaultLatLng.longitude);
-        setOpen(false);
+    const getMyLocation = () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setLatitude(latitude);
+            setLongitude(longitude);
+            handleModalClose();
+        });
     };
 
     return (
@@ -94,13 +60,6 @@ export const GetUserLocationModal = ({
                     happening near you.
                 </p>
 
-                {gettingLocation && (
-                    <div className={`text-center mt-6`}>
-                        <p>Getting your location...</p>
-                        <Spinner className={`w-6 inline-block mx-auto`} />
-                    </div>
-                )}
-
                 <StaticMap
                     className={`rounded-lg mt-4`}
                     lat={defaultLatLng.latitude}
@@ -109,10 +68,10 @@ export const GetUserLocationModal = ({
                 />
 
                 <ModalActions>
-                    <SecondaryButton onClick={rejectLocationPermissions}>
+                    <SecondaryButton onClick={handleModalClose}>
                         No thanks
                     </SecondaryButton>
-                    <PrimaryButton onClick={useMyLocation}>
+                    <PrimaryButton onClick={getMyLocation}>
                         Use My Location
                     </PrimaryButton>
                 </ModalActions>

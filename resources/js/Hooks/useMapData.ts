@@ -13,6 +13,7 @@ export const useMapData = () => {
     const [longitude, setLongitude] = useRecoilState(longitudeState);
     const [selectedPlace, setSelectedPlace] =
         useRecoilState(selectedPlaceState);
+    const [zoomLevel, setZoomLevel] = useRecoilState(selectedPlaceState);
 
     return {
         latitude,
@@ -23,5 +24,7 @@ export const useMapData = () => {
         selectedPlace,
         mapFlyTo,
         mapRef,
+        zoomLevel,
+        setZoomLevel,
     };
 };
