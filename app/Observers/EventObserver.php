@@ -17,6 +17,10 @@ class EventObserver
         Mail::to($event->user)->send(new NewEventCreatedMailable($event));
 
         Artisan::call('app:clear-event-cache');
+
+        $event->update([
+            'sex' => determineSexOfEvent($event->eventType),
+        ]);
     }
 
     public function updated(Event $event): void
