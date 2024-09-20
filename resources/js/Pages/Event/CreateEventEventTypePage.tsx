@@ -4,7 +4,6 @@ import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
-import dayjs from "dayjs";
 import mapboxgl from "mapbox-gl";
 import Map, {
     GeolocateControl,
@@ -15,19 +14,15 @@ import Map, {
 import { useRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
 import { InputError } from "@/Components/Forms/InputError";
-import { InputLabel } from "@/Components/Forms/InputLabel";
-import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
-import TextInput from "@/Components/Forms/TextInput";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
-import { config } from "@/helpers/config";
+import { commonMapProps } from "@/helpers/commonMapProps";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
@@ -36,7 +31,6 @@ import useTypedPage from "@/Hooks/useTypedPage";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 import { selectedPlaceState, zoomState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
-import { commonMapProps } from "@/helpers/commonMapProps";
 
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();
