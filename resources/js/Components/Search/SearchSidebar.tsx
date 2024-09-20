@@ -21,10 +21,10 @@ export const SearchSidebar = () => {
                     {events.length === 0 ? (
                         <NoSearchResults />
                     ) : (
-                        events.map((event: Event, index: number) => (
+                        events.map((event: Event) => (
                             <EventResult
                                 event={event}
-                                key={index}
+                                key={event.id}
                                 className={`mb-4 ${isSelectedEvent(event, currentEvent, "border-grey-darker")}`}
                                 onMouseEnter={() => setCurrentEvent(event)}
                                 onMouseLeave={() => setCurrentEvent(null)}
