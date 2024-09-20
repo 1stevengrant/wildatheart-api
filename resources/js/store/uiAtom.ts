@@ -5,4 +5,9 @@ const eventCreateProgressState = atom({
     default: false,
 });
 
-export { eventCreateProgressState };
+const loaderState = atom({
+    key: "LoaderState",
+    default: false,
+});
+
+export { eventCreateProgressState, loaderState };
