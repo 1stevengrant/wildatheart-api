@@ -142,4 +142,13 @@ class EventBuilder extends Builder
 
         return $this;
     }
+
+    public function filterByTypeGroup(?string $typeGroup): EventBuilder
+    {
+        if ($typeGroup) {
+            return $this->where('type_group', $typeGroup);
+        }
+
+        return $this;
+    }
 }

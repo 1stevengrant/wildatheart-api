@@ -37,6 +37,7 @@ class SearchForEventsController extends Controller
             ->withinBoundingBox($swLatitude, $swLongitude, $neLatitude, $neLongitude)
             ->betweenDates($startDate, $endDate)
             ->filterBySex($sex)
+            ->filterByTypeGroup($typeGroup)
             ->orderBy('start_date')
             ->get();
 
