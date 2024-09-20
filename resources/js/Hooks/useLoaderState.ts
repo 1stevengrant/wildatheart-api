@@ -1,11 +1,10 @@
-import { useState } from "react";
-
 import { useRecoilState } from "recoil";
 
 import { eventsListLoadingState } from "@/store/eventsAtom";
+import { loaderState } from "@/store/uiAtom";
 
 export const useLoaderState = () => {
-    const [showLoader, setShowLoader] = useState(false);
+    const [showLoader, setShowLoader] = useRecoilState(loaderState);
     const [eventsListLoading] = useRecoilState(eventsListLoadingState);
 
     const handleLoaderState = () => {
