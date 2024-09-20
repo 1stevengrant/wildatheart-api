@@ -9,7 +9,7 @@ class EventBuilder extends Builder
 {
     public function public(): EventBuilder
     {
-        return $this->where('approved_at', '!=', null);
+        return $this->where('is_private', false);
     }
 
     public function published(): EventBuilder
@@ -90,5 +90,56 @@ class EventBuilder extends Builder
     public function user(int $userId): EventBuilder
     {
         return $this->where('user_id', $userId);
+    }
+
+    public function withinBoundingBox(
+        float $swLatitude,
+        float $swLongitude,
+        float $neLatitude,
+        float $neLongitude
+    ): EventBuilder {
+        return $this->whereBetween('latitude', [$swLatitude, $neLatitude])
+            ->whereBetween('longitude', [$swLongitude, $neLongitude]);
+    }
+
+    public function notPrivate(): EventBuilder
+    {
+        return $this->where('is_private', false);
+    }
+
+    public function private(): EventBuilder
+    {
+        return $this->where('is_private', true);
+    }
+
+    public function approved(): EventBuilder
+    {
+        return $this->whereNotNull('approved_at');
+    }
+
+    public function betweenDates(?string $startDate = null, ?string $endDate = null): EventBuilder
+    {
+        if ($startDate && $endDate) {
+            return $this->whereBetween('start_date', [$startDate, $endDate]);
+        }
+
+        if ($startDate) {
+            return $this->where('start_date', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            return $this->where('start_date', '<=', $endDate);
+        }
+
+        return $this;
+    }
+
+    public function filterBySex(?string $sex): EventBuilder
+    {
+        if ($sex && in_array(strtolower($sex), ['men', 'women'])) {
+            return $this->where('sex', strtolower($sex));
+        }
+
+        return $this;
     }
 }
