@@ -16,9 +16,9 @@ export const EventList = () => {
     return (
         <>
             {events.length > 0 &&
-                events.map((event: Event, index: number) => (
+                events.map((event: Event) => (
                     <Marker
-                        key={index}
+                        key={event.id}
                         longitude={event.longitude}
                         latitude={event.latitude}
                         anchor="bottom"

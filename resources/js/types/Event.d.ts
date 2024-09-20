@@ -46,4 +46,6 @@ export type Event = {
     type_group?: string;
     hostObject: HostType;
     isPrivate: boolean;
+    host_full_name: string;
+    host_md5_email: string;
 };
