@@ -14,5 +14,5 @@ export const commonMapProps = {
     mapboxAccessToken: config("services.mapbox.token"),
     customAttribution: ``,
     attributionControl: false,
-    mapStyle: `https://api.maptiler.com/maps/streets/style.json?key=sr5EVCtJBfz1IQnASSwn`,
+    mapStyle: `https://api.maptiler.com/maps/streets/style.json?key=1kAGKS8dAMyREqM1ZFrT`,
 };
