@@ -44,6 +44,9 @@ tabs:
               type: link
               display: 'Buy Book URL'
           -
+            handle: topics
+            field: content.topics
+          -
             import: blocks
   sidebar:
     display: Sidebar
