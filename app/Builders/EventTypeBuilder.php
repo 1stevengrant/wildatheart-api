@@ -11,6 +11,11 @@ class EventTypeBuilder extends Builder
         return $this->where('slug', $operator, $slug);
     }
 
+    public function activeSlug(string $slug, string $operator = 'LIKE'): EventTypeBuilder
+    {
+        return $this->slug($slug, $operator)->active();
+    }
+
     public function slugOr(string $slug, string $operator = 'LIKE'): EventTypeBuilder
     {
         return $this->orWhere('slug', $operator, $slug);

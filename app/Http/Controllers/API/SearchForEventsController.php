@@ -30,7 +30,7 @@ class SearchForEventsController extends Controller
         $events = Event::query()
             ->approved()
             ->active()
-            ->withinBoundingBox($swLatitude, $swLongitude, $neLatitude, $neLongitude)
+//            ->withinBoundingBox($swLatitude, $swLongitude, $neLatitude, $neLongitude)
             ->betweenDates($startDate, $endDate)
             ->filterBySex($sex)
             ->filterByTypeGroup($typeGroup)

@@ -3,22 +3,22 @@ import { atom } from "recoil";
 import { Event } from "@/types/Event";
 
 const currentEventState = atom<Event | null | undefined>({
-    key: "currentEvent",
+    key: "currentEventState",
     default: undefined,
 });
 
 const reactNotificationState = atom<Array<any>>({
-    key: "reactNotification",
+    key: "reactNotificationState",
     default: [],
 });
 
 const showFilterPanelState = atom<boolean>({
-    key: "showFilterPanel",
+    key: "showFilterPanelState",
     default: false,
 });
 
 const reactNotificationAtom = atom<Array<any>>({
-    key: "reactNotificationAtom",
+    key: "reactNotificationAtomState",
     default: [],
 });
 

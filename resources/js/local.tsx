@@ -2,7 +2,7 @@ import "../css/app.css";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -13,10 +13,22 @@ import { MantineProvider } from "@mantine/core";
 import * as Sentry from "@sentry/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilSnapshot } from "recoil";
 
 import { RouteContext } from "@/Hooks/useRoute";
 import { mantineTheme } from "@/mantineTheme";
+
+function DebugObserver(): React.ReactNode {
+    const snapshot = useRecoilSnapshot();
+    useEffect(() => {
+        console.debug("The following atoms were modified:");
+        for (const node of snapshot.getNodes_UNSTABLE({ isModified: true })) {
+            console.debug(node.key, snapshot.getLoadable(node));
+        }
+    }, [snapshot]);
+
+    return null;
+}
 
 Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_LARAVEL_DSN,
@@ -41,6 +53,7 @@ createInertiaApp({
 
         root.render(
             <RecoilRoot>
+                <DebugObserver />
                 <RouteContext.Provider value={(window as any).route}>
                     <MantineProvider theme={mantineTheme}>
                         <App {...props} />

@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
 export const searchResultsState = atom({
-    key: "SearchResults",
+    key: "SearchResultsState",
     default: false,
 });

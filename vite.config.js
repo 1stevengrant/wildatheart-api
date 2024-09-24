@@ -10,6 +10,7 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/cp.js",
                 "resources/css/cp.css",
+                "app/**/*.php",
             ],
             refresh: true,
             detectTls: true,

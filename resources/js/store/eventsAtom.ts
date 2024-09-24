@@ -3,12 +3,12 @@ import { atom } from "recoil";
 import { EventType } from "@/types/EventType";
 
 const eventsListState = atom({
-    key: "EventsList",
+    key: "EventsListState",
     default: [],
 });
 
 const eventsListLoadingState = atom({
-    key: "EventsListLoading",
+    key: "EventsListLoadingState",
     default: false,
 });
 

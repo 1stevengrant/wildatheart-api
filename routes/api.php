@@ -54,6 +54,6 @@ Route::prefix('content')->group(function () {
 });
 
 Route::get('events/search', \App\Http\Controllers\API\SearchForEventsController::class);
-Route::get('events/types', function () {
-    return response()->json(\App\Models\EventType::all());
+Route::get('events', function () {
+    return \App\Http\Resources\API\EventAPIResource::collection(\App\Models\Event::paginate(200));
 });

@@ -33,7 +33,7 @@ export const EventCardContent = (props: { event: Event }) => {
                         {event.host_photo ? (
                             <img
                                 src={event.host_photo}
-                                className={`w-8 h-8 rounded-full`}
+                                className={`w-8 h-8 rounded-full object-cover`}
                                 alt=""
                             />
                         ) : (

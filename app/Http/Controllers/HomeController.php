@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\EventType;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Artesaos\SEOTools\Facades\TwitterCard;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 
 class HomeController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke()
     {
         $image = url('img/opengraph.png');
         $title = 'Home - Wild at Heart Fires';
@@ -38,7 +39,29 @@ class HomeController extends Controller
 
         JsonLd::generate();
 
+        $events = Event::query()->approved()->active()
+            ->when(request('sex'), function ($query, $sex) {
+                return $query->where('sex', $sex);
+            })
+            ->when(request('type_group'), function ($query, $typeGroup) {
+                return $query->where('type_group', $typeGroup);
+            })
+            ->when(request('types'), function ($query, $types) {
+                return $query->whereIn('event_type_id', $types);
+            })
+            ->when(request('start_date'), function ($query, $startDate) {
+                return $query->where('start_date', '>=', $startDate);
+            })
+            ->when(request('end_date'), function ($query, $endDate) {
+                return $query->where('start_date', '<=', $endDate);
+            })
+            ->get();
+
+        ray($events);
+
         return inertia('HomePage', [
+            'filters' => Request::all(['sex', 'type_group', 'types', 'start_date', 'end_date']),
+            'events' => $events,
             'allEventTypes' => EventType::query()->active()->get(),
             'experienceTypes' => EventType::query()->slug('%experience%')->active()->get(),
             'retreatTypes' => EventType::query()

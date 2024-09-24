@@ -149,7 +149,6 @@ export const MapComponent = ({ className = "" }: { className?: string }) => {
                 <GetUserLocationModal
                     open={openGetUserLocationModal}
                     setOpen={setOpenGetUserLocationModal}
-                    onLocationSet={handleFlyTo}
                 />
                 <EventList />
 

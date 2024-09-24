@@ -1,12 +1,12 @@
 import { atom } from "recoil";
 
 const selectedPlaceState = atom<any | undefined>({
-    key: "selectedPlace",
+    key: "SelectedPlaceState",
     default: undefined,
 });
 
 const zoomState = atom<number>({
-    key: "zoom",
+    key: "ZoomState",
     default: 6,
 });
 
