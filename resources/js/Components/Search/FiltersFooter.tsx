@@ -6,7 +6,7 @@ import { showFilterPanelState } from "@/store";
 
 export const FiltersFooter = () => {
     const setShowFilterPanel = useSetRecoilState(showFilterPanelState);
-    const { resetAll } = useSearchEvents();
+    // const { resetAll } = useSearchEvents();
     return (
         <div
             className={`flex items-center justify-between p-4 border-t border-grey-darker`}
@@ -14,7 +14,7 @@ export const FiltersFooter = () => {
             <button
                 onClick={() => {
                     setShowFilterPanel(false);
-                    resetAll();
+                    // resetAll();
                 }}
                 className={`text-grey-200 px-4 py-2 inline-block rounded-md font-semibold text-center`}
             >

@@ -59,17 +59,17 @@ class HomeController extends Controller
 
         ray($events);
 
+        $eventTypes = EventType::query()->active();
+
         return inertia('HomePage', [
             'filters' => Request::all(['sex', 'type_group', 'types', 'start_date', 'end_date']),
             'events' => $events,
-            'allEventTypes' => EventType::query()->active()->get(),
-            'experienceTypes' => EventType::query()->slug('%experience%')->active()->get(),
-            'retreatTypes' => EventType::query()
-                ->slug('%retreat%')
-                ->slugOr('%school%')
-                ->active()
-                ->get(),
-            'fireTypes' => EventType::query()->slug('%fire%')->active()->get(),
+//            'allEventTypes' => $eventTypes->get(),
+//            'experienceTypes' => $eventTypes->slug('%experience%')->get(),
+//            'retreatTypes' => $eventTypes->slug('%retreat%')
+//                ->slugOr('%school%')
+//                ->get(),
+//            'fireTypes' => $eventTypes->slug('%fire%')->active()->get(),
         ]);
     }
 }
