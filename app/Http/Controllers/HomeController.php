@@ -44,22 +44,23 @@ class HomeController extends Controller
             ->when(request('sex'), function ($query, $sex) {
                 return $query->where('sex', $sex);
             })
-            ->when(request('type_group'), function ($query, $typeGroup) {
-                return $query->where('type_group', $typeGroup);
+            ->when(request('group_type'), function ($query, $groupType) {
+                return $query->where('group_type', $groupType);
             })
-            ->when(request('types'), function ($query, $types) {
+            ->when(request('event_types'), function ($query, $types) {
                 return $query->whereIn('event_type_id', $types);
             })
-            ->when(request('start_date'), function ($query, $startDate) {
-                return $query->where('start_date', '>=', $startDate);
-            })
-            ->when(request('end_date'), function ($query, $endDate) {
-                return $query->where('start_date', '<=', $endDate);
-            })
+//            ->when(request('start_date'), function ($query, $startDate) {
+//                return $query->where('start_date', '>=', $startDate);
+//            })
+//            ->when(request('end_date'), function ($query, $endDate) {
+//                return $query->where('start_date', '<=', $endDate);
+//            })
             ->get();
+        ray(request()->all());
 
         return inertia('HomePage', [
-            'filters' => Request::all(['sex', 'type_group', 'types', 'start_date', 'end_date']),
+            'filters' => Request::all(['sex', 'group_type', 'event_types']),
             'events' => $events,
             'eventTypes' => EventTypeResource::collection(EventType::query()->active()->get()),
         ]);

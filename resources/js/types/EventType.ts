@@ -24,4 +24,5 @@ export type EventType = {
     video_link?: string;
     updated_at: string;
     event_guide_pages?: any;
+    group_type: string;
 };

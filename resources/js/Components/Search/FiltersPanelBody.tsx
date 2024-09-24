@@ -2,8 +2,8 @@ import React from "react";
 
 import { DateFilters } from "@/Components/API/Filters/DateFilters";
 import { InputLabel } from "@/Components/Forms/InputLabel";
+import { InertiaEventTypesFilter } from "@/Components/InertiaEventTypesFilter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
-import { InertiaTypesFilter } from "@/Components/InertiaTypesFilter";
 
 export const FiltersPanelBody = () => {
     return (
@@ -21,7 +21,7 @@ export const FiltersPanelBody = () => {
                 <DateFilters />
                 <div className={`space-y-4`}>
                     <InputLabel>Event Types</InputLabel>
-                    <InertiaTypesFilter />
+                    <InertiaEventTypesFilter />
                 </div>
             </div>
         </div>

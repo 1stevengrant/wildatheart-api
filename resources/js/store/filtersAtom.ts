@@ -33,12 +33,16 @@ const endDateStringState = atom({
     default: <string>"",
 });
 
-const filterState = atom({
-    key: "FilterState",
+const filterState = atom<{
+    sex: string;
+    group_type: string;
+    event_types: number[];
+}>({
+    key: "filterState",
     default: {
         sex: "",
-        type_group: "",
-        types: [],
+        group_type: "",
+        event_types: [],
     },
 });
 

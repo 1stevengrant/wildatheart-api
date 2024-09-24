@@ -4,39 +4,16 @@ import { router, usePage } from "@inertiajs/react";
 import pickBy from "lodash/pickBy";
 import { useRecoilState } from "recoil";
 
+import { InertiaToggleGroupType } from "@/Components/InertiaToggleGroupType";
 import { InertiaToggleSex } from "@/Components/InertiaToggleSex";
-import { InertiaToggleTypeGroups } from "@/Components/InertiaToggleTypeGroups";
 import { ToggleFilterPanelButton } from "@/Components/Search/ToggleFilterPanelButton";
 import { eventsListState } from "@/store/eventsAtom";
 import { filterState } from "@/store/filtersAtom";
+import { useFilterState } from "@/Hooks/useFilterState";
 
 export const QuickFilters = () => {
     const [events] = useRecoilState(eventsListState);
-    const { filters } = usePage<{
-        filters: { sex?: string; type_group?: string };
-    }>().props;
-
-    const [filtersFromBackend] = useState({
-        sex: filters.sex || "",
-        type_group: filters.type_group || "",
-    });
-
-    const [recoilFilters, setRecoilFilters] = useRecoilState(filterState);
-
-    useEffect(() => {
-        setRecoilFilters(filtersFromBackend);
-    }, [filtersFromBackend, setRecoilFilters]);
-
-    useEffect(() => {
-        const query = pickBy(recoilFilters);
-
-        router.get(route("home"), query, {
-            replace: true,
-            preserveState: true,
-        });
-    }, [recoilFilters]);
-
-    const resetFilters = () => setRecoilFilters({ sex: "", type_group: "" });
+    const { recoilFilters, resetFilters } = useFilterState();
     return (
         <div className="sticky top-0">
             <ToggleFilterPanelButton />
@@ -44,7 +21,7 @@ export const QuickFilters = () => {
                 className={`border-b border-grey-darker py-2 md:py-6 md:px-4 rounded-b-lg`}
             >
                 <div className={`flex items-center justify-center`}>
-                    <InertiaToggleTypeGroups />
+                    <InertiaToggleGroupType />
                     <InertiaToggleSex />
                     <button
                         onClick={resetFilters}

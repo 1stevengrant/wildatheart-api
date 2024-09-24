@@ -2,29 +2,29 @@ import { useRecoilState } from "recoil";
 
 import { filterState } from "@/store/filtersAtom";
 
-export const InertiaToggleTypeGroups = () => {
+export const InertiaToggleGroupType = () => {
     const [filters, setFilters] = useRecoilState(filterState); // Use Recoil state
 
-    const typeGroups = [
+    const groupTypes = [
         { value: "retreat", label: "Retreat", bgClass: "bg-blue-500" },
         { value: "experience", label: "Experience", bgClass: "bg-green-500" },
         { value: "fire", label: "Fire", bgClass: "bg-red-500" },
     ];
 
-    const handleTypeGroupClick = (type_group: string) => {
+    const handleTypeGroupClick = (group_type: string) => {
         setFilters((prev) => ({
             ...prev,
-            type_group: prev.type_group === type_group ? "" : type_group, // toggle logic
+            group_type: prev.group_type === group_type ? "" : group_type, // toggle logic
         }));
     };
 
     return (
         <div className="flex items-center">
-            {typeGroups.map(({ value, label, bgClass }) => (
+            {groupTypes.map(({ value, label, bgClass }) => (
                 <button
                     key={value}
                     onClick={() => handleTypeGroupClick(value)}
-                    className={`px-4 py-2 ${filters.type_group === value ? `${bgClass} text-white` : "bg-gray-200"}`}
+                    className={`px-4 py-2 ${filters.group_type === value ? `${bgClass} text-white` : "bg-gray-200"}`}
                 >
                     {label}
                 </button>
