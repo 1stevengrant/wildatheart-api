@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EventTypeResource;
 use App\Models\Event;
 use App\Models\EventType;
 use Artesaos\SEOTools\Facades\JsonLd;
@@ -57,19 +58,10 @@ class HomeController extends Controller
             })
             ->get();
 
-        ray($events);
-
-        $eventTypes = EventType::query()->active();
-
         return inertia('HomePage', [
             'filters' => Request::all(['sex', 'type_group', 'types', 'start_date', 'end_date']),
             'events' => $events,
-//            'allEventTypes' => $eventTypes->get(),
-//            'experienceTypes' => $eventTypes->slug('%experience%')->get(),
-//            'retreatTypes' => $eventTypes->slug('%retreat%')
-//                ->slugOr('%school%')
-//                ->get(),
-//            'fireTypes' => $eventTypes->slug('%fire%')->active()->get(),
+            'eventTypes' => EventTypeResource::collection(EventType::query()->active()->get()),
         ]);
     }
 }

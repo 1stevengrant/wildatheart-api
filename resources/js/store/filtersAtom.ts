@@ -38,6 +38,7 @@ const filterState = atom({
     default: {
         sex: "",
         type_group: "",
+        types: [],
     },
 });
 
