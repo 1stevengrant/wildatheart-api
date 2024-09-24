@@ -4,6 +4,9 @@ use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
+use App\Http\Controllers\API\PageController;
+use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
+use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\UserController;
@@ -31,11 +34,17 @@ Route::get('users', UserController::class);
 Route::prefix('v1')->group(function () {
     Route::name('v1.')->group(function () {
         Route::get('stats', StatsController::class)->name('stats');
+        Route::prefix('content')->group(function () {
+            Route::name('content.')->group(function () {
+                Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
+            });
+        });
     });
 });
 
 Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
+        Route::get('/page/{slug}', [PageController::class, 'getPageBySlug'])->name('pages.bySlug');
         Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
         Route::get('/media-by-series-id/{slug}', [MediaItemDataController::class, 'mediaBySeriesId'])->name('media.bySeriesId');
         Route::get('/media/redirects', [MediaItemDataController::class, 'getRedirects'])->name('media.getRedirects');
@@ -44,6 +53,17 @@ Route::prefix('content')->group(function () {
         Route::get('/subsplash-media/{slug}', [MediaItemDataController::class, 'subsplashMedia'])->name('media.show');
         Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
+        Route::prefix('v1')->group(function () {
+            Route::name('v1.')->group(function () {
+                Route::get('openapi.json', function () {
+                    return response()->json(
+                        json_decode(file_get_contents(base_path('public/openapi.json')))
+                    );
+                })->name('openapi.json');
+                Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
+                Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
+            });
+        });
     });
 });
 
