@@ -74,6 +74,24 @@ tabs:
               default: men
               type: radio
               display: Sex
+          -
+            handle: group_type
+            field:
+              options:
+                -
+                  key: fire
+                  value: Fire
+                -
+                  key: experience
+                  value: Experience
+                -
+                  key: retreat
+                  value: Retreat
+              type: radio
+              display: 'Group Type'
+              validate:
+                - required
+                - string
   media:
     display: Media
     sections:
