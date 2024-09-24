@@ -17,17 +17,99 @@ fields:
       collections:
         - media_series
       type: entries
-      display: 'Media Series'
+      display: 'Media Series (DEPRECATED)'
   -
     handle: media_items
     field:
       collections:
         - media_item
       type: entries
-      display: 'Media Items'
+      display: 'Media Items (DEPRECATED)'
   -
     handle: focused_item
     field:
       type: integer
       display: 'Focused Item'
       instructions: 'Enter the integer of the item you would like the slider to start on.'
+  -
+    handle: slides
+    field:
+      type: replicator
+      display: Slides
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            series:
+              display: Series
+              instructions: "Adds a specific series to the list. Good for creating a list of series that don't fit into a taxonomy."
+              fields:
+                -
+                  handle: series
+                  field:
+                    collections:
+                      - media_series
+                    type: entries
+                    display: Series
+                    instructions: "Adds a specific series to the list. Good for creating a list of series that don't fit into a taxonomy."
+            media_items_from_series:
+              display: 'Media Items From Series'
+              instructions: 'Adds all media items that are from a particular series.'
+              fields:
+                -
+                  handle: media_items_from_series
+                  field:
+                    collections:
+                      - media_series
+                    type: entries
+                    display: 'Media Items From Series'
+                    instructions: 'Adds all media items from a chosen series.'
+                    max_items: 1
+            media_item:
+              display: 'Media Item'
+              instructions: "Adds a specific media item to the slider. Good for one off additions that aren't in a series."
+              fields:
+                -
+                  handle: media_item
+                  field:
+                    collections:
+                      - media_item
+                    type: entries
+                    display: 'Media Item'
+            custom_slide:
+              display: 'Custom Slide'
+              fields:
+                -
+                  import: custom_slide
+            content_in_taxonomy:
+              display: 'Content in Taxonomy'
+              instructions: 'Renders all content from a chosen taxonomy.'
+              fields:
+                -
+                  handle: content_by_topic
+                  field:
+                    taxonomies:
+                      - topics
+                    type: terms
+                    display: 'Content by Topic'
+                -
+                  handle: collections_to_load_from
+                  field:
+                    type: collections
+                    display: 'Collections to load from'
+                    instructions: 'If not set, content from all collections that matches the selected taxonomy will be used.'
+                -
+                  handle: limit
+                  field:
+                    type: integer
+                    display: Limit
+                    instructions: 'Limit the number of items returned to the slider.'
+            subsplash_list_id:
+              display: 'Subsplash List Id'
+              fields:
+                -
+                  handle: subsplash_list_id
+                  field:
+                    type: text
+                    display: 'Subsplash List ID'
+                    instructions: 'Enter the ID of a Subsplash list you want to load items from.'
