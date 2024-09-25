@@ -4,7 +4,6 @@ use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
-use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\SubsplashController;
@@ -39,7 +38,6 @@ Route::prefix('v1')->group(function () {
 
 Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
-        Route::get('/page/{slug}', [PageController::class, 'getPageBySlug'])->name('pages.bySlug');
         Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
         Route::get('/media-by-series-id/{slug}', [MediaItemDataController::class, 'mediaBySeriesId'])->name('media.bySeriesId');
         Route::get('/media/redirects', [MediaItemDataController::class, 'getRedirects'])->name('media.getRedirects');
