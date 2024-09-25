@@ -33,7 +33,7 @@ export const MainHeader = () => {
                 </a>
                 <Link
                     className={`ml-4 border-b-2 pb-2 ${url?.includes("home") ? `border-white` : `border-transparent`}`}
-                    href={"/"}
+                    href={route("home")}
                 >
                     Events
                 </Link>
