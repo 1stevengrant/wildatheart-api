@@ -6,6 +6,7 @@ use App\DataTypeObjects\PageData;
 use App\Http\Controllers\Controller;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
+use App\Services\ImageBuilderService;
 use App\Services\SubsplashService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -70,20 +71,12 @@ class PageEntryController extends Controller
         $blockBuilder = new BlockBuilderService();
 
         $response['blocks'] = $blockBuilder->build($page->blocks);
-        $response['images'] = $this->imagesBuilder($page->images);
+
+        $imageBuilder = new ImageBuilderService();
+
+        $response['images'] = $imageBuilder->build($page->images);
 
 
         return PageData::from($response);
-
-        return response()->json($response);
-    }
-
-    public function imagesBuilder($images)
-    {
-        return $images;
-
-        return array_map(function ($image) {
-            return $image->toArray();
-        }, $images);
     }
 }

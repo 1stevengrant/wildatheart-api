@@ -150,6 +150,15 @@ class BlockBuilderService
                 'trim_description_bool' => false,
                 'href' => $mediaItem->uri,
                 'is_coming_soon' => $mediaItem->date > Carbon::now(),
+                'right_cta' => ButtonProps::from([
+                    "text" => "Play {$mediaItem->media_type}",
+                    "href" => $mediaItem->uri,
+                    "variant" => "cta",
+                    "leftIcon" => IconProps::from([
+                        "name" => "play",
+                    ]),
+                    "rightIcon" => IconProps::from([]),
+                ]),
             ]);
         }
 

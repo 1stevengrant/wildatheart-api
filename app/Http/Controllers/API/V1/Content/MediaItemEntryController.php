@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
+use App\DataTypeObjects\MediaItemData;
+use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\Controller;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
+use App\Services\ImageBuilderService;
 use App\Services\SubsplashService;
 use Carbon\Carbon;
 use Facades\Statamic\CP\LivePreview;
@@ -45,6 +48,11 @@ class MediaItemEntryController extends Controller
             return response()->json(['error' => 'Media not found'], 404);
         }
 
+        // Adding this as workaround until I can refactor into a service
+        if ($mediaItem->blueprint->handle === 'subsplash_media_item') {
+            return app(MediaItemDataController::class)->buildSubsplashMediaItemResponse($mediaItem);
+        }
+
         $entryBuilder = new EntryBuilderService();
 
         $response = $entryBuilder->buildResponseFromEntry($mediaItem);
@@ -58,10 +66,15 @@ class MediaItemEntryController extends Controller
         // $mediaItem = $mediaItem->toArray();
         $response['mediaItems'] = $mediaItemsInSeries->toArray();
 
-        $blockBuilder = new BlockBuilderService();
+        if (isset($mediaItem->blocks)) {
+            $blockBuilder = new BlockBuilderService();
+            $response['blocks'] = $blockBuilder->build($mediaItem->blocks);
+        }
 
-        $response['blocks'] = $blockBuilder->build($mediaItem->blocks);
+        $imageBuilder = new ImageBuilderService();
 
-        return response()->json($response);
+        $response['images'] = $imageBuilder->build($mediaItem->images);
+
+        return MediaItemData::from($response);
     }
 }
