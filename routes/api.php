@@ -48,16 +48,14 @@ Route::prefix('content')->group(function () {
         Route::get('/subsplash-media/{slug}', [MediaItemDataController::class, 'subsplashMedia'])->name('media.show');
         Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
-        Route::prefix('v1')->group(function () {
-            Route::name('v1.')->group(function () {
-                Route::get('openapi.json', function () {
-                    return response()->json(
-                        json_decode(file_get_contents(base_path('public/openapi.json')))
-                    );
-                })->name('openapi.json');
-                Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
-                Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
-            });
+        Route::prefix('v1')->name('v1.')->group(function () {
+            Route::get('openapi.json', function () {
+                return response()->json(
+                    json_decode(file_get_contents(base_path('public/openapi.json')))
+                );
+            })->name('openapi.json');
+            Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
+            Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
         });
     });
 });
