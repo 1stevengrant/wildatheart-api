@@ -19,6 +19,18 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
+        $this->setSEOMetaData();
+
+
+        return inertia('HomePage', [
+            'filters' => Request::all(['sex', 'group_type', 'event_types']),
+            'events' => $this->getEvents(),
+            'eventTypes' => $this->getEventTypes(),
+        ]);
+    }
+
+    private function setSEOMetaData()
+    {
         $image = url('img/opengraph.png');
         $title = 'Home - Wild at Heart Fires';
         $url = url()->current();
@@ -40,7 +52,10 @@ class HomeController extends Controller
             ->setUrl($url);
 
         JsonLd::generate();
+    }
 
+    private function getEvents()
+    {
         $events = Event::query()->approved()->active()
             ->when(request('sex'), function ($query, $sex) {
                 return $query->where('sex', $sex);
@@ -60,13 +75,14 @@ class HomeController extends Controller
             ->with(['eventType', 'user'])
             ->orderBy('start_date', 'asc')
             ->get();
-        $events = EventAPIResource::collection($events);
-        ray($events);
+        return EventAPIResource::collection($events);
+    }
 
-        return inertia('HomePage', [
-            'filters' => Request::all(['sex', 'group_type', 'event_types']),
-            'events' => $events,
-            'eventTypes' => EventTypeResource::collection(EventType::query()->active()->get()),
-        ]);
+    private function getEventTypes()
+    {
+        return cache()->remember('active_event_types', now()->addMinutes(30), function () {
+            return EventTypeResource::collection(EventType::query()->active()->get());
+        });
+
     }
 }
