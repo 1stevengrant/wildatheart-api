@@ -40,7 +40,7 @@ class MediaItemEntryController extends Controller
                 ->where('collection', 'media_item')
                 ->where('slug', $slug)
                 ->where('published', true)
-                ->where('date', '<=', Carbon::now())
+                ->where('date', '<=', now())
                 ->first();
         }
 

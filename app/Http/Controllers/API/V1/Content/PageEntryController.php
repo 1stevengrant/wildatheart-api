@@ -54,6 +54,7 @@ class PageEntryController extends Controller
                 ->where('collection', 'pages')
                 ->where('slug', $slug)
                 ->where('published', true)
+                ->where('date', '<=', now())
                 ->first();
         }
 
