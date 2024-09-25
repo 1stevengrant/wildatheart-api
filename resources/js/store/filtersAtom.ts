@@ -1,35 +1,35 @@
 import { atom } from "recoil";
 
 const typeGroupState = atom({
-    key: "TypeGroupState",
+    key: "TypeGroup",
     default: <string>"",
 });
 const typesState = atom<number[]>({
-    key: "TypesState",
+    key: "Types",
     default: [],
 });
 const sexState = atom({
-    key: "SexState",
+    key: "Sex",
     default: <string>"",
 });
 const radiusState = atom({
-    key: "RadiusState",
+    key: "Radius",
     default: <number>100,
 });
 const startDateState = atom({
-    key: "StartDateState",
+    key: "StartDate",
     default: <Date | null>null,
 });
 const endDateState = atom({
-    key: "EndDateState",
+    key: "EndDate",
     default: <Date | null>null,
 });
 const startDateStringState = atom({
-    key: "StartDateStringState",
+    key: "StartDateString",
     default: <string>"",
 });
 const endDateStringState = atom({
-    key: "EndDateStringState",
+    key: "EndDateString",
     default: <string>"",
 });
 
@@ -37,12 +37,16 @@ const filterState = atom<{
     sex: string;
     group_type: string;
     event_types: number[];
+    start_date: string;
+    end_date: string;
 }>({
-    key: "filterState",
+    key: "Filter",
     default: {
         sex: "",
         group_type: "",
         event_types: [],
+        start_date: "",
+        end_date: "",
     },
 });
 

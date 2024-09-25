@@ -3,6 +3,8 @@ import React from "react";
 import { DateFilters } from "@/Components/API/Filters/DateFilters";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { InertiaEventTypesFilter } from "@/Components/InertiaEventTypesFilter";
+import { InertiaToggleGroupType } from "@/Components/InertiaToggleGroupType";
+import { InertiaToggleSex } from "@/Components/InertiaToggleSex";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 
 export const FiltersPanelBody = () => {
@@ -11,8 +13,8 @@ export const FiltersPanelBody = () => {
             <div className={`mt-2`}>
                 <InputLabel>Quick Filters</InputLabel>
                 <div className={`flex items-center justify-center space-x-4`}>
-                    {/*<ToggleTypeGroups />*/}
-                    {/*<ToggleSex />*/}
+                    <InertiaToggleGroupType />
+                    <InertiaToggleSex />
                 </div>
             </div>
 

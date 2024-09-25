@@ -1,42 +1,27 @@
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
+import { useRecoilState } from "recoil";
 
-import { useDates } from "@/Hooks/useDates";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
+import { filterState } from "@/store/filtersAtom";
 
 export const DateFilters = () => {
-    const { maxDate } = useDates();
-    const {
-        startDate,
-        setStartDate,
-        setStartDateString,
-        endDate,
-        setEndDate,
-        setEndDateString,
-        resetAllDates,
-    } = useDates();
-
+    const [filters, setFilters] = useRecoilState(filterState);
     const { setPopupInfo } = usePopupInfo();
-
-    const handleDateChange = (value: Date | null, type = "start") => {
+    const handleStartDateChange = (value: Date | null) => {
         setPopupInfo(null);
-        if (type === "start") {
-            setStartDate(value);
+        setFilters((prev) => ({
+            ...prev,
+            start_date: value ? dayjs(value).format("YYYY-MM-DD") : "",
+        }));
+    };
 
-            if (value) {
-                setStartDateString(value.toISOString().split("T")[0]);
-            } else {
-                resetAllDates();
-            }
-        } else {
-            setEndDate(value);
-            if (value) {
-                setEndDateString(value.toISOString().split("T")[0]);
-            } else {
-                setEndDateString("");
-                setEndDate(null);
-            }
-        }
+    const handleEndDateChange = (value: Date | null) => {
+        setPopupInfo(null);
+        setFilters((prev) => ({
+            ...prev,
+            end_date: value ? dayjs(value).format("YYYY-MM-DD") : "",
+        }));
     };
 
     return (
@@ -46,22 +31,28 @@ export const DateFilters = () => {
                     label="Start date"
                     placeholder="Select start date"
                     minDate={new Date()}
-                    value={startDate}
-                    maxDate={maxDate}
+                    value={
+                        filters.start_date ? new Date(filters.start_date) : null
+                    }
+                    maxDate={new Date(2100, 11, 31)}
                     clearable
-                    onChange={(value) => handleDateChange(value)}
+                    onChange={handleStartDateChange}
                 />
             </div>
             <div>
-                {startDate && (
+                {filters.start_date && (
                     <DatePickerInput
                         label="End date"
                         placeholder="Select end date"
-                        minDate={dayjs(startDate).add(1, "day").toDate()}
-                        value={endDate}
-                        maxDate={maxDate}
+                        minDate={dayjs(filters.start_date)
+                            .add(1, "day")
+                            .toDate()}
+                        value={
+                            filters.end_date ? new Date(filters.end_date) : null
+                        }
+                        maxDate={new Date(2100, 11, 31)}
                         clearable
-                        onChange={(value) => handleDateChange(value, "end")}
+                        onChange={handleEndDateChange}
                     />
                 )}
             </div>

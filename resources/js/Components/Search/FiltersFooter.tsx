@@ -1,7 +1,6 @@
 import { useSetRecoilState } from "recoil";
 
 import { EventCount } from "@/Components/API/EventCount";
-import { useSearchEvents } from "@/Hooks/useSearchEvents";
 import { showFilterPanelState } from "@/store";
 
 export const FiltersFooter = () => {

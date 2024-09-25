@@ -12,9 +12,7 @@ import {
     retreatTypeGroup,
 } from "@/helpers/eventTypeGroups";
 import { imageGenerator } from "@/helpers/user";
-import { Event } from "@/types/Event";
-
-export const MobileEventListCard = ({ event }: { event: Event }) => {
+export const MobileEventListCard = ({ event }: { event: any }) => {
     return (
         <li className={`border border-grey-darker rounded-lg p-4`}>
             <Link className={`flex space-x-4`} href={event.url}>
@@ -54,11 +52,12 @@ export const MobileEventListCard = ({ event }: { event: Event }) => {
                             {event?.host_photo ? (
                                 <UserAvatar image={event.host_photo} />
                             ) : (
-                                <FallbackAvatar
-                                    size={30}
-                                    name={event.hostObject.full_name}
-                                    md5email={event.hostObject.md5email}
-                                />
+                                // <FallbackAvatar
+                                //     size={30}
+                                //     name={event.hostObject.full_name}
+                                //     md5email={event.hostObject.md5email}
+                                // />
+                                <img src="" alt="" />
                             )}
                         </>
                         <div

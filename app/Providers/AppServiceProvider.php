@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         Event::saving(function (Event $event): void {
             $event->load('host', 'eventType');
         });
+
+        //        Model::preventLazyLoading(! app()->isProduction());
 
         Gate::define('viewPulse', function ($user) {
             return $user->hasRole(User::ROLE_ADMIN);

@@ -1,22 +1,24 @@
 import React from "react";
-
-import { usePage } from "@inertiajs/react";
-import Tippy from "@tippyjs/react/headless";
 import { Marker } from "react-map-gl";
-import { useRecoilState } from "recoil";
-
-import { EventCard } from "@/Components/Events/EventCard";
 import { EventMarkerButton } from "@/Components/Events/EventMarkerButton";
+import { useEventList } from "@/Hooks/useEventList";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
-import { eventsListState } from "@/store/eventsAtom";
-import { Event } from "@/types/Event";
 
 export const EventList = () => {
     const { setPopupInfo } = usePopupInfo();
-    const props = usePage().props;
+    const { data } = useEventList();
+
     return (
         <>
-
+            {data.map((event) => (
+                <Marker
+                    key={event.id}
+                    longitude={event.longitude}
+                    latitude={event.latitude}
+                >
+                    {event.name}
+                </Marker>
+            ))}
         </>
     );
 };

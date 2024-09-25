@@ -5,23 +5,22 @@ import { NoSearchResults } from "@/Components/NoSearchResults";
 import { FiltersPanel } from "@/Components/Search/FiltersPanel";
 import { QuickFilters } from "@/Components/Search/QuickFilters";
 import { isSelectedEvent } from "@/helpers/isSelectedEvent";
+import { useEventList } from "@/Hooks/useEventList";
 import { currentEventState, showFilterPanelState } from "@/store";
-import { eventsListState } from "@/store/eventsAtom";
-import { Event } from "@/types/Event";
 
 export const SearchSidebar = () => {
-    const [events] = useRecoilState(eventsListState);
-    const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
+    const { data } = useEventList();
     const [showFilterPanel] = useRecoilState(showFilterPanelState);
+    const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
     return (
         <aside className="relative flex flex-col rounded-b-2xl bg-black md:w-[557px]">
             {showFilterPanel ? <FiltersPanel /> : <QuickFilters />}
             {!showFilterPanel && (
                 <div className="flex-1 overflow-y-auto px-4">
-                    {events.length === 0 ? (
+                    {data.length === 0 ? (
                         <NoSearchResults />
                     ) : (
-                        events.map((event: Event) => (
+                        data.map((event: any) => (
                             <EventResult
                                 event={event}
                                 key={event.id}

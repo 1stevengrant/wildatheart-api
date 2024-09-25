@@ -17,7 +17,7 @@ class EventTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'group_type' => $this->group_type
+            'group_type' => $this->group_type,
         ];
     }
 }

@@ -11,6 +11,7 @@ use App\Traits\Event\EventScopeTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravolt\Avatar\Facade as Avatar;
 
 class Event extends BaseModel
 {
@@ -94,16 +95,7 @@ class Event extends BaseModel
             ]);
         }
 
-        return asset('svgs/user.svg');
-    }
-
-    public function hostAvatar(): ?string
-    {
-        if ($this->host->image) {
-            return $this->host->image;
-        }
-
-        return null;
+        return Avatar::create($this->host->full_name)->toBase64();
     }
 
     public function allAttendeeEmails(): string

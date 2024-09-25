@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\API\EventAPIResource;
 use App\Http\Resources\EventTypeResource;
 use App\Models\Event;
 use App\Models\EventType;
@@ -45,19 +46,22 @@ class HomeController extends Controller
                 return $query->where('sex', $sex);
             })
             ->when(request('group_type'), function ($query, $groupType) {
-                return $query->where('group_type', $groupType);
+                return $query->where('type_group', $groupType);
             })
             ->when(request('event_types'), function ($query, $types) {
                 return $query->whereIn('event_type_id', $types);
             })
-//            ->when(request('start_date'), function ($query, $startDate) {
-//                return $query->where('start_date', '>=', $startDate);
-//            })
-//            ->when(request('end_date'), function ($query, $endDate) {
-//                return $query->where('start_date', '<=', $endDate);
-//            })
+            ->when(request('start_date'), function ($query, $startDate) {
+                return $query->where('start_date', '>=', $startDate);
+            })
+            ->when(request('end_date'), function ($query, $endDate) {
+                return $query->where('start_date', '<=', $endDate);
+            })
+            ->with(['eventType', 'user'])
+            ->orderBy('start_date', 'asc')
             ->get();
-        ray(request()->all());
+        $events = EventAPIResource::collection($events);
+        ray($events);
 
         return inertia('HomePage', [
             'filters' => Request::all(['sex', 'group_type', 'event_types']),

@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/Forms/SwitchComponentWrapper";
+import { useFilterState } from "@/Hooks/useFilterState";
 import { filterState } from "@/store/filtersAtom";
 import { PaginatedData } from "@/types";
 import { EventType } from "@/types/EventType";
@@ -14,6 +15,7 @@ interface EventTypeGroup {
 }
 
 export const InertiaEventTypesFilter = () => {
+    useFilterState();
     const [filters, setFilters] = useRecoilState(filterState);
     const { eventTypes } = usePage<{
         eventTypes: PaginatedData<EventType>;
@@ -34,8 +36,8 @@ export const InertiaEventTypesFilter = () => {
     const eventTypeGroups: EventTypeGroup = data.reduce(
         (acc: EventTypeGroup, eventType: EventType) => {
             const { group_type, id, name } = eventType;
-            if (!acc[group_type]) acc[group_type] = []; // Initialize array for the group_type if not present
-            acc[group_type].push({ id, name }); // Push event type into the appropriate group
+            if (!acc[group_type]) acc[group_type] = [];
+            acc[group_type].push({ id, name });
             return acc;
         },
         {} as EventTypeGroup
