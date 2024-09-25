@@ -7,14 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
 use App\Services\ImageBuilderService;
-use App\Services\SubsplashService;
-use Carbon\Carbon;
-use Illuminate\Support\Collection;
-use Rector\CodeQuality\Rector\Identical\GetClassToInstanceOfRector;
-use Spatie\LaravelData\Data;
+use Facades\Statamic\CP\LivePreview;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Token;
-use Facades\Statamic\CP\LivePreview;
 
 /**
  * @group Page Entity Retrieval
@@ -25,11 +20,10 @@ class PageEntryController extends Controller
 {
     /**
      * getPageBySlug
-     * 
+     *
      * Get a page using its slug
-     * 
+     *
      * @urlParam slug string required The slug of the page. Example: media
-     * 
      */
     public function getPageBySlug(string $slug)
     {
@@ -58,25 +52,21 @@ class PageEntryController extends Controller
                 ->first();
         }
 
-
-
-
-        if (!$page) {
+        if (! $page) {
             return response()->json(['error' => 'Page not found'], 404);
         }
 
-        $entryBuilder = new EntryBuilderService();
+        $entryBuilder = new EntryBuilderService;
 
         $response = $entryBuilder->buildResponseFromEntry($page);
 
-        $blockBuilder = new BlockBuilderService();
+        $blockBuilder = new BlockBuilderService;
 
         $response['blocks'] = $blockBuilder->build($page->blocks);
 
-        $imageBuilder = new ImageBuilderService();
+        $imageBuilder = new ImageBuilderService;
 
         $response['images'] = $imageBuilder->build($page->images);
-
 
         return PageData::from($response);
     }

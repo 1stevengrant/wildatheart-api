@@ -51,21 +51,20 @@ class BlockBuilderService
     public function processMediaSliderBlock($block)
     {
 
-
         $processedBlock = $block->toArray();
-        $processedBlock["slides"] = [];
+        $processedBlock['slides'] = [];
 
         foreach ($block->slides as $slide) {
             if ($slide->type === 'subsplash_list_id') {
                 $subsplashSlides = $this->buildSubsplashSlide($slide);
-                $processedBlock["slides"] = array_merge($processedBlock["slides"], $subsplashSlides->slides);
-            } else if ($slide->type === 'media_items_from_series') {
+                $processedBlock['slides'] = array_merge($processedBlock['slides'], $subsplashSlides->slides);
+            } elseif ($slide->type === 'media_items_from_series') {
                 $mediaItemSlides = $this->buildMediaItemsFromSeriesSlide($slide);
-                $processedBlock["slides"] = array_merge($processedBlock["slides"], $mediaItemSlides->slides);
-            } else if ($slide->type === 'custom_slide') {
-                $processedBlock["slides"][] = $this->buildCustomSlide($slide);
+                $processedBlock['slides'] = array_merge($processedBlock['slides'], $mediaItemSlides->slides);
+            } elseif ($slide->type === 'custom_slide') {
+                $processedBlock['slides'][] = $this->buildCustomSlide($slide);
             } else {
-                $processedBlock["slides"][] = $slide;
+                $processedBlock['slides'][] = $slide;
             }
         }
         // dd($processedBlock);
@@ -85,38 +84,38 @@ class BlockBuilderService
             'trim_description_bool' => $slide->trim_description_bool,
             'href' => $slide->uri,
             'right_cta' => ButtonProps::from([
-                "text" => $slide->right_cta->text,
-                "href" => $slide->right_cta->href,
-                "variant" => $slide->right_cta->variant,
-                "leftIcon" => IconProps::from([
-                    "name" => $slide->right_cta->left_icon->icon,
-                    "width" => $slide->right_cta->left_icon->width,
-                    "height" => $slide->right_cta->left_icon->height,
+                'text' => $slide->right_cta->text,
+                'href' => $slide->right_cta->href,
+                'variant' => $slide->right_cta->variant,
+                'leftIcon' => IconProps::from([
+                    'name' => $slide->right_cta->left_icon->icon,
+                    'width' => $slide->right_cta->left_icon->width,
+                    'height' => $slide->right_cta->left_icon->height,
                 ]),
-                "rightIcon" => IconProps::from([
-                    "name" => $slide->right_cta->right_icon->icon,
-                    "width" => $slide->right_cta->right_icon->width,
-                    "height" => $slide->right_cta->right_icon->height,
+                'rightIcon' => IconProps::from([
+                    'name' => $slide->right_cta->right_icon->icon,
+                    'width' => $slide->right_cta->right_icon->width,
+                    'height' => $slide->right_cta->right_icon->height,
                 ]),
-                "openInModal" => $slide->right_cta->open_in_modal,
-                "openInNewTab" => $slide->right_cta->open_in_new_tab,
+                'openInModal' => $slide->right_cta->open_in_modal,
+                'openInNewTab' => $slide->right_cta->open_in_new_tab,
             ]),
             'left_cta' => ButtonProps::from([
-                "text" => $slide->left_cta->text,
-                "href" => $slide->left_cta->href,
-                "variant" => $slide->left_cta->variant,
-                "leftIcon" => IconProps::from([
-                    "name" => $slide->left_cta->left_icon->icon,
-                    "width" => $slide->left_cta->left_icon->width,
-                    "height" => $slide->left_cta->left_icon->height,
+                'text' => $slide->left_cta->text,
+                'href' => $slide->left_cta->href,
+                'variant' => $slide->left_cta->variant,
+                'leftIcon' => IconProps::from([
+                    'name' => $slide->left_cta->left_icon->icon,
+                    'width' => $slide->left_cta->left_icon->width,
+                    'height' => $slide->left_cta->left_icon->height,
                 ]),
-                "rightIcon" => IconProps::from([
-                    "name" => $slide->left_cta->right_icon->icon,
-                    "width" => $slide->left_cta->right_icon->width,
-                    "height" => $slide->left_cta->right_icon->height,
+                'rightIcon' => IconProps::from([
+                    'name' => $slide->left_cta->right_icon->icon,
+                    'width' => $slide->left_cta->right_icon->width,
+                    'height' => $slide->left_cta->right_icon->height,
                 ]),
-                "openInModal" => $slide->left_cta->open_in_modal,
-                "openInNewTab" => $slide->left_cta->open_in_new_tab,
+                'openInModal' => $slide->left_cta->open_in_modal,
+                'openInNewTab' => $slide->left_cta->open_in_new_tab,
             ]),
         ]);
 
@@ -125,8 +124,8 @@ class BlockBuilderService
 
     public function buildMediaItemsFromSeriesSlide(&$slide)
     {
-        $mediaItemsFromSeriesSlide = new MediaItemsSlide();
-        if (!isset($slide->media_items_from_series->id)) {
+        $mediaItemsFromSeriesSlide = new MediaItemsSlide;
+        if (! isset($slide->media_items_from_series->id)) {
             return $mediaItemsFromSeriesSlide;
         }
 
@@ -151,13 +150,13 @@ class BlockBuilderService
                 'href' => $mediaItem->uri,
                 'is_coming_soon' => $mediaItem->date > Carbon::now(),
                 'right_cta' => ButtonProps::from([
-                    "text" => "Play {$mediaItem->media_type}",
-                    "href" => $mediaItem->date > Carbon::now() ? null : $mediaItem->uri,
-                    "variant" => "cta",
-                    "leftIcon" => IconProps::from([
-                        "name" => "play",
+                    'text' => "Play {$mediaItem->media_type}",
+                    'href' => $mediaItem->date > Carbon::now() ? null : $mediaItem->uri,
+                    'variant' => 'cta',
+                    'leftIcon' => IconProps::from([
+                        'name' => 'play',
                     ]),
-                    "rightIcon" => IconProps::from([]),
+                    'rightIcon' => IconProps::from([]),
                 ]),
             ]);
         }
@@ -167,46 +166,47 @@ class BlockBuilderService
 
     public function buildSubsplashSlide(&$slide): MediaItemsSlide
     {
-        $subsplashListSlide = new MediaItemsSlide();
-        $subsplash = new SubsplashService();
-        $url = "https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=" . $slide->subsplash_list_id;
+        $subsplashListSlide = new MediaItemsSlide;
+        $subsplash = new SubsplashService;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
-        foreach ($subsplashList["_embedded"]["list-rows"] as $item) {
-            $series = $item["_embedded"]["media-series"];
-            $images = $series["_embedded"]["images"];
+        foreach ($subsplashList['_embedded']['list-rows'] as $item) {
+            $series = $item['_embedded']['media-series'];
+            $images = $series['_embedded']['images'];
             $wideImage = collect($images)->firstWhere('type', 'wide');
             $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
 
-            $entry = Entry::find($series["id"]);
+            $entry = Entry::find($series['id']);
 
             // Need to import series if it doesn't exist
-            if (!$entry) {
+            if (! $entry) {
                 continue;
             }
 
             $slide = SlideBlock::from([
-                'id' => $series["id"],
-                'title' => $series["title"],
+                'id' => $series['id'],
+                'title' => $series['title'],
                 'featured_image_src' => $wideImageUrl,
-                'description' => $series["subtitle"],
+                'description' => $series['subtitle'],
                 'variant' => CardVariant::portrait,
                 'href' => $entry->uri,
             ]);
 
             $subsplashListSlide->slides[] = $slide;
         }
+
         return $subsplashListSlide;
     }
 
     public function imageFromCDN(?Asset $image)
     {
-        if (!$image) {
+        if (! $image) {
             return null;
         }
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl . $image->path;
+        return $cdnUrl.$image->path;
     }
 }

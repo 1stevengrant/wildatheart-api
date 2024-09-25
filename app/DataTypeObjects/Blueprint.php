@@ -9,5 +9,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class Blueprint extends Data
 {
     public string $title;
+
     public string $handle;
 }

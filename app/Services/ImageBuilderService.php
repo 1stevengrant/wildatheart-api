@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use Statamic\Entries\Entry;
 use Statamic\Fields\Values;
 
 class ImageBuilderService
 {
     public function build(?Values $images)
     {
-        if (!$images) {
+        if (! $images) {
             return null;
         }
 

@@ -10,18 +10,31 @@ use Statamic\Entries\Entry as EntriesEntry;
 class SlideBlock extends Data
 {
     public $id = null;
+
     public $type = 'slide';
+
     public ?string $title = null;
+
     public ?string $featured_image_src = null;
+
     public ?string $tag = null;
+
     public ?string $leader = null;
+
     public ?string $description = null;
+
     public ?bool $trim_description_bool = null;
+
     public ?string $details = null;
+
     public ?CardVariant $variant = CardVariant::portrait;
+
     public ?ButtonProps $left_cta = null;
+
     public ?ButtonProps $right_cta = null;
+
     public ?string $href = null;
+
     public ?bool $is_coming_soon = null;
 }
 

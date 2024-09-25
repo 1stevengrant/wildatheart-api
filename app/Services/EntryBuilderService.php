@@ -10,7 +10,6 @@ class EntryBuilderService
     {
         $response = $entry->toArray();
 
-
         $propertiesToRemove = [
             'api_url',
             'date',
@@ -23,7 +22,7 @@ class EntryBuilderService
             'updated_at',
             'permalink',
             'origin',
-            'last_modified'
+            'last_modified',
         ];
         foreach ($propertiesToRemove as $property) {
             unset($response[$property]);

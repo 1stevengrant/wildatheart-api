@@ -50,6 +50,7 @@ class MediaItemDataController extends Controller
             ->firstOrFail();
 
         $responseData = $this->buildSubsplashMediaItemResponse($mediaItem);        // Return the view with the merged data
+
         return response()->json($responseData);
     }
 
@@ -220,6 +221,7 @@ class MediaItemDataController extends Controller
                 ];
             }
         }
+
         return $responseData;
     }
 

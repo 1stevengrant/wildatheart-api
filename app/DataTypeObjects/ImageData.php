@@ -9,7 +9,10 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class ImageData extends Data
 {
     public ?string $square = null;
+
     public ?string $wide = null;
+
     public ?string $banner = null;
+
     public ?string $vertical = null;
 }

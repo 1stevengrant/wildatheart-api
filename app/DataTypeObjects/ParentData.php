@@ -9,8 +9,12 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class ParentData extends Data
 {
     public string $id;
+
     public string $title;
+
     public string $url;
+
     public string $permalink;
+
     public string $api_url;
 }

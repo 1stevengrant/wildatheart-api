@@ -8,15 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
 use App\Services\ImageBuilderService;
-use App\Services\SubsplashService;
-use Carbon\Carbon;
 use Facades\Statamic\CP\LivePreview;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Token;
 
 class MediaItemEntryController extends Controller
 {
-
     public function media($slug)
     {
 
@@ -44,7 +41,7 @@ class MediaItemEntryController extends Controller
                 ->first();
         }
 
-        if (!$mediaItem) {
+        if (! $mediaItem) {
             return response()->json(['error' => 'Media not found'], 404);
         }
 
@@ -53,10 +50,9 @@ class MediaItemEntryController extends Controller
             return app(MediaItemDataController::class)->buildSubsplashMediaItemResponse($mediaItem);
         }
 
-        $entryBuilder = new EntryBuilderService();
+        $entryBuilder = new EntryBuilderService;
 
         $response = $entryBuilder->buildResponseFromEntry($mediaItem);
-
 
         $mediaItemsInSeries = Entry::query()
             ->where('collection', 'media_item')
@@ -67,11 +63,11 @@ class MediaItemEntryController extends Controller
         $response['mediaItems'] = $mediaItemsInSeries->toArray();
 
         if (isset($mediaItem->blocks)) {
-            $blockBuilder = new BlockBuilderService();
+            $blockBuilder = new BlockBuilderService;
             $response['blocks'] = $blockBuilder->build($mediaItem->blocks);
         }
 
-        $imageBuilder = new ImageBuilderService();
+        $imageBuilder = new ImageBuilderService;
 
         $response['images'] = $imageBuilder->build($mediaItem->images);
 

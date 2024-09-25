@@ -19,7 +19,6 @@ test('an unauthenticated user cannot post to the host agreement endpoint', funct
         ->assertRedirect(route('login'));
 });
 
-
 test('that it redirects to the intended route after agreeing to the host agreement', function () {
     $user = User::factory()->create();
 
@@ -28,4 +27,3 @@ test('that it redirects to the intended route after agreeing to the host agreeme
         ->post(route('host.agreement.store'))
         ->assertRedirect(route('my.profile'));
 });
-
