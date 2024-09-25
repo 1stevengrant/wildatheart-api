@@ -89,4 +89,14 @@ trait EventAttributesTrait
     {
         return HostResource::make($this->host);
     }
+
+    public function getLongitudeAttribute(): float
+    {
+        return round($this->attributes['longitude'], 2);
+    }
+
+    public function getLatitudeAttribute(): float
+    {
+        return round($this->attributes['latitude'], 2);
+    }
 }
