@@ -117,4 +117,14 @@ trait EventAttributesTrait
     {
         return str_replace(',', '', $this->attributes['city']);
     }
+
+    public function getLongitudeAttribute(): string
+    {
+        return number_format($this->attributes['longitude'], 2);
+    }
+
+    public function getLatitudeAttribute(): string
+    {
+        return number_format($this->attributes['latitude'], 2);
+    }
 }
