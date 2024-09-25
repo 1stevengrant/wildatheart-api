@@ -152,7 +152,7 @@ class BlockBuilderService
                 'is_coming_soon' => $mediaItem->date > Carbon::now(),
                 'right_cta' => ButtonProps::from([
                     "text" => "Play {$mediaItem->media_type}",
-                    "href" => $mediaItem->uri,
+                    "href" => $mediaItem->date > Carbon::now() ? null : $mediaItem->uri,
                     "variant" => "cta",
                     "leftIcon" => IconProps::from([
                         "name" => "play",
