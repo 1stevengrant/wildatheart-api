@@ -34,11 +34,6 @@ Route::get('users', UserController::class);
 Route::prefix('v1')->group(function () {
     Route::name('v1.')->group(function () {
         Route::get('stats', StatsController::class)->name('stats');
-        Route::prefix('content')->group(function () {
-            Route::name('content.')->group(function () {
-                Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
-            });
-        });
     });
 });
 
