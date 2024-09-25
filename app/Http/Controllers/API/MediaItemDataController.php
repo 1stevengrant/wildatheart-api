@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Services\SubsplashService;
 use Carbon\Carbon;
+use Statamic\Eloquent\Entries\UuidEntryModel;
 use Statamic\Entries\Entry;
 
 class MediaItemDataController extends Controller
@@ -47,6 +48,14 @@ class MediaItemDataController extends Controller
             ->where('collection', 'media_item')
             ->where('slug', $slug)
             ->firstOrFail();
+
+        $responseData = $this->buildSubsplashMediaItemResponse($mediaItem);        // Return the view with the merged data
+        return response()->json($responseData);
+    }
+
+    public function buildSubsplashMediaItemResponse(Entry|UuidEntryModel $mediaItem)
+    {
+        $responseData = [];
 
         $responseData['id'] = $mediaItem->id;
         $responseData['slug'] = $mediaItem->slug;
@@ -211,9 +220,7 @@ class MediaItemDataController extends Controller
                 ];
             }
         }
-
-        // Return the view with the merged data
-        return response()->json($responseData);
+        return $responseData;
     }
 
     public function getRedirects()

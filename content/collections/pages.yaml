@@ -8,7 +8,7 @@ sort_dir: desc
 preview_targets:
   -
     label: Local
-    url: 'http://localhost:4321/preview/{id}?preview=true'
-    refresh: false
+    url: '{permalink}'
+    refresh: true
 structure:
   root: true

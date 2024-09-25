@@ -73,5 +73,6 @@ tabs:
               default: now
               validate:
                 - required
+              time_enabled: true
           -
             import: images

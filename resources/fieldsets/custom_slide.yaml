@@ -1,0 +1,66 @@
+title: Slide
+fields:
+  -
+    handle: tag
+    field:
+      type: text
+      display: Tag
+      instructions: 'Appears as a pill in the upper left hand of the card.'
+  -
+    handle: featured_image
+    field:
+      max_files: 1
+      container: s3
+      type: assets
+      display: 'Featured Image'
+      instructions: 'The image you want to show on the card.'
+  -
+    handle: leader
+    field:
+      type: text
+      display: Leader
+      instructions: 'Appears below the image and above the Title.'
+  -
+    handle: title
+    field:
+      type: text
+      display: Title
+  -
+    handle: description
+    field:
+      type: markdown
+      display: Description
+  -
+    handle: trim_description
+    field:
+      type: toggle
+      display: 'Trim Description?'
+      instructions: 'Truncates the description length.'
+  -
+    handle: details
+    field:
+      type: text
+      display: Details
+      instructions: 'Appears below description.'
+  -
+    handle: right_cta
+    field:
+      type: group
+      display: 'Right CTA'
+      fields:
+        -
+          import: button
+  -
+    handle: left_cta
+    field:
+      type: group
+      display: 'Left CTA'
+      fields:
+        -
+          import: button
+  -
+    handle: link
+    field:
+      type: link
+      display: Link
+      instructions: 'Where do you want the user to go when they click on this card?'
