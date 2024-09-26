@@ -72,7 +72,7 @@ class HomeController extends Controller
             ->when(request('end_date'), function ($query, $endDate) {
                 return $query->where('start_date', '<=', $endDate);
             })
-            ->with(['eventType', 'user'])
+            ->with(['eventType', 'host'])
             ->orderBy('start_date', 'asc')
             ->get();
         return EventAPIResource::collection($events);
