@@ -35,6 +35,7 @@ class SearchForEventsController extends Controller
             ->filterBySex($sex)
             ->filterByTypeGroup($typeGroup)
             ->filterByEventTypes($types)
+            ->with(['host', 'eventType'])
             ->orderBy('start_date')
             ->get();
 
