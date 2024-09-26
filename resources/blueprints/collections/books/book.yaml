@@ -47,6 +47,11 @@ tabs:
             handle: topics
             field: content.topics
           -
+            handle: publication_date
+            field:
+              type: date
+              display: 'Publication Date'
+          -
             import: blocks
   sidebar:
     display: Sidebar
