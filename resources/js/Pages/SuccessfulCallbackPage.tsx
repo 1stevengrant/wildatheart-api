@@ -1,6 +1,6 @@
 import React from "react";
 
-import { FireMarker } from "@/Components/Events/FireMarker";
+import { FireMarker } from "@/Components/Icons/FireMarker";
 import { Logo } from "@/Components/Ui/Logo";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 

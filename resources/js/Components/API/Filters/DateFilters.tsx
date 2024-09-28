@@ -18,27 +18,29 @@ export const DateFilters = () => {
 
     const { setPopupInfo } = usePopupInfo();
 
+    const formatDateString = (date: any) => {
+        return dayjs(date).format("YYYY-MM-DD");
+    };
+
     const handleDateChange = (value: Date | null, type = "start") => {
         setPopupInfo(null);
         if (type === "start") {
             setStartDate(value);
-
             if (value) {
-                setStartDateString(value.toISOString().split("T")[0]);
+                setStartDateString(formatDateString(value));
             } else {
                 resetAllDates();
             }
         } else {
             setEndDate(value);
             if (value) {
-                setEndDateString(value.toISOString().split("T")[0]);
+                setEndDateString(formatDateString(value));
             } else {
                 setEndDateString("");
                 setEndDate(null);
             }
         }
     };
-
     return (
         <div className={`flex flex-col space-y-4`}>
             <div>
@@ -58,8 +60,8 @@ export const DateFilters = () => {
                         label="End date"
                         placeholder="Select end date"
                         minDate={dayjs(startDate).add(1, "day").toDate()}
-                        value={endDate}
-                        maxDate={maxDate}
+                        value={endDate ? new Date(endDate) : null}
+                        maxDate={new Date(2100, 11, 31)}
                         clearable
                         onChange={(value) => handleDateChange(value, "end")}
                     />

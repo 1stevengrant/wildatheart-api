@@ -4,7 +4,6 @@ import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
-import dayjs from "dayjs";
 import mapboxgl from "mapbox-gl";
 import Map, {
     GeolocateControl,
@@ -15,12 +14,8 @@ import Map, {
 import { useRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
 import { InputError } from "@/Components/Forms/InputError";
-import { InputLabel } from "@/Components/Forms/InputLabel";
-import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
-import TextInput from "@/Components/Forms/TextInput";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";

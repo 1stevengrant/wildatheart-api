@@ -19,10 +19,10 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
 
     const [currentEvent] = useRecoilState(currentEventState);
     const isActiveEvent =
-        event?.id === currentEvent?.id ? "text-orange" : "text-grey-200";
+        event.id === currentEvent?.id ? "text-orange" : "text-grey-200";
     return (
         <>
-            {event?.type_group === fireTypeGroup && (
+            {event.type_group === fireTypeGroup && (
                 <div className={eventTypeNameClasses}>
                     <div className={`${eventTypeClasses} ${isActiveEvent}`}>
                         Monthly Gathering for Men
@@ -32,17 +32,17 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
                     </EventTypeBadge>
                 </div>
             )}
-            {event?.type_group === retreatTypeGroup && (
+            {event.type_group === retreatTypeGroup && (
                 <div className={eventTypeNameClasses}>
                     <div className={`${eventTypeClasses} ${isActiveEvent}`}>
-                        Multi-Day retreat for{" "}
+                        Multi-Day Retreat for{" "}
                         {event.sex === EVENT_FOR_MEN ? (
                             <span>Men</span>
                         ) : (
                             <span>Women</span>
                         )}
                     </div>
-                    {event?.start_date && (
+                    {event.start_date && (
                         <EventTypeBadge className={`hidden md:inline-flex`}>
                             {dateFormatter(event.start_date, "MMM Do")}
                             {event.end_date &&

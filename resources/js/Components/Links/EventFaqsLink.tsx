@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { Link } from "@inertiajs/react";
 

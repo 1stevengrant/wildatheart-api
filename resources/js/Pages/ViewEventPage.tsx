@@ -7,7 +7,7 @@ import Markdown from "react-markdown";
 import { BackToEvents } from "@/Components/Buttons/BackToEvents";
 import { ConnectWithHost } from "@/Components/Events/Detail/ConnectWithHost";
 import { Date } from "@/Components/Events/Detail/Dates";
-import Host from "@/Components/Events/Detail/Host";
+import { Host } from "@/Components/Events/Detail/Host";
 import { Location } from "@/Components/Events/Detail/Location";
 import { MobileConnect } from "@/Components/Events/Detail/MobileConnect";
 import { PhotoCarousel } from "@/Components/Events/Detail/PhotoCarousel";

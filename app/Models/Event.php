@@ -11,6 +11,7 @@ use App\Traits\Event\EventScopeTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravolt\Avatar\Facade as Avatar;
 
 class Event extends BaseModel
 {
@@ -89,12 +90,10 @@ class Event extends BaseModel
         if ($this->host->image) {
             makeImagePublic($this->host->image);
 
-            return bunnyImage($this->host->image, [
-                'height' => 100,
-            ]);
+            return $this->host->image;
         }
 
-        return asset('svgs/user.svg');
+        return Avatar::create($this->host->full_name)->toBase64();
     }
 
     public function hostAvatar(): ?string

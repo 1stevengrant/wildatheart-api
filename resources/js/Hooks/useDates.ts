@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useRecoilState } from "recoil";
 
 import {
@@ -6,7 +7,6 @@ import {
     startDateState,
     startDateStringState,
 } from "@/store/filtersAtom";
-import dayjs from "dayjs";
 
 export const useDates = () => {
     const [startDate, setStartDate] = useRecoilState(startDateState);

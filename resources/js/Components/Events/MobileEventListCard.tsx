@@ -2,7 +2,6 @@ import React from "react";
 
 import { Link } from "@inertiajs/react";
 
-import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { dateFormatter } from "@/helpers/dateFormatter";
 import { EVENT_FOR_MEN } from "@/helpers/eventSex";
@@ -44,21 +43,22 @@ export const MobileEventListCard = ({ event }: { event: Event }) => {
                         >
                             {event.type_group === fireTypeGroup && `Monthly`}
                             {event.type_group === retreatTypeGroup &&
-                                `${dateFormatter(event.start_date, "MMM D")} - ${dateFormatter(event.end_date, "MMM D")}`}
+                                `${dateFormatter(event.start_date)} - ${dateFormatter(event.end_date)}`}
                             {event.type_group === experienceTypeGroup &&
                                 `Starts on ${dateFormatter(event.start_date)}`}
                         </span>
                     </div>
                     <div className={`flex items-center space-x-2 mt-1`}>
                         <>
-                            {event?.host_photo ? (
+                            {event.host_photo ? (
                                 <UserAvatar image={event.host_photo} />
                             ) : (
-                                <FallbackAvatar
-                                    size={30}
-                                    name={event.hostObject.full_name}
-                                    md5email={event.hostObject.md5email}
-                                />
+                                // <FallbackAvatar
+                                //     size={30}
+                                //     name={event.hostObject.full_name}
+                                //     md5email={event.hostObject.md5email}
+                                // />
+                                <img src="" alt="" />
                             )}
                         </>
                         <div

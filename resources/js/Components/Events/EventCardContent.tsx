@@ -5,17 +5,18 @@ import { EventHostInfo } from "@/Components/Events/EventHostInfo";
 import { EventInfo } from "@/Components/Events/EventInfo";
 import { EventLocation } from "@/Components/Events/EventLocation";
 import { HostedBy } from "@/Components/Events/HostedBy";
-import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 import { imageGenerator } from "@/helpers/user";
 import { Event } from "@/types/Event";
+import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
+import { dateFormatter } from "@/helpers/dateFormatter";
 
 export const EventCardContent = (props: { event: Event }) => {
     const { event } = props;
     return (
         <>
-            {event?.event_type_image && (
+            {event.event_type_image && (
                 <img
                     src={imageGenerator(event.event_type_image, {
                         width: 100,
@@ -29,24 +30,25 @@ export const EventCardContent = (props: { event: Event }) => {
                 <div>
                     <EventTypeGroupIndicator event={event} />
                     <EventLocation location={event?.location} />
+                    {event.start_date && (
+                        <EventTypeBadge className={`md:hidden`}>
+                            {dateFormatter(event.start_date, "MMM Do")}
+                            {event.end_date &&
+                                ` - ${dateFormatter(event.end_date, "MMM Do YYYY")}`}
+                        </EventTypeBadge>
+                    )}
                 </div>
                 <EventHostInfo>
                     <>
-                        {event?.host_photo ? (
+                        {event.host_photo && (
                             <UserAvatar image={event.host_photo} />
-                        ) : (
-                            <FallbackAvatar
-                                size={30}
-                                name={event.hostObject.full_name}
-                                md5email={event.hostObject.md5email}
-                            />
                         )}
                     </>
                     <div className="text-xs text-grey-200 leading-tighter">
-                        {event?.type_group === fireTypeGroup && (
+                        {event.type_group === fireTypeGroup && (
                             <div>{event.name} Fire</div>
                         )}
-                        <HostedBy host={event?.host_name} />
+                        <HostedBy host={event.host_name} />
                     </div>
                 </EventHostInfo>
             </EventInfo>

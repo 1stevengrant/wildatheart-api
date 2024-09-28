@@ -18,7 +18,7 @@ export const FiltersFooter = () => {
                 }}
                 className={`text-grey-200 px-4 py-2 inline-block rounded-md font-semibold text-center`}
             >
-                Show All Events
+                Reset Filters
             </button>
             <EventCount />
         </div>

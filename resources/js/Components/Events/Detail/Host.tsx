@@ -12,7 +12,7 @@ type HostProps = {
     hostPhoto?: string;
 };
 
-const Host = ({ className = "", host, hostPhoto }: HostProps) => {
+export const Host = ({ className = "", host, hostPhoto }: HostProps) => {
     const page = usePage();
     const event = page.props.event as Event;
     const { full_name, md5email } = event.hostObject;
@@ -37,5 +37,3 @@ const Host = ({ className = "", host, hostPhoto }: HostProps) => {
         </div>
     );
 };
-
-export default Host;

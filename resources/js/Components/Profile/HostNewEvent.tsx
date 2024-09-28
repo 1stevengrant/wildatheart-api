@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Link } from "@inertiajs/react";
 import pluralize from "pluralize";
 import { useRecoilState } from "recoil";

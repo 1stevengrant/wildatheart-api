@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Link, usePage } from "@inertiajs/react";
 
 import { HeadingOne } from "@/Components/Type/HeadingOne";

@@ -15,13 +15,13 @@ import Map, {
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { FireMarker } from "@/Components/Events/FireMarker";
 import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import TextInput from "@/Components/Forms/TextInput";
+import { FireMarker } from "@/Components/Icons/FireMarker";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { config } from "@/helpers/config";

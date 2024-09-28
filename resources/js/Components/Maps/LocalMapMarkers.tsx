@@ -1,5 +1,3 @@
-import React from "react";
-
 import Tippy from "@tippyjs/react/headless";
 import { Marker } from "react-map-gl";
 import { useRecoilState } from "recoil";
@@ -8,17 +6,16 @@ import { EventCard } from "@/Components/Events/EventCard";
 import { EventMarkerButton } from "@/Components/Events/EventMarkerButton";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
 import { eventsListState } from "@/store/eventsAtom";
-import { Event } from "@/types/Event";
 
-export const EventList = () => {
-    const { setPopupInfo } = usePopupInfo();
+export const LocalMapMarkers = () => {
     const [events] = useRecoilState(eventsListState);
+    const { setPopupInfo } = usePopupInfo();
     return (
         <>
             {events.length > 0 &&
-                events.map((event: Event, index: number) => (
+                events.map((event: any) => (
                     <Marker
-                        key={index}
+                        key={event.id}
                         longitude={event.longitude}
                         latitude={event.latitude}
                         anchor="bottom"

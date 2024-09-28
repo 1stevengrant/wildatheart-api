@@ -1,14 +1,13 @@
 <?php
 
-use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
+use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\StatsController;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,9 +25,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::get('events', EventController::class);
-Route::get('users', UserController::class);
 
 Route::prefix('v1')->group(function () {
     Route::name('v1.')->group(function () {
@@ -53,7 +49,4 @@ Route::prefix('content')->group(function () {
     });
 });
 
-Route::get('events/search', \App\Http\Controllers\API\SearchForEventsController::class);
-Route::get('events/types', function () {
-    return response()->json(\App\Models\EventType::all());
-});
+Route::get('events/search', SearchForEventsController::class)->name('api.events.search');

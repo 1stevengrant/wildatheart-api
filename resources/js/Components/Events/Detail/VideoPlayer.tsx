@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
 
-type VideoPlayerProps = {
+export const VideoPlayer = ({
+    src,
+    className = "",
+}: {
     src: string;
     className?: string;
-};
-
-export const VideoPlayer = ({ src, className = "" }: VideoPlayerProps) => {
+}) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     return (

@@ -1,9 +1,8 @@
 import { useRef } from "react";
 
-import { MapRef } from "react-map-gl/maplibre";
+import type { MapRef } from "react-map-gl";
 import { useRecoilState } from "recoil";
 
-import { mapFlyTo } from "@/lib/mapFlyTo";
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 import { selectedPlaceState } from "@/store/mapAtom";
 
@@ -21,7 +20,6 @@ export const useMapData = () => {
         setLongitude,
         setSelectedPlace,
         selectedPlace,
-        mapFlyTo,
         mapRef,
     };
 };

@@ -1,13 +1,12 @@
 import { useRecoilState } from "recoil";
 
 import { EventResult } from "@/Components/Events/Detail/EventResult";
+import { NoSearchResults } from "@/Components/NoSearchResults";
 import { FiltersPanel } from "@/Components/Search/FiltersPanel";
 import { QuickFilters } from "@/Components/Search/QuickFilters";
 import { isSelectedEvent } from "@/helpers/isSelectedEvent";
 import { currentEventState, showFilterPanelState } from "@/store";
 import { eventsListState } from "@/store/eventsAtom";
-import { Event } from "@/types/Event";
-import { NoSearchResults } from "@/Components/NoSearchResults";
 
 export const SearchSidebar = () => {
     const [events] = useRecoilState(eventsListState);
@@ -21,10 +20,10 @@ export const SearchSidebar = () => {
                     {events.length === 0 ? (
                         <NoSearchResults />
                     ) : (
-                        events.map((event: Event, index: number) => (
+                        events.map((event: any) => (
                             <EventResult
                                 event={event}
-                                key={index}
+                                key={event.id}
                                 className={`mb-4 ${isSelectedEvent(event, currentEvent, "border-grey-darker")}`}
                                 onMouseEnter={() => setCurrentEvent(event)}
                                 onMouseLeave={() => setCurrentEvent(null)}
