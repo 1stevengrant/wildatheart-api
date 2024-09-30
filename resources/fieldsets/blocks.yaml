@@ -52,3 +52,10 @@ fields:
               fields:
                 -
                   import: subscribe_form
+            add_to_calendar:
+              display: 'Add To Calendar'
+              instructions: "Add a button that adds events to a user's calendar of choice"
+              icon: calendar-date
+              fields:
+                -
+                  import: add_to_calendar_block
