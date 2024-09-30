@@ -1,84 +1,119 @@
-title: "Add To Calendar"
+title: 'Add To Calendar'
 fields:
-  - handle: name
+  -
+    handle: name
     field:
       type: text
       display: Name
-      instructions: "The name of your event"
-  - handle: options
+      instructions: 'The name of your event'
+  -
+    handle: description
+    field:
+      type: markdown
+      display: Description
+      instructions: 'The description of your event.'
+  -
+    handle: options
     field:
       options:
-        - key: Apple
+        -
+          key: Apple
           value: null
-        - key: Google
+        -
+          key: Google
           value: null
-        - key: iCal
+        -
+          key: iCal
           value: null
-        - key: Microsoft365
+        -
+          key: Microsoft365
           value: null
-        - key: MicrosoftTeams
+        -
+          key: MicrosoftTeams
           value: null
-        - key: Outlook.com
+        -
+          key: Outlook.com
           value: null
-        - key: Yahoo
+        -
+          key: Yahoo
           value: null
       multiple: true
       type: select
       display: Options
-      instructions: "Choose the calendar options you want."
-  - handle: location
+      instructions: 'Choose the calendar options you want.'
+  -
+    handle: location
     field:
       type: text
       display: Location
-  - handle: start_date
+  -
+    handle: start_date
     field:
       type: date
-      display: "Start Date"
+      display: 'Start Date'
       format: Y-m-d
-  - handle: end_date
+  -
+    handle: end_date
     field:
       type: date
-      display: "End Date"
+      display: 'End Date'
       format: Y-m-d
-  - handle: start_time
+  -
+    handle: start_time
     field:
       type: time
-      display: "Start Time"
-  - handle: end_time
+      display: 'Start Time'
+  -
+    handle: end_time
     field:
       type: time
-      display: "End Time"
-  - handle: timezone
+      display: 'End Time'
+  -
+    handle: timezone
     field:
       options:
-        - key: America/Denver
+        -
+          key: America/Denver
           value: null
-        - key: America/New_York
+        -
+          key: America/New_York
           value: null
-        - key: America/Chicago
+        -
+          key: America/Chicago
           value: null
-        - key: America/Los_Angeles
+        -
+          key: America/Los_Angeles
           value: null
-        - key: America/Phoenix
+        -
+          key: America/Phoenix
           value: null
-        - key: America/Anchorage
+        -
+          key: America/Anchorage
           value: null
-        - key: America/Honolulu
+        -
+          key: America/Honolulu
           value: null
-        - key: Europe/London
+        -
+          key: Europe/London
           value: null
-        - key: Europe/Paris
+        -
+          key: Europe/Paris
           value: null
-        - key: Europe/Berlin
+        -
+          key: Europe/Berlin
           value: null
-        - key: Asia/Tokyo
+        -
+          key: Asia/Tokyo
           value: null
-        - key: Asia/Shanghai
+        -
+          key: Asia/Shanghai
           value: null
-        - key: Australia/Sydney
+        -
+          key: Australia/Sydney
           value: null
-        - key: Pacific/Auckland
+        -
+          key: Pacific/Auckland
           value: null
       type: select
       display: Timezone
-      instructions: "Select the timezone for your event"
+      instructions: 'Select the timezone for your event'
