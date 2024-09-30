@@ -288,6 +288,15 @@ tabs:
               type: toggle
               display: 'Allow Materials Order'
               instructions: 'Should this event type allow the a materials order?'
+          -
+            handle: number_of_items_in_material_order_label
+            field:
+              type: text
+              display: 'Number of items in material order label'
+              instructions: 'Allows the customization of the label eg. `Expected number of attendees`'
+              validate:
+                - required
+                - string
   event_guide:
     display: 'Event Guide'
     sections:
