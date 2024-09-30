@@ -9,9 +9,15 @@ fields:
   -
     handle: description
     field:
-      type: markdown
+      type: textarea
       display: Description
-      instructions: 'The description of your event.'
+      instructions: |-
+        Supports HTML pseudo tags for formatting: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).
+        Define a link text with the following schema: [url]https://....|URL Text[/url].
+
+        (In case of compatibility issues, you can use curly {*} instead of square [*] brackets here.)
+
+        (Apple, Yahoo, and Microsoft Teams are not fully supported and automatically transformed to plain text, supporting only line breaks and hyperlinks.)
   -
     handle: options
     field:
