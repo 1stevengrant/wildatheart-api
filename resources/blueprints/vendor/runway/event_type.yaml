@@ -282,6 +282,12 @@ tabs:
                 - nullable
                 - url
               instructions: 'A link to the video content for the Event Type'
+          -
+            handle: allow_materials_order
+            field:
+              type: toggle
+              display: 'Allow Materials Order'
+              instructions: 'Should this event type allow the a materials order?'
   event_guide:
     display: 'Event Guide'
     sections:
