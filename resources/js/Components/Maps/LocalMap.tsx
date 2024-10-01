@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 
 import axios from "axios";
-import Map, { GeolocateControl, LngLatBounds, NavigationControl } from "react-map-gl";
+import Map, {
+    GeolocateControl,
+    LngLatBounds,
+    NavigationControl,
+} from "react-map-gl";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { EventCountButton } from "@/Components/Buttons/EventCountButton";
@@ -15,6 +19,7 @@ import { useSex } from "@/Hooks/useSex";
 import { useTypeGroup } from "@/Hooks/useTypeGroup";
 import { useTypes } from "@/Hooks/useTypes";
 import { getUserLocation, setUserLocation } from "@/lib/localStorage";
+import { reactNotificationState } from "@/store";
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 import { eventsListState } from "@/store/eventsAtom";
 
@@ -22,6 +27,9 @@ const DEFAULT_LATITUDE = 0;
 const DEFAULT_LONGITUDE = 0;
 
 export const LocalMap = () => {
+    const [reactNotifications, setReactNotifications] = useRecoilState(
+        reactNotificationState
+    );
     const [showLoading, setShowLoading] = useState(false);
     const { mapRef, selectedPlace } = useMapData();
     const [latitude, setLatitude] = useRecoilState(latitudeState);
@@ -35,6 +43,7 @@ export const LocalMap = () => {
     const { startDateString, endDateString } = useDates();
 
     const initialFlyToDone = useRef(false);
+    const hasZoomedOut = useRef(false);
 
     useEffect(() => {
         const storedLocation = getUserLocation();
@@ -113,7 +122,7 @@ export const LocalMap = () => {
 
     useEffect(() => {
         if (bounds) {
-            getEvents();
+            void getEvents();
         }
     }, [bounds, currentSex, typeGroup, types, startDateString, endDateString]);
 
@@ -148,8 +157,27 @@ export const LocalMap = () => {
                         end_date: endDateString,
                     },
                 });
-                setEvents(response.data);
                 setShowLoading(false);
+                if (response.data.length === 0) {
+                    if (!hasZoomedOut.current) {
+                        mapRef.current
+                            ?.getMap()
+                            .zoomTo(mapRef.current?.getMap().getZoom() - 1);
+                        hasZoomedOut.current = true;
+                    }
+                    // Add notification for no events found
+                    const newNotification = {
+                        message:
+                            "No events found matching the current criteria.",
+                        type: "error",
+                    };
+                    setReactNotifications([
+                        ...reactNotifications,
+                        newNotification,
+                    ]);
+                } else {
+                    setEvents(response.data);
+                }
             } catch (error) {
                 console.log(error);
                 setShowLoading(false);
