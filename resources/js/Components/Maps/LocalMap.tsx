@@ -158,23 +158,11 @@ export const LocalMap = () => {
                     },
                 });
                 setShowLoading(false);
-                if (response.data.length === 0) {
-                    if (!hasZoomedOut.current) {
-                        mapRef.current
-                            ?.getMap()
-                            .zoomTo(mapRef.current?.getMap().getZoom() - 1);
-                        hasZoomedOut.current = true;
-                    }
-                    // Add notification for no events found
-                    const newNotification = {
-                        message:
-                            "No events found matching the current criteria.",
-                        type: "error",
-                    };
-                    setReactNotifications([
-                        ...reactNotifications,
-                        newNotification,
-                    ]);
+                if (response.data.length === 0 && !hasZoomedOut.current) {
+                    mapRef.current
+                        ?.getMap()
+                        .zoomTo(mapRef.current?.getMap().getZoom() - 1);
+                    hasZoomedOut.current = true;
                 } else {
                     setEvents(response.data);
                 }
