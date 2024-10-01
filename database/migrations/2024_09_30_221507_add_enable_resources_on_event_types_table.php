@@ -31,7 +31,7 @@ return new class extends Migration
         Schema::table('event_types', function (Blueprint $table) {
             $table->dropColumn([
                 'allow_materials_order',
-                'number_of_items_in_material_order_label'
+                'number_of_items_in_material_order_label',
             ]);
         });
 

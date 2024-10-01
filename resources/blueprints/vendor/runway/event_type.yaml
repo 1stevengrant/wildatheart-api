@@ -297,6 +297,14 @@ tabs:
               validate:
                 - required
                 - string
+          -
+            handle: zapier_webhook_url
+            field:
+              input_type: url
+              type: text
+              display: 'Zapier Webhook URL'
+              validate:
+                - active_url
   event_guide:
     display: 'Event Guide'
     sections:
