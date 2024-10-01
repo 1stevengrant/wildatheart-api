@@ -75,4 +75,9 @@ tabs:
                 - required
               time_enabled: true
           -
+            handle: make_scheduled_page_public
+            field:
+              type: toggle
+              display: 'Make Scheduled Page Public'
+          -
             import: images
