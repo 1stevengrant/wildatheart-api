@@ -37,7 +37,7 @@ class SlideBlock extends Data
 
     public ?bool $is_coming_soon = null;
 
-    public ?string $is_coming_soon_text = null;
+    public ?string $date = null;
 }
 
 #[TypeScript]

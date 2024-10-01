@@ -134,6 +134,11 @@ class BlockBuilderService
             ->where('collection', 'media_item')
             ->where('published', true)
             ->where('data->series', 'like', "%{$seriesId}")
+            // TODO: Add this back in when all the series items have been set to make_scheduled_page_public
+            // ->where(function ($query) {
+            //     $query->where('date', '<=', now())
+            //           ->orWhere('data->make_scheduled_page_public', true);
+            // })
             ->orderBy('data->position', 'asc')
             ->get();
 
@@ -148,7 +153,7 @@ class BlockBuilderService
                 'trim_description_bool' => false,
                 'href' => $mediaItem->uri,
                 'is_coming_soon' => $mediaItem->date > now(),
-                'is_coming_soon_text' => $mediaItem->date > now() ? 'Premieres ' . $mediaItem->date->format('F j') : null,
+                'date' => $mediaItem->date,
                 'right_cta' => ButtonProps::from([
                     'text' => "Play {$mediaItem->media_type}",
                     'href' => $mediaItem->date > now() ? null : $mediaItem->uri,

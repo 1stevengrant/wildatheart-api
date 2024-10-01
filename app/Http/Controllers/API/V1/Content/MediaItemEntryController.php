@@ -37,7 +37,10 @@ class MediaItemEntryController extends Controller
                 ->where('collection', 'media_item')
                 ->where('slug', $slug)
                 ->where('published', true)
-                ->where('date', '<=', now())
+                ->where(function ($query) {
+                    $query->where('date', '<=', now())
+                          ->orWhere('data->make_scheduled_page_public', true);
+                })
                 ->first();
         }
 
