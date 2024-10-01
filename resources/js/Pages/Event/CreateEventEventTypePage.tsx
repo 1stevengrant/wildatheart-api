@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 import mapboxgl from "mapbox-gl";
+import { singular } from "pluralize";
 import Map, {
     GeolocateControl,
     MapLayerMouseEvent,
@@ -15,14 +16,17 @@ import { useRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { InputError } from "@/Components/Forms/InputError";
+import { InputLabel } from "@/Components/Forms/InputLabel";
+import SelectInput from "@/Components/Forms/SelectInput";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
-import { config } from "@/helpers/config";
+import { commonMapProps } from "@/helpers/commonMapboxMapProps";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
@@ -142,6 +146,7 @@ const CreateEventEventTypePage = () => {
             poi: "",
             is_private: false,
             start_date: null,
+            number_of_items_in_material_order: "",
         });
 
     useEffect(() => {
@@ -295,7 +300,7 @@ const CreateEventEventTypePage = () => {
             >
                 <EmptyLayoutBody>
                     <PageContainer>
-                        <h1>Create Event</h1>
+                        <HeadingOne>Create Event</HeadingOne>
                         <p>
                             The below information can be changed at any time.
                             Once published, attendees will be able to see your
@@ -311,32 +316,18 @@ const CreateEventEventTypePage = () => {
                                 <Map
                                     mapLib={mapboxgl}
                                     ref={mapRef}
-                                    dragRotate={false}
-                                    touchPitch={false}
-                                    pitchWithRotate={false}
-                                    maxPitch={0}
-                                    minPitch={0}
-                                    mapStyle="mapbox://styles/mapbox/navigation-day-v1"
+                                    {...commonMapProps}
                                     initialViewState={{
                                         zoom: 6,
-                                    }}
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        borderRadius: "0.5rem",
                                     }}
                                     onClick={(event) => {
                                         handleMapClick(event);
                                     }}
-                                    mapboxAccessToken={config(
-                                        "services.mapbox.token"
-                                    )}
                                     onZoomEnd={() =>
                                         handleUserLevelZoom(
                                             mapRef.current?.getZoom() || 6
                                         )
                                     }
-                                    attributionControl={false}
                                 >
                                     <GeolocateControl position="top-left" />
                                     <NavigationControl position="top-left" />
@@ -386,6 +377,60 @@ const CreateEventEventTypePage = () => {
                                         </div>
                                     </div>
                                 </label>
+                                {eventType.allow_materials_order && (
+                                    <div className={`mt-4`}>
+                                        <p>
+                                            We'll send you free{" "}
+                                            {singular(eventType.name)}{" "}
+                                            note-taking guides for your
+                                            attendees. Just tell us how many you
+                                            need.
+                                        </p>
+
+                                        <InputLabel
+                                            htmlFor="number_of_items_in_material_order"
+                                            value={
+                                                eventType.number_of_items_in_material_order_label ??
+                                                "Number of items in material order"
+                                            }
+                                            required
+                                        />
+                                        <SelectInput
+                                            id={
+                                                "number_of_items_in_material_order"
+                                            }
+                                            onChange={(
+                                                e: React.ChangeEvent<
+                                                    | HTMLInputElement
+                                                    | HTMLSelectElement
+                                                >
+                                            ) => {
+                                                setData(
+                                                    "number_of_items_in_material_order",
+                                                    e.target.value
+                                                );
+                                            }}
+                                            className={`text-white mt-2`}
+                                            options={[
+                                                { value: "0", label: "NONE" },
+                                                { value: "10", label: "1-10" },
+                                                { value: "20", label: "11-20" },
+                                                { value: "30", label: "21-30" },
+                                                { value: "40", label: "31-40" },
+                                                { value: "50", label: "41-50" },
+                                                { value: "60", label: "51-60" },
+                                                { value: "70", label: "61-70" },
+                                                { value: "80", label: "71-80" },
+                                                { value: "90", label: "81-90" },
+                                                {
+                                                    value: "100",
+                                                    label: "91-100",
+                                                },
+                                                { value: "200", label: "100+" },
+                                            ]}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </form>
                     </PageContainer>

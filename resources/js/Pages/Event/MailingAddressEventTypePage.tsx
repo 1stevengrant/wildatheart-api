@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Link, useForm, usePage } from "@inertiajs/react";
+import { singular } from "pluralize";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input/min";
@@ -14,6 +15,7 @@ import TextInput from "@/Components/Forms/TextInput";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
+import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { sortedCountries } from "@/helpers/countryList";
 import { priorityCountries } from "@/helpers/priorityCountries";
@@ -76,7 +78,13 @@ const MailingAddressEventTypePage = () => {
             >
                 <EmptyLayoutBody>
                     <PageContainer>
-                        <h1>Mailing Address</h1>
+                        <HeadingOne>Mailing Address</HeadingOne>
+                        {eventType.allow_materials_order && (
+                            <p>
+                                Tell us where we should send your free{" "}
+                                {singular(eventType.name)} resources.
+                            </p>
+                        )}
                         <form className="my-4">
                             <FormGrid>
                                 <div>

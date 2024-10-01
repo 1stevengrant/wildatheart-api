@@ -18,6 +18,7 @@ return [
 
         \App\Models\Page::class => [
             'name' => 'Local Platform Pages',
+            'cp_icon' => 'book-pages',
         ],
     ],
 

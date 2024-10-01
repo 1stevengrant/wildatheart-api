@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\DTO\GoogleSheetDTO;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,7 +17,7 @@ class PostToZapier implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public array $data) {}
+    public function __construct(public GoogleSheetDTO $dto) {}
 
     /**
      * Execute the job.
@@ -25,34 +26,23 @@ class PostToZapier implements ShouldQueue
      */
     public function handle(): void
     {
-        if (app()->isProduction()) {
-            activity()
-                ->withProperties($this->data)
-                ->log('Post to Zapier');
-            $data = $this->data;
-            $response = Http::post(config('services.zapier.event_webhook_url'), [
-                'email' => $data['email'],
-                'quantity' => 1,
-                'first_name' => $data['given_name'],
-                'last_name' => $data['family_name'],
-                'address_1' => $data['street_address'],
-                'address_2' => $data['address2'],
-                'city' => $data['city'],
-                'state' => $data['state'],
-                'zip' => $data['zip'],
-                'country' => $data['country'],
-                'date' => now(),
-            ]);
+        activity()
+            ->withProperties((array) $this->dto)
+            ->log('Post to Zapier '.$this->dto->webhookUrl);
+
+        if (config('services.zapier.enabled')) {
+
+            $response = Http::post($this->dto->webhookUrl, (array) $this->dto);
 
             if ($response->failed()) {
                 activity()
                     ->withProperties([
-                        'data' => $this->data,
+                        'data' => (array) $this->dto,
                         'response' => $response->body(),
                     ])
-                    ->log('Post to Zapier failed');
+                    ->log('Post to Zapier failed '.$this->dto->webhookUrl);
 
-                throw new \Exception('Post to Zapier failed');
+                throw new \Exception('Post to Zapier failed '.$this->dto->webhookUrl);
             }
         }
     }
