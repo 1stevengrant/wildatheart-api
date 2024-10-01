@@ -149,6 +149,7 @@ class BlockBuilderService
                 'trim_description_bool' => false,
                 'href' => $mediaItem->uri,
                 'is_coming_soon' => $mediaItem->date > Carbon::now(),
+                'is_coming_soon_text' => $mediaItem->date > Carbon::now() ? 'Premieres ' . $mediaItem->date->format('F j') : null,
                 'right_cta' => ButtonProps::from([
                     'text' => "Play {$mediaItem->media_type}",
                     'href' => $mediaItem->date > Carbon::now() ? null : $mediaItem->uri,
