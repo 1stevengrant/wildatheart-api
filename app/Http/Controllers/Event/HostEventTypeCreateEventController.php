@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\DTO\GoogleSheetDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
+use App\Jobs\PostToZapier;
 use App\Models\EventType;
 use App\Services\EventCreationStepHandlerService;
 use App\Support\EventDateHelper;
@@ -54,7 +56,29 @@ class HostEventTypeCreateEventController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'sex' => determineSexOfEvent($eventType),
+            'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
         ]);
+
+        if ($eventType->zapier_webhook_url && $eventType->allow_materials_order) {
+            $dto = new GoogleSheetDTO(
+                webhookUrl: $eventType->zapier_webhook_url,
+                eventId: $event->id,
+                eventType: $eventType->name,
+                email: auth()->user()->email,
+                quantity: $request->number_of_items_in_material_order,
+                first_name: auth()->user()->given_name,
+                last_name: auth()->user()->family_name,
+                address_1: $request->street_address,
+                address_2: $request->address_2,
+                city: $request->city,
+                state: $request->state,
+                zip: $request->zip,
+                country: $request->country,
+                date: now()->toDateTimeString(),
+            );
+
+            PostToZapier::dispatch($dto);
+        }
 
         return redirect()->route('my.events.active', ['event' => $event]);
     }

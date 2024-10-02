@@ -44,7 +44,7 @@ export const Notification = ({
                 aria-hidden="true"
             />
         );
-    const backgroundColor = type === "success" ? "bg-white" : "bg-red-50";
+    const backgroundColor = type === "success" ? "bg-white" : "bg-red-lightest";
 
     return (
         <>
@@ -67,7 +67,7 @@ export const Notification = ({
                                 <div className="flex-shrink-0">{icon}</div>
                                 <div className="ml-3 w-0 flex-1 pt-0.5">
                                     <p
-                                        className={`text-sm font-medium ${type === "success" ? "text-black" : "text-red-700"}`}
+                                        className={`text-sm font-medium ${type === "success" ? "text-black" : "text-red"}`}
                                     >
                                         {message}
                                     </p>

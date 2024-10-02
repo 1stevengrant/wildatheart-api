@@ -13,3 +13,8 @@ fields:
       time_seconds_enabled: true
       type: date
       display: 'End date/time'
+  -
+    handle: show_on_mobile
+    field:
+      type: toggle
+      display: 'Show On Mobile'

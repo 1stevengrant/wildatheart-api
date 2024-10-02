@@ -15,6 +15,12 @@ fields:
               fields:
                 -
                   import: button
+            add_to_calendar:
+              display: 'Add to Calendar'
+              icon: calendar-date
+              fields:
+                -
+                  import: add_to_calendar_block
   -
     handle: position
     field:

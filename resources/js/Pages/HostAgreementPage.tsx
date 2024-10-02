@@ -17,7 +17,6 @@ import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 
 const HostAgreementPage = () => {
     const { hostAgreement } = usePage().props as any;
-    console.log(hostAgreement);
     const handleAgree = (event: React.FormEvent) => {
         event.preventDefault();
         router.post(route("host.agreement.store"), {

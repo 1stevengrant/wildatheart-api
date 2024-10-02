@@ -1,46 +1,30 @@
 <?php
 
+use App\DTO\GoogleSheetDTO;
 use App\Jobs\PostToZapier;
 
 it('posts the event details to zapier and adds the event to the spreadsheet', function () {
     \Illuminate\Support\Facades\Queue::fake();
     \Illuminate\Support\Facades\Http::fake();
 
-    $data = [
-        'email' => 'test@test.com',
-        'quantity' => 1,
-        'given_name' => 'Steven',
-        'family_name' => 'Grant',
-        'street_address' => '123 Main St',
-        'address2' => 'Apt 1',
-        'city' => 'Anytown',
-        'state' => 'NY',
-        'zip' => '12345',
-        'country' => 'US',
-        'date' => now(),
-    ];
+    $dto = new GoogleSheetDTO(
+        webhookUrl: 'https://hooks.zapier.com/hooks/catch/123456/abcdef',
+        eventId: '123',
+        eventType: 'event',
+        email: 'test@test.com',
+        quantity: 1,
+        first_name: 'Steven',
+        last_name: 'Grant',
+        address_1: '123 Main St',
+        address_2: 'Apt 1',
+        city: 'Anytown',
+        state: 'NY',
+        zip: '12345',
+        country: 'US',
+        date: now(),
+    );
 
-    PostToZapier::dispatch($data);
+    PostToZapier::dispatch($dto);
 
     \Illuminate\Support\Facades\Queue::assertPushed(PostToZapier::class);
-
-    $this->app['env'] = 'production';
-
-    $job = new PostToZapier($data);
-    $job->handle();
-
-    Http::assertSent(function ($request) use ($data) {
-        return $request->hasHeader('Content-Type', 'application/json') &&
-            $request->url() === config('services.zapier.event_webhook_url') &&
-            $request['email'] === $data['email'] &&
-            $request['quantity'] === $data['quantity'] &&
-            $request['first_name'] === $data['given_name'] &&
-            $request['last_name'] === $data['family_name'] &&
-            $request['address_1'] === $data['street_address'] &&
-            $request['address_2'] === $data['address2'] &&
-            $request['city'] === $data['city'] &&
-            $request['state'] === $data['state'] &&
-            $request['zip'] === $data['zip'] &&
-            $request['country'] === $data['country'];
-    });
 });

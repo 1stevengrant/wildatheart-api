@@ -24,7 +24,7 @@ const MyContactsPage = () => {
 
     return (
         <HostDashboardLayout pageTitle={pageTitle}>
-            <div className="flex items-center justify-between border-grey-border border-b pb-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between border-grey-border border-b pb-6">
                 <div className={`flex items-center space-x-5`}>
                     <HeadingOne className={`flex-shrink-0`}>
                         {pageTitle}
@@ -32,7 +32,7 @@ const MyContactsPage = () => {
                     <FilterBar />
                 </div>
                 <a
-                    className={primaryButtonClasses}
+                    className={`${primaryButtonClasses} mt-4 md:mt-0`}
                     href={route("export.contacts", {
                         event: route().params.event_id,
                     })}

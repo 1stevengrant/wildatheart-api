@@ -8,14 +8,13 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
     Mail::fake();
-    $this->seed(\Database\Seeders\UserSeeder::class);
-    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = Event::factory()->approved()->fires()->create();
     $this->attributes = [
         'family_name' => 'Doe',
         'given_name' => 'John',
         'email' => 'steven@ghijk.co.uk',
+        'confirm_email' => 'steven@ghijk.co.uk',
         'city' => 'London',
         'state' => 'London',
         'country' => 'United Kingdom',
@@ -98,4 +97,9 @@ test('phone number must have min 9 characters', function () {
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['phone' => str_repeat('1',
         8)]))
         ->assertSessionHasErrors('phone');
+});
+it('requires the email addresses to match before the connection can be made', function () {
+
+    $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['confirm_email' => '']))
+        ->assertSessionHasErrors('confirm_email');
 });

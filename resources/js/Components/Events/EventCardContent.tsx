@@ -4,13 +4,13 @@ import { EventTypeGroupIndicator } from "@/Components/Events/EventAdminCard/Even
 import { EventHostInfo } from "@/Components/Events/EventHostInfo";
 import { EventInfo } from "@/Components/Events/EventInfo";
 import { EventLocation } from "@/Components/Events/EventLocation";
+import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { UserAvatar } from "@/Components/UserAvatar";
+import { dateFormatter } from "@/helpers/dateFormatter";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 import { imageGenerator } from "@/helpers/user";
 import { Event } from "@/types/Event";
-import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
-import { dateFormatter } from "@/helpers/dateFormatter";
 
 export const EventCardContent = (props: { event: Event }) => {
     const { event } = props;

@@ -12,6 +12,7 @@ import TextArea from "@/Components/Forms/TextArea";
 import TextInput from "@/Components/Forms/TextInput";
 import { Modal } from "@/Components/Ui/Modal";
 import { ModalActions } from "@/Components/Ui/ModalActions";
+import { scrollToError } from "@/helpers/scrollToError";
 
 export const SupportModal = ({
     open,
@@ -36,6 +37,7 @@ export const SupportModal = ({
         post(route("support.store"), {
             preserveScroll: true,
             onSuccess: () => handleSuccess(),
+            onError: () => scrollToError(),
         });
     };
 

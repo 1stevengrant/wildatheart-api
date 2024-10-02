@@ -4,6 +4,7 @@ import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { ContentBlocksComponent } from "@/Components/ContentBlocksComponent";
 import { CenterContainer } from "@/Components/Pages/CenterContainer";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
+import { scrollToError } from "@/helpers/scrollToError";
 import { usePageContent } from "@/Hooks/usePageContent";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { Event } from "@/types/Event";
@@ -19,6 +20,7 @@ const FireExtinguishedPage = () => {
         form.post(destroyUrl, {
             preserveScroll: true,
             preserveState: false,
+            onError: () => scrollToError(),
         });
     };
 

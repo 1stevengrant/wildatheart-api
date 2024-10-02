@@ -290,7 +290,7 @@ export const HostDashboardLayout = ({
                 </div>
 
                 <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-black px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 md:hidden">
+                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-black px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 lg:hidden">
                         <button
                             type="button"
                             className="text-white -m-2.5 p-2.5 lg:hidden"
@@ -302,7 +302,7 @@ export const HostDashboardLayout = ({
                     </div>
 
                     <main>
-                        <div className="px-4 sm:px-6 lg:px-8 md:pt-12">
+                        <div className="px-4 sm:px-6 lg:px-8 lg:pt-12">
                             {children}
                         </div>
                     </main>

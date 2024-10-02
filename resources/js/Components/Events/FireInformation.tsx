@@ -24,9 +24,10 @@ import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper"
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
-import { config } from "@/helpers/config";
+import { commonMapProps } from "@/helpers/commonMapboxMapProps";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
+import { scrollToError } from "@/helpers/scrollToError";
 import { oneHour } from "@/helpers/timeConstants";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState } from "@/store/mapAtom";
@@ -243,6 +244,7 @@ export const FireInformation = ({ user }: any) => {
         event.preventDefault();
         post(route("host.fire.store"), {
             preserveScroll: true,
+            onError: () => scrollToError(),
         });
     };
 
@@ -293,30 +295,18 @@ export const FireInformation = ({ user }: any) => {
                         <Map
                             mapLib={mapboxgl}
                             ref={mapRef}
-                            dragRotate={false}
-                            touchPitch={false}
-                            pitchWithRotate={false}
-                            maxPitch={0}
-                            minPitch={0}
-                            mapStyle="mapbox://styles/mapbox/navigation-day-v1"
+                            {...commonMapProps}
                             initialViewState={{
                                 zoom: 6,
-                            }}
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                borderRadius: "0.5rem",
                             }}
                             onClick={(event) => {
                                 handleMapClick(event);
                             }}
-                            mapboxAccessToken={config("services.mapbox.token")}
                             onZoomEnd={() =>
                                 handleUserLevelZoom(
                                     mapRef.current?.getZoom() || 6
                                 )
                             }
-                            attributionControl={false}
                         >
                             <GeolocateControl position="top-left" />
                             <NavigationControl position="top-left" />

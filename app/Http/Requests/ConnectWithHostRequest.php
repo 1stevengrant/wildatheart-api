@@ -25,6 +25,7 @@ class ConnectWithHostRequest extends FormRequest
             'family_name' => 'required|string|max:255|min:2',
             'given_name' => 'required|string|max:255|min:2',
             'email' => 'required|email|max:255',
+            'confirm_email' => 'required|email|same:email',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'country' => 'required|string|max:255',

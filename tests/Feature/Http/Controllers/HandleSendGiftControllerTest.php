@@ -4,9 +4,7 @@ use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\UserSeeder::class);
-    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = \App\Models\Event::factory()->fires()->create();
 
     $this->addressData = [

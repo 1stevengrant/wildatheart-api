@@ -1,0 +1,125 @@
+title: 'Add To Calendar'
+fields:
+  -
+    handle: name
+    field:
+      type: text
+      display: Name
+      instructions: 'The name of your event'
+  -
+    handle: description
+    field:
+      type: textarea
+      display: Description
+      instructions: |-
+        Supports HTML pseudo tags for formatting: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).
+        Define a link text with the following schema: [url]https://....|URL Text[/url].
+
+        (In case of compatibility issues, you can use curly {*} instead of square [*] brackets here.)
+
+        (Apple, Yahoo, and Microsoft Teams are not fully supported and automatically transformed to plain text, supporting only line breaks and hyperlinks.)
+  -
+    handle: options
+    field:
+      options:
+        -
+          key: Apple
+          value: null
+        -
+          key: Google
+          value: null
+        -
+          key: iCal
+          value: null
+        -
+          key: Microsoft365
+          value: null
+        -
+          key: MicrosoftTeams
+          value: null
+        -
+          key: Outlook.com
+          value: null
+        -
+          key: Yahoo
+          value: null
+      multiple: true
+      type: select
+      display: Options
+      instructions: 'Choose the calendar options you want.'
+  -
+    handle: location
+    field:
+      type: text
+      display: Location
+  -
+    handle: start_date
+    field:
+      type: date
+      display: 'Start Date'
+      format: Y-m-d
+  -
+    handle: end_date
+    field:
+      type: date
+      display: 'End Date'
+      format: Y-m-d
+  -
+    handle: start_time
+    field:
+      type: time
+      display: 'Start Time'
+  -
+    handle: end_time
+    field:
+      type: time
+      display: 'End Time'
+  -
+    handle: timezone
+    field:
+      options:
+        -
+          key: America/Denver
+          value: null
+        -
+          key: America/New_York
+          value: null
+        -
+          key: America/Chicago
+          value: null
+        -
+          key: America/Los_Angeles
+          value: null
+        -
+          key: America/Phoenix
+          value: null
+        -
+          key: America/Anchorage
+          value: null
+        -
+          key: America/Honolulu
+          value: null
+        -
+          key: Europe/London
+          value: null
+        -
+          key: Europe/Paris
+          value: null
+        -
+          key: Europe/Berlin
+          value: null
+        -
+          key: Asia/Tokyo
+          value: null
+        -
+          key: Asia/Shanghai
+          value: null
+        -
+          key: Australia/Sydney
+          value: null
+        -
+          key: Pacific/Auckland
+          value: null
+      type: select
+      display: Timezone
+      instructions: 'Select the timezone for your event'

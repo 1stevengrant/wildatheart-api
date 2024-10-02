@@ -70,7 +70,7 @@ return [
     ],
 
     'zapier' => [
-        'event_webhook_url' => 'https://hooks.zapier.com/hooks/catch/340972/3tew72r/',
+        'enabled' => env('ZAPIER_ENABLED', false),
     ],
 
     'sendgrid' => [

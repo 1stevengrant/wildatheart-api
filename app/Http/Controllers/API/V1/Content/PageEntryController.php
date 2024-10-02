@@ -48,7 +48,10 @@ class PageEntryController extends Controller
                 ->where('collection', 'pages')
                 ->where('slug', $slug)
                 ->where('published', true)
-                ->where('date', '<=', now())
+                ->where(function ($query) {
+                    $query->where('date', '<=', now())
+                        ->orWhere('data->make_scheduled_page_public', true);
+                })
                 ->first();
         }
 

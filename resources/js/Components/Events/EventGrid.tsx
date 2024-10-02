@@ -8,7 +8,7 @@ export const EventGrid = ({
     className?: string;
 }) => {
     return (
-        <div className={`grid gap-6 md:grid-cols-2 clear-both ${className}`}>
+        <div className={`grid gap-6 lg:grid-cols-2 clear-both ${className}`}>
             {children}
         </div>
     );

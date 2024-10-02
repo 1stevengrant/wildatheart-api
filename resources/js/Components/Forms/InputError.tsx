@@ -6,7 +6,10 @@ export const InputError = ({
     ...props
 }: HTMLAttributes<HTMLParagraphElement> & { message?: string }) => {
     return message ? (
-        <div {...props} className={`text-sm text-red mt-1 italic ${className}`}>
+        <div
+            {...props}
+            className={`field-validation-error text-sm text-red mt-1 italic ${className}`}
+        >
             {message}
         </div>
     ) : null;

@@ -7,7 +7,6 @@ use App\DataTypeObjects\CardVariant;
 use App\DataTypeObjects\IconProps;
 use App\DataTypeObjects\MediaItemsSlide;
 use App\DataTypeObjects\SlideBlock;
-use Carbon\Carbon;
 use Statamic\Eloquent\Assets\Asset;
 use Statamic\Entries\Entry;
 
@@ -135,6 +134,11 @@ class BlockBuilderService
             ->where('collection', 'media_item')
             ->where('published', true)
             ->where('data->series', 'like', "%{$seriesId}")
+            // TODO: Add this back in when all the series items have been set to make_scheduled_page_public
+            // ->where(function ($query) {
+            //     $query->where('date', '<=', now())
+            //           ->orWhere('data->make_scheduled_page_public', true);
+            // })
             ->orderBy('data->position', 'asc')
             ->get();
 
@@ -148,10 +152,11 @@ class BlockBuilderService
                 'variant' => CardVariant::portrait,
                 'trim_description_bool' => false,
                 'href' => $mediaItem->uri,
-                'is_coming_soon' => $mediaItem->date > Carbon::now(),
+                'is_coming_soon' => $mediaItem->date > now(),
+                'date' => $mediaItem->date,
                 'right_cta' => ButtonProps::from([
                     'text' => "Play {$mediaItem->media_type}",
-                    'href' => $mediaItem->date > Carbon::now() ? null : $mediaItem->uri,
+                    'href' => $mediaItem->date > now() ? null : $mediaItem->uri,
                     'variant' => 'cta',
                     'leftIcon' => IconProps::from([
                         'name' => 'play',
