@@ -16,6 +16,7 @@ import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper"
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { sortedCountries } from "@/helpers/countryList";
 import { priorityCountries } from "@/helpers/priorityCountries";
+import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
@@ -47,6 +48,7 @@ const SendGiftPage = () => {
         e.preventDefault();
         post(route("gift.store", { event: event }), {
             preserveScroll: true,
+            onError: () => scrollToError(),
         });
     };
 

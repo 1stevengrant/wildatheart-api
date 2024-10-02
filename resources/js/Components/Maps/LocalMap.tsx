@@ -19,7 +19,6 @@ import { useSex } from "@/Hooks/useSex";
 import { useTypeGroup } from "@/Hooks/useTypeGroup";
 import { useTypes } from "@/Hooks/useTypes";
 import { getUserLocation, setUserLocation } from "@/lib/localStorage";
-import { reactNotificationState } from "@/store";
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 import { eventsListState } from "@/store/eventsAtom";
 
@@ -27,9 +26,6 @@ const DEFAULT_LATITUDE = 0;
 const DEFAULT_LONGITUDE = 0;
 
 export const LocalMap = () => {
-    const [reactNotifications, setReactNotifications] = useRecoilState(
-        reactNotificationState
-    );
     const [showLoading, setShowLoading] = useState(false);
     const { mapRef, selectedPlace } = useMapData();
     const [latitude, setLatitude] = useRecoilState(latitudeState);

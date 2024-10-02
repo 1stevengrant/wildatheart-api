@@ -19,6 +19,7 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { sortedCountries } from "@/helpers/countryList";
 import { priorityCountries } from "@/helpers/priorityCountries";
+import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
@@ -52,6 +53,7 @@ const MailingAddressEventTypePage = () => {
         e.preventDefault();
         post(route("host.eventType.mailing.store", eventType), {
             preserveScroll: true,
+            onError: () => scrollToError(),
         });
     };
 

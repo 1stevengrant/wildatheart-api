@@ -27,6 +27,7 @@ import { Spinner } from "@/Components/Ui/Spinner";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
+import { scrollToError } from "@/helpers/scrollToError";
 import { oneHour } from "@/helpers/timeConstants";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState } from "@/store/mapAtom";
@@ -243,6 +244,7 @@ export const FireInformation = ({ user }: any) => {
         event.preventDefault();
         post(route("host.fire.store"), {
             preserveScroll: true,
+            onError: () => scrollToError(),
         });
     };
 

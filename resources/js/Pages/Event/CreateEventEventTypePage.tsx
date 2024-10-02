@@ -29,6 +29,7 @@ import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
+import { scrollToError } from "@/helpers/scrollToError";
 import { oneHour } from "@/helpers/timeConstants";
 import { useDates } from "@/Hooks/useDates";
 import useTypedPage from "@/Hooks/useTypedPage";
@@ -246,6 +247,7 @@ const CreateEventEventTypePage = () => {
             route("host.eventType.create.store", { eventType: eventType.slug }),
             {
                 preserveScroll: true,
+                onError: () => scrollToError(),
             }
         );
     };

@@ -46,9 +46,7 @@ export const UpdateProfileForm = ({
                 clearPhotoFileInput();
                 router.get(redirectTo);
             },
-            onError: () => {
-                scrollToError(form.errors);
-            },
+            onError: () => scrollToError(),
         });
     };
 

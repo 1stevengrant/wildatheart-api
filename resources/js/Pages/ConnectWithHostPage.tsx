@@ -49,7 +49,7 @@ const ConnectWithHostPage = () => {
                 setProcessing(false);
             },
             onError: () => {
-                scrollToError(form.errors);
+                scrollToError();
                 setProcessing(false);
             },
         });
