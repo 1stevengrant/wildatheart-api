@@ -5,6 +5,7 @@ use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\SubsplashController;
+use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\StatsController;
@@ -43,6 +44,7 @@ Route::prefix('content')->group(function () {
         Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
         Route::prefix('v1')->name('v1.')->group(function () {
+        Route::get('/daily-reading', [DailyReadingController::class, 'index'])->name('dailyReading.index');
             Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
             Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
         });

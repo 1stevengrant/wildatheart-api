@@ -84,4 +84,8 @@ return [
         'authentication_token_url' => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL'),
         'cache_duration' => env('SUBSPLASH_CACHE_DURATION'),
     ],
+    'transistor' => [
+        'api_key' => env('TRANSISTOR_API_KEY'),
+        'cache_duration' => env('TRANSISTOR_CACHE_DURATION'),
+    ],
 ];
