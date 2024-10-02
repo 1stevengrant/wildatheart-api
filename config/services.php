@@ -86,6 +86,7 @@ return [
     ],
     'transistor' => [
         'api_key' => env('TRANSISTOR_API_KEY'),
+        'api_url' => env('TRANSISTOR_API_URL'),
         'cache_duration' => env('TRANSISTOR_CACHE_DURATION'),
     ],
 ];

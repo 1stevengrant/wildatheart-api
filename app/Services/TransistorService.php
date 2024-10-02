@@ -79,7 +79,7 @@ class TransistorService
      */
     public function getRecent($showId, $count = 1)
     {
-        $url = 'https://api.transistor.fm/v1/episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
         $json = $this->transistorFetch($url);
 
         if(isset($json['errors'])) {    
@@ -93,7 +93,7 @@ class TransistorService
     public function getAll($showId)
     {
 
-        $url = 'https://api.transistor.fm/v1/episodes?show_id=' . $showId . '&status=published&pagination[per]=100';
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=100';
 
         $json = $this->transistorFetch($url);
 
@@ -109,7 +109,7 @@ class TransistorService
             // Move through all pages of data and merge them into the $data array
             while($currentPage <= $json['meta']['totalPages']) {
                 $currentPage += 1;
-                $url = 'https://api.transistor.fm/v1/episodes?show_id=' . $showId . '&status=published&pagination[per]=100&pagination[page]=' . $currentPage;
+                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=100&pagination[page]=' . $currentPage;
                 $json = $this->transistorFetch($url);
 
                 if(!isset($json['errors'])) {
