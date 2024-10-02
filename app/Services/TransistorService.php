@@ -7,6 +7,15 @@ use Illuminate\Support\Facades\Http;
 
 class TransistorService
 {
+    /**
+     * Fetch data from the Transistor API
+     * 
+     * Transistor API is rate limited to 10 requests every 10 seconds, so this method caches the results of the API call.
+     * Transistor API is paginated, so this method fetches all pages of data and merges them into a single array.
+     * 
+     * @param string $url The URL to fetch data from
+     * @return array The data from the Transistor API
+     */
     public function transistorFetch($url)
     {
         $TRANSISTOR_CACHE_DURATION = config('services.transistor.cache_duration');
@@ -27,19 +36,24 @@ class TransistorService
             $json = $response->json();
 
             $data = $json['data'];
-            $currentPage = $json['meta']['currentPage'];
-            while($currentPage <= $json['meta']['totalPages']) {
-                $currentPage += 1;
-                $response = Http::withHeaders([
-                    'x-api-key' => $TRANSISTOR_API_KEY,
-                ])->get($url . '&pagination[page]=' . $currentPage);
-                if ($response->successful()) {
-                    $data = array_merge($data, $response->json()['data']);
+
+            if(isset($json['meta']['currentPage']) && isset($json['meta']['totalPages'])) {
+                $currentPage = $json['meta']['currentPage'];
+
+                // Move through all pages of data and merge them into the $data array
+                while($currentPage <= $json['meta']['totalPages']) {
+                    $currentPage += 1;
+                    $response = Http::withHeaders([
+                        'x-api-key' => $TRANSISTOR_API_KEY,
+                    ])->get($url . '&pagination[page]=' . $currentPage);
+                    if ($response->successful()) {
+                        $data = array_merge($data, $response->json()['data']);
+                    }
+            
                 }
-           
             }
 
-            Cache::put($url, $json, (int) $TRANSISTOR_CACHE_DURATION);
+            Cache::put($url, $data, (int) $TRANSISTOR_CACHE_DURATION);
 
 
             return $data;
