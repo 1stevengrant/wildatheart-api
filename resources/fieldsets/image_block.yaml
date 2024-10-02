@@ -1,0 +1,23 @@
+title: 'Image Block'
+fields:
+  -
+    handle: image
+    field:
+      container: s3
+      type: assets
+      display: image
+  -
+    handle: small_width
+    field:
+      type: width
+      display: 'Small Width'
+  -
+    handle: medium_width
+    field:
+      type: width
+      display: 'Medium Width'
+  -
+    handle: link
+    field:
+      type: link
+      display: Link

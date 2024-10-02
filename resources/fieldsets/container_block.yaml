@@ -1,0 +1,40 @@
+title: 'Container Block'
+fields:
+  -
+    handle: blocks
+    field:
+      buttons:
+        - h2
+        - h3
+        - h4
+        - h5
+        - h6
+        - bold
+        - italic
+        - unorderedlist
+        - orderedlist
+        - removeformat
+        - quote
+        - anchor
+        - image
+        - table
+        - horizontalrule
+      remove_empty_nodes: false
+      type: bard
+      display: Blocks
+      container: s3
+      sets:
+        container_set_group:
+          display: 'Container Set Group'
+          sets:
+            mini_bio:
+              display: 'Mini Bio'
+              fields:
+                -
+                  import: mini_bio_block
+            image:
+              display: Image
+              icon: media-image-picture-orientation
+              fields:
+                -
+                  import: image_block
