@@ -1,0 +1,54 @@
+title: 'Container Block'
+fields:
+  -
+    handle: margins
+    field:
+      options:
+        -
+          key: none
+          value: null
+        -
+          key: page
+          value: null
+      default: page
+      type: select
+      display: Margins
+  -
+    handle: apply_prose
+    field:
+      type: toggle
+      display: 'Apply Prose'
+      instructions: 'Apply @tailwindcss/typography prose styles.'
+      default: true
+  -
+    handle: blocks
+    field:
+      buttons:
+        - h1
+        - h2
+        - h3
+        - h4
+        - h5
+        - h6
+        - bold
+        - italic
+        - unorderedlist
+        - orderedlist
+        - removeformat
+        - quote
+        - anchor
+        - image
+        - table
+        - horizontalrule
+      remove_empty_nodes: false
+      type: bard
+      display: Blocks
+      sets:
+        container_set_group:
+          display: 'Container Set Group'
+          sets:
+            mini_bio:
+              display: 'Mini Bio'
+              fields:
+                -
+                  import: mini_bio_block
