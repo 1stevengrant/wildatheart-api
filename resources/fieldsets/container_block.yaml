@@ -33,3 +33,9 @@ fields:
               fields:
                 -
                   import: mini_bio_block
+            image:
+              display: Image
+              icon: media-image-picture-orientation
+              fields:
+                -
+                  import: image_block
