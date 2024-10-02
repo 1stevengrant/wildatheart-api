@@ -30,6 +30,7 @@ class EventTypeSeeder extends Seeder
             'description' => fake()->paragraphs(6, true),
             'slug' => Str::slug($eventType),
             'image' => \Pest\Faker\fake()->imageUrl(),
+            'zapier_webhook_url' => 'https://hooks.zapier.com/hooks/catch/1234567/abcde',
         ]));
     }
 }

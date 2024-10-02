@@ -39,7 +39,7 @@ class MediaItemEntryController extends Controller
                 ->where('published', true)
                 ->where(function ($query) {
                     $query->where('date', '<=', now())
-                          ->orWhere('data->make_scheduled_page_public', true);
+                        ->orWhere('data->make_scheduled_page_public', true);
                 })
                 ->first();
         }

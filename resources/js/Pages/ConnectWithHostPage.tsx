@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, useForm, usePage } from "@inertiajs/react";
@@ -27,18 +27,25 @@ const ConnectWithHostPage = () => {
     const page = usePage();
     const event = page.props.event as Event;
     const { auth } = page.props as unknown as PageProps;
-    const [processing, setProcessing] = React.useState(false);
+    const [processing, setProcessing] = useState(false);
     const form = useForm({
         _method: "POST",
         given_name: auth.user?.given_name ?? "",
         family_name: auth.user?.family_name ?? "",
         phone: auth.user?.phone ?? "",
         email: auth.user?.email ?? "",
+        confirm_email: auth.user?.email ?? "",
         city: auth.user?.city ?? "",
         state: "",
         country: "",
         opted_into_marketing: true,
     });
+
+    const handleConfirmEmailPaste = (
+        e: React.ClipboardEvent<HTMLInputElement>
+    ) => {
+        e.preventDefault();
+    };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         setProcessing(true);
@@ -143,6 +150,31 @@ const ConnectWithHostPage = () => {
                                         }
                                     />
                                     <InputError message={form.errors.email} />
+                                </div>
+
+                                <div className={`col-span-2`}>
+                                    <InputLabel
+                                        htmlFor="confirm_email"
+                                        value="Confirm Email"
+                                        required
+                                    />
+                                    <TextInput
+                                        id="confirm_email"
+                                        name="confirm_email"
+                                        value={form.data.confirm_email}
+                                        autoComplete="confirm_email"
+                                        type={"email"}
+                                        onPaste={handleConfirmEmailPaste}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                "confirm_email",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                    <InputError
+                                        message={form.errors.confirm_email}
+                                    />
                                 </div>
 
                                 <div className="col-span-2">
