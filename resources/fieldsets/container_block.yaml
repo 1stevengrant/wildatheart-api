@@ -43,6 +43,7 @@ fields:
       remove_empty_nodes: false
       type: bard
       display: Blocks
+      container: s3
       sets:
         container_set_group:
           display: 'Container Set Group'
