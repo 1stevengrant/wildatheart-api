@@ -32,31 +32,34 @@ class TransistorService
             'x-api-key' => $TRANSISTOR_API_KEY,
         ])->get($url);
 
+
+
+
         if ($response->successful()) {
             $json = $response->json();
 
-            $data = $json['data'];
-
-            if(isset($json['meta']['currentPage']) && isset($json['meta']['totalPages'])) {
-                $currentPage = $json['meta']['currentPage'];
-
-                // Move through all pages of data and merge them into the $data array
-                while($currentPage <= $json['meta']['totalPages']) {
-                    $currentPage += 1;
-                    $response = Http::withHeaders([
-                        'x-api-key' => $TRANSISTOR_API_KEY,
-                    ])->get($url . '&pagination[page]=' . $currentPage);
-                    if ($response->successful()) {
-                        $data = array_merge($data, $response->json()['data']);
+            /**
+             * Drupal removed leading articles from slugs
+             * for simplicity we'll do the same.
+             */
+            if (isset($json['data']) && is_array($json['data'])) {
+                foreach ($json['data'] as &$item) {
+                    if (isset($item['attributes']['slug'])) {
+                        $slug = $item['attributes']['slug'];
+                        $slug = preg_replace('/^(to-|the-|a-|an-|of-)/i', '', $slug);
+                        $slug = preg_replace('/-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
+                        $item['attributes']['slug'] = $slug;
                     }
-            
                 }
             }
 
-            Cache::put($url, $data, (int) $TRANSISTOR_CACHE_DURATION);
+            if(isset($json['errors'])) {
+                return $json['errors'];
+            }
 
+            Cache::put($url, $json, (int) $TRANSISTOR_CACHE_DURATION);
 
-            return $data;
+            return $json;
         }
 
         if (isset($response->json()['errors'])) {
@@ -65,6 +68,58 @@ class TransistorService
 
         // Handle error appropriately
         throw new \Exception('Failed to fetch data from Transistor API');
+    }
+
+    /**
+     * Get the most recent episodes from the Transistor API
+     * 
+     * @param string $showId The ID of the show to fetch episodes from
+     * @param int $count The number of episodes to fetch
+     * @return array The most recent episodes from the Transistor API
+     */
+    public function getRecent($showId, $count = 1)
+    {
+        $url = 'https://api.transistor.fm/v1/episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
+        $json = $this->transistorFetch($url);
+
+        if(isset($json['errors'])) {    
+            return $json['errors'];
+        }
+
+        return $json['data'];
+    }
+
+
+    public function getAll($showId)
+    {
+
+        $url = 'https://api.transistor.fm/v1/episodes?show_id=' . $showId . '&status=published&pagination[per]=100';
+
+        $json = $this->transistorFetch($url);
+
+        if(isset($json['errors'])) {
+            return $json['errors'];
+        }
+
+        $data = $json['data'];
+
+        if(isset($json['meta']['currentPage']) && isset($json['meta']['totalPages'])) {
+            $currentPage = $json['meta']['currentPage'];
+
+            // Move through all pages of data and merge them into the $data array
+            while($currentPage <= $json['meta']['totalPages']) {
+                $currentPage += 1;
+                $url = 'https://api.transistor.fm/v1/episodes?show_id=' . $showId . '&status=published&pagination[per]=100&pagination[page]=' . $currentPage;
+                $json = $this->transistorFetch($url);
+
+                if(!isset($json['errors'])) {
+                    $data = array_merge($data, $json['data']);
+                }
+        
+            }
+        }
+
+        return $data;
     }
 
 }
