@@ -3,8 +3,8 @@ import React from "react";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
 import Vimeo from "@u-wave/react-vimeo";
-import Markdown from "react-markdown";
 
+import { CustomMarkdown } from "@/Components/CustomMarkdown";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { EventFaqsLink } from "@/Components/Links/EventFaqsLink";
@@ -73,9 +73,9 @@ const ScheduleEventTypePage = () => {
                                             );
                                         case "text":
                                             return (
-                                                <Markdown key={index}>
+                                                <CustomMarkdown key={index}>
                                                     {schedule.text_block}
-                                                </Markdown>
+                                                </CustomMarkdown>
                                             );
                                         default:
                                             return (
