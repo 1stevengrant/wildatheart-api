@@ -11,9 +11,10 @@ fields:
       container: s3
       type: assets
       display: Image
+      max_files: 1
   -
-    handle: blocks
+    handle: prose
     field:
       remove_empty_nodes: false
       type: bard
-      display: Blocks
+      display: Prose

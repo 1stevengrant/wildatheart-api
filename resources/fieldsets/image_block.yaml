@@ -6,16 +6,35 @@ fields:
       container: s3
       type: assets
       display: image
+      max_files: 1
   -
     handle: small_width
     field:
       type: width
       display: 'Small Width'
+      options:
+        - '8'
+        - 25
+        - 33
+        - 50
+        - 66
+        - 75
+        - 100
+        - max-content
   -
     handle: medium_width
     field:
       type: width
       display: 'Medium Width'
+      options:
+        - '8'
+        - 25
+        - 33
+        - 50
+        - 66
+        - 75
+        - 100
+        - max-content
   -
     handle: link
     field:
