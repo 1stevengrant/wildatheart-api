@@ -19,9 +19,10 @@ class SendNewEventSlackAlert implements ShouldQueue
 
     public function handle(): void
     {
-        if (app()->isProduction()) {
+        if (! config('slack-alerts.slack_alerts_enabled')) {
             return;
         }
+
         $event = $this->event;
         $hostName = $event->host->fullName;
         $location = $event->location;
@@ -76,5 +77,6 @@ class SendNewEventSlackAlert implements ShouldQueue
                     ],
                 ],
             ]);
+
     }
 }

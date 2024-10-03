@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Attendee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ConnectWithHostRequest;
 use App\Http\Resources\EventResource;
+use App\Jobs\PostAttendeeContactToSlackJob;
 use App\Models\Event;
-use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class ConnectWithHostController extends Controller
 {
@@ -40,11 +40,7 @@ class ConnectWithHostController extends Controller
             ->causedBy($event)
             ->log('Connected with Host');
 
-        if (app()->isProduction()) {
-            SlackAlert::to('events')
-                ->message($attendee->fullName.' contacted '
-                    .$event->host->fullName.' about their event in '.$event->location.' !');
-        }
+        PostAttendeeContactToSlackJob::dispatch($attendee, $event);
 
         return to_route('view.event', $event)->with(['notifications' => [
             'message' => "Connected with {$event->host->fullName}!",
