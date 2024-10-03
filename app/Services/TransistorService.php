@@ -38,20 +38,6 @@ class TransistorService
         if ($response->successful()) {
             $json = $response->json();
 
-            /**
-             * Drupal removed leading articles from slugs
-             * for simplicity we'll do the same.
-             */
-            if (isset($json['data']) && is_array($json['data'])) {
-                foreach ($json['data'] as &$item) {
-                    if (isset($item['attributes']['slug'])) {
-                        $slug = $item['attributes']['slug'];
-                        $slug = preg_replace('/^(to-|the-|a-|an-|of-)/i', '', $slug);
-                        $slug = preg_replace('/-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
-                        $item['attributes']['slug'] = $slug;
-                    }
-                }
-            }
 
             if(isset($json['errors'])) {
                 return $json['errors'];
@@ -87,6 +73,23 @@ class TransistorService
         }
 
         return $json['data'];
+    }
+
+    /**
+     * Get a single episode by its slug
+     * 
+     * @param string $slug The slug of the episode to fetch
+     * @return array The episode from the Transistor API
+     */
+    public function getBySlug($slug)
+    {
+        $url = config('services.transistor.api_url') . 'episodes/' . $slug;
+        $json = $this->transistorFetch($url);
+
+        if(isset($json['errors'])) {
+            return $json['errors'];
+        }
+        
     }
 
 

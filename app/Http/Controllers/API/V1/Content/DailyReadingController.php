@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
+use App\DataTypeObjects\API\V1\Content\DailyReading;
 use App\DataTypeObjects\TransistorPodcastEpisode;
 use App\Http\Controllers\Controller;
 use App\Services\TransistorService;
 use Illuminate\Http\Request;
+
 /**
  * @group Daily Reading Entity Retrieval
  *
@@ -13,27 +15,69 @@ use Illuminate\Http\Request;
  */
 class DailyReadingController extends Controller
 {
-    public function index()
+
+    private $transistorService;
+
+    public function __construct(TransistorService $transistorService)
     {
-        $transistorService = new TransistorService();
-        $data = $transistorService->getAll('wildatheart-daily');
-        return TransistorPodcastEpisode::collect($data);
+        $this->transistorService = $transistorService;
     }
 
+    public function generatePreviousEpisodeSlug(string $slug)
+    {
+        $slug = preg_replace('/^(to-|the-|a-|an-|of-)/i', '', $slug);
+        $slug = preg_replace('/-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
+        return $slug;
+    }
+
+
+    public function index()
+    {
+        $data = $this->transistorService->getAll('wildatheart-daily');
+
+        $dailyReadings = [];
+
+                    /**
+             * Drupal removed leading articles from slugs
+             * for simplicity we'll do the same.
+             */
+            if ($data) {
+                foreach ($data as &$item) {
+                    $dailyReading = DailyReading::from([
+                        'transistor_episode' => TransistorPodcastEpisode::from($item),
+                        'previous_episode_slug' => null,
+                    ]);
+                    if (isset($item['attributes']['slug'])) {
+                        $slug = $item['attributes']['slug'];
+                        $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($slug);
+                    }
+                    $dailyReadings[] = $dailyReading;
+                }
+            }
+
+
+        return DailyReading::collect($dailyReadings);
+    }
     
     public function getRecent(Request $request)
     {
         $limit = $request->input('limit', 1);
         
-        $transistorService = new TransistorService();
-        $data = $transistorService->getRecent('wildatheart-daily', $limit);
-        return TransistorPodcastEpisode::collect($data);
-    }
+        $data = $this->transistorService->getRecent('wildatheart-daily', $limit);
+        $dailyReadings = [];
+        if ($data) {
+            foreach ($data as &$item) {
+                $dailyReading = DailyReading::from([
+                    'transistor_episode' => TransistorPodcastEpisode::from($item),
+                    'previous_episode_slug' => null,
+                ]);
+                if (isset($item['attributes']['slug'])) {
+                    $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($item['attributes']['slug']);
+                }
+                $dailyReadings[] = $dailyReading;
+            }
+        }
+        return DailyReading::collect($dailyReadings);    }
 
-    public function show(string $slug)
-    {
-        $transistorService = new TransistorService();
-        $data = $transistorService->transistorFetch('https://api.transistor.fm/v1/episodes/' . $slug );
-        return TransistorPodcastEpisode::from($data);
-    }
+   
 }
