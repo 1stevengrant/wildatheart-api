@@ -3,6 +3,7 @@
 
 namespace App\DataTypeObjects\API\V1\Content;
 
+use App\DataTypeObjects\TransistorPodcastEpisode;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -10,7 +11,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class DailyReadingResponse extends Data
 {
-    /** @var Collection<int, DailyReadingResponse> */
-    public Collection $transistor_episodes;
-    public string $previous_episode_slug;
+    public TransistorPodcastEpisode $transistor_episode;
+    public ?string $previous_episode_slug;
 }

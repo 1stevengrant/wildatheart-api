@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use App\DataTypeObjects\API\V1\Content\DailyReading;
+use App\DataTypeObjects\API\V1\Content\DailyReadingResponse;
 use App\DataTypeObjects\TransistorPodcastEpisode;
 use App\Http\Controllers\Controller;
 use App\Services\TransistorService;
@@ -43,7 +43,7 @@ class DailyReadingController extends Controller
              */
             if ($data) {
                 foreach ($data as &$item) {
-                    $dailyReading = DailyReading::from([
+                    $dailyReading = DailyReadingResponse::from([
                         'transistor_episode' => TransistorPodcastEpisode::from($item),
                         'previous_episode_slug' => null,
                     ]);
@@ -56,7 +56,7 @@ class DailyReadingController extends Controller
             }
 
 
-        return DailyReading::collect($dailyReadings);
+        return DailyReadingResponse::collect($dailyReadings);
     }
     
     public function getRecent(Request $request)
@@ -67,7 +67,7 @@ class DailyReadingController extends Controller
         $dailyReadings = [];
         if ($data) {
             foreach ($data as &$item) {
-                $dailyReading = DailyReading::from([
+                $dailyReading = DailyReadingResponse::from([
                     'transistor_episode' => TransistorPodcastEpisode::from($item),
                     'previous_episode_slug' => null,
                 ]);
@@ -77,7 +77,8 @@ class DailyReadingController extends Controller
                 $dailyReadings[] = $dailyReading;
             }
         }
-        return DailyReading::collect($dailyReadings);    }
+        return DailyReadingResponse::collect($dailyReadings);
+    }
 
    
 }
