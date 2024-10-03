@@ -1,13 +1,13 @@
 <?php
 
-use App\DTO\GoogleSheetDTO;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 use App\Jobs\PostToZapier;
 
 it('posts the event details to zapier and adds the event to the spreadsheet', function () {
     \Illuminate\Support\Facades\Queue::fake();
     \Illuminate\Support\Facades\Http::fake();
 
-    $dto = new GoogleSheetDTO(
+    $dataTransferObject = new GoogleSheetDataTransferObject(
         webhookUrl: 'https://hooks.zapier.com/hooks/catch/123456/abcdef',
         eventId: '123',
         eventType: 'event',
@@ -24,7 +24,7 @@ it('posts the event details to zapier and adds the event to the spreadsheet', fu
         date: now(),
     );
 
-    PostToZapier::dispatch($dto);
+    PostToZapier::dispatch($dataTransferObject);
 
     \Illuminate\Support\Facades\Queue::assertPushed(PostToZapier::class);
 });

@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Gift;
 
 use App\Actions\Address\CreateAddress;
 use App\Actions\Event\UpdateEvent;
-use App\DTO\GoogleSheetDTO;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HandleSendGiftRequest;
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
 use App\Models\Event;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class HandleSendGiftController extends Controller
@@ -46,7 +45,7 @@ class HandleSendGiftController extends Controller
         Mail::to($event->host->email)
             ->send(new GiftRequested($event));
 
-        $dto = new GoogleSheetDTO(
+        $dataTransferObject = new GoogleSheetDataTransferObject(
             webhookUrl: $event->eventType->zapier_webhook_url,
             eventId: $event->id,
             eventType: $event->eventType->name,
@@ -63,7 +62,7 @@ class HandleSendGiftController extends Controller
             date: now()->toDateString()
         );
 
-        PostToZapier::dispatch(dto: $dto);
+        PostToZapier::dispatch($dataTransferObject);
 
         return to_route('gift.success', $event);
     }
