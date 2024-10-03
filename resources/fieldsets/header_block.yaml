@@ -16,3 +16,4 @@ fields:
       container: s3
       type: assets
       display: Image
+      max_files: 1
