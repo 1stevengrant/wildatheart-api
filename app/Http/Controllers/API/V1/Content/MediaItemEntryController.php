@@ -74,6 +74,7 @@ class MediaItemEntryController extends Controller
 
         $response['images'] = $imageBuilder->build($mediaItem->images);
 
+        return response()->json($response);
         return MediaItemData::from($response);
     }
 }
