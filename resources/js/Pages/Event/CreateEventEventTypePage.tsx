@@ -32,9 +32,10 @@ import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
 import { oneHour } from "@/helpers/timeConstants";
 import { useDates } from "@/Hooks/useDates";
+import { useMapData } from "@/Hooks/useMapData";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
-import { selectedPlaceState, zoomState } from "@/store/mapAtom";
+import { selectedPlaceState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
 
 const CreateEventEventTypePage = () => {
@@ -45,11 +46,7 @@ const CreateEventEventTypePage = () => {
     const mapRef = useRef<any>(null);
     const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [marker, setMarker] = useState<any>(null);
-    const [userZoomLevel, setUserZoomLevel] = useRecoilState<number>(zoomState);
-
-    const handleUserLevelZoom = (zoom: number) => {
-        setUserZoomLevel(zoom);
-    };
+    const { zoom, handleUserLevelZoom } = useMapData();
 
     const lookupCurrentLocation = () => {
         if (navigator.geolocation) {
@@ -69,7 +66,7 @@ const CreateEventEventTypePage = () => {
                         locationData.coords.latitude,
                     ],
                     undefined,
-                    userZoomLevel
+                    zoom
                 );
                 addEvent(
                     locationData.coords.longitude,
@@ -98,7 +95,7 @@ const CreateEventEventTypePage = () => {
         flyTo(
             [position.coords.longitude, position.coords.latitude],
             undefined,
-            userZoomLevel
+            zoom
         );
 
         addEvent(position.coords.longitude, position.coords.latitude);
@@ -106,7 +103,7 @@ const CreateEventEventTypePage = () => {
 
     const getLocationError = (error: GeolocationPositionError) => {
         console.log(error);
-        flyTo([0, 0], undefined, 1);
+        flyTo([0, 0], undefined, zoom);
     };
 
     const flyTo = (

@@ -29,6 +29,7 @@ import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
 import { oneHour } from "@/helpers/timeConstants";
+import { useMapData } from "@/Hooks/useMapData";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
@@ -39,11 +40,7 @@ export const FireInformation = ({ user }: any) => {
     const mapRef = useRef<any>(null);
     const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [marker, setMarker] = useState<any>(null);
-    const [userZoomLevel, setUserZoomLevel] = useState<number>(6);
-
-    const handleUserLevelZoom = (zoom: number) => {
-        setUserZoomLevel(zoom);
-    };
+    const { handleUserLevelZoom, zoom } = useMapData();
 
     const lookupCurrentLocation = () => {
         if (navigator.geolocation) {
@@ -63,7 +60,7 @@ export const FireInformation = ({ user }: any) => {
                         locationData.coords.latitude,
                     ],
                     undefined,
-                    userZoomLevel
+                    zoom
                 );
                 addEvent(
                     locationData.coords.longitude,
@@ -92,7 +89,7 @@ export const FireInformation = ({ user }: any) => {
         flyTo(
             [position.coords.longitude, position.coords.latitude],
             undefined,
-            userZoomLevel
+            zoom
         );
 
         addEvent(position.coords.longitude, position.coords.latitude);
