@@ -16,8 +16,8 @@ export const LocalMapMarkers = () => {
                 events.map((event: any) => (
                     <Marker
                         key={event.id}
-                        longitude={event.longitude}
-                        latitude={event.latitude}
+                        longitude={event.display_longitude}
+                        latitude={event.display_latitude}
                         anchor="bottom"
                         onClick={(e) => {
                             e.originalEvent.stopPropagation();
