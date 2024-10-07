@@ -71,7 +71,6 @@ class PageEntryController extends Controller
 
         $response['images'] = $imageBuilder->build($page->images);
 
-        // return response()->json($response);
         return PageData::from($response);
     }
 }
