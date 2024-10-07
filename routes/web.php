@@ -4,19 +4,20 @@ use App\Http\Controllers\Attendee\ConnectWithHostController;
 use App\Http\Controllers\CreateSupportTicketController;
 use App\Http\Controllers\DrupalUrlController;
 use App\Http\Controllers\Event\ViewEventListingController;
+use App\Http\Controllers\FiresPageController;
 use App\Http\Controllers\HandleMonthlyHostFireEmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SupportRequestController;
+use App\Http\Controllers\UpcomingEventsController;
 use App\Http\Controllers\Webhooks\SendGridWebhookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::prefix('support')->name('support.')
-    ->group(function () {
-        Route::post('/', SupportRequestController::class)->name('store');
-        Route::get('/', CreateSupportTicketController::class)->name('create');
-    });
+Route::prefix('support')->name('support.')->group(function () {
+    Route::post('/', SupportRequestController::class)->name('store');
+    Route::get('/', CreateSupportTicketController::class)->name('create');
+});
 
 include 'auth.php';
 include 'emails.php';
@@ -46,4 +47,9 @@ Route::prefix('drupal')->name('drupal.')->group(function () {
     Route::get('{any}', [DrupalUrlController::class, 'any'])
         ->where('any', '.*')->name('drupal.any');
     Route::get('/', [DrupalUrlController::class, 'index'])->name('index');
+});
+
+Route::name('upcoming.')->group(function () {
+    Route::get('upcoming', UpcomingEventsController::class)->name('events');
+    Route::get('fires', FiresPageController::class)->name('fires');
 });

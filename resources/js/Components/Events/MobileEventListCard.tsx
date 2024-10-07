@@ -49,22 +49,15 @@ export const MobileEventListCard = ({ event }: { event: Event }) => {
                         </span>
                     </div>
                     <div className={`flex items-center space-x-2 mt-1`}>
-                        <>
-                            {event.host_photo ? (
-                                <UserAvatar image={event.host_photo} />
-                            ) : (
-                                // <FallbackAvatar
-                                //     size={30}
-                                //     name={event.hostObject.full_name}
-                                //     md5email={event.hostObject.md5email}
-                                // />
-                                <img src="" alt="" />
-                            )}
-                        </>
+                        {event.host_photo && (
+                            <UserAvatar image={event.host_photo} />
+                        )}
                         <div
                             className={`flex flex-col text-grey-200 leading-tighter text-sm`}
                         >
-                            <div>{event.name}</div>
+                            {event.type_group === fireTypeGroup && (
+                                <div>{event.name} Fire</div>
+                            )}
                             <div>{event.host_name}</div>
                         </div>
                     </div>
