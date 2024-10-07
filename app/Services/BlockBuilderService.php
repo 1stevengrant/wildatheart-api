@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DataTypeObjects\ButtonProps;
 use App\DataTypeObjects\CardVariant;
+use App\DataTypeObjects\HeroTitleBlock;
 use App\DataTypeObjects\IconProps;
 use App\DataTypeObjects\MediaItemsSlide;
 use App\DataTypeObjects\SlideBlock;
@@ -20,6 +21,7 @@ class BlockBuilderService
 
             $output[] = match ($block['type']) {
                 'media_slider' => $this->processMediaSliderBlock($block),
+                'hero_title' => $this->processHeroTitleBlock($block),
                 default => $this->processDefaultBlock($block)
             };
         }
@@ -45,6 +47,14 @@ class BlockBuilderService
         }
 
         return $output;
+    }
+
+    public function processHeroTitleBlock($block)
+    {
+        return HeroTitleBlock::from([
+            'hero_title' => $block['hero_title'],
+            'text_style' => $block['text_style'],
+        ]);
     }
 
     public function processMediaSliderBlock($block)
@@ -173,7 +183,7 @@ class BlockBuilderService
     {
         $subsplashListSlide = new MediaItemsSlide;
         $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
@@ -212,6 +222,6 @@ class BlockBuilderService
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl.$image->path;
+        return $cdnUrl . $image->path;
     }
 }
