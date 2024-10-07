@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 
 import Tippy from "@tippyjs/react/headless";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 import { SelectedEventType } from "@/Components/Events/SelectedEventType";
 import { imageGenerator } from "@/helpers/user";
 import { EventType } from "@/types/EventType";
+
 import "tippy.js/dist/tippy.css";
 
 export const EventTypeSelectButton = ({
@@ -17,6 +19,7 @@ export const EventTypeSelectButton = ({
     isSelected: boolean;
 }) => {
     const tippyRef = useRef<any>(null);
+    const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
 
     const handleHide = () => {
         if (tippyRef.current && tippyRef.current.hide) {
@@ -29,10 +32,14 @@ export const EventTypeSelectButton = ({
             trigger="click mouseenter"
             key={type.id}
             placement="bottom-start"
+            onTrigger={() => {
+                if (isSmallDevice) {
+                    setSelectedType(type);
+                }
+            }}
             interactive={true}
             touch={true}
             delay={250}
-            appendTo={() => document.body}
             render={(attrs) => (
                 <SelectedEventType
                     eventType={type}

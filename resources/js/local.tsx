@@ -4,7 +4,6 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import React from "react";
 
-import "maplibre-gl/dist/maplibre-gl.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";

@@ -33,7 +33,8 @@ export const SelectedEventType = ({
                 leaveTo="opacity-0"
             >
                 <div
-                    className={`w-full md:w-[350px] p-6 rounded-2xl z-[100] shadow-xl bg-gradient-to-br ${eventTypeBackground(eventType.slug)} to-zinc-800 ${attrs}`}
+                    {...attrs}
+                    className={`w-full md:w-[350px] p-6 rounded-2xl z-[100] shadow-xl bg-gradient-to-br ${eventTypeBackground(eventType.slug)} to-zinc-800`}
                 >
                     <div
                         className={`flex items-center justify-between space-x-4`}
