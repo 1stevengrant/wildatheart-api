@@ -46,7 +46,7 @@ class Attributes extends Data
     public string $embed_html;
     public string $embed_html_dark;
     public bool $audio_processing;
-    public string $type_attribute;
+    public string $type;
     public ?string $email_notifications;
 }
 
@@ -54,12 +54,4 @@ class Attributes extends Data
 class Relationships extends Data
 {
     public ShowData $show;
-}  
-
-#[TypeScript]
-class ShowData extends Data
-{
-    public string $id;
-    public string $type;
 }
-

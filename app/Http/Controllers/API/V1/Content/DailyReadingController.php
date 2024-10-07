@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1\Content;
 
 use App\DataTypeObjects\API\V1\Content\DailyReadingResponse;
+use App\DataTypeObjects\ShowData;
 use App\DataTypeObjects\TransistorPodcastEpisode;
 use App\Http\Controllers\Controller;
 use App\Services\TransistorService;
@@ -37,36 +38,37 @@ class DailyReadingController extends Controller
 
         $dailyReadings = [];
 
-                    /**
-             * Drupal removed leading articles from slugs
-             * for simplicity we'll do the same.
-             */
-            if ($data) {
-                foreach ($data as &$item) {
-                    $dailyReading = DailyReadingResponse::from([
-                        'transistor_episode' => TransistorPodcastEpisode::from($item),
-                        'previous_episode_slug' => null,
-                    ]);
-                    if (isset($item['attributes']['slug'])) {
-                        $slug = $item['attributes']['slug'];
-                        $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($slug);
-                    }
-                    $dailyReadings[] = $dailyReading;
+        /**
+         * Drupal removed leading articles from slugs
+         * for simplicity we'll do the same.
+         */
+        if ($data) {
+            foreach ($data as &$item) {
+
+                $dailyReading = DailyReadingResponse::from([
+                    'transistor_episode' => TransistorPodcastEpisode::from($item),
+                    'previous_episode_slug' => null,
+                ]);
+                if (isset($item['attributes']['slug'])) {
+                    $slug = $item['attributes']['slug'];
+                    $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($slug);
                 }
+                $dailyReadings[] = $dailyReading;
             }
+        }
 
-
-        return DailyReadingResponse::collect($dailyReadings);
+        return DailyReadingResponse::collection($dailyReadings);
     }
-    
+
     public function getRecent(Request $request)
     {
         $limit = $request->input('limit', 1);
-        
+
         $data = $this->transistorService->getRecent('wildatheart-daily', $limit);
         $dailyReadings = [];
         if ($data) {
             foreach ($data as &$item) {
+
                 $dailyReading = DailyReadingResponse::from([
                     'transistor_episode' => TransistorPodcastEpisode::from($item),
                     'previous_episode_slug' => null,
@@ -77,8 +79,6 @@ class DailyReadingController extends Controller
                 $dailyReadings[] = $dailyReading;
             }
         }
-        return DailyReadingResponse::collect($dailyReadings);
+        return DailyReadingResponse::collection($dailyReadings);
     }
-
-   
 }
