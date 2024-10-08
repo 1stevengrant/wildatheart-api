@@ -16,12 +16,7 @@ use Illuminate\Support\Str;
  */
 class DailyReadingController extends Controller
 {
-    private $transistorService;
-
-    public function __construct(TransistorService $transistorService)
-    {
-        $this->transistorService = $transistorService;
-    }
+    public function __construct(private readonly TransistorService $transistorService) {}
 
     public function generatePreviousEpisodeSlug(string $title)
     {
