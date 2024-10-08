@@ -41,7 +41,9 @@ class PageEntryController extends Controller
             // Skip published and date checks for live preview or token access
 
             $token = Token::find($token);
-            $page = LivePreview::item($token);
+            if ($token) {
+                $page = LivePreview::item($token);
+            }
         } else {
 
             $page = Entry::query()
@@ -73,6 +75,7 @@ class PageEntryController extends Controller
 
         // adding the json response here to overcome 500 error
         return response()->json($response);
+
         return PageData::from($response);
     }
 }
