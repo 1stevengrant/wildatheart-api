@@ -17,6 +17,7 @@ class PrayersEntryController extends Controller
         $prayers = Entry::query()
             ->where('collection', 'prayers')
             ->where('published', true)
+            ->orderBy('order', 'asc')
             ->get();
 
 
@@ -24,7 +25,8 @@ class PrayersEntryController extends Controller
             return $this->buildPrayerResponse($prayer);
         });
 
-        return PrayersShowResponse::collect($prayersResponse);
+
+        return PrayersShowResponse::collection($prayersResponse);
     }
 
     public function show($slug)

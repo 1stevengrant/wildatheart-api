@@ -73,9 +73,6 @@ class PageEntryController extends Controller
 
         $response['images'] = $imageBuilder->build($page->images);
 
-        // adding the json response here to overcome 500 error
-        return response()->json($response);
-
         return PageData::from($response);
     }
 }

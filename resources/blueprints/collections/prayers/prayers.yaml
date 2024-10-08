@@ -19,6 +19,11 @@ tabs:
               type: bard
               display: Content
           -
+            handle: summary
+            field:
+              type: textarea
+              display: Summary
+          -
             handle: pdf
             field:
               max_files: 1

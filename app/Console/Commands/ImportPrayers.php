@@ -54,6 +54,7 @@ class ImportPrayers extends Command
                 $newData = [
                     'title' => $prayer['title'],
                     'content' => $this->getBody($prayer['body']),
+                    'summary' => $prayer['summary'],
                     'drupal_url' => str_replace('https://wildatheart.org', '', $prayer['url']),
                 ];
 
