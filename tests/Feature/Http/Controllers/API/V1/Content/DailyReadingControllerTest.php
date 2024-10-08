@@ -61,7 +61,6 @@ $mockData = [
             ]
         ]
     ],
-
     [
         'id' => '1299116',
         'type' => 'episode',
@@ -135,8 +134,10 @@ it('returns daily readings', function () use ($mockData) {
 
     $responseData = $response->json();
 
+    expect($responseData[0]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
     expect($responseData[0]['previous_episode_slug'])->toEqual('what-jesus-weeps-over');
-    expect($responseData[1]['previous_episode_slug'])->toEqual('his-child-his-reflection');
+    expect($responseData[1]['current_episode_slug'])->toEqual('his-child-his-reflection');
+    expect($responseData[1]['previous_episode_slug'])->toEqual('his-child%3b-his-reflection');
 });
 
 it('returns limited number of recent daily readings', function () use ($mockData) {
@@ -181,4 +182,39 @@ it('uses default limit when none provided for recent readings', function () use 
     // Assert
     $response->assertStatus(200)
         ->assertJsonCount($defaultLimit);
+});
+
+it('returns redirects', function () use ($mockData) {
+    // Arrange
+    $this->transistorServiceMock->shouldReceive('getAll')
+        ->with('wildatheart-daily')
+        ->once()
+        ->andReturn($mockData);
+
+    // Act
+    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'what-jesus-weeps-over']));
+
+    // Assert
+    $response->assertStatus(200)
+        ->assertJsonStructure([
+            'previous_slug',
+            'current_slug',
+        ]);
+
+    $responseData = $response->json();
+    expect($responseData['previous_slug'])->toEqual('what-jesus-weeps-over');
+    expect($responseData['current_slug'])->toEqual('what-jesus-weeps-over');
+});
+
+it('returns redirects using the old slug', function () use ($mockData) {
+    // Arrange
+    $this->transistorServiceMock->shouldReceive('getAll')
+        ->with('wildatheart-daily')
+        ->once()
+        ->andReturn($mockData);
+
+    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'his-child%3b-his-reflection']));
+    $responseData = $response->json();
+    expect($responseData['current_slug'])->toEqual('his-child-his-reflection');
+    expect($responseData['previous_slug'])->toEqual('his-child%3b-his-reflection');
 });

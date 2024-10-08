@@ -47,6 +47,7 @@ Route::prefix('content')->group(function () {
             Route::prefix('daily-reading')->name('dailyReading.')->group(function () {
                 Route::get('/', [DailyReadingController::class, 'index'])->name('index');
                 Route::get('/recent', [DailyReadingController::class, 'getRecent'])->name('getRecent');
+                Route::get('/redirect/{slug}', [DailyReadingController::class, 'redirect'])->name('redirect');
             });
             Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
             Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
