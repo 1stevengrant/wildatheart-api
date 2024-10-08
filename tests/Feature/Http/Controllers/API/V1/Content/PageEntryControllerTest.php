@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Statamic\Facades\Entry;
 use Statamic\Facades\Collection;
+use Statamic\Facades\Entry;
 
 uses(Tests\TestCase::class, RefreshDatabase::class)->in('Feature');
 

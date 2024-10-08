@@ -9,6 +9,8 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class StatamicValue extends Data
 {
     public string $value;
+
     public string $label;
+
     public string $key;
 }

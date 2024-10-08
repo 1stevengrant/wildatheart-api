@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\V1\Content;
 
 use App\DataTypeObjects\API\V1\Content\DailyReadingResponse;
-use App\DataTypeObjects\ShowData;
 use App\DataTypeObjects\TransistorPodcastEpisode;
 use App\Http\Controllers\Controller;
 use App\Services\TransistorService;
@@ -17,7 +16,6 @@ use Illuminate\Support\Str;
  */
 class DailyReadingController extends Controller
 {
-
     private $transistorService;
 
     public function __construct(TransistorService $transistorService)
@@ -48,9 +46,9 @@ class DailyReadingController extends Controller
         // Remove words that were not used in drupal slugs for some reason.
         $slug = preg_replace('/^(for-|is-|to-|the-|a-|an-|of-)/i', '', $slug);
         $slug = preg_replace('/-for-|-is-|-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
+
         return $slug;
     }
-
 
     public function index()
     {
@@ -102,6 +100,7 @@ class DailyReadingController extends Controller
                 $dailyReadings[] = $dailyReading;
             }
         }
+
         return DailyReadingResponse::collection($dailyReadings);
     }
 
@@ -114,12 +113,11 @@ class DailyReadingController extends Controller
             $mappedReadings[$reading->previous_episode_slug] = $reading->current_episode_slug;
         }
 
-
         $slug = strtolower(urlencode($slug));
         if (isset($mappedReadings[$slug])) {
             return [
                 'previous_slug' => $slug,
-                'current_slug' => $mappedReadings[$slug]
+                'current_slug' => $mappedReadings[$slug],
             ];
         }
 

@@ -3,8 +3,8 @@
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Services\TransistorService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use function Pest\Laravel\getJson;
 
+use function Pest\Laravel\getJson;
 
 /**
  * @covers \App\Http\Controllers\API\V1\Content\DailyReadingController
@@ -51,16 +51,16 @@ $mockData = [
             'embed_html_dark' => '<iframe width="100%" height="180" frameborder="no" scrolling="no" seamless src="https://share.transistor.fm/e/0314dae8/dark"></iframe>',
             'audio_processing' => false,
             'type' => 'full',
-            'email_notifications' => null
+            'email_notifications' => null,
         ],
         'relationships' => [
             'show' => [
                 'data' => [
                     'id' => '40884',
-                    'type' => 'show'
-                ]
-            ]
-        ]
+                    'type' => 'show',
+                ],
+            ],
+        ],
     ],
     [
         'id' => '1299116',
@@ -95,17 +95,17 @@ $mockData = [
             'embed_html_dark' => '<iframe width="100%" height="180" frameborder="no" scrolling="no" seamless src="https://share.transistor.fm/e/43e2f61e/dark"></iframe>',
             'audio_processing' => false,
             'type' => 'full',
-            'email_notifications' => null
+            'email_notifications' => null,
         ],
         'relationships' => [
             'show' => [
                 'data' => [
                     'id' => '40884',
-                    'type' => 'show'
-                ]
-            ]
-        ]
-    ]
+                    'type' => 'show',
+                ],
+            ],
+        ],
+    ],
 ];
 
 it('returns daily readings', function () use ($mockData) {
@@ -250,7 +250,7 @@ describe('generatePreviousEpisodeSlug', function () {
 
     it('handles em dashes and apostrophies', function () {
         // Arrange
-        $title = "Worship — The Heart’s Healer";
+        $title = 'Worship — The Heart’s Healer';
         $dailyReadingController = new DailyReadingController($this->transistorServiceMock);
 
         // Act
@@ -308,8 +308,6 @@ describe('generatePreviousEpisodeSlug', function () {
     //     // Assert
     //     expect($slug)->toEqual('his-child-his-reflection');
     // });
-
-
 
     // it('handles multiple hyphens', function () {
     //     // Arrange

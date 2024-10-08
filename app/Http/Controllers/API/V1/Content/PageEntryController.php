@@ -75,6 +75,7 @@ class PageEntryController extends Controller
 
         // adding the json response here to overcome 500 error
         return response()->json($response);
+
         return PageData::from($response);
     }
 }

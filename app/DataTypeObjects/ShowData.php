@@ -15,5 +15,6 @@ class ShowData extends Data
 class Show extends Data
 {
     public string $id;
+
     public string $type;
 }

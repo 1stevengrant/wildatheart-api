@@ -9,7 +9,10 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class TextLineBlock extends Data
 {
     public string $type = 'text_line';
+
     public string $text;
+
     public StatamicValue $text_style;
+
     public string $id;
 }
