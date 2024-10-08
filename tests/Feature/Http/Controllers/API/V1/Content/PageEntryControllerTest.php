@@ -14,18 +14,21 @@ beforeEach(function () {
 });
 
 it('returns 404 when page not found', function () {
+    // Arrange
     $nonExistentSlug = 'non-existent-page';
 
+    // Act
     $response = $this->getJson(route('content.v1.pages.bySlug', ['slug' => $nonExistentSlug]));
 
+    // Assert
     $response->assertStatus(404)
         ->assertJson(['error' => 'Page not found']);
 });
 
 test('returns published page by slug', function () {
+    // Arrange
     $slug = 'test-page';
 
-    // Create a published page entry
     $entry = Entry::make()
         ->collection('pages')
         ->blueprint('page')
@@ -58,8 +61,10 @@ test('returns published page by slug', function () {
         ])
         ->save();
 
+    // Act
     $response = $this->getJson(route('content.v1.pages.bySlug', ['slug' => $slug]));
 
+    // Assert
     $response->assertStatus(200)
         ->assertJsonFragment([
             'text' => 'This is a test page.',
@@ -67,9 +72,10 @@ test('returns published page by slug', function () {
 });
 
 test('it does not return unpublished pages', function () {
+
+    // Arrange
     $slug = 'unpublished-page';
 
-    // Create an unpublished page entry
     $entry = Entry::make()
         ->collection('pages')
         ->slug($slug)
@@ -81,13 +87,16 @@ test('it does not return unpublished pages', function () {
         ])
         ->save();
 
+    // Act
     $response = $this->getJson(route('content.v1.pages.bySlug', ['slug' => $slug]));
 
+    // Assert
     $response->assertStatus(404)
         ->assertJson(['error' => 'Page not found']);
 });
 
 test('it does not return pages with future date', function () {
+    // Arrange
     $slug = 'future-page';
 
     // Create a page with a future date
@@ -109,6 +118,7 @@ test('it does not return pages with future date', function () {
 });
 
 test('it returns future page when make_scheduled_page_public is true', function () {
+    // Arrange
     $slug = 'future-public-page';
 
     // Create a future page with 'make_scheduled_page_public' set to true
@@ -143,8 +153,10 @@ test('it returns future page when make_scheduled_page_public is true', function 
         ])
         ->save();
 
+    // Act
     $response = $this->getJson(route('content.v1.pages.bySlug', ['slug' => $slug]));
 
+    // Assert
     $response->assertStatus(200)
         ->assertJsonFragment([
             'title' => 'Future Public Page',

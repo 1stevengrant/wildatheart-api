@@ -213,7 +213,10 @@ it('returns redirects using the old slug', function () use ($mockData) {
         ->once()
         ->andReturn($mockData);
 
+    // Act
     $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'his-child%3b-his-reflection']));
+
+    // Assert
     $responseData = $response->json();
     expect($responseData['current_slug'])->toEqual('his-child-his-reflection');
     expect($responseData['previous_slug'])->toEqual('his-child%3b-his-reflection');
