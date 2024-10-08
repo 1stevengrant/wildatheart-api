@@ -27,30 +27,27 @@ class DailyReadingController extends Controller
 
     public function generatePreviousEpisodeSlug(string $title)
     {
-
-
-
-
         // Replace spaces with hyphens
         $slug = str_replace(' ', '-', $title);
 
+        // Remove semicolons standard apostrophies and question marks
+        $slug = preg_replace("/[;?']/", '', $slug);
+
+        // Encode the slug
         $slug = urlencode($slug);
 
+        // Convert to lowercase
         $slug = strtolower($slug);
-
-        // Remove any remaining non-alphanumeric characters (except hyphens)
-        // $slug = preg_replace('/[^a-z0-9-]/i', '', $slug);
-
-        if (str_contains($slug, "to-")) {
-            $slug = str_replace("to-", "", $slug);
-        }
 
         // Ensure single hyphens between words
         $slug = preg_replace('/-+/', '-', $slug);
+
         // Remove leading and trailing hyphens
         $slug = trim($slug, '-');
-        $slug = preg_replace('/^(to-|the-|a-|an-|of-)/i', '', $slug);
-        $slug = preg_replace('/-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
+
+        // Remove words that were not used in drupal slugs for some reason.
+        $slug = preg_replace('/^(for-|is-|to-|the-|a-|an-|of-)/i', '', $slug);
+        $slug = preg_replace('/-for-|-is-|-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
         return $slug;
     }
 

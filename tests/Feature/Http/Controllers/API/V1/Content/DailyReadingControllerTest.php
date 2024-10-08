@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Services\TransistorService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\getJson;
@@ -137,7 +138,7 @@ it('returns daily readings', function () use ($mockData) {
     expect($responseData[0]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
     expect($responseData[0]['previous_episode_slug'])->toEqual('what-jesus-weeps-over');
     expect($responseData[1]['current_episode_slug'])->toEqual('his-child-his-reflection');
-    expect($responseData[1]['previous_episode_slug'])->toEqual('his-child%3b-his-reflection');
+    expect($responseData[1]['previous_episode_slug'])->toEqual('his-child-his-reflection');
 });
 
 it('returns limited number of recent daily readings', function () use ($mockData) {
@@ -214,10 +215,132 @@ it('returns redirects using the old slug', function () use ($mockData) {
         ->andReturn($mockData);
 
     // Act
-    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'his-child%3b-his-reflection']));
+    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'his-child-his-reflection']));
 
     // Assert
     $responseData = $response->json();
     expect($responseData['current_slug'])->toEqual('his-child-his-reflection');
-    expect($responseData['previous_slug'])->toEqual('his-child%3b-his-reflection');
+    expect($responseData['previous_slug'])->toEqual('his-child-his-reflection');
+});
+
+describe('generatePreviousEpisodeSlug', function () {
+    it('generates a previous episode slug', function () {
+        // Arrange
+        $title = 'What Jesus Weeps Over';
+        $dailyReadingController = new DailyReadingController($this->transistorServiceMock);
+
+        // Act
+        $slug = $dailyReadingController->generatePreviousEpisodeSlug($title);
+
+        // Assert
+        expect($slug)->toEqual('what-jesus-weeps-over');
+    });
+
+    it('handles leading articles', function () {
+        // Arrange
+        $title = 'The Good Shepherd';
+        $dailyReadingController = new DailyReadingController($this->transistorServiceMock);
+
+        // Act
+        $slug = $dailyReadingController->generatePreviousEpisodeSlug($title);
+
+        // Assert
+        expect($slug)->toEqual('good-shepherd');
+    });
+
+    it('handles em dashes and apostrophies', function () {
+        // Arrange
+        $title = "Worship — The Heart’s Healer";
+        $dailyReadingController = new DailyReadingController($this->transistorServiceMock);
+
+        // Act
+        $slug = $dailyReadingController->generatePreviousEpisodeSlug($title);
+
+        // Assert
+        expect($slug)->toEqual('worship-%e2%80%94-heart%e2%80%99s-healer');
+    });
+
+    it('removes semicolons', function () {
+        // Arrange
+        $title = 'His Child; His Reflection';
+        $dailyReadingController = new DailyReadingController($this->transistorServiceMock);
+
+        // Act
+        $slug = $dailyReadingController->generatePreviousEpisodeSlug($title);
+
+        // Assert
+        expect($slug)->toEqual('his-child-his-reflection');
+    });
+
+    it('removes question marks', function () {
+        // Arrange
+        $title = 'How Is Your Soul?';
+        $dailyReadingController = new DailyReadingController($this->transistorServiceMock);
+
+        // Act
+        $slug = $dailyReadingController->generatePreviousEpisodeSlug($title);
+
+        // Assert
+        expect($slug)->toEqual('how-your-soul');
+    });
+
+    it('handles standard    sapostrophies', function () {
+        // Arrange
+        $dailyReadingController = new DailyReadingController($this->transistorServiceMock);
+
+        // Act
+        $slug = $dailyReadingController->generatePreviousEpisodeSlug("Our Heart's Capacities");
+
+        // Assert
+        expect($slug)->toEqual('our-hearts-capacities');
+
+        $slug = $dailyReadingController->generatePreviousEpisodeSlug("It's All For You");
+        expect($slug)->toEqual('its-all-you');
+    });
+
+    // it('handles multiple spaces', function () {
+    //     // Arrange
+    //     $title = 'His Child; His Reflection';
+
+    //     // Act
+    //     $slug = generatePreviousEpisodeSlug($title);
+
+    //     // Assert
+    //     expect($slug)->toEqual('his-child-his-reflection');
+    // });
+
+
+
+    // it('handles multiple hyphens', function () {
+    //     // Arrange
+    //     $title = 'The Good Shepherd';
+
+    //     // Act
+    //     $slug = generatePreviousEpisodeSlug($title);
+
+    //     // Assert
+    //     expect($slug)->toEqual('the-good-shepherd');
+    // });
+
+    // it('handles leading and trailing hyphens', function () {
+    //     // Arrange
+    //     $title = 'The Good Shepherd';
+
+    //     // Act
+    //     $slug = generatePreviousEpisodeSlug($title);
+
+    //     // Assert
+    //     expect($slug)->toEqual('the-good-shepherd');
+    // });
+
+    // it('handles leading articles', function () {
+    //     // Arrange
+    //     $title = 'The Good Shepherd';
+
+    //     // Act
+    //     $slug = generatePreviousEpisodeSlug($title);
+
+    //     // Assert
+    //     expect($slug)->toEqual('the-good-shepherd');
+    // });
 });
