@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\DTO\GoogleSheetDTO;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Jobs\PostToZapier;
@@ -60,7 +60,7 @@ class HostEventTypeCreateEventController extends Controller
         ]);
 
         if ($eventType->zapier_webhook_url && $eventType->allow_materials_order) {
-            $dto = new GoogleSheetDTO(
+            $dataTransferObject = new GoogleSheetDataTransferObject(
                 webhookUrl: $eventType->zapier_webhook_url,
                 eventId: $event->id,
                 eventType: $eventType->name,
@@ -77,7 +77,7 @@ class HostEventTypeCreateEventController extends Controller
                 date: now()->toDateTimeString(),
             );
 
-            PostToZapier::dispatch($dto);
+            PostToZapier::dispatch($dataTransferObject);
         }
 
         return redirect()->route('my.events.active', ['event' => $event]);

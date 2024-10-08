@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DataTransferObjects;
 
-class GoogleSheetDTO
+class GoogleSheetDataTransferObject
 {
     public function __construct(
         public string $webhookUrl,

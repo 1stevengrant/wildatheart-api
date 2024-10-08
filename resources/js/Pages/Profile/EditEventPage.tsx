@@ -12,7 +12,7 @@ import Map, {
     Marker,
     NavigationControl,
 } from "react-map-gl";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
@@ -28,18 +28,20 @@ import { config } from "@/helpers/config";
 import { eventIsAFire } from "@/helpers/eventIsAFire";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { useDates } from "@/Hooks/useDates";
+import { useMapData } from "@/Hooks/useMapData";
 import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { selectedPlaceState, zoomState } from "@/store/mapAtom";
+import { selectedPlaceState } from "@/store/mapAtom";
 import { Event } from "@/types/Event";
 
 const EditEventPage = () => {
     const { startDate, setStartDate, resetAllDates, maxDate } = useDates();
     const mapRef = useRef<any>(null);
     const [selectedPlace] = useRecoilState(selectedPlaceState);
+    const { handleUserLevelZoom } = useMapData();
     const [isPrivate, setIsPrivate] = useState(false);
-    const setUserZoomLevel = useSetRecoilState<number>(zoomState);
+
     const page = useTypedPage();
     const user = page.props.auth.user!;
     const event = page.props.event as Event;
@@ -178,10 +180,6 @@ const EditEventPage = () => {
             duration: duration,
             zoom: zoom,
         });
-    };
-
-    const handleUserLevelZoom = (zoom: number) => {
-        setUserZoomLevel(zoom);
     };
 
     return (

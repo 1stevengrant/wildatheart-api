@@ -2,8 +2,8 @@ import React from "react";
 
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
-import Markdown from "react-markdown";
 
+import { CustomMarkdown } from "@/Components/CustomMarkdown";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { EventFaqsLink } from "@/Components/Links/EventFaqsLink";
@@ -53,9 +53,9 @@ const BeforeEventTypePage = () => {
                 <EmptyLayoutBody>
                     <PageContainer>
                         {eventType.registration_before_your_event_text && (
-                            <Markdown>
+                            <CustomMarkdown>
                                 {eventType.registration_before_your_event_text}
-                            </Markdown>
+                            </CustomMarkdown>
                         )}
                     </PageContainer>
                 </EmptyLayoutBody>

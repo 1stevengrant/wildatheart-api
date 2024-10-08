@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\DTO\GoogleSheetDTO;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,7 +17,7 @@ class PostToZapier implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public GoogleSheetDTO $dto) {}
+    public function __construct(public GoogleSheetDataTransferObject $dataTransferObject) {}
 
     /**
      * Execute the job.
@@ -27,22 +27,22 @@ class PostToZapier implements ShouldQueue
     public function handle(): void
     {
         activity()
-            ->withProperties((array) $this->dto)
-            ->log('Post to Zapier '.$this->dto->webhookUrl);
+            ->withProperties((array) $this->dataTransferObject)
+            ->log('Post to Zapier '.$this->dataTransferObject->webhookUrl);
 
         if (config('services.zapier.enabled')) {
 
-            $response = Http::post($this->dto->webhookUrl, (array) $this->dto);
+            $response = Http::post($this->dataTransferObject->webhookUrl, (array) $this->dataTransferObject);
 
             if ($response->failed()) {
                 activity()
                     ->withProperties([
-                        'data' => (array) $this->dto,
+                        'data' => (array) $this->dataTransferObject,
                         'response' => $response->body(),
                     ])
-                    ->log('Post to Zapier failed '.$this->dto->webhookUrl);
+                    ->log('Post to Zapier failed '.$this->dataTransferObject->webhookUrl);
 
-                throw new \Exception('Post to Zapier failed '.$this->dto->webhookUrl);
+                throw new \Exception('Post to Zapier failed '.$this->dataTransferObject->webhookUrl);
             }
         }
     }

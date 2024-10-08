@@ -4,8 +4,8 @@ import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
 import Vimeo from "@u-wave/react-vimeo";
-import Markdown from "react-markdown";
 
+import { CustomMarkdown } from "@/Components/CustomMarkdown";
 import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
@@ -67,9 +67,9 @@ const WelcomeEventTypePage = () => {
                                 />
                             ))}
                         {eventType.registration_welcome_text && (
-                            <Markdown>
+                            <CustomMarkdown>
                                 {eventType.registration_welcome_text}
-                            </Markdown>
+                            </CustomMarkdown>
                         )}
                     </PageContainer>
                 </EmptyLayoutBody>

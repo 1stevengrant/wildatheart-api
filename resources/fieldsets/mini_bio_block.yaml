@@ -1,0 +1,20 @@
+title: 'Mini Bio Block'
+fields:
+  -
+    handle: name
+    field:
+      type: text
+      display: Name
+  -
+    handle: image
+    field:
+      container: s3
+      type: assets
+      display: Image
+      max_files: 1
+  -
+    handle: prose
+    field:
+      remove_empty_nodes: false
+      type: bard
+      display: Prose

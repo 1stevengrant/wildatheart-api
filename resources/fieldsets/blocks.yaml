@@ -59,3 +59,15 @@ fields:
               fields:
                 -
                   import: add_to_calendar_block
+            header:
+              display: Header
+              icon: layout-header
+              fields:
+                -
+                  import: header_block
+            container:
+              display: Container
+              icon: programming-module-box-cube
+              fields:
+                -
+                  import: container_block

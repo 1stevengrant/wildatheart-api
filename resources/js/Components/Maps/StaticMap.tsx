@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import mapboxgl from "mapbox-gl";
 
+import { NoWebGLSupport } from "@/Components/Maps/NoWebGLSupport";
 import { config } from "@/helpers/config";
 import { IStaticMapProps } from "@/interfaces/IStaticMapProps";
 
@@ -11,8 +12,13 @@ export const StaticMap = ({
     event,
     className = "",
 }: IStaticMapProps) => {
+    const [mapIsSupported, setMapIsSupported] = useState(true);
     useEffect(() => {
         mapboxgl.accessToken = import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN;
+        if (!mapboxgl.supported()) {
+            setMapIsSupported(false);
+            return;
+        }
         let mapMarkerUrl = "";
         if (event?.eventType.includes("retreat")) {
             mapMarkerUrl = "/svgs/map-marker-retreat.svg";
@@ -40,10 +46,16 @@ export const StaticMap = ({
     }, []);
 
     return (
-        <div
-            id="mapContainer"
-            className={`${className}`}
-            style={{ width: "100%", height: "275px" }}
-        />
+        <>
+            {!mapIsSupported ? (
+                <NoWebGLSupport className={`my-24`} />
+            ) : (
+                <div
+                    id="mapContainer"
+                    className={`${className}`}
+                    style={{ width: "100%", height: "275px" }}
+                />
+            )}
+        </>
     );
 };

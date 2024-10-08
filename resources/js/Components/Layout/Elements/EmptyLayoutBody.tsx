@@ -10,7 +10,9 @@ export const EmptyLayoutBody = ({
     className = "",
 }: EmptyLayoutBodyProps) => {
     return (
-        <div className={`pb-[63px] md:pb-[93px] md:mx-auto ${className}`}>
+        <div
+            className={`pb-[63px] md:pb-[93px] md:mx-auto overflow-y-scroll ${className}`}
+        >
             {children}
         </div>
     );

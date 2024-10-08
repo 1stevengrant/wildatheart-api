@@ -1,9 +1,12 @@
 <?php
 
 return [
+    'slack_alerts_enabled' => env('SLACK_ALERTS_ENABLED', false),
+
     /*
      * The webhook URLs that we'll use to send a message to Slack.
      */
+
     'webhook_urls' => [
         'default' => config('services.slack.webhook_url'),
         'events' => config('services.slack.events_webhook_url'),
