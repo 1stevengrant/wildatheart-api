@@ -49,7 +49,7 @@ return [
     ],
 
     'zendesk' => [
-        'ticket_api' => 'https://'.env('ZENDESK_SUBDOMAIN').'.zendesk.com/api/v2/tickets.json',
+        'ticket_api' => 'https://' . env('ZENDESK_SUBDOMAIN') . '.zendesk.com/api/v2/tickets.json',
         'token' => env('ZENDESK_TOKEN'),
         'user' => env('ZENDESK_USERNAME'),
     ],
@@ -88,5 +88,8 @@ return [
         'api_key' => env('TRANSISTOR_API_KEY'),
         'api_url' => env('TRANSISTOR_API_URL'),
         'cache_duration' => env('TRANSISTOR_CACHE_DURATION'),
+    ],
+    'bunny' => [
+        's3_cdn_url' => env('BUNNY_S3_CDN_URL'),
     ],
 ];

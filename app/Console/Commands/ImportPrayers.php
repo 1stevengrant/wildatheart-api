@@ -95,10 +95,10 @@ class ImportPrayers extends Command
     {
         $filename = basename($srcUrl);
 
-        $existingAsset = Asset::find("files/prayers/{$filename}");
+        $existingAsset = Asset::find("s3::files/prayers/{$filename}");
 
         if ($existingAsset) {
-            return $existingAsset->id();
+            return $existingAsset->path;
         }
         $fileContent = Http::get($srcUrl)->body();
         $tempFile = tempnam(sys_get_temp_dir(), 'prayer_file_');
@@ -117,7 +117,7 @@ class ImportPrayers extends Command
             $asset->upload($uploadedFile);
             $asset->save();
             // Add the asset to the prayer data
-            return $asset->id();
+            return $asset->path;
         }
     }
 }
