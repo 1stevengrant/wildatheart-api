@@ -41,7 +41,9 @@ class PageEntryController extends Controller
             // Skip published and date checks for live preview or token access
 
             $token = Token::find($token);
-            $page = LivePreview::item($token);
+            if ($token) {
+                $page = LivePreview::item($token);
+            }
         } else {
 
             $page = Entry::query()
