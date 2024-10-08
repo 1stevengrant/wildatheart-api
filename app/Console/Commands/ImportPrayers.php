@@ -21,7 +21,7 @@ class ImportPrayers extends Command
      *
      * @var string
      */
-    protected $description = 'Import events from the Allies Network to Local platform';
+    protected $description = 'Import prayers from Drupal into Statamic';
 
     /**
      * Execute the console command.
@@ -33,7 +33,6 @@ class ImportPrayers extends Command
 
     public function import(): void
     {
-        // filter events with first and last name
         $drupalPrayers = collect(Http::get('https://wildatheart.org/json/prayer')->json())
             ->toArray();
 
