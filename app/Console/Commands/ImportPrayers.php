@@ -97,29 +97,27 @@ class ImportPrayers extends Command
 
         $existingAsset = Asset::find("files/prayers/{$filename}");
 
-        if (!$existingAsset) {
-            $fileContent = Http::get($srcUrl)->body();
-            $tempFile = tempnam(sys_get_temp_dir(), 'prayer_file_');
-            file_put_contents($tempFile, $fileContent);
-
-            $uploadedFile = new \Illuminate\Http\UploadedFile(
-                $tempFile,
-                $filename,
-                'application/pdf',
-                null,
-                true
-            );
-
-            if ($uploadedFile) {
-                $asset = Asset::make()->container('s3')->path("files/prayers/{$filename}");
-                $asset->upload($uploadedFile);
-                $asset->save();
-                // Add the asset to the prayer data
-                return $asset->id();
-            }
-        } else {
-            // Use the existing asset
+        if ($existingAsset) {
             return $existingAsset->id();
+        }
+        $fileContent = Http::get($srcUrl)->body();
+        $tempFile = tempnam(sys_get_temp_dir(), 'prayer_file_');
+        file_put_contents($tempFile, $fileContent);
+
+        $uploadedFile = new \Illuminate\Http\UploadedFile(
+            $tempFile,
+            $filename,
+            'application/pdf',
+            null,
+            true
+        );
+
+        if ($uploadedFile) {
+            $asset = Asset::make()->container('s3')->path("files/prayers/{$filename}");
+            $asset->upload($uploadedFile);
+            $asset->save();
+            // Add the asset to the prayer data
+            return $asset->id();
         }
     }
 }
