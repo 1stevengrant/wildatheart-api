@@ -29,6 +29,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         Gate::define('viewHorizon', function ($user) {
             $allowedDomains = ['wildatheart.org', 'ghijk.co.uk'];
+
             return in_array($user->email, $allowedDomains);
         });
     }

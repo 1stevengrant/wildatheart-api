@@ -10,7 +10,7 @@ class PageData extends Data
 {
     public string $id;
 
-    /** @var array<SlideBlock|GenericBlock> */
+    /** @var array<SlideBlock|GenericBlock|HeroTitleBlock> */
     public ?array $blocks;
 
     public ImageData $images;
@@ -36,9 +36,9 @@ class PageData extends Data
 
     public string $title;
 
-    public string $uri;
+    public ?string $uri;
 
-    public string $url;
+    public ?string $url;
 
     public Blueprint $blueprint;
 }

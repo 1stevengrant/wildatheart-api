@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DataTypeObjects\ButtonProps;
 use App\DataTypeObjects\CardVariant;
+use App\DataTypeObjects\HeroTitleBlock;
 use App\DataTypeObjects\IconProps;
 use App\DataTypeObjects\MediaItemsSlide;
 use App\DataTypeObjects\SlideBlock;
@@ -20,6 +21,7 @@ class BlockBuilderService
 
             $output[] = match ($block['type']) {
                 'media_slider' => $this->processMediaSliderBlock($block),
+                'hero_title' => $this->processHeroTitleBlock($block),
                 default => $this->processDefaultBlock($block)
             };
         }
@@ -45,6 +47,14 @@ class BlockBuilderService
         }
 
         return $output;
+    }
+
+    public function processHeroTitleBlock($block)
+    {
+        return HeroTitleBlock::from([
+            'hero_title' => $block['hero_title'],
+            'text_style' => $block['text_style'],
+        ]);
     }
 
     public function processMediaSliderBlock($block)
