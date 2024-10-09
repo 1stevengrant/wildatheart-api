@@ -59,12 +59,12 @@ class ImportPrayers extends Command
                 ];
 
                 // Import PDF from URL into Statamic assets
-                if (isset($prayer['pdf_link']) && !empty($prayer['pdf_link'])) {
+                if (!empty($prayer['pdf_link'])) {
                     $newData['pdf'] = $this->importFile($prayer['pdf_link']);
                 }
 
                 // Import MP3 from URL into Statamic assets
-                if (isset($prayer['audioUrl']) && !empty($prayer['audioUrl'])) {
+                if (!empty($prayer['audioUrl'])) {
                     $newData['mp3'] = $this->importFile($prayer['audioUrl']);
                 }
 
