@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Services\TransistorService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -110,11 +109,13 @@ $mockData = [
 
 $mockScheduled = array_map(function ($item) {
     $item['attributes']['status'] = 'scheduled';
+
     return $item;
 }, $mockData);
 
 $mockDraft = array_map(function ($item) {
     $item['attributes']['status'] = 'draft';
+
     return $item;
 }, $mockData);
 
@@ -200,7 +201,7 @@ it('uses default limit when none provided for recent readings', function () use 
         ->assertJsonCount($defaultLimit);
 });
 
-it('returns redirects', function () use ($mockData) {
+it('returns redirects', function () {
 
     // Act
     $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'what-jesus-weeps-over']));
@@ -217,7 +218,7 @@ it('returns redirects', function () use ($mockData) {
     expect($responseData['current_slug'])->toEqual('what-jesus-weeps-over');
 });
 
-it('returns redirects using the old slug', function () use ($mockData) {
+it('returns redirects using the old slug', function () {
     // Act
     $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'his-child-his-reflection']));
 

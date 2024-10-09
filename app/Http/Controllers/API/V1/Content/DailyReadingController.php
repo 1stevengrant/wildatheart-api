@@ -82,14 +82,14 @@ class DailyReadingController extends Controller
         $dailyReadingsData = json_decode($jsonContents, true);
 
         if ($dailyReadingsData === null && json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException('Error decoding JSON: ' . json_last_error_msg());
+            throw new \RuntimeException('Error decoding JSON: '.json_last_error_msg());
         }
 
         $matchingReading = null;
         $slug = strtolower(urlencode($slug));
         foreach ($dailyReadingsData as $reading) {
 
-            if (strtolower(str_replace("/daily-reading/", '', $reading['alias'])) === $slug) {
+            if (strtolower(str_replace('/daily-reading/', '', $reading['alias'])) === $slug) {
                 $matchingReading = $reading;
 
                 break;
@@ -98,7 +98,7 @@ class DailyReadingController extends Controller
 
         if ($matchingReading) {
             return response()->json([
-                'previous_slug' => str_replace("/daily-reading/", '', $reading['alias']),
+                'previous_slug' => str_replace('/daily-reading/', '', $reading['alias']),
                 'current_slug' => Str::slug($matchingReading['title'], '-'),
             ]);
         }
