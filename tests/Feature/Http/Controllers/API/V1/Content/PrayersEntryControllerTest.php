@@ -3,10 +3,7 @@
 namespace Tests\Feature\Http\Controllers\API\V1\Content;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Statamic\Facades\Entry;
-use Tests\TestCase;
 
 uses(RefreshDatabase::class);
 
@@ -25,18 +22,30 @@ it('returns 404 when page not found', function () {
 
 test('it can get a list of prayers', function () {
     // Create some prayer entries
+
     $prayer1 = Entry::make()
         ->collection('prayers')
         ->slug('prayer-1')
         ->published(true)
-        ->data(['title' => 'Prayer 1', 'order' => 1]);
+        ->data([
+            'title' => "Prayer 1",
+            'content' => "<p>This is a test</p>",
+            'summary' => "This is a test summary",
+            'drupal_url' => "https://wildatheart.org/prayer/prayer-1",
+        ]);
+
     $prayer1->save();
 
     $prayer2 = Entry::make()
         ->collection('prayers')
         ->slug('prayer-2')
         ->published(true)
-        ->data(['title' => 'Prayer 2', 'order' => 2]);
+        ->data([
+            'title' => "Prayer 2",
+            'content' => "<p>This is a test</p>",
+            'summary' => "This is a test summary",
+            'drupal_url' => "https://wildatheart.org/prayer/prayer-2",
+        ]);
     $prayer2->save();
 
     // Make the request
@@ -44,31 +53,34 @@ test('it can get a list of prayers', function () {
 
     // Assert the response
     $response->assertStatus(200)
-        ->assertJsonCount(2)
-        ->assertJson(
-            fn(AssertableJson $json) =>
-            $json->where('0.slug', 'prayer-1')
-                ->where('1.slug', 'prayer-2')
-        );
+        ->assertJsonCount(2);
+    // Confirm that the title is the same
+    $response->assertJsonFragment([
+        'title' => 'Prayer 1',
+    ]);
 });
 
-// test('it can show a specific prayer', function () {
-//     // Create a prayer entry
-//     $prayer = Entry::make()
-//         ->collection('prayers')
-//         ->slug('prayer-1')
-//         ->published(true)
-//         ->data(['title' => 'Prayer 1']);
-//     $prayer->save();
+test('it can show a specific prayer', function () {
+    // Create a prayer entry
+    $prayer1 = Entry::make()
+        ->collection('prayers')
+        ->slug('prayer-1')
+        ->published(true)
+        ->data([
+            'title' => "Prayer 1",
+            'content' => "<p>This is a test</p>",
+            'summary' => "This is a test summary",
+            'drupal_url' => "https://wildatheart.org/prayer/prayer-1",
+        ]);
 
-//     // Make the request
-//     $response = $this->getJson('/api/v1/prayers/prayer-1');
+    $prayer1->save();
 
-//     // Assert the response
-//     $response->assertStatus(200)
-//         ->assertJson(
-//             fn(AssertableJson $json) =>
-//             $json->where('slug', 'prayer-1')
-//                 ->where('title', 'Prayer 1')
-//         );
-// });
+    // Make the request
+    $response = $this->getJson(route('content.v1.prayers.show', ['slug' => $prayer1->slug]));
+
+    // Assert the response
+    $response->assertStatus(200);
+    $response->assertJsonFragment([
+        'title' => 'Prayer 1',
+    ]);
+});

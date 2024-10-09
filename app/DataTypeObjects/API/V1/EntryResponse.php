@@ -21,9 +21,9 @@ class EntryResponse extends Data
 
     public string $slug;
 
-    public string $uri;
+    public ?string $uri;
 
-    public string $url;
+    public ?string $url;
 
     public Blueprint $blueprint;
 
