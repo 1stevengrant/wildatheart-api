@@ -84,13 +84,12 @@ class TransistorService
         if (isset($json['errors'])) {
             return $json['errors'];
         }
-
     }
 
-    public function getAll($showId)
+    public function getAll($showId, $status = 'published')
     {
 
-        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status=published&pagination[per]=100';
+        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]=100';
 
         $json = $this->transistorFetch($url);
 
@@ -112,7 +111,6 @@ class TransistorService
                 if (! isset($json['errors'])) {
                     $data = array_merge($data, $json['data']);
                 }
-
             }
         }
 

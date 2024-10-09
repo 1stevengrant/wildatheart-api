@@ -18,36 +18,12 @@ class DailyReadingController extends Controller
 {
     public function __construct(private readonly TransistorService $transistorService) {}
 
-    public function generatePreviousEpisodeSlug(string $title)
-    {
-        // Replace spaces with hyphens
-        $slug = str_replace(' ', '-', $title);
-
-        // Remove semicolons standard apostrophies and question marks
-        $slug = preg_replace("/[;?']/", '', $slug);
-
-        // Encode the slug
-        $slug = urlencode($slug);
-
-        // Convert to lowercase
-        $slug = strtolower($slug);
-
-        // Ensure single hyphens between words
-        $slug = preg_replace('/-+/', '-', $slug);
-
-        // Remove leading and trailing hyphens
-        $slug = trim($slug, '-');
-
-        // Remove words that were not used in drupal slugs for some reason.
-        $slug = preg_replace('/^(for-|is-|to-|the-|a-|an-|of-)/i', '', $slug);
-        $slug = preg_replace('/-for-|-is-|-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
-
-        return $slug;
-    }
-
     public function index()
     {
         $data = $this->transistorService->getAll('wildatheart-daily');
+        $scheduledData = $this->transistorService->getAll('wildatheart-daily', 'scheduled');
+        $draftData = $this->transistorService->getAll('wildatheart-daily', 'draft');
+        $data = array_merge($data, $scheduledData, $draftData);
 
         $dailyReadings = [];
 
@@ -65,7 +41,6 @@ class DailyReadingController extends Controller
                 ]);
                 if (isset($item['attributes']['title'])) {
                     $title = $item['attributes']['title'];
-                    $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($title);
                     $dailyReading->current_episode_slug = Str::slug($title, '-');
                 }
                 $dailyReadings[] = $dailyReading;
@@ -89,7 +64,6 @@ class DailyReadingController extends Controller
                     'previous_episode_slug' => null,
                 ]);
                 if (isset($item['attributes']['title'])) {
-                    $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($item['attributes']['title']);
                     $dailyReading->current_episode_slug = Str::slug($item['attributes']['title'], '-');
                 }
                 $dailyReadings[] = $dailyReading;
@@ -101,19 +75,32 @@ class DailyReadingController extends Controller
 
     public function redirect($slug)
     {
-        $allReadings = $this->index();
+        // $allReadings = $this->index();
 
-        $mappedReadings = [];
-        foreach ($allReadings as $reading) {
-            $mappedReadings[$reading->previous_episode_slug] = $reading->current_episode_slug;
+        $jsonPath = storage_path('app/public/dailyreadings.json');
+        $jsonContents = file_get_contents($jsonPath);
+        $dailyReadingsData = json_decode($jsonContents, true);
+
+        if ($dailyReadingsData === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Error decoding JSON: '.json_last_error_msg());
         }
 
+        $matchingReading = null;
         $slug = strtolower(urlencode($slug));
-        if (isset($mappedReadings[$slug])) {
-            return [
-                'previous_slug' => $slug,
-                'current_slug' => $mappedReadings[$slug],
-            ];
+        foreach ($dailyReadingsData as $reading) {
+
+            if (strtolower(str_replace('/daily-reading/', '', $reading['alias'])) === $slug) {
+                $matchingReading = $reading;
+
+                break;
+            }
+        }
+
+        if ($matchingReading) {
+            return response()->json([
+                'previous_slug' => str_replace('/daily-reading/', '', $reading['alias']),
+                'current_slug' => Str::slug($matchingReading['title'], '-'),
+            ]);
         }
 
         // If no matching slug is found, return a 404 response
