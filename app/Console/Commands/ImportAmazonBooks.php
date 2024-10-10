@@ -167,6 +167,9 @@ class ImportAmazonBooks extends Command
      * 
      * PAAPI Docs: https://webservices.amazon.com/paapi5/documentation/
      * 
+     * Most of this code is from the PAAPI Scratchpad tool:
+     * https://webservices.amazon.com/paapi5/scratchpad/index.html
+     * 
      * @param array $ASINs An array of ASINs (strings)
      * @return array An array of Amazon items
      */
