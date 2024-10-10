@@ -7,10 +7,9 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-
 beforeEach(function () {
     Cache::flush();
-    $this->transistorService = new TransistorService();
+    $this->transistorService = new TransistorService;
 });
 
 it('returns cached data when available', function () {
@@ -110,7 +109,6 @@ it('returns errors when API responds with errors in getRecent', function () {
     $count = 2;
     $errors = ['errors' => ['message' => 'Something went wrong']];
 
-
     Http::fake([
         '*' => Http::response($errors, 200),
     ]);
@@ -123,23 +121,20 @@ it('returns errors when API responds with errors in getRecent', function () {
 it('returns data from  getAll', function () {
     $showId = '12345';
     $data = ['data' => ['episode1', 'episode2']];
-    $url = config('services.transistor.api_url') . 'episodes?show_id=12345&status=draft&pagination%5Bper%5D=100';
+    $url = config('services.transistor.api_url').'episodes?show_id=12345&status=draft&pagination%5Bper%5D=100';
 
     Http::fake(function (Request $request) use ($url, $data) {
         if ($request->url() === $url) {
             return Http::response($data, 200);
         } else {
-            return Http::response(["errors" => [["title" => "Resource not found"]]], 200);
+            return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
         }
     });
 
-    $result = $this->transistorService->getAll($showId, "draft");
+    $result = $this->transistorService->getAll($showId, 'draft');
 
     expect($result)->toBe($data['data']);
 });
-
-
-
 
 it('Requests all pages if more pags are available', function () {
     $showId = '12345';
@@ -147,20 +142,20 @@ it('Requests all pages if more pags are available', function () {
     $firstPage = ['meta' => ['currentPage' => 1, 'totalPages' => 2], 'data' => ['episode1', 'episode2']];
     $secondPage = ['meta' => ['currentPage' => 2, 'totalPages' => 2], 'data' => ['episode3', 'episode4']];
 
-    $url = config('services.transistor.api_url') . 'episodes?show_id=12345&status=draft&pagination%5Bper%5D=100';
+    $url = config('services.transistor.api_url').'episodes?show_id=12345&status=draft&pagination%5Bper%5D=100';
 
     Http::fake(function (Request $request) use ($url, $firstPage, $secondPage) {
         if ($request->url() === $url) {
             return Http::response($firstPage, 200);
-        } else if ($request->url() === $url . '&pagination%5Bpage%5D=2') {
+        } elseif ($request->url() === $url.'&pagination%5Bpage%5D=2') {
             return Http::response($secondPage, 200);
         } else {
-            return Http::response(["errors" => [["title" => "Resource not found"]]], 200);
+            return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
         }
     });
 
     $result = $this->transistorService->getAll($showId, 'draft');
     Http::assertSentCount(2);
 
-    expect($result)->toBe(array_merge($firstPage['data'], $secondPage['data'],));
+    expect($result)->toBe(array_merge($firstPage['data'], $secondPage['data']));
 });

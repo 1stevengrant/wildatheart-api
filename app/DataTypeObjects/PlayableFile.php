@@ -8,5 +8,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class PlayableFile extends File
 {
     public string $playtime;
+
     public int $duration_seconds;
 }
