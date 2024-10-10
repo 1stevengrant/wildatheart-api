@@ -66,6 +66,7 @@ return [
     ],
 
     'bunny' => [
+        's3_cdn_url' => env('BUNNY_S3_CDN_URL'),
         'api_url' => env('BUNNY_CDN_URL'),
     ],
 

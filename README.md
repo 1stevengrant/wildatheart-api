@@ -61,6 +61,14 @@ Make sure your server meets the minimum requirements before you start. [Official
 11. optionally, you might want to grab a production database backup. For that, see the [database](docs/database.md) docs.
 12. run the development server `php artisan serve` if not using something like Laravel Valet, Sail or Herd.
 
+## Running tests
+
+1. Follow installation steps above.
+2. Make sure you have a `wahlocal_test` database created.
+3. If you're using Herd, set your PHP memory limit to at least 256M.
+4. Copy `.env.testing.example` to `.env.testing` and fill in the missing variables..
+5. Run the tests with `./vendor/bin/pest`.
+
 ## Notes
 
 -   useful when switching branches:

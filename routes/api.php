@@ -8,6 +8,7 @@ use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
+use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\StatsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,11 +46,16 @@ Route::prefix('content')->group(function () {
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
         Route::prefix('v1')->name('v1.')->group(function () {
             Route::prefix('daily-reading')->name('dailyReading.')->group(function () {
-                Route::get('/', [DailyReadingController::class, 'index'])->name('dailyReading.index');
-                Route::get('/recent', [DailyReadingController::class, 'getRecent'])->name('dailyReading.getRecent');
+                Route::get('/', [DailyReadingController::class, 'index'])->name('index');
+                Route::get('/recent', [DailyReadingController::class, 'getRecent'])->name('getRecent');
+                Route::get('/redirect/{slug}', [DailyReadingController::class, 'redirect'])->name('redirect');
             });
             Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
             Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
+            Route::prefix('prayers')->name('prayers.')->group(function () {
+                Route::get('/', [PrayersEntryController::class, 'index'])->name('index');
+                Route::get('/{slug}', [PrayersEntryController::class, 'show'])->name('show');
+            });
         });
     });
 });

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 
 import axios from "axios";
+import mapboxgl from "mapbox-gl";
 import Map, {
     GeolocateControl,
     LngLatBounds,
@@ -10,6 +11,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { EventCountButton } from "@/Components/Buttons/EventCountButton";
 import { LocalMapMarkers } from "@/Components/Maps/LocalMapMarkers";
+import { NoWebGLSupport } from "@/Components/Maps/NoWebGLSupport";
 import { IsLoading } from "@/Components/Ui/IsLoading";
 import { OutsideClickHandlerEvents } from "@/Components/Ui/OutsideClickHandlerEvents";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
@@ -40,6 +42,17 @@ export const LocalMap = () => {
 
     const initialFlyToDone = useRef(false);
     const hasZoomedOut = useRef(false);
+    const [hasSupport, setHasSupport] = useState(true);
+
+    useEffect(() => {
+        mapboxgl.accessToken = import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN;
+
+        if (!mapboxgl.supported()) {
+            setHasSupport(false);
+        }
+
+        return;
+    }, []);
 
     useEffect(() => {
         const storedLocation = getUserLocation();
@@ -170,33 +183,42 @@ export const LocalMap = () => {
     };
 
     return (
-        <Map
-            initialViewState={{
-                latitude: latitude ?? DEFAULT_LATITUDE,
-                longitude: longitude ?? DEFAULT_LONGITUDE,
-                zoom: 3,
-            }}
-            {...commonMapProps}
-            ref={mapRef}
-            onMoveEnd={handleOnMapMoveEnd}
-            onLoad={onMapLoad}
-        >
-            <LocalMapMarkers />
-            <GeolocateControl
-                position="top-left"
-                onGeolocate={handleGeolocate}
-                trackUserLocation
-            />
-            <NavigationControl showCompass={false} position="top-left" />
-            {showLoading && (
-                <IsLoading
-                    className={`relative mt-8`}
-                    text={`Loading Events`}
-                />
-            )}
+        <>
+            {!hasSupport ? (
+                <NoWebGLSupport />
+            ) : (
+                <Map
+                    initialViewState={{
+                        latitude: latitude ?? DEFAULT_LATITUDE,
+                        longitude: longitude ?? DEFAULT_LONGITUDE,
+                        zoom: 3,
+                    }}
+                    {...commonMapProps}
+                    ref={mapRef}
+                    onMoveEnd={handleOnMapMoveEnd}
+                    onLoad={onMapLoad}
+                >
+                    <LocalMapMarkers />
+                    <GeolocateControl
+                        position="top-left"
+                        onGeolocate={handleGeolocate}
+                        trackUserLocation
+                    />
+                    <NavigationControl
+                        showCompass={false}
+                        position="top-left"
+                    />
+                    {showLoading && (
+                        <IsLoading
+                            className={`relative mt-8`}
+                            text={`Loading Events`}
+                        />
+                    )}
 
-            <EventCountButton />
-            <OutsideClickHandlerEvents />
-        </Map>
+                    <EventCountButton />
+                    <OutsideClickHandlerEvents />
+                </Map>
+            )}
+        </>
     );
 };

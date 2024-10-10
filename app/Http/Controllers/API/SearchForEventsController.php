@@ -6,9 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\SearchForEventsRequest;
 use App\Http\Resources\API\EventResource;
 use App\Models\Event;
+use App\Services\EventOffsettingService;
 
 class SearchForEventsController extends Controller
 {
+    public function __construct(
+        private readonly EventOffsettingService $eventOffsettingService
+    ) {}
+
     /**
      * Handle the incoming request.
      */
@@ -33,6 +38,8 @@ class SearchForEventsController extends Controller
             ->orderBy('start_date', 'asc')
             ->get();
 
-        return response()->json(EventResource::collection($events));
+        $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
+
+        return response()->json(EventResource::collection($offsetEvents));
     }
 }

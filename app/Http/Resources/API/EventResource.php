@@ -19,6 +19,8 @@ class EventResource extends JsonResource
             'name' => $this->name,
             'longitude' => $this->longitude,
             'latitude' => $this->latitude,
+            'display_longitude' => $this->display_longitude ?? $this->longitude,
+            'display_latitude' => $this->display_latitude ?? $this->latitude,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'event_type_id' => $this->event_type_id,
@@ -26,10 +28,12 @@ class EventResource extends JsonResource
             'event_type_image' => $this->eventType->image,
             'type_group' => $this->type_group,
             'location' => $this->location,
+            'country' => $this->country,
             'host_name' => $this->host->full_name,
             'host_photo' => $this->hostPhoto(),
             'sex' => $this->sex,
             'url' => $this->url,
+            'group_size' => $this->group_size ?? 1,
         ];
     }
 }

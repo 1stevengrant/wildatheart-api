@@ -8,7 +8,7 @@ export const commonMapProps = {
     touchPitch: false,
     customAttribution: "",
     attributionControl: false,
-    mapStyle: "mapbox://styles/mapbox/outdoors-v11",
+    mapStyle: "mapbox://styles/mapbox/outdoors-v12",
     mapboxAccessToken: import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN,
     style: {
         width: "100%",

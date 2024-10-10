@@ -7,6 +7,7 @@ use App\DataTypeObjects\TransistorPodcastEpisode;
 use App\Http\Controllers\Controller;
 use App\Services\TransistorService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * @group Daily Reading Entity Retrieval
@@ -15,70 +16,94 @@ use Illuminate\Http\Request;
  */
 class DailyReadingController extends Controller
 {
-
-    private $transistorService;
-
-    public function __construct(TransistorService $transistorService)
-    {
-        $this->transistorService = $transistorService;
-    }
-
-    public function generatePreviousEpisodeSlug(string $slug)
-    {
-        $slug = preg_replace('/^(to-|the-|a-|an-|of-)/i', '', $slug);
-        $slug = preg_replace('/-to-|-the-|-a-|-an-|-of-/i', '-', $slug);
-        return $slug;
-    }
-
+    public function __construct(private readonly TransistorService $transistorService) {}
 
     public function index()
     {
         $data = $this->transistorService->getAll('wildatheart-daily');
+        $scheduledData = $this->transistorService->getAll('wildatheart-daily', 'scheduled');
+        $draftData = $this->transistorService->getAll('wildatheart-daily', 'draft');
+        $data = array_merge($data, $scheduledData, $draftData);
 
         $dailyReadings = [];
 
-                    /**
-             * Drupal removed leading articles from slugs
-             * for simplicity we'll do the same.
-             */
-            if ($data) {
-                foreach ($data as &$item) {
-                    $dailyReading = DailyReadingResponse::from([
-                        'transistor_episode' => TransistorPodcastEpisode::from($item),
-                        'previous_episode_slug' => null,
-                    ]);
-                    if (isset($item['attributes']['slug'])) {
-                        $slug = $item['attributes']['slug'];
-                        $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($slug);
-                    }
-                    $dailyReadings[] = $dailyReading;
-                }
-            }
-
-
-        return DailyReadingResponse::collect($dailyReadings);
-    }
-    
-    public function getRecent(Request $request)
-    {
-        $limit = $request->input('limit', 1);
-        
-        $data = $this->transistorService->getRecent('wildatheart-daily', $limit);
-        $dailyReadings = [];
+        /**
+         * Drupal removed leading articles from slugs
+         * for simplicity we'll do the same.
+         */
         if ($data) {
             foreach ($data as &$item) {
+
                 $dailyReading = DailyReadingResponse::from([
                     'transistor_episode' => TransistorPodcastEpisode::from($item),
                     'previous_episode_slug' => null,
+
                 ]);
-                if (isset($item['attributes']['slug'])) {
-                    $dailyReading->previous_episode_slug = $this->generatePreviousEpisodeSlug($item['attributes']['slug']);
+                if (isset($item['attributes']['title'])) {
+                    $title = $item['attributes']['title'];
+                    $dailyReading->current_episode_slug = Str::slug($title, '-');
                 }
                 $dailyReadings[] = $dailyReading;
             }
         }
-        return DailyReadingResponse::collect($dailyReadings);
+
+        return DailyReadingResponse::collection($dailyReadings);
     }
 
-   
+    public function getRecent(Request $request)
+    {
+        $limit = $request->input('limit', 1);
+
+        $data = $this->transistorService->getRecent('wildatheart-daily', $limit);
+        $dailyReadings = [];
+        if ($data) {
+            foreach ($data as &$item) {
+
+                $dailyReading = DailyReadingResponse::from([
+                    'transistor_episode' => TransistorPodcastEpisode::from($item),
+                    'previous_episode_slug' => null,
+                ]);
+                if (isset($item['attributes']['title'])) {
+                    $dailyReading->current_episode_slug = Str::slug($item['attributes']['title'], '-');
+                }
+                $dailyReadings[] = $dailyReading;
+            }
+        }
+
+        return DailyReadingResponse::collection($dailyReadings);
+    }
+
+    public function redirect($slug)
+    {
+        // $allReadings = $this->index();
+
+        $jsonPath = storage_path('app/public/dailyreadings.json');
+        $jsonContents = file_get_contents($jsonPath);
+        $dailyReadingsData = json_decode($jsonContents, true);
+
+        if ($dailyReadingsData === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Error decoding JSON: '.json_last_error_msg());
+        }
+
+        $matchingReading = null;
+        $slug = strtolower(urlencode($slug));
+        foreach ($dailyReadingsData as $reading) {
+
+            if (strtolower(str_replace('/daily-reading/', '', $reading['alias'])) === $slug) {
+                $matchingReading = $reading;
+
+                break;
+            }
+        }
+
+        if ($matchingReading) {
+            return response()->json([
+                'previous_slug' => str_replace('/daily-reading/', '', $reading['alias']),
+                'current_slug' => Str::slug($matchingReading['title'], '-'),
+            ]);
+        }
+
+        // If no matching slug is found, return a 404 response
+        return response()->json(['error' => 'Daily reading not found'], 404);
+    }
 }
