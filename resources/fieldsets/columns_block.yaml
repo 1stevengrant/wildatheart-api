@@ -1,0 +1,29 @@
+title: 'Columns Block'
+fields:
+  -
+    handle: columns
+    field:
+      type: replicator
+      display: Columns
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            column:
+              display: Column
+              fields:
+                -
+                  handle: blocks
+                  field:
+                    remove_empty_nodes: false
+                    type: bard
+                    display: Blocks
+                    sets:
+                      styled_text:
+                        display: 'Styled Text'
+                        sets:
+                          styled_text:
+                            display: 'Styled Text'
+                            fields:
+                              -
+                                import: styled_text_block

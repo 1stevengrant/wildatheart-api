@@ -1,114 +1,101 @@
-title: 'Styled Text Block'
+title: "Styled Text Block"
 fields:
-  -
-    handle: text
+  - handle: text
     field:
       remove_empty_nodes: false
       type: bard
       display: Text
-  -
-    handle: style
+  - handle: style
     field:
       options:
-        -
-          key: wah-hero-1
-          value: 'Hero 1'
-        -
-          key: wah-hero-2
-          value: 'Hero 2'
-        -
-          key: wah-heading-1
-          value: 'Heading 1'
-        -
-          key: wah-heading-2
-          value: 'Heading 2'
-        -
-          key: wah-heading-3
-          value: 'Heading 3'
-        -
-          key: wah-heading-4
-          value: 'Heading 4'
-        -
-          key: wah-heading-5
-          value: 'Heading 5'
-        -
-          key: wah-heading-6
-          value: 'Heading 6'
-        -
-          key: wah-body-large
-          value: 'Body Large'
-        -
-          key: wah-body-base
-          value: 'Body Base'
-        -
-          key: wah-body-small
-          value: 'Body Small'
-        -
-          key: wah-body-xsmall
-          value: 'Body XSmall'
+        - key: prose-lg
+          value: "Prose"
+        - key: wah-hero-1
+          value: "Hero 1"
+        - key: wah-hero-2
+          value: "Hero 2"
+        - key: wah-heading-1
+          value: "Heading 1"
+        - key: wah-heading-2
+          value: "Heading 2"
+        - key: wah-heading-3
+          value: "Heading 3"
+        - key: wah-heading-4
+          value: "Heading 4"
+        - key: wah-heading-5
+          value: "Heading 5"
+        - key: wah-heading-6
+          value: "Heading 6"
+        - key: wah-body-large
+          value: "Body Large"
+        - key: wah-body-base
+          value: "Body Base"
+        - key: wah-body-small
+          value: "Body Small"
+        - key: wah-body-xsmall
+          value: "Body XSmall"
       type: select
       display: Style
-  -
-    handle: color
+  - handle: color
     field:
       swatches:
-        - '#010101'
-        - '#ffffff'
-        - '#010101'
-        - '#FBEFE6'
-        - '#EEBD96'
-        - '#E7A26B'
-        - '#DD7A2B'
-        - '#D65F00'
-        - '#964300'
-        - '#833A00'
-        - '#EEF3F4'
-        - '#B8CDD1'
-        - '#9BB8BE'
-        - '#6F9AA2'
-        - '#52858F'
-        - '#395D64'
-        - '#325157'
-        - '#FFFFFF'
-        - '#FAFAFB'
-        - '#F5F6F6'
-        - '#ECEDED'
-        - '#E0E1E2'
-        - '#C3C6C8'
-        - '#B5B9BA'
-        - '#A9ADAF'
-        - '#9AA0A2'
-        - '#8C9295'
-        - '#7D8488'
-        - '#6F777A'
-        - '#61696D'
-        - '#555E62'
-        - '#465055'
-        - '#3A454A'
-        - '#29353A'
-        - '#1B272D'
-        - '#0F1C22'
-        - '#F2F4EE'
-        - '#CBD0BB'
-        - '#B6BD9F'
-        - '#96A075'
-        - '#818D59'
-        - '#5A633E'
-        - '#4F5636'
-        - '#FBE6E6'
-        - '#ED9999'
-        - '#E56F6F'
-        - '#DA3131'
-        - '#D20707'
-        - '#930505'
-        - '#800404'
-        - '#FBF8E6'
-        - '#EEE299'
-        - '#E7D66F'
-        - '#DCC531'
-        - '#D5B907'
-        - '#958205'
-        - '#827104'
+        - "#010101"
+        - "#ffffff"
+        - "#010101"
+        - "#FBEFE6"
+        - "#EEBD96"
+        - "#E7A26B"
+        - "#DD7A2B"
+        - "#D65F00"
+        - "#964300"
+        - "#833A00"
+        - "#EEF3F4"
+        - "#B8CDD1"
+        - "#9BB8BE"
+        - "#6F9AA2"
+        - "#52858F"
+        - "#395D64"
+        - "#325157"
+        - "#FFFFFF"
+        - "#FAFAFB"
+        - "#F5F6F6"
+        - "#ECEDED"
+        - "#E0E1E2"
+        - "#C3C6C8"
+        - "#B5B9BA"
+        - "#A9ADAF"
+        - "#9AA0A2"
+        - "#8C9295"
+        - "#7D8488"
+        - "#6F777A"
+        - "#61696D"
+        - "#555E62"
+        - "#465055"
+        - "#3A454A"
+        - "#29353A"
+        - "#1B272D"
+        - "#0F1C22"
+        - "#F2F4EE"
+        - "#CBD0BB"
+        - "#B6BD9F"
+        - "#96A075"
+        - "#818D59"
+        - "#5A633E"
+        - "#4F5636"
+        - "#FBE6E6"
+        - "#ED9999"
+        - "#E56F6F"
+        - "#DA3131"
+        - "#D20707"
+        - "#930505"
+        - "#800404"
+        - "#FBF8E6"
+        - "#EEE299"
+        - "#E7D66F"
+        - "#DCC531"
+        - "#D5B907"
+        - "#958205"
+        - "#827104"
       type: color
       display: Color
-      default: '#D65F00'
+      default: "#ffffff"

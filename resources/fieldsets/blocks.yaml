@@ -77,3 +77,8 @@ fields:
               fields:
                 -
                   import: styled_text_block
+            columns:
+              display: Columns
+              fields:
+                -
+                  import: columns_block
