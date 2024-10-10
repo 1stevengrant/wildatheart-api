@@ -123,14 +123,17 @@ it('returns daily readings', function () use ($mockData, $mockScheduled, $mockDr
     // Arrange
     $this->transistorServiceMock->shouldReceive('getAll')
         ->with('wildatheart-daily')
+        ->once()
         ->andReturn($mockData);
 
     $this->transistorServiceMock->shouldReceive('getAll')
         ->with('wildatheart-daily', 'scheduled')
+        ->once()
         ->andReturn($mockScheduled);
 
     $this->transistorServiceMock->shouldReceive('getAll')
         ->with('wildatheart-daily', 'draft')
+        ->once()
         ->andReturn($mockDraft);
 
     // Act
@@ -155,6 +158,10 @@ it('returns daily readings', function () use ($mockData, $mockScheduled, $mockDr
 
     expect($responseData[0]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
     expect($responseData[1]['current_episode_slug'])->toEqual('his-child-his-reflection');
+    expect($responseData[2]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
+    expect($responseData[3]['current_episode_slug'])->toEqual('his-child-his-reflection');
+    expect($responseData[4]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
+    expect($responseData[5]['current_episode_slug'])->toEqual('his-child-his-reflection');
 });
 
 it('returns limited number of recent daily readings', function () use ($mockData) {
