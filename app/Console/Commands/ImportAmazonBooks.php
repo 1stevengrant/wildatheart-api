@@ -162,7 +162,10 @@ class ImportAmazonBooks extends Command
     }
 
     /**
-     * Get Amazon items by ASIN (Amazon Standard Identification Number)
+     * Get Amazon items by ASIN (Amazon Standard Identification Number) using
+     * the Amazon Product Advertising API (PAAPI).
+     * 
+     * PAAPI Docs: https://webservices.amazon.com/paapi5/documentation/
      * 
      * @param array $ASINs An array of ASINs (strings)
      * @return array An array of Amazon items
