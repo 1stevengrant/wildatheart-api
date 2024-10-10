@@ -63,7 +63,7 @@ class ImportAmazonBooks extends Command
          * (couldn't figure out how to get the lists programmatically with PAAPI...)
          */
 
-        $books_list = array(
+        $books_list = [
             "1400208645", // Resilient
             "B08BYZBC8C", // Wild at Heart Expanded Edition
             "B08BZ1BQ5T", // Captivating Expanded Edition
@@ -86,9 +86,9 @@ class ImportAmazonBooks extends Command
             "B00AQ0AEOQ", // Epic
             "0785288767", // You Have What It Takes
             "0718034155" // You Are Captivating
-        );
+        ];
 
-        $workbooks_list = array(
+        $workbooks_list = [
             "B08BZ1DRDL", // Wild at Heart Study Guide, Updated Edition
             "0310135648", // Wild at Heart Field Guide, Revised Edition
             "0310128846", // Captivating Bible Study Guide, Updated Edition
@@ -107,14 +107,14 @@ class ImportAmazonBooks extends Command
             "0310096901", // Unwavering Bible Study Guide
             "0781409551", // Becoming Myself 8-Session Study Guide
             "1400206723" // Killing Lions Journal
-        );
+        ];
 
-        $other_list = array(
+        $other_list = [
             "0578321009", // A Year with Men: A 12-Month Plan for Your Guys' Group
             "1400234352", // The One Minute Pause Journal
-        );
+        ];
 
-        $group_study_list = array(
+        $group_study_list = [
             "0310129125", // Wild at Heart Video Series Updated Edition
             "0310127440", // Captivating Video Series Updated Edition
             "0310097037", // Get Your Life Back Video Study
@@ -125,16 +125,16 @@ class ImportAmazonBooks extends Command
             "1418528609", // Epic Live DVD
             "0310096928", // Unwavering Video Study
             "143470713X", // Becoming Myself 8-Session DVD
-        );
+        ];
 
-        $devotionals_list = array(
+        $devotionals_list = [
             "140020948X", // Restoration Year: A 365-Day Devotional
             "1434709949", // Beautiful Me: Believing God's Truth about You
             "0781414075", // Beautiful Now: 90 Days of Experiencing God's Dreams for You
             "1400202523", // Knowing the Heart of God: A Year of Devotional Readings to Help You Abide in Him
-        );
+        ];
 
-        $spanish_list = array(
+        $spanish_list = [
             "B003DESKNO", // Salvaje de corazón
             "B076K4DX62", // Todas las cosas nuevas
             "B01864DTYU", // Mueve montañas
@@ -149,7 +149,7 @@ class ImportAmazonBooks extends Command
             "0881136484", // El Sagrado Romance Vivamos Mas Cerca De Dios
             "B003917VM2", // Cautivante
             "B003917VHW", // La travesía del corazón salvaje
-        );
+        ];
 
         return array_merge(
             $books_list,
