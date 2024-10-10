@@ -35,7 +35,7 @@ class TransistorService
             $json = $response->json();
 
             if (isset($json['errors'])) {
-                return $json['errors'];
+                return $json;
             }
 
             Cache::put($url, $json, (int) $TRANSISTOR_CACHE_DURATION);
@@ -63,8 +63,9 @@ class TransistorService
         $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
         $json = $this->transistorFetch($url);
 
-        if (isset($json['errors'])) {
-            return $json['errors'];
+
+        if (isset($json['errors']) || !isset($json['data'])) {
+            return $json;
         }
 
         return $json['data'];
@@ -77,7 +78,7 @@ class TransistorService
 
         $json = $this->transistorFetch($url);
 
-        if (isset($json['errors'])) {
+        if (!empty($json['errors'])) {
             return $json['errors'];
         }
 
@@ -87,10 +88,12 @@ class TransistorService
             $currentPage = $json['meta']['currentPage'];
 
             // Move through all pages of data and merge them into the $data array
-            while ($currentPage <= $json['meta']['totalPages']) {
+            while ($currentPage < $json['meta']['totalPages']) {
                 $currentPage += 1;
-                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=100&pagination[page]=' . $currentPage;
+
+                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=100&pagination[page]=' . $currentPage;
                 $json = $this->transistorFetch($url);
+
 
                 if (! isset($json['errors'])) {
                     $data = array_merge($data, $json['data']);
