@@ -36,13 +36,12 @@ class ImportPrayers extends Command
         $drupalPrayers = collect(Http::get('https://wildatheart.org/json/prayer')->json())
             ->toArray();
 
-
         $this->output->progressStart(count($drupalPrayers));
 
         collect($drupalPrayers)
             ->each(function ($prayer) {
 
-                $this->info('Importing ' . $prayer['title']);
+                $this->info('Importing '.$prayer['title']);
                 $this->line('');
 
                 $existingPrayer = Entry::query()
@@ -59,15 +58,14 @@ class ImportPrayers extends Command
                 ];
 
                 // Import PDF from URL into Statamic assets
-                if (!empty($prayer['pdf_link'])) {
+                if (! empty($prayer['pdf_link'])) {
                     $newData['pdf'] = $this->importFile($prayer['pdf_link']);
                 }
 
                 // Import MP3 from URL into Statamic assets
-                if (!empty($prayer['audioUrl'])) {
+                if (! empty($prayer['audioUrl'])) {
                     $newData['mp3'] = $this->importFile($prayer['audioUrl']);
                 }
-
 
                 if ($existingPrayer) {
                     $existingPrayer->data($newData);
@@ -117,6 +115,7 @@ class ImportPrayers extends Command
             $asset = Asset::make()->container('s3')->path("files/prayers/{$filename}");
             $asset->upload($uploadedFile);
             $asset->save();
+
             // Add the asset to the prayer data
             return $asset->path;
         }

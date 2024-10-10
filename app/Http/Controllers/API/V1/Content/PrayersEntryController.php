@@ -20,11 +20,9 @@ class PrayersEntryController extends Controller
             ->orderBy('order', 'asc')
             ->get();
 
-
         $prayersResponse = $prayers->map(function ($prayer) {
             return $this->buildPrayerResponse($prayer);
         });
-
 
         return PrayersShowResponse::collection($prayersResponse);
     }
@@ -38,8 +36,7 @@ class PrayersEntryController extends Controller
             ->where('published', true)
             ->first();
 
-
-        if (!$prayer) {
+        if (! $prayer) {
             return response()->json(['error' => 'Prayer not found'], 404);
         }
 

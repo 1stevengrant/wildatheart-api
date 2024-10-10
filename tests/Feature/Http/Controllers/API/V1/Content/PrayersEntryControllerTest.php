@@ -7,7 +7,6 @@ use Statamic\Facades\Entry;
 
 uses(RefreshDatabase::class);
 
-
 it('returns 404 when page not found', function () {
     // Arrange
     $nonExistentSlug = 'non-existent-page';
@@ -28,10 +27,10 @@ test('it can get a list of prayers', function () {
         ->slug('prayer-1')
         ->published(true)
         ->data([
-            'title' => "Prayer 1",
-            'content' => "<p>This is a test</p>",
-            'summary' => "This is a test summary",
-            'drupal_url' => "https://wildatheart.org/prayer/prayer-1",
+            'title' => 'Prayer 1',
+            'content' => '<p>This is a test</p>',
+            'summary' => 'This is a test summary',
+            'drupal_url' => 'https://wildatheart.org/prayer/prayer-1',
         ]);
 
     $prayer1->save();
@@ -41,10 +40,10 @@ test('it can get a list of prayers', function () {
         ->slug('prayer-2')
         ->published(true)
         ->data([
-            'title' => "Prayer 2",
-            'content' => "<p>This is a test</p>",
-            'summary' => "This is a test summary",
-            'drupal_url' => "https://wildatheart.org/prayer/prayer-2",
+            'title' => 'Prayer 2',
+            'content' => '<p>This is a test</p>',
+            'summary' => 'This is a test summary',
+            'drupal_url' => 'https://wildatheart.org/prayer/prayer-2',
         ]);
     $prayer2->save();
 
@@ -67,10 +66,10 @@ test('it can show a specific prayer', function () {
         ->slug('prayer-1')
         ->published(true)
         ->data([
-            'title' => "Prayer 1",
-            'content' => "<p>This is a test</p>",
-            'summary' => "This is a test summary",
-            'drupal_url' => "https://wildatheart.org/prayer/prayer-1",
+            'title' => 'Prayer 1',
+            'content' => '<p>This is a test</p>',
+            'summary' => 'This is a test summary',
+            'drupal_url' => 'https://wildatheart.org/prayer/prayer-1',
         ]);
 
     $prayer1->save();

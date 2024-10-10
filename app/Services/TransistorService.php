@@ -35,7 +35,7 @@ class TransistorService
             $json = $response->json();
 
             if (isset($json['errors'])) {
-                return $json['errors'];
+                return $json;
             }
 
             Cache::put($url, $json, (int) $TRANSISTOR_CACHE_DURATION);
@@ -63,27 +63,11 @@ class TransistorService
         $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status=published&pagination[per]='.$count;
         $json = $this->transistorFetch($url);
 
-        if (isset($json['errors'])) {
-            return $json['errors'];
+        if (isset($json['errors']) || ! isset($json['data'])) {
+            return $json;
         }
 
         return $json['data'];
-    }
-
-    /**
-     * Get a single episode by its slug
-     *
-     * @param  string  $slug  The slug of the episode to fetch
-     * @return array The episode from the Transistor API
-     */
-    public function getBySlug($slug)
-    {
-        $url = config('services.transistor.api_url').'episodes/'.$slug;
-        $json = $this->transistorFetch($url);
-
-        if (isset($json['errors'])) {
-            return $json['errors'];
-        }
     }
 
     public function getAll($showId, $status = 'published')
@@ -93,7 +77,7 @@ class TransistorService
 
         $json = $this->transistorFetch($url);
 
-        if (isset($json['errors'])) {
+        if (! empty($json['errors'])) {
             return $json['errors'];
         }
 
@@ -103,9 +87,10 @@ class TransistorService
             $currentPage = $json['meta']['currentPage'];
 
             // Move through all pages of data and merge them into the $data array
-            while ($currentPage <= $json['meta']['totalPages']) {
+            while ($currentPage < $json['meta']['totalPages']) {
                 $currentPage += 1;
-                $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status=published&pagination[per]=100&pagination[page]='.$currentPage;
+
+                $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]=100&pagination[page]='.$currentPage;
                 $json = $this->transistorFetch($url);
 
                 if (! isset($json['errors'])) {

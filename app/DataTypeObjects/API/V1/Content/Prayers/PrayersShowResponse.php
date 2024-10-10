@@ -11,8 +11,12 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class PrayersShowResponse extends EntryResponse
 {
     public string $content;
+
     public string $summary;
+
     public string $drupal_url;
+
     public ?PlayableFile $mp3;
+
     public ?File $pdf;
 }
