@@ -255,17 +255,6 @@ tabs:
                   handle: button_entry
                   field:
                     max_items: 1
-                    collections:
-                      - authors
-                      - blogs
-                      - categories
-                      - events
-                      - experiences
-                      - media_item
-                      - media_series
-                      - pages
-                      - prayer
-                      - sessions
                     type: entries
                     display: 'Button Entry'
                 -
