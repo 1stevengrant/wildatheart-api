@@ -71,3 +71,14 @@ fields:
               fields:
                 -
                   import: container_block
+            styled_text:
+              display: 'Styled Text'
+              icon: text-formatting-all-caps
+              fields:
+                -
+                  import: styled_text_block
+            columns:
+              display: Columns
+              fields:
+                -
+                  import: columns_block
