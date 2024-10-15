@@ -17,6 +17,14 @@ tabs:
               type: assets
               display: 'Event Logo'
               max_files: 1
+          -
+            handle: event_type
+            field:
+              taxonomies:
+                - event_types
+              type: terms
+              display: 'Event Type'
+              max_items: 1
       -
         display: Testimonials
         fields:
