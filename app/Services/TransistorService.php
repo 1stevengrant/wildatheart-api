@@ -78,7 +78,7 @@ class TransistorService
         }
 
         // Handle error appropriately
-        throw new \Exception('Failed to fetch data from Transistor API');
+        throw new \Exception('Failed to update episode in Transistor API');
     }
 
     /**
