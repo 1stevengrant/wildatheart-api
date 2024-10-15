@@ -51,6 +51,36 @@ class TransistorService
         throw new \Exception('Failed to fetch data from Transistor API');
     }
 
+
+    public function updateEpisode($episodeId, $data)
+    {
+        $TRANSISTOR_API_KEY = config('services.transistor.api_key');
+
+        $url = config('services.transistor.api_url') . 'episodes/' . $episodeId;
+
+        $response = Http::withHeaders([
+            'x-api-key' => $TRANSISTOR_API_KEY,
+        ])->patch($url, $data);
+
+
+        if ($response->successful()) {
+            $json = $response->json();
+
+            if (isset($json['errors'])) {
+                return $json;
+            }
+
+            return $json;
+        }
+
+        if (isset($response->json()['errors'])) {
+            return $response->json();
+        }
+
+        // Handle error appropriately
+        throw new \Exception('Failed to fetch data from Transistor API');
+    }
+
     /**
      * Get the most recent episodes from the Transistor API
      *
@@ -60,7 +90,7 @@ class TransistorService
      */
     public function getRecent($showId, $count = 1)
     {
-        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status=published&pagination[per]='.$count;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
         $json = $this->transistorFetch($url);
 
         if (isset($json['errors']) || ! isset($json['data'])) {
@@ -73,7 +103,7 @@ class TransistorService
     public function getAll($showId, $status = 'published')
     {
 
-        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]=100';
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=100';
 
         $json = $this->transistorFetch($url);
 
@@ -90,7 +120,7 @@ class TransistorService
             while ($currentPage < $json['meta']['totalPages']) {
                 $currentPage += 1;
 
-                $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]=100&pagination[page]='.$currentPage;
+                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=100&pagination[page]=' . $currentPage;
                 $json = $this->transistorFetch($url);
 
                 if (! isset($json['errors'])) {
