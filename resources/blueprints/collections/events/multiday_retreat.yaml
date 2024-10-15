@@ -30,6 +30,11 @@ tabs:
         fields:
           -
             import: testimonials
+      -
+        display: 'Video Testimonials'
+        fields:
+          -
+            import: vertical_videos_block
   sidebar:
     display: Sidebar
     sections:
