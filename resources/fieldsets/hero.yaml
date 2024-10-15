@@ -149,8 +149,6 @@ fields:
       validate:
         - image
       folder: wp-app/uploads
-      if:
-        background_video_url: 'not empty'
   -
     handle: featured_video_url
     field:
@@ -165,8 +163,6 @@ fields:
       display: 'Featured Video Fallback Image'
       validate:
         - image
-      if:
-        featured_video_url: 'not empty'
       folder: wp-app/uploads
   -
     import: buttons
