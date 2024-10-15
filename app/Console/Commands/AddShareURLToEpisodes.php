@@ -36,26 +36,23 @@ class AddShareURLToEpisodes extends Command
     public function addShareURLToEpisodes(): void
     {
 
-        $transistorService = new TransistorService();
+        $transistorService = new TransistorService;
 
-        $episodes = $transistorService->getAll("wildatheart-daily", "scheduled");
-
+        $episodes = $transistorService->getAll('wildatheart-daily', 'scheduled');
 
         $progressBar = $this->output->createProgressBar(count($episodes));
         $progressBar->start();
 
         $this->info('Adding share URLs to episodes...');
 
-
         foreach ($episodes as $episode) {
-
 
             $slug = Str::slug($episode['attributes']['title']);
             $this->info($slug);
 
-            $alternate_url = "https://wildatheart.org/daily-readings/" . $slug;
+            $alternate_url = 'https://wildatheart.org/daily-readings/'.$slug;
             $data = [
-                "episode" => ["alternate_url" => $alternate_url]
+                'episode' => ['alternate_url' => $alternate_url],
             ];
 
             $transistorService->updateEpisode($episode['id'], $data);
