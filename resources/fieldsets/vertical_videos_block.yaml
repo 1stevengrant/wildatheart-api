@@ -1,0 +1,45 @@
+title: 'Vertical Videos Block'
+fields:
+  -
+    handle: vertical_videos_block
+    field:
+      type: group
+      display: 'Vertical Videos Block'
+      fields:
+        -
+          handle: title
+          field:
+            type: text
+            display: Title
+        -
+          handle: videos
+          field:
+            type: replicator
+            display: Videos
+            sets:
+              new_set_group:
+                display: 'New Set Group'
+                sets:
+                  video:
+                    display: Video
+                    fields:
+                      -
+                        handle: video_url
+                        field:
+                          type: text
+                          display: 'Video Url'
+                      -
+                        handle: poster_url
+                        field:
+                          type: text
+                          display: 'Poster Url'
+                      -
+                        handle: title
+                        field:
+                          type: text
+                          display: Title
+                      -
+                        handle: subtitle
+                        field:
+                          type: text
+                          display: Subtitle

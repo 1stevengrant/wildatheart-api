@@ -70,6 +70,12 @@ fields:
               fields:
                 -
                   import: actions
+            styled_text:
+              display: 'Styled Text'
+              icon: text-formatting-all-caps
+              fields:
+                -
+                  import: styled_text_block
   -
     handle: hero_variant
     field:
@@ -145,12 +151,10 @@ fields:
       max_files: 1
       container: s3
       type: assets
-      display: 'Background Video Fallback Image'
+      display: 'Background Image'
       validate:
         - image
       folder: wp-app/uploads
-      if:
-        background_video_url: 'not empty'
   -
     handle: featured_video_url
     field:
@@ -165,8 +169,6 @@ fields:
       display: 'Featured Video Fallback Image'
       validate:
         - image
-      if:
-        featured_video_url: 'not empty'
       folder: wp-app/uploads
   -
     import: buttons
