@@ -51,6 +51,34 @@ class TransistorService
         throw new \Exception('Failed to fetch data from Transistor API');
     }
 
+    public function updateEpisode($episodeId, $data)
+    {
+        $TRANSISTOR_API_KEY = config('services.transistor.api_key');
+
+        $url = config('services.transistor.api_url').'episodes/'.$episodeId;
+
+        $response = Http::withHeaders([
+            'x-api-key' => $TRANSISTOR_API_KEY,
+        ])->patch($url, $data);
+
+        if ($response->successful()) {
+            $json = $response->json();
+
+            if (isset($json['errors'])) {
+                return $json;
+            }
+
+            return $json;
+        }
+
+        if (isset($response->json()['errors'])) {
+            return $response->json();
+        }
+
+        // Handle error appropriately
+        throw new \Exception('Failed to update episode in Transistor API');
+    }
+
     /**
      * Get the most recent episodes from the Transistor API
      *
