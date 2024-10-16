@@ -11,7 +11,7 @@ fields:
           field:
             max_files: 1
             container: s3
-            folder: wp-app/uploads
+            folder: files
             type: assets
             display: Square
         -
@@ -19,7 +19,7 @@ fields:
           field:
             max_files: 1
             container: s3
-            folder: wp-app/uploads
+            folder: files
             type: assets
             display: Wide
         -
@@ -27,7 +27,7 @@ fields:
           field:
             max_files: 1
             container: s3
-            folder: wp-app/uploads
+            folder: files
             type: assets
             display: Banner
         -
@@ -35,6 +35,6 @@ fields:
           field:
             max_files: 1
             container: s3
-            folder: wp-app/uploads
+            folder: files
             type: assets
             display: Vertical
