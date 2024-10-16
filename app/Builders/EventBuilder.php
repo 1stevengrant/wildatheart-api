@@ -180,4 +180,9 @@ class EventBuilder extends Builder
 
         return $this;
     }
+
+    public function createdAfter(string $date): EventBuilder
+    {
+        return $this->where('created_at', '>=', $date);
+    }
 }

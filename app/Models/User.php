@@ -182,4 +182,9 @@ class User extends Authenticatable
     {
         return md5($this->email);
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->super;
+    }
 }
