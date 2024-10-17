@@ -64,9 +64,10 @@ tabs:
                         -
                           handle: question_text
                           field:
-                            placeholder: 'What adventures or games did you play as a boy?'
-                            type: textarea
+                            remove_empty_nodes: trim
+                            type: bard
                             display: 'Question Text'
+                            placeholder: 'What adventures or games did you play as a boy?'
           -
             handle: description_legacy
             field:
