@@ -68,6 +68,11 @@ tabs:
                             type: bard
                             display: 'Question Text'
                             placeholder: 'What adventures or games did you play as a boy?'
+                            buttons:
+                              - bold
+                              - italic
+                              - removeformat
+                              - anchor
           -
             handle: description_legacy
             field:
