@@ -34,7 +34,7 @@ class TransistorService
         if ($response->successful()) {
             $json = $response->json();
 
-            if (isset($json['errors'])) {
+            if (! empty($json['errors'])) {
                 return $json;
             }
 
@@ -100,8 +100,9 @@ class TransistorService
 
     public function getAll($showId, $status = 'published')
     {
+        $pageSize = 1200;
 
-        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]=100';
+        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]='.$pageSize;
 
         $json = $this->transistorFetch($url);
 
@@ -118,9 +119,8 @@ class TransistorService
             while ($currentPage < $json['meta']['totalPages']) {
                 $currentPage += 1;
 
-                $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]=100&pagination[page]='.$currentPage;
+                $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]='.$pageSize.'&pagination[page]='.$currentPage;
                 $json = $this->transistorFetch($url);
-
                 if (! isset($json['errors'])) {
                     $data = array_merge($data, $json['data']);
                 }

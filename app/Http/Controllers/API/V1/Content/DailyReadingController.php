@@ -24,7 +24,6 @@ class DailyReadingController extends Controller
         $scheduledData = $this->transistorService->getAll('wildatheart-daily', 'scheduled');
         $draftData = $this->transistorService->getAll('wildatheart-daily', 'draft');
         $data = array_merge($data, $scheduledData, $draftData);
-
         $dailyReadings = [];
 
         /**
