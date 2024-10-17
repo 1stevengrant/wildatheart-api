@@ -2,69 +2,87 @@ tabs:
   main:
     display: Main
     sections:
-      - fields:
-          - handle: title
+      -
+        fields:
+          -
+            handle: title
             field:
               type: text
               required: true
-          - handle: author_name
-            field:
-              type: text
               validate:
                 - required
-              display: "Author Name"
-              instructions_position: above
-              listable: hidden
-              visibility: visible
-              replicator_preview: true
-              input_type: text
-              antlers: false
-              hide_display: false
-          - handle: author_image
+              display: Title
+              instructions: 'Full name of the Contributor'
+          -
+            handle: image
             field:
-              mode: list
               container: s3
-              restrict: false
-              allow_uploads: true
-              show_filename: true
-              show_set_alt: true
               type: assets
-              display: "Author Image"
-              icon: assets
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
-          - handle: author_bio
+              display: Image
+              max_files: 1
+              instructions: 'Picture of the Contributor'
+          -
+            handle: roles_description
             field:
-              restrict: false
+              type: text
+              display: 'Roles Description'
+              instructions: 'A brief description of the roles and positions this person holds, e.g. "Author, Founder of Wild At Heart Ministries"'
+          -
+            handle: bio_short
+            field:
               buttons:
                 - bold
                 - italic
                 - link
-              automatic_line_breaks: true
-              automatic_links: false
-              escape_markup: false
-              heading_anchors: false
-              smartypants: false
-              table_of_contents: false
-              antlers: false
               type: markdown
-              display: "Author Bio"
-              icon: markdown
-              listable: hidden
-              instructions_position: above
-              visibility: visible
-              replicator_preview: true
-              hide_display: false
+              display: 'Bio Short'
+              instructions: 'short biography'
+          -
+            handle: bio_long
+            field:
+              type: markdown
+              display: 'Bio Long'
+              instructions: 'long biography'
+          -
+            handle: updates_explanation
+            field:
+              type: markdown
+              display: 'Updates Explanation'
+              instructions: 'A couple sentences explaining the ways to receive communication updates from this person.'
+          -
+            handle: updates_links
+            field:
+              type: grid
+              display: 'Updates Links'
+              instructions: 'Links for how to receive updates from this person.'
+              fields:
+                -
+                  handle: title
+                  field:
+                    type: text
+                    display: Title
+                -
+                  handle: link
+                  field:
+                    type: link
+                    display: Link
   sidebar:
     display: Sidebar
     sections:
-      - fields:
-          - handle: slug
+      -
+        fields:
+          -
+            handle: slug
             field:
               type: slug
               localizable: true
-              validate: "max:200"
-title: Author
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required
+title: Contributor
