@@ -21,6 +21,7 @@ tabs:
               display: Image
               max_files: 1
               instructions: 'Picture of the Contributor'
+              folder: files/contributors
           -
             handle: roles_description
             field:
