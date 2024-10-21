@@ -6,27 +6,39 @@ use App\Http\Controllers\Controller;
 use App\Services\SubsplashService;
 use Carbon\Carbon;
 use Statamic\Entries\Entry;
+use Statamic\Eloquent\Entries\UuidEntryModel;
 
 class MediaSeriesDataController extends Controller
 {
     public function show($slug)
     {
-        $responseData = [];
 
         $series = Entry::query()
             ->where('collection', 'media_series')
             ->where('slug', $slug)
             ->firstOrFail();
 
+
+        if ($series->blueprint === 'custom_series') {
+            return $series;
+        }
+
+        $responseData = $this->buildSubsplashMediaSeriesResponse($series);        // Return the view with the merged data 
+
+        // Return the view with the merged data
+        return response()->json($responseData);
+    }
+
+    public function buildSubsplashMediaSeriesResponse(Entry|UuidEntryModel $series)
+    {
+        $responseData = [];
+
         $responseData['id'] = $series->id;
         $responseData['title'] = $series->title;
         $responseData['slug'] = $series->slug;
         $responseData['uri'] = $series->uri;
+        $responseData['blueprint'] = $series->blueprint;
 
-        if ($series->blueprint === 'custom_series') {
-
-            return $series;
-        }
 
         $subsplash = new SubsplashService;
 
@@ -38,7 +50,7 @@ class MediaSeriesDataController extends Controller
 
         $responseData['subtitle'] = $subsplashSeries['subtitle'];
 
-        $series['subsplash_data'] = $subsplashSeries;
+        $responseData['subsplash_data'] = $subsplashSeries;
 
         $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
         $responseData['_embedded'] = $subsplashSeries['_embedded'];
@@ -90,7 +102,6 @@ class MediaSeriesDataController extends Controller
             ];
         }
 
-        // Return the view with the merged data
-        return response()->json($responseData);
+        return $responseData;
     }
 }
