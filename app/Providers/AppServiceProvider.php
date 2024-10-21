@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Statamic\Statamic;
+use Statamic\Facades\Collection;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,5 +51,17 @@ class AppServiceProvider extends ServiceProvider
                     ->whereNotEmpty($column);
             }
         );
+
+
+        Collection::computed('media_item', 'custom_url', function ($entry, $value) {
+            if ($entry->series) {
+                $series = $entry->series->value();
+                if ($series) {
+                    $seriesUri = $series->uri();
+                    return $seriesUri . '/' . $entry->slug;
+                }
+            }
+            return 'media' . '/' . $entry->slug();
+        });
     }
 }
