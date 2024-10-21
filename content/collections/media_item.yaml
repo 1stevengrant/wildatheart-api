@@ -2,7 +2,7 @@ title: 'Media Item'
 template: default
 layout: layout
 revisions: false
-route: 'media/{slug}'
+route: '{custom_url}'
 date: true
 sort_dir: desc
 date_behavior:
