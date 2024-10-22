@@ -24,10 +24,10 @@ export const MainHeader = () => {
             className={`px-2 py-4 md:p-4 bg-black text-white flex items-center justify-between space-x-2 md:space-x-4 w-full`}
         >
             <div className={`flex items-center xl:w-1/2`}>
-                <a href={wahWebsiteUrl}>
+                <a href={wahWebsiteUrl} className={`block`}>
                     <Logo
                         className={
-                            "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mr-2"
+                            "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mr-2 opacity-80"
                         }
                     />
                 </a>

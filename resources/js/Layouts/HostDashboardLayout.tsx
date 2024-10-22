@@ -130,7 +130,7 @@ export const HostDashboardLayout = ({
                                         <a href={wahWebsiteUrl}>
                                             <Logo
                                                 className={
-                                                    "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mt-6"
+                                                    "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mt-6 opacity-80"
                                                 }
                                             />
                                         </a>
@@ -222,7 +222,7 @@ export const HostDashboardLayout = ({
                         <a href={wahWebsiteUrl}>
                             <Logo
                                 className={
-                                    "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mt-6"
+                                    "w-[75px] flex-shrink-0 md:w-[100px] lg:w-[150px] mt-6 opacity-80"
                                 }
                             />
                         </a>
