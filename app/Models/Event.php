@@ -23,14 +23,14 @@ class Event extends BaseModel
         static::saving(function ($event) {
             if ($event->eventType) {
                 $eventTypeName = $event->eventType->name;
-                if (str_contains(strtolower($eventTypeName), 'retreat')) {
-                    $event->type_group = 'retreat';
+                if (str_contains(strtolower($eventTypeName), EventType::TYPE_RETREAT)) {
+                    $event->type_group = EventType::TYPE_RETREAT;
                 }
-                if (str_contains(strtolower($eventTypeName), 'experience')) {
-                    $event->type_group = 'experience';
+                if (str_contains(strtolower($eventTypeName), EventType::TYPE_EXPERIENCE)) {
+                    $event->type_group = EventType::TYPE_EXPERIENCE;
                 }
-                if (str_contains(strtolower($eventTypeName), 'fire')) {
-                    $event->type_group = 'fire';
+                if (str_contains(strtolower($eventTypeName), EventType::TYPE_FIRE)) {
+                    $event->type_group = EventType::TYPE_FIRE;
                 }
 
             }

@@ -32,13 +32,19 @@ jobs:
           FORGE_GIT_BRANCH: ${{ github.head_ref }}
           FORGE_DOMAIN: gondor.wildatheart.org
           SUBDOMAIN_NAME: pr-${{ github.event.number }}
-          FORGE_DEPLOY_SCRIPT: "cd $FORGE_SITE_PATH; git pull origin $FORGE_SITE_BRANCH; composer install; npm install; npm run build; php artisan key:generate; php artisan migrate --force; php artisan db:seed --force"
+          FORGE_DEPLOY_SCRIPT: ${{ secrets.LARAVEL_DEPLOY_SCRIPT }}
           FORGE_JOB_SCHEDULER: true
           FORGE_DB_CREATION_REQUIRED: true
           FORGE_SSL_REQUIRED: true
           FORGE_WAIT_ON_SSL: true
           FORGE_WAIT_ON_DEPLOY: true
           FORGE_ENVIRONMENT_URL: https://pr-${{ github.event.number }}.gondor.wildatheart.org
-          FORGE_ENV_KEYS: "AUTH0_AUDIENCE=https://pr-${{ github.event.number }}.gondor.wildatheart.org;AUTH0_REDIRECT_URI=https://pr-${{ github.event.number }}.gondor.wildatheart.org/callback; ${{ secrets.LARAVEL_ENV_KEYS }}"
+          FORGE_ENV_KEYS: |
+            REMOTE_DATABASE_USERNAME=forge
+            REMOTE_DATABASE_NAME=wah_local_prod
+            REMOTE_DATABASE_PASSWORD=${{ secrets.FORGE_DB_PASSWORD }}
+            AUTH0_AUDIENCE=https://pr-${{ github.event.number }}.gondor.wildatheart.org
+            AUTH0_REDIRECT_URI=https://pr-${{ github.event.number }}.gondor.wildatheart.org/callback
+            ${{ secrets.LARAVEL_ENV_KEYS }}
           FORGE_NGINX_TEMPLATE: 14550
         run: harbor provision

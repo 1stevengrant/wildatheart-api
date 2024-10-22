@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Event;
 
 use App\Jobs\ImportEvent;
 use Illuminate\Console\Command;

@@ -20,7 +20,6 @@ use App\Http\Controllers\EventGuideController;
 use App\Http\Controllers\Gift\GiftSuccessController;
 use App\Http\Controllers\Gift\HandleSendGiftController;
 use App\Http\Controllers\Gift\SendGiftController;
-use App\Http\Controllers\InternalReportingController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\User\AgreeToHostAgreementController;
 use App\Http\Controllers\User\DestroyUserImageController;
@@ -36,10 +35,6 @@ Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.logi
 Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');
 
 Route::middleware(['auth'])->group(function () {
-
-    Route::middleware(['super_admin'])->group(function () {
-        Route::get('internal/reporting', InternalReportingController::class)->name('internal.reporting');
-    });
 
     Route::prefix('host')->name('host.')->group(function () {
         Route::get('agreement', HostAgreementPageController::class)->name('agreement');

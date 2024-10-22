@@ -19,27 +19,37 @@ class SearchForEventsController extends Controller
      */
     public function __invoke(SearchForEventsRequest $request)
     {
-        $request->validated();
-        $events = Event::query()
-            ->approved()
-            ->active()
-            ->notPrivate()
-            ->filterBySex($request->input('sex'))
-            ->filterByTypeGroup($request->input('type_group'))
-            ->filterByEventTypes($request->input('types'))
-            ->betweenDates($request->input('start_date'), $request->input('end_date'))
-            ->withinBoundingBox(
-                $request->input('sw_latitude'),
-                $request->input('sw_longitude'),
-                $request->input('ne_latitude'),
-                $request->input('ne_longitude')
-            )
-            ->with(['eventType', 'host'])
-            ->orderBy('start_date', 'asc')
-            ->get();
+        $validatedData = $request->validated();
+
+        $cacheKey = $this->generateCacheKey($validatedData);
+
+        $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData) {
+            return Event::query()
+                ->approved()
+                ->active()
+                ->notPrivate()
+                ->filterBySex($validatedData['sex'])
+                ->filterByTypeGroup($validatedData['type_group'])
+                ->filterByEventTypes($validatedData['types'])
+                ->betweenDates($validatedData['start_date'], $validatedData['end_date'])
+                ->withinBoundingBox(
+                    $validatedData['sw_latitude'],
+                    $validatedData['sw_longitude'],
+                    $validatedData['ne_latitude'],
+                    $validatedData['ne_longitude']
+                )
+                ->with(['eventType', 'host'])
+                ->orderBy('start_date', 'asc')
+                ->get();
+        });
 
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
         return response()->json(EventResource::collection($offsetEvents));
+    }
+
+    private function generateCacheKey(array $validatedData): string
+    {
+        return 'events_search_'.md5(json_encode($validatedData));
     }
 }

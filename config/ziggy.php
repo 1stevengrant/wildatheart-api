@@ -9,5 +9,13 @@ return [
         'nova-settings.*',
         'two-factor.*',
         'ignition.*',
+        'webhooks.*',
+        'livewire.*',
+        'drupal.*',
+        'statamic.*',
+        'v1.stats.*',
+        'content.*',
+        'sanctum.*',
+        'v1.*'
     ],
 ];

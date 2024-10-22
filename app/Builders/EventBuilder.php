@@ -116,6 +116,17 @@ class EventBuilder extends Builder
         float $neLatitude,
         float $neLongitude
     ): EventBuilder {
+        $swLongitude = fmod(($swLongitude + 540), 360) - 180;
+        $neLongitude = fmod(($neLongitude + 540), 360) - 180;
+
+        if ($swLongitude > $neLongitude) {
+            return $this->whereBetween('latitude', [$swLatitude, $neLatitude])
+                ->where(function ($query) use ($swLongitude, $neLongitude) {
+                    $query->where('longitude', '>=', $swLongitude)
+                        ->orWhere('longitude', '<=', $neLongitude);
+                });
+        }
+
         return $this->whereBetween('latitude', [$swLatitude, $neLatitude])
             ->whereBetween('longitude', [$swLongitude, $neLongitude]);
     }

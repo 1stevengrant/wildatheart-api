@@ -1,5 +1,5 @@
 export const commonMapProps = {
-    minZoom: 0,
+    minZoom: 1,
     maxZoom: 13,
     maxPitch: 0,
     minPitch: 0,
@@ -8,7 +8,7 @@ export const commonMapProps = {
     touchPitch: false,
     customAttribution: "",
     attributionControl: false,
-    mapStyle: "mapbox://styles/mapbox/outdoors-v12",
+    mapStyle: "mapbox://styles/mapbox/streets-v11",
     mapboxAccessToken: import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN,
     style: {
         width: "100%",

@@ -49,12 +49,12 @@ class EventOffsettingService
             if ($index == 0 && $groupSize == 1) {
                 // For single events, apply a small random offset
                 $randomAngle = mt_rand(0, 360) * (M_PI / 180);
-                $event->display_latitude = $baseEvent->latitude + ($this->minOffset * sin($randomAngle));
-                $event->display_longitude = $baseEvent->longitude + ($this->minOffset * cos($randomAngle) / cos(deg2rad($baseEvent->latitude)));
+                $latOffset = $this->minOffset * sin($randomAngle);
+                $lngOffset = $this->minOffset * cos($randomAngle) / cos(deg2rad($baseEvent->latitude));
             } elseif ($index == 0) {
                 // Slightly offset the first event in a group
-                $event->display_latitude = $baseEvent->latitude + ($offsetRadius * 0.1);
-                $event->display_longitude = $baseEvent->longitude + ($offsetRadius * 0.1);
+                $latOffset = $offsetRadius * 0.1;
+                $lngOffset = $offsetRadius * 0.1;
             } else {
                 $angle = (2 * M_PI / ($groupSize - 1)) * ($index - 1);
                 $ring = floor(($index - 1) / $this->maxMarkersPerRing);
@@ -62,11 +62,10 @@ class EventOffsettingService
 
                 $latOffset = $radius * sin($angle);
                 $lngOffset = $radius * cos($angle) / cos(deg2rad($baseEvent->latitude));
-
-                $event->display_latitude = $baseEvent->latitude + $latOffset;
-                $event->display_longitude = $baseEvent->longitude + $lngOffset;
             }
 
+            $event->display_latitude = round($baseEvent->latitude + $latOffset, 2);
+            $event->display_longitude = round($baseEvent->longitude + $lngOffset, 2);
             $event->group_size = $groupSize;
         }
     }

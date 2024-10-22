@@ -18,7 +18,8 @@ export const NoWebGLSupport = ({ className = "" }: { className?: string }) => {
                     in this browser version.{" "}
                 </p>
                 <p>
-                    <a target={`_blank`}
+                    <a
+                        target={`_blank`}
                         href={`https://www.google.com/search?q=enable+webgl+in+browser&sca_esv=5de61c6dbcae3990&sxsrf=ADLYWIKyqD26Z3azbIEvdiywAVEXjjpL1Q%3A1727900804108&ei=hKz9ZuCyBpOcseMPmcLqYA&ved=0ahUKEwjghIuNxPCIAxUTTmwGHRmhGgwQ4dUDCBE&uact=5&oq=enable+webgl+in+browser&gs_lp=Egxnd3Mtd2l6LXNlcnAiF2VuYWJsZSB3ZWJnbCBpbiBicm93c2VyMgUQABiABDIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgsQABiABBiGAxiKBTILEAAYgAQYhgMYigUyCxAAGIAEGIYDGIoFMggQABiABBiiBDIIEAAYgAQYogRIvxVQ-ARY_RRwAXgBkAEAmAGhAqABng-qAQUwLjkuMbgBA8gBAPgBAZgCC6ACyQ_CAgoQABiwAxjWBBhHwgINEAAYgAQYsAMYQxiKBcICChAAGIAEGEMYigXCAgsQABiABBiRAhiKBZgDAIgGAZAGCpIHBTEuOC4yoAe0RQ&sclient=gws-wiz-serp`}
                     >
                         Find out how to enable WebGL2

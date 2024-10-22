@@ -4,60 +4,37 @@ use App\Models\Event;
 use App\Models\EventType;
 use App\Models\State;
 
-if (! function_exists('generateTimeList')) {
-    function generateTimeList(): array
-    {
-        $times = [];
-        $startTime = strtotime('00:00:00');
-        $endTime = strtotime('23:45:00');
-
-        while ($startTime <= $endTime) {
-            $times[] = date('H:i:s', $startTime);
-            $startTime += 900;
-        }
-
-        return $times;
-    }
-}
-
-if (! function_exists('prettyDate')) {
-    function prettyDate(string $date): string
-    {
-        return date('l, F jS, Y', strtotime($date));
-    }
-}
-
-if (! function_exists('prettyTime')) {
-    function prettyTime(string $time): string
-    {
-        return date('g:i A', strtotime($time));
-    }
-}
-
 if (! function_exists('getStateAbbreviation')) {
     function getStateAbbreviation(?string $stateName = null): ?string
     {
-        // Already stored as abbreviated in DB so return.
-        if ($stateName && strlen($stateName) === 2) {
-            return $stateName;
-        }
-        $stateAbbreviations = State::all()->pluck('code', 'name')->toArray();
-
-        $stateName = ucwords(strtolower($stateName));
-        if (array_key_exists($stateName, $stateAbbreviations)) {
-            return $stateAbbreviations[$stateName];
+        if ($stateName === null) {
+            return null;
         }
 
-        return null;
+        if (strlen($stateName) === 2) {
+            return strtoupper($stateName);
+        }
+
+        $normalizedName = ucwords(strtolower(trim($stateName)));
+
+        static $stateAbbreviations = null;
+
+        if ($stateAbbreviations === null) {
+            $stateAbbreviations = cache()->rememberForever('state_abbreviations', function () {
+                return State::all()->pluck('code', 'name')->toArray();
+            });
+        }
+
+        return $stateAbbreviations[$normalizedName] ?? null;
     }
 }
 
 if (! function_exists('getStateName')) {
     function getStateName(?string $stateCode = null): string
     {
-        $stateNames = State::all()->pluck('name', 'code')->toArray();
-
-        return $stateNames[$stateCode];
+        return cache()->rememberForever('state_names', function () {
+            return State::all()->pluck('name', 'code')->toArray();
+        })[$stateCode] ?? '';
     }
 }
 
@@ -338,10 +315,26 @@ if (! function_exists('getCountries')) {
     }
 }
 
-if (! function_exists('getCountryCode')) {
-    function getCountryCodeFromCountryName(string $countryName): bool|int|string
+if (! function_exists('getCountryCodeFromCountryName')) {
+    function getCountryCodeFromCountryName(string $countryName): string
     {
-        return \Squire\Models\Country::where('name', 'like', $countryName)->firstOrFail()->code_2;
+        $normalizedName = strtolower(trim($countryName));
+        $countryCode = Cache::get("country_code:{$normalizedName}");
+
+        if ($countryCode === null) {
+            $country = \Squire\Models\Country::where('name', 'like', $countryName)->first();
+
+            if ($country) {
+                $countryCode = $country->code_2;
+                Cache::put("country_code:{$normalizedName}", $countryCode, now()->addWeek());
+            } else {
+                Cache::put("country_code:{$normalizedName}", 'not_found', now()->addDay());
+
+                return '';
+            }
+        }
+
+        return $countryCode === 'not_found' ? '' : $countryCode;
     }
 }
 

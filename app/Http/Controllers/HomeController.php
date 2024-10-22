@@ -39,14 +39,18 @@ class HomeController extends Controller
         JsonLd::generate();
 
         return inertia('HomePage', [
-            'allEventTypes' => EventType::query()->active()->get(),
-            'experienceTypes' => EventType::query()->slug('%experience%')->active()->get(),
-            'retreatTypes' => EventType::query()
-                ->slug('%retreat%')
-                ->slugOr('%school%')
-                ->active()
-                ->get(),
-            'fireTypes' => EventType::query()->slug('%fire%')->active()->get(),
+            'allEventTypes' => cache()->remember('allEventTypes', now()->addDay(), function () {
+                return EventType::query()->active()->get();
+            }),
+            'experienceTypes' => cache()->remember('experienceTypes', now()->addDay(), function () {
+                return EventType::query()->slug('%experience%')->active()->get();
+            }),
+            'retreatTypes' => cache()->remember('retreatTypes', now()->addDay(), function () {
+                return EventType::query()->slug('%retreat%')->active()->get();
+            }),
+            'fireTypes' => cache()->remember('fireTypes', now()->addDay(), function () {
+                return EventType::query()->slug('%fire%')->active()->get();
+            }),
         ]);
     }
 }
