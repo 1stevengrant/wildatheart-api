@@ -7,14 +7,12 @@ import { NotificationWrapper } from "@/Components/Layout/Notifications/Notificat
 
 export const BackendNotifications = () => {
     const { notifications } = usePage<any>().props;
-
+    if (!notifications) {
+        return null;
+    }
     return (
-        <>
-            {notifications && (
-                <NotificationWrapper>
-                    <Notification message={notifications.message} />
-                </NotificationWrapper>
-            )}
-        </>
+        <NotificationWrapper>
+            <Notification message={notifications.message} />
+        </NotificationWrapper>
     );
 };
