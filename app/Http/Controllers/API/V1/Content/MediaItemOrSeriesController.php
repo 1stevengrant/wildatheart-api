@@ -104,8 +104,6 @@ class MediaItemOrSeriesController extends Controller
 
         if ($response['blueprint']['handle'] === 'custom_media_item') {
             return MediaItemData::from($response);
-
-            return response()->json($response);
         }
 
         $mediaItemsInSeries = Entry::query()
