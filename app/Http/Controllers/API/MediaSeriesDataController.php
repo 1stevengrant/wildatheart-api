@@ -10,7 +10,7 @@ use Statamic\Entries\Entry;
 
 class MediaSeriesDataController extends Controller
 {
-    public function show($slug)
+    public function show(string $slug)
     {
 
         $series = Entry::query()
