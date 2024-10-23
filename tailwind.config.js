@@ -30,6 +30,7 @@ export default {
                 black: 900,
             },
             colors: {
+                "yellow-600": "#f6e05e",
                 transparent: "transparent",
                 "transparent-orange": "rgba(214, 95, 0, 0.9)",
                 "transparent-brown": "rgba(116, 54, 23, 0.9)",
