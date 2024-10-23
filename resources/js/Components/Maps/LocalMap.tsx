@@ -31,13 +31,12 @@ import {
 import { reactNotificationState } from "@/store";
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 
-const MAP_CONSTANTS = {
-    MAX_ZOOM_OUT_ATTEMPTS: 6,
-    DEFAULT_ZOOM_LEVEL: 3,
-    SELECTED_PLACE_ZOOM_LEVEL: 7,
-    GEOLOCATION_ZOOM_LEVEL: 4,
-    ZOOM_OUT_INCREMENT: 1,
-} as const;
+const MAX_ZOOM_OUT_ATTEMPTS = 6;
+const DEFAULT_ZOOM_LEVEL = 3;
+const SELECTED_PLACE_ZOOM_LEVEL = 7;
+const GEOLOCATION_ZOOM_LEVEL = 4;
+const ZOOM_OUT_INCREMENT = 1;
+const MIN_EVENTS_THRESHOLD = 3;
 
 export const LocalMap = () => {
     const { mapRef, selectedPlace } = useMapData();
@@ -122,7 +121,7 @@ export const LocalMap = () => {
         flyToLocation(
             selectedPlace.center[0],
             selectedPlace.center[1],
-            MAP_CONSTANTS.SELECTED_PLACE_ZOOM_LEVEL
+            SELECTED_PLACE_ZOOM_LEVEL
         );
     }, [selectedPlace]);
 
@@ -149,11 +148,10 @@ export const LocalMap = () => {
         setCurrentZoom(newZoomLevel);
         setUserZoom(newZoomLevel);
 
-        // Only reset counter if it's not an automatic zoom
         if (!isAutomaticZoom.current) {
             zoomOutAttemptCount.current = 0;
         }
-        isAutomaticZoom.current = false; // Reset the flag
+        isAutomaticZoom.current = false;
     }, []);
 
     const handleMapLoad = useCallback(() => {
@@ -182,20 +180,16 @@ export const LocalMap = () => {
                     currentRequestController.current.signal
                 );
 
-                if (eventCount > 0) {
+                if (eventCount >= MIN_EVENTS_THRESHOLD) {
                     zoomOutAttemptCount.current = 0;
                     return;
                 }
 
-                if (
-                    zoomOutAttemptCount.current >=
-                    MAP_CONSTANTS.MAX_ZOOM_OUT_ATTEMPTS
-                ) {
+                if (zoomOutAttemptCount.current >= MAX_ZOOM_OUT_ATTEMPTS) {
                     setReactNotifications((prevState) => [
                         ...prevState,
                         {
-                            message:
-                                "No events found in this area. Try searching in a different location.",
+                            message: `Not enough events found in this area (minimum ${MIN_EVENTS_THRESHOLD}). Try searching in a different location.`,
                             type: "error",
                         },
                     ]);
@@ -207,12 +201,12 @@ export const LocalMap = () => {
 
                 const currentZoomLevel = map.getZoom();
                 console.log(
-                    `Zooming out attempt ${
+                    `Found ${eventCount} events. Need ${MIN_EVENTS_THRESHOLD}. Zooming out attempt ${
                         zoomOutAttemptCount.current + 1
-                    } of ${MAP_CONSTANTS.MAX_ZOOM_OUT_ATTEMPTS}`
+                    } of ${MAX_ZOOM_OUT_ATTEMPTS}`
                 );
-                isAutomaticZoom.current = true; // Set the flag before zooming
-                map.zoomTo(currentZoomLevel - MAP_CONSTANTS.ZOOM_OUT_INCREMENT);
+                isAutomaticZoom.current = true;
+                map.zoomTo(currentZoomLevel - ZOOM_OUT_INCREMENT);
                 zoomOutAttemptCount.current += 1;
             } catch (error: any) {
                 if (error.name === "AbortError") {
@@ -242,7 +236,7 @@ export const LocalMap = () => {
         setLatitude(userLat);
         setLongitude(userLng);
         setUserLocation(userLat, userLng);
-        flyToLocation(userLng, userLat, MAP_CONSTANTS.GEOLOCATION_ZOOM_LEVEL);
+        flyToLocation(userLng, userLat, GEOLOCATION_ZOOM_LEVEL);
     }, []);
 
     if (!hasWebGLSupport) return <NoWebGLSupport />;
@@ -252,7 +246,7 @@ export const LocalMap = () => {
             initialViewState={{
                 latitude: latitude ?? defaultLatLng.latitude,
                 longitude: longitude ?? defaultLatLng.longitude,
-                zoom: currentZoom ?? MAP_CONSTANTS.DEFAULT_ZOOM_LEVEL,
+                zoom: currentZoom ?? DEFAULT_ZOOM_LEVEL,
             }}
             {...commonMapProps}
             ref={mapRef}
