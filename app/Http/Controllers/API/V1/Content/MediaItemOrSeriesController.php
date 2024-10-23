@@ -27,8 +27,6 @@ class MediaItemOrSeriesController extends Controller
 
         if (str_contains($slugOrUri, '/')) {
             $uri = '/media/' . $slugOrUri;
-        } else {
-            $slug = $slugOrUri;
         }
 
         $seriesRedirects = [
