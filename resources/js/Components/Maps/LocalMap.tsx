@@ -29,172 +29,215 @@ import {
 } from "@/lib/localStorage";
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 
+const MAP_CONSTANTS = {
+    MAX_ZOOM_OUT_ATTEMPTS: 3,
+    DEFAULT_ZOOM_LEVEL: 3,
+    SELECTED_PLACE_ZOOM_LEVEL: 7,
+    GEOLOCATION_ZOOM_LEVEL: 4,
+    ZOOM_OUT_INCREMENT: 1,
+} as const;
+
 export const LocalMap = () => {
     const { mapRef, selectedPlace } = useMapData();
     const [latitude, setLatitude] = useRecoilState(latitudeState);
     const [longitude, setLongitude] = useRecoilState(longitudeState);
-    const [zoom, setZoom] = useState<number | null>(null);
+    const [currentZoom, setCurrentZoom] = useState<number | null>(null);
+    const [mapBounds, setMapBounds] = useState<LngLatBounds | null>(null);
 
-    const [bounds, setBounds] = useState<LngLatBounds | null>(null);
     const { currentSex } = useSex();
     const { typeGroup } = useTypeGroup();
     const { types } = useTypes();
     const { startDateString, endDateString } = useDates();
     const { getEvents, showLoading } = useEvents();
 
-    const initialFlyToDone = useRef(false);
-    const hasZoomedOut = useRef(false);
-    const [hasSupport, setHasSupport] = useState(true);
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const hasInitialFlyToDone = useRef(false);
+    const zoomOutAttemptCount = useRef(0);
+    const [hasWebGLSupport, setHasWebGLSupport] = useState(true);
+    const currentRequestController = useRef<AbortController | null>(null);
 
     useEffect(() => {
         mapboxgl.accessToken = import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN;
 
         if (!mapboxgl.supported()) {
-            setHasSupport(false);
+            setHasWebGLSupport(false);
+            return;
         }
 
-        const storedLocation = getUserLocation();
-        const storedZoom = getUserZoom();
+        const savedLocation = getUserLocation();
+        const savedZoom = getUserZoom();
 
-        if (storedLocation && !initialFlyToDone.current) {
-            setLatitude(storedLocation.latitude);
-            setLongitude(storedLocation.longitude);
+        if (savedLocation && !hasInitialFlyToDone.current) {
+            setLatitude(savedLocation.latitude);
+            setLongitude(savedLocation.longitude);
         }
 
-        if (storedZoom !== null) {
-            setZoom(storedZoom);
+        if (savedZoom !== null) {
+            setCurrentZoom(savedZoom);
         }
-
-        return;
     }, []);
+
+    const flyToLocation = useCallback(
+        (lng: number, lat: number, zoomLevel: number) => {
+            if (!mapRef.current) return;
+
+            mapRef.current.getMap().flyTo({
+                center: [lng, lat],
+                zoom: zoomLevel,
+                essential: true,
+            });
+        },
+        []
+    );
 
     useEffect(() => {
         if (
-            mapRef.current &&
-            latitude !== null &&
-            longitude !== null &&
-            zoom !== null &&
-            !initialFlyToDone.current
+            !mapRef.current ||
+            latitude === null ||
+            longitude === null ||
+            currentZoom === null ||
+            hasInitialFlyToDone.current
         ) {
-            console.log(
-                "Flying to location:",
-                latitude,
-                longitude,
-                "with zoom:",
-                zoom
-            );
-            mapRef.current.getMap().flyTo({
-                center: [longitude, latitude],
-                zoom: zoom,
-                essential: true,
-            });
-            initialFlyToDone.current = true;
+            return;
         }
-    }, [latitude, longitude, zoom, mapRef.current]);
+
+        console.log(
+            "Initial fly to:",
+            latitude,
+            longitude,
+            "zoom:",
+            currentZoom
+        );
+        flyToLocation(longitude, latitude, currentZoom);
+        hasInitialFlyToDone.current = true;
+    }, [latitude, longitude, currentZoom, mapRef.current]);
 
     useEffect(() => {
         if (!mapRef.current || !selectedPlace) return;
-        console.log(
-            "Flying to selected place:",
+
+        console.log("Flying to selected place:", selectedPlace.center);
+        flyToLocation(
             selectedPlace.center[0],
-            selectedPlace.center[1]
+            selectedPlace.center[1],
+            MAP_CONSTANTS.SELECTED_PLACE_ZOOM_LEVEL
         );
-        mapRef.current.getMap().flyTo({
-            center: selectedPlace.center,
-            zoom: 7,
-            essential: true,
-        });
     }, [selectedPlace]);
 
-    const handleOnMapMoveEnd = useCallback(() => {
+    const handleMapMove = useCallback(() => {
         if (!mapRef.current) return;
+
         const map = mapRef.current.getMap();
         const newBounds = map.getBounds();
-        setBounds(newBounds);
-        const center = map.getCenter();
-        const newZoom = map.getZoom();
-        console.log("Map moved to:", center.lat, center.lng, "Zoom:", newZoom);
-        setUserLocation(center.lat, center.lng);
-        setLatitude(center.lat);
-        setLongitude(center.lng);
-        setZoom(newZoom);
-        setUserZoom(newZoom);
+        const centerPosition = map.getCenter();
+        const newZoomLevel = map.getZoom();
+
+        console.log(
+            "Map moved to:",
+            centerPosition.lat,
+            centerPosition.lng,
+            "Zoom:",
+            newZoomLevel
+        );
+
+        setMapBounds(newBounds);
+        setUserLocation(centerPosition.lat, centerPosition.lng);
+        setLatitude(centerPosition.lat);
+        setLongitude(centerPosition.lng);
+        setCurrentZoom(newZoomLevel);
+        setUserZoom(newZoomLevel);
+        zoomOutAttemptCount.current = 0;
     }, []);
 
-    const onMapLoad = useCallback(() => {
+    const handleMapLoad = useCallback(() => {
         console.log("Map loaded");
-        handleOnMapMoveEnd();
-    }, [handleOnMapMoveEnd]);
+        handleMapMove();
+    }, [handleMapMove]);
 
     useEffect(() => {
-        if (bounds) {
-            const fetchEvents = async () => {
-                if (abortControllerRef.current) {
-                    abortControllerRef.current.abort();
+        if (!mapBounds) return;
+
+        const fetchEventsForBounds = async () => {
+            if (currentRequestController.current) {
+                currentRequestController.current.abort();
+            }
+
+            currentRequestController.current = new AbortController();
+
+            try {
+                const eventCount = await getEvents(
+                    mapBounds,
+                    currentSex,
+                    types,
+                    typeGroup,
+                    startDateString,
+                    endDateString,
+                    currentRequestController.current.signal
+                );
+
+                if (eventCount > 0) {
+                    zoomOutAttemptCount.current = 0;
+                    return;
                 }
 
-                abortControllerRef.current = new AbortController();
-
-                try {
-                    const eventCount = await getEvents(
-                        bounds,
-                        currentSex,
-                        types,
-                        typeGroup,
-                        startDateString,
-                        endDateString,
-                        abortControllerRef.current.signal
-                    );
-                    if (eventCount === 0 && !hasZoomedOut.current) {
-                        mapRef.current
-                            ?.getMap()
-                            .zoomTo(mapRef.current?.getMap().getZoom() - 1);
-                        hasZoomedOut.current = true;
-                    }
-                } catch (error: any) {
-                    if (error.name === "AbortError") {
-                        console.log("Fetch aborted");
-                    } else {
-                        console.error("Fetch error:", error);
-                    }
+                if (
+                    zoomOutAttemptCount.current >=
+                    MAP_CONSTANTS.MAX_ZOOM_OUT_ATTEMPTS
+                ) {
+                    return;
                 }
-            };
-            fetchEvents();
-        }
 
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
+                const map = mapRef.current?.getMap();
+                if (!map) return;
+
+                const currentZoomLevel = map.getZoom();
+                console.log(
+                    `Zooming out attempt ${zoomOutAttemptCount.current + 1} of ${MAP_CONSTANTS.MAX_ZOOM_OUT_ATTEMPTS}`
+                );
+                map.zoomTo(currentZoomLevel - MAP_CONSTANTS.ZOOM_OUT_INCREMENT);
+                zoomOutAttemptCount.current += 1;
+            } catch (error: any) {
+                if (error.name === "AbortError") {
+                    console.log("Fetch aborted");
+                    return;
+                }
+                console.error("Fetch error:", error);
             }
         };
-    }, [bounds, currentSex, typeGroup, types, startDateString, endDateString]);
+
+        fetchEventsForBounds();
+
+        return () => {
+            currentRequestController.current?.abort();
+        };
+    }, [
+        mapBounds,
+        currentSex,
+        typeGroup,
+        types,
+        startDateString,
+        endDateString,
+    ]);
 
     const handleGeolocate = useCallback((e: GeolocationPosition) => {
-        const { latitude, longitude } = e.coords;
-        setLatitude(latitude);
-        setLongitude(longitude);
-        setUserLocation(latitude, longitude);
-        mapRef.current?.getMap().flyTo({
-            center: [longitude, latitude],
-            zoom: 4,
-            essential: true,
-        });
+        const { latitude: userLat, longitude: userLng } = e.coords;
+        setLatitude(userLat);
+        setLongitude(userLng);
+        setUserLocation(userLat, userLng);
+        flyToLocation(userLng, userLat, MAP_CONSTANTS.GEOLOCATION_ZOOM_LEVEL);
     }, []);
 
-    if (!hasSupport) return <NoWebGLSupport />;
+    if (!hasWebGLSupport) return <NoWebGLSupport />;
 
     return (
         <Map
             initialViewState={{
                 latitude: latitude ?? defaultLatLng.latitude,
                 longitude: longitude ?? defaultLatLng.longitude,
-                zoom: zoom ?? 3,
+                zoom: currentZoom ?? MAP_CONSTANTS.DEFAULT_ZOOM_LEVEL,
             }}
             {...commonMapProps}
             ref={mapRef}
-            onMoveEnd={handleOnMapMoveEnd}
-            onLoad={onMapLoad}
+            onMoveEnd={handleMapMove}
+            onLoad={handleMapLoad}
         >
             <LocalMapMarkers />
             <GeolocateControl
@@ -209,7 +252,6 @@ export const LocalMap = () => {
                     text={`Loading Events`}
                 />
             )}
-
             <EventCountButton />
             <OutsideClickHandlerEvents />
         </Map>
