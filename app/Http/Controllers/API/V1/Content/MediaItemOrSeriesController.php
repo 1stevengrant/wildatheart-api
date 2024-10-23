@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1\Content;
 
 use App\DataTypeObjects\API\V1\ErrorResponse;
+use App\DataTypeObjects\API\V1\RedirectResponse;
 use App\DataTypeObjects\MediaItemData;
 use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
 use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
@@ -24,10 +25,27 @@ class MediaItemOrSeriesController extends Controller
         $slug = $slugOrUri;
 
         if (str_contains($slugOrUri, '/')) {
-            $uri = '/media/'.$slugOrUri;
+            $uri = '/media/' . $slugOrUri;
         } else {
             $slug = $slugOrUri;
         }
+
+        $seriesRedirects = [
+            'the-series-official-trailer',
+            'prologue-john',
+            'chapter-1-mark',
+            'chapter-2-pablo',
+            'chapter-3-leo',
+            'chapter-4-sam',
+        ];
+
+        if (config('features.is_custom_uri_enabled') && in_array($slug, $seriesRedirects)) {
+            return RedirectResponse::from([
+                'redirect' => '/media/the-series/' . $slug,
+                'code' => 301,
+            ]);
+        }
+
 
         // Check for token and live-preview query parameters
         $request = request();
@@ -106,4 +124,5 @@ class MediaItemOrSeriesController extends Controller
 
         return SubsplashMediaSeries::from($response);
     }
+    public function redirect($uri) {}
 }
