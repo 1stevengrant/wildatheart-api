@@ -7,6 +7,7 @@ use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
+use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\StatsController;
@@ -52,6 +53,7 @@ Route::prefix('content')->group(function () {
             });
             Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
             Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
+            Route::get('/media-or-series/{slugOrUri}', [MediaItemOrSeriesController::class, 'show'])->name('mediaOrSeries')->where('slugOrUri', '.*');
             Route::prefix('prayers')->name('prayers.')->group(function () {
                 Route::get('/', [PrayersEntryController::class, 'index'])->name('index');
                 Route::get('/{slug}', [PrayersEntryController::class, 'show'])->name('show');

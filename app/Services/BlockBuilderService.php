@@ -61,6 +61,7 @@ class BlockBuilderService
     {
 
         $processedBlock = $block->toArray();
+
         $processedBlock['slides'] = [];
 
         foreach ($block->slides as $slide) {
@@ -76,7 +77,6 @@ class BlockBuilderService
                 $processedBlock['slides'][] = $slide;
             }
         }
-        // dd($processedBlock);
 
         return $processedBlock;
     }
