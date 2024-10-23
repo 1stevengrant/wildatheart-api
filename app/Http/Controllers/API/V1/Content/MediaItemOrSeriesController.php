@@ -24,11 +24,10 @@ class MediaItemOrSeriesController extends Controller
         $slug = $slugOrUri;
 
         if (str_contains($slugOrUri, '/')) {
-            $uri = '/media/' . $slugOrUri;
+            $uri = '/media/'.$slugOrUri;
         } else {
             $slug = $slugOrUri;
         }
-
 
         // Check for token and live-preview query parameters
         $request = request();
@@ -46,7 +45,7 @@ class MediaItemOrSeriesController extends Controller
             $mediaItemOrSeries = LivePreview::item($token);
         } else {
             $mediaItemOrSeries = Entry::query()
-                ->where(function ($query) use ($slug, $uri) {
+                ->where(function ($query) {
                     $query->where('collection', 'media_item')
                         ->orWhere('collection', 'media_series');
                 })
@@ -62,7 +61,6 @@ class MediaItemOrSeriesController extends Controller
                 ->first();
         }
 
-
         if (! $mediaItemOrSeries) {
             return ErrorResponse::from(['error' => 'Media not found']);
         }
@@ -75,7 +73,6 @@ class MediaItemOrSeriesController extends Controller
             return app(MediaSeriesDataController::class)->buildSubsplashMediaSeriesResponse($mediaItemOrSeries);
         }
 
-
         $entryBuilder = new EntryBuilderService;
 
         $response = $entryBuilder->buildResponseFromEntry($mediaItemOrSeries);
@@ -85,16 +82,15 @@ class MediaItemOrSeriesController extends Controller
             $response['blocks'] = $blockBuilder->build($mediaItemOrSeries->blocks);
         }
 
-
         $imageBuilder = new ImageBuilderService;
 
         $response['images'] = $imageBuilder->build($mediaItemOrSeries->images);
 
         if ($response['blueprint']['handle'] === 'custom_media_item') {
             return MediaItemData::from($response);
+
             return response()->json($response);
         }
-
 
         $mediaItemsInSeries = Entry::query()
             ->where('collection', 'media_item')
@@ -103,9 +99,6 @@ class MediaItemOrSeriesController extends Controller
 
         // $mediaItem = $mediaItem->toArray();
         $response['mediaItems'] = $mediaItemsInSeries->toArray();
-
-
-
 
         if ($response['blueprint']['handle'] === 'custom_series') {
             return CustomSeries::from($response);

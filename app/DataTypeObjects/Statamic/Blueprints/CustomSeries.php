@@ -2,15 +2,14 @@
 
 namespace App\DataTypeObjects\Statamic\Blueprints;
 
+use App\DataTypeObjects\Blueprint;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
-use App\DataTypeObjects\Blueprint;
 
 #[TypeScript]
 class CustomSeries extends Data
 {
-
-    function __construct()
+    public function __construct()
     {
         $this->blueprint = Blueprint::from(['title' => 'Custom Series', 'handle' => 'custom_series']);
     }

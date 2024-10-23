@@ -5,8 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Services\SubsplashService;
 use Carbon\Carbon;
-use Statamic\Entries\Entry;
 use Statamic\Eloquent\Entries\UuidEntryModel;
+use Statamic\Entries\Entry;
 
 class MediaSeriesDataController extends Controller
 {
@@ -18,12 +18,11 @@ class MediaSeriesDataController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-
         if ($series->blueprint === 'custom_series') {
             return $series;
         }
 
-        $responseData = $this->buildSubsplashMediaSeriesResponse($series);        // Return the view with the merged data 
+        $responseData = $this->buildSubsplashMediaSeriesResponse($series);        // Return the view with the merged data
 
         // Return the view with the merged data
         return response()->json($responseData);
@@ -38,7 +37,6 @@ class MediaSeriesDataController extends Controller
         $responseData['slug'] = $series->slug;
         $responseData['uri'] = $series->uri;
         $responseData['blueprint'] = $series->blueprint;
-
 
         $subsplash = new SubsplashService;
 
