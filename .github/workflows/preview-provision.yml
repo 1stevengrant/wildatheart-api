@@ -40,6 +40,7 @@ jobs:
           FORGE_WAIT_ON_DEPLOY: true
           FORGE_ENVIRONMENT_URL: https://pr-${{ github.event.number }}.gondor.wildatheart.org
           FORGE_ENV_KEYS: |
+            LOCAL_MYSQL_PATH=/usr/bin/mysql
             REMOTE_DATABASE_USERNAME=forge
             REMOTE_DATABASE_NAME=wah_local_prod
             REMOTE_DATABASE_PASSWORD=${{ secrets.FORGE_DB_PASSWORD }}

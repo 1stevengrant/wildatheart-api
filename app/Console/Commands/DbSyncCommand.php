@@ -6,7 +6,8 @@ use Illuminate\Console\Command;
 
 class DbSyncCommand extends Command
 {
-    protected $signature   = 'db:production-sync {--T|test} {--F|filename=}';
+    protected $signature = 'db:production-sync {--T|test} {--F|filename=}';
+
     protected $description = 'Sync production database with local';
 
     public function handle(): bool
@@ -19,27 +20,27 @@ class DbSyncCommand extends Command
             return true;
         }
 
-        $useSsh      = config('dbsync.useSsh');
+        $useSsh = config('dbsync.useSsh');
         $sshUsername = config('dbsync.sshUsername');
-        $sshPort     = config('dbsync.sshPort');
-        $host        = config('dbsync.host');
+        $sshPort = config('dbsync.sshPort');
+        $host = config('dbsync.host');
 
-        $mysqlHostName         = config('dbsync.mysqlHostName');
-        $username              = config('dbsync.username');
-        $database              = config('dbsync.database');
-        $port                  = config('dbsync.port');
-        $password              = config('dbsync.password');
-        $ignore                = config('dbsync.ignore');
-        $ignoreTables          = explode(',', $ignore);
-        $importSqlFile         = config('dbsync.importSqlFile');
+        $mysqlHostName = config('dbsync.mysqlHostName');
+        $username = config('dbsync.username');
+        $database = config('dbsync.database');
+        $port = config('dbsync.port');
+        $password = config('dbsync.password');
+        $ignore = config('dbsync.ignore');
+        $ignoreTables = explode(',', $ignore);
+        $importSqlFile = config('dbsync.importSqlFile');
         $removeFileAfterImport = config('dbsync.removeFileAfterImport');
-        $fileName              = $this->option('filename') ?? config('dbsync.defaultFileName');
-        $mysqldumpSkipTzUtc    = config('dbsync.mysqldumpSkipTzUtc') ? '--skip-tz-utc' : '';
+        $fileName = $this->option('filename') ?? config('dbsync.defaultFileName');
+        $mysqldumpSkipTzUtc = config('dbsync.mysqldumpSkipTzUtc') ? '--skip-tz-utc' : '';
 
-        $targetConnection      = config('dbsync.targetConnection');
-        $defaultConnection     = config('database.default');
+        $targetConnection = config('dbsync.targetConnection');
+        $defaultConnection = config('database.default');
 
-        $defaultConnection = empty($targetConnection) ? $defaultConnection: $targetConnection;
+        $defaultConnection = empty($targetConnection) ? $defaultConnection : $targetConnection;
 
         $localUsername = config("database.connections.{$defaultConnection}.username");
         $localPassword = config("database.connections.{$defaultConnection}.password");
@@ -65,7 +66,7 @@ class DbSyncCommand extends Command
             $progressBar = $this->output->createProgressBar($totalSteps);
 
             if ($useSsh === true) {
-                echo($mysqlHostName . PHP_EOL);
+                echo $mysqlHostName.PHP_EOL;
                 exec("ssh $sshUsername@$host -p$sshPort mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString > $fileName", $output);
             } else {
                 exec("mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString $mysqldumpSkipTzUtc --column-statistics=0 > $fileName", $output);

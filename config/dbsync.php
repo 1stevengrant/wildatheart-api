@@ -74,13 +74,12 @@ return [
 
     'mysqldumpSkipTzUtc' => env('REMOTE_MYSQLDUMP_SKIP_TZ_UTC', false),
 
-
     /*
     * List all the environment variables that need to be set for the command to work
     */
     'environments' => [
         'local',
-        'staging'
+        'staging',
     ],
 
     'localMysqlPath' => env('LOCAL_MYSQL_PATH', '/usr/local/bin/mysql'),

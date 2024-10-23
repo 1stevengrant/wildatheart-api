@@ -16,6 +16,6 @@ return [
         'v1.stats.*',
         'content.*',
         'sanctum.*',
-        'v1.*'
+        'v1.*',
     ],
 ];
