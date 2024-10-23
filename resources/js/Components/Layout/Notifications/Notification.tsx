@@ -23,43 +23,59 @@ const NOTIFICATION_TYPES = {
     success: {
         icon: CheckCircleIcon,
         iconColor: "text-green-400",
+        ariaLabel: "Success notification",
     },
     error: {
         icon: ExclamationCircleIcon,
         iconColor: "text-red-dark",
+        ariaLabel: "Error notification",
     },
     warning: {
         icon: ExclamationTriangleIcon,
         iconColor: "text-yellow-600",
+        ariaLabel: "Warning notification",
     },
     info: {
         icon: ExclamationTriangleIcon,
         iconColor: "text-yellow-600",
+        ariaLabel: "Information notification",
     },
 } as const;
 
 export const Notification = ({
     message,
     type = "success",
-    duration = 2500,
+    duration = 5000,
 }: NotificationProps) => {
     const [show, setShow] = useState(true);
     const setReactNotifications = useSetRecoilState(reactNotificationState);
-    const { icon: Icon, iconColor } = NOTIFICATION_TYPES[type];
+    const { icon: Icon, iconColor, ariaLabel } = NOTIFICATION_TYPES[type];
+
+    const handleClose = () => {
+        setShow(false);
+        // Give time for the animation to complete before clearing notifications
+        setTimeout(() => {
+            setReactNotifications([]);
+        }, 100);
+    };
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setShow(false);
-            setReactNotifications([]);
-        }, duration);
+        if (!duration) return;
+
+        const timer = setTimeout(handleClose, duration);
         return () => clearTimeout(timer);
-    }, [duration, setReactNotifications]);
+    }, [duration]); // Remove setReactNotifications from deps as it's handled in handleClose
 
     return (
-        <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <div
+            role="alert"
+            aria-label={ariaLabel}
+            className="fixed right-0 top-4 z-50 flex w-full flex-col items-center space-y-4 sm:items-end sm:pr-4"
+        >
             <Transition
                 show={show}
                 as={Fragment}
+                appear={true}
                 enter="transform ease-out duration-300 transition"
                 enterFrom="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
                 enterTo="translate-y-0 opacity-100 sm:translate-x-0"
@@ -83,8 +99,9 @@ export const Notification = ({
                             </div>
                             <button
                                 type="button"
+                                aria-label="Close notification"
                                 className="ml-4 inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                onClick={() => setShow(false)}
+                                onClick={handleClose}
                             >
                                 <XMarkIcon
                                     className="h-5 w-5"
