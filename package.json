@@ -1,4 +1,5 @@
 {
+    "name": "wild-at-heart-local-platform",
     "private": true,
     "type": "module",
     "scripts": {
