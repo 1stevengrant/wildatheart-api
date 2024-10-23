@@ -19,32 +19,24 @@ interface NotificationProps {
     duration?: number;
 }
 
-const getIcon = (type: NotificationType) => {
-    switch (type) {
-        case "success":
-            return (
-                <CheckCircleIcon
-                    className="h-6 w-6 text-green-400"
-                    aria-hidden="true"
-                />
-            );
-        case "error":
-            return (
-                <ExclamationCircleIcon
-                    className="h-6 w-6 text-red-dark"
-                    aria-hidden="true"
-                />
-            );
-        case "warning":
-        case "info":
-            return (
-                <ExclamationTriangleIcon
-                    className="h-6 w-6 text-yellow-600"
-                    aria-hidden="true"
-                />
-            );
-    }
-};
+const NOTIFICATION_TYPES = {
+    success: {
+        icon: CheckCircleIcon,
+        iconColor: "text-green-400",
+    },
+    error: {
+        icon: ExclamationCircleIcon,
+        iconColor: "text-red-dark",
+    },
+    warning: {
+        icon: ExclamationTriangleIcon,
+        iconColor: "text-yellow-600",
+    },
+    info: {
+        icon: ExclamationTriangleIcon,
+        iconColor: "text-yellow-600",
+    },
+} as const;
 
 export const Notification = ({
     message,
@@ -53,6 +45,7 @@ export const Notification = ({
 }: NotificationProps) => {
     const [show, setShow] = useState(true);
     const setReactNotifications = useSetRecoilState(reactNotificationState);
+    const { icon: Icon, iconColor } = NOTIFICATION_TYPES[type];
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -77,7 +70,12 @@ export const Notification = ({
                 <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                     <div className="p-4">
                         <div className="flex items-start">
-                            <div className="flex-shrink-0">{getIcon(type)}</div>
+                            <div className="flex-shrink-0">
+                                <Icon
+                                    className={`h-6 w-6 ${iconColor}`}
+                                    aria-hidden="true"
+                                />
+                            </div>
                             <div className="ml-3 w-0 flex-1 pt-0.5">
                                 <p className="text-sm font-medium text-black">
                                     {message}
