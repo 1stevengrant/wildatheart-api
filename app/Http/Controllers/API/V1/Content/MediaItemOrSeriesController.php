@@ -16,10 +16,11 @@ use App\Services\ImageBuilderService;
 use Facades\Statamic\CP\LivePreview;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Token;
+use Illuminate\Http\Request;
 
 class MediaItemOrSeriesController extends Controller
 {
-    public function show($slugOrUri)
+    public function show($slugOrUri, Request $request)
     {
         $uri = $slugOrUri;
         $slug = $slugOrUri;
@@ -48,7 +49,6 @@ class MediaItemOrSeriesController extends Controller
 
 
         // Check for token and live-preview query parameters
-        $request = request();
         $token = $request->query('token', false);
         $livePreview = $request->query('live-preview', false);
 
