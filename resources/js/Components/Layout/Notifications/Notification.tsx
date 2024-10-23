@@ -5,6 +5,7 @@ import {
     CheckCircleIcon,
     ExclamationCircleIcon,
     XMarkIcon,
+    ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { useSetRecoilState } from "recoil";
 
@@ -12,14 +13,14 @@ import { reactNotificationState } from "@/store";
 
 interface INotificationProps {
     message: string;
-    type?: "success" | "error";
+    type?: "success" | "error" | "warning" | "info";
     duration?: number;
 }
 
 export const Notification = ({
     message,
     type = "success",
-    duration = 2500,
+    duration = 5000,
 }: INotificationProps) => {
     const [show, setShow] = useState(true);
     const setReactNotifications = useSetRecoilState(reactNotificationState);
@@ -32,19 +33,32 @@ export const Notification = ({
         return () => clearTimeout(timer);
     });
 
-    const icon =
-        type === "success" ? (
-            <CheckCircleIcon
-                className="h-6 w-6 text-green-400"
-                aria-hidden="true"
-            />
-        ) : (
-            <ExclamationCircleIcon
-                className="h-6 w-6 text-red-500"
-                aria-hidden="true"
-            />
-        );
-    const backgroundColor = type === "success" ? "bg-white" : "bg-red-lightest";
+    const getIcon = () => {
+        switch (type) {
+            case "success":
+                return (
+                    <CheckCircleIcon
+                        className="h-6 w-6 text-green-400"
+                        aria-hidden="true"
+                    />
+                );
+            case "error":
+                return (
+                    <ExclamationCircleIcon
+                        className="h-6 w-6 text-red-dark"
+                        aria-hidden="true"
+                    />
+                );
+            case "warning":
+            case "info":
+                return (
+                    <ExclamationTriangleIcon
+                        className="h-6 w-6 text-yellow-600"
+                        aria-hidden="true"
+                    />
+                );
+        }
+    };
 
     return (
         <>
@@ -59,16 +73,12 @@ export const Notification = ({
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div
-                        className={`pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg ${backgroundColor} shadow-lg ring-1 ring-black ring-opacity-5`}
-                    >
+                    <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                         <div className="p-4">
                             <div className="flex items-start">
-                                <div className="flex-shrink-0">{icon}</div>
+                                <div className="flex-shrink-0">{getIcon()}</div>
                                 <div className="ml-3 w-0 flex-1 pt-0.5">
-                                    <p
-                                        className={`text-sm font-medium ${type === "success" ? "text-black" : "text-red"}`}
-                                    >
+                                    <p className="text-sm font-medium text-black">
                                         {message}
                                     </p>
                                 </div>

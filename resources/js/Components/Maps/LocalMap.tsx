@@ -7,6 +7,7 @@ import Map, {
     NavigationControl,
 } from "react-map-gl";
 import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 import { EventCountButton } from "@/Components/Buttons/EventCountButton";
 import { LocalMapMarkers } from "@/Components/Maps/LocalMapMarkers";
@@ -27,10 +28,11 @@ import {
     getUserZoom,
     setUserZoom,
 } from "@/lib/localStorage";
+import { reactNotificationState } from "@/store";
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 
 const MAP_CONSTANTS = {
-    MAX_ZOOM_OUT_ATTEMPTS: 3,
+    MAX_ZOOM_OUT_ATTEMPTS: 6,
     DEFAULT_ZOOM_LEVEL: 3,
     SELECTED_PLACE_ZOOM_LEVEL: 7,
     GEOLOCATION_ZOOM_LEVEL: 4,
@@ -43,6 +45,7 @@ export const LocalMap = () => {
     const [longitude, setLongitude] = useRecoilState(longitudeState);
     const [currentZoom, setCurrentZoom] = useState<number | null>(null);
     const [mapBounds, setMapBounds] = useState<LngLatBounds | null>(null);
+    const setReactNotifications = useSetRecoilState(reactNotificationState);
 
     const { currentSex } = useSex();
     const { typeGroup } = useTypeGroup();
@@ -52,6 +55,7 @@ export const LocalMap = () => {
 
     const hasInitialFlyToDone = useRef(false);
     const zoomOutAttemptCount = useRef(0);
+    const isAutomaticZoom = useRef(false);
     const [hasWebGLSupport, setHasWebGLSupport] = useState(true);
     const currentRequestController = useRef<AbortController | null>(null);
 
@@ -144,7 +148,12 @@ export const LocalMap = () => {
         setLongitude(centerPosition.lng);
         setCurrentZoom(newZoomLevel);
         setUserZoom(newZoomLevel);
-        zoomOutAttemptCount.current = 0;
+
+        // Only reset counter if it's not an automatic zoom
+        if (!isAutomaticZoom.current) {
+            zoomOutAttemptCount.current = 0;
+        }
+        isAutomaticZoom.current = false; // Reset the flag
     }, []);
 
     const handleMapLoad = useCallback(() => {
@@ -182,6 +191,14 @@ export const LocalMap = () => {
                     zoomOutAttemptCount.current >=
                     MAP_CONSTANTS.MAX_ZOOM_OUT_ATTEMPTS
                 ) {
+                    setReactNotifications((prevState) => [
+                        ...prevState,
+                        {
+                            message:
+                                "No events found in this area. Try searching in a different location.",
+                            type: "error",
+                        },
+                    ]);
                     return;
                 }
 
@@ -190,8 +207,11 @@ export const LocalMap = () => {
 
                 const currentZoomLevel = map.getZoom();
                 console.log(
-                    `Zooming out attempt ${zoomOutAttemptCount.current + 1} of ${MAP_CONSTANTS.MAX_ZOOM_OUT_ATTEMPTS}`
+                    `Zooming out attempt ${
+                        zoomOutAttemptCount.current + 1
+                    } of ${MAP_CONSTANTS.MAX_ZOOM_OUT_ATTEMPTS}`
                 );
+                isAutomaticZoom.current = true; // Set the flag before zooming
                 map.zoomTo(currentZoomLevel - MAP_CONSTANTS.ZOOM_OUT_INCREMENT);
                 zoomOutAttemptCount.current += 1;
             } catch (error: any) {
