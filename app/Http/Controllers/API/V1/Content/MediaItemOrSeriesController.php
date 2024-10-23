@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use App\DataTypeObjects\MediaItemData;
+use App\DataTypeObjects\API\V1\ErrorResponse;
+use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
+use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\Controller;
@@ -60,7 +62,7 @@ class MediaItemOrSeriesController extends Controller
         }
 
         if (! $mediaItemOrSeries) {
-            return response()->json(['error' => 'Media not found'], 404);
+            return ErrorResponse::from(['error' => 'Media not found']);
         }
 
         // Adding this as workaround until I can refactor into a service
@@ -93,6 +95,10 @@ class MediaItemOrSeriesController extends Controller
 
         $response['images'] = $imageBuilder->build($mediaItemOrSeries->images);
 
-        return MediaItemData::from($response);
+        if ($response['blueprint']['handle'] === 'custom_series') {
+            return CustomSeries::from($response);
+        }
+
+        return SubsplashMediaSeries::from($response);
     }
 }
