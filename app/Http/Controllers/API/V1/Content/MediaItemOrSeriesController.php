@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1\Content;
 
 use App\DataTypeObjects\API\V1\ErrorResponse;
+use App\DataTypeObjects\MediaItemData;
 use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
 use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
 use App\Http\Controllers\API\MediaItemDataController;
@@ -61,11 +62,11 @@ class MediaItemOrSeriesController extends Controller
                 ->first();
         }
 
+
         if (! $mediaItemOrSeries) {
             return ErrorResponse::from(['error' => 'Media not found']);
         }
 
-        // Adding this as workaround until I can refactor into a service
         if ($mediaItemOrSeries->blueprint->handle === 'subsplash_media_item') {
             return app(MediaItemDataController::class)->buildSubsplashMediaItemResponse($mediaItemOrSeries);
         }
@@ -74,9 +75,26 @@ class MediaItemOrSeriesController extends Controller
             return app(MediaSeriesDataController::class)->buildSubsplashMediaSeriesResponse($mediaItemOrSeries);
         }
 
+
         $entryBuilder = new EntryBuilderService;
 
         $response = $entryBuilder->buildResponseFromEntry($mediaItemOrSeries);
+
+        if (isset($mediaItemOrSeries->blocks)) {
+            $blockBuilder = new BlockBuilderService;
+            $response['blocks'] = $blockBuilder->build($mediaItemOrSeries->blocks);
+        }
+
+
+        $imageBuilder = new ImageBuilderService;
+
+        $response['images'] = $imageBuilder->build($mediaItemOrSeries->images);
+
+        if ($response['blueprint']['handle'] === 'custom_media_item') {
+            return MediaItemData::from($response);
+            return response()->json($response);
+        }
+
 
         $mediaItemsInSeries = Entry::query()
             ->where('collection', 'media_item')
@@ -86,14 +104,8 @@ class MediaItemOrSeriesController extends Controller
         // $mediaItem = $mediaItem->toArray();
         $response['mediaItems'] = $mediaItemsInSeries->toArray();
 
-        if (isset($mediaItemOrSeries->blocks)) {
-            $blockBuilder = new BlockBuilderService;
-            $response['blocks'] = $blockBuilder->build($mediaItemOrSeries->blocks);
-        }
 
-        $imageBuilder = new ImageBuilderService;
 
-        $response['images'] = $imageBuilder->build($mediaItemOrSeries->images);
 
         if ($response['blueprint']['handle'] === 'custom_series') {
             return CustomSeries::from($response);

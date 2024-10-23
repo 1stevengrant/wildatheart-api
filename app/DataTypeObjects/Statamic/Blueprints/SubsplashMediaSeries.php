@@ -4,6 +4,7 @@ namespace App\DataTypeObjects\Statamic\Blueprints;
 
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use App\DataTypeObjects\Blueprint;
 
 #[TypeScript]
 class SubsplashMediaSeries extends Data

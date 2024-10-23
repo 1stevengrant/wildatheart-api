@@ -54,7 +54,8 @@ class AppServiceProvider extends ServiceProvider
 
 
         Collection::computed('media_item', 'custom_url', function ($entry, $value) {
-            if ($entry->series) {
+
+            if (config('features.is_custom_uri_enabled') && $entry->series) {
                 $series = $entry->series->value();
                 if ($series) {
                     $seriesUri = $series->uri();
