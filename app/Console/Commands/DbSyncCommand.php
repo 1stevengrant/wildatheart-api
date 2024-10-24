@@ -10,14 +10,14 @@ class DbSyncCommand extends Command
 
     protected $description = 'Sync production database with local';
 
-    public function handle(): bool
+    public function handle(): int
     {
         $inTest = $this->option('test');
 
         if (! in_array(config('app.env'), config('dbsync.environments'))) {
             $this->error('DB sync will only run on local and staging environments');
 
-            return true;
+            return self::SUCCESS;
         }
 
         $useSsh = config('dbsync.useSsh');
@@ -52,7 +52,7 @@ class DbSyncCommand extends Command
         if (empty($host) || empty($username) || empty($database)) {
             $this->error('DB credentials not set, have you published the config and set ENV variables?');
 
-            return true;
+            return self::SUCCESS;
         }
 
         if ($inTest === false) {
@@ -67,17 +67,33 @@ class DbSyncCommand extends Command
 
             if ($useSsh === true) {
                 echo $mysqlHostName.PHP_EOL;
-                exec("ssh $sshUsername@$host -p$sshPort mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString > $fileName", $output);
+                $result = 0;
+                exec("ssh $sshUsername@$host -p$sshPort mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString > $fileName 2>/dev/null", $output, $result);
+                if ($result !== 0) {
+                    $this->error('Export failed');
+                    return self::FAILURE;
+                }
             } else {
-                exec("mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString $mysqldumpSkipTzUtc --column-statistics=0 > $fileName", $output);
+                $result = 0;
+                exec("mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString $mysqldumpSkipTzUtc --column-statistics=0 > $fileName 2>/dev/null", $output, $result);
+                if ($result !== 0) {
+                    $this->error('Export failed');
+                    return self::FAILURE;
+                }
             }
 
             $progressBar->advance();
 
             $command = $localPassword
-                ? "$localMysqlPath -u$localUsername -h$localHostname -p$localPassword -P$localPort $localDatabase < $fileName"
-                : "$localMysqlPath -u$localUsername -h$localHostname -P$localPort $localDatabase < $fileName";
-            exec($command, $output);
+                ? "$localMysqlPath -u$localUsername -h$localHostname -p$localPassword -P$localPort $localDatabase < $fileName 2>/dev/null"
+                : "$localMysqlPath -u$localUsername -h$localHostname -P$localPort $localDatabase < $fileName 2>/dev/null";
+
+            $result = 0;
+            exec($command, $output, $result);
+            if ($result !== 0) {
+                $this->error('Import failed');
+                return self::FAILURE;
+            }
 
             $progressBar->advance();
             $progressBar->finish();
@@ -87,8 +103,9 @@ class DbSyncCommand extends Command
             }
         }
 
-        $this->comment("\nDB Synced");
+        $this->newLine();
+        $this->info('DB Synced');
 
-        return true;
+        return self::SUCCESS;
     }
 }
