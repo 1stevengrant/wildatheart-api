@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
@@ -63,3 +64,4 @@ Route::prefix('content')->group(function () {
 });
 
 Route::get('events/search', SearchForEventsController::class)->name('api.events.search');
+Route::get('events/all', AllEventsController::class)->name('api.events.all');
