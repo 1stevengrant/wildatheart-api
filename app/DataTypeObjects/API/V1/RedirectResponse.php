@@ -9,5 +9,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class RedirectResponse extends Data
 {
     public string $redirect;
+
     public string $code;
 }

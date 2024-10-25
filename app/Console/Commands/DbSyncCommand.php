@@ -71,6 +71,7 @@ class DbSyncCommand extends Command
                 exec("ssh $sshUsername@$host -p$sshPort mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString > $fileName 2>/dev/null", $output, $result);
                 if ($result !== 0) {
                     $this->error('Export failed');
+
                     return self::FAILURE;
                 }
             } else {
@@ -78,6 +79,7 @@ class DbSyncCommand extends Command
                 exec("mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString $mysqldumpSkipTzUtc --column-statistics=0 > $fileName 2>/dev/null", $output, $result);
                 if ($result !== 0) {
                     $this->error('Export failed');
+
                     return self::FAILURE;
                 }
             }
@@ -92,6 +94,7 @@ class DbSyncCommand extends Command
             exec($command, $output, $result);
             if ($result !== 0) {
                 $this->error('Import failed');
+
                 return self::FAILURE;
             }
 

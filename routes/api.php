@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
@@ -29,10 +30,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('v1')->group(function () {
-    Route::name('v1.')->group(function () {
-        Route::get('stats', StatsController::class)->name('stats');
-    });
+Route::prefix('v1')->name('v1')->group(function () {
+    Route::get('stats', StatsController::class)->name('stats');
 });
 
 Route::prefix('content')->group(function () {
@@ -63,3 +62,4 @@ Route::prefix('content')->group(function () {
 });
 
 Route::get('events/search', SearchForEventsController::class)->name('api.events.search');
+Route::get('events/all', AllEventsController::class)->name('api.events.all');
