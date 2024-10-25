@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
@@ -18,7 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Impersonatable, Notifiable;
+    use HasApiTokens, HasFactory, HasRoles, Impersonatable, Notifiable, SoftDeletes;
 
     const ROLE_ADMIN = 'admin';
 
@@ -60,6 +61,11 @@ class User extends Authenticatable
 
         static::creating(function ($model) {
             $model->uuid = (string) Str::uuid();
+        });
+
+        static::deleting(function ($user) {
+            $user->events->each->delete();
+            $user->addresses->each->delete();
         });
     }
 

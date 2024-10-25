@@ -35,6 +35,10 @@ class Event extends BaseModel
 
             }
         });
+
+        static::deleting(function ($event) {
+            $event->attendees()->delete();
+        });
     }
 
     protected $casts = [
