@@ -7,29 +7,90 @@ use Illuminate\Http\Request;
 
 class InternalReportingController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
-
         $date = $request->get('date') ?? now()->subDays(30)->startOfDay()->format('Y-m-d');
+        $cacheTime = now()->addMinutes(15);
+        $year = now()->parse($date)->year;
+        $startOfYear = now()->parse($date)->startOfYear();
+        $endOfYear = now()->parse($date)->endOfYear();
 
         return inertia('Internal/ReportingPage', [
             'date' => $date,
+            'year' => $year,
             'eventStats' => [
-                'fires' => cache()->remember('fires.count_'.$date, now()->addMinutes(15), function () use ($date) {
-                    return Event::query()->createdAfter($date)->fires()->count();
-                }),
-                'wahRetreats' => cache()->remember('wah-retreats.count_'.$date, now()->addMinutes(15), function () use ($date) {
-                    return Event::query()->createdAfter($date)->wahRetreat()->count();
-                }),
-                'captivatingRetreats' => cache()->remember('captivating-retreats.count_'.$date, now()->addMinutes(15), function () use ($date) {
-                    return Event::query()->createdAfter($date)->captivatingRetreat()->count();
-                }),
-                'experiences' => cache()->remember('experiences.count_'.$date, now()->addMinutes(15), function () use ($date) {
-                    return Event::query()->createdAfter($date)->experiences()->count();
-                }),
+                'fires' => [
+                    'count' => cache()->remember('fires.count_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->fires()->count();
+                    }),
+                    'hosts' => cache()->remember('fires.hosts_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->fires()->distinct('user_id')->count('user_id');
+                    }),
+                ],
+                'wahRetreats' => [
+                    'count' => cache()->remember('wah-retreats.count_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->wahRetreat()->count();
+                    }),
+                    'hosts' => cache()->remember('wah-retreats.hosts_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->wahRetreat()->distinct('user_id')->count('user_id');
+                    }),
+                ],
+                'captivatingRetreats' => [
+                    'count' => cache()->remember('captivating-retreats.count_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->captivatingRetreat()->count();
+                    }),
+                    'hosts' => cache()->remember('captivating-retreats.hosts_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->captivatingRetreat()->distinct('user_id')->count('user_id');
+                    }),
+                ],
+                'experiences' => [
+                    'count' => cache()->remember('experiences.count_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->experiences()->count();
+                    }),
+                    'hosts' => cache()->remember('experiences.hosts_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->createdAfter($date)->experiences()->distinct('user_id')->count('user_id');
+                    }),
+                ],
+            ],
+            'yearStats' => [
+                'fires' => [
+                    'count' => cache()->remember('fires.count_year_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->withTrashed()->fires()->whereBetween('updated_at', [
+                            now()->parse($date)->startOfYear(),
+                            now()->parse($date)->endOfYear(),
+                        ])->count();
+                    }),
+                    'hosts' => cache()->remember('fires.hosts_year_'.$date, $cacheTime, function () use ($date) {
+                        return Event::query()->withTrashed()->fires()->whereBetween('updated_at', [
+                            now()->parse($date)->startOfYear(),
+                            now()->parse($date)->endOfYear(),
+                        ])->distinct('user_id')->count('user_id');
+                    }),
+                ],
+                'wahRetreats' => [
+                    'count' => cache()->remember('wah-retreats.count_year_'.$date, $cacheTime, function () use ($startOfYear, $endOfYear) {
+                        return Event::query()->withTrashed()->startDateBetween($startOfYear, $endOfYear)->wahRetreat()->count();
+                    }),
+                    'hosts' => cache()->remember('wah-retreats.hosts_year_'.$date, $cacheTime, function () use ($startOfYear, $endOfYear) {
+                        return Event::query()->withTrashed()->startDateBetween($startOfYear, $endOfYear)->wahRetreat()->distinct('user_id')->count('user_id');
+                    }),
+                ],
+                'captivatingRetreats' => [
+                    'count' => cache()->remember('captivating-retreats.count_year_'.$date, $cacheTime, function () use ($startOfYear, $endOfYear) {
+                        return Event::query()->withTrashed()->startDateBetween($startOfYear, $endOfYear)->captivatingRetreat()->count();
+                    }),
+                    'hosts' => cache()->remember('captivating-retreats.hosts_year_'.$date, $cacheTime, function () use ($startOfYear, $endOfYear) {
+                        return Event::query()->withTrashed()->startDateBetween($startOfYear, $endOfYear)->captivatingRetreat()->distinct('user_id')->count('user_id');
+                    }),
+                ],
+                'experiences' => [
+                    'count' => cache()->remember('experiences.count_year_'.$date, $cacheTime, function () use ($startOfYear, $endOfYear) {
+                        return Event::query()->withTrashed()->startDateBetween($startOfYear, $endOfYear)->experiences()->count();
+                    }),
+                    'hosts' => cache()->remember('experiences.hosts_year_'.$date, $cacheTime, function () use ($startOfYear, $endOfYear) {
+                        return Event::query()->withTrashed()->startDateBetween($startOfYear, $endOfYear)->experiences()->distinct('user_id')->count('user_id');
+                    }),
+                ],
             ],
         ]);
     }

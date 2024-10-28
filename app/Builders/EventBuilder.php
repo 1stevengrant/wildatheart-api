@@ -196,4 +196,12 @@ class EventBuilder extends Builder
     {
         return $this->where('created_at', '>=', $date);
     }
+
+    public function startDateBetween(string $startDate, string $endDate): EventBuilder
+    {
+        return $this->whereBetween('start_date', [
+            $startDate,
+            $endDate,
+        ]);
+    }
 }

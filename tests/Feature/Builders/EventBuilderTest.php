@@ -153,3 +153,36 @@ it('gets active events', function () {
 
     expect($activeEvents->count())->toBe(1);
 });
+
+it('gets events that were updated this year', function () {
+    Event::factory()->basicRetreat()->create([
+        'created_at' => now()->subYear(),
+        'updated_at' => now()->startOfYear(),
+    ]);
+
+    Event::factory()->basicRetreat()->create([
+        'updated_at' => now()->subYear(),
+    ]);
+
+    $eventsUpdatedThisYear = Event::query()
+        ->whereBetween('updated_at', [now()->startOfYear(), now()])
+        ->get();
+
+    expect($eventsUpdatedThisYear->count())->toBe(1);
+});
+
+it('gets events that that occurred this year', function () {
+    Event::factory()->basicRetreat()->create([
+        'start_date' => now()->subYear(),
+    ]);
+
+    Event::factory()->basicRetreat()->create([
+        'start_date' => now()->startOfYear(),
+    ]);
+
+    $eventsThisYear = Event::query()
+        ->whereBetween('start_date', [now()->startOfYear(), now()])
+        ->get();
+
+    expect($eventsThisYear->count())->toBe(1);
+});
