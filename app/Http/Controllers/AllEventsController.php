@@ -18,6 +18,7 @@ class AllEventsController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $startTime = microtime(true);
         $events = cache()->remember('all_events', now()->addMinutes(15), function () {
             return Event::query()
                 ->approved()
@@ -30,6 +31,11 @@ class AllEventsController extends Controller
 
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
-        return response()->json(EventResource::collection($offsetEvents));
+        return response()->json([
+            'data' => EventResource::collection($offsetEvents),
+            'meta' => [
+                'response_time_ms' => round((microtime(true) - $startTime) * 1000, 2)
+            ]
+        ]);
     }
 }
