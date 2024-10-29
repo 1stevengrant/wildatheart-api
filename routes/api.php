@@ -65,6 +65,6 @@ Route::get('events/search', SearchForEventsController::class)->name('api.events.
 Route::get('events/all', AllEventsController::class)->name('api.events.all');
 Route::get('events/sarah', function () {
     return response()->json([
-        'events' => \App\Models\Event::all()
+        'events' => \App\Models\Event::all(),
     ]);
 });

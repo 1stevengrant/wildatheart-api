@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 
 class AllEventsController extends Controller
 {
-//    public function __construct(
-//        private readonly EventOffsettingService $eventOffsettingService
-//    ) {}
+    public function __construct(
+        private readonly EventOffsettingService $eventOffsettingService
+    ) {}
 
     /**
      * Handle the incoming request.
@@ -31,11 +31,11 @@ class AllEventsController extends Controller
         });
         $endEventsTime = microtime(true);
 
-//        $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
+        $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
         $endOffsetTime = microtime(true);
 
-//        $data = EventResource::collection($offsetEvents);
-        $data = EventResource::collection($events);
+        $data = EventResource::collection($offsetEvents);
+
         $endCollectionTime = microtime(true);
 
         return response()->json([
@@ -45,7 +45,7 @@ class AllEventsController extends Controller
                 'events_time_ms' => round(($endEventsTime - $startEventsTime) * 1000, 2),
                 'offset_time_ms' => round(($endOffsetTime - $endEventsTime) * 1000, 2),
                 'collection_time_ms' => round(($endCollectionTime - $endOffsetTime) * 1000, 2),
-            ]
+            ],
         ]);
     }
 }
