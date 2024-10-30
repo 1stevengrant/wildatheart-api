@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\API\EventResource;
 use App\Models\Event;
 use App\Services\EventOffsettingService;
 use Illuminate\Http\Request;
@@ -31,12 +32,13 @@ class AllEventsController extends Controller
         $endEventsTime = microtime(true);
 
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
+
         $endOffsetTime = microtime(true);
 
         $endCollectionTime = microtime(true);
 
         return response()->json([
-            'data' => $offsetEvents,
+            'data' => EventResource::collection($offsetEvents),
             'meta' => [
                 'response_time_ms' => round((microtime(true) - $startTime) * 1000, 2),
                 'events_time_ms' => round(($endEventsTime - $startEventsTime) * 1000, 2),

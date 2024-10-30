@@ -70,11 +70,6 @@ trait EventAttributesTrait
         return $this->eventType->image ?? '';
     }
 
-    public function getHostPhotoAttribute(): ?string
-    {
-        return $this->host->image ?? null;
-    }
-
     public function getStartDateAttribute($value): ?string
     {
         return $value ? Carbon::parse($value)->format('Y-m-d') : null;

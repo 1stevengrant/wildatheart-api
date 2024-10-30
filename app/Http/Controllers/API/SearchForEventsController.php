@@ -46,6 +46,7 @@ class SearchForEventsController extends Controller
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
         return response()->json(EventResource::collection($offsetEvents));
+
     }
 
     private function generateCacheKey(array $validatedData): string

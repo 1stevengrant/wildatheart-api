@@ -100,15 +100,6 @@ class Event extends BaseModel
         return Avatar::create($this->host->full_name)->toBase64();
     }
 
-    public function hostAvatar(): ?string
-    {
-        if ($this->host->image) {
-            return $this->host->image;
-        }
-
-        return null;
-    }
-
     public function allAttendeeEmails(): string
     {
         return implode(', ', $this->attendees->pluck('email')->toArray());
