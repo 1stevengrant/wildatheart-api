@@ -30,6 +30,7 @@ import {
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 
 export const LocalMap = () => {
+    const { getEvents, showLoading, setZoomingComplete } = useEvents();
     const { mapRef, selectedPlace } = useMapData();
     const [latitude, setLatitude] = useRecoilState(latitudeState);
     const [longitude, setLongitude] = useRecoilState(longitudeState);
@@ -40,10 +41,8 @@ export const LocalMap = () => {
     const { typeGroup } = useTypeGroup();
     const { types } = useTypes();
     const { startDateString, endDateString } = useDates();
-    const { getEvents, showLoading } = useEvents();
 
     const initialFlyToDone = useRef(false);
-    const hasZoomedOut = useRef(false);
     const [hasSupport, setHasSupport] = useState(true);
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -120,6 +119,7 @@ export const LocalMap = () => {
         setLongitude(center.lng);
         setZoom(newZoom);
         setUserZoom(newZoom);
+        setZoomingComplete(); // Mark any zoom operation as complete
     }, []);
 
     const onMapLoad = useCallback(() => {
@@ -137,7 +137,7 @@ export const LocalMap = () => {
                 abortControllerRef.current = new AbortController();
 
                 try {
-                    const eventCount = await getEvents(
+                    const result = await getEvents(
                         bounds,
                         currentSex,
                         types,
@@ -146,11 +146,11 @@ export const LocalMap = () => {
                         endDateString,
                         abortControllerRef.current.signal
                     );
-                    if (eventCount === 0 && !hasZoomedOut.current) {
-                        mapRef.current
-                            ?.getMap()
-                            .zoomTo(mapRef.current?.getMap().getZoom() - 1);
-                        hasZoomedOut.current = true;
+
+                    if (result.shouldZoomOut && mapRef.current) {
+                        const currentZoom = mapRef.current.getMap().getZoom();
+                        // Zoom out by 2 levels at a time for faster coverage
+                        mapRef.current.getMap().zoomTo(currentZoom - 2);
                     }
                 } catch (error: any) {
                     if (error.name === "AbortError") {
