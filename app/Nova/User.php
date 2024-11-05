@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Nova\Lenses\ActiveHosts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules;
+use Laravel\Nova\Actions\ExportAsCsv;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -136,6 +137,8 @@ class User extends Resource
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+            ExportAsCsv::make(),
+        ];
     }
 }
