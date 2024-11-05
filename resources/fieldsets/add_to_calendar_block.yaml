@@ -123,3 +123,46 @@ fields:
       type: select
       display: Timezone
       instructions: 'Select the timezone for your event'
+  -
+    handle: recurring
+    field:
+      type: toggle
+      display: Recurring
+  -
+    handle: recurrence
+    field:
+      type: group
+      display: 'Repeat Every'
+      if:
+        recurring: 'equals true'
+      fields:
+        -
+          handle: INTERVAL
+          field:
+            input_type: number
+            type: text
+            display: Interval
+        -
+          handle: FREQ
+          field:
+            options:
+              -
+                key: DAILY
+                value: Day(s)
+              -
+                key: WEEKLY
+                value: Week(s)
+              -
+                key: MONTHLY
+                value: Month(s)
+              -
+                key: YEARLY
+                value: Year(s)
+            type: select
+            display: Frequency
+        -
+          handle: COUNT
+          field:
+            input_type: number
+            type: text
+            display: Count
