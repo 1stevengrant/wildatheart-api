@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Lenses\ActiveHosts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules;
 use Laravel\Nova\Fields\Gravatar;
@@ -38,7 +39,10 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'family_name', 'given_name', 'email',
+        'id',
+        'family_name',
+        'given_name',
+        'email',
     ];
 
     public static function indexQuery(NovaRequest $request, $query): Builder
@@ -120,7 +124,9 @@ class User extends Resource
      */
     public function lenses(NovaRequest $request)
     {
-        return [];
+        return [
+            new ActiveHosts(),
+        ];
     }
 
     /**
