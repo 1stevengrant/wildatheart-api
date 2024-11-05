@@ -33,7 +33,6 @@ class ActiveHosts extends Lens
                 ->leftJoin('events', 'users.id', '=', 'events.user_id')
                 ->whereNotNull('events.approved_at')
                 ->whereNull('events.deleted_at')
-                // ->whereIn('events.event_type_id', [1, 2])
                 ->groupBy('users.id')
         );
     }

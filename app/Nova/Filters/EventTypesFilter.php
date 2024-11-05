@@ -5,7 +5,6 @@ namespace App\Nova\Filters;
 use App\Models\EventType;
 use Laravel\Nova\Filters\BooleanFilter;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\LaravelIgnition\Recorders\DumpRecorder\DumpRecorder;
 
 class EventTypesFilter extends BooleanFilter
 {
@@ -16,7 +15,6 @@ class EventTypesFilter extends BooleanFilter
      *
      * @var string
      */
-    // public $component = 'select-filter';
 
     /**
      * Apply the filter to the given query.
