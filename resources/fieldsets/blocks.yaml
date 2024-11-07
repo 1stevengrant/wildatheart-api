@@ -1,6 +1,7 @@
 title: Blocks
 fields:
-  - handle: blocks
+  -
+    handle: blocks
     field:
       remove_empty_nodes: false
       type: bard
@@ -12,59 +13,72 @@ fields:
             hero:
               display: Hero
               fields:
-                - import: hero
+                -
+                  import: hero
             hero_slider:
-              display: "Hero Slider"
+              display: 'Hero Slider'
               fields:
-                - import: hero_slider
+                -
+                  import: hero_slider
             media_slider:
-              display: "Media Slider"
+              display: 'Media Slider'
               fields:
-                - import: media_slider
+                -
+                  import: media_slider
             countdown:
               display: Countdown
               fields:
-                - import: countdown
+                -
+                  import: countdown
             buttons:
               display: Buttons
               fields:
-                - import: buttons
+                -
+                  import: buttons
             hero_title:
-              display: "Hero Title"
+              display: 'Hero Title'
               fields:
-                - handle: hero_title
+                -
+                  handle: hero_title
                   field: hero.hero_title
             hero_logo:
-              display: "Hero Logo"
+              display: 'Hero Logo'
               fields:
-                - handle: hero_logo
+                -
+                  handle: hero_logo
                   field: hero.hero_logo
             subscribe_form:
-              display: "Subscribe Form"
+              display: 'Subscribe Form'
               fields:
-                - import: subscribe_form
+                -
+                  import: subscribe_form
             add_to_calendar:
-              display: "Add To Calendar"
+              display: 'Add To Calendar'
               instructions: "Add a button that adds events to a user's calendar of choice"
               icon: calendar-date
               fields:
-                - import: add_to_calendar_block
+                -
+                  import: add_to_calendar_block
             header:
               display: Header
               icon: layout-header
               fields:
-                - import: header_block
+                -
+                  import: header_block
             container:
               display: Container
               icon: programming-module-box-cube
               fields:
-                - import: container_block
+                -
+                  import: container_block
             styled_text:
-              display: "Styled Text"
+              display: 'Styled Text'
               icon: text-formatting-all-caps
               fields:
-                - import: styled_text_block
+                -
+                  import: styled_text_block
             columns_block:
-              display: "Columns Block"
+              display: 'Columns Block'
               fields:
-                - import: columns_block
+                -
+                  import: columns_block
