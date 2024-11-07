@@ -1,6 +1,22 @@
 title: 'Add To Calendar'
 fields:
   -
+    handle: button_text
+    field:
+      type: text
+      display: 'Button Text'
+      default: 'Add to Calendar'
+  -
+    handle: button_variant
+    field:
+      options:
+        primary: Primary
+        secondary: Secondary
+        cta: 'Call to Action'
+      default: primary
+      type: select
+      display: 'Button Variant'
+  -
     handle: name
     field:
       type: text
