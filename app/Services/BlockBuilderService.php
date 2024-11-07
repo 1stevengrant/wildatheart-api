@@ -161,8 +161,8 @@ class BlockBuilderService
                 'description' => $mediaItem->description,
                 'variant' => CardVariant::portrait,
                 'trim_description_bool' => false,
-                'href' => $mediaItem->uri,
-                'is_coming_soon' => $mediaItem->date > now(),
+                'href' => $mediaItem->date > now() && !$mediaItem->make_scheduled_page_public ? null : $mediaItem->uri,
+                'is_coming_soon' => $mediaItem->date > now() && !$mediaItem->make_scheduled_page_public,
                 'date' => $mediaItem->date,
                 'right_cta' => ButtonProps::from([
                     'text' => "Play {$mediaItem->media_type}",
@@ -183,7 +183,7 @@ class BlockBuilderService
     {
         $subsplashListSlide = new MediaItemsSlide;
         $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
@@ -222,6 +222,6 @@ class BlockBuilderService
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl.$image->path;
+        return $cdnUrl . $image->path;
     }
 }
