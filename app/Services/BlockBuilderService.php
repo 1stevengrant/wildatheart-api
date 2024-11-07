@@ -144,18 +144,13 @@ class BlockBuilderService
             ->where('collection', 'media_item')
             ->where('published', true)
             ->where('data->series', 'like', "%{$seriesId}")
-            // TODO: Add this back in when all the series items have been set to make_scheduled_page_public
-            // ->where(function ($query) {
-            //     $query->where('date', '<=', now())
-            //           ->orWhere('data->make_scheduled_page_public', true);
-            // })
-            ->orderBy('data->position', 'asc')
+            ->orderBy('date', 'asc')
             ->get();
 
         foreach ($mediaItemsFromSeries as $mediaItem) {
             $mediaItemsFromSeriesSlide->slides[] = SlideBlock::from([
                 'id' => $mediaItem->id,
-                'tag' => $mediaItem->position >= 1 ? "{$mediaItem->media_type} {$mediaItem->position}" : $mediaItem->media_type,
+                'tag' => $mediaItem->position >= 1  ? "{$mediaItem->media_type} {$mediaItem->position}" : $mediaItem->media_type,
                 'title' => $mediaItem->title,
                 'featured_image_src' => $this->imageFromCDN($mediaItem->images->wide),
                 'description' => $mediaItem->description,
