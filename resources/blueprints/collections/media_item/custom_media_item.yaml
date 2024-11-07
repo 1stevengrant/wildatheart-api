@@ -50,7 +50,6 @@ tabs:
           -
             handle: media_type
             field:
-              default: Session
               type: text
               display: 'Media Type'
               instructions: 'How you want this item to be labeled. (i.e. "Episode", "Session", etc.)'
