@@ -31,3 +31,4 @@ yarn-error.log
 .phpactor.json
 scripts/.env.sh
 /*.csv
+file.sql
