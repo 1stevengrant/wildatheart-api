@@ -1,5 +1,10 @@
 import { Menu } from "@headlessui/react";
-import { HomeIcon, MapIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+    ArrowTopRightOnSquareIcon,
+    HomeIcon,
+    MapIcon,
+    UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
 
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
@@ -21,6 +26,11 @@ const navItems = [
         icon: <UserCircleIcon className={`w-6 h-6`} />,
         title: `My Profile`,
         href: route("my.profile"),
+    },
+    {
+        icon: <ArrowTopRightOnSquareIcon className={`w-6 h-6`} />,
+        title: `Logout`,
+        href: route("logout"),
     },
 ];
 export const SidebarUserMenuItems = () => {

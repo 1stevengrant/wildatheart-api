@@ -20,6 +20,7 @@ class LoginController extends Controller
     public function __invoke(Request $request)
     {
         $this->auth0->clear();
+        session(['url.intended' => url()->previous()]);
         activity()
             ->log('Clearing Auth0 Session');
 

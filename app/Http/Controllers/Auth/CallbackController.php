@@ -35,7 +35,7 @@ class CallbackController extends Controller
 
             $this->logActivity('CallbackController', ['auth0User' => $auth0User, 'user' => $user]);
 
-            return to_route('home')->with([
+            return redirect()->intended(route('home'))->with([
                 'notifications' => [
                     'message' => 'You are now logged in!',
                     'type' => 'success',

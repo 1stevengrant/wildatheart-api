@@ -19,7 +19,6 @@ class EventTypesFilter extends BooleanFilter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $value
      * @return \Illuminate\Database\Eloquent\Builder
@@ -36,7 +35,7 @@ class EventTypesFilter extends BooleanFilter
             return $types[$key];
         })->keys()->toArray();
 
-        if (!empty($selectedTypes)) {
+        if (! empty($selectedTypes)) {
             return $query->whereIn('events.event_type_id', $selectedTypes);
         }
 
@@ -46,13 +45,13 @@ class EventTypesFilter extends BooleanFilter
     /**
      * Get the filter's available options.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function options(NovaRequest $request)
     {
 
         $eventTypes = EventType::all();
+
         return $eventTypes->pluck('id', 'name');
     }
 }

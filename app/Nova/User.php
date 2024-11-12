@@ -126,7 +126,7 @@ class User extends Resource
     public function lenses(NovaRequest $request)
     {
         return [
-            new ActiveHosts(),
+            new ActiveHosts,
         ];
     }
 

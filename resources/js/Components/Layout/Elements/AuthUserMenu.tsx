@@ -15,7 +15,7 @@ export const AuthUserMenu = ({ auth }: { auth: any }) => {
         <li className="relative -mx-6 mt-auto">
             <OutsideClickHandler onOutsideClick={() => setShowUserMenu(false)}>
                 {showUserMenu && (
-                    <div className={`absolute left-6 -top-28 space-y-4`}>
+                    <div className={`absolute left-6 -top-40 space-y-4`}>
                         <Menu>
                             <SidebarUserMenuItems />
                         </Menu>
