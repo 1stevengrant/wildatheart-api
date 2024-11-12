@@ -17,8 +17,10 @@ if (! function_exists('getImageUrl')) {
 }
 
 if (! function_exists('bunnyImage')) {
-    function bunnyImage(string $image, array $params = []): string
+    function bunnyImage(string $image, array $params = [], string $cdn = 'api_url'): string
     {
-        return config('services.bunny.api_url').'/'.$image.'?'.http_build_query($params);
+        $baseUrl = config('services.bunny.'.($cdn === 'api_url' ? 'api_url' : 's3_cdn_url'));
+
+        return $baseUrl.'/'.$image.'?'.http_build_query($params);
     }
 }

@@ -174,6 +174,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         \App\Providers\Auth0ServiceProvider::class,
+        \App\Providers\CustomStatamicProvider::class,
     ])->toArray(),
 
     /*
