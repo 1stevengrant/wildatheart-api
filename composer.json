@@ -33,7 +33,7 @@
         "lorisleiva/laravel-actions": "^2.5",
         "omniphx/forrest": "2.*",
         "repat/laravel-validator-emojis": "^0.2.0",
-        "sentry/sentry-laravel": "^3.4",
+        "sentry/sentry-laravel": "^4.10",
         "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-data": "^3.2",
         "spatie/laravel-failed-job-monitor": "^4.2",
