@@ -113,3 +113,12 @@ fields:
                     type: text
                     display: 'Subsplash List ID'
                     instructions: 'Enter the ID of a Subsplash list you want to load items from.'
+            recently_added:
+              display: 'Recently Added'
+              fields:
+                -
+                  handle: limit
+                  field:
+                    type: integer
+                    display: Limit
+                    instructions: 'Limit the number of items returned to the slider.'

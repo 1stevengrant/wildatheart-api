@@ -73,6 +73,8 @@ class BlockBuilderService
                 $processedBlock['slides'] = array_merge($processedBlock['slides'], $mediaItemSlides->slides);
             } elseif ($slide->type === 'custom_slide') {
                 $processedBlock['slides'][] = $this->buildCustomSlide($slide);
+            } elseif ($slide->type === 'recently_added') {
+                $processedBlock['slides'][] = $this->buildRecentlyAdded($slide);
             } else {
                 $processedBlock['slides'][] = $slide;
             }
@@ -178,7 +180,7 @@ class BlockBuilderService
     {
         $subsplashListSlide = new MediaItemsSlide;
         $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
@@ -209,6 +211,20 @@ class BlockBuilderService
         return $subsplashListSlide;
     }
 
+    public function buildRecentlyAdded($slide)
+    {
+        $recentlyAddedSlide = new MediaItemsSlide;
+
+        $recentItems = Entry::query()
+            ->where('published', true)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        // dd($recentItems);
+        // dd($slide);
+        return $recentlyAddedSlide;
+    }
+
     public function imageFromCDN(?Asset $image)
     {
         if (! $image) {
@@ -217,6 +233,6 @@ class BlockBuilderService
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl.$image->path;
+        return $cdnUrl . $image->path;
     }
 }
