@@ -56,7 +56,7 @@ class StatsController extends Controller
                     ],
                     'fires' => [
                         [
-                            'label' => 'Current Fires Listings',
+                            'label' => 'Current Fire Listings',
                             'count' => Event::query()->fires()->published()->count(),
                         ],
                         [
