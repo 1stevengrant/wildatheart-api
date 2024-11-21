@@ -6,8 +6,11 @@ import {
     UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
+import classNames from "classnames";
+import { useSetRecoilState } from "recoil";
 
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
+import { logoutModalAtom } from "@/store/logoutModalAtom";
 
 const linkClasses = `flex items-center space-x-3 hover:text-orange`;
 
@@ -27,13 +30,9 @@ const navItems = [
         title: `My Profile`,
         href: route("my.profile"),
     },
-    {
-        icon: <ArrowTopRightOnSquareIcon className={`w-6 h-6`} />,
-        title: `Logout`,
-        href: route("logout"),
-    },
 ];
 export const SidebarUserMenuItems = () => {
+    const setLogoutModalOpen = useSetRecoilState(logoutModalAtom);
     return (
         <>
             {navItems.map((item, index) => (
@@ -44,6 +43,18 @@ export const SidebarUserMenuItems = () => {
                     </Link>
                 </Menu.Item>
             ))}
+            <Menu.Item>
+                <button
+                    onClick={() => setLogoutModalOpen(true)}
+                    className={classNames(
+                        `flex items-center space-x-3 hover:text-orange`,
+                        `w-full`
+                    )}
+                >
+                    <ArrowTopRightOnSquareIcon className={`w-6 h-6`} />
+                    <div>Logout</div>
+                </button>
+            </Menu.Item>
         </>
     );
 };

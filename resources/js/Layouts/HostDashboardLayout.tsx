@@ -12,13 +12,16 @@ import {
 } from "@heroicons/react/24/outline";
 import { Head, Link, usePage } from "@inertiajs/react";
 import classNames from "classnames";
+import { useRecoilState } from "recoil";
 
 import { AuthUserMenu } from "@/Components/Layout/Elements/AuthUserMenu";
 import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
 import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
+import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { SupportModal } from "@/Components/Modals/SupportModal";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
+import { logoutModalAtom } from "@/store/logoutModalAtom";
 
 export const HostDashboardLayout = ({
     children,
@@ -65,6 +68,9 @@ export const HostDashboardLayout = ({
         },
     ];
 
+    const [isLogoutModalOpen, setIsLogoutModalOpen] =
+        useRecoilState(logoutModalAtom);
+
     return (
         <>
             <Head title={pageTitle} />
@@ -72,6 +78,10 @@ export const HostDashboardLayout = ({
                 <SupportModal
                     open={openSupportModal}
                     setOpen={setOpenSupportModal}
+                />
+                <LogoutModal
+                    open={isLogoutModalOpen}
+                    setOpen={setIsLogoutModalOpen}
                 />
                 <Transition show={sidebarOpen}>
                     <Dialog
