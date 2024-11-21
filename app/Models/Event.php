@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravolt\Avatar\Facade as Avatar;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Event extends BaseModel
 {
-    use EventActionsTrait, EventAttributesTrait, EventRelationshipsTrait, EventScopeTrait, HasFactory, HasUuids, SoftDeletes;
+    use EventActionsTrait, EventAttributesTrait, EventRelationshipsTrait, EventScopeTrait, HasFactory, HasUuids, LogsActivity, SoftDeletes;
 
     protected static function boot(): void
     {
@@ -132,5 +134,20 @@ class Event extends BaseModel
     public function getCityAttribute(): array|string
     {
         return str_replace(',', '', $this->attributes['city']);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // Log all attributes since you're using $guarded
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('events')
+            ->setDescriptionForEvent(function (string $eventName) {
+                $user = auth()->user();
+                $userName = $user ? $user->full_name : 'System';
+
+                return "Event has been {$eventName} by {$userName}";
+            });
     }
 }

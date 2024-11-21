@@ -5,11 +5,14 @@ namespace App\Models;
 use App\Builders\EventTypeBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class EventType extends BaseModel
 {
-    use HasFactory, HasRunwayResource;
+    use HasFactory, HasRunwayResource, LogsActivity;
 
     protected $guarded = ['id'];
 
@@ -51,7 +54,17 @@ class EventType extends BaseModel
         parent::boot();
 
         static::creating(function ($eventType) {
-            $eventType->slug = \Str::slug($eventType->name);
+            $eventType->slug = Str::slug($eventType->name);
+        });
+
+        // Add debug logging to verify events are firing
+        static::updated(function ($model) {
+            \Log::info('EventType updated', [
+                'id' => $model->id,
+                'changes' => $model->getDirty(),
+                'log_name' => 'event_types',
+                'user' => auth()->user()?->full_name,
+            ]);
         });
     }
 
@@ -68,5 +81,20 @@ class EventType extends BaseModel
     public function newEloquentBuilder($query): EventTypeBuilder
     {
         return new EventTypeBuilder($query);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // Log all attributes since you're using $guarded
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('event_types')
+            ->setDescriptionForEvent(function (string $eventName) {
+                $user = auth()->user();
+                $userName = $user ? $user->full_name : 'System';
+
+                return "Event type has been {$eventName} by {$userName}";
+            });
     }
 }

@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Attendee extends BaseModel
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     public function getFullnameAttribute(): string
     {
@@ -98,5 +100,20 @@ class Attendee extends BaseModel
                 $query->onlyTrashed();
             }
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // Log all attributes since you're using $guarded
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('attendees')
+            ->setDescriptionForEvent(function (string $eventName) {
+                $user = auth()->user();
+                $userName = $user ? $user->full_name : 'System';
+
+                return "Attendee has been {$eventName} by {$userName}";
+            });
     }
 }

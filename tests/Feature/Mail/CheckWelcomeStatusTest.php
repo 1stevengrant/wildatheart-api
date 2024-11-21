@@ -4,6 +4,7 @@ use App\Actions\Event\CheckWelcomeStatus;
 use App\Mail\Event\SendWelcomeEmail;
 use App\Models\Event;
 use Database\Seeders\EventTypeSeeder;
+use Illuminate\Support\Facades\Mail;
 
 it('sends the welcome email', function () {
     Mail::fake();

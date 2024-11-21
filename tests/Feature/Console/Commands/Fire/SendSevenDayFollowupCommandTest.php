@@ -3,6 +3,7 @@
 use App\Mail\Fire\SevenDayFollowupMailable;
 use App\Models\EmailTemplate;
 use App\Models\Event;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
     $this->seed();

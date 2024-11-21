@@ -15,11 +15,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Nova\Auth\Impersonatable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Impersonatable, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, Impersonatable, LogsActivity, Notifiable, SoftDeletes;
 
     const ROLE_ADMIN = 'admin';
 
@@ -192,5 +194,20 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return $this->super;
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // Log all attributes since you're using $guarded
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('users')
+            ->setDescriptionForEvent(function (string $eventName) {
+                $user = auth()->user();
+                $userName = $user ? $user->full_name : 'System';
+
+                return "User type has been {$eventName} by {$userName}";
+            });
     }
 }

@@ -3,6 +3,7 @@
 use App\Actions\User\SendVerificationEmail;
 use App\Mail\Event\SendEmailVerificationEmail;
 use App\Models\Event;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\UserSeeder::class);

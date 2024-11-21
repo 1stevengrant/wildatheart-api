@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
-use Str;
 
 class Page extends Model
 {
-    use HasRunwayResource;
+    use HasRunwayResource, LogsActivity;
 
     protected $guarded = ['id'];
 
@@ -55,5 +57,20 @@ class Page extends Model
     public function scopeBySlug($query, string $slug)
     {
         return $query->where('slug', $slug)->first();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // Log all attributes since you're using $guarded
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('pages')
+            ->setDescriptionForEvent(function (string $eventName) {
+                $user = auth()->user();
+                $userName = $user ? $user->full_name : 'System';
+
+                return "Page has been {$eventName} by {$userName}";
+            });
     }
 }

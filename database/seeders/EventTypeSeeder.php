@@ -29,8 +29,9 @@ class EventTypeSeeder extends Seeder
             'summary' => fake()->sentence(5),
             'description' => fake()->paragraphs(6, true),
             'slug' => Str::slug($eventType),
-            'image' => \Pest\Faker\fake()->imageUrl(),
+            'image' => fake()->imageUrl(),
             'zapier_webhook_url' => 'https://hooks.zapier.com/hooks/catch/1234567/abcde',
+            'card_teaser_text' => fake()->paragraph,
         ]));
     }
 }

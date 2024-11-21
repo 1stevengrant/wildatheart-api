@@ -4,12 +4,14 @@ use App\Mail\Event\AttendeeConnectedToHost;
 use App\Mail\Event\AttendeeRegistered;
 use App\Models\EmailTemplate;
 use App\Models\Event;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
     Mail::fake();
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = Event::factory()->approved()->fires()->create();
+
     $this->attributes = [
         'family_name' => 'Doe',
         'given_name' => 'John',

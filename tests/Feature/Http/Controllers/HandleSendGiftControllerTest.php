@@ -2,6 +2,8 @@
 
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
