@@ -32,16 +32,16 @@ class CustomStatamicProvider extends ServiceProvider
 
         Collection::computed('media_item', 'custom_url', function ($entry, $value) {
 
-            if (config('features.is_custom_uri_enabled') && $entry->series) {
+            if ($entry->series) {
                 $series = $entry->series->value();
                 if ($series) {
                     $seriesUri = $series->uri();
 
-                    return $seriesUri.'/'.$entry->slug;
+                    return $seriesUri . '/' . $entry->slug;
                 }
             }
 
-            return 'media'.'/'.$entry->slug();
+            return 'media' . '/' . $entry->slug();
         });
 
         Statamic::vite('app', [

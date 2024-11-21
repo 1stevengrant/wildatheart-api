@@ -65,7 +65,7 @@ class MediaItemDataController extends Controller
 
         $subsplash = new SubsplashService;
 
-        $subsplashMediaItem = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItem->id}");
+        $subsplashMediaItem = $subsplash->getMediaItem($mediaItem->id);
 
         if (isset($subsplashMediaItem['errors']) && $subsplashMediaItem['errors'][0]['code'] === 'resource_not_found') {
             return response()->json($mediaItem);

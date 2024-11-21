@@ -73,8 +73,9 @@ class BlockBuilderService
                 $processedBlock['slides'] = array_merge($processedBlock['slides'], $mediaItemSlides->slides);
             } elseif ($slide->type === 'custom_slide') {
                 $processedBlock['slides'][] = $this->buildCustomSlide($slide);
-            } elseif ($slide->type === 'recently_added') {
-                $processedBlock['slides'][] = $this->buildRecentlyAdded($slide);
+            } elseif ($slide->type === 'content_in_taxonomy') {
+                $recentlyAddedSlide = $this->buildRecentlyAdded($slide);
+                $processedBlock['slides'] = array_merge($processedBlock['slides'], $recentlyAddedSlide->slides);
             } else {
                 $processedBlock['slides'][] = $slide;
             }
@@ -215,14 +216,44 @@ class BlockBuilderService
     {
         $recentlyAddedSlide = new MediaItemsSlide;
 
+        $collectionsToLoadFrom = $slide->collections_to_load_from->pluck('handle');
+
+
         $recentItems = Entry::query()
             ->where('published', true)
-            ->orderBy('date', 'asc')
+            ->where('date', '<=', now())
+            ->where('collection', $slide->collections_to_load_from)
+            ->orderBy('date', 'desc')
+            ->limit($slide->limit ?? 10)
             ->get();
 
-        // dd($recentItems);
-        // dd($slide);
+        foreach ($recentItems as $item) {
+            $recentlyAddedSlide->slides[] = $this->createSlideFromEntry($item);
+        }
+
         return $recentlyAddedSlide;
+    }
+
+    public function createSlideFromEntry($entry)
+    {
+        $slide = SlideBlock::from();
+
+        $previewBuilder = new PreviewBuilderService;
+        $preview = $previewBuilder->build($entry);
+
+        $slide->id = $preview->id;
+        $slide->title = $preview->title;
+        $slide->featured_image_src = $preview->featured_image_src;
+        $slide->description = $preview->description;
+        $slide->href = $preview->uri;
+        $slide->date = $preview->published_at;
+        if ($preview->related_content) {
+            $slide->leader = $preview->related_content[0]->title;
+        }
+
+        $slide->trim_description_bool = true;
+
+        return $slide;
     }
 
     public function imageFromCDN(?Asset $image)

@@ -50,7 +50,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer '.$accessToken;
+        $token = 'Bearer ' . $accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
@@ -77,6 +77,16 @@ class SubsplashService
         throw new \Exception('Failed to fetch data from Subsplash API');
     }
 
+    public function getMediaItem($mediaItemId)
+    {
+        return $this->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItemId}");
+    }
+
+    public function getMediaSeries($mediaSeriesId)
+    {
+        return $this->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$mediaSeriesId}");
+    }
+
     public function getRelatedMediaItems($seriesId)
     {
         if (! $seriesId) {
@@ -90,5 +100,28 @@ class SubsplashService
         $subsplashMediaItems = $this->subsplashFetch($relatedMediaItemsUrl);
 
         return $subsplashMediaItems['_embedded']['media-items'];
+    }
+
+    public function getAllRelatedMediaItems($seriesId)
+    {
+        if (! $seriesId) {
+            return null;
+        }
+
+        $subsplashSeries = $this->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$seriesId}");
+
+        $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
+
+        $subsplashMediaItems = $this->subsplashFetch($relatedMediaItemsUrl);
+        $next = data_get($subsplashMediaItems, '_links.next.href');
+        $mediaItems = data_get($subsplashMediaItems, '_embedded.media-items', []);
+
+        while ($next) {
+            $subsplashMediaItems = $this->subsplashFetch($next);
+            $next = data_get($subsplashMediaItems, '_links.next.href');
+            $mediaItems = array_merge($mediaItems, data_get($subsplashMediaItems, '_embedded.media-items', []));
+        }
+
+        return $mediaItems;
     }
 }
