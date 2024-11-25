@@ -30,13 +30,6 @@ export const EventCardContent = (props: { event: Event }) => {
                 <div>
                     <EventTypeGroupIndicator event={event} />
                     <EventLocation location={event?.location} />
-                    {event.start_date && (
-                        <EventTypeBadge className={`md:hidden`}>
-                            {dateFormatter(event.start_date, "MMM Do")}
-                            {event.end_date &&
-                                ` - ${dateFormatter(event.end_date, "MMM Do YYYY")}`}
-                        </EventTypeBadge>
-                    )}
                 </div>
                 <EventHostInfo>
                     <>

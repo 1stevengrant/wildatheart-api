@@ -79,6 +79,11 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
                     Monthly
                 </EventTypeBadge>
             )}
+            {event?.type_group === retreatTypeGroup && (
+                <EventTypeBadge className={`my-2 md:hidden`}>
+                    Starts {dateFormatter(event.start_date)}
+                </EventTypeBadge>
+            )}
         </>
     );
 };
