@@ -9,7 +9,7 @@ class GoogleSheetDataTransferObject
         public string $eventId,
         public string $eventType,
         public string $email,
-        public ?string $quantity,
+        public int $quantity,
         public string $first_name,
         public string $last_name,
         public string $address_1,

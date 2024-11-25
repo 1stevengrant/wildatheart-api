@@ -37,6 +37,7 @@ class HostEventTypeCreateEventController extends Controller
         $request->validate((new EventRequest)->rules());
 
         EventDateHelper::adjustEndDateForRetreat($request, $eventType->name);
+        $mailingAddress = auth()->user()->primaryAddress();
 
         $event = auth()->user()->events()->create([
             'event_type_id' => $eventType->id,
@@ -59,7 +60,7 @@ class HostEventTypeCreateEventController extends Controller
             'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
         ]);
 
-        if ($eventType->zapier_webhook_url && $eventType->allow_materials_order) {
+        if ($eventType->hasZapier() && $eventType->hasMaterialsOrder()) {
             $dataTransferObject = new GoogleSheetDataTransferObject(
                 webhookUrl: $eventType->zapier_webhook_url,
                 eventId: $event->id,
@@ -68,12 +69,12 @@ class HostEventTypeCreateEventController extends Controller
                 quantity: $request->number_of_items_in_material_order,
                 first_name: auth()->user()->given_name,
                 last_name: auth()->user()->family_name,
-                address_1: $request->street_address,
-                address_2: $request->address_2,
-                city: $request->city,
-                state: $request->state,
-                zip: $request->zip,
-                country: $request->country,
+                address_1: $mailingAddress->street_address,
+                address_2: $mailingAddress->address2,
+                city: $mailingAddress->city,
+                state: $mailingAddress->state,
+                zip: $mailingAddress->zip,
+                country: $mailingAddress->country,
                 date: now()->toDateTimeString(),
             );
 

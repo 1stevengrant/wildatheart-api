@@ -210,4 +210,9 @@ class User extends Authenticatable
                 return "User type has been {$eventName} by {$userName}";
             });
     }
+
+    public function primaryAddress(): ?Address
+    {
+        return $this->addresses()->where('is_primary', true)->first();
+    }
 }

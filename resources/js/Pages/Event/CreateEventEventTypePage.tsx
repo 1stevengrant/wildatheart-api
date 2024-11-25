@@ -395,23 +395,28 @@ const CreateEventEventTypePage = () => {
                                             required
                                         />
                                         <SelectInput
-                                            id={
-                                                "number_of_items_in_material_order"
-                                            }
+                                            id="number_of_items_in_material_order"
                                             onChange={(
                                                 e: React.ChangeEvent<
                                                     | HTMLInputElement
                                                     | HTMLSelectElement
                                                 >
                                             ) => {
+                                                const value =
+                                                    e.target.value === ""
+                                                        ? null
+                                                        : Number(
+                                                              e.target.value
+                                                          );
                                                 setData(
                                                     "number_of_items_in_material_order",
-                                                    e.target.value
+                                                    value
                                                 );
                                             }}
                                             className={`text-white mt-2`}
                                             options={[
-                                                { value: "0", label: "NONE" },
+                                                { value: "", label: "Select" },
+                                                { value: "0", label: "None" },
                                                 { value: "10", label: "1-10" },
                                                 { value: "20", label: "11-20" },
                                                 { value: "30", label: "21-30" },
@@ -427,6 +432,11 @@ const CreateEventEventTypePage = () => {
                                                 },
                                                 { value: "200", label: "100+" },
                                             ]}
+                                        />
+                                        <InputError
+                                            message={
+                                                errors.number_of_items_in_material_order
+                                            }
                                         />
                                     </div>
                                 )}
