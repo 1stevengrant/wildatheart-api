@@ -94,4 +94,14 @@ trait EventAttributesTrait
     {
         return round($this->attributes['latitude'], 2);
     }
+
+    public function getMailingAddressAttribute(): string
+    {
+        $mailingAddress = $this->user->addresses()->where('is_primary', true)->first();
+        if (! $mailingAddress) {
+            return 'No mailing address found';
+        }
+
+        return $mailingAddress->street_address.' '.$mailingAddress->address2.' '.$mailingAddress->city.' '.$mailingAddress->state.' '.$mailingAddress->zip.' '.$mailingAddress->country;
+    }
 }
