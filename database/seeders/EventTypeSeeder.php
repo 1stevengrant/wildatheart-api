@@ -32,6 +32,7 @@ class EventTypeSeeder extends Seeder
             'image' => fake()->imageUrl(),
             'zapier_webhook_url' => 'https://hooks.zapier.com/hooks/catch/1234567/abcde',
             'card_teaser_text' => fake()->paragraph,
+            'allow_materials_order' => true,
         ]));
     }
 }

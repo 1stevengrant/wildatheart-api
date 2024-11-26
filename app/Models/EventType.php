@@ -97,4 +97,14 @@ class EventType extends BaseModel
                 return "Event type has been {$eventName} by {$userName}";
             });
     }
+
+    public function hasZapier(): bool
+    {
+        return ! empty($this->zapier_webhook_url);
+    }
+
+    public function hasMaterialsOrder(): bool
+    {
+        return $this->allow_materials_order;
+    }
 }

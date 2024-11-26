@@ -22,10 +22,11 @@ class EventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'start_date' => 'required',
+            'country' => ['required', 'string'],
+            'latitude' => ['required', 'numeric'],
+            'longitude' => ['required', 'numeric'],
+            'start_date' => ['required', 'date'],
+            'number_of_items_in_material_order' => ['required', 'numeric'],
         ];
     }
 }

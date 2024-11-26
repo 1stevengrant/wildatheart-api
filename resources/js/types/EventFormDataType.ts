@@ -15,5 +15,5 @@ export type EventFormDataType = {
     is_private?: boolean | null;
     start_date?: Date | null;
     end_date?: Date | null;
-    number_of_items_in_material_order?: string | null;
+    number_of_items_in_material_order?: string | null | number;
 };
