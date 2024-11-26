@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\CheckIfUserShouldBeAdmin;
+use App\Jobs\LogActivity;
 use App\Models\User;
 use Auth0\SDK\Auth0 as Auth0SDK;
 use Auth0\SDK\Exception\StateException;
 use Illuminate\Http\Request;
-use Str;
+use Illuminate\Support\Str;
 
 class CallbackController extends Controller
 {
@@ -24,16 +25,24 @@ class CallbackController extends Controller
     {
         try {
             $response = $this->auth0->exchange();
-            abort_unless($response, 401, $this->logAndReturn('Unauthorized access attempt'));
+            abort_unless($response, 401, dispatch(new LogActivity(
+                logName: 'auth',
+                description: 'Unauthorized access attempt',
+            )));
 
             $auth0User = $this->auth0->getUser();
+
             $user = $this->findOrCreateUser($auth0User);
 
             auth()->login($user);
 
             CheckIfUserShouldBeAdmin::dispatch($user);
 
-            $this->logActivity('CallbackController', ['auth0User' => $auth0User, 'user' => $user]);
+            dispatch(new LogActivity(
+                logName: 'auth',
+                description: 'user logged in',
+                properties: ['user' => $user, 'auth0User' => $auth0User],
+            ));
 
             return redirect()->intended(route('home'))->with([
                 'notifications' => [
@@ -43,7 +52,11 @@ class CallbackController extends Controller
             ]);
 
         } catch (StateException $e) {
-            $this->logActivity('Unauthorized access attempt', ['exception' => $e]);
+            dispatch(new LogActivity(
+                logName: 'auth',
+                description: 'Unauthorized access attempt',
+                properties: ['exception' => $e],
+            ));
 
             return redirect()->route('login');
         }
@@ -60,19 +73,5 @@ class CallbackController extends Controller
                 'provider_id' => $auth0User['sub'],
             ]
         );
-    }
-
-    protected function logActivity(string $message, array $properties = [])
-    {
-        activity()
-            ->withProperties($properties)
-            ->log($message);
-    }
-
-    protected function logAndReturn(string $message)
-    {
-        $this->logActivity($message);
-
-        return $message;
     }
 }
