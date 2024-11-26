@@ -2,6 +2,7 @@
 
 namespace App\Actions\Event;
 
+use App\Jobs\LogActivityJob;
 use App\Mail\Event\SendWelcomeEmail;
 use App\Models\Event;
 use Illuminate\Support\Facades\Mail;
@@ -15,9 +16,10 @@ class CheckWelcomeStatus
         Event $event
     ): void {
 
-        activity()
-            ->performedOn($event)
-            ->log('Check Welcome Status');
+        dispatch(new LogActivityJob(
+            description: 'Check Welcome Status',
+            performedOn: $event,
+        ));
 
         if (! $event->welcomeHasBeenSent()) {
 
@@ -27,9 +29,10 @@ class CheckWelcomeStatus
                 'welcome_sent' => true,
             ], $event);
 
-            activity()
-                ->performedOn($event)
-                ->log('Send Welcome Email');
+            dispatch(new LogActivityJob(
+                description: 'Send Welcome Email',
+                performedOn: $event,
+            ));
         }
     }
 }

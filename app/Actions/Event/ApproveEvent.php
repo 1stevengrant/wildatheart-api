@@ -2,6 +2,7 @@
 
 namespace App\Actions\Event;
 
+use App\Jobs\LogActivityJob;
 use App\Models\Event;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -15,6 +16,9 @@ class ApproveEvent
         $event->update([
             'approved_at' => now(),
         ]);
-        activity()->performedOn($event)->log('Approve Event');
+        dispatch(new LogActivityJob(
+            description: 'Event approved',
+            performedOn: $event,
+        ));
     }
 }

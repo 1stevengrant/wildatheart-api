@@ -23,10 +23,6 @@ class DeleteEventController extends Controller
 
         $event->delete();
 
-        activity()->causedBy(auth()->user())
-            ->performedOn($event)
-            ->log('Soft Delete Event');
-
         return redirect()->back()->with(['notifications' => [
             'message' => 'Event deleted successfully.',
             'type' => 'success',

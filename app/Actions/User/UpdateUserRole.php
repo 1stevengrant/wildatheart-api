@@ -2,6 +2,7 @@
 
 namespace App\Actions\User;
 
+use App\Jobs\LogActivityJob;
 use App\Models\User;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -12,6 +13,10 @@ class UpdateUserRole
     public function handle(User $user, string $role): void
     {
         $user->assignRole($role);
-        activity()->performedOn($user)->log('Update User Role');
+        dispatch(new LogActivityJob(
+            description: 'Update User Role',
+            causedBy: auth()->user(),
+            performedOn: $user
+        ));
     }
 }

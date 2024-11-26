@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\LogActivityJob;
 use App\Models\Attendee;
 use Illuminate\Http\Request;
 
@@ -21,10 +22,11 @@ class ToggleContactContactedController extends Controller
                 'contacted_on' => null,
             ]);
 
-            activity()
-                ->performedOn($attendee)
-                ->causedBy(auth()->user())
-                ->log('Contact unmarked as not contacted');
+            dispatch(new LogActivityJob(
+                description: 'Contact unmarked as not contacted',
+                causedBy: auth()->user(),
+                performedOn: $attendee,
+            ));
 
             return redirect()->back()->with(['notifications' => [
                 'message' => 'Contact updated',
@@ -36,10 +38,11 @@ class ToggleContactContactedController extends Controller
             'contacted_on' => now(),
         ]);
 
-        activity()
-            ->performedOn($attendee)
-            ->causedBy(auth()->user())
-            ->log('Contact unmarked as contacted');
+        dispatch(new LogActivityJob(
+            description: 'Contact marked as contacted',
+            causedBy: auth()->user(),
+            performedOn: $attendee,
+        ));
 
         return redirect()->back()->with(['notifications' => [
             'message' => 'Contact updated',

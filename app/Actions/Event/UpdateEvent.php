@@ -13,7 +13,6 @@ class UpdateEvent
         array $data,
         Event $event
     ): void {
-        activity()->performedOn($event)->log('Update Event');
         $event->update($data);
     }
 }

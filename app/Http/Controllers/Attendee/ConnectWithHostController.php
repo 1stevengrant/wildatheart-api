@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Attendee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ConnectWithHostRequest;
 use App\Http\Resources\EventResource;
+use App\Jobs\LogActivityJob;
 use App\Jobs\PostAttendeeContactToSlackJob;
 use App\Models\Event;
 use App\Services\SeoService;
@@ -43,11 +44,12 @@ class ConnectWithHostController extends Controller
             'marketing_updates' => $request->opted_into_marketing,
         ]);
 
-        activity()
-            ->withProperties(['attendee' => $attendee, 'event' => $event])
-            ->performedOn($attendee)
-            ->causedBy($event)
-            ->log('Connected with Host');
+        dispatch(new LogActivityJob(
+            description: 'Connected with Host',
+            properties: ['attendee' => $attendee, 'event' => $event],
+            causedBy: $event,
+            performedOn: $attendee,
+        ));
 
         PostAttendeeContactToSlackJob::dispatch($attendee, $event);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\LogActivityJob;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -19,10 +20,11 @@ class ToggleEventApprovedAtController extends Controller
             'approved_at' => $event->approved_at ? null : now(),
         ]);
 
-        activity()
-            ->performedOn($event)
-            ->causedBy(auth()->user())
-            ->log('Toggle Event Approved At');
+        dispatch(new LogActivityJob(
+            description: 'Toggle Event Approved At',
+            causedBy: auth()->user(),
+            performedOn: $event
+        ));
 
         return to_route('my.events.active')->with(['notifications' => [
             'message' => 'Event updated successfully!',

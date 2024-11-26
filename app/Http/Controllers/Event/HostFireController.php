@@ -8,6 +8,7 @@ use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
+use App\Jobs\LogActivityJob;
 use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -47,10 +48,11 @@ class HostFireController extends Controller
             'neighborhood' => request('neighborhood'),
         ]);
 
-        activity()
-            ->performedOn($event)
-            ->causedBy(auth()->user())
-            ->log('Create Event');
+        dispatch(new LogActivityJob(
+            description: 'Create Event',
+            causedBy: auth()->user(),
+            performedOn: $event,
+        ));
 
         UpdateUserRole::run(
             user: auth()->user(),

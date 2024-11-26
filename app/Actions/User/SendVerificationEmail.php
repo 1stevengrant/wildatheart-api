@@ -2,6 +2,7 @@
 
 namespace App\Actions\User;
 
+use App\Jobs\LogActivityJob;
 use App\Mail\Event\SendEmailVerificationEmail;
 use App\Models\Event;
 use Illuminate\Support\Facades\Mail;
@@ -17,10 +18,11 @@ class SendVerificationEmail
             'event_id' => $event->id,
         ]);
 
-        activity()
-            ->performedOn($event)
-            ->causedBy(auth()->user())
-            ->log('Send Verification Email');
+        dispatch(new LogActivityJob(
+            description: 'Send Verification Email',
+            causedBy: auth()->user(),
+            performedOn: $event,
+        ));
 
         Mail::to(auth()->user()->email)->send(new SendEmailVerificationEmail(
             verificationToken: $verification->token,

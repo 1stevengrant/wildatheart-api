@@ -1,4 +1,4 @@
-import React, { FormEventHandler } from "react";
+import React, { FormEventHandler, useState } from "react";
 
 import { Dialog } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
@@ -22,6 +22,8 @@ export const SupportModal = ({
     setOpen: (open: boolean) => void;
 }) => {
     const { auth } = usePage<any>().props;
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const { data, setData, post, errors, reset } = useForm({
         name: auth.user
             ? `${auth.user.given_name} ${auth.user.family_name}`
@@ -31,23 +33,34 @@ export const SupportModal = ({
         description: "",
     });
 
-    const submit: FormEventHandler = (e) => {
+    const submit: FormEventHandler = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
 
         post(route("support.store"), {
             preserveScroll: true,
-            onSuccess: () => handleSuccess(),
-            onError: () => scrollToError(),
+            onSuccess: () => {
+                reset();
+                setIsSubmitting(false);
+                setOpen(false);
+            },
+            onError: () => {
+                setIsSubmitting(false);
+                scrollToError();
+            },
         });
     };
 
-    const handleSuccess = () => {
-        setOpen(false);
-        reset();
+    const handleCancel = () => {
+        if (!isSubmitting) {
+            setOpen(false);
+        }
     };
 
     return (
-        <Modal open={open} setOpen={setOpen}>
+        <Modal open={open} setOpen={handleCancel}>
             <form onSubmit={submit}>
                 <div>
                     <Dialog.Title as="h3" className="font-semibold leading-6">
@@ -63,6 +76,7 @@ export const SupportModal = ({
                                 className="mt-1 block w-full"
                                 autoComplete="name"
                                 isFocused={true}
+                                disabled={isSubmitting}
                                 onChange={(e) =>
                                     setData("name", e.target.value)
                                 }
@@ -81,6 +95,7 @@ export const SupportModal = ({
                                 value={data.email}
                                 className="mt-1 block w-full"
                                 autoComplete="email"
+                                disabled={isSubmitting}
                                 onChange={(e) =>
                                     setData("email", e.target.value)
                                 }
@@ -99,6 +114,7 @@ export const SupportModal = ({
                                 value={data.subject}
                                 className="mt-1 block w-full"
                                 autoComplete="subject"
+                                disabled={isSubmitting}
                                 onChange={(e) =>
                                     setData("subject", e.target.value)
                                 }
@@ -114,6 +130,8 @@ export const SupportModal = ({
                             <TextArea
                                 id="description"
                                 name="description"
+                                value={data.description}
+                                disabled={isSubmitting}
                                 onChange={(e) =>
                                     setData("description", e.target.value)
                                 }
@@ -125,12 +143,14 @@ export const SupportModal = ({
                 <ModalActions>
                     <SecondaryButton
                         type="button"
-                        className=""
-                        onClick={() => setOpen(false)}
+                        disabled={isSubmitting}
+                        onClick={handleCancel}
                     >
                         Cancel
                     </SecondaryButton>
-                    <PrimaryButton type="submit">Submit</PrimaryButton>
+                    <PrimaryButton type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Submitting..." : "Submit"}
+                    </PrimaryButton>
                 </ModalActions>
             </form>
         </Modal>

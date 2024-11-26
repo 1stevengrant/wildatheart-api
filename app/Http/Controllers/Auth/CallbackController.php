@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\CheckIfUserShouldBeAdmin;
-use App\Jobs\LogActivity;
+use App\Jobs\LogActivityJob;
 use App\Models\User;
 use Auth0\SDK\Auth0 as Auth0SDK;
 use Auth0\SDK\Exception\StateException;
@@ -25,7 +25,7 @@ class CallbackController extends Controller
     {
         try {
             $response = $this->auth0->exchange();
-            abort_unless($response, 401, dispatch(new LogActivity(
+            abort_unless($response, 401, dispatch(new LogActivityJob(
                 logName: 'auth',
                 description: 'Unauthorized access attempt',
             )));
@@ -38,7 +38,7 @@ class CallbackController extends Controller
 
             CheckIfUserShouldBeAdmin::dispatch($user);
 
-            dispatch(new LogActivity(
+            dispatch(new LogActivityJob(
                 logName: 'auth',
                 description: 'user logged in',
                 properties: ['user' => $user, 'auth0User' => $auth0User],
@@ -52,7 +52,7 @@ class CallbackController extends Controller
             ]);
 
         } catch (StateException $e) {
-            dispatch(new LogActivity(
+            dispatch(new LogActivityJob(
                 logName: 'auth',
                 description: 'Unauthorized access attempt',
                 properties: ['exception' => $e],

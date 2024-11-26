@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SupportRequest;
+use App\Jobs\LogActivityJob;
 use App\Models\Issue;
 
 class SupportRequestController extends Controller
@@ -11,7 +12,11 @@ class SupportRequestController extends Controller
     {
         $request->validated();
 
-        activity()->log('Create Issue');
+        dispatch(new LogActivityJob(
+            description: 'Issue created',
+            causedBy: $request->user(),
+            performedOn: $request->user(),
+        ));
 
         Issue::create([
             'email' => request('email'),

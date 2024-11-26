@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\LogActivityJob;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -18,10 +19,11 @@ class ToggleEventPrivacyController extends Controller
 
         $eventPrivacy = $event->is_private ? 'private' : 'public';
 
-        activity()
-            ->performedOn($event)
-            ->causedBy(auth()->user())
-            ->log('Event marked as '.$eventPrivacy);
+        dispatch(new LogActivityJob(
+            description: 'Toggle Event Privacy',
+            causedBy: auth()->user(),
+            performedOn: $event
+        ));
 
         return redirect()->back()->with(['notifications' => [
             'message' => 'Event privacy updated',

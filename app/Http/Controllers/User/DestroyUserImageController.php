@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\LogActivityJob;
 use Illuminate\Http\Request;
 
 class DestroyUserImageController extends Controller
@@ -14,10 +15,11 @@ class DestroyUserImageController extends Controller
     {
         $request->user()->deleteProfilePhoto();
 
-        activity()
-            ->causedBy($request->user())
-            ->performedOn($request->user())
-            ->log('Profile photo deleted');
+        dispatch(new LogActivityJob(
+            description: 'Profile photo deleted',
+            causedBy: $request->user(),
+            performedOn: $request->user(),
+        ));
 
         return back(303)->with(['notifications' => [
             'message' => 'Profile photo deleted!',

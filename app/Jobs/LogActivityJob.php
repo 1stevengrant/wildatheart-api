@@ -4,11 +4,12 @@ namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class LogActivity implements ShouldQueue
+class LogActivityJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -19,6 +20,8 @@ class LogActivity implements ShouldQueue
         public string $logName = 'default',
         public string $description = 'Activity logged',
         public array $properties = [],
+        public ?Model $causedBy = null,
+        public ?Model $performedOn = null
     ) {}
 
     /**
@@ -26,9 +29,15 @@ class LogActivity implements ShouldQueue
      */
     public function handle(): void
     {
-        activity()
+        $activity = activity()
             ->inLog($this->logName)
-            ->withProperties($this->properties)
-            ->log($this->description);
+            ->causedBy($this->causedBy)
+            ->withProperties($this->properties);
+
+        if ($this->performedOn instanceof Model) {
+            $activity->performedOn($this->performedOn);
+        }
+
+        $activity->log($this->description);
     }
 }

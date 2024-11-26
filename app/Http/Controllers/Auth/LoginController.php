@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\LogActivity;
+use App\Jobs\LogActivityJob;
 use Auth0\SDK\Auth0 as Auth0SDK;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,12 +23,12 @@ class LoginController extends Controller
         $this->auth0->clear();
         session(['url.intended' => url()->previous()]);
 
-        dispatch(new LogActivity(
+        dispatch(new LogActivityJob(
             logName: 'auth',
             description: 'Clearing Auth0 Session',
         ));
 
-        dispatch(new LogActivity(
+        dispatch(new LogActivityJob(
             logName: 'auth',
             description: 'Redirecting to Auth0 Login',
         ));

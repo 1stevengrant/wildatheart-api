@@ -22,11 +22,6 @@ class UpdateEventController extends Controller
 
         $event->update($request->all());
 
-        activity()
-            ->performedOn($event)
-            ->causedBy(auth()->user())
-            ->log('Update Event');
-
         return to_route('my.events.active')->with(['notifications' => [
             'message' => 'Event updated successfully!',
             'type' => 'success',

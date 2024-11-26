@@ -1,6 +1,9 @@
 <?php
 
-it('creates a support ticket', function () {
+use Illuminate\Support\Facades\Queue;
+
+it('creates a support ticket and logs the activity', function () {
+    Queue::fake();
     $attributes = [
         'name' => 'John Doe',
         'email' => 'steven@ghijk.co.uk',
@@ -12,6 +15,8 @@ it('creates a support ticket', function () {
 
     expect($response->status())->toBe(302)
         ->and(\App\Models\Issue::count())->toBe(1);
+
+    Queue::assertPushed(\App\Jobs\LogActivityJob::class);
 });
 
 test('a support ticket requires an email address', function () {
