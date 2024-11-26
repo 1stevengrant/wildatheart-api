@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Attendee\ToggleContactContactedController;
-use App\Http\Controllers\Auth\OneTimeLoginController;
-use App\Http\Controllers\Auth\SuccessAuth0CallbackController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\EditEventController;
 use App\Http\Controllers\Event\HostEventTypeBeforeController;
@@ -30,9 +28,7 @@ use App\Http\Controllers\User\MyContactsController;
 use App\Http\Controllers\User\MyInactiveEventsController;
 use App\Http\Controllers\User\MyProfileController;
 use App\Http\Controllers\User\UpdateUserProfileController;
-
-Route::get('onetime/{token}', OneTimeLoginController::class)->name('onetime.login');
-Route::get('successful', SuccessAuth0CallbackController::class)->name('successful-auth0-callback');
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
 
