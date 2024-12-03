@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Closure;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,8 @@ class LogActivityJob implements ShouldQueue
         public string $description = 'Activity logged',
         public array $properties = [],
         public ?Model $causedBy = null,
-        public ?Model $performedOn = null
+        public ?Model $performedOn = null,
+        public ?Closure $tap = null
     ) {}
 
     /**
@@ -36,6 +38,10 @@ class LogActivityJob implements ShouldQueue
 
         if ($this->performedOn instanceof Model) {
             $activity->performedOn($this->performedOn);
+        }
+
+        if ($this->tap) {
+            $activity->tap($this->tap);
         }
 
         $activity->log($this->description);

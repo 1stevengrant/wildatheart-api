@@ -344,3 +344,24 @@ if (! function_exists('determineSexOfEvent')) {
         return in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT]) ? Event::FOR_WOMEN : Event::FOR_MEN;
     }
 }
+
+if (! function_exists('deepArrayCompare')) {
+    function deepArrayCompare($array1, $array2): bool
+    {
+        if (is_array($array1) && is_array($array2)) {
+            if (count($array1) !== count($array2)) {
+                return false;
+            }
+
+            foreach ($array1 as $key => $value) {
+                if (! array_key_exists($key, $array2) || ! deepArrayCompare($value, $array2[$key])) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return $array1 === $array2;
+    }
+}

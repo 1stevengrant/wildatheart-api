@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogStatamicEntryChanges;
+use App\Listeners\SaveSubsplashItemEntryWithId;
 use App\Listeners\UpdateLastLoginDateTime;
 use App\Models\Attendee;
 use App\Models\Event;
@@ -13,6 +15,10 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Statamic\Events\EntryCreated;
+use Statamic\Events\EntryDeleted;
+use Statamic\Events\EntrySaved;
+use Statamic\Events\EntrySaving;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -28,8 +34,17 @@ class EventServiceProvider extends ServiceProvider
         Login::class => [
             UpdateLastLoginDateTime::class,
         ],
-        \Statamic\Events\EntrySaved::class => [
-            \App\Listeners\SaveSubsplashItemEntryWithId::class,
+        EntrySaved::class => [
+            SaveSubsplashItemEntryWithId::class,
+        ],
+        EntrySaving::class => [
+            LogStatamicEntryChanges::class,
+        ],
+        EntryCreated::class => [
+            LogStatamicEntryChanges::class,
+        ],
+        EntryDeleted::class => [
+            LogStatamicEntryChanges::class,
         ],
     ];
 
