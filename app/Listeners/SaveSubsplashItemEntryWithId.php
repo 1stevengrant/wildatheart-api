@@ -18,11 +18,27 @@ class SaveSubsplashItemEntryWithId
             // $prevId = $entry->id();
             // Ensure the new ID is unique
             if (! $entry->collection()->queryEntries()->where('id', $newId)->first()) {
+
                 $newEntry = Entry::make()
-                    ->blueprint('subsplash_media_item')
+                    ->blueprint($entry->blueprint())
                     ->slug($entry->slug())
                     ->collection($entry->collectionHandle())
-                    ->locale($entry->locale());
+                    ->locale($entry->locale())
+                    ->published($entry->published)
+                    ->date($entry->date);
+
+                // Point any previous relationships to this new entry
+                $relatedEntries = Entry::query()
+                    ->where('data', 'like', "%{$entry->id}%")
+                    ->get();
+
+                foreach ($relatedEntries as $relatedEntry) {
+                    $data = $relatedEntry->data()->all();
+                    $data = str_replace($entry->id, $newEntry->id, json_encode($data));
+                    $data = json_decode($data, true);
+                    $relatedEntry->data($data);
+                    $relatedEntry->save();
+                }
 
                 $data = $entry->data()->except(['id'])->all();
                 $newEntry->data($data);
@@ -32,10 +48,6 @@ class SaveSubsplashItemEntryWithId
                 $entry->delete();
 
                 return redirect($newEntry->edit_url());
-                // $oldEntry = Entry::find($prevId);
-                // if ($oldEntry) {
-                //     $oldEntry->delete();
-                // }
             }
         }
     }
