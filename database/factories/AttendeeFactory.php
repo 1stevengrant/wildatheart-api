@@ -19,10 +19,10 @@ class AttendeeFactory extends Factory
     {
         return [
             'user_id' => User::factory()->create()->id,
-            'given_name' => $this->faker->firstName,
-            'family_name' => $this->faker->lastName,
-            'email' => $this->faker->email,
-            'city' => $this->faker->city,
+            'given_name' => $this->faker->firstName(),
+            'family_name' => $this->faker->lastName(),
+            'email' => $this->faker->email(),
+            'city' => $this->faker->city(),
             'country' => 'US',
             'state' => 'CA',
         ];

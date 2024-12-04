@@ -24,7 +24,7 @@ class NovaImport extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $eventTypes = \App\Models\EventType::all();
 

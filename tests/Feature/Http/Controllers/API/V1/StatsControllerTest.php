@@ -3,7 +3,7 @@
 use App\Models\Event;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });
 
 it('returns the stats', function () {

@@ -15,10 +15,6 @@ class Page extends Model
 
     protected $guarded = ['id'];
 
-    protected $casts = [
-        'content' => 'array',
-    ];
-
     protected $hidden = [
         'created_by',
         'last_updated_by',
@@ -42,6 +38,13 @@ class Page extends Model
         static::updating(static function ($page): void {
             $page->last_updated_by = auth()->id();
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'content' => 'array',
+        ];
     }
 
     public function createdBy(): BelongsTo

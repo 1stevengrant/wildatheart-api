@@ -24,7 +24,7 @@ class DeleteExpiredEmailVerifications extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $this->info('Deleting expired email verification records...');
 

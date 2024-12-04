@@ -15,7 +15,7 @@ class GenerateTypeScript extends Command
 
     protected $description = 'Generate TypeScript types from Statamic blueprints.';
 
-    public function handle()
+    public function handle(): void
     {
         $config = TypeScriptTransformerConfig::create()
             // path where your PHP classes are

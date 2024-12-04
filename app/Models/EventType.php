@@ -38,17 +38,6 @@ class EventType extends BaseModel
 
     const TYPE_FIRE = 'fire';
 
-    protected $casts = [
-        'key_details' => 'array',
-        'photos' => 'array',
-        'event_faqs' => 'array',
-        'event_schedule' => 'array',
-        'is_active' => 'boolean',
-        'event_guide_pages' => 'array',
-        'action_buttons' => 'array',
-        'new_content' => 'array',
-    ];
-
     public static function boot(): void
     {
         parent::boot();
@@ -66,6 +55,20 @@ class EventType extends BaseModel
                 'user' => auth()->user()?->full_name,
             ]);
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'key_details' => 'array',
+            'photos' => 'array',
+            'event_faqs' => 'array',
+            'event_schedule' => 'array',
+            'is_active' => 'boolean',
+            'event_guide_pages' => 'array',
+            'action_buttons' => 'array',
+            'new_content' => 'array',
+        ];
     }
 
     public function events(): HasMany

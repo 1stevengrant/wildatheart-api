@@ -8,22 +8,24 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     Cache::flush();
     $this->transistorService = new TransistorService;
 });
 
 it('returns cached data when available', function () {
     $url = 'https://api.transistor.fm/v1/episodes';
+    $cacheKey = md5($url);
     $cachedData = ['data' => 'cached'];
 
     Cache::shouldReceive('has')
         ->once()
-        ->with($url)
+        ->with($cacheKey)
         ->andReturn(true);
 
     Cache::shouldReceive('get')
         ->once()
-        ->with($url)
+        ->with($cacheKey)
         ->andReturn($cachedData);
 
     $result = $this->transistorService->transistorFetch($url);
@@ -33,12 +35,13 @@ it('returns cached data when available', function () {
 
 it('fetches from API and caches data when not cached', function () {
     $url = 'https://api.transistor.fm/v1/episodes';
+    $cacheKey = md5($url);
     $apiResponse = ['data' => 'from_api'];
     $cacheDuration = (int) config('services.transistor.cache_duration');
 
     Cache::shouldReceive('has')
         ->once()
-        ->with($url)
+        ->with($cacheKey)
         ->andReturn(false);
 
     Http::fake([
@@ -47,7 +50,7 @@ it('fetches from API and caches data when not cached', function () {
 
     Cache::shouldReceive('put')
         ->once()
-        ->with($url, $apiResponse, $cacheDuration);
+        ->with($cacheKey, $apiResponse, $cacheDuration);
 
     $result = $this->transistorService->transistorFetch($url);
 
@@ -56,11 +59,12 @@ it('fetches from API and caches data when not cached', function () {
 
 it('returns errors when API responds with errors', function () {
     $url = 'https://api.transistor.fm/v1/episodes';
+    $cacheKey = md5($url);
     $apiResponse = ['errors' => ['message' => 'Something went wrong']];
 
     Cache::shouldReceive('has')
         ->once()
-        ->with($url)
+        ->with($cacheKey)
         ->andReturn(false);
 
     Http::fake([
@@ -74,10 +78,10 @@ it('returns errors when API responds with errors', function () {
 
 it('throws an exception when API request fails', function () {
     $url = 'https://api.transistor.fm/v1/episodes';
-
+    $cacheKey = md5($url);
     Cache::shouldReceive('has')
         ->once()
-        ->with($url)
+        ->with($cacheKey)
         ->andReturn(false);
 
     Http::fake([

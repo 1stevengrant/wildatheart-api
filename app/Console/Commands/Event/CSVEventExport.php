@@ -24,7 +24,7 @@ class CSVEventExport extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $events = Event::query()
             ->withTrashed()

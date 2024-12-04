@@ -3,7 +3,7 @@
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = \App\Models\Event::factory()->fires()->create();
 });
 test('loads a list of my contacts', function () {

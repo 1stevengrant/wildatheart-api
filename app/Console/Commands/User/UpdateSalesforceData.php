@@ -25,7 +25,7 @@ class UpdateSalesforceData extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $users = collect(Http::get('https://wildatheart.org/json/allies')->json());
 

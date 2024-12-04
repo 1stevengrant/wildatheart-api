@@ -11,6 +11,7 @@ use function Pest\Laravel\getJson;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     // Mock the TransistorService
     $this->transistorServiceMock = Mockery::mock(TransistorService::class);
     $this->app->instance(TransistorService::class, $this->transistorServiceMock);
@@ -156,12 +157,12 @@ it('returns daily readings', function () use ($mockData, $mockScheduled, $mockDr
 
     $responseData = $response->json();
 
-    expect($responseData[0]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
-    expect($responseData[1]['current_episode_slug'])->toEqual('his-child-his-reflection');
-    expect($responseData[2]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
-    expect($responseData[3]['current_episode_slug'])->toEqual('his-child-his-reflection');
-    expect($responseData[4]['current_episode_slug'])->toEqual('what-jesus-weeps-over');
-    expect($responseData[5]['current_episode_slug'])->toEqual('his-child-his-reflection');
+    expect($responseData[0]['current_episode_slug'])->toEqual('what-jesus-weeps-over')
+        ->and($responseData[1]['current_episode_slug'])->toEqual('his-child-his-reflection')
+        ->and($responseData[2]['current_episode_slug'])->toEqual('what-jesus-weeps-over')
+        ->and($responseData[3]['current_episode_slug'])->toEqual('his-child-his-reflection')
+        ->and($responseData[4]['current_episode_slug'])->toEqual('what-jesus-weeps-over')
+        ->and($responseData[5]['current_episode_slug'])->toEqual('his-child-his-reflection');
 });
 
 it('returns limited number of recent daily readings', function () use ($mockData) {

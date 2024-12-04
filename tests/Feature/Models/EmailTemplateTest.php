@@ -5,6 +5,9 @@ use App\Models\User;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+});
 it('returns associated user when lastUpdatedByUser is called', function () {
     $user = User::factory()->create();
     $emailTemplate = EmailTemplate::factory()->create(['last_updated_by' => $user->id]);

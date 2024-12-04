@@ -12,7 +12,7 @@ class ImportSubsplashMediaItems extends Command
 
     protected $description = 'Imports Subsplash Media Items into the Media Items collection.';
 
-    public function handle()
+    public function handle(): void
     {
         $jsonData = json_decode(file_get_contents(storage_path('app/public/audio.json')), true);
         $collection = collect($jsonData);

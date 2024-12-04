@@ -15,14 +15,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Nova\Auth\Impersonatable;
-use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Impersonatable, LogsActivity, Notifiable, SoftDeletes;
+    use HasFactory, HasRoles, Impersonatable, LogsActivity, Notifiable, SoftDeletes;
 
     const ROLE_ADMIN = 'admin';
 
@@ -47,17 +46,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'last_login_at' => 'datetime',
-        'id' => 'integer',
-    ];
-
     protected static function boot(): void
     {
         parent::boot();
@@ -70,6 +58,20 @@ class User extends Authenticatable
             $user->events->each->delete();
             $user->addresses->each->delete();
         });
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
+            'id' => 'integer',
+        ];
     }
 
     public function attendees(): HasManyThrough

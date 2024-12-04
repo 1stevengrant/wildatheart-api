@@ -4,9 +4,8 @@ use App\Models\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     \App\Models\User::factory()->create();
-    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
     $this->event = Event::factory()->fires()->create();
 });
 

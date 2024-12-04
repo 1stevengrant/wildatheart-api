@@ -5,8 +5,7 @@ use App\Models\User;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\UserSeeder::class);
-    $this->seed(\Database\Seeders\EmailTemplateSeeder::class);
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = \App\Models\Event::factory()->fires()->create();
     $this->attendees = Attendee::factory()->count(3)->create([
         'event_id' => $this->event->id,

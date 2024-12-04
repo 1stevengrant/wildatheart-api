@@ -5,7 +5,8 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
-use Tightenco\Ziggy\Ziggy;
+
+//use Tightenco\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -37,7 +38,7 @@ class HandleInertiaRequests extends Middleware
                 ? $this->transformUser($request->user())
                 : null,
             'ziggy' => fn () => [
-                ...(new Ziggy)->toArray(),
+                //                ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
             'notifications' => fn () => Session::get('notifications'),

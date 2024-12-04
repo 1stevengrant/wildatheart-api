@@ -3,7 +3,7 @@
 use App\Models\User;
 
 beforeEach(function () {
-    $this->seed();
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });
 test('only a super admin can access the internal reporting url', function () {
     $user = User::factory()->create(['super' => false]);

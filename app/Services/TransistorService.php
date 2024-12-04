@@ -21,8 +21,10 @@ class TransistorService
         $TRANSISTOR_CACHE_DURATION = config('services.transistor.cache_duration');
         $TRANSISTOR_API_KEY = config('services.transistor.api_key');
 
-        if (Cache::has($url)) {
-            $value = Cache::get($url);
+        $cacheKey = md5($url);
+
+        if (Cache::has($cacheKey)) {
+            $value = Cache::get($cacheKey);
 
             return $value;
         }
@@ -38,7 +40,7 @@ class TransistorService
                 return $json;
             }
 
-            Cache::put($url, $json, (int) $TRANSISTOR_CACHE_DURATION);
+            Cache::put($cacheKey, $json, (int) $TRANSISTOR_CACHE_DURATION);
 
             return $json;
         }

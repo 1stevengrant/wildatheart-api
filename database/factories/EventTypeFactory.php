@@ -17,19 +17,19 @@ class EventTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
+            'name' => $this->faker->word(),
             'is_active' => true,
-            'description' => $this->faker->paragraph,
+            'description' => $this->faker->paragraph(),
             'registration_welcome_video' => 'https://vimeo.com/505766418',
-            'registration_welcome_text' => $this->faker->paragraph,
-            'registration_before_your_event_text' => $this->faker->paragraph,
+            'registration_welcome_text' => $this->faker->paragraph(),
+            'registration_before_your_event_text' => $this->faker->paragraph(),
             'event_schedule' => [
                 'name' => 'Schedule',
             ],
             'event_faqs' => [
                 'name' => 'Schedule',
             ],
-            'summary' => $this->faker->paragraph,
+            'summary' => $this->faker->paragraph(),
         ];
     }
 

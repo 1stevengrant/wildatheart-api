@@ -4,7 +4,7 @@ use App\Models\Event;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });
 
 test('a user cannot claim a gift for an event that has already claimed a gift', function () {

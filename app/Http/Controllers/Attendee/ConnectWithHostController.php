@@ -16,11 +16,12 @@ class ConnectWithHostController extends Controller
 
     public function index(Event $event)
     {
-        $title = "Connect with {$event->host_name} for {$event->name} in {$event->location}";
-        $description = $event->eventType->card_teaser_text;
-        $image = bunnyImage($event->eventType->image);
-        $url = url()->current();
-        $this->seoService->setMetadata($title, $description, $image, $url);
+        $this->seoService->setMetadata(
+            title: "Connect with {$event->host_name} for {$event->name} in {$event->location}",
+            description: $event->eventType->card_teaser_text ?? '',
+            image: bunnyImage($event->eventType->image),
+            url: url()->current()
+        );
 
         return inertia('ConnectWithHostPage', [
             'event' => EventResource::make($event)->resolve(),

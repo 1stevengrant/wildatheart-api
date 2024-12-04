@@ -27,14 +27,6 @@ beforeEach(function () {
     $this->emailTemplate = EmailTemplate::factory()->create();
 });
 
-it('allows an anonymous user to see the form to connect with an event host', function () {
-
-    $this->get(route('connect.index', $this->event))
-        ->assertInertia(fn (Assert $assert) => $assert
-            ->component('ConnectWithHostPage')
-        );
-});
-
 it('makes a connection between the anonymous user and host', function () {
     $this->withoutExceptionHandling();
     $this->post(route('connect.store', $this->event), $this->attributes)
@@ -43,6 +35,16 @@ it('makes a connection between the anonymous user and host', function () {
 
     Mail::assertQueued(AttendeeRegistered::class);
     Mail::assertQueued(AttendeeConnectedToHost::class);
+});
+
+it('allows an anonymous user to see the form to connect with an event host', function () {
+    $this->withoutExceptionHandling();
+    $this->get(route('connect.index', $this->event))
+        ->assertInertia(fn (Assert $assert) => $assert
+            ->component('ConnectWithHostPage')
+        )
+        ->assertStatus(200)
+        ->assertSeeHtml('Connect with '.$this->event->host_name);
 });
 
 test('making a contact requires a first name', function () {

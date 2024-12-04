@@ -8,10 +8,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (! Schema::hasTable('addresses')) {
             Schema::create('addresses', function (Blueprint $table) {
@@ -221,10 +219,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('role_has_permissions', function (Blueprint $table) {
             $table->dropForeign('role_has_permissions_permission_id_foreign');

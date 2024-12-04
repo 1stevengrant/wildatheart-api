@@ -1,10 +1,9 @@
 <?php
 
-use Database\Seeders\EventTypeSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    $this->seed(EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = \App\Models\Event::factory()->approved()->fires()->create();
 });
 

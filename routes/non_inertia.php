@@ -4,6 +4,7 @@ use App\Http\Controllers\Attendee\ExportContacts;
 use App\Http\Controllers\Auth\CallbackController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('login', LoginController::class)->name('login')->middleware('guest');
 Route::get('callback', CallbackController::class)->name('callback');

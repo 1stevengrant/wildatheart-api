@@ -6,6 +6,9 @@ use App\Models\Event;
 use Database\Seeders\EventTypeSeeder;
 use Illuminate\Support\Facades\Mail;
 
+beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+});
 it('sends the welcome email', function () {
     Mail::fake();
 

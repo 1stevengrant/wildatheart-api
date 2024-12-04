@@ -12,7 +12,7 @@ class ImportSubsplashMediaSeries extends Command
 
     protected $description = 'Imports Subsplash Media Series into the Media Series collection.';
 
-    public function handle()
+    public function handle(): void
     {
         $jsonData = json_decode(file_get_contents(storage_path('app/public/series.json')), true);
         $collection = collect($jsonData);

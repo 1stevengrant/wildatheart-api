@@ -2,15 +2,33 @@
 
 namespace App\Providers;
 
+use App\Models\Attendee;
 use App\Models\Event;
+use App\Models\Issue;
 use App\Models\User;
+use App\Observers\AttendeeObserver;
+use App\Observers\EventObserver;
+use App\Observers\IssueObserver;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * The path to your application's "home" route.
+     *
+     * Typically, users are redirected here after authentication.
+     *
+     * @var string
+     */
+    public const HOME = '/';
+
     /**
      * Register any application services.
      */
@@ -44,5 +62,28 @@ class AppServiceProvider extends ServiceProvider
                     ->whereNotEmpty($column);
             }
         );
+
+        $this->bootEvent();
+        $this->bootRoute();
+    }
+
+    public function bootEvent(): void
+    {
+        Event::observe(EventObserver::class);
+        Issue::observe(IssueObserver::class);
+        Attendee::observe(AttendeeObserver::class);
+
+    }
+
+    public function bootRoute(): void
+    {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(600)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('email', function (Request $request) {
+            return Limit::perMinute(1)->by($request->ip());
+        });
+
     }
 }

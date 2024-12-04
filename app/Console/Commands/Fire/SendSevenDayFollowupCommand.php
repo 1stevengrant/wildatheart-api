@@ -25,7 +25,7 @@ class SendSevenDayFollowupCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         Event::query()
             ->lastMonthlyEmailSentAgo(7)

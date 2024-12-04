@@ -7,6 +7,7 @@ use Statamic\Facades\Entry;
 uses(Tests\TestCase::class, RefreshDatabase::class)->in('Feature');
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     // Ensure the 'pages' collection exists
     if (! Collection::handleExists('pages')) {
         Collection::make('pages')->save();

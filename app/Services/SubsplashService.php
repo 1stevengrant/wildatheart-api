@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Cache;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class SubsplashService
@@ -42,8 +42,9 @@ class SubsplashService
     {
         $SUBSPLASH_CACHE_DURATION = config('services.subsplash.cache_duration');
 
-        if (Cache::has($url)) {
-            $value = Cache::get($url);
+        $cacheKey = md5($url);
+        if (Cache::has($cacheKey)) {
+            $value = Cache::get($cacheKey);
 
             return $value;
         }
@@ -63,7 +64,7 @@ class SubsplashService
 
         if ($response->successful()) {
             $json = $response->json();
-            Cache::put($url, $json, (int) $SUBSPLASH_CACHE_DURATION);
+            Cache::put($cacheKey, $json, (int) $SUBSPLASH_CACHE_DURATION);
 
             return $json;
         }

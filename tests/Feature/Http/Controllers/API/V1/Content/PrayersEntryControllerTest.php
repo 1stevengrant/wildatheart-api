@@ -6,7 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\Entry;
 
 uses(RefreshDatabase::class);
-
+beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+});
 it('returns 404 when page not found', function () {
     // Arrange
     $nonExistentSlug = 'non-existent-page';

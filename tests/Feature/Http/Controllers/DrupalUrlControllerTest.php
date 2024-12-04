@@ -2,6 +2,7 @@
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     // Mock the authenticated user
     $this->user = \App\Models\User::factory()->create();
     $this->actingAs($this->user);

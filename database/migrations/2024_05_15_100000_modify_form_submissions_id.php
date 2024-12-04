@@ -6,14 +6,14 @@ use Statamic\Eloquent\Database\BaseMigration as Migration;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::table($this->prefix('form_submissions'), function (Blueprint $table) {
             $table->double('id', 14, 4)->index()->unique()->change();
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table($this->prefix('form_submissions'), function (Blueprint $table) {
             $table->dropUnique('form_submissions_id_unique');

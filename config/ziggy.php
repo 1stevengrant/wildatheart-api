@@ -15,7 +15,6 @@ return [
         'statamic.*',
         'v1.stats.*',
         'content.*',
-        'sanctum.*',
         'v1.*',
     ],
 ];
