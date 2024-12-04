@@ -93,7 +93,7 @@ class ImportEvent implements ShouldQueue
             return EventType::where('name', EventType::BECOMING_A_KING)->first()->id;
         }
         if ($drupalEventType === 'Basic Event') {
-            return EventType::where('name', EventType::WAH_BASIC)->first()->id;
+            return EventType::where('name', EventType::WAH_RETREAT)->first()->id;
         }
 
         if ($drupalEventType === 'Core Event') {

@@ -15,7 +15,7 @@ class EventTypeSeeder extends Seeder
     {
         $eventTypes = collect([
             EventType::FIRES,
-            EventType::WAH_BASIC,
+            EventType::WAH_RETREAT,
             EventType::CAPTIVATING_CORE_RETREAT,
             EventType::BECOMING_A_KING,
             EventType::WAH_EXPERIENCE,

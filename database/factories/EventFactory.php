@@ -101,11 +101,11 @@ class EventFactory extends Factory
         });
     }
 
-    public function basicRetreat(): self
+    public function wahRetreat(): self
     {
         return $this->state(function (array $attributes) {
             return [
-                'event_type_id' => EventType::where('name', EventType::WAH_BASIC)->first()->id,
+                'event_type_id' => EventType::where('name', EventType::WAH_RETREAT)->first()->id,
                 'start_date' => now()->addDay(),
                 'end_date' => now()->addDays(3),
                 'sex' => Event::FOR_MEN,

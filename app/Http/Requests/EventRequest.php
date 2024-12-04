@@ -21,12 +21,17 @@ class EventRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'country' => ['required', 'string'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
             'start_date' => ['required', 'date'],
-            'number_of_items_in_material_order' => ['required', 'numeric'],
         ];
+
+        $rules['number_of_items_in_material_order'] = $this->route('eventType')?->hasMaterialsOrder()
+            ? ['required', 'numeric']
+            : ['nullable', 'numeric'];
+
+        return $rules;
     }
 }

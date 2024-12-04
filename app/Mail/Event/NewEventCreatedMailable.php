@@ -27,7 +27,7 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
     public function __construct(public Event $event)
     {
         match ($this->event->eventType->name) {
-            EventType::WAH_BASIC => $this->emailTemplate = $this->getEmailTemplate('wah-retreat-created'),
+            EventType::WAH_RETREAT => $this->emailTemplate = $this->getEmailTemplate('wah-retreat-created'),
             EventType::WAH_EXPERIENCE => $this->emailTemplate = $this->getEmailTemplate('wild-at-heart-experience-created'),
             EventType::CAPTIVATING_EXPERIENCE => $this->emailTemplate = $this->getEmailTemplate('captivating-experience-created'),
             EventType::CAPTIVATING_CORE_RETREAT => $this->emailTemplate = $this->getEmailTemplate('captivating-retreat-created'),

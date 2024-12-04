@@ -57,7 +57,7 @@ it('caches the stats for an hour', function () {
 
 it('returns the number of upcoming retreats', function () {
     Event::factory()->fires()->create();
-    Event::factory()->basicRetreat()->create();
+    Event::factory()->wahRetreat()->create();
     Event::factory()->captivatingCoreRetreat()->create();
     Event::factory()->becomingAKingRetreat()->create();
 

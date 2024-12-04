@@ -13,7 +13,7 @@ beforeEach(function () {
 
 it('adds the end date for a retreat event type', function () {
     $event = Event::factory()
-        ->basicRetreat()
+        ->wahRetreat()
         ->create([
             'user_id' => $this->user->id,
         ]);

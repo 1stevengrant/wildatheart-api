@@ -24,7 +24,7 @@ class DrupalUrlController extends Controller
     public function courses(Request $request, string $course)
     {
         $eventTypes = [
-            'basic' => EventType::WAH_BASIC,
+            'basic' => EventType::WAH_RETREAT,
             'core' => EventType::CAPTIVATING_CORE_RETREAT,
             'becomingakingretreat' => EventType::BECOMING_A_KING,
             'wildatheart' => EventType::WAH_EXPERIENCE,

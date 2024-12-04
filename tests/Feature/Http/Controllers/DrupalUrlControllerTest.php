@@ -69,7 +69,7 @@ it('logs activity and redirects to the event when event is found', function () {
 it('logs activity and redirects to event type when course matches', function () {
     // Define the event type mapping and expected event type
     $course = 'basic';
-    $eventType = \App\Models\EventType::factory()->create(['name' => \App\Models\EventType::WAH_BASIC]);
+    $eventType = \App\Models\EventType::factory()->create(['name' => \App\Models\EventType::WAH_RETREAT]);
 
     // Make a GET request to the /drupal/courses/{course} route
     $response = $this->get('/drupal/courses/'.$course);

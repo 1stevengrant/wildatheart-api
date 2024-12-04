@@ -54,7 +54,7 @@ it('gets events where the last monthly email was sent more than 7 days ago', fun
 
 it('gets retreats only', function () {
     Event::factory()->fires()->create();
-    Event::factory()->basicRetreat()->create();
+    Event::factory()->wahRetreat()->create();
     Event::factory()->captivatingCoreRetreat()->create();
     Event::factory()->becomingAKingRetreat()->create();
 
@@ -66,7 +66,7 @@ it('gets retreats only', function () {
 });
 
 it('gets events that are upcoming', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->addDays(1),
     ]);
 
@@ -78,7 +78,7 @@ it('gets events that are upcoming', function () {
 });
 
 it('does not get events with a start date of more than 1 year ago', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subYear()->subDay(),
     ]);
 
@@ -90,11 +90,11 @@ it('does not get events with a start date of more than 1 year ago', function () 
 });
 
 it('gets events with a start date in the last year', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subYear()->addDay(),
     ]);
 
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subYear()->subDay(),
     ]);
 
@@ -106,11 +106,11 @@ it('gets events with a start date in the last year', function () {
 });
 
 it('gets retreats that are upcoming', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->addDay(),
     ]);
 
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subDay(),
     ]);
 
@@ -123,11 +123,11 @@ it('gets retreats that are upcoming', function () {
 });
 
 it('gets inactive events', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subDay(),
     ]);
 
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subDays(2),
     ]);
 
@@ -139,11 +139,11 @@ it('gets inactive events', function () {
 });
 
 it('gets active events', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->addDay(),
     ]);
 
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subDay(),
     ]);
 
@@ -155,12 +155,12 @@ it('gets active events', function () {
 });
 
 it('gets events that were updated this year', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'created_at' => now()->subYear(),
         'updated_at' => now()->startOfYear(),
     ]);
 
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'updated_at' => now()->subYear(),
     ]);
 
@@ -172,11 +172,11 @@ it('gets events that were updated this year', function () {
 });
 
 it('gets events that that occurred this year', function () {
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->subYear(),
     ]);
 
-    Event::factory()->basicRetreat()->create([
+    Event::factory()->wahRetreat()->create([
         'start_date' => now()->startOfYear(),
     ]);
 

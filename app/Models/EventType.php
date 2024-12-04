@@ -16,7 +16,7 @@ class EventType extends BaseModel
 
     protected $guarded = ['id'];
 
-    const WAH_BASIC = 'Wild at Heart Retreat';
+    const WAH_RETREAT = 'Wild at Heart Retreat';
 
     const CAPTIVATING_CORE_RETREAT = 'Captivating Retreat';
 
