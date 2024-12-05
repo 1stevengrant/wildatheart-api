@@ -12,7 +12,7 @@ export type Event = {
     gift_requested: boolean;
     id: string;
     eventType: string;
-    event_type: unknown;
+    event_type: any;
     event_type_image?: string;
     eventTypeData: any;
     host: string;
