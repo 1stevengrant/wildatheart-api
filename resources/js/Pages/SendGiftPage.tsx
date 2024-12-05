@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Link, useForm, usePage } from "@inertiajs/react";
+import { singular } from "pluralize";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input";
@@ -20,6 +21,7 @@ import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
+import { Event } from "@/types/Event";
 
 const SendGiftPage = () => {
     const page = usePage();
@@ -60,7 +62,8 @@ const SendGiftPage = () => {
                         <HeadingOne>
                             Huzzah!
                             <br />
-                            Your Fire has been registered.
+                            Your {singular(event.event_type.name)} has been
+                            registered.
                         </HeadingOne>
 
                         <p className="mt-8">
