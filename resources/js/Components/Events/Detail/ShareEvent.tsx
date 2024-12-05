@@ -64,7 +64,9 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
     };
 
     return (
-        <div className={`${className}`}>
+        <div
+            className={`${className} shadow-xl hover:shadow-none transition absolute top-[20px] right-4 bg-white z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-orange duration-200 ease-in-out`}
+        >
             <button
                 className={`flex items-center space-x-2 rounded-full`}
                 onClick={() => setOpen(true)}
