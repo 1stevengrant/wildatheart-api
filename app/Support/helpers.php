@@ -341,7 +341,7 @@ if (! function_exists('getCountryCodeFromCountryName')) {
 if (! function_exists('determineSexOfEvent')) {
     function determineSexOfEvent(EventType $eventType): string
     {
-        return in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT]) ? Event::FOR_WOMEN : Event::FOR_MEN;
+        return in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT, EventType::CAPTIVATING_FIRE]) ? Event::FOR_WOMEN : Event::FOR_MEN;
     }
 }
 

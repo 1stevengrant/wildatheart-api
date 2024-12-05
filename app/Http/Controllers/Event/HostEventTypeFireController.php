@@ -14,7 +14,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class HostFireController extends Controller
+class HostEventTypeFireController extends Controller
 {
     /**
      * Handle the incoming request.

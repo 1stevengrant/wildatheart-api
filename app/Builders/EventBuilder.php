@@ -204,4 +204,9 @@ class EventBuilder extends Builder
             $endDate,
         ]);
     }
+
+    public function name(string $name, string $operator = "="): EventBuilder
+    {
+        return $this->where('name', $operator, "$name");
+    }
 }

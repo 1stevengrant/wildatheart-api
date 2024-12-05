@@ -32,6 +32,8 @@ class EventType extends BaseModel
 
     const FIRES = 'Fires';
 
+    const CAPTIVATING_FIRE = 'Captivating Fires';
+
     const TYPE_RETREAT = 'retreat';
 
     const TYPE_EXPERIENCE = 'experience';

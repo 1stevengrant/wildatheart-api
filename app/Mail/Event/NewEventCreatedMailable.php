@@ -35,6 +35,7 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
             EventType::BECOMING_A_KING => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-retreat-event-created'),
             EventType::SURVIVAL_SCHOOL => $this->emailTemplate = $this->getEmailTemplate('survival-school-event-created'),
             EventType::FIRES => $this->emailTemplate = $this->getEmailTemplate('send-welcome-email'),
+            EventType::CAPTIVATING_FIRE => $this->emailTemplate = $this->getEmailTemplate('captivating-fires-welcome-email'),
         };
     }
 

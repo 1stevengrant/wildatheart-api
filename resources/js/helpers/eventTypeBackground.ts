@@ -2,6 +2,7 @@ import {
     EventTypeBecomingAKingExperience,
     EventTypeBecomingAKingRetreat,
     EventTypeCaptivatingExperience,
+    EventTypeCaptivatingFires,
     EventTypeCaptivatingRetreat,
     EventTypeFires,
     EventTypeWahExperience,
@@ -11,6 +12,8 @@ import {
 export const eventTypeBackground = (eventTypeSlug: string) => {
     switch (eventTypeSlug) {
         case EventTypeFires:
+            return "from-[#8E3920]";
+        case EventTypeCaptivatingFires:
             return "from-[#8E3920]";
         case EventTypeCaptivatingRetreat:
             return "from-[#73919C]";

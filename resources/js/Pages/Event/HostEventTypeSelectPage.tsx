@@ -13,7 +13,10 @@ import { EmptyLayoutWrapper } from "@/Components/Layout/Elements/EmptyLayoutWrap
 import { SnapGrid } from "@/Components/SnapGrid";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
-import { EventTypeFires } from "@/helpers/eventNames";
+import {
+    EventTypeCaptivatingFires,
+    EventTypeFires,
+} from "@/helpers/eventNames";
 import {
     experienceTypeDescription,
     fireTypeDescription,
@@ -36,6 +39,28 @@ const HostEventTypeSelectPage = () => {
 
     const [selectedType, setSelectedType] = useState<EventType | null>(null);
     const pageTitle = `Select an Event Type`;
+
+    const getRouteForEventType = (eventType: EventType) => {
+        switch (eventType.slug) {
+            case EventTypeFires:
+                return route("host.fire");
+            case EventTypeCaptivatingFires:
+                return route("host.captivating-fire");
+            default:
+                return route("host.eventType.index", eventType.slug);
+        }
+    };
+
+    const getEventTypeDisplay = (eventType: EventType) => {
+        switch (eventType.slug) {
+            case EventTypeFires:
+                return "Fire";
+            case EventTypeCaptivatingFires:
+                return "Captivating Fire";
+            default:
+                return eventType.name;
+        }
+    };
 
     return (
         <EmptyLayout title={pageTitle}>
@@ -111,17 +136,9 @@ const HostEventTypeSelectPage = () => {
                     {selectedType && (
                         <Link
                             className={`${primaryButtonClasses}`}
-                            href={route(
-                                selectedType.slug === EventTypeFires
-                                    ? "host.fire"
-                                    : "host.eventType.index",
-                                selectedType.slug
-                            )}
+                            href={getRouteForEventType(selectedType)}
                         >
-                            Create Your{" "}
-                            {selectedType.slug === EventTypeFires
-                                ? "Fire"
-                                : selectedType.name}
+                            Create Your {getEventTypeDisplay(selectedType)}
                             <ArrowRightIcon className={`w-4 h-4 ml-2`} />
                         </Link>
                     )}
