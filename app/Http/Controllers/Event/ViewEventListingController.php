@@ -21,12 +21,12 @@ class ViewEventListingController extends Controller
             return redirect()->route('login');
         }
 
-        $title = "Connect with {$event->host_name} for {$event->name} in {$event->location}";
-        $description = preg_replace('/\s+/', ' ', $event->eventType->card_teaser_text);
-        $image = bunnyImage($event->eventType->image);
-        $url = url()->current();
-
-        $this->seoService->setMetadata($title, $description, $image, $url);
+        $this->seoService->setMetadata(
+            title: "Connect with {$event->host_name} for {$event->name} in {$event->location}",
+            description: preg_replace('/\s+/', ' ', $event->eventType->card_teaser_text),
+            image: bunnyImage($event->eventType->image),
+            url: url()->current(),
+        );
 
         return inertia('ViewEventPage', [
             'event' => EventResource::make($event)->resolve(),
