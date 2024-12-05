@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\Attendee\ToggleContactContactedController;
+use App\Http\Controllers\Event\CaptivatingFireController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\EditEventController;
 use App\Http\Controllers\Event\HostEventTypeBeforeController;
-use App\Http\Controllers\Event\CaptivatingFireController;
 use App\Http\Controllers\Event\HostEventTypeController;
 use App\Http\Controllers\Event\HostEventTypeCreateEventController;
 use App\Http\Controllers\Event\HostEventTypeFaqsController;
