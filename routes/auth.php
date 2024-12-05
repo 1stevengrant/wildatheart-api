@@ -4,14 +4,14 @@ use App\Http\Controllers\Attendee\ToggleContactContactedController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\EditEventController;
 use App\Http\Controllers\Event\HostEventTypeBeforeController;
-use App\Http\Controllers\Event\HostEventTypeCaptivatingFireController;
+use App\Http\Controllers\Event\CaptivatingFireController;
 use App\Http\Controllers\Event\HostEventTypeController;
 use App\Http\Controllers\Event\HostEventTypeCreateEventController;
 use App\Http\Controllers\Event\HostEventTypeFaqsController;
-use App\Http\Controllers\Event\HostEventTypeFireController;
 use App\Http\Controllers\Event\HostEventTypeMailingAddressController;
 use App\Http\Controllers\Event\HostEventTypeScheduleController;
 use App\Http\Controllers\Event\HostEventTypeSelectController;
+use App\Http\Controllers\Event\StandardFireController;
 use App\Http\Controllers\Event\ToggleEventApprovedAtController;
 use App\Http\Controllers\Event\ToggleEventPrivacyController;
 use App\Http\Controllers\Event\UpdateEventController;
@@ -45,11 +45,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('host')->name('host.')->group(function () {
             Route::get('/', HostProfileController::class)->name('index');
-            Route::get('fire', [HostEventTypeFireController::class, 'index'])->name('fire');
-            Route::post('fire', [HostEventTypeFireController::class, 'store'])->name('fire.store');
+            Route::get('fire', [StandardFireController::class, 'index'])->name('fire');
+            Route::post('fire', [StandardFireController::class, 'store'])->name('fire.store');
 
-            Route::get('captivating-fire', [HostEventTypeCaptivatingFireController::class, 'index'])->name('captivating-fire');
-            Route::post('captivating-fire', [HostEventTypeCaptivatingFireController::class, 'store'])->name('captivating-fire.store');
+            Route::get('captivating-fire', [CaptivatingFireController::class, 'index'])->name('captivating-fire');
+            Route::post('captivating-fire', [CaptivatingFireController::class, 'store'])->name('captivating-fire.store');
         });
 
         Route::prefix('gift')->name('gift.')->group(function () {

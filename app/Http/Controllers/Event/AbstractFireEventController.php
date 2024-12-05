@@ -11,18 +11,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
 use App\Models\EventType;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class HostEventTypeCaptivatingFireController extends Controller
+abstract class AbstractFireEventController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function index(Request $request)
+    abstract protected function getEventType(): string;
+
+    abstract protected function getViewName(): string;
+
+    public function index()
     {
-        return inertia('HostCaptivatingFirePage', [
-            'eventType' => EventType::where('name', EventType::CAPTIVATING_FIRE)->first(),
+        return inertia($this->getViewName(), [
+            'eventType' => EventType::where('name', $this->getEventType())->first(),
         ]);
     }
 
@@ -31,7 +31,7 @@ class HostEventTypeCaptivatingFireController extends Controller
         $request->validated();
 
         $event = CreateFireEventType::make()->handle(
-            eventType: EventType::where('name', EventType::CAPTIVATING_FIRE)->first(),
+            eventType: EventType::where('name', $this->getEventType())->first(),
             data: $request->all()
         );
 
