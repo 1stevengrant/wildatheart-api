@@ -205,7 +205,7 @@ class EventBuilder extends Builder
         ]);
     }
 
-    public function name(string $name, string $operator = "="): EventBuilder
+    public function name(string $name, string $operator = '='): EventBuilder
     {
         return $this->where('name', $operator, "$name");
     }

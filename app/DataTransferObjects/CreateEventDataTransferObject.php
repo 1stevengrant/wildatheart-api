@@ -5,14 +5,14 @@ namespace App\DataTransferObjects;
 readonly class CreateEventDataTransferObject
 {
     public function __construct(
-        public string  $name,
+        public string $name,
         public ?string $streetAddress,
         public ?string $state,
         public ?string $city,
         public ?string $zip,
-        public string  $country,
-        public float   $latitude,
-        public float   $longitude,
+        public string $country,
+        public float $latitude,
+        public float $longitude,
         public ?string $region,
         public ?string $district,
         public ?string $locality,

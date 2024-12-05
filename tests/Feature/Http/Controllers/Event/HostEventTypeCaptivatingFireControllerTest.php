@@ -25,7 +25,7 @@ it('creates a captivating fire', function () {
         'neighborhood' => 'Skid Row',
     ];
 
-    $this->post(route("host.captivating-fire.store"), $attributes);
+    $this->post(route('host.captivating-fire.store'), $attributes);
     $event = \App\Models\Event::query()->name('Captivating Hearts')->first();
     expect($event->name)->toBe('Captivating Hearts')
         ->and($event->eventType->name)->toBe(EventType::CAPTIVATING_FIRE)

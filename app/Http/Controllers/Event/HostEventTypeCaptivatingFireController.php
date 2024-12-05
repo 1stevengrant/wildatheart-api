@@ -9,7 +9,6 @@ use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
-use App\Jobs\LogActivityJob;
 use App\Models\EventType;
 use App\Models\User;
 use Illuminate\Http\Request;
