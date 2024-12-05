@@ -11,7 +11,7 @@ export const RetreatsFilter = () => {
     const { types, handleTypesChange, retreatEventTypes } = useTypes();
 
     return (
-        <div className={`border-b border-grey-darker py-8`}>
+        <div className={`border-b border-n400 py-8`}>
             <FilterTypeWrapper
                 icon={<RetreatsIcon className={`stroke-white w-8 h-8`} />}
                 title={`Multi-Day Retreats`}

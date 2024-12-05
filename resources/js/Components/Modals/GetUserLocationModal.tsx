@@ -94,7 +94,7 @@ export const GetUserLocationModal = () => {
             )}
 
             {positionError && (
-                <p className={`text-center text-red-dark`}>
+                <p className={`text-center text-r200`}>
                     We were unable to get your location. Please try again.
                 </p>
             )}

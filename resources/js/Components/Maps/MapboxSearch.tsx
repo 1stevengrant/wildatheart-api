@@ -51,7 +51,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
             </InputLabel>
             <Combobox value={selected} onChange={handleSelect}>
                 <div className="relative">
-                    <div className="relative flex w-full cursor-default items-center rounded-lg border-2 bg-black pl-4 border-grey-darker focus-within:border-orange">
+                    <div className="relative flex w-full cursor-default items-center rounded-lg border-2 bg-black pl-4 border-n400 focus-within:border-p200">
                         <MapPinIcon className="h-5 w-5 text-white" />
                         <Combobox.Input
                             id="event_location"
@@ -70,7 +70,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                                 Loading...
                             </div>
                         ) : error ? (
-                            <div className="relative cursor-default select-none px-4 py-2 text-red-500">
+                            <div className="relative cursor-default select-none px-4 py-2 text-r200">
                                 {error}
                             </div>
                         ) : results.length === 0 && query !== "" ? (
@@ -84,7 +84,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                                     className={({ active }) =>
                                         `relative cursor-default select-none py-2 pl-10 pr-4 ${
                                             active
-                                                ? "bg-orange text-white"
+                                                ? "bg-p200 text-white"
                                                 : "text-gray-900"
                                         }`
                                     }
@@ -106,7 +106,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                                                     className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
                                                         active
                                                             ? "text-white"
-                                                            : "text-orange"
+                                                            : "text-p200"
                                                     }`}
                                                 >
                                                     <MapPinIcon

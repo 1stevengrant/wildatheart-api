@@ -15,7 +15,7 @@ import { Event } from "@/types/Event";
 
 export const MobileEventListCard = ({ event }: { event: Event }) => {
     return (
-        <li className={`border border-grey-darker rounded-lg p-4`}>
+        <li className={`border border-n400 rounded-lg p-4`}>
             <Link className={`flex space-x-4`} href={event.url}>
                 <div>
                     <img
@@ -25,8 +25,8 @@ export const MobileEventListCard = ({ event }: { event: Event }) => {
                     />
                 </div>
                 <div className={`flex-1 flex flex-col justify-between`}>
-                    <div className={`leading-tighter text-xs`}>
-                        <p className={`text-grey-200`}>
+                    <div className={`leading-tighter text-xxs`}>
+                        <p className={`text-n40`}>
                             {event.type_group === experienceTypeGroup &&
                                 `6-part video study for ${event.sex === EVENT_FOR_MEN ? `Men` : `Women`}`}
                             {event.type_group === fireTypeGroup && (
@@ -53,7 +53,7 @@ export const MobileEventListCard = ({ event }: { event: Event }) => {
                             <UserAvatar image={event.host_photo} />
                         )}
                         <div
-                            className={`flex flex-col text-grey-200 leading-tighter text-sm`}
+                            className={`flex flex-col text-n40 leading-tighter text-sm`}
                         >
                             {event.type_group === fireTypeGroup && (
                                 <div>{event.name} Fire</div>

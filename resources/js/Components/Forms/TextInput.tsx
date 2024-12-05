@@ -31,8 +31,8 @@ export default forwardRef(function TextInput(
         <input
             {...props}
             type={type}
-            className={`p-2 border border-grey-darker w-full bg-form rounded-md focus:border-orange focus:outline-none
-                focus:ring-orange text-white block ${className}`}
+            className={`p-2 border border-n400 w-full bg-n900 rounded-md focus:border-p200 focus:outline-none
+                focus:ring-p200 text-white block ${className}`}
             ref={localRef}
         />
     );

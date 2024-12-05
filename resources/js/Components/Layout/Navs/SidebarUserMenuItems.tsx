@@ -12,7 +12,7 @@ import { useSetRecoilState } from "recoil";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
 import { logoutModalAtom } from "@/store/logoutModalAtom";
 
-const linkClasses = `flex items-center space-x-3 hover:text-orange`;
+const linkClasses = `flex items-center space-x-3 hover:text-p200`;
 
 const navItems = [
     {
@@ -47,7 +47,7 @@ export const SidebarUserMenuItems = () => {
                 <button
                     onClick={() => setLogoutModalOpen(true)}
                     className={classNames(
-                        `flex items-center space-x-3 hover:text-orange`,
+                        `flex items-center space-x-3 hover:text-p200`,
                         `w-full`
                     )}
                 >

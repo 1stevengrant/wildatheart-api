@@ -12,7 +12,7 @@ export const QuickFilters = () => {
         <div className="sticky top-0">
             <ToggleFilterPanelButton />
             <div
-                className={`border-b border-grey-darker py-2 md:py-6 md:px-4 rounded-b-lg`}
+                className={`border-b border-n400 py-2 md:py-6 md:px-4 rounded-b-lg`}
             >
                 <div className={`flex items-center justify-center space-x-4`}>
                     <ResetAll />

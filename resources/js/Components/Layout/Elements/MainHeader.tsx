@@ -17,7 +17,7 @@ export const MainHeader = () => {
             : false;
     };
 
-    const textStyles = `hover:border-orange hover:text-orange transition ease-in-out duration-150`;
+    const textStyles = `hover:border-p200 hover:text-p200 transition ease-in-out duration-150`;
 
     return (
         <header

@@ -14,7 +14,7 @@ export const ConnectWithHost = ({ className }: { className?: string }) => {
             ?.connectedWithHost ?? false;
     return (
         <div
-            className={className + " rounded-lg border border-grey-darker p-8"}
+            className={className + " rounded-lg border border-n400 p-8"}
         >
             {hasConnectedWithHost ? (
                 <>

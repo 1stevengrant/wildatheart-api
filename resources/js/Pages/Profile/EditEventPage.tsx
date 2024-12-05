@@ -255,7 +255,7 @@ const EditEventPage = () => {
                                         <FireMarker className={"w-10 h-10"} />
                                     ) : (
                                         <MapPinIcon
-                                            className={"w-10 h-10 text-orange"}
+                                            className={"w-10 h-10 text-p200"}
                                         />
                                     )}
                                 </Marker>
@@ -301,7 +301,7 @@ const EditEventPage = () => {
                         Update This {singular(eventTypeName)}
                     </PrimaryButton>
                     <Link
-                        className={"text-grey-200 inline-block text-center"}
+                        className={"text-n40 inline-block text-center"}
                         href={route("my.events.active")}
                     >
                         Cancel

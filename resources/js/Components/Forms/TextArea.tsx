@@ -30,8 +30,8 @@ export default forwardRef(function Textarea(
         <textarea
             {...props}
             className={
-                "p-2 border border-grey-border w-full bg-form rounded-md focus:border-orange focus:outline-none" +
-                " focus:ring-orange text-white " +
+                "p-2 border border-n700 w-full bg-n900 rounded-md focus:border-p200 focus:outline-none" +
+                " focus:ring-p200 text-white " +
                 className
             }
             ref={localRef}

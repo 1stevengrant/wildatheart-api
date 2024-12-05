@@ -53,7 +53,7 @@ export const EventTypeSelectButton = ({
         >
             <button
                 onClick={() => setSelectedType(type)}
-                className={`border-4 rounded-2xl relative ${isSelected ? "border-white" : "border-grey-border hover:border-orange"}`}
+                className={`border-4 rounded-2xl relative ${isSelected ? "border-white" : "border-n700 hover:border-p200"}`}
             >
                 {type.image ? (
                     <img

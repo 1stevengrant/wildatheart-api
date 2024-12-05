@@ -11,7 +11,7 @@ export default function FooterNavLink({
     return (
         <Link
             {...props}
-            className={"" + (active ? " text-orange" : "") + className}
+            className={"" + (active ? " text-p200" : "") + className}
         >
             {children}
         </Link>

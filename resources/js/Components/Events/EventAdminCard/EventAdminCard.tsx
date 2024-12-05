@@ -11,12 +11,12 @@ import { EventTypeFires } from "@/helpers/eventNames";
 import { Event } from "@/types/Event";
 
 export const EventAdminCard = ({ event }: { event: Event }) => {
-    const eventLinkClasses = `hover:bg-orange bg-[#353535] rounded flex items-center space-x-2 capitalize px-2 md:px-4 py-2 font-semibold`;
+    const eventLinkClasses = `hover:bg-p200 bg-[#353535] rounded flex items-center space-x-2 capitalize px-2 md:px-4 py-2 font-semibold`;
 
     return (
         <div>
             <div
-                className={`rounded-lg p-4 border border-grey-border relative`}
+                className={`rounded-lg p-4 border border-n700 relative`}
             >
                 {event.type_group !== "fire" && (
                     <EventPublicPrivate event={event} />
@@ -35,13 +35,13 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                                 )}
                                 {event.approved_at ? (
                                     <span
-                                        className={`text-xs bg-orange text-white px-2 py-1 rounded-full ml-2`}
+                                        className={`text-xxs bg-p200 text-white px-2 py-1 rounded-full ml-2`}
                                     >
                                         Published
                                     </span>
                                 ) : (
                                     <span
-                                        className={`text-xs bg-grey-darker text-white px-2 py-1 rounded-full ml-2`}
+                                        className={`text-xxs bg-grey-darker text-white px-2 py-1 rounded-full ml-2`}
                                     >
                                         Unpublished
                                     </span>
@@ -58,7 +58,7 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                                 name={event.hostObject.full_name}
                                 md5email={event.hostObject.md5email}
                             />
-                            <div className="text-sm leading-tighter text-grey-200">
+                            <div className="text-sm leading-tighter text-n40">
                                 Hosted by {event.host}
                             </div>
                         </div>

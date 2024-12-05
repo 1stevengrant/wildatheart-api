@@ -15,14 +15,14 @@ export default function FieldGroup({
         <div className="space-y-2">
             {label && (
                 <label
-                    className="block text-gray-800 select-none"
+                    className="block text-n700 select-none"
                     htmlFor={name}
                 >
                     {label}:
                 </label>
             )}
             {children}
-            {error && <div className="text-red-500 mt-2 text-sm">{error}</div>}
+            {error && <div className="text-r200-500 mt-2 text-sm">{error}</div>}
         </div>
     );
 }

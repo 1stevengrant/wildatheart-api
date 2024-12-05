@@ -16,7 +16,7 @@ export const ListItem = ({
             <a
                 target={openInNewTab ? "_blank" : "_self"}
                 href={url}
-                className={`flex items-center hover:text-orange transition duration-150 ease-in-out`}
+                className={`flex items-center hover:text-p200 transition duration-150 ease-in-out`}
             >
                 {icon}
                 <div>{text}</div>

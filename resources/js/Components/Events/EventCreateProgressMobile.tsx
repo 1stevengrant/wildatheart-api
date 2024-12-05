@@ -18,7 +18,7 @@ export const EventCreateProgressMobile = () => {
     return (
         <div className={`flex items-center lg:hidden `}>
             <div className={`ml-8 text-left leading-tight`}>
-                <p className={`text-white text-xs`}>
+                <p className={`text-white text-xxs`}>
                     Step{" "}
                     {isEventGuideStep ? `1` : isMailingAddressStep ? `2` : `3`}
                 </p>

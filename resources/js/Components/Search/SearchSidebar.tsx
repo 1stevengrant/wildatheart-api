@@ -24,7 +24,7 @@ export const SearchSidebar = () => {
                             <EventResult
                                 event={event}
                                 key={event.id}
-                                className={`mb-4 ${isSelectedEvent(event, currentEvent, "border-grey-darker")}`}
+                                className={`mb-4 ${isSelectedEvent(event, currentEvent, "border-n400")}`}
                                 onMouseEnter={() => setCurrentEvent(event)}
                                 onMouseLeave={() => setCurrentEvent(null)}
                             />
