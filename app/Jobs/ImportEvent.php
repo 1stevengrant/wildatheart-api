@@ -2,16 +2,16 @@
 
 namespace App\Jobs;
 
+use Str;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Str;
 
 class ImportEvent implements ShouldQueue
 {
@@ -122,7 +122,7 @@ class ImportEvent implements ShouldQueue
 
     public function determinePrivacySetting(string $privacySetting): bool
     {
-        if (str_contains(strtolower($privacySetting), 'private')) {
+        if (str_contains(mb_strtolower($privacySetting), 'private')) {
             return true;
         }
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\Http\Controllers\Controller;
 use App\Models\EventType;
-use App\Services\EventCreationStepHandlerService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\EventCreationStepHandlerService;
 
 class HostEventTypeFaqsController extends Controller
 {

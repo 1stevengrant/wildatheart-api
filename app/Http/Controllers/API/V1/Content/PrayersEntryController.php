@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use App\DataTypeObjects\API\V1\Content\Prayers\PrayersShowResponse;
-use App\DataTypeObjects\File;
-use App\DataTypeObjects\PlayableFile;
-use App\Http\Controllers\Controller;
-use App\Services\BunnyCDNService;
-use App\Services\EntryBuilderService;
 use Statamic\Entries\Entry;
+use App\DataTypeObjects\File;
+use App\Services\BunnyCDNService;
+use App\Http\Controllers\Controller;
+use App\DataTypeObjects\PlayableFile;
+use App\Services\EntryBuilderService;
+use App\DataTypeObjects\API\V1\Content\Prayers\PrayersShowResponse;
 
 class PrayersEntryController extends Controller
 {

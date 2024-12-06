@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use AlexAzartsev\Heroicon\Heroicon;
 use App\Models\User;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Nova;
+use AlexAzartsev\Heroicon\Heroicon;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider

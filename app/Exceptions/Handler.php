@@ -2,13 +2,13 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
+use Throwable;
 use Illuminate\Http\Request;
 use Sentry\Laravel\Integration;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {

@@ -2,11 +2,11 @@
 
 namespace App\Actions\User;
 
-use App\Jobs\LogActivityJob;
-use App\Mail\Event\SendEmailVerificationEmail;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\Mail;
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\Mail\Event\SendEmailVerificationEmail;
 
 class SendVerificationEmail
 {

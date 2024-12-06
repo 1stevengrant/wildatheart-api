@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Attendee extends BaseModel
 {
@@ -50,14 +50,14 @@ class Attendee extends BaseModel
     protected function email(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => strtolower($value),
+            get: fn (string $value) => mb_strtolower($value),
         );
     }
 
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucwords(strtolower($value)),
+            get: fn (string $value) => ucwords(mb_strtolower($value)),
         );
     }
 

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\Assets\GenerateColorPalette;
-use Illuminate\Console\Command;
 use Statamic\Facades\Asset;
+use Illuminate\Console\Command;
+use App\Jobs\Assets\GenerateColorPalette;
 
 class GenerateColorPaletteForAssets extends Command
 {

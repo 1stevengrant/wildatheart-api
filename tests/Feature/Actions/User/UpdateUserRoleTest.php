@@ -1,7 +1,7 @@
 <?php
 
-use App\Actions\User\UpdateUserRole;
 use App\Models\User;
+use App\Actions\User\UpdateUserRole;
 
 it('updates a user role', function () {
     Artisan::call('db:seed', ['--class' => 'RoleSeeder']);

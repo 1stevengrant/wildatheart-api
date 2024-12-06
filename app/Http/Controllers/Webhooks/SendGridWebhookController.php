@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Webhooks;
 
-use App\Http\Controllers\Controller;
-use App\Models\Attendee;
 use App\Models\User;
+use App\Models\Attendee;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class SendGridWebhookController extends Controller

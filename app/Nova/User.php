@@ -2,21 +2,21 @@
 
 namespace App\Nova;
 
-use App\Nova\Lenses\ActiveHosts;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\Rules;
-use Laravel\Nova\Actions\ExportAsCsv;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\MorphToMany;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Vyuldashev\NovaPermission\Permission;
+use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\Number;
+use App\Nova\Lenses\ActiveHosts;
+use Illuminate\Validation\Rules;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Gravatar;
+use Laravel\Nova\Fields\Password;
 use Vyuldashev\NovaPermission\Role;
+use Laravel\Nova\Fields\MorphToMany;
+use Laravel\Nova\Actions\ExportAsCsv;
+use Illuminate\Database\Eloquent\Builder;
+use Vyuldashev\NovaPermission\Permission;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class User extends Resource
 {

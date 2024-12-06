@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\LogActivityJob;
-use Auth0\SDK\Auth0 as Auth0SDK;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Jobs\LogActivityJob;
+use Illuminate\Http\Request;
+use Auth0\SDK\Auth0 as Auth0SDK;
+use App\Http\Controllers\Controller;
 
 class LoginController extends Controller
 {

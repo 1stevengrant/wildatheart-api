@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\EventType;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
-use App\Models\EventType;
 
 class MyActiveEventsController extends Controller
 {

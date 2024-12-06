@@ -1,8 +1,8 @@
 <?php
 
-use App\Actions\EmailVerify\DeleteEmailVerify;
-use App\Models\EmailVerify;
 use App\Models\User;
+use App\Models\EmailVerify;
+use App\Actions\EmailVerify\DeleteEmailVerify;
 
 it('deletes an email verification', function () {
     $user = User::factory()->create();

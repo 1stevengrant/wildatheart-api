@@ -2,23 +2,23 @@
 
 namespace App\Providers;
 
-use App\Listeners\LogStatamicEntryChanges;
-use App\Listeners\SaveSubsplashItemEntryWithId;
-use App\Listeners\UpdateLastLoginDateTime;
-use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\Issue;
-use App\Observers\AttendeeObserver;
+use App\Models\Attendee;
+use Statamic\Events\EntrySaved;
 use App\Observers\EventObserver;
 use App\Observers\IssueObserver;
+use Statamic\Events\EntrySaving;
 use Illuminate\Auth\Events\Login;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntryDeleted;
-use Statamic\Events\EntrySaved;
-use Statamic\Events\EntrySaving;
+use App\Observers\AttendeeObserver;
+use Illuminate\Auth\Events\Registered;
+use App\Listeners\LogStatamicEntryChanges;
+use App\Listeners\UpdateLastLoginDateTime;
+use App\Listeners\SaveSubsplashItemEntryWithId;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 
 class ViewEventListingController extends Controller
 {

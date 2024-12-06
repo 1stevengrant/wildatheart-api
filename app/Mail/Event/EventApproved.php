@@ -3,12 +3,12 @@
 namespace App\Mail\Event;
 
 use App\Models\EmailTemplate;
-use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
+use App\Traits\InteractsWithEmailTemplates;
 
 class EventApproved extends Mailable
 {

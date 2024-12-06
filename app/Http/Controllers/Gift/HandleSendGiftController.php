@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Gift;
 
-use App\Actions\Address\CreateAddress;
-use App\Actions\Event\UpdateEvent;
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\HandleSendGiftRequest;
+use App\Models\Event;
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
-use App\Models\Event;
+use App\Actions\Event\UpdateEvent;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Actions\Address\CreateAddress;
+use App\Http\Requests\HandleSendGiftRequest;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HandleSendGiftController extends Controller
 {

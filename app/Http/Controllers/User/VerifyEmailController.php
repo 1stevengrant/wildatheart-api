@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Actions\EmailVerify\GetByToken;
-use App\Actions\Event\ApproveEvent;
-use App\Actions\User\ConfirmEmail;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Actions\User\ConfirmEmail;
+use App\Actions\Event\ApproveEvent;
+use App\Http\Controllers\Controller;
+use App\Actions\EmailVerify\GetByToken;
 
 class VerifyEmailController extends Controller
 {

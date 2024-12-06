@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
+use Statamic\Entries\Entry;
+use Statamic\Facades\Token;
 use App\DataTypeObjects\PageData;
 use App\Http\Controllers\Controller;
+use Facades\Statamic\CP\LivePreview;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
 use App\Services\ImageBuilderService;
-use Facades\Statamic\CP\LivePreview;
-use Statamic\Entries\Entry;
-use Statamic\Facades\Token;
 
 /**
  * @group Page Entity Retrieval

@@ -2,15 +2,15 @@
 
 namespace App\Jobs;
 
-use App\Models\Attendee;
 use App\Models\Event;
+use App\Models\Attendee;
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Str;
-use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class PostAttendeeContactToSlackJob implements ShouldQueue
 {

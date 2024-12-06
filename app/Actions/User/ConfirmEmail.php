@@ -2,10 +2,10 @@
 
 namespace App\Actions\User;
 
-use App\Actions\EmailVerify\DeleteEmailVerify;
-use App\Models\EmailVerify;
 use App\Models\User;
+use App\Models\EmailVerify;
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\Actions\EmailVerify\DeleteEmailVerify;
 
 class ConfirmEmail
 {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\API\EventResource;
 use App\Models\Event;
-use App\Services\EventOffsettingService;
 use Illuminate\Http\Request;
+use App\Services\EventOffsettingService;
+use App\Http\Resources\API\EventResource;
 
 class AllEventsController extends Controller
 {

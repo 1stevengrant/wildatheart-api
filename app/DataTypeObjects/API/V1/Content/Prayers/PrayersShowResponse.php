@@ -2,9 +2,9 @@
 
 namespace App\DataTypeObjects\API\V1\Content\Prayers;
 
-use App\DataTypeObjects\API\V1\EntryResponse;
 use App\DataTypeObjects\File;
 use App\DataTypeObjects\PlayableFile;
+use App\DataTypeObjects\API\V1\EntryResponse;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]

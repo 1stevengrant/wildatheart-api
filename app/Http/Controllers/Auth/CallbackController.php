@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use Illuminate\Support\Str;
+use App\Jobs\LogActivityJob;
+use Illuminate\Http\Request;
+use Auth0\SDK\Auth0 as Auth0SDK;
 use App\Http\Controllers\Controller;
 use App\Jobs\CheckIfUserShouldBeAdmin;
-use App\Jobs\LogActivityJob;
-use App\Models\User;
-use Auth0\SDK\Auth0 as Auth0SDK;
 use Auth0\SDK\Exception\StateException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class CallbackController extends Controller
 {

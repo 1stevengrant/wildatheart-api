@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\Models\User;
+use Inertia\Inertia;
+use App\Models\EventType;
 use App\Actions\Event\ApproveEvent;
-use App\Actions\Event\CheckWelcomeStatus;
-use App\Actions\Event\CreateFireEventType;
-use App\Actions\User\SendVerificationEmail;
 use App\Actions\User\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
-use App\Models\EventType;
-use App\Models\User;
-use Inertia\Inertia;
+use App\Actions\Event\CheckWelcomeStatus;
+use App\Actions\Event\CreateFireEventType;
+use App\Actions\User\SendVerificationEmail;
 
 abstract class AbstractFireEventController extends Controller
 {

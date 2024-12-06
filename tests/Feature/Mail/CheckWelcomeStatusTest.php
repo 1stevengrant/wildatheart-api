@@ -1,10 +1,10 @@
 <?php
 
-use App\Actions\Event\CheckWelcomeStatus;
-use App\Mail\Event\SendWelcomeEmail;
 use App\Models\Event;
-use Database\Seeders\EventTypeSeeder;
+use App\Mail\Event\SendWelcomeEmail;
 use Illuminate\Support\Facades\Mail;
+use Database\Seeders\EventTypeSeeder;
+use App\Actions\Event\CheckWelcomeStatus;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);

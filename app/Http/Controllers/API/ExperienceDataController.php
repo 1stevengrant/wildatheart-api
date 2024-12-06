@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Services\SubsplashService;
 use Statamic\Entries\Entry;
+use App\Services\SubsplashService;
+use App\Http\Controllers\Controller;
 
 class ExperienceDataController extends Controller
 {

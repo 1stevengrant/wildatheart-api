@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Http;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class PostToZapier implements ShouldQueue
 {

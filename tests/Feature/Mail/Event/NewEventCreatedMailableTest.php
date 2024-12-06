@@ -1,8 +1,8 @@
 <?php
 
-use App\Mail\Event\NewEventCreatedMailable;
 use App\Models\Event;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Event\NewEventCreatedMailable;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);

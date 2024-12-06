@@ -3,9 +3,9 @@
 namespace App\Nova\Metrics;
 
 use App\Models\User;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Metrics\Trend;
 use Laravel\Nova\Nova;
+use Laravel\Nova\Metrics\Trend;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class UsersPerDay extends Trend
 {

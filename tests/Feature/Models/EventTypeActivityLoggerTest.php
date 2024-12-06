@@ -1,12 +1,13 @@
 <?php
 
-use App\Models\EventType;
 use App\Models\User;
-use Database\Seeders\DatabaseSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Activitylog\Models\Activity;
+use App\Models\EventType;
 
 use function Pest\Laravel\actingAs;
+
+use Database\Seeders\DatabaseSeeder;
+use Spatie\Activitylog\Models\Activity;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 beforeEach(function () {

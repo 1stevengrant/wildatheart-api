@@ -2,11 +2,11 @@
 
 namespace App\Traits\Event;
 
-use App\Http\Resources\HostResource;
-use App\Models\EventType;
 use Carbon\Carbon;
-use Illuminate\Contracts\Foundation\Application;
+use App\Models\EventType;
+use App\Http\Resources\HostResource;
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Contracts\Foundation\Application;
 
 trait EventAttributesTrait
 {
@@ -41,7 +41,7 @@ trait EventAttributesTrait
 
     public function setStateCodeAttribute($value): void
     {
-        $this->attributes['state'] = getStateAbbreviation(strtoupper($value));
+        $this->attributes['state'] = getStateAbbreviation(mb_strtoupper($value));
     }
 
     public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
@@ -51,7 +51,7 @@ trait EventAttributesTrait
 
     public function getTypeGroupAttribute(): string
     {
-        $eventName = strtolower($this->eventType->name);
+        $eventName = mb_strtolower($this->eventType->name);
 
         if (str_contains($eventName, EventType::TYPE_RETREAT) || str_contains($eventName, 'school')) {
             return EventType::TYPE_RETREAT;

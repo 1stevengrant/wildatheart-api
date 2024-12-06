@@ -1,8 +1,8 @@
 <?php
 
-use Laravel\Pulse\Http\Middleware\Authorize;
 use Laravel\Pulse\Pulse;
 use Laravel\Pulse\Recorders;
+use Laravel\Pulse\Http\Middleware\Authorize;
 
 return [
 

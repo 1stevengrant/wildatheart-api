@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\LogActivityJob;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ToggleEventPrivacyController extends Controller
 {

@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use App\Builders\EventBuilder;
 use App\Enums\EventSexEnum;
+use App\Builders\EventBuilder;
+use Spatie\Activitylog\LogOptions;
+use App\Traits\Event\EventScopeTrait;
+use Laravolt\Avatar\Facade as Avatar;
 use App\Traits\Event\EventActionsTrait;
 use App\Traits\Event\EventAttributesTrait;
+use Spatie\Activitylog\Traits\LogsActivity;
 use App\Traits\Event\EventRelationshipsTrait;
-use App\Traits\Event\EventScopeTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravolt\Avatar\Facade as Avatar;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 class Event extends BaseModel
 {
@@ -25,13 +25,13 @@ class Event extends BaseModel
         static::saving(function ($event) {
             if ($event->eventType) {
                 $eventTypeName = $event->eventType->name;
-                if (str_contains(strtolower($eventTypeName), EventType::TYPE_RETREAT)) {
+                if (str_contains(mb_strtolower($eventTypeName), EventType::TYPE_RETREAT)) {
                     $event->type_group = EventType::TYPE_RETREAT;
                 }
-                if (str_contains(strtolower($eventTypeName), EventType::TYPE_EXPERIENCE)) {
+                if (str_contains(mb_strtolower($eventTypeName), EventType::TYPE_EXPERIENCE)) {
                     $event->type_group = EventType::TYPE_EXPERIENCE;
                 }
-                if (str_contains(strtolower($eventTypeName), EventType::TYPE_FIRE)) {
+                if (str_contains(mb_strtolower($eventTypeName), EventType::TYPE_FIRE)) {
                     $event->type_group = EventType::TYPE_FIRE;
                 }
 
@@ -110,25 +110,25 @@ class Event extends BaseModel
 
     public function getLocationAttribute(): string
     {
-        if (strtolower($this->country) === self::DEFAULT_COUNTRY || strtolower($this->country) === 'united states') {
+        if (mb_strtolower($this->country) === self::DEFAULT_COUNTRY || mb_strtolower($this->country) === 'united states') {
             if ($this->city && $this->region) {
                 return $this->city.', '.getStateAbbreviation($this->region);
             }
         }
 
-        if (strtolower($this->country) === 'new zealand') {
+        if (mb_strtolower($this->country) === 'new zealand') {
             if ($this->city && $this->region) {
                 return $this->city.', NZ';
             }
         }
 
-        if (strtolower($this->country) === 'gb') {
+        if (mb_strtolower($this->country) === 'gb') {
             if ($this->city && $this->region) {
                 return $this->city.', UK';
             }
         }
 
-        return $this->city.', '.strtoupper($this->country);
+        return $this->city.', '.mb_strtoupper($this->country);
     }
 
     public function getCityAttribute(): array|string

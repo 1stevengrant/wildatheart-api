@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
+use Statamic\Statamic;
+use Statamic\Facades\Collection;
+use Statamic\Events\AssetUploaded;
+use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
 use Illuminate\Support\Facades\Event as LaravelEvent;
-use Illuminate\Support\ServiceProvider;
-use Statamic\Events\AssetUploaded;
-use Statamic\Facades\Collection;
-use Statamic\Statamic;
 
 class CustomStatamicProvider extends ServiceProvider
 {

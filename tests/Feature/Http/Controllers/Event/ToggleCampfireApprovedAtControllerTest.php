@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\User;
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Carbon;
+use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);

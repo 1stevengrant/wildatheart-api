@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Artesaos\SEOTools\Facades\JsonLd;
-use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\TwitterCard;
 
 class SeoService

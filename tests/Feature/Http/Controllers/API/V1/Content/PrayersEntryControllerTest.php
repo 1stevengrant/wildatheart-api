@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers\API\V1\Content;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Statamic\Facades\Entry;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 beforeEach(function () {

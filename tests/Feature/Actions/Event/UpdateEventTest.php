@@ -1,7 +1,7 @@
 <?php
 
-use App\Actions\Event\UpdateEvent;
 use App\Models\Event;
+use App\Actions\Event\UpdateEvent;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\EventTypeSeeder::class);

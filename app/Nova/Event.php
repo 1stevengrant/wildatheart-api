@@ -2,15 +2,15 @@
 
 namespace App\Nova;
 
-use App\Nova\Actions\PublishEvent;
-use App\Nova\Actions\UnpublishEvent;
 use App\Rules\EventDateRule;
-use App\Rules\MustNotBeInThePast;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\HasMany;
+use App\Rules\MustNotBeInThePast;
+use Laravel\Nova\Fields\DateTime;
+use App\Nova\Actions\PublishEvent;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Actions\UnpublishEvent;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Event extends Resource

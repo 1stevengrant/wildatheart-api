@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Actions\User\SendVerificationEmail;
-use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Actions\User\SendVerificationEmail;
 
 class ResendConfirmationEmail extends Controller
 {

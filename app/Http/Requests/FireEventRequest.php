@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Rules\ShouldNotEndWithFire;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Repat\LaravelRules\DoesntContainEmojis;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class FireEventRequest extends FormRequest
 {

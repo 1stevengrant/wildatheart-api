@@ -1,18 +1,18 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AllEventsController;
-use App\Http\Controllers\API\ExperienceDataController;
+use App\Http\Controllers\API\V1\StatsController;
+use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\MediaItemDataController;
+use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
-use App\Http\Controllers\API\SubsplashController;
+use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
+use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
-use App\Http\Controllers\API\V1\Content\PageEntryController;
-use App\Http\Controllers\API\V1\Content\PrayersEntryController;
-use App\Http\Controllers\API\V1\StatsController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------

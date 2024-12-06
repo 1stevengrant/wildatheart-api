@@ -4,8 +4,8 @@ namespace Tests\Feature\Services;
 
 use App\Services\TransistorService;
 use Illuminate\Http\Client\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
@@ -130,9 +130,10 @@ it('returns data from getAll', function () {
     Http::fake(function (Request $request) use ($url, $data) {
         if ($request->url() === $url) {
             return Http::response($data, 200);
-        } else {
-            return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
         }
+
+        return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
+
     });
 
     $result = $this->transistorService->getAll($showId, 'draft');
@@ -151,11 +152,13 @@ it('Requests all pages if more pags are available', function () {
     Http::fake(function (Request $request) use ($url, $firstPage, $secondPage) {
         if ($request->url() === $url) {
             return Http::response($firstPage, 200);
-        } elseif ($request->url() === $url.'&pagination%5Bpage%5D=2') {
-            return Http::response($secondPage, 200);
-        } else {
-            return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
         }
+        if ($request->url() === $url.'&pagination%5Bpage%5D=2') {
+            return Http::response($secondPage, 200);
+        }
+
+        return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
+
     });
 
     $result = $this->transistorService->getAll($showId, 'draft');

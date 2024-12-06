@@ -1,7 +1,7 @@
 <?php
 
-use App\Actions\Event\ApproveEvent;
 use App\Models\Event;
+use App\Actions\Event\ApproveEvent;
 
 beforeEach(function () {
     \App\Models\User::factory()->create();

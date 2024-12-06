@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
+use Statamic\Entries\Entry;
+use App\DataTypeObjects\IconProps;
+use App\DataTypeObjects\SlideBlock;
+use Statamic\Eloquent\Assets\Asset;
 use App\DataTypeObjects\ButtonProps;
 use App\DataTypeObjects\CardVariant;
 use App\DataTypeObjects\HeroTitleBlock;
-use App\DataTypeObjects\IconProps;
 use App\DataTypeObjects\MediaItemsSlide;
-use App\DataTypeObjects\SlideBlock;
-use Statamic\Eloquent\Assets\Asset;
-use Statamic\Entries\Entry;
 
 class BlockBuilderService
 {

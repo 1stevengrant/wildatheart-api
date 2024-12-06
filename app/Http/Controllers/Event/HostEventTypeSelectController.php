@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\Http\Controllers\Controller;
 use App\Models\EventType;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class HostEventTypeSelectController extends Controller
 {

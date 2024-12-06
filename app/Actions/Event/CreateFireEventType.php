@@ -2,10 +2,10 @@
 
 namespace App\Actions\Event;
 
-use App\DataTransferObjects\CreateEventDataTransferObject;
-use App\Jobs\LogActivityJob;
 use App\Models\EventType;
+use App\Jobs\LogActivityJob;
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\DataTransferObjects\CreateEventDataTransferObject;
 
 class CreateFireEventType
 {

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Attendee;
 use App\Models\User;
+use App\Models\Attendee;
 
 beforeEach(function () {
     $this->seed(\Database\Seeders\UserSeeder::class);

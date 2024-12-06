@@ -2,8 +2,8 @@
 
 namespace App\DataTypeObjects\API\V1\Content;
 
-use App\DataTypeObjects\TransistorPodcastEpisode;
 use Spatie\LaravelData\Data;
+use App\DataTypeObjects\TransistorPodcastEpisode;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]

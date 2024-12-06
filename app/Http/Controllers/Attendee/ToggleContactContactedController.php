@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Attendee;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\LogActivityJob;
 use App\Models\Attendee;
+use App\Jobs\LogActivityJob;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ToggleContactContactedController extends Controller
 {

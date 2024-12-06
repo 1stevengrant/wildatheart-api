@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\Fire;
 
-use App\Jobs\Fire\UnpublishFireJob;
 use App\Models\Event;
 use Illuminate\Console\Command;
+use App\Jobs\Fire\UnpublishFireJob;
 
 class UnpublishInactiveFires extends Command
 {

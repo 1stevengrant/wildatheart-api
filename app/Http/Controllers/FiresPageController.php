@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\API\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Http\Resources\API\EventResource;
 
 class FiresPageController extends Controller
 {
