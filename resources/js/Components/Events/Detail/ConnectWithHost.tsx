@@ -13,9 +13,7 @@ export const ConnectWithHost = ({ className }: { className?: string }) => {
         (page.props.notifications as { connectedWithHost?: boolean })
             ?.connectedWithHost ?? false;
     return (
-        <div
-            className={className + " rounded-lg border border-n400 p-8"}
-        >
+        <div className={className + " rounded-lg border border-n400 p-8"}>
             {hasConnectedWithHost ? (
                 <>
                     <PrimaryButton className={"w-full"} disabled={true}>
@@ -33,13 +31,13 @@ export const ConnectWithHost = ({ className }: { className?: string }) => {
                     </p>
                     <Link
                         className={`${whiteButtonClasses} block capitalize`}
-                        href={`/connect/${event.id}`}
+                        href={route("connect.index", event.id)}
                     >
                         Connect With {event.host}
                     </Link>
                     <p className="mt-4 text-center text-sm">
-                        <span className={`capitalize`}>{event.host}</span> will send out updates regarding the event
-                        after sign-up.
+                        <span className={`capitalize`}>{event.host}</span> will
+                        send out updates regarding the event after sign-up.
                     </p>
                 </>
             )}
