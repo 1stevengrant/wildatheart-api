@@ -32,13 +32,13 @@ export const ConnectWithHost = ({ className }: { className?: string }) => {
                         Want More Info?
                     </p>
                     <Link
-                        className={`${whiteButtonClasses} block`}
+                        className={`${whiteButtonClasses} block capitalize`}
                         href={`/connect/${event.id}`}
                     >
                         Connect With {event.host}
                     </Link>
                     <p className="mt-4 text-center text-sm">
-                        {event.host} will send out updates regarding the event
+                        <span className={`capitalize`}>{event.host}</span> will send out updates regarding the event
                         after sign-up.
                     </p>
                 </>
