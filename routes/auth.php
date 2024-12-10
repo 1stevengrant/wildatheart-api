@@ -7,7 +7,6 @@ use App\Http\Controllers\Gift\SendGiftController;
 use App\Http\Controllers\User\MyProfileController;
 use App\Http\Controllers\Event\EditEventController;
 use App\Http\Controllers\User\MyContactsController;
-use App\Http\Controllers\Gift\GiftSuccessController;
 use App\Http\Controllers\User\HostProfileController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\UpdateEventController;
@@ -55,7 +54,6 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('gift')->name('gift.')->group(function () {
             Route::get('{event}', SendGiftController::class)->name('index');
             Route::post('{event}', HandleSendGiftController::class)->name('store');
-            Route::get('{event}/success', GiftSuccessController::class)->name('success');
         });
 
         Route::prefix('host/{eventType}')->name('host.eventType.')->group(function () {

@@ -184,11 +184,6 @@ const SendGiftPage = () => {
                                         value={data.country}
                                         classes={selectClasses}
                                         onChange={(val) => {
-                                            const country =
-                                                sortedCountries.find(
-                                                    (country) =>
-                                                        country[0] === val
-                                                );
                                             setData("country", val);
                                         }}
                                     />
@@ -279,7 +274,7 @@ const SendGiftPage = () => {
                                     Send Me My Gift
                                 </PrimaryButton>
                                 <Link
-                                    href={route("home")}
+                                    href={route("my.events.active")}
                                     className={`text-center py-3 text-sm text-grey-200 block`}
                                 >
                                     No thanks

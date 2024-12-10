@@ -64,6 +64,11 @@ class HandleSendGiftController extends Controller
 
         PostToZapier::dispatch($dataTransferObject);
 
-        return to_route('gift.success', $event);
+        return to_route('my.events.active')->with([
+            'notifications' => [
+                'message' => 'Your free gift has been requested!',
+                'type' => 'success',
+            ],
+        ]);
     }
 }
