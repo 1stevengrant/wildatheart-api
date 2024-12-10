@@ -23,9 +23,9 @@ import {
     EventTypeFires,
     EventTypeWahExperience,
 } from "@/helpers/eventNames";
+import { proseClasses } from "@/helpers/proseClasses";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { Event } from "@/types/Event";
-import { proseClasses } from "@/helpers/proseClasses";
 
 const ViewEventPage = () => {
     const page = usePage();

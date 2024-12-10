@@ -10,8 +10,8 @@ import { singular } from "pluralize";
 
 import { ListItem } from "@/Components/EventResources/ListItem";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import { EventTypeFires } from "@/helpers/eventNames";
 import { eventTypeBackground } from "@/helpers/eventTypeBackground";
+import { getRouteForEventType } from "@/helpers/getRouteForEventType";
 import { imageGenerator } from "@/helpers/user";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
@@ -66,14 +66,7 @@ const ResourcesPage = () => {
                                     />
                                 }
                                 text={`Host New ${singular(eventType.name)}`}
-                                url={
-                                    eventType.slug === EventTypeFires
-                                        ? route("host.fire")
-                                        : route(
-                                              "host.eventType.index",
-                                              eventType
-                                          )
-                                }
+                                url={getRouteForEventType(eventType)}
                             />
                             {eventType.video_link && (
                                 <ListItem

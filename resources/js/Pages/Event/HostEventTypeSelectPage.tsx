@@ -22,6 +22,7 @@ import {
     fireTypeDescription,
     retreatTypeDescription,
 } from "@/helpers/eventTypes";
+import { getRouteForEventType } from "@/helpers/getRouteForEventType";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
@@ -39,17 +40,6 @@ const HostEventTypeSelectPage = () => {
 
     const [selectedType, setSelectedType] = useState<EventType | null>(null);
     const pageTitle = `Select an Event Type`;
-
-    const getRouteForEventType = (eventType: EventType) => {
-        switch (eventType.slug) {
-            case EventTypeFires:
-                return route("host.fire");
-            case EventTypeCaptivatingFires:
-                return route("host.captivating-fire");
-            default:
-                return route("host.eventType.index", eventType.slug);
-        }
-    };
 
     const getEventTypeDisplay = (eventType: EventType) => {
         switch (eventType.slug) {

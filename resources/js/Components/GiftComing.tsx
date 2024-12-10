@@ -1,9 +1,9 @@
 import { Link, usePage } from "@inertiajs/react";
+import { singular } from "pluralize";
 
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useRoute from "@/Hooks/useRoute";
 import { Event } from "@/types/Event";
-import { singular } from "pluralize";
 
 export const GiftComing = () => {
     const page = usePage();
