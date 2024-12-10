@@ -27,7 +27,7 @@ test('it creates an address for the event that can be shipped to', function () {
     $response = $this->actingAs($this->event->host)
         ->post(route('gift.store', $this->event), $this->addressData);
 
-    $response->assertRedirect(route('gift.success', $this->event));
+    $response->assertRedirect(route('my.events.active'));
 
     $this->assertDatabaseHas('addresses',
         array_merge($this->addressData, ['event_id' => $this->event->id, 'is_primary' => true])
@@ -38,7 +38,7 @@ it('marks the gift as requested', function () {
     $this->actingAs($this->event->host)
         ->post(route('gift.store', $this->event), $this->addressData);
 
-    expect($this->event->fresh()->gift_requested)->toBe(true);
+    expect($this->event->fresh()->gift_requested)->toBeTrue();
 });
 
 it('sends mail notification to admin about the request', function () {
@@ -55,14 +55,5 @@ it('updates zapier about the request', function () {
         ->post(route('gift.store', $this->event), $this->addressData);
 
     Queue::assertPushed(PostToZapier::class);
-
-});
-
-it('redirects to a success page', function () {
-
-    $response = $this->actingAs($this->event->host)
-        ->post(route('gift.store', $this->event), $this->addressData);
-
-    $response->assertRedirect(route('gift.success', $this->event));
 
 });
