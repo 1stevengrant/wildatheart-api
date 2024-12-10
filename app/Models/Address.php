@@ -10,9 +10,12 @@ class Address extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
-    protected $casts = [
-        'is_primary' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_primary' => 'boolean',
+        ];
+    }
 
     public function event(): BelongsTo
     {

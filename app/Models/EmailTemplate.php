@@ -12,9 +12,12 @@ class EmailTemplate extends BaseModel
 {
     use HasFactory, LogsActivity;
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 
     public static function boot(): void
     {

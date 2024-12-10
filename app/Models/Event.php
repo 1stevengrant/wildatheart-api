@@ -44,18 +44,21 @@ class Event extends BaseModel
         });
     }
 
-    protected $casts = [
-        'approved_at' => 'datetime',
-        'deleted_at' => 'datetime',
-        'legacy_drupal_location' => 'array',
-        'longitude' => 'float',
-        'latitude' => 'float',
-        'start_date' => 'date',
-        'end_date' => 'date',
-        'welcome_sent' => 'boolean',
-        'gift_requested' => 'boolean',
-        'sex' => EventSexEnum::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'approved_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'legacy_drupal_location' => 'array',
+            'longitude' => 'float',
+            'latitude' => 'float',
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'welcome_sent' => 'boolean',
+            'gift_requested' => 'boolean',
+            'sex' => EventSexEnum::class,
+        ];
+    }
 
     const FOR_MEN = 'men';
 
