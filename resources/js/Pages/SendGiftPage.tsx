@@ -285,8 +285,8 @@ const SendGiftPage = () => {
                     </div>
                 </LeftColumn>
                 <RightColumn>
-                    {event.event_type.free_gift_image && (
-                        <div className={`mx-auto`}>
+                    <div className={`mx-auto`}>
+                        {event.event_type.free_gift_image ? (
                             <img
                                 src={imageGenerator(
                                     event.event_type.free_gift_image
@@ -294,8 +294,14 @@ const SendGiftPage = () => {
                                 className={`max-h-[700px] hidden md:block`}
                                 alt=""
                             />
-                        </div>
-                    )}
+                        ) : (
+                            <img
+                                src="/img/fires-gift-image-v2.webp"
+                                className={`max-h-[700px] hidden md:block`}
+                                alt=""
+                            />
+                        )}
+                    </div>
                 </RightColumn>
             </TwoColumnWrapper>
         </EmptyLayout>
