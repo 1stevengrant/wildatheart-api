@@ -284,7 +284,6 @@ const EditEventPage = () => {
                                 onChange={() => {
                                     setIsPrivate(!isPrivate);
                                     setData("is_private", !isPrivate);
-                                    console.log(data.is_private);
                                 }}
                             />
                             <div className={`text-white text-sm mt-4`}>

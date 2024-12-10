@@ -292,7 +292,6 @@ export const FireInformation = ({ user }: any) => {
                     </div>
                     <FireNamingGuidelines />
                     <EventDisplay event={event} className={"md:hidden mt-4"} />
-                    {/*{console.log(event)}*/}
                     <MapboxSearch className={"mt-4"} />
                     <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
                         <Map

@@ -19,6 +19,7 @@ import { sortedCountries } from "@/helpers/countryList";
 import { priorityCountries } from "@/helpers/priorityCountries";
 import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
+import { imageGenerator } from "@/helpers/user";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
 import { Event } from "@/types/Event";
@@ -284,13 +285,17 @@ const SendGiftPage = () => {
                     </div>
                 </LeftColumn>
                 <RightColumn>
-                    <div className={`mx-auto`}>
-                        <img
-                            src="/img/fires-gift-image-v2.webp"
-                            className={`max-h-[700px] hidden md:block`}
-                            alt=""
-                        />
-                    </div>
+                    {event.event_type.free_gift_image && (
+                        <div className={`mx-auto`}>
+                            <img
+                                src={imageGenerator(
+                                    event.event_type.free_gift_image
+                                )}
+                                className={`max-h-[700px] hidden md:block`}
+                                alt=""
+                            />
+                        </div>
+                    )}
                 </RightColumn>
             </TwoColumnWrapper>
         </EmptyLayout>
