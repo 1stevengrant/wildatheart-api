@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('event_types', function (Blueprint $table) {
+            $table->string('free_gift_image')->nullable()->after('name');
             $table->integer('order')->default(0)->after('name');
         });
     }
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('event_types', function (Blueprint $table) {
-            $table->dropColumn('order');
+            $table->dropColumn(['order', 'free_gift_image']);
         });
     }
 };

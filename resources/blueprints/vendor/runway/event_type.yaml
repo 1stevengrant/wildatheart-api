@@ -102,6 +102,14 @@ tabs:
               validate:
                 - required
                 - integer
+          -
+            handle: free_gift_image
+            field:
+              max_files: 1
+              container: app
+              type: assets
+              display: 'Free Gift Image'
+              instructions: 'Upload or choose the image for the free gift'
   media:
     display: Media
     sections:
