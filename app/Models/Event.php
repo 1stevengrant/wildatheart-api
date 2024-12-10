@@ -10,8 +10,6 @@ use App\Http\Resources\HostResource;
 use Laravolt\Avatar\Facade as Avatar;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Contracts\Routing\UrlGenerator;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
