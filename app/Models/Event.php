@@ -202,11 +202,6 @@ class Event extends BaseModel
         $this->attributes['state'] = getStateAbbreviation(mb_strtoupper($value));
     }
 
-    public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
-    {
-        return url('manager/resources/camp-fires/'.$this->id);
-    }
-
     public function getTypeGroupAttribute(): string
     {
         $eventName = mb_strtolower($this->eventType->name);
