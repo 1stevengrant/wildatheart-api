@@ -10,6 +10,7 @@ use Auth0\SDK\Auth0 as Auth0SDK;
 use App\Http\Controllers\Controller;
 use App\Jobs\CheckIfUserShouldBeAdmin;
 use Auth0\SDK\Exception\StateException;
+use Illuminate\Support\Facades\Session;
 
 class CallbackController extends Controller
 {
@@ -44,7 +45,9 @@ class CallbackController extends Controller
                 properties: ['user' => $user, 'auth0User' => $auth0User],
             ));
 
-            return redirect()->intended(route('home'))->with([
+            $intendedUrl = Session::get('auth.intended_url');
+
+            return redirect()->to($intendedUrl)->with([
                 'notifications' => [
                     'message' => 'You are now logged in!',
                     'type' => 'success',

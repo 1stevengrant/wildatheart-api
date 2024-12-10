@@ -214,7 +214,7 @@ class User extends Authenticatable
             });
     }
 
-    public function primaryAddress(): Model
+    public function primaryAddress(): ?Model
     {
         return $this->addresses()->where('is_primary', true)->first();
     }
