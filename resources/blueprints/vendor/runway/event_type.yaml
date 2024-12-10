@@ -92,6 +92,16 @@ tabs:
               validate:
                 - required
                 - string
+          -
+            handle: order
+            field:
+              input_type: number
+              type: text
+              display: Order
+              instructions: 'This defines the order of the event type display 1 being first and the higher number being last'
+              validate:
+                - required
+                - integer
   media:
     display: Media
     sections:
