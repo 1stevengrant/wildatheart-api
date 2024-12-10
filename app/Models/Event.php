@@ -2,22 +2,25 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Enums\EventSexEnum;
 use App\Builders\EventBuilder;
 use Spatie\Activitylog\LogOptions;
-use App\Traits\Event\EventScopeTrait;
+use App\Http\Resources\HostResource;
 use Laravolt\Avatar\Facade as Avatar;
-use App\Traits\Event\EventActionsTrait;
-use App\Traits\Event\EventAttributesTrait;
 use Spatie\Activitylog\Traits\LogsActivity;
-use App\Traits\Event\EventRelationshipsTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Event extends BaseModel
 {
-    use EventActionsTrait, EventAttributesTrait, EventRelationshipsTrait, EventScopeTrait, HasFactory, HasUuids, LogsActivity, SoftDeletes;
+    use HasFactory, HasUuids, LogsActivity, SoftDeletes;
 
     protected static function boot(): void
     {
@@ -149,5 +152,213 @@ class Event extends BaseModel
 
                 return "Event has been {$eventName} by {$userName}";
             });
+    }
+
+    // action methods
+    public function unpublish(): void
+    {
+        $this->approved_at = null;
+        $this->save();
+    }
+
+    public function publish(): void
+    {
+        $this->approved_at = now();
+        $this->save();
+    }
+
+    // attribute methods
+    public function getCoordinatesAttribute(): string
+    {
+        return $this->longitude.', '.$this->latitude;
+    }
+
+    public function getEmailAttribute(): string
+    {
+        return $this->user->email;
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('view.event', ['event' => $this]);
+    }
+
+    public function getHostNameAttribute()
+    {
+        return $this->host->full_name;
+    }
+
+    public function getTitleAttribute(): ?string
+    {
+        if ($this->name) {
+            return $this->name.' Fire';
+        }
+
+        return null;
+    }
+
+    public function setStateCodeAttribute($value): void
+    {
+        $this->attributes['state'] = getStateAbbreviation(mb_strtoupper($value));
+    }
+
+    public function getAdminUrlAttribute(): \Illuminate\Foundation\Application|string|UrlGenerator|Application
+    {
+        return url('manager/resources/camp-fires/'.$this->id);
+    }
+
+    public function getTypeGroupAttribute(): string
+    {
+        $eventName = mb_strtolower($this->eventType->name);
+
+        if (str_contains($eventName, EventType::TYPE_RETREAT) || str_contains($eventName, 'school')) {
+            return EventType::TYPE_RETREAT;
+        }
+
+        if (str_contains($eventName, EventType::TYPE_EXPERIENCE)) {
+            return EventType::TYPE_EXPERIENCE;
+        }
+
+        return EventType::TYPE_FIRE;
+
+    }
+
+    public function getEventTypeImageAttribute(): string
+    {
+        return $this->eventType->image ?? '';
+    }
+
+    public function getStartDateAttribute($value): ?string
+    {
+        return $value ? Carbon::parse($value)->format('Y-m-d') : null;
+    }
+
+    public function getEndDateAttribute($value): ?string
+    {
+        return $value ? Carbon::parse($value)->format('Y-m-d') : null;
+    }
+
+    public function getHostObjectAttribute()
+    {
+        return HostResource::make($this->host);
+    }
+
+    public function getLongitudeAttribute(): float
+    {
+        return round($this->attributes['longitude'], 2);
+    }
+
+    public function getLatitudeAttribute(): float
+    {
+        return round($this->attributes['latitude'], 2);
+    }
+
+    public function getMailingAddressAttribute(): string
+    {
+        $mailingAddress = $this->user->addresses()->where('is_primary', true)->first();
+        if (! $mailingAddress) {
+            return 'No mailing address found';
+        }
+
+        return $mailingAddress->street_address.' '.$mailingAddress->address2.' '.$mailingAddress->city.' '.$mailingAddress->state.' '.$mailingAddress->zip.' '.$mailingAddress->country;
+    }
+
+    // relationship methods
+    public function attendees(): HasMany
+    {
+        return $this->hasMany(Attendee::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function host(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function address(): HasOne
+    {
+        return $this->hasOne(Address::class);
+    }
+
+    public function eventType(): BelongsTo
+    {
+        return $this->belongsTo(EventType::class);
+    }
+
+    // scope methods
+    public function scopeWithinDistance(
+        $query,
+        $latitude,
+        $longitude,
+        $radius = 10,
+        $sex = null,
+        $typeGroup = null,
+        $types = null,
+        $startDate = null,
+        $endDate = null
+    ) {
+        $sex = $sex ?? '';
+        $typeGroup = $typeGroup ?? '';
+        $startDate = $startDate ?? '';
+        $endDate = $endDate ?? '';
+
+        $query
+            ->select(
+                'id',
+                'name',
+                'latitude',
+                'longitude',
+                'country',
+                'sex',
+                'event_type_id',
+                'start_date',
+                'end_date',
+                'user_id',
+                'country',
+                'region',
+                'city',
+                'district',
+                'state',
+                'is_private',
+            )
+            ->selectRaw(
+                '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
+                [$latitude, $longitude, $latitude]
+            )
+            ->whereNotNull('approved_at')
+            ->whereNull('deleted_at')
+            ->where('is_private', false)
+            ->having('distance', '<=', $radius)
+            ->orderBy('distance');
+
+        if ($sex) {
+            $query->where('sex', $sex);
+        }
+
+        if (! empty($types)) {
+            $query->whereIn('event_type_id', explode(',', $types));
+        }
+
+        if ($startDate) {
+            $query->whereRaw('(start_date >= ? OR start_date IS NULL)', [$startDate]);
+        } else {
+            $query->whereRaw('(start_date >= CURDATE() OR start_date IS NULL)');
+        }
+
+        if ($endDate) {
+            $query->whereRaw('(end_date <= ? OR end_date IS NULL)', [$endDate]);
+        }
+
+        if ($typeGroup) {
+            $query->whereHas('eventType', function ($query) use ($typeGroup) {
+                $query->where('name', 'like', '%'.$typeGroup.'%');
+            });
+        }
+
+        return $query;
     }
 }
