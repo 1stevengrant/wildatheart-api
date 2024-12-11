@@ -2,13 +2,13 @@
 
 namespace App\Listeners;
 
+use Statamic\Facades\Entry;
 use App\Jobs\LogActivityJob;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Spatie\Activitylog\Contracts\Activity;
+use Statamic\Events\EntrySaving;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntryDeleted;
-use Statamic\Events\EntrySaving;
-use Statamic\Facades\Entry;
+use Spatie\Activitylog\Contracts\Activity;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class LogStatamicEntryChanges
 {

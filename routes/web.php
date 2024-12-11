@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\Attendee\ConnectWithHostController;
-use App\Http\Controllers\CreateSupportTicketController;
-use App\Http\Controllers\DrupalUrlController;
-use App\Http\Controllers\Event\ViewEventListingController;
-use App\Http\Controllers\FiresPageController;
-use App\Http\Controllers\HandleMonthlyHostFireEmailController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DrupalUrlController;
+use App\Http\Controllers\FiresPageController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\UpcomingEventsController;
+use App\Http\Controllers\CreateSupportTicketController;
+use App\Http\Controllers\Event\ViewEventListingController;
+use App\Http\Controllers\Attendee\ConnectWithHostController;
 use App\Http\Controllers\Webhooks\SendGridWebhookController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HandleMonthlyHostFireEmailController;
 
 Route::get('/', HomeController::class)->name('home');
 

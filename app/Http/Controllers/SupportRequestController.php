@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SupportRequest;
-use App\Jobs\LogActivityJob;
 use App\Models\Issue;
+use App\Jobs\LogActivityJob;
+use App\Http\Requests\SupportRequest;
 
 class SupportRequestController extends Controller
 {

@@ -13,7 +13,7 @@ class ResourcesController extends Controller
     public function __invoke(Request $request)
     {
         return inertia('ResourcesPage', [
-            'eventTypes' => EventType::query()->active()->get(),
+            'eventTypes' => EventType::query()->active()->orderBy('order')->get(),
         ]);
     }
 }

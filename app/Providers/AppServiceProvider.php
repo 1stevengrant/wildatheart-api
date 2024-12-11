@@ -2,21 +2,21 @@
 
 namespace App\Providers;
 
-use App\Models\Attendee;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Issue;
-use App\Models\User;
-use App\Observers\AttendeeObserver;
+use App\Models\Attendee;
+use Illuminate\Http\Request;
 use App\Observers\EventObserver;
 use App\Observers\IssueObserver;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Http\Request;
+use App\Observers\AttendeeObserver;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class AppServiceProvider extends ServiceProvider
 {

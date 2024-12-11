@@ -1,10 +1,10 @@
 <?php
 
-use App\Actions\Address\CreateAddress;
-use App\Models\Event;
 use App\Models\User;
-use Database\Seeders\EmailTemplateSeeder;
+use App\Models\Event;
 use Database\Seeders\EventTypeSeeder;
+use App\Actions\Address\CreateAddress;
+use Database\Seeders\EmailTemplateSeeder;
 
 beforeEach(function () {
     User::factory()->create();

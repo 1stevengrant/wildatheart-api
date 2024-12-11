@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\EventResource;
 use App\Models\EventType;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
 
 class MyInactiveEventsController extends Controller
 {

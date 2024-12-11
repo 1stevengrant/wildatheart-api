@@ -2,8 +2,8 @@
 
 namespace App\DataTypeObjects\API\V1;
 
-use App\DataTypeObjects\Blueprint;
 use Spatie\LaravelData\Data;
+use App\DataTypeObjects\Blueprint;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]

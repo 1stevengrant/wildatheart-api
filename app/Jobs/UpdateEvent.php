@@ -4,10 +4,10 @@ namespace App\Jobs;
 
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class UpdateEvent implements ShouldQueue
 {
@@ -28,10 +28,10 @@ class UpdateEvent implements ShouldQueue
         $this->event->update([
             'latitude' => $meta->latitude,
             'longitude' => $meta->longitude,
-            'country' => strtoupper($meta->country),
+            'country' => mb_strtoupper($meta->country),
             'state' => $meta->province_name,
             'region' => $meta->province_name,
-            'state_code' => strtoupper($meta->province),
+            'state_code' => mb_strtoupper($meta->province),
             'city' => $meta->city,
             'street_address' => $meta->street,
             'zip' => $meta->postal_code,

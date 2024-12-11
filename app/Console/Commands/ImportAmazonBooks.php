@@ -330,7 +330,7 @@ class AwsV4
             $canonicalURL .= $key.':'.$value."\n";
         }
         $canonicalURL .= "\n";
-        $this->strSignedHeader = substr($signedHeaders, 0, -1);
+        $this->strSignedHeader = mb_substr($signedHeaders, 0, -1);
         $canonicalURL .= $this->strSignedHeader."\n";
         $canonicalURL .= $this->generateHex($this->payload);
 
@@ -352,7 +352,7 @@ class AwsV4
     {
         $signatureKey = $this->getSignatureKey($this->secretKey, $this->currentDate, $this->regionName, $this->serviceName);
         $signature = hash_hmac('sha256', $stringToSign, $signatureKey, true);
-        $strHexSignature = strtolower(bin2hex($signature));
+        $strHexSignature = mb_strtolower(bin2hex($signature));
 
         return $strHexSignature;
     }
@@ -386,7 +386,7 @@ class AwsV4
 
     private function generateHex($data)
     {
-        return strtolower(bin2hex(hash('sha256', $data, true)));
+        return mb_strtolower(bin2hex(hash('sha256', $data, true)));
     }
 
     private function getSignatureKey($key, $date, $regionName, $serviceName)

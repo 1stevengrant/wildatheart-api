@@ -2,16 +2,16 @@
 
 namespace App\Mail\Event;
 
-use App\Models\EmailTemplate;
 use App\Models\Event;
 use App\Models\EventType;
-use App\Traits\InteractsWithEmailTemplates;
+use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
+use App\Traits\InteractsWithEmailTemplates;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NewEventCreatedMailable extends Mailable implements ShouldQueue
 {
@@ -35,6 +35,7 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
             EventType::BECOMING_A_KING => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-retreat-event-created'),
             EventType::SURVIVAL_SCHOOL => $this->emailTemplate = $this->getEmailTemplate('survival-school-event-created'),
             EventType::FIRES => $this->emailTemplate = $this->getEmailTemplate('send-welcome-email'),
+            EventType::CAPTIVATING_FIRE => $this->emailTemplate = $this->getEmailTemplate('captivating-fires-welcome-email'),
         };
     }
 

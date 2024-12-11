@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\Fire\ConfirmFireUnpublishedMailable;
-use App\Models\Event;
 use App\Models\Page;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Event;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Fire\ConfirmFireUnpublishedMailable;
 
 class HandleMonthlyHostFireEmailController extends Controller
 {

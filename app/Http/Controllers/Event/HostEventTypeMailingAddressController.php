@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\Models\EventType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MailingAddressRequest;
-use App\Models\EventType;
 use App\Services\EventCreationStepHandlerService;
 
 class HostEventTypeMailingAddressController extends Controller

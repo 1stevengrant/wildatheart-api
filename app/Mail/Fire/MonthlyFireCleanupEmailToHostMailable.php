@@ -2,17 +2,17 @@
 
 namespace App\Mail\Fire;
 
-use App\Models\EmailTemplate;
 use App\Models\Event;
+use App\Models\EmailTemplate;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Envelope;
 use App\Traits\BurnExtinguishFireActions;
 use App\Traits\InteractsWithEmailTemplates;
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\URL;
 
 class MonthlyFireCleanupEmailToHostMailable extends Mailable implements ShouldQueue
 {

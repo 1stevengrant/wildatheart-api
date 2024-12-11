@@ -2,10 +2,10 @@
 
 namespace App\Observers;
 
-use App\Mail\Event\AttendeeConnectedToHost;
-use App\Mail\Event\AttendeeRegistered;
 use App\Models\Attendee;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Event\AttendeeRegistered;
+use App\Mail\Event\AttendeeConnectedToHost;
 
 class AttendeeObserver
 {

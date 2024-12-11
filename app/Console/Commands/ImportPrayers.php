@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use Statamic\Assets\Asset;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Statamic\Assets\Asset;
 use Statamic\Eloquent\Entries\Entry;
 
 class ImportPrayers extends Command

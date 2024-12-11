@@ -2,10 +2,10 @@
 
 namespace App\Nova\Metrics;
 
-use App\Models\Attendee;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Metrics\Trend;
 use Laravel\Nova\Nova;
+use App\Models\Attendee;
+use Laravel\Nova\Metrics\Trend;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class AttendeesPerDay extends Trend
 {

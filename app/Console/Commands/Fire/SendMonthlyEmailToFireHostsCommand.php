@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\Fire;
 
-use App\Jobs\Fire\MonthlyFireCleanupEmailToHostJob;
 use App\Models\Event;
 use Illuminate\Console\Command;
+use App\Jobs\Fire\MonthlyFireCleanupEmailToHostJob;
 
 class SendMonthlyEmailToFireHostsCommand extends Command
 {

@@ -14,7 +14,7 @@ class MustNotContainFire implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (str_contains(strtolower($value), 'fire')) {
+        if (str_contains(mb_strtolower($value), 'fire')) {
             $fail(__('You don\'t need to add "fire".'));
         }
     }

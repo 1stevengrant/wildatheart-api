@@ -1,9 +1,9 @@
 <?php
 
-use App\Mail\Fire\SevenDayFollowupMailable;
-use App\Models\EmailTemplate;
 use App\Models\Event;
+use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Fire\SevenDayFollowupMailable;
 
 beforeEach(function () {
     $this->seed();

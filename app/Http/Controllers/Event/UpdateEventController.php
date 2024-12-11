@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\FireEventRequest;
 use App\Models\Event;
 use App\Support\EventDateHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\FireEventRequest;
 
 class UpdateEventController extends Controller
 {

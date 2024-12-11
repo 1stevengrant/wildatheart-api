@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Link, useForm, usePage } from "@inertiajs/react";
+import { singular } from "pluralize";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input";
@@ -18,8 +19,10 @@ import { sortedCountries } from "@/helpers/countryList";
 import { priorityCountries } from "@/helpers/priorityCountries";
 import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
+import { imageGenerator } from "@/helpers/user";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
+import { Event } from "@/types/Event";
 
 const SendGiftPage = () => {
     const page = usePage();
@@ -60,7 +63,8 @@ const SendGiftPage = () => {
                         <HeadingOne>
                             Huzzah!
                             <br />
-                            Your Fire has been registered.
+                            Your {singular(event.event_type.name)} has been
+                            registered.
                         </HeadingOne>
 
                         <p className="mt-8">
@@ -181,11 +185,6 @@ const SendGiftPage = () => {
                                         value={data.country}
                                         classes={selectClasses}
                                         onChange={(val) => {
-                                            const country =
-                                                sortedCountries.find(
-                                                    (country) =>
-                                                        country[0] === val
-                                                );
                                             setData("country", val);
                                         }}
                                     />
@@ -276,7 +275,7 @@ const SendGiftPage = () => {
                                     Send Me My Gift
                                 </PrimaryButton>
                                 <Link
-                                    href={route("home")}
+                                    href={route("my.events.active")}
                                     className={`text-center py-3 text-sm text-grey-200 block`}
                                 >
                                     No thanks
@@ -287,11 +286,21 @@ const SendGiftPage = () => {
                 </LeftColumn>
                 <RightColumn>
                     <div className={`mx-auto`}>
-                        <img
-                            src="/img/fires-gift-image-v2.webp"
-                            className={`max-h-[700px] hidden md:block`}
-                            alt=""
-                        />
+                        {event.event_type.free_gift_image ? (
+                            <img
+                                src={imageGenerator(
+                                    event.event_type.free_gift_image
+                                )}
+                                className={`max-h-[700px] hidden md:block`}
+                                alt=""
+                            />
+                        ) : (
+                            <img
+                                src="/img/fires-gift-image-v2.webp"
+                                className={`max-h-[700px] hidden md:block`}
+                                alt=""
+                            />
+                        )}
                     </div>
                 </RightColumn>
             </TwoColumnWrapper>

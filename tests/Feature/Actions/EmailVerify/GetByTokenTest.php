@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\EmailVerify;
 use App\Models\User;
+use App\Models\EmailVerify;
 
 it('gets an email verification by its token code', function () {
     $user = User::factory()->create();

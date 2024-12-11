@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
 use App\Jobs\LogActivityJob;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DestroyUserImageController extends Controller
 {

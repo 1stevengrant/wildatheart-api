@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\TransistorService;
-use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Illuminate\Console\Command;
+use App\Services\TransistorService;
 
 class AddShareURLToEpisodes extends Command
 {

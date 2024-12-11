@@ -1,9 +1,9 @@
 <?php
 
+use function Pest\Laravel\getJson;
+
 use App\Services\TransistorService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
-use function Pest\Laravel\getJson;
 
 /**
  * @covers \App\Http\Controllers\API\V1\Content\DailyReadingController

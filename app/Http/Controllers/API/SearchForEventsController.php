@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\API\SearchForEventsRequest;
-use App\Http\Resources\API\EventResource;
 use App\Models\Event;
+use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
+use App\Http\Resources\API\EventResource;
+use App\Http\Requests\API\SearchForEventsRequest;
 
 class SearchForEventsController extends Controller
 {

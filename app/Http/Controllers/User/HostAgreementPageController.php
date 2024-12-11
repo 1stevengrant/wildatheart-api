@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Statamic\Facades\GlobalSet;
+use App\Http\Controllers\Controller;
 
 class HostAgreementPageController extends Controller
 {

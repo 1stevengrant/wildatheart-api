@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Gift;
 
-use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class SendGiftController extends Controller
 {

@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\TypeScriptTransformer\Formatters\PrettierFormatter;
-use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
-use Spatie\TypeScriptTransformer\Transformers\MyclabsEnumTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformer;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
+use Spatie\TypeScriptTransformer\Formatters\PrettierFormatter;
+use Spatie\TypeScriptTransformer\Transformers\MyclabsEnumTransformer;
 
 class GenerateTypeScript extends Command
 {

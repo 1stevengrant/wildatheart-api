@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import { usePage } from "@inertiajs/react";
 import Vimeo from "@u-wave/react-vimeo";
@@ -8,19 +8,22 @@ import { BackToEvents } from "@/Components/Buttons/BackToEvents";
 import { ConnectWithHost } from "@/Components/Events/Detail/ConnectWithHost";
 import { Date } from "@/Components/Events/Detail/Dates";
 import { Host } from "@/Components/Events/Detail/Host";
+import { KeyDetails } from "@/Components/Events/Detail/KeyDetails";
 import { Location } from "@/Components/Events/Detail/Location";
 import { MobileConnect } from "@/Components/Events/Detail/MobileConnect";
 import { PhotoCarousel } from "@/Components/Events/Detail/PhotoCarousel";
 import { ShareEvent } from "@/Components/Events/Detail/ShareEvent";
+import { UnpublishedBadge } from "@/Components/Events/Detail/UnpublishedBadge";
 import { StaticMap } from "@/Components/Maps/StaticMap";
-import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { dateFormatter } from "@/helpers/dateFormatter";
 import {
     EventTypeBecomingAKingExperience,
     EventTypeCaptivatingExperience,
+    EventTypeCaptivatingFires,
     EventTypeFires,
     EventTypeWahExperience,
 } from "@/helpers/eventNames";
+import { proseClasses } from "@/helpers/proseClasses";
 import { AppLayout } from "@/Layouts/AppLayout";
 import { Event } from "@/types/Event";
 
@@ -43,8 +46,9 @@ const ViewEventPage = () => {
     });
 
     const eventTitle = (event: Event) => {
-        console.log(event);
         switch (event.eventType) {
+            case EventTypeCaptivatingFires:
+                return `${event.name} Captivating Fire`;
             case EventTypeFires:
                 return `${event.name} Fire`;
             default:
@@ -53,16 +57,24 @@ const ViewEventPage = () => {
     };
 
     const eventDate = (event: Event): string => {
-        switch (event.eventType) {
-            case EventTypeFires:
-                return "";
-            case EventTypeCaptivatingExperience:
-            case EventTypeWahExperience:
-            case EventTypeBecomingAKingExperience:
-                return `Starts on ${dateFormatter(event.startDate)}`;
-            default:
-                return `${dateFormatter(event.startDate)} - ${dateFormatter(event.endDate)}`;
+        if (
+            event.eventType === EventTypeCaptivatingFires ||
+            event.eventType === EventTypeFires
+        ) {
+            return "";
         }
+
+        if (
+            [
+                EventTypeCaptivatingExperience,
+                EventTypeWahExperience,
+                EventTypeBecomingAKingExperience,
+            ].includes(event.eventType)
+        ) {
+            return `Starts on ${dateFormatter(event.startDate)}`;
+        }
+
+        return `${dateFormatter(event.startDate)} - ${dateFormatter(event.endDate)}`;
     };
 
     return (
@@ -77,9 +89,7 @@ const ViewEventPage = () => {
                     event={event}
                 />
                 <BackToEvents />
-                <ShareEvent
-                    className={`shadow-xl hover:shadow-none transition absolute top-[20px] right-4 bg-white z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-orange duration-200 ease-in-out`}
-                />
+                <ShareEvent />
             </div>
             <div
                 className="relative border-t bg-black p-6 text-white top-[-32px] rounded-t-[2.5rem] border-grey-darker"
@@ -91,11 +101,7 @@ const ViewEventPage = () => {
                             <div className="flex items-center space-x-4">
                                 <h1 className="mb-1 flex items-center text-3xl leading-tighter">
                                     {eventTitle(event)}
-                                    {!event.approved_at && (
-                                        <span className="ml-2 rounded px-2 py-1 text-sm font-semibold uppercase text-white bg-orange">
-                                            Unpublished
-                                        </span>
-                                    )}
+                                    {!event.approved_at && <UnpublishedBadge />}
                                 </h1>
                             </div>
 
@@ -122,62 +128,16 @@ const ViewEventPage = () => {
                                     alt={``}
                                 />
                             )}
-
-                            {event.eventTypeData.key_details &&
-                                event.eventTypeData.key_details.length > 0 && (
-                                    <div>
-                                        <HeadingOne className={`mt-[48px]`}>
-                                            Key Details
-                                        </HeadingOne>
-                                        <ul className={`my-8`}>
-                                            {event.eventTypeData.key_details.map(
-                                                (item: any, index: number) => (
-                                                    <li
-                                                        className="mb-4 flex items-start"
-                                                        key={index}
-                                                    >
-                                                        <div
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: item
-                                                                    .fields
-                                                                    .icon,
-                                                            }}
-                                                            className={`w-6 h-6`}
-                                                        />
-                                                        <div className="ml-[24px] leading-[24px]">
-                                                            <p className="font-medium">
-                                                                {
-                                                                    item.fields
-                                                                        .headline
-                                                                }
-                                                            </p>
-                                                            <p className="text-sm text-[#B8B8B8]">
-                                                                {
-                                                                    item.fields
-                                                                        .description
-                                                                }
-                                                            </p>
-                                                        </div>
-                                                    </li>
-                                                )
-                                            )}
-                                        </ul>
-                                    </div>
-                                )}
-
-                            <div
-                                className={`mt-4 prose prose-p:text-white prose-a:text-orange max-w-none prose-hr:bg-black prose-h2:text-white prose-h3:text-white  prose-li:text-white`}
-                            >
-                                <Markdown>
-                                    {event.eventTypeData.description}
-                                </Markdown>
-                            </div>
+                            <KeyDetails event={event} />
+                            <Markdown className={proseClasses}>
+                                {event.eventTypeData.description}
+                            </Markdown>
 
                             {event.eventTypeData.photos &&
                                 event.eventTypeData.photos.length > 0 && (
                                     <PhotoCarousel
                                         className={`mt-8`}
-                                        images={event?.eventTypeData.photos}
+                                        images={event.eventTypeData.photos}
                                     />
                                 )}
                         </div>

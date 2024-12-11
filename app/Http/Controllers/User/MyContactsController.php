@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\AttendeeCollection;
-use Illuminate\Support\Facades\Request;
 use Inertia\Response;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Request;
+use App\Http\Resources\AttendeeCollection;
 
 class MyContactsController extends Controller
 {

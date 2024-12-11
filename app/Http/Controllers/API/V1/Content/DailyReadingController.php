@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use App\DataTypeObjects\API\V1\Content\DailyReadingResponse;
-use App\DataTypeObjects\TransistorPodcastEpisode;
-use App\Http\Controllers\Controller;
-use App\Services\TransistorService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Services\TransistorService;
+use App\Http\Controllers\Controller;
+use App\DataTypeObjects\TransistorPodcastEpisode;
+use App\DataTypeObjects\API\V1\Content\DailyReadingResponse;
 
 /**
  * @group Daily Reading Entity Retrieval
@@ -85,10 +85,10 @@ class DailyReadingController extends Controller
         }
 
         $matchingReading = null;
-        $slug = strtolower(urlencode($slug));
+        $slug = mb_strtolower(urlencode($slug));
         foreach ($dailyReadingsData as $reading) {
 
-            if (strtolower(str_replace('/daily-reading/', '', $reading['alias'])) === $slug) {
+            if (mb_strtolower(str_replace('/daily-reading/', '', $reading['alias'])) === $slug) {
                 $matchingReading = $reading;
 
                 break;

@@ -1,4 +1,5 @@
 import { Link, usePage } from "@inertiajs/react";
+import { singular } from "pluralize";
 
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useRoute from "@/Hooks/useRoute";
@@ -21,7 +22,7 @@ export const GiftComing = () => {
                     href={route("view.event", event)}
                     className="rounded-md border border-transparent px-4 py-2 text-center font-medium text-white transition duration-150 ease-in-out bg-orange hover:bg-transparent-orange disabled:bg-grey-200 disabled:text-grey-darker disabled:cursor-not-allowed"
                 >
-                    Visit Your Fire Listing
+                    Visit Your {singular(event.event_type.name)} Listing
                 </Link>
             </div>
         </div>

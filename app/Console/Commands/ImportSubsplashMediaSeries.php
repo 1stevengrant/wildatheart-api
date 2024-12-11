@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 use Statamic\Facades\Entry;
+use Illuminate\Support\Carbon;
+use Illuminate\Console\Command;
 
 class ImportSubsplashMediaSeries extends Command
 {

@@ -1,8 +1,8 @@
 <?php
 
-use App\Jobs\CheckIfUserShouldBeAdmin;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
+use App\Jobs\CheckIfUserShouldBeAdmin;
 
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);

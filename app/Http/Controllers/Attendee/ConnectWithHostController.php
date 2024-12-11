@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Attendee;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\ConnectWithHostRequest;
-use App\Http\Resources\EventResource;
-use App\Jobs\LogActivityJob;
-use App\Jobs\PostAttendeeContactToSlackJob;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use App\Services\SeoService;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\EventResource;
+use App\Jobs\PostAttendeeContactToSlackJob;
+use App\Http\Requests\ConnectWithHostRequest;
 
 class ConnectWithHostController extends Controller
 {

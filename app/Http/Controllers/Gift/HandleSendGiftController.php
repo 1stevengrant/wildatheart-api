@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Gift;
 
-use App\Actions\Address\CreateAddress;
-use App\Actions\Event\UpdateEvent;
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\HandleSendGiftRequest;
+use App\Models\Event;
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
-use App\Models\Event;
+use App\Actions\Event\UpdateEvent;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Actions\Address\CreateAddress;
+use App\Http\Requests\HandleSendGiftRequest;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HandleSendGiftController extends Controller
 {
@@ -64,6 +64,11 @@ class HandleSendGiftController extends Controller
 
         PostToZapier::dispatch($dataTransferObject);
 
-        return to_route('gift.success', $event);
+        return to_route('my.events.active')->with([
+            'notifications' => [
+                'message' => 'Your free gift has been requested!',
+                'type' => 'success',
+            ],
+        ]);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\Http\Controllers\Controller;
 use App\Models\EventType;
+use App\Http\Controllers\Controller;
 use App\Services\EventCreationStepHandlerService;
 
 class HostEventTypeBeforeController extends Controller

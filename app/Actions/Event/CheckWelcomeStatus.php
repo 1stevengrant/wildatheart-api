@@ -2,9 +2,9 @@
 
 namespace App\Actions\Event;
 
+use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use App\Mail\Event\SendWelcomeEmail;
-use App\Models\Event;
 use Illuminate\Support\Facades\Mail;
 use Lorisleiva\Actions\Concerns\AsAction;
 

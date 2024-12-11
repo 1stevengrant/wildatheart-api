@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\LogActivityJob;
 use App\Models\EventType;
+use App\Jobs\LogActivityJob;
 use Illuminate\Http\Request;
 
 class DrupalUrlController extends Controller

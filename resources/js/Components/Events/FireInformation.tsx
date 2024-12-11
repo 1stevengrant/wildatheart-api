@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import { Link, useForm } from "@inertiajs/react";
 import mapboxgl from "mapbox-gl";
+import { singular } from "pluralize";
 import Map, {
     GeolocateControl,
     MapLayerMouseEvent,
@@ -25,6 +26,7 @@ import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
+import { EventTypeCaptivatingFires } from "@/helpers/eventNames";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
@@ -239,7 +241,11 @@ export const FireInformation = ({ user }: any) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        post(route("host.fire.store"), {
+        const eventPostEndpoint =
+            eventType.slug === EventTypeCaptivatingFires
+                ? route("host.captivating-fire.store")
+                : route("host.fire.store");
+        post(eventPostEndpoint, {
             preserveScroll: true,
             onError: () => scrollToError(),
         });
@@ -253,7 +259,7 @@ export const FireInformation = ({ user }: any) => {
                     className={"max-w-[500px] mx-auto"}
                 >
                     <HeadingOne className={"my-12"}>
-                        Tell us about your Fire
+                        Tell us about your {singular(eventType.name)}
                     </HeadingOne>
                     <div>
                         <InputLabel
@@ -286,7 +292,6 @@ export const FireInformation = ({ user }: any) => {
                     </div>
                     <FireNamingGuidelines />
                     <EventDisplay event={event} className={"md:hidden mt-4"} />
-                    {/*{console.log(event)}*/}
                     <MapboxSearch className={"mt-4"} />
                     <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
                         <Map

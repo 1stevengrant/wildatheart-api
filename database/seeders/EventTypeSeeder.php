@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\EventType;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
 
 class EventTypeSeeder extends Seeder
 {
@@ -22,6 +22,7 @@ class EventTypeSeeder extends Seeder
             EventType::CAPTIVATING_EXPERIENCE,
             EventType::BECOMING_A_KING_EXPERIENCE,
             EventType::SURVIVAL_SCHOOL,
+            EventType::CAPTIVATING_FIRE,
         ]);
 
         $eventTypes->each(fn ($eventType) => EventType::create([

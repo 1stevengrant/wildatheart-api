@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Event;
-use App\Models\EventType;
 use App\Models\State;
+use App\Models\EventType;
 
 if (! function_exists('getStateAbbreviation')) {
     function getStateAbbreviation(?string $stateName = null): ?string
@@ -11,11 +11,11 @@ if (! function_exists('getStateAbbreviation')) {
             return null;
         }
 
-        if (strlen($stateName) === 2) {
-            return strtoupper($stateName);
+        if (mb_strlen($stateName) === 2) {
+            return mb_strtoupper($stateName);
         }
 
-        $normalizedName = ucwords(strtolower(trim($stateName)));
+        $normalizedName = ucwords(mb_strtolower(trim($stateName)));
 
         static $stateAbbreviations = null;
 
@@ -318,7 +318,7 @@ if (! function_exists('getCountries')) {
 if (! function_exists('getCountryCodeFromCountryName')) {
     function getCountryCodeFromCountryName(string $countryName): string
     {
-        $normalizedName = strtolower(trim($countryName));
+        $normalizedName = mb_strtolower(trim($countryName));
         $countryCode = Cache::get("country_code:{$normalizedName}");
 
         if ($countryCode === null) {
@@ -341,7 +341,7 @@ if (! function_exists('getCountryCodeFromCountryName')) {
 if (! function_exists('determineSexOfEvent')) {
     function determineSexOfEvent(EventType $eventType): string
     {
-        return in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT]) ? Event::FOR_WOMEN : Event::FOR_MEN;
+        return in_array($eventType->name, [EventType::CAPTIVATING_EXPERIENCE, EventType::CAPTIVATING_CORE_RETREAT, EventType::CAPTIVATING_FIRE]) ? Event::FOR_WOMEN : Event::FOR_MEN;
     }
 }
 

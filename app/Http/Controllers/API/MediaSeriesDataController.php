@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Services\SubsplashService;
 use Carbon\Carbon;
-use Statamic\Eloquent\Entries\UuidEntryModel;
 use Statamic\Entries\Entry;
+use App\Services\SubsplashService;
+use App\Http\Controllers\Controller;
+use Statamic\Eloquent\Entries\UuidEntryModel;
 
 class MediaSeriesDataController extends Controller
 {

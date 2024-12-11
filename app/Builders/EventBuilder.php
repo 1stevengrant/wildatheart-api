@@ -165,8 +165,8 @@ class EventBuilder extends Builder
 
     public function filterBySex(?string $sex): EventBuilder
     {
-        if ($sex && in_array(strtolower($sex), ['men', 'women'])) {
-            return $this->where('sex', strtolower($sex));
+        if ($sex && in_array(mb_strtolower($sex), ['men', 'women'])) {
+            return $this->where('sex', mb_strtolower($sex));
         }
 
         return $this;
@@ -203,5 +203,10 @@ class EventBuilder extends Builder
             $startDate,
             $endDate,
         ]);
+    }
+
+    public function name(string $name, string $operator = '='): EventBuilder
+    {
+        return $this->where('name', $operator, "$name");
     }
 }

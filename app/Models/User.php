@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use App\Builders\UserBuilder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Laravel\Nova\Auth\Impersonatable;
+use App\Builders\UserBuilder;
+use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Laravel\Nova\Auth\Impersonatable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable
 {
@@ -133,8 +133,8 @@ class User extends Authenticatable
     protected function email(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => strtolower($value),
-            set: fn (string $value) => strtolower(str_replace(' ', '', $value)),
+            get: fn (string $value) => mb_strtolower($value),
+            set: fn (string $value) => mb_strtolower(str_replace(' ', '', $value)),
         );
     }
 
@@ -214,7 +214,7 @@ class User extends Authenticatable
             });
     }
 
-    public function primaryAddress(): Model
+    public function primaryAddress(): ?Model
     {
         return $this->addresses()->where('is_primary', true)->first();
     }

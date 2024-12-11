@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use App\DataTypeObjects\API\V1\ErrorResponse;
-use App\DataTypeObjects\API\V1\RedirectResponse;
-use App\DataTypeObjects\MediaItemData;
-use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
-use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
-use App\Http\Controllers\API\MediaItemDataController;
-use App\Http\Controllers\API\MediaSeriesDataController;
+use Statamic\Entries\Entry;
+use Statamic\Facades\Token;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Facades\Statamic\CP\LivePreview;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
 use App\Services\ImageBuilderService;
-use Facades\Statamic\CP\LivePreview;
-use Illuminate\Http\Request;
-use Statamic\Entries\Entry;
-use Statamic\Facades\Token;
+use App\DataTypeObjects\MediaItemData;
+use App\DataTypeObjects\API\V1\ErrorResponse;
+use App\DataTypeObjects\API\V1\RedirectResponse;
+use App\Http\Controllers\API\MediaItemDataController;
+use App\Http\Controllers\API\MediaSeriesDataController;
+use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
+use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
 
 class MediaItemOrSeriesController extends Controller
 {

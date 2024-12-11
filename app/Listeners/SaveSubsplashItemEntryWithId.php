@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use Statamic\Events\EntrySaved;
 use Statamic\Facades\Entry;
+use Statamic\Events\EntrySaved;
 
 class SaveSubsplashItemEntryWithId
 {

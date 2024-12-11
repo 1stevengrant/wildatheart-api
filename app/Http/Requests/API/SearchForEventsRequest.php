@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class SearchForEventsRequest extends FormRequest
 {

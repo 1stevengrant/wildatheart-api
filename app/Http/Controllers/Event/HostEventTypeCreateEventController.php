@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\EventRequest;
-use App\Jobs\PostToZapier;
 use App\Models\EventType;
-use App\Services\EventCreationStepHandlerService;
+use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
+use App\Http\Requests\EventRequest;
+use App\Http\Controllers\Controller;
+use App\Services\EventCreationStepHandlerService;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HostEventTypeCreateEventController extends Controller
 {

@@ -3,8 +3,8 @@
 namespace App\DataTypeObjects;
 
 use Spatie\LaravelData\Data;
-use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 use Statamic\Entries\Entry as EntriesEntry;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class SlideBlock extends Data

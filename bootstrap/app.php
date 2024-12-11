@@ -21,7 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectGuestsTo(fn () => route('login'));
+        $middleware->redirectGuestsTo(function () {
+            session()->put('auth.intended_url', request()->url());
+
+            return route('login');
+        });
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
 
         $middleware->validateCsrfTokens(except: [

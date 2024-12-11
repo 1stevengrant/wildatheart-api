@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Builders\EventTypeBuilder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use App\Builders\EventTypeBuilder;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EventType extends BaseModel
 {
@@ -31,6 +31,8 @@ class EventType extends BaseModel
     const SURVIVAL_SCHOOL = 'Survival School';
 
     const FIRES = 'Fires';
+
+    const CAPTIVATING_FIRE = 'Captivating Fires';
 
     const TYPE_RETREAT = 'retreat';
 

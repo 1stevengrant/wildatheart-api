@@ -2,8 +2,8 @@
 
 namespace App\Actions\User;
 
-use App\Jobs\LogActivityJob;
 use App\Models\User;
+use App\Jobs\LogActivityJob;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class UpdateUserRole

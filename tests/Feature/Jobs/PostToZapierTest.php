@@ -1,7 +1,7 @@
 <?php
 
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
 use App\Jobs\PostToZapier;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 it('posts the event details to zapier and adds the event to the spreadsheet', function () {
     \Illuminate\Support\Facades\Queue::fake();

@@ -1,8 +1,8 @@
 <?php
 
-use App\Actions\User\ConfirmEmail;
-use App\Models\EmailVerify;
 use App\Models\User;
+use App\Models\EmailVerify;
+use App\Actions\User\ConfirmEmail;
 
 it('confirms a users email address', function () {
     $user = User::factory()->unverified()->create();

@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use Inertia\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Inertia\Middleware;
 
 //use Tightenco\Ziggy\Ziggy;
 
