@@ -1,0 +1,111 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [staging]
+  pull_request:
+    branches: [staging]
+jobs:
+  forge-deploy:
+    name: "Deploy to Laravel Forge"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Start Laravel Forge Deployment
+        id: deploy
+        run: |
+          RESPONSE=$(curl -X POST "${{ secrets.FORGE_STAGING_TRIGGER_URL }}" \
+            -H "Authorization: Bearer ${{ secrets.FORGE_API_TOKEN }}" \
+            -H "Accept: application/json" \
+            -s -w "\n%{http_code}")
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$ d')
+
+          echo "Status Code: $HTTP_STATUS"
+          echo "API Response: $BODY"
+
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Error: API request failed with status $HTTP_STATUS"
+            echo "Response: $BODY"
+            exit 1
+          fi
+
+      - name: Wait for Deployment to Complete
+        id: status
+        run: |
+          STATUS="deploying"
+          while [ "$STATUS" = "deploying" ]; do
+            RESPONSE=$(curl -X GET "https://forge.laravel.com/api/v1/servers/${{ secrets.FORGE_SERVER_ID }}/sites/2436323/deployment-history" \
+              -H "Authorization: Bearer ${{ secrets.FORGE_API_TOKEN }}" \
+              -H "Accept: application/json" \
+              -s)
+            echo "API Response: $RESPONSE"
+            if ! STATUS=$(echo $RESPONSE | jq -r '.deployments[0].status'); then
+              echo "Error: Failed to parse status from response"
+              exit 1
+            fi
+            echo "Current status: $STATUS"
+            sleep 10
+          done
+          echo "Final status: $STATUS"
+          if [ "$STATUS" != "finished" ]; then
+            exit 1
+          fi
+  test:
+    name: "Run Integration Tests"
+    needs: forge-deploy
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get latest tests in wildatheart.org-astro
+        uses: actions/checkout@v4
+        with:
+          repository: wild-at-heart/wildatheart.org-astro
+          path: astro
+          ref: develop
+          token: ${{ secrets.PAT_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install deps from wildatheart.org-astro
+        working-directory: astro
+        run: |
+          npm install
+          npm ci
+      - name: Install Playwright Browsers
+        working-directory: astro
+        run: npx playwright install --with-deps
+      - name: Run Integration Tests On Astro in CF pointed at local-staging
+        working-directory: astro
+        run: npx playwright test
+      - name: Start application
+        working-directory: astro
+        run: |
+          npm run build
+          npm run start &
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.ASTRO_SENTRY_AUTH_TOKEN }}
+          TRANSISTOR_API_KEY: ${{ secrets.TRANSISTOR_API_KEY }}
+          SUBSPLASH_CLIENT_SECRET: ${{ secrets.SUBSPLASH_CLIENT_SECRET }}
+          SUBSPLASH_CLIENT_ID: e11e0fb6-4acd-4344-a75a-d64b671d1d09
+          MAPBOX_ACCESS_TOKEN: "pk.eyJ1IjoiMXN0ZXZlbmdyYW50IiwiYSI6ImNqcmx2bHVjcDBidnkzenBqYW5uaGE5YTYifQ.1ivkQGXDApuhvrgrNR6j0A"
+          SUBSPLASH_SCOPE: 5289PV
+          SUBSPLASH_AUTHENTICATION_TOKEN_URL: "https://core.subsplash.com/tokens/v1/token"
+          FRONTEND_URL: "http://localhost:4321"
+          PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: "0x4AAAAAAAfYWAymCrpRYz7j"
+          SENTRY_ORG: "wild-at-heart"
+          SENTRY_PROJECT: "wildatheart-astro"
+          CONTENT_API_URL: "https://local-staging.wildatheart.org/api/content"
+          WAH_LOCAL_API_URL: "https://local-staging.wildatheart.org/api/v1"
+          CONTENT_API_V1_URL: "https://local-staging.wildatheart.org/api/content/v1"
+          CONTENT_API_AUTH_TOKEN: "Basic d2FoOndhaA=="
+      - name: Run Integration Tests Through A Fresh Build
+        working-directory: astro
+        run: BASE_URL=http://localhost:4321 npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
