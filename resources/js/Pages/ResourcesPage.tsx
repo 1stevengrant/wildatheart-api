@@ -31,7 +31,7 @@ const ResourcesPage = () => {
                 {eventTypes.map((eventType: EventType) => (
                     <div
                         key={eventType.id}
-                        className={`p-6 bg-gradient-to-br ${eventTypeBackground(eventType.slug)} end-zinc-900 rounded-2xl shadow-xl flex space-x-4 md:flex-col md:space-x-0`}
+                        className={`p-6 bg-gradient-to-br ${eventTypeBackground(eventType.slug)} end-n800 rounded-2xl shadow-xl flex space-x-4 md:flex-col md:space-x-0`}
                     >
                         {eventType.image && (
                             <img

@@ -23,8 +23,8 @@ export const SwitchComponent = ({
                 checked={checked}
                 onChange={onChange}
                 className={classNames(
-                    checked ? "bg-orange" : "bg-grey-darker",
-                    `relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2`
+                    checked ? "bg-p200" : "bg-grey-darker",
+                    `relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-p200 focus:ring-offset-2`
                 )}
             >
                 <div className="sr-only">Use setting</div>

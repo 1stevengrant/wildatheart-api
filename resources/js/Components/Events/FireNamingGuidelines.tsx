@@ -1,6 +1,6 @@
 export const FireNamingGuidelines = ({ className }: { className?: string }) => {
     return (
-        <div className={`${className} text-sm text-grey-200 mt-4`}>
+        <div className={`${className} text-sm text-n40 mt-4`}>
             <p>Fire Naming Guidelines</p>
             <ul className="mt-2 list-disc pl-8">
                 <li>No special characters/emojis</li>

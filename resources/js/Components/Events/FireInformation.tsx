@@ -339,7 +339,7 @@ export const FireInformation = ({ user }: any) => {
                         </PrimaryButton>
                         <Link
                             className={
-                                "text-grey-200 w-full inline-block text-center"
+                                "text-n40 w-full inline-block text-center"
                             }
                             href={route("home")}
                         >

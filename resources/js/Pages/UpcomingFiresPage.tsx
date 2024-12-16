@@ -67,7 +67,7 @@ const UpcomingFiresPage = () => {
                         placeholder="Search fires..."
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        className="w-full p-2 border border-grey-darker rounded bg-black text-white placeholder:text-white focus:outline-none focus:border-orange focus:ring-0"
+                        className="w-full p-2 border border-n400 rounded bg-black text-white placeholder:text-white focus:outline-none focus:border-p200 focus:ring-0"
                     />
                 </div>
                 {debouncedSearchTerm && (
@@ -82,7 +82,7 @@ const UpcomingFiresPage = () => {
                         {filteredFires.map((event: Event) => (
                             <li
                                 key={event.id}
-                                className={`lg:border lg:border-grey-darker lg:rounded-md lg:hover:border-orange transition-all ease-in-out`}
+                                className={`lg:border lg:border-n400 lg:rounded-md lg:hover:border-p200 transition-all ease-in-out`}
                             >
                                 <EventCard
                                     className={`hidden lg:block `}

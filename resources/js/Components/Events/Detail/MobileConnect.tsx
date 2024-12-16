@@ -16,7 +16,7 @@ export const MobileConnect = () => {
     return (
         <div
             id="mobile-connect-with-host"
-            className="fixed right-0 bottom-0 left-0 border-t bg-black px-4 py-6 border-grey-darker md:hidden"
+            className="fixed right-0 bottom-0 left-0 border-t bg-black px-4 py-6 border-n400 md:hidden"
         >
             <div className="flex items-center space-x-6">
                 {hasConnectedWithHost ? (

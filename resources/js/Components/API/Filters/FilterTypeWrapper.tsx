@@ -13,7 +13,7 @@ export const FilterTypeWrapper = ({
                 {icon}
                 <div>{title}</div>
             </div>
-            <p className={`text-sm text-grey-200 my-4`}>{text}</p>
+            <p className={`text-sm text-n40 my-4`}>{text}</p>
         </>
     );
 };

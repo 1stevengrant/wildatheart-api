@@ -16,7 +16,7 @@ export const FiresFilter = () => {
     const fireTypes = props.fireTypes;
 
     return (
-        <div className={`border-b border-grey-darker pb-8`}>
+        <div className={`border-b border-n400 pb-8`}>
             <FilterTypeWrapper
                 icon={<FiresIcon className={`stroke-white w-8 h-8`} />}
                 title={`Fires`}

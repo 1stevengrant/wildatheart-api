@@ -16,10 +16,10 @@ export const InputLabel = ({
     return (
         <label
             {...props}
-            className={`block font-semibold text-sm text-grey-200 ` + className}
+            className={`block font-semibold text-sm text-n70 ` + className}
         >
             {value ? value : children}
-            {required ? <span className="text-red"> *</span> : null}
+            {required ? <span className="text-r200"> *</span> : null}
         </label>
     );
 };

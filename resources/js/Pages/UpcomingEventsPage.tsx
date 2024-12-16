@@ -31,7 +31,7 @@ const UpcomingEventsPage = () => {
                             {events.map((event: any) => (
                                 <li
                                     key={event.data.id}
-                                    className={`lg:border lg:border-grey-darker lg:rounded-md lg:hover:border-orange transition-all ease-in-out`}
+                                    className={`lg:border lg:border-n400 lg:rounded-md lg:hover:border-p200 transition-all ease-in-out`}
                                 >
                                     <EventCard
                                         className={`hidden lg:block `}

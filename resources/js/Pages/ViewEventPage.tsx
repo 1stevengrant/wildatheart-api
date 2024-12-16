@@ -92,7 +92,7 @@ const ViewEventPage = () => {
                 <ShareEvent />
             </div>
             <div
-                className="relative border-t bg-black p-6 text-white top-[-32px] rounded-t-[2.5rem] border-grey-darker"
+                className="relative border-t bg-black p-6 text-white top-[-32px] rounded-t-[2.5rem] border-n400"
                 id={"event"}
             >
                 <div className="container mx-auto">
@@ -128,6 +128,7 @@ const ViewEventPage = () => {
                                     alt={``}
                                 />
                             )}
+
                             <KeyDetails event={event} />
                             <Markdown className={proseClasses}>
                                 {event.eventTypeData.description}

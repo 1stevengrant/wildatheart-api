@@ -7,7 +7,7 @@ import { CircleIcon } from "@/Components/Icons/CircleIcon";
 import { imageGenerator } from "@/helpers/user";
 
 const EventStep = ({ step }: { step: number }) => {
-    return <div className={`text-xs text-grey-200`}>Step {step}</div>;
+    return <div className={`text-xxs text-n40`}>Step {step}</div>;
 };
 
 const EventStepBar = ({
@@ -19,7 +19,7 @@ const EventStepBar = ({
 }) => {
     return (
         <div
-            className={`rounded h-[50px] border w-[5px] ${isActive ? `bg-white` : `${isComplete ? `bg-orange border-orange` : ``}`} `}
+            className={`rounded h-[50px] border w-[5px] ${isActive ? `bg-white` : `${isComplete ? `bg-p200 border-p200` : ``}`} `}
         />
     );
 };
@@ -58,7 +58,7 @@ export const EventCreateProgress = () => {
             {eventType && (
                 <>
                     <div
-                        className={`border-2 p-2 border-grey-border rounded-lg mt-4 flex items-center`}
+                        className={`border-2 p-2 border-n700 rounded-lg mt-4 flex items-center`}
                     >
                         <div>
                             <img
@@ -105,7 +105,7 @@ export const EventCreateProgress = () => {
                                 <EventListItem>
                                     <span>
                                         <CircleIcon
-                                            className={`${route().current("host.eventType.index") ? `fill-white` : `${eventSteps.guide.welcome ? `fill-orange` : `stroke-white`}`}`}
+                                            className={`${route().current("host.eventType.index") ? `fill-white` : `${eventSteps.guide.welcome ? `fill-p200` : `stroke-white`}`}`}
                                         />
                                     </span>
                                     <span>Welcome</span>
@@ -113,7 +113,7 @@ export const EventCreateProgress = () => {
                                 <EventListItem>
                                     <span>
                                         <CircleIcon
-                                            className={`${route().current("host.eventType.before") ? `fill-white` : `${eventSteps.guide.before ? `fill-orange` : `stroke-white`}`}`}
+                                            className={`${route().current("host.eventType.before") ? `fill-white` : `${eventSteps.guide.before ? `fill-p200` : `stroke-white`}`}`}
                                         />
                                     </span>
                                     <span>Before Your {eventName}</span>
@@ -123,7 +123,7 @@ export const EventCreateProgress = () => {
                                         <EventListItem>
                                             <span>
                                                 <CircleIcon
-                                                    className={`${route().current("host.eventType.schedule") ? `fill-white` : `${eventSteps.guide.schedule ? `fill-orange` : `stroke-white`}`}`}
+                                                    className={`${route().current("host.eventType.schedule") ? `fill-white` : `${eventSteps.guide.schedule ? `fill-p200` : `stroke-white`}`}`}
                                                 />
                                             </span>
                                             <span>{eventName} Schedule</span>
@@ -135,7 +135,7 @@ export const EventCreateProgress = () => {
                                         <EventListItem>
                                             <span>
                                                 <CircleIcon
-                                                    className={`${route().current("host.eventType.faqs") ? `fill-white` : `${eventSteps.guide.faqs ? `fill-orange` : `stroke-white`}`}`}
+                                                    className={`${route().current("host.eventType.faqs") ? `fill-white` : `${eventSteps.guide.faqs ? `fill-p200` : `stroke-white`}`}`}
                                                 />
                                             </span>
                                             <span>{eventName} FAQs</span>

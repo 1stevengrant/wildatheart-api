@@ -39,7 +39,7 @@ export default function Table<T>({
                     {rows?.length === 0 && (
                         <tr>
                             <td
-                                className="px-6 py-24 border-t border-grey-border text-center"
+                                className="px-6 py-24 border-t border-n700 text-center"
                                 colSpan={columns.length}
                             >
                                 {noDataMessage}
@@ -56,7 +56,7 @@ export default function Table<T>({
                                     return (
                                         <td
                                             key={column.name}
-                                            className="border-t border-grey-border px-6 py-4"
+                                            className="border-t border-n700 px-6 py-4"
                                         >
                                             {column.renderCell?.(row) ??
                                                 get(row, column.name) ??

@@ -1,74 +1,151 @@
-import forms from "@tailwindcss/forms";
-import typography from "@tailwindcss/typography";
+/*
+ * NOTE: this file has holdovers from the previous design system.
+ * Moving forward, we should do our best to align with tailwind and the design system.
+ */
 
-/** @type {import('tailwindcss').Config} */
-export default {
+/**
+ * Colors
+ * https://www.figma.com/design/kgPud8tPmNVObrB936pZf0/WAH-Design-System?node-id=55-991&node-type=frame&t=rOR0RZcqBn8VQ4PN-0
+ */
+const colors = {
+    // Default
+    black: "#010101",
+    white: "#ffffff",
+    body: "#010101",
+
+    // Primary
+    p50: "#FBEFE6",
+    p75: "#EEBD96",
+    p100: "#E7A26B",
+    p200: "#DD7A2B",
+    p300: "#D65F00",
+    p400: "#964300",
+    p500: "#833A00",
+
+    // Secondary
+    s50: "#EEF3F4",
+    s75: "#B8CDD1",
+    s100: "#9BB8BE",
+    s200: "#6F9AA2",
+    s300: "#52858F",
+    s400: "#395D64",
+    s500: "#325157",
+
+    // Neutrals
+    n0: "#FFFFFF",
+    n10: "#FAFAFB",
+    n20: "#F5F6F6",
+    n30: "#ECEDED",
+    n40: "#E0E1E2",
+    n50: "#C3C6C8",
+    n60: "#B5B9BA",
+    n70: "#A9ADAF",
+    n80: "#9AA0A2",
+    n90: "#8C9295",
+    n100: "#7D8488",
+    n200: "#6F777A",
+    n300: "#61696D",
+    n400: "#555E62",
+    n500: "#465055",
+    n600: "#3A454A",
+    n700: "#29353A",
+    n800: "#1B272D",
+    n900: "#0F1C22",
+
+    // Success
+    g50: "#F2F4EE",
+    g75: "#CBD0BB",
+    g100: "#B6BD9F",
+    g200: "#96A075",
+    g300: "#818D59",
+    g400: "#5A633E",
+    g500: "#4F5636",
+
+    // Danger
+    r50: "#FBE6E6",
+    r75: "#ED9999",
+    r100: "#E56F6F",
+    r200: "#DA3131",
+    r300: "#D20707",
+    r400: "#930505",
+    r500: "#800404",
+
+    // Warning
+    y50: "#FBF8E6",
+    y75: "#EEE299",
+    y100: "#E7D66F",
+    y200: "#DCC531",
+    y300: "#D5B907",
+    y400: "#958205",
+    y500: "#827104",
+
+    // From Nav Mockups
+    // https://www.figma.com/design/exRUpLNLT1Vxq2kN3QB8dc/WAH-Web-Mocks?node-id=716-640&node-type=vector&m=dev
+    /**
+     * We likely need to have a chat with Wookie to decide how
+     * we want to add these colors to the official color system.
+     */
+    "matt-grey": "#202020",
+    "matt-black": "#0D151A",
+
+    // Defaults from Tailwind we want
+    transparent: "transparent",
+    current: "currentColor",
+};
+
+/**
+ * Font Sizes
+ * https://www.figma.com/design/kgPud8tPmNVObrB936pZf0/WAH-Design-System?node-id=24-316&node-type=canvas&t=rOR0RZcqBn8VQ4PN-0
+ */
+const fontSize = {
+    hero1: "clamp(2.25rem, 1.6848rem + 2.4117cqw, 4rem)",
+    hero2: "clamp(1.75rem, 1.6693rem + 0.3445vw, 2rem)",
+    h1: "clamp(1.75rem, 3.5cqw, 3rem)",
+    h2: "clamp(1.25rem, 3.5cqw, 1.5rem)",
+    h3: "clamp(1.1rem, 3.5cqw, 1.375rem)",
+    h4: "clamp(.875rem, 3.5cqw, 1.25rem)",
+    h5: "clamp(.75rem, 3.5cqw, 1.125rem)",
+    h6: ".875rem",
+    "body-extra-small": ".625rem",
+    "body-small": ".75rem",
+    "body-base": "1rem",
+    "body-large": "clamp(1rem, 3.5cqw, 1.4375rem)",
+};
+
+/** @type {import("tailwindcss").Config} */
+module.exports = {
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.{tsx,ts,vue,js,jsx}",
     ],
-
     theme: {
+        colors,
+        fontSize,
         extend: {
-            screens: {
-                "ipad-landscape": "1180px",
+            animation: {
+                zoom: "zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                fade: "fade 0.2s ease-out",
             },
             backgroundImage: {
                 campfire: "url('/resources/img/fires-image.webp')",
             },
-            fontWeight: {
-                hairline: 100,
-                thin: 200,
-                light: 300,
-                normal: 400,
-                medium: 500,
-                semibold: 600,
-                bold: 700,
-                extrabold: 800,
-                black: 900,
+            borderRadius: {
+                "3xl": "1.875rem",
             },
-            colors: {
-                transparent: "transparent",
-                "transparent-orange": "rgba(214, 95, 0, 0.9)",
-                "transparent-brown": "rgba(116, 54, 23, 0.9)",
-                black: "#111111", //From Sketch File
-                light: "#f2f3f3",
-                error: "red",
-                dark: "#0f1c22",
-                darker: "#081013",
-                "grey-darkest": "#1d272b",
-                "grey-darker": "#484848",
-                "grey-200": "#B8B6B6",
-                "grey-dark": "#5C6771", // From Sketch File
-                "grey-border": "#2E2C29",
-                form: "#171513",
-                grey: "#9FA7A9",
-                "grey-light": "var(--wah-grey-light)", //From Sketch File
-                "grey-lighter": "#f1f5f8",
-                "grey-lightest": "#f8fafc",
-                white: "#ffffff",
-                "red-darkest": "#3b0d0c",
-                "red-darker": "#621b18",
-                "red-dark": "#cc1f1a",
-                red: "#e3342f",
-                "red-light": "#ef5753",
-                "red-lighter": "#f9acaa",
-                "red-lightest": "#fcebea",
-                orange: "#D65F00",
-                "blue-darkest": "#06272E",
-                "blue-darker": "#185f68", // From Borders in styleguide
-                blue: "#52858F", // From style guide
-                "blue-900": "#0B1419",
-                brown: "#743617",
-                "green-400": "#4ade80",
+            borderWidth: {
+                half: ".5px",
+            },
+            container: {
+                center: true,
+                padding: "1.5rem",
+                paddingLeft: "1.5rem",
+                paddingRight: "1.5rem",
+                maxWidth: "1373px",
             },
             fontFamily: {
-                cursive: ["Rock Salt", "cursive"],
-                sans: ["Inter", "sans-serif"],
-                serif: ["Arno Pro", "arno-pro", "Georgia", "serif"],
-                mono: ["Menlo", "monospace"],
+                sans: ["astoria-sans", "sans-serif"],
             },
             fontSize: {
                 xxs: ".625rem", // 10px
@@ -83,70 +160,48 @@ export default {
                 "4xl": "2.125rem", // 34px
                 "5xl": "3.875rem", // 48px
             },
-
-            lineHeight: {
-                tighter: 1.17,
-                none: 1,
-                tight: 1.25,
-                normal: 1.5,
-                loose: 2,
-                looser: 2.5,
-                loosest: 3,
+            keyframes: {
+                zoom: {
+                    "0%": {
+                        transform: "scale(0.95)",
+                    },
+                    "100%": {
+                        transform: "scale(1)",
+                    },
+                },
+                fade: {
+                    "0%": {
+                        opacity: "0",
+                    },
+                    "100%": {
+                        opacity: "1",
+                    },
+                },
             },
             letterSpacing: {
-                tight: "-0.05em",
-                normal: "0",
-                wide: "0.03em",
-                wider: "0.06em",
-                widest: "0.07em",
+                "even-wider": "0.07em",
+                widest: "0.2em",
+            },
+            scale: {
+                300: "3",
+            },
+            screens: {
+                "ipad-landscape": "1180px",
             },
             typography: (theme) => ({
                 DEFAULT: {
                     css: {
-                        p: {
-                            color: theme("colors.white"),
-                        },
-                        ul: {
-                            color: theme("colors.white"),
-                        },
-                        ol: {
-                            color: theme("colors.white"),
-                        },
-                        "li::marker": {
-                            color: theme("colors.white"),
-                        },
-                        h1: {
-                            color: theme("colors.white"),
-                            fontWeight: theme("fontWeight.semibold"),
-                        },
                         h2: {
-                            color: theme("colors.white"),
-                            fontWeight: theme("fontWeight.semibold"),
-                        },
-                        h3: {
-                            color: theme("colors.white"),
-                            fontWeight: theme("fontWeight.semibold"),
-                        },
-                        h4: {
-                            color: theme("colors.white"),
-                            fontWeight: theme("fontWeight.semibold"),
-                        },
-                        a: {
-                            color: theme("colors.orange"),
-                            textDecoration: "underline",
-                        },
-                        "a:hover": {
-                            color: theme("colors.white"),
-                            textDecoration: "none",
-                        },
-                        strong: {
-                            color: theme("colors.white"),
+                            marginBottom: ".5rem",
                         },
                     },
                 },
             }),
         },
     },
-
-    plugins: [forms, typography, require("@headlessui/tailwindcss")],
+    plugins: [
+        require("@tailwindcss/container-queries"),
+        require("@tailwindcss/typography"),
+        require("flowbite/plugin"),
+    ],
 };

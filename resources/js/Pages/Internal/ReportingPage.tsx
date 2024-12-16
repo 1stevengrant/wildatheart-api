@@ -34,7 +34,7 @@ const Stat = ({
         <li>
             <div className={`flex space-x-2 items-center`}>
                 <span className="font-semibold text-gray-700">{label}:</span>
-                <span className="text-orange">{value.count}</span>
+                <span className="text-p200">{value.count}</span>
                 <div className={`text-grey text-sm`}>Hosts: {value.hosts}</div>
             </div>
 
@@ -55,7 +55,7 @@ const StatCard = ({
     return (
         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
             <div className="p-6 bg-white">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">
+                <h2 className="text-2xl font-bold mb-4 text-n700">
                     {title}
                 </h2>
                 {byline && <p className="text-grey italic">{byline}</p>}

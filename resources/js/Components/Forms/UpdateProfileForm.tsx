@@ -15,7 +15,7 @@ import { UserAvatar } from "@/Components/UserAvatar";
 import { scrollToError } from "@/helpers/scrollToError";
 import useRoute from "@/Hooks/useRoute";
 
-const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-orange hover:text-orange transition ease-in-out duration-100 font-semibold text-sm`;
+const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-p200 hover:text-p200 transition ease-in-out duration-100 font-semibold text-sm`;
 
 export const UpdateProfileForm = ({
     user,
@@ -281,7 +281,7 @@ export const UpdateProfileForm = ({
                 </PrimaryButton>
                 <Link
                     href={route("home")}
-                    className="block py-3 text-center text-sm text-grey-200"
+                    className="block py-3 text-center text-sm text-n40"
                 >
                     Cancel
                 </Link>

@@ -8,7 +8,7 @@ export const InputError = ({
     return message ? (
         <div
             {...props}
-            className={`field-validation-error text-sm text-red mt-1 italic ${className}`}
+            className={`field-validation-error text-sm text-r200 mt-1 italic ${className}`}
         >
             {message}
         </div>

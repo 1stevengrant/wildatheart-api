@@ -17,7 +17,7 @@ export default function SelectInput({
             id={name}
             name={name}
             {...props}
-            className={`bg-form rounded-full pl-6 focus:ring-orange focus:outline-none focus:border-none ${className} ${error ? "" : ""}`}
+            className={`bg-n900 rounded-full pl-6 focus:ring-p200 focus:outline-none focus:border-none ${className} ${error ? "" : ""}`}
         >
             {options?.map(({ value, label }, index) => (
                 <option key={index} value={value}>

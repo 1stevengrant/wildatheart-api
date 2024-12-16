@@ -12,17 +12,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <x-favicons />
 
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link
-        href="https://fonts.bunny.net/css?family=inter:100,200,300,400,500,600,700,800,900"
-        rel="stylesheet"
-    />
+    <link rel="stylesheet" href="https://use.typekit.net/qce7npw.css">
     @routes
     @viteReactRefresh
     @vite(['resources/js/local.tsx', "resources/js/Pages/{$page['component']}.tsx"])
     @inertiaHead
 </head>
-<body class="font-sans antialiased bg-black text-white selection:bg-orange selection:text-white h-full">
+<body class="font-sans antialiased bg-black text-white selection:bg-p200 selection:text-white h-full">
 @inertia
 </body>
 </html>

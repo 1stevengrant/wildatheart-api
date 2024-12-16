@@ -52,7 +52,7 @@ const FaqsEventTypePage = () => {
                                             {({ open }) => (
                                                 /* Use the `open` state to conditionally change the direction of an icon. */
                                                 <>
-                                                    <Disclosure.Button className="flex w-full items-center justify-between border-t py-2 text-white border-grey-border">
+                                                    <Disclosure.Button className="flex w-full items-center justify-between border-t py-2 text-white border-n700">
                                                         <div
                                                             className={`flex items-center font-semibold`}
                                                         >
@@ -67,7 +67,7 @@ const FaqsEventTypePage = () => {
                                                             className={`w-6 h-6 flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
                                                         />
                                                     </Disclosure.Button>
-                                                    <Disclosure.Panel className="border-t py-4  border-t-grey-border text-white">
+                                                    <Disclosure.Panel className="border-t py-4  border-t-n700 text-white">
                                                         {faq.answer}
                                                     </Disclosure.Panel>
                                                 </>
