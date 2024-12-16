@@ -31,7 +31,7 @@ export const Host = ({ className = "", host, hostPhoto }: HostProps) => {
 
                 <div>
                     <p className="text-sm">Your Host ·</p>
-                    <p className="text-2xl font-medium">{host}</p>
+                    <p className="capitalize text-2xl font-medium">{host}</p>
                 </div>
             </div>
         </div>

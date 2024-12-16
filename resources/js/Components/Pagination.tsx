@@ -36,13 +36,13 @@ function PaginationItem({ active, label, url }: PaginationItem) {
         [
             "mr-1 mb-1",
             "px-4 py-3",
-            "border-2 border-grey-darker border-gray-300 rounded",
+            "border-2 border-n400 rounded",
             "text-sm font-semibold",
             "hover:border-white",
-            "focus:outline-none focus:border-orange focus:text-orange",
+            "focus:outline-none focus:border-p200 focus:text-p200",
         ],
         {
-            "bg-black border-orange text-orange": active,
+            "bg-black border-p200 text-p200": active,
         }
     );
 
@@ -61,7 +61,7 @@ function PaginationItem({ active, label, url }: PaginationItem) {
 
 function PageInactive({ label }: Pick<PaginationItem, "label">) {
     const className = classNames(
-        "mr-1 mb-1 px-4 py-3 text-sm font-semibold border-2 rounded border-solid border-grey-darker text-grey-darker cursor-not-allowed"
+        "mr-1 mb-1 px-4 py-3 text-sm font-semibold border-2 rounded border-solid border-n400 text-n400 cursor-not-allowed"
     );
 
     /**

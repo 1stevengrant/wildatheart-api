@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
         div.classList.add(
             "px-4",
             "py-2",
-            "bg-orange",
-            "text-gray-800",
+            "bg-p200",
+            "text-n700",
             "absolute",
             "bottom-0",
             "right"

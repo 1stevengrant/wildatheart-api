@@ -23,7 +23,7 @@ export const EventDisplay = ({
 
     return (
         <div
-            className={`${className} p-4 flex space-x-4 border rounded-md cursor-pointer border-grey-border`}
+            className={`${className} p-4 flex space-x-4 border rounded-md cursor-pointer border-n700`}
         >
             {event.eventType.image && (
                 <img

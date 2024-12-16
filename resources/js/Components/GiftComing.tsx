@@ -20,7 +20,7 @@ export const GiftComing = () => {
             <div className={`mt-8`}>
                 <Link
                     href={route("view.event", event)}
-                    className="rounded-md border border-transparent px-4 py-2 text-center font-medium text-white transition duration-150 ease-in-out bg-orange hover:bg-transparent-orange disabled:bg-grey-200 disabled:text-grey-darker disabled:cursor-not-allowed"
+                    className="rounded-md border border-transparent px-4 py-2 text-center font-medium text-white transition duration-150 ease-in-out bg-p200 hover:bg-transparent-p200 disabled:bg-n40 disabled:text-grey-darker disabled:cursor-not-allowed"
                 >
                     Visit Your {singular(event.event_type.name)} Listing
                 </Link>

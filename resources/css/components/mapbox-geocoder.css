@@ -36,7 +36,7 @@
         width 0.25s,
         min-width 0.25s;
     border: 1px solid var(--border);
-    @apply py-1 focus-within:border-orange;
+    @apply py-1 focus-within:border-p200;
 }
 
 .mapboxgl-ctrl-geocoder--input {
@@ -116,7 +116,7 @@
     cursor: default;
     display: block;
     padding: 6px 12px;
-    @apply border border-transparent hover:border-orange;
+    @apply border border-transparent hover:border-p200;
 }
 
 .mapboxgl-ctrl-geocoder .suggestions > .active > a,

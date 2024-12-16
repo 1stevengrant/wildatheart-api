@@ -34,7 +34,7 @@ export const SelectedEventType = ({
             >
                 <div
                     {...attrs}
-                    className={`w-full md:w-[350px] p-6 rounded-2xl z-[100] shadow-xl bg-gradient-to-br ${eventTypeBackground(eventType.slug)} to-zinc-800`}
+                    className={`w-full md:w-[350px] p-6 rounded-2xl z-[100] shadow-xl bg-gradient-to-br ${eventTypeBackground(eventType.slug)} to-n700`}
                 >
                     <div
                         className={`flex items-center justify-between space-x-4`}

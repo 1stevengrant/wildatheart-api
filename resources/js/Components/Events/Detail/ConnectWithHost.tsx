@@ -5,6 +5,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { whiteButtonClasses } from "@/helpers/whiteButtonClasses";
 import { Event } from "@/types/Event";
+import { blackButtonClasses } from "@/helpers/blackButtonClasses";
 
 export const ConnectWithHost = ({ className }: { className?: string }) => {
     const page = usePage();
@@ -13,9 +14,7 @@ export const ConnectWithHost = ({ className }: { className?: string }) => {
         (page.props.notifications as { connectedWithHost?: boolean })
             ?.connectedWithHost ?? false;
     return (
-        <div
-            className={className + " rounded-lg border border-grey-darker p-8"}
-        >
+        <div className={className + " rounded-lg border border-n400 p-8"}>
             {hasConnectedWithHost ? (
                 <>
                     <PrimaryButton className={"w-full"} disabled={true}>
@@ -32,14 +31,14 @@ export const ConnectWithHost = ({ className }: { className?: string }) => {
                         Want More Info?
                     </p>
                     <Link
-                        className={`${whiteButtonClasses} block`}
-                        href={`/connect/${event.id}`}
+                        className={`${blackButtonClasses} w-full`}
+                        href={route("connect.index", event.id)}
                     >
                         Connect With {event.host}
                     </Link>
                     <p className="mt-4 text-center text-sm">
-                        {event.host} will send out updates regarding the event
-                        after sign-up.
+                        <span className={`capitalize`}>{event.host}</span> will
+                        send out updates regarding the event after sign-up.
                     </p>
                 </>
             )}

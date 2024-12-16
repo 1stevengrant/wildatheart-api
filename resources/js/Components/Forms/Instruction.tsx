@@ -8,6 +8,6 @@ export const Instruction = ({
     className?: string;
 }) => {
     return (
-        <div className={`text-sm text-grey-200 ${className} `}>{children}</div>
+        <div className={`text-sm text-n40 ${className} `}>{children}</div>
     );
 };

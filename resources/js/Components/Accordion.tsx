@@ -22,7 +22,7 @@ export const Accordion = ({
                             {({ open }) => (
                                 /* Use the `open` state to conditionally change the direction of an icon. */
                                 <>
-                                    <Disclosure.Button className="flex w-full items-center justify-between border-t px-2 py-2 text-white border-grey-border focus:outline-none">
+                                    <Disclosure.Button className="flex w-full items-center justify-between border-t px-2 py-2 text-white border-n700 focus:outline-none">
                                         <div
                                             className={`flex items-center font-semibold`}
                                         >
@@ -36,7 +36,7 @@ export const Accordion = ({
                                             className={`w-6 h-6 text-white flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
                                         />
                                     </Disclosure.Button>
-                                    <Disclosure.Panel className="border-t py-4 border-t-grey-border">
+                                    <Disclosure.Panel className="border-t py-4 border-t-n700">
                                         {item.accordion_box_content &&
                                             item.accordion_box_content
                                                 .filter(

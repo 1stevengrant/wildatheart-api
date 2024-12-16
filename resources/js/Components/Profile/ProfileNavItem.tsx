@@ -15,7 +15,7 @@ export const ProfileNavItem = ({ icon, link, text }: ProfileNavItemProps) => {
     const isActive = route().current(link + "*");
 
     const textClasses = classNames({
-        "text-orange bg-grey-darkest": isActive,
+        "text-p200 bg-grey-darkest": isActive,
         "text-white group-hover:text-white": !isActive,
     });
 

@@ -70,12 +70,9 @@ const ConnectWithHostPage = () => {
                     <div className={"mx-auto max-w-[500px]"}>
                         <Link
                             href={event.url}
-                            className={
-                                "bg-white rounded-full h-14 w-14 flex items-center" +
-                                " justify-center"
-                            }
+                            className={`bg-white hover:text-p300 rounded-full h-14 w-14 flex items-center text-black justify-center transition ease-in-out duration-75`}
                         >
-                            <ArrowLeftIcon className={"h-8 w-8 text-black"} />
+                            <ArrowLeftIcon className={"h-8 w-8 fill-current"} />
                         </Link>
                         <HeadingOne className={"mt-6"}>
                             Connect With {event.host}

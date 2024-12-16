@@ -3,10 +3,10 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 export const NoWebGLSupport = ({ className = "" }: { className?: string }) => {
     return (
         <div
-            className={`text-red-500 w-full h-full flex items-center justify-center ${className}`}
+            className={`text-r200 w-full h-full flex items-center justify-center ${className}`}
         >
             <div
-                className={`p-4 bg-amber-50 border-l-4 border-l-amber-300 prose prose-p:text-gray-900 prose-h1:text-gray-900 prose-a:hover:text-orange prose-h1:m-0 prose-h1:text-xl`}
+                className={`p-4 bg-amber-50 border-l-4 border-l-amber-300 prose prose-p:text-gray-900 prose-h1:text-gray-900 prose-a:hover:text-p200 prose-h1:m-0 prose-h1:text-xl`}
             >
                 <div className={`flex items-center`}>
                     <ExclamationCircleIcon className={`w-6 h-6 mr-2`} />

@@ -34,17 +34,14 @@ export const Notification = ({
 
     const icon =
         type === "success" ? (
-            <CheckCircleIcon
-                className="h-6 w-6 text-green-400"
-                aria-hidden="true"
-            />
+            <CheckCircleIcon className="h-6 w-6 text-g300" aria-hidden="true" />
         ) : (
             <ExclamationCircleIcon
-                className="h-6 w-6 text-red-500"
+                className="h-6 w-6 text-r200"
                 aria-hidden="true"
             />
         );
-    const backgroundColor = type === "success" ? "bg-white" : "bg-red-lightest";
+    const backgroundColor = type === "success" ? "bg-white" : "bg-r50";
 
     return (
         <>
@@ -67,7 +64,7 @@ export const Notification = ({
                                 <div className="flex-shrink-0">{icon}</div>
                                 <div className="ml-3 w-0 flex-1 pt-0.5">
                                     <p
-                                        className={`text-sm font-medium ${type === "success" ? "text-black" : "text-red"}`}
+                                        className={`text-sm font-medium ${type === "success" ? "text-black" : "text-r200"}`}
                                     >
                                         {message}
                                     </p>
@@ -75,7 +72,7 @@ export const Notification = ({
                                 <div className="ml-4 flex flex-shrink-0">
                                     <button
                                         type="button"
-                                        className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        className="inline-flex rounded-md bg-white text-n80 hover:text-n200 focus:outline-none focus:ring-2 focus:ring-p200 focus:ring-offset-2"
                                         onClick={() => {
                                             setShow(false);
                                         }}

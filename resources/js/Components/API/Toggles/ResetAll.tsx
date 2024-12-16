@@ -18,7 +18,7 @@ export const ResetAll = () => {
 
     return (
         <button
-            className={`text-xxs font-medium flex flex-col justify-center items-center md:px-4 md:py-2 rounded-lg md:border-2 uppercase hover:border-orange transition duration-300 ease-in-out cursor-pointer hover:text-orange hover:stroke-orange md:hidden`}
+            className={`text-xxs font-medium flex flex-col justify-center items-center md:px-4 md:py-2 rounded-lg md:border-2 uppercase hover:border-p200 transition duration-300 ease-in-out cursor-pointer hover:text-p200 hover:stroke-p200 md:hidden`}
             onClick={() => {
                 setSelectedPlace(null);
                 resetAllDates();

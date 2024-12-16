@@ -24,7 +24,7 @@ const MyConnectionsPage = () => {
 
     return (
         <HostDashboardLayout pageTitle={pageTitle}>
-            <div className="flex items-center justify-between border-grey-border border-b pb-6">
+            <div className="flex items-center justify-between border-n700 border-b pb-6">
                 <div className={`flex items-center space-x-5`}>
                     <HeadingOne className={`flex-shrink-0`}>
                         {pageTitle}

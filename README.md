@@ -13,11 +13,13 @@ To run this locally you will need to make sure you have a SQL db and PHP running
 
 -   Running PHP - [Laravel Valet](https://laravel.com/docs/10.x/valet) or [Laravel Herd](https://herd.laravel.com/)
 -   Running SQL - [DBngin](https://dbngin.com/)
+-   Running Redis - Laravel Herd includes Redis by default
 
 *   PHP 8.1
 *   npm as a package manager. This is important. While npm could be used, it's not advised to have package-lock.json and
     yarn.lock files in the same project.
 *   MySQL 8.0
+*   Redis (included with Herd)
 
 You will also need to make sure you have the following tools installed:
 
@@ -40,6 +42,10 @@ Make sure your server meets the minimum requirements before you start. [Official
      DB_DATABASE=your_local_db_name
      DB_USERNAME=your_local_db_username
      DB_PASSWORD=your_local_db_password
+
+     REDIS_HOST=127.0.0.1
+     REDIS_PASSWORD=null
+     REDIS_PORT=6379
     ```
 
 7. populate AWS credentials in `.env` file

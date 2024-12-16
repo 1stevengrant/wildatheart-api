@@ -12,7 +12,7 @@ export const BackToEvents = ({
     positionClasses = "absolute left-4 top-[20px]",
     bgColorClasses = "bg-white",
 }: BackToEventsProps) => {
-    const combinedClasses = `${positionClasses} ${bgColorClasses} z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-orange transition duration-200 ease-in-out shadow-xl hover:shadow-none`;
+    const combinedClasses = `${positionClasses} ${bgColorClasses} z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-p300 transition duration-200 ease-in-out shadow-xl hover:shadow-none`;
 
     return (
         <Link href={route("home")} className={combinedClasses}>

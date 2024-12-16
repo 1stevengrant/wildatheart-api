@@ -5,6 +5,7 @@ import { AuthNav } from "@/Components/Layout/Navs/AuthNav";
 import { MyProfileNavMobile } from "@/Components/Layout/Navs/MyProfileNavMobile";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
+import { blackButtonClasses } from "@/helpers/blackButtonClasses";
 
 export const MainHeader = () => {
     const { auth } = usePage<any>().props;
@@ -17,7 +18,7 @@ export const MainHeader = () => {
             : false;
     };
 
-    const textStyles = `hover:border-orange hover:text-orange transition ease-in-out duration-150`;
+    const textStyles = `hover:border-p200 hover:text-p200 transition ease-in-out duration-150`;
 
     return (
         <header
@@ -45,7 +46,7 @@ export const MainHeader = () => {
                     </Link>
                     <a
                         href={`https://wildatheart.org/events`}
-                        className={`rounded-full  border border-white px-4 py-2 ${textStyles}`}
+                        className={`${blackButtonClasses}`}
                     >
                         Learn More
                     </a>

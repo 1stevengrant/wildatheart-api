@@ -14,12 +14,12 @@ import { currentEventState } from "@/store";
 import { Event } from "@/types/Event";
 
 export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
-    const eventTypeClasses = `text-grey-200 font-semibold text-sm`;
+    const eventTypeClasses = `text-n40 font-semibold text-sm`;
     const eventTypeNameClasses = `flex items-center justify-between space-x-4`;
 
     const [currentEvent] = useRecoilState(currentEventState);
     const isActiveEvent =
-        event.id === currentEvent?.id ? "text-orange" : "text-grey-200";
+        event.id === currentEvent?.id ? "text-p200" : "text-n40";
     return (
         <>
             {event.type_group === fireTypeGroup && (

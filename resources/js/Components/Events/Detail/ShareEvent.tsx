@@ -65,7 +65,7 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
 
     return (
         <div
-            className={`${className} shadow-xl hover:shadow-none transition absolute top-[20px] right-4 bg-white z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-orange duration-200 ease-in-out`}
+            className={`${className} shadow-xl hover:shadow-none transition absolute top-[20px] right-4 bg-white z-10 flex items-center space-x-2 rounded-full px-4 py-2 text-black font-medium hover:text-p300 duration-200 ease-in-out`}
         >
             <button
                 className={`flex items-center space-x-2 rounded-full`}
@@ -88,13 +88,13 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
                             onClick={handleLinkClick}
                             href={link.url}
                             target={"_blank"}
-                            className={`rounded-lg px-2 py-1 border border-orange hover:border-black bg-orange text-white transition-colors duration-100 ease-in-out hover:bg-black text-center`}
+                            className={`rounded-lg px-2 py-1 border border-p200 hover:border-black bg-p200 text-white transition-colors duration-100 ease-in-out hover:bg-black text-center`}
                         >
                             {link.title}
                         </a>
                     ))}
                     <button
-                        className="col-span-2 rounded-lg border px-2 py-1 text-center text-white transition-colors duration-100 ease-in-out border-orange bg-orange hover:border-black hover:bg-black"
+                        className="col-span-2 rounded-lg border px-2 py-1 text-center text-white transition-colors duration-100 ease-in-out border-p200 bg-p200 hover:border-black hover:bg-black"
                         onClick={copyToClipboard}
                     >
                         Copy URL to Clipboard

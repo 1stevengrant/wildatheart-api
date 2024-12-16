@@ -6,6 +6,6 @@ export const isSelectedEvent = (
     borderColor?: string
 ) => {
     return event.id === currentEvent?.id
-        ? "border-orange"
+        ? "border-p200"
         : `${borderColor ? `${borderColor}` : `border-transparent`}`;
 };

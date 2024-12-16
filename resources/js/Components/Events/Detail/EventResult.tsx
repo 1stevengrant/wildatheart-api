@@ -13,7 +13,7 @@ export const EventResult = ({
 }: IEventCardProps) => {
     return (
         <div
-            className={`relative hidden rounded-md bg-black p-2 shadow-lg md:block md:p-4 border hover:border-orange ${className}`}
+            className={`relative hidden rounded-md bg-black p-2 shadow-lg md:block md:p-4 border hover:border-p200 ${className}`}
             onClick={() => (onClick ? onClick(event) : null)}
             onMouseEnter={() => onMouseEnter?.(event)}
             onMouseLeave={() => onMouseLeave?.(null)}

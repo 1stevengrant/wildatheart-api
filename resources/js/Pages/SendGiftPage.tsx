@@ -276,7 +276,7 @@ const SendGiftPage = () => {
                                 </PrimaryButton>
                                 <Link
                                     href={route("my.events.active")}
-                                    className={`text-center py-3 text-sm text-grey-200 block`}
+                                    className={`text-center py-3 text-sm text-n40 block`}
                                 >
                                     No thanks
                                 </Link>

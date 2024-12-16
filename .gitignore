@@ -32,3 +32,8 @@ yarn-error.log
 scripts/.env.sh
 /*.csv
 file.sql
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
