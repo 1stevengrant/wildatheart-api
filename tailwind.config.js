@@ -124,6 +124,29 @@ module.exports = {
         colors,
         fontSize,
         extend: {
+            animation: {
+                zoom: "zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                fade: "fade 0.2s ease-out",
+            },
+            backgroundImage: {
+                campfire: "url('/resources/img/fires-image.webp')",
+            },
+            borderRadius: {
+                "3xl": "1.875rem",
+            },
+            borderWidth: {
+                half: ".5px",
+            },
+            container: {
+                center: true,
+                padding: "1.5rem",
+                paddingLeft: "1.5rem",
+                paddingRight: "1.5rem",
+                maxWidth: "1373px",
+            },
+            fontFamily: {
+                sans: ["astoria-sans", "sans-serif"],
+            },
             fontSize: {
                 xxs: ".625rem", // 10px
                 xs: ".75rem", // 12px
@@ -136,17 +159,6 @@ module.exports = {
                 "3xl": "1.875rem", // 30px
                 "4xl": "2.125rem", // 34px
                 "5xl": "3.875rem", // 48px
-            },
-            animation: {
-                zoom: "zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                fade: "fade 0.2s ease-out",
-            },
-            container: {
-                center: true,
-                padding: "1.5rem",
-                paddingLeft: "1.5rem",
-                paddingRight: "1.5rem",
-                maxWidth: "1373px",
             },
             keyframes: {
                 zoom: {
@@ -170,24 +182,21 @@ module.exports = {
                 "even-wider": "0.07em",
                 widest: "0.2em",
             },
-            fontFamily: {
-                sans: ["astoria-sans", "sans-serif"],
-            },
-            borderRadius: {
-                "3xl": "1.875rem",
+            scale: {
+                300: "3",
             },
             screens: {
                 "ipad-landscape": "1180px",
             },
-            backgroundImage: {
-                campfire: "url('/resources/img/fires-image.webp')",
-            },
-            scale: {
-                300: "3",
-            },
-            borderWidth: {
-                half: ".5px",
-            },
+            typography: (theme) => ({
+                DEFAULT: {
+                    css: {
+                        h2: {
+                            marginBottom: ".5rem",
+                        },
+                    },
+                },
+            }),
         },
     },
     plugins: [

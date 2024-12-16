@@ -5,6 +5,7 @@ import { AuthNav } from "@/Components/Layout/Navs/AuthNav";
 import { MyProfileNavMobile } from "@/Components/Layout/Navs/MyProfileNavMobile";
 import { Logo } from "@/Components/Ui/Logo";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
+import { blackButtonClasses } from "@/helpers/blackButtonClasses";
 
 export const MainHeader = () => {
     const { auth } = usePage<any>().props;
@@ -45,7 +46,7 @@ export const MainHeader = () => {
                     </Link>
                     <a
                         href={`https://wildatheart.org/events`}
-                        className={`rounded-full  border border-white px-4 py-2 ${textStyles}`}
+                        className={`${blackButtonClasses}`}
                     >
                         Learn More
                     </a>

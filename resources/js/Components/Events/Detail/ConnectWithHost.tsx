@@ -5,6 +5,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { whiteButtonClasses } from "@/helpers/whiteButtonClasses";
 import { Event } from "@/types/Event";
+import { blackButtonClasses } from "@/helpers/blackButtonClasses";
 
 export const ConnectWithHost = ({ className }: { className?: string }) => {
     const page = usePage();
@@ -30,7 +31,7 @@ export const ConnectWithHost = ({ className }: { className?: string }) => {
                         Want More Info?
                     </p>
                     <Link
-                        className={`${whiteButtonClasses} block capitalize`}
+                        className={`${blackButtonClasses} w-full`}
                         href={route("connect.index", event.id)}
                     >
                         Connect With {event.host}
