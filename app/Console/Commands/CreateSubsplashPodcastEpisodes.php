@@ -29,12 +29,11 @@ class CreateSubsplashPodcastEpisodes extends Command
             ->where('collection', 'podcasts')
             ->get();
 
-        $this->updatePodcastSeriesIds($podcasts);
-
         foreach ($podcasts as $podcast) {
             $this->info("Processing podcast {$podcast->title}");
             $subsplash = new SubsplashService;
             $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$podcast->subsplash_series_id}");
+            $subsplash->saveMediaSeriesAsEntry($subsplashSeries);
             $subsplashMediaItems = $subsplash->getAllRelatedMediaItems($podcast->subsplash_series_id);
 
             $collection = collect($subsplashMediaItems);
