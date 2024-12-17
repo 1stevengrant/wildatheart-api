@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use Statamic\Entries\Entry;
+use Illuminate\Console\Command;
 
 class UpdateBookPublishDates extends Command
 {

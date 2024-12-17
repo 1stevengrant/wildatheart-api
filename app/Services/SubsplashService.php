@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Statamic\Entries\Entry;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class SubsplashService
 {
@@ -52,7 +52,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer ' . $accessToken;
+        $token = 'Bearer '.$accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
@@ -164,7 +164,7 @@ class SubsplashService
                 ->where('id', $seriesId)
                 ->first();
 
-            if (!$mediaSeries) {
+            if (! $mediaSeries) {
                 $mediaSeries = $this->getMediaSeries($seriesId);
                 $this->saveMediaSeriesAsEntry($mediaSeries);
             }
@@ -213,10 +213,11 @@ class SubsplashService
             }
 
             $entry->delete();
-            return;
-        };
 
-        if (!$entry) {
+            return;
+        }
+
+        if (! $entry) {
             $entry = Entry::make()
                 ->published(true)
                 ->blueprint('subsplash_media_series')

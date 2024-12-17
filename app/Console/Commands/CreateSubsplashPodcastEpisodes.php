@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Services\SubsplashService;
+use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
 use Statamic\Entries\Collection;
-use Statamic\Facades\Entry;
+use App\Services\SubsplashService;
 
 class CreateSubsplashPodcastEpisodes extends Command
 {
@@ -48,8 +48,8 @@ class CreateSubsplashPodcastEpisodes extends Command
                 });
             });
 
-            Collection::findByHandle("podcasts")->updateEntryUris();
-            Collection::findByHandle("media_item")->updateEntryUris();
+            Collection::findByHandle('podcasts')->updateEntryUris();
+            Collection::findByHandle('media_item')->updateEntryUris();
 
             $bar->finish();
         }
@@ -78,12 +78,12 @@ class CreateSubsplashPodcastEpisodes extends Command
     {
 
         if (! data_get($media, 'id')) {
-            $this->info("Skipping media item without id");
+            $this->info('Skipping media item without id');
+
             return;
         }
 
         $title = data_get($media, 'title');
-
 
         $entry = Entry::query()
             ->where('collection', 'media_item')

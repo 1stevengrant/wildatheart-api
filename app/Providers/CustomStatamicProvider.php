@@ -37,11 +37,11 @@ class CustomStatamicProvider extends ServiceProvider
                 if ($series) {
                     $seriesUri = $series->uri();
 
-                    return $seriesUri . '/' . $entry->slug;
+                    return $seriesUri.'/'.$entry->slug;
                 }
             }
 
-            return 'media' . '/' . $entry->slug();
+            return 'media'.'/'.$entry->slug();
         });
 
         Statamic::vite('app', [

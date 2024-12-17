@@ -46,7 +46,8 @@ class SaveSubsplashItemEntryWithId
                 $newEntry->id($newId);
                 $newEntry->save();
                 $entry->delete();
-                return redirect("/test");
+
+                return redirect('/test');
 
                 // return redirect($newEntry->edit_url());
             }
