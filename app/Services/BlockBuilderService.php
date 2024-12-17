@@ -81,7 +81,7 @@ class BlockBuilderService
             } elseif ($slide->type === 'custom_slide') {
                 $processedBlock['slides'][] = $this->buildCustomSlide($slide);
             } elseif ($slide->type === 'content_in_taxonomy') {
-                $recentlyAddedSlide = $this->buildRecentlyAdded($slide);
+                $recentlyAddedSlide = $this->buildContentInTaxonomySlide($slide);
                 $processedBlock['slides'] = array_merge($processedBlock['slides'], $recentlyAddedSlide->slides);
             } else {
                 $processedBlock['slides'][] = $slide;
@@ -219,7 +219,7 @@ class BlockBuilderService
         return $subsplashListSlide;
     }
 
-    public function buildRecentlyAdded($slide)
+    public function buildContentInTaxonomySlide($slide)
     {
         $recentlyAddedSlide = new MediaItemsSlide;
 
