@@ -1,6 +1,9 @@
 title: 'Media Series'
 template: default
 layout: layout
+taxonomies:
+  - content_type
+  - topics
 revisions: false
 route: 'media/{slug}'
 date: true

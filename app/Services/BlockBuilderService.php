@@ -188,7 +188,7 @@ class BlockBuilderService
     {
         $subsplashListSlide = new MediaItemsSlide;
         $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
@@ -225,13 +225,19 @@ class BlockBuilderService
 
         $collectionsToLoadFrom = $slide->collections_to_load_from->pluck('handle');
 
-        $recentItems = Entry::query()
+        $query = Entry::query()
             ->where('published', true)
             ->where('date', '<=', now())
             ->where('collection', $slide->collections_to_load_from)
-            ->orderBy('date', 'desc')
-            ->limit($slide->limit ?? 10)
-            ->get();
+            ->orderBy('date', 'desc');
+
+        // Add taxonomy terms filter if they exist
+        if (!empty($slide->tags->toArray())) {
+            $query->whereTaxonomyIn($slide->tags->pluck('id'));
+        }
+
+        $recentItems = $query->limit($slide->limit ?? 10)->get();
+
 
         foreach ($recentItems as $item) {
             $recentlyAddedSlide->slides[] = $this->createSlideFromEntry($item);
@@ -269,6 +275,6 @@ class BlockBuilderService
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl.$image->path;
+        return $cdnUrl . $image->path;
     }
 }

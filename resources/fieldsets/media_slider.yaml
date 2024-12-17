@@ -1,44 +1,51 @@
-title: "Media Slider"
+title: 'Media Slider'
 fields:
-  - handle: section_title
+  -
+    handle: section_title
     field:
       type: text
-      display: "Section Title"
-  - handle: link_to_more
+      display: 'Section Title'
+  -
+    handle: link_to_more
     field:
       type: link
-      display: "Link to more"
-  - handle: media_series
+      display: 'Link to more'
+  -
+    handle: media_series
     field:
       max_items: 1
       collections:
         - media_series
       type: entries
-      display: "Media Series (DEPRECATED)"
-  - handle: media_items
+      display: 'Media Series (DEPRECATED)'
+  -
+    handle: media_items
     field:
       collections:
         - media_item
       type: entries
-      display: "Media Items (DEPRECATED)"
-  - handle: focused_item
+      display: 'Media Items (DEPRECATED)'
+  -
+    handle: focused_item
     field:
       type: integer
-      display: "Focused Item"
-      instructions: "Enter the integer of the item you would like the slider to start on."
-  - handle: slides
+      display: 'Focused Item'
+      instructions: 'Enter the integer of the item you would like the slider to start on.'
+  -
+    handle: slides
     field:
       type: replicator
       display: Slides
       sets:
         new_set_group:
-          display: "New Set Group"
+          display: 'New Set Group'
           sets:
             series:
               display: Series
               instructions: "Adds a specific series to the list. Good for creating a list of series that don't fit into a taxonomy."
               fields:
-                - handle: series
+                -
+                  handle: series
                   field:
                     collections:
                       - media_series
@@ -46,56 +53,65 @@ fields:
                     display: Series
                     instructions: "Adds a specific series to the list. Good for creating a list of series that don't fit into a taxonomy."
             media_items_from_series:
-              display: "Media Items From Series"
-              instructions: "Adds all media items that are from a particular series."
+              display: 'Media Items From Series'
+              instructions: 'Adds all media items that are from a particular series.'
               fields:
-                - handle: media_items_from_series
+                -
+                  handle: media_items_from_series
                   field:
                     collections:
                       - media_series
                     type: entries
-                    display: "Media Items From Series"
-                    instructions: "Adds all media items from a chosen series."
+                    display: 'Media Items From Series'
+                    instructions: 'Adds all media items from a chosen series.'
                     max_items: 1
             media_item:
-              display: "Media Item"
+              display: 'Media Item'
               instructions: "Adds a specific media item to the slider. Good for one off additions that aren't in a series."
               fields:
-                - handle: media_item
+                -
+                  handle: media_item
                   field:
                     collections:
                       - media_item
                     type: entries
-                    display: "Media Item"
+                    display: 'Media Item'
             custom_slide:
-              display: "Custom Slide"
+              display: 'Custom Slide'
               fields:
-                - import: custom_slide
+                -
+                  import: custom_slide
             content_in_taxonomy:
-              display: "Content in Taxonomy"
-              instructions: "Renders all content from a chosen taxonomy."
+              display: 'Content in Taxonomy'
+              instructions: 'Renders all content from a chosen taxonomy.'
               fields:
-                - handle: content_by_topic
+                -
+                  handle: tags
                   field:
                     taxonomies:
                       - topics
+                      - content_type
+                      - event_types
                     type: terms
-                    display: "Content by Topic"
-                - handle: collections_to_load_from
+                    display: Tags
+                -
+                  handle: collections_to_load_from
                   field:
                     type: collections
-                    display: "Collections to load from"
-                    instructions: "If not set, content from all collections that matches the selected taxonomy will be used."
-                - handle: limit
+                    display: 'Collections to load from'
+                    instructions: 'If not set, content from all collections that matches the selected taxonomy will be used.'
+                -
+                  handle: limit
                   field:
                     type: integer
                     display: Limit
-                    instructions: "Limit the number of items returned to the slider."
+                    instructions: 'Limit the number of items returned to the slider.'
             subsplash_list_id:
-              display: "Subsplash List Id"
+              display: 'Subsplash List Id'
               fields:
-                - handle: subsplash_list_id
+                -
+                  handle: subsplash_list_id
                   field:
                     type: text
-                    display: "Subsplash List ID"
-                    instructions: "Enter the ID of a Subsplash list you want to load items from."
+                    display: 'Subsplash List ID'
+                    instructions: 'Enter the ID of a Subsplash list you want to load items from.'
