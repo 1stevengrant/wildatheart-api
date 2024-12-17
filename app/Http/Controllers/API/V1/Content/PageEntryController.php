@@ -18,6 +18,13 @@ use App\Services\ImageBuilderService;
  */
 class PageEntryController extends Controller
 {
+    private BlockBuilderService $blockBuilder;
+
+    public function __construct(BlockBuilderService $blockBuilder)
+    {
+        $this->blockBuilder = $blockBuilder;
+    }
+
     /**
      * getPageBySlug
      *
@@ -65,9 +72,7 @@ class PageEntryController extends Controller
 
         $response = $entryBuilder->buildResponseFromEntry($page);
 
-        $blockBuilder = new BlockBuilderService;
-
-        $response['blocks'] = $blockBuilder->build($page->blocks);
+        $response['blocks'] = $this->blockBuilder->build($page->blocks);
 
         $imageBuilder = new ImageBuilderService;
 

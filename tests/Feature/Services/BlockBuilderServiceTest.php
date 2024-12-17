@@ -1,42 +1,67 @@
 <?php
 
-namespace Tests\Feature\Services;
-
-use App\DataTypeObjects\MediaItemsSlide;
-use App\DataTypeObjects\StatamicValue;
 use App\Services\BlockBuilderService;
-use Illuminate\Support\Facades\Cache;
-use Statamic\Entries\Entry;
+use App\DataTypeObjects\SlideBlock;
+use App\Services\BunnyCDNService;
+use App\Services\PreviewBuilderService;
+use App\Services\SubsplashService;
+use Statamic\Facades\Entry;
 
 beforeEach(function () {
-  Cache::flush();
-  $this->transistorService = new BlockBuilderService();
+  $this->seed(\Database\Seeders\DatabaseSeeder::class);
+  $this->subsplashService = Mockery::mock(SubsplashService::class);
+  $this->bunnyCDNService = Mockery::mock(BunnyCDNService::class);
+
+  // Create PreviewBuilderService with mocked dependencies
+  $previewBuilderService = new PreviewBuilderService(
+    $this->bunnyCDNService,
+    $this->subsplashService
+  );
+  $this->service = new BlockBuilderService($previewBuilderService);
 });
 
-it('returns cached data when available', function () {
+it('processes a hero title block correctly', function () {
 
-  $entry = Entry::make()
-    ->published(true)
-    ->blueprint('subsplash_media_item')
-    ->collection('media_item')
-    ->id('b3cf6993-7341-4204-9fd0-56e43913702f')
-    ->slug("test-slug")
-    ->data([
-      'title' => 'Test Title',
-      'subsplash_media_item_id' => 'b3cf6993-7341-4204-9fd0-56e43913702f',
-    ]);
+  $mediaItem = Entry::make()
+    ->collection("media_item")
+    ->slug("podcast-1");
 
-  $entry->save();
+  $mediaItem->set("title", 'test item');
+  $mediaItem->save();
 
-
-  $slide = [
-    'limit' => StatamicValue::from(),
-    'id' => 'testID',
-    'type' => 'recently_added',
+  $block = [
+    'type' => 'hero_title',
+    'hero_title' => 'Welcome to our site',
+    'text_style' => 'bold'
   ];
 
-  $result = $this->transistorService->buildRecentlyAdded($slide);
+  $entry = Entry::make()->collection("pages")->slug("test");
 
-  expect($result)->toBeInstanceOf(MediaItemsSlide::class);
-  expect($result->slides)->toHaveCount(1);
+  $testBlocks = [[
+    "section_title" => "Video Series",
+    "link_to_more" => null,
+    "media_series" => null,
+    "media_items" => null,
+    "media_items" => null,
+    "focused_item" => null,
+    "slides" => [
+      [
+        "limit" => 10,
+        "enabled" => true,
+        "type" => "content_in_taxonomy",
+        "collections_to_load_from" => [
+          "media_item"
+        ]
+      ]
+    ],
+    "type" => "media_slider"
+  ]];
+  $entry->set('blocks', $testBlocks);
+
+
+  $result = $this->service->build($entry->blocks);
+
+  expect($result[0]['slides'])->toHaveCount(1)
+    ->and($result[0]['slides'][0])->toBeInstanceOf(SlideBlock::class)
+    ->and($result[0]['slides'][0]->title)->toBe('test item');
 });

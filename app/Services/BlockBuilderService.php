@@ -13,7 +13,14 @@ use App\DataTypeObjects\MediaItemsSlide;
 
 class BlockBuilderService
 {
-    public function build($blocks)
+    private PreviewBuilderService $previewBuilder;
+
+    public function __construct(PreviewBuilderService $previewBuilder)
+    {
+        $this->previewBuilder = $previewBuilder;
+    }
+
+    public function build(array $blocks)
     {
 
         $output = [];
@@ -238,8 +245,7 @@ class BlockBuilderService
     {
         $slide = SlideBlock::from();
 
-        $previewBuilder = new PreviewBuilderService;
-        $preview = $previewBuilder->build($entry);
+        $preview = $this->previewBuilder->build($entry);
 
         $slide->id = $preview->id;
         $slide->title = $preview->title;
