@@ -30,7 +30,7 @@ export const UpdateProfileForm = ({
         phone: user.phone ?? "",
         email: user.email ?? "",
         image: null as File | null,
-        opted_into_marketing: user.opted_into_marketing ?? true,
+        opted_into_marketing: Boolean(user.opted_into_marketing) ?? true,
     });
 
     const route = useRoute();
@@ -247,7 +247,7 @@ export const UpdateProfileForm = ({
                         className={`mb-2`}
                     />
                     <SwitchComponent
-                        checked={form.data.opted_into_marketing === true}
+                        checked={Boolean(form.data.opted_into_marketing)}
                         onChange={() =>
                             form.setData(
                                 "opted_into_marketing",
