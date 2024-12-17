@@ -256,16 +256,10 @@ export const UpdateProfileForm = ({
                         }
                     />
                     <Instruction>
-                        {form.data.opted_into_marketing && (
-                            <span>Yes! Send</span>
-                        )}
-                        {!form.data.opted_into_marketing && (
-                            <span>No! Don't send</span>
-                        )}
-                        <span>
-                            {" "}
-                            me updates and resources from Wild at Heart.
-                        </span>
+                        {form.data.opted_into_marketing
+                            ? "Yes! Send"
+                            : "No! Don't send"}{" "}
+                        me updates and resources from Wild at Heart.
                     </Instruction>
                 </div>
             </div>
