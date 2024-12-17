@@ -2,22 +2,17 @@
 
 namespace App\Services;
 
-use App\DataTypeObjects\ContentPreview;
 use Statamic\Eloquent\Entries\Entry;
+use App\DataTypeObjects\ContentPreview;
 
 /**
  * Service for building preview data for various blueprint and entry types in Statamic
  */
 class PreviewBuilderService
 {
-  private $bunnyCDN;
-  private $subsplash;
+    private $bunnyCDN;
 
-  public function __construct()
-  {
-    $this->bunnyCDN = new BunnyCDNService;
-    $this->subsplash = new SubsplashService;
-  }
+    private $subsplash;
 
     public function __construct(
         BunnyCDNService $bunnyCDN,
@@ -44,21 +39,32 @@ class PreviewBuilderService
         }
     }
 
-    if ($entry->description) {
-      $preview->description = strip_tags($entry->description);
+    private function buildExperienceSessionPreview(Entry $entry)
+    {
+        $preview = $this->buildSubsplashMediaItemPreview($entry);
+        $preview->title = $entry->title;
+        $preview->description = $entry->description;
+        $preview->published_at = $entry->date;
+
+        return $preview;
     }
 
+    private function buildSubsplashMediaItemPreview(Entry $entry)
+    {
+        $preview = new ContentPreview;
 
-    return $preview;
-  }
+        $preview->id = $entry->id;
+        $preview->title = $entry->title;
+        $preview->uri = $entry->uri;
+        $preview->published_at = $entry->date;
 
-  private function buildSubsplashMediaSeriesPreview(Entry $entry)
-  {
-    $preview = new ContentPreview;
-    $preview->id = $entry->id;
-    $preview->title = $entry->title;
-    $preview->uri = $entry->uri;
-    $preview->published_at = $entry->date;
+        $subsplashMediaItem = $this->subsplash->getMediaItem($entry->subsplash_media_item_id);
+        if (! empty($subsplashMediaItem['_embedded'])) {
+            $images = $subsplashMediaItem['_embedded']['images'];
+            $wideImage = collect($images)->firstWhere('type', 'wide');
+            $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
+            $preview->featured_image_src = $wideImageUrl;
+        }
 
         $preview->description = data_get($subsplashMediaItem, 'summary');
         // if ($entry->series->value() === null) {
