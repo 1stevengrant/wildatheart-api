@@ -4,6 +4,7 @@ namespace App\Mail\Event;
 
 use App\Models\Event;
 use App\Models\EventType;
+use Illuminate\Support\Str;
 use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -33,7 +34,7 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
             EventType::CAPTIVATING_CORE_RETREAT => $this->emailTemplate = $this->getEmailTemplate('captivating-retreat-created'),
             EventType::BECOMING_A_KING_EXPERIENCE => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-experience-created'),
             EventType::BECOMING_A_KING => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-retreat-event-created'),
-            EventType::SURVIVAL_SCHOOL => $this->emailTemplate = $this->getEmailTemplate('survival-school-event-created'),
+            EventType::SURVIVAL_SCHOOL => $this->emailTemplate = $this->getEmailTemplate('survival-school-created'),
             EventType::FIRES => $this->emailTemplate = $this->getEmailTemplate('send-welcome-email'),
             EventType::CAPTIVATING_FIRE => $this->emailTemplate = $this->getEmailTemplate('captivating-fires-welcome-email'),
         };
@@ -57,7 +58,8 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
         $content = $this->emailTemplate->body;
         $content = str_replace('[event_url]', $this->event->url, $content);
         $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
-        $this->emailContent = \Str::markdown($content);
+        $content = str_replace('[email_address]', $this->event->host->email, $content);
+        $this->emailContent = Str::markdown($content);
 
         return new Content(
             markdown: 'mail.event.new-event-created',

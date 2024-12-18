@@ -122,6 +122,15 @@ class EventFactory extends Factory
         });
     }
 
+    public function captivatingFires(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'event_type_id' => EventType::where('name', EventType::CAPTIVATING_FIRE)->first()->id,
+            ];
+        });
+    }
+
     public function survivalSchool(): self
     {
         return $this->state(function (array $attributes) {
