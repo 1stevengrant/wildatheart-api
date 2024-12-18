@@ -86,12 +86,14 @@ fields:
               instructions: 'Renders all content from a chosen taxonomy.'
               fields:
                 -
-                  handle: content_by_topic
+                  handle: tags
                   field:
                     taxonomies:
                       - topics
+                      - content_type
+                      - event_types
                     type: terms
-                    display: 'Content by Topic'
+                    display: Tags
                 -
                   handle: collections_to_load_from
                   field:

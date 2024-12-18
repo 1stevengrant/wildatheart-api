@@ -1,6 +1,10 @@
 title: 'Media Item'
 template: default
 layout: layout
+taxonomies:
+  - content_type
+  - topics
+  - media_type
 revisions: false
 route: '{custom_url}'
 date: true

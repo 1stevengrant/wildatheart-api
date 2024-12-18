@@ -2,6 +2,7 @@ title: Podcasts
 template: default
 layout: layout
 revisions: false
+route: 'podcasts/{slug}'
 sort_dir: asc
 date_behavior:
   past: public

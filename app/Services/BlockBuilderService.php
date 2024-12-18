@@ -13,7 +13,14 @@ use App\DataTypeObjects\MediaItemsSlide;
 
 class BlockBuilderService
 {
-    public function build($blocks)
+    private PreviewBuilderService $previewBuilder;
+
+    public function __construct(PreviewBuilderService $previewBuilder)
+    {
+        $this->previewBuilder = $previewBuilder;
+    }
+
+    public function build(array $blocks)
     {
 
         $output = [];
@@ -73,6 +80,9 @@ class BlockBuilderService
                 $processedBlock['slides'] = array_merge($processedBlock['slides'], $mediaItemSlides->slides);
             } elseif ($slide->type === 'custom_slide') {
                 $processedBlock['slides'][] = $this->buildCustomSlide($slide);
+            } elseif ($slide->type === 'content_in_taxonomy') {
+                $recentlyAddedSlide = $this->buildContentInTaxonomySlide($slide);
+                $processedBlock['slides'] = array_merge($processedBlock['slides'], $recentlyAddedSlide->slides);
             } else {
                 $processedBlock['slides'][] = $slide;
             }
@@ -178,7 +188,7 @@ class BlockBuilderService
     {
         $subsplashListSlide = new MediaItemsSlide;
         $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
@@ -209,6 +219,54 @@ class BlockBuilderService
         return $subsplashListSlide;
     }
 
+    public function buildContentInTaxonomySlide($slide)
+    {
+        $recentlyAddedSlide = new MediaItemsSlide;
+
+        $collectionsToLoadFrom = $slide->collections_to_load_from->pluck('handle');
+
+        $query = Entry::query()
+            ->where('published', true)
+            ->where('date', '<=', now())
+            ->where('collection', $slide->collections_to_load_from)
+            ->orderBy('date', 'desc');
+
+        // Add taxonomy terms filter if they exist
+        if (!empty($slide->tags->toArray())) {
+            $query->whereTaxonomyIn($slide->tags->pluck('id'));
+        }
+
+        $recentItems = $query->limit($slide->limit ?? 10)->get();
+
+
+        foreach ($recentItems as $item) {
+            $recentlyAddedSlide->slides[] = $this->createSlideFromEntry($item);
+        }
+
+        return $recentlyAddedSlide;
+    }
+
+    public function createSlideFromEntry($entry)
+    {
+        $slide = SlideBlock::from();
+
+        $preview = $this->previewBuilder->build($entry);
+
+        $slide->id = $preview->id;
+        $slide->title = $preview->title;
+        $slide->featured_image_src = $preview->featured_image_src;
+        $slide->description = $preview->description;
+        $slide->href = $preview->uri;
+        $slide->date = $preview->published_at;
+        if ($preview->related_content) {
+            $slide->leader = $preview->related_content[0]->title;
+        }
+
+        $slide->trim_description_bool = true;
+
+        return $slide;
+    }
+
     public function imageFromCDN(?Asset $image)
     {
         if (! $image) {
@@ -217,6 +275,6 @@ class BlockBuilderService
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl.$image->path;
+        return $cdnUrl . $image->path;
     }
 }
