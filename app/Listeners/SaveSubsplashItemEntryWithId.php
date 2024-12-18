@@ -60,6 +60,8 @@ class SaveSubsplashItemEntryWithId
                 $newEntry->id($newId);
                 $newEntry->save();
                 $entry->delete();
+
+                return;
             }
         }
     }

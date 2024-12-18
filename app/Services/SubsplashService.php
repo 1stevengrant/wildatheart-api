@@ -52,7 +52,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer '.$accessToken;
+        $token = 'Bearer ' . $accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
@@ -146,7 +146,7 @@ class SubsplashService
         }
 
         $publishedAt = data_get($mediaItem, 'published_at');
-        $entry->date(\Carbon\Carbon::parse($publishedAt));
+        $entry->date(Carbon::parse($publishedAt));
 
         $entry->slug(data_get($mediaItem, 'title'));
 
