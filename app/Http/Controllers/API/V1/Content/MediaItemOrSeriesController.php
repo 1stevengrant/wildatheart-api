@@ -20,13 +20,19 @@ use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
 
 class MediaItemOrSeriesController extends Controller
 {
+    private BlockBuilderService $blockBuilder;
+
+    public function __construct(BlockBuilderService $blockBuilder)
+    {
+        $this->blockBuilder = $blockBuilder;
+    }
     public function show($slugOrUri, Request $request)
     {
         $uri = $slugOrUri;
         $slug = $slugOrUri;
 
         if (str_contains($slugOrUri, '/')) {
-            $uri = '/media/'.$slugOrUri;
+            $uri = '/media/' . $slugOrUri;
         }
 
         $seriesRedirects = [
@@ -40,7 +46,7 @@ class MediaItemOrSeriesController extends Controller
 
         if (config('features.is_custom_uri_enabled') && in_array($slug, $seriesRedirects)) {
             return RedirectResponse::from([
-                'redirect' => '/media/the-series/'.$slug,
+                'redirect' => '/media/the-series/' . $slug,
                 'code' => 301,
             ]);
         }
@@ -93,8 +99,7 @@ class MediaItemOrSeriesController extends Controller
         $response = $entryBuilder->buildResponseFromEntry($mediaItemOrSeries);
 
         if (isset($mediaItemOrSeries->blocks)) {
-            $blockBuilder = new BlockBuilderService;
-            $response['blocks'] = $blockBuilder->build($mediaItemOrSeries->blocks);
+            $response['blocks'] = $this->blockBuilder->build($mediaItemOrSeries->blocks);
         }
 
         $imageBuilder = new ImageBuilderService;
