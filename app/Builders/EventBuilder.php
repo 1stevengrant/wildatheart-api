@@ -27,6 +27,16 @@ class EventBuilder extends Builder
         return $this->where('event_type_id', EventType::where('name', EventType::FIRES)->first()->id);
     }
 
+    public function becomingAKingRetreats(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::BECOMING_A_KING)->first()->id);
+    }
+
+    public function becomingAKingExperiences(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::BECOMING_A_KING_EXPERIENCE)->first()->id);
+    }
+
     public function retreats(): EventBuilder
     {
         $eventTypes = EventType::whereIn('name', [
