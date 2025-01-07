@@ -8,12 +8,13 @@ import { HostedBy } from "@/Components/Events/HostedBy";
 import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { imageGenerator } from "@/helpers/user";
 import useTypedPage from "@/Hooks/useTypedPage";
+import { Event } from "@/types/Event";
 
 export const EventDisplay = ({
     event,
     className = "",
 }: {
-    event: any;
+    event: Event;
     className?: string;
 }) => {
     const page = useTypedPage();
@@ -25,9 +26,9 @@ export const EventDisplay = ({
         <div
             className={`${className} p-4 flex space-x-4 border rounded-md cursor-pointer border-n700`}
         >
-            {event.eventType.image && (
+            {event.eventTypeImage && (
                 <img
-                    src={imageGenerator(event.eventType.image, {
+                    src={imageGenerator(event.eventTypeImage, {
                         width: 100,
                         height: 100,
                     })}

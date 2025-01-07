@@ -7,7 +7,5 @@ export const Instruction = ({
     children: React.ReactNode;
     className?: string;
 }) => {
-    return (
-        <div className={`text-sm text-n40 ${className} `}>{children}</div>
-    );
+    return <div className={`text-sm text-n40 ${className} `}>{children}</div>;
 };
