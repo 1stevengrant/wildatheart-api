@@ -18,23 +18,21 @@ class SaveSubsplashItemEntryWithId
 
         //     $content_types = $entry->content_type;
 
-
         //     foreach ($relatedMediaItems as $mediaItem) {
         //         $mediaItem->set("content_type", $content_types->pluck('slug'));
         //         $mediaItem->save();
         //     }
         // }
 
-
         // if it isn't set, do nothing
-        if (!$entry->has('subsplash_media_item_id')) {
+        if (! $entry->has('subsplash_media_item_id')) {
             return;
         }
 
         // Check if the entry has an 'id' field and it's not already set as the entry ID
         $mediaItemId = $entry->get('subsplash_media_item_id');
 
-        // Ensure that this item hasn't already been created with its id yet. 
+        // Ensure that this item hasn't already been created with its id yet.
         if ($mediaItemId === $entry->id() || $entry->collection()->queryEntries()->where('id', $mediaItemId)->first()) {
             return;
         }
