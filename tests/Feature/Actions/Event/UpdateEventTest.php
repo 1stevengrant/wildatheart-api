@@ -4,7 +4,7 @@ use App\Models\Event;
 use App\Actions\Event\UpdateEvent;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\EventTypeSeeder::class);
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });
 
 it('updates an event with given data', function () {

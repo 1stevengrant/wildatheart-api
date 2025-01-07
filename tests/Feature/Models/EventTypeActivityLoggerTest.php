@@ -68,7 +68,7 @@ it('does not log activity when no attributes have changed', function () {
 
     $eventType->update(['name' => 'Test Event']); // Same value
 
-    expect(Activity::count())->toBe(3); // 2 created by the factory, 1 for the update
+    expect(Activity::count())->toBe(2); // 2 created by the factory, 1 for the update
 });
 
 it('logs system changes when no user is authenticated', function () {
