@@ -15,7 +15,7 @@ export const SwitchComponent = ({
     return (
         <>
             {label && (
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-n20">
                     {label}
                 </label>
             )}
@@ -23,7 +23,7 @@ export const SwitchComponent = ({
                 checked={checked}
                 onChange={onChange}
                 className={classNames(
-                    checked ? "bg-p200" : "bg-grey-darker",
+                    checked ? "bg-p200" : "bg-n600",
                     `relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-p200 focus:ring-offset-2`
                 )}
             >

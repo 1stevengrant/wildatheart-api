@@ -34,6 +34,11 @@ tabs:
                 - media_item
               type: entries
               display: 'Media Items'
+          -
+            handle: subsplash_media_series_id
+            field:
+              type: text
+              display: 'Subsplash Media Series ID'
   sidebar:
     display: Sidebar
     sections:
@@ -58,3 +63,19 @@ tabs:
             field:
               type: toggle
               display: 'Hide Navigation'
+          -
+            handle: content_type
+            field:
+              type: terms
+              taxonomies:
+                - content_type
+              display: 'Content Type'
+              mode: select
+          -
+            handle: topics
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: Topics
+              mode: select

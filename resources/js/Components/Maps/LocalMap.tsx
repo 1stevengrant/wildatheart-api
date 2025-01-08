@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 
+import { router } from "@inertiajs/react";
 import mapboxgl from "mapbox-gl";
 import Map, {
     GeolocateControl,
@@ -39,12 +40,63 @@ export const LocalMap = () => {
     const [bounds, setBounds] = useState<LngLatBounds | null>(null);
     const { currentSex } = useSex();
     const { typeGroup } = useTypeGroup();
-    const { types } = useTypes();
+    const { types, setTypesTo } = useTypes();
     const { startDateString, endDateString } = useDates();
 
     const initialFlyToDone = useRef(false);
     const [hasSupport, setHasSupport] = useState(true);
     const abortControllerRef = useRef<AbortController | null>(null);
+    const initialLoadDone = useRef(false);
+
+    useEffect(() => {
+        if (!initialLoadDone.current) {
+            const url = new URL(window.location.href);
+            const typesParam = url.searchParams.get("types");
+
+            if (typesParam) {
+                const typeIds = typesParam.split(",").map((id) => parseInt(id));
+                setTypesTo(typeIds);
+            }
+            initialLoadDone.current = true;
+        }
+    }, []);
+
+    const debouncedUpdateUrl = useCallback((newTypes: number[]) => {
+        const currentUrl = new URL(window.location.href);
+        const currentTypesParam = currentUrl.searchParams.get("types");
+        const newTypesParam = newTypes.length > 0 ? newTypes.join(",") : null;
+
+        if (currentTypesParam !== newTypesParam) {
+            const params = new URLSearchParams(currentUrl.search);
+
+            if (newTypes.length > 0) {
+                params.set("types", newTypes.join(","));
+            } else {
+                params.delete("types");
+            }
+
+            router.get(
+                `${window.location.pathname}?${params.toString()}`,
+                {},
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    replace: true,
+                    only: [],
+                }
+            );
+        }
+    }, []);
+
+    useEffect(() => {
+        if (initialLoadDone.current) {
+            const timeoutId = setTimeout(() => {
+                debouncedUpdateUrl(types);
+            }, 300);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }, [types]);
 
     useEffect(() => {
         mapboxgl.accessToken = import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN;
