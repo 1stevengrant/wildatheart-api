@@ -30,7 +30,7 @@ class EventResource extends JsonResource
             'location' => $this->location,
             'country' => $this->country,
             'host_name' => $this->host->full_name,
-            'host_photo' => null,
+            'host_photo' => $this->hostPhoto,
             'sex' => $this->sex,
             'url' => $this->url,
             'group_size' => $this->group_size ?? 1,
