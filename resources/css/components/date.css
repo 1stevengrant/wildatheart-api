@@ -1,70 +1,73 @@
 .mantine-Popover-dropdown {
-    background: #000 !important;
-    border-color: #000 !important;
+    @apply bg-black border-black !important;
 }
 
 .mantine-DatePickerInput-calendarHeaderLevel {
     &:hover {
-        background: transparent !important;
+        @apply bg-transparent !important;
     }
 }
 
 .mantine-DatePickerInput-calendarHeaderControl {
     &:hover {
-        background: transparent !important;
+        @apply bg-transparent !important;
     }
 }
 
 .mantine-DatePickerInput-day {
-    background: #000 !important;
-    color: #fff !important;
+    @apply bg-black text-white !important;
 
     &:hover {
-        border: 1px solid #fff !important;
+        @apply border border-white !important;
     }
 
     &[data-disabled="true"] {
-        border: 1px solid transparent !important;
-        color: #5c6771 !important;
+        @apply border border-transparent text-n50 !important;
     }
 
     &[data-outside="true"] {
-        background: #000 !important;
-        color: #fff !important;
+        @apply bg-black text-white !important;
         opacity: unset !important;
     }
 
     &[data-today="true"] {
-        color: #d65f00 !important;
+        @apply text-p300 !important;
     }
 
     &[data-selected="true"] {
-        background: #d65f00 !important;
-        color: #fff !important;
+        @apply bg-p300 text-white !important;
+
         &:hover {
-            border-color: #d65f00 !important;
+            @apply border-p300 !important;
         }
     }
 }
 
+.mantine-DatePickerInput-day[data-selected="true"]:hover {
+    @apply bg-p300 text-white !important;
+}
+
 .mantine-DatePickerInput-label {
-    color: #b8b6b6 !important;
-    display: block !important;
-    margin-bottom: 0.5rem !important;
+    @apply text-n70 block mb-2 text-sm font-semibold !important;
 }
 
 .mantine-DatePickerInput-input,
 .mantine-DatePickerInput-wrapper {
-    border-radius: 0.5rem !important;
-    color: white !important;
-    background: #000 !important;
-    border: 1px solid #484848 !important;
+    @apply rounded-lg text-white bg-black border border-n400 !important;
 }
 
 .mantine-DatePickerInput-input {
-    padding: 0.75rem 1rem !important;
+    @apply px-4 py-2.5 font-sans !important;
 }
 
 .mantine-InputPlaceholder-placeholder {
-    color: white !important;
+    @apply text-white font-sans !important;
+}
+
+.mantine-DatePickerInput-day:hover {
+    @apply text-p300 !important;
+}
+
+.mantine-CloseButton-root {
+    @apply text-n100 !important;
 }

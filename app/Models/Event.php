@@ -357,4 +357,14 @@ class Event extends BaseModel
 
         return $query;
     }
+
+
+    public function getHostPhotoAttribute(): string
+    {
+        if ($this->host->image) {
+            return $this->host->image;
+        }
+
+        return Avatar::create($this->host->full_name)->toBase64();
+    }
 }

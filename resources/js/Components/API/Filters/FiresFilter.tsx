@@ -25,7 +25,7 @@ export const FiresFilter = () => {
             {fireTypes.map((eventType: any, index: number) => {
                 return (
                     <SwitchComponentWrapper key={index}>
-                        <span>{eventType.name}</span>
+                        <span>{eventType.filter_name ?? eventType.name}</span>
                         <SwitchComponent
                             checked={types.includes(eventType.id)}
                             onChange={() => handleTypesChange(eventType.id)}
