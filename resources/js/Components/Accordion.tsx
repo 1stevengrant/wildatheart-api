@@ -36,7 +36,7 @@ export const Accordion = ({
                                             className={`w-6 h-6 text-white flex-shrink-0 ${open ? `rotate-90 transform` : ``} `}
                                         />
                                     </Disclosure.Button>
-                                    <Disclosure.Panel className="border-t py-4 border-t-n700">
+                                    <Disclosure.Panel className="border-t py-4 border-t-n700 text-white">
                                         {item.accordion_box_content &&
                                             item.accordion_box_content
                                                 .filter(
