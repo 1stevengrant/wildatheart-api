@@ -16,4 +16,6 @@ export type EventFormDataType = {
     start_date?: Date | null;
     end_date?: Date | null;
     number_of_items_in_material_order?: string | null | number;
+    description?: string | null;
+    registration_url?: string | null;
 };

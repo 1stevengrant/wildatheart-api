@@ -18,6 +18,7 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
+import { Tiptap } from "@/Components/Forms/Tiptap";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
 import { RightColumn } from "@/Components/Layout/Elements/RightColumn";
@@ -43,6 +44,7 @@ export const FireInformation = ({ user }: any) => {
     const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [marker, setMarker] = useState<any>(null);
     const { handleUserLevelZoom, zoom } = useMapData();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const lookupCurrentLocation = () => {
         if (navigator.geolocation) {
@@ -140,6 +142,7 @@ export const FireInformation = ({ user }: any) => {
             neighborhood: "",
             street_address: "",
             poi: "",
+            description: "",
         });
 
     useEffect(() => {
@@ -240,6 +243,7 @@ export const FireInformation = ({ user }: any) => {
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        setIsSubmitting(true);
         event.preventDefault();
         const eventPostEndpoint =
             eventType.slug === EventTypeCaptivatingFires
@@ -247,7 +251,13 @@ export const FireInformation = ({ user }: any) => {
                 : route("host.fire.store");
         post(eventPostEndpoint, {
             preserveScroll: true,
-            onError: () => scrollToError(),
+            onError: () => {
+                scrollToError();
+                setIsSubmitting(false);
+            },
+            onSuccess: () => {
+                setIsSubmitting(false);
+            },
         });
     };
 
@@ -324,7 +334,20 @@ export const FireInformation = ({ user }: any) => {
                             </>
                         </Map>
                     </div>
-
+                    <div className={`mt-4`}>
+                        <InputLabel htmlFor="description" value="Description" />
+                        <Tiptap
+                            id="description"
+                            name="description"
+                            value={data.description || ""}
+                            disabled={isSubmitting}
+                            onChange={(value: string) =>
+                                setData("description", value)
+                            }
+                            className="mt-1"
+                        />
+                        <InputError message={errors.description} />
+                    </div>
                     <div className="mt-4 space-y-4">
                         <PrimaryButton
                             disabled={

@@ -20,6 +20,8 @@ class Event extends BaseModel
 {
     use HasFactory, HasUuids, LogsActivity, SoftDeletes;
 
+    public const LOG_NAME = 'events';
+
     protected static function boot(): void
     {
         parent::boot();
@@ -357,7 +359,6 @@ class Event extends BaseModel
 
         return $query;
     }
-
 
     public function getHostPhotoAttribute(): string
     {

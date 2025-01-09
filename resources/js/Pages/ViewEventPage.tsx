@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { usePage } from "@inertiajs/react";
 import Vimeo from "@u-wave/react-vimeo";
+import parse from "html-react-parser";
 import Markdown from "react-markdown";
 
 import { BackToEvents } from "@/Components/Buttons/BackToEvents";
@@ -134,6 +135,13 @@ const ViewEventPage = () => {
                                 {event.eventTypeData.description}
                             </Markdown>
 
+                            {event.description && (
+                                <div className={`${proseClasses} mt-8`}>
+                                    <h2>About this {eventTitle(event)}</h2>
+                                    {parse(event.description)}
+                                </div>
+                            )}
+
                             {event.eventTypeData.photos &&
                                 event.eventTypeData.photos.length > 0 && (
                                     <PhotoCarousel
@@ -154,7 +162,6 @@ const ViewEventPage = () => {
                     </div>
                 </div>
             </div>
-
             <MobileConnect />
         </AppLayout>
     );

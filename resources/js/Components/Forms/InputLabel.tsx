@@ -16,7 +16,7 @@ export const InputLabel = ({
     return (
         <label
             {...props}
-            className={`block font-semibold text-sm text-n70 ` + className}
+            className={`block font-semibold text-n70 ` + className}
         >
             {value ? value : children}
             {required ? <span className="text-r200"> *</span> : null}

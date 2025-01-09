@@ -56,6 +56,8 @@ class HostEventTypeCreateEventController extends Controller
             'end_date' => $request->end_date,
             'sex' => determineSexOfEvent($eventType),
             'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
+            'registration_url' => $request->registration_url,
+            'description' => $request->description,
         ]);
 
         $mailingAddress = auth()->user()->primaryAddress();

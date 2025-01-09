@@ -1,5 +1,5 @@
 .mantine-Popover-dropdown {
-    @apply bg-black border-black !important;
+    @apply bg-n900 border-n400 !important;
 }
 
 .mantine-DatePickerInput-calendarHeaderLevel {
@@ -15,7 +15,7 @@
 }
 
 .mantine-DatePickerInput-day {
-    @apply bg-black text-white !important;
+    @apply bg-n900 text-white !important;
 
     &:hover {
         @apply border border-white !important;
@@ -26,25 +26,25 @@
     }
 
     &[data-outside="true"] {
-        @apply bg-black text-white !important;
+        @apply bg-n900 text-white !important;
         opacity: unset !important;
     }
 
     &[data-today="true"] {
-        @apply text-p300 !important;
+        @apply text-p200 !important;
     }
 
     &[data-selected="true"] {
-        @apply bg-p300 text-white !important;
+        @apply bg-p200 text-white !important;
 
         &:hover {
-            @apply border-p300 !important;
+            @apply border-p200 !important;
         }
     }
 }
 
 .mantine-DatePickerInput-day[data-selected="true"]:hover {
-    @apply bg-p300 text-white !important;
+    @apply bg-p200 text-white !important;
 }
 
 .mantine-DatePickerInput-label {
@@ -53,7 +53,7 @@
 
 .mantine-DatePickerInput-input,
 .mantine-DatePickerInput-wrapper {
-    @apply rounded-lg text-white bg-black border border-n400 !important;
+    @apply rounded-lg text-white bg-n900 border border-n400 !important;
 }
 
 .mantine-DatePickerInput-input {
@@ -65,9 +65,13 @@
 }
 
 .mantine-DatePickerInput-day:hover {
-    @apply text-p300 !important;
+    @apply text-p200 !important;
 }
 
 .mantine-CloseButton-root {
     @apply text-n100 !important;
+}
+
+.mantine-DatePickerInput-label {
+    @apply text-base !important;
 }

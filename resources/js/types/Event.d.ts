@@ -46,4 +46,6 @@ export type Event = {
     type_group?: string;
     hostObject: HostType;
     isPrivate: boolean;
+    description?: string;
+    registration_url?: string;
 };

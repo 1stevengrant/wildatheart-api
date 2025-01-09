@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\MaximumCharacterCountWithoutHtml;
+use App\Rules\MinimumCharacterCountWithoutHtml;
 
 class EventRequest extends FormRequest
 {
@@ -26,6 +28,13 @@ class EventRequest extends FormRequest
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
             'start_date' => ['required', 'date'],
+            'registration_url' => ['nullable', 'string', 'sometimes', 'url'],
+            'description' => [
+                'sometimes',
+                'string',
+                new MinimumCharacterCountWithoutHtml,
+                new MaximumCharacterCountWithoutHtml(500),
+            ],
         ];
 
         $rules['number_of_items_in_material_order'] = $this->route('eventType')?->hasMaterialsOrder()

@@ -17,11 +17,15 @@ import { useRecoilState } from "recoil";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
+import { Instruction } from "@/Components/Forms/Instruction";
 import SelectInput from "@/Components/Forms/SelectInput";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
+import TextInput from "@/Components/Forms/TextInput";
+import { Tiptap } from "@/Components/Forms/Tiptap";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
+import { OptionalInformationWrapper } from "@/Components/OptionalInformationWrapper";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
@@ -145,6 +149,8 @@ const CreateEventEventTypePage = () => {
             is_private: false,
             start_date: null,
             number_of_items_in_material_order: "",
+            registration_url: "",
+            description: "",
         });
 
     useEffect(() => {
@@ -173,33 +179,34 @@ const CreateEventEventTypePage = () => {
         const location = await lookupLocation(lng, lat);
 
         const country = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("country")
-            )?.text,
-            region = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("region")
-            )?.text,
-            postcode = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("postcode")
-            )?.text,
-            district = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("district")
-            )?.text,
-            place = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("place")
-            )?.text,
-            locality = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("locality")
-            )?.text,
-            neighborhood = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("country")
+        )?.text;
+        const region = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("region")
+        )?.text;
+        const postcode = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("postcode")
+        )?.text;
+        const district = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("district")
+        )?.text;
+        const place = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("place")
+        )?.text;
+        const locality = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("locality")
+        )?.text;
+        const neighborhood = location.find(
+            (feature: { id: string | string[] }) =>
                 feature.id.includes("neighborhood")
-            )?.text,
-            streetAddress = location.find(
-                (feature: { id: string | string[] }) =>
-                    feature.id.includes("address")
-            )?.text,
-            poi = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("poi")
-            )?.text;
+        )?.text;
+        const streetAddress = location.find(
+            (feature: { id: string | string[] }) =>
+                feature.id.includes("address")
+        )?.text;
+        const poi = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("poi")
+        )?.text;
 
         data.country = country;
         data.region = region;
@@ -347,6 +354,7 @@ const CreateEventEventTypePage = () => {
                                     label="Start date"
                                     placeholder="Select start date"
                                     minDate={new Date()}
+                                    required
                                     value={startDate}
                                     maxDate={maxDate}
                                     clearable
@@ -376,6 +384,7 @@ const CreateEventEventTypePage = () => {
                                         </div>
                                     </div>
                                 </label>
+
                                 {eventType.allow_materials_order && (
                                     <div className={`mt-4`}>
                                         <p>
@@ -442,6 +451,51 @@ const CreateEventEventTypePage = () => {
                                         />
                                     </div>
                                 )}
+                                <OptionalInformationWrapper>
+                                    <div className={`mt-4`}>
+                                        <InputLabel
+                                            htmlFor="description"
+                                            value="Description"
+                                        />
+                                        <Tiptap
+                                            id="description"
+                                            name="description"
+                                            value={data.description || ""}
+                                            onChange={(value: string) =>
+                                                setData("description", value)
+                                            }
+                                            placeholderText={`If your event has more details, tell us about them here.`}
+                                            className="mt-1"
+                                        />
+                                        <InputError
+                                            message={errors.description}
+                                        />
+                                    </div>
+                                    <div className={`mt-4`}>
+                                        <InputLabel
+                                            htmlFor="registration_url"
+                                            value="Registration URL"
+                                        />
+                                        <TextInput
+                                            id={"registration_url"}
+                                            value={data.registration_url ?? ""}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "registration_url",
+                                                    e.target.value
+                                                )
+                                            }
+                                            placeholder={`https://example.com`}
+                                        />
+                                        <Instruction>
+                                            If you have an external registration
+                                            page, paste the URL here.
+                                        </Instruction>
+                                        <InputError
+                                            message={errors.registration_url}
+                                        />
+                                    </div>
+                                </OptionalInformationWrapper>
                             </div>
                         </form>
                     </PageContainer>

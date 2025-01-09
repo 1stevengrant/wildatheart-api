@@ -203,5 +203,6 @@ module.exports = {
         require("@tailwindcss/container-queries"),
         require("@tailwindcss/typography"),
         require("flowbite/plugin"),
+        require("@headlessui/tailwindcss"),
     ],
 };

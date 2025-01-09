@@ -55,9 +55,7 @@ const StatCard = ({
     return (
         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
             <div className="p-6 bg-white">
-                <h2 className="text-2xl font-bold mb-4 text-n700">
-                    {title}
-                </h2>
+                <h2 className="text-2xl font-bold mb-4 text-n700">{title}</h2>
                 {byline && <p className="text-grey italic">{byline}</p>}
                 <hr className="my-4" />
                 <ul className="space-y-3">{children}</ul>

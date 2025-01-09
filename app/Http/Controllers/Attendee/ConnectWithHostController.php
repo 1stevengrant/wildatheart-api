@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee;
 
+use Inertia\Inertia;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use App\Services\SeoService;
@@ -16,6 +17,16 @@ class ConnectWithHostController extends Controller
 
     public function index(Event $event)
     {
+        if ($event->registration_url) {
+            dispatch(new LogActivityJob(
+                logName: Event::LOG_NAME,
+                description: 'Clicked External Registration Link',
+                properties: ['event' => $event],
+            ));
+
+            return Inertia::location($event->registration_url);
+        }
+
         $this->seoService->setMetadata(
             title: "Connect with {$event->host_name} for {$event->name} in {$event->location}",
             description: $event->eventType->card_teaser_text ?? '',

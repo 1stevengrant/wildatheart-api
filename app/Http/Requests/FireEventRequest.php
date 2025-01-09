@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Rules\ShouldNotEndWithFire;
 use Illuminate\Foundation\Http\FormRequest;
 use Repat\LaravelRules\DoesntContainEmojis;
+use App\Rules\MaximumCharacterCountWithoutHtml;
+use App\Rules\MinimumCharacterCountWithoutHtml;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class FireEventRequest extends FormRequest
@@ -36,6 +38,12 @@ class FireEventRequest extends FormRequest
             'country' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
+            'description' => [
+                'sometimes',
+                'string',
+                new MinimumCharacterCountWithoutHtml,
+                new MaximumCharacterCountWithoutHtml(500),
+            ],
         ];
     }
 }
