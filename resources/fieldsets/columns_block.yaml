@@ -1,50 +1,55 @@
-title: 'Columns Block'
+title: "Columns Block"
 fields:
-  -
-    handle: columns
+  - handle: columns
     field:
       type: replicator
       display: Columns
       sets:
         new_set_group:
-          display: 'New Set Group'
+          display: "New Set Group"
           sets:
             column:
               display: Column
               fields:
-                -
-                  handle: blocks
+                - handle: blocks
                   field:
                     type: replicator
                     display: Blocks
                     sets:
                       new_set_group:
-                        display: 'New Set Group'
+                        display: "New Set Group"
                         sets:
                           styled_text:
-                            display: 'Styled Text'
+                            display: "Styled Text"
+                            icon: text-formatting-all-caps
                             fields:
-                              -
-                                import: styled_text_block
+                              - import: styled_text_block
                           image:
                             display: Image
+                            icon: media-image-picture-orientation
                             fields:
-                              -
-                                import: image_block
-                -
-                  handle: column_width
+                              - import: image_block
+                          buttons:
+                            display: Buttons
+                            fields:
+                              - import: buttons
+                          button_cloud:
+                            display: Button Cloud
+                            fields:
+                              - import: button_cloud
+                - handle: column_width
                   field:
                     type: width
-                    display: 'Column Width Desktop'
+                    display: "Column Width Desktop"
                     options:
-                      - '20'
-                      - '25'
-                      - '33'
-                      - '40'
-                      - '50'
-                      - '60'
-                      - '66'
-                      - '75'
-                      - '80'
-                      - '100'
-                    default: '100'
+                      - "20"
+                      - "25"
+                      - "33"
+                      - "40"
+                      - "50"
+                      - "60"
+                      - "66"
+                      - "75"
+                      - "80"
+                      - "100"
+                    default: "100"
