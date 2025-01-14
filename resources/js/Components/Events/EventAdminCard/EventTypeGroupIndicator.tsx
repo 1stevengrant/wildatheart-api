@@ -3,8 +3,8 @@ import React from "react";
 import { useRecoilState } from "recoil";
 
 import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
+import { EventSex } from "@/Components/EventSex";
 import { dateFormatter } from "@/helpers/dateFormatter";
-import { EVENT_FOR_MEN } from "@/helpers/eventSex";
 import {
     experienceTypeGroup,
     fireTypeGroup,
@@ -25,7 +25,7 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
             {event.type_group === fireTypeGroup && (
                 <div className={eventTypeNameClasses}>
                     <div className={`${eventTypeClasses} ${isActiveEvent}`}>
-                        Monthly Gathering for Men
+                        Monthly Gathering for <EventSex sex={event.sex} />
                     </div>
                     <EventTypeBadge className={`hidden md:inline-flex`}>
                         Monthly
@@ -35,12 +35,7 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
             {event.type_group === retreatTypeGroup && (
                 <div className={eventTypeNameClasses}>
                     <div className={`${eventTypeClasses} ${isActiveEvent}`}>
-                        Multi-Day Retreat for{" "}
-                        {event.sex === EVENT_FOR_MEN ? (
-                            <span>Men</span>
-                        ) : (
-                            <span>Women</span>
-                        )}
+                        Multi-Day Retreat for <EventSex sex={event.sex} />
                     </div>
                     {event.start_date && (
                         <EventTypeBadge className={`hidden md:inline-flex`}>
@@ -55,12 +50,7 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
             {event?.type_group === experienceTypeGroup && (
                 <div className={eventTypeNameClasses}>
                     <div className={`${eventTypeClasses} ${isActiveEvent}`}>
-                        6-part video study for{" "}
-                        {event.sex === EVENT_FOR_MEN ? (
-                            <span>Men</span>
-                        ) : (
-                            <span>Women</span>
-                        )}
+                        6-part video study for <EventSex sex={event.sex} />
                     </div>
                     <EventTypeBadge className={`hidden md:inline-flex`}>
                         Starts {dateFormatter(event.start_date)}
