@@ -46,7 +46,7 @@ const EventGuidePage = () => {
                         eventType.event_guide_pages.map(
                             (page: any, index: number) => (
                                 <Tab
-                                    className={`${tabClasses} text-left md:text-center`}
+                                    className={`${tabClasses} text-left md:text-center ui-selected:font-bold`}
                                     key={index}
                                 >
                                     {page.page_title}
@@ -75,7 +75,7 @@ const EventGuidePage = () => {
                                                                         block.body
                                                                     }
                                                                     key={index}
-                                                                    className={`prose-p:text-white prose-strong:text-white prose-ol:text-white prose-ul:text-white prose-li:text-white prose-li:marker:text-white`}
+                                                                    className={`prose-p:text-white prose-strong:text-white prose-ol:text-white prose-ul:text-white prose-li:text-white prose-li:marker:text-white prose-h1:text-white prose-h2:text-white prose-h3:text-white prose-h4:text-white prose-h5:text-white prose-h6:text-white`}
                                                                 />
                                                             );
 
