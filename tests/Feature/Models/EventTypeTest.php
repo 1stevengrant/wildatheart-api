@@ -40,3 +40,14 @@ it('gets a list of inactive event types', function () {
 
     expect($eventTypes->count())->toBe(1);
 });
+
+it('clears the cache when a new event type is created', function () {
+    cache()->put('allEventTypes', 'cached', now()->addDay());
+
+    EventType::create([
+        'name' => 'Wild at Heart Retreat',
+        'is_active' => true,
+    ]);
+
+    expect(cache()->has('allEventTypes'))->toBeFalse();
+});
