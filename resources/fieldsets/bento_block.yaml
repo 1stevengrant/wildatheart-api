@@ -1,0 +1,136 @@
+title: 'Bento Block'
+fields:
+  -
+    handle: compartments
+    field:
+      type: replicator
+      display: Compartments
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            compartment:
+              display: Compartment
+              fields:
+                -
+                  handle: blocks
+                  field:
+                    remove_empty_nodes: false
+                    type: bard
+                    display: Blocks
+                    sets:
+                      blocks:
+                        display: Blocks
+                        sets:
+                          content_card:
+                            display: 'Content Card'
+                            fields:
+                              -
+                                handle: title
+                                field:
+                                  type: text
+                                  display: Title
+                              -
+                                handle: subtitle
+                                field:
+                                  type: text
+                                  display: Subtitle
+                              -
+                                handle: href
+                                field:
+                                  type: link
+                                  display: Link
+                              -
+                                handle: background_image
+                                field:
+                                  container: s3
+                                  type: assets
+                                  display: 'Background Image'
+                                  max_files: 1
+                              -
+                                handle: background_video_url
+                                field:
+                                  type: link
+                                  display: 'Background Video URL'
+                              -
+                                handle: disable_aspect_ratio
+                                field:
+                                  type: toggle
+                                  display: 'Disable Aspect Ratio'
+                                  instructions: 'Disables the forced aspect ratio. Useful within Bento Box.'
+                -
+                  handle: row_span
+                  field:
+                    options:
+                      -
+                        key: 1
+                        value: '1'
+                      -
+                        key: 2
+                        value: '2'
+                      -
+                        key: 3
+                        value: '3'
+                      -
+                        key: full
+                        value: Full
+                    type: select
+                    display: 'Row Span'
+                    instructions: 'How many rows do you want this compartment to be?'
+                -
+                  handle: column_span
+                  field:
+                    options:
+                      -
+                        key: 1
+                        value: '1'
+                      -
+                        key: 2
+                        value: '2'
+                      -
+                        key: 3
+                        value: '3'
+                      -
+                        key: full
+                        value: Full
+                    type: select
+                    display: 'Column Span'
+                    instructions: 'How many columns do you want this compartment to be?'
+  -
+    handle: row_count
+    field:
+      options:
+        -
+          key: 1
+          value: '1'
+        -
+          key: 2
+          value: '2'
+        -
+          key: 3
+          value: '3'
+        -
+          key: 4
+          value: '4'
+      type: select
+      display: 'Row Count'
+      instructions: 'How many rows you want this bento to have.'
+  -
+    handle: column_count
+    field:
+      options:
+        -
+          key: 1
+          value: '1'
+        -
+          key: 2
+          value: '2'
+        -
+          key: 3
+          value: '3'
+        -
+          key: 4
+          value: '4'
+      type: select
+      display: 'Column Count'
+      instructions: 'How many columns you want this bento to have.'

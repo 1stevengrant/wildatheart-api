@@ -21,6 +21,22 @@ fields:
       type: select
       display: Variant
   -
+    handle: size
+    field:
+      options:
+        -
+          key: large
+          value: Large
+        -
+          key: medium
+          value: Medium
+        -
+          key: small
+          value: Small
+      default: large
+      type: select
+      display: Size
+  -
     handle: left_icon
     field:
       type: group

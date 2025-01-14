@@ -79,6 +79,13 @@ fields:
                   import: styled_text_block
             columns_block:
               display: 'Columns Block'
+              icon: layout-three-columns
               fields:
                 -
                   import: columns_block
+            bento_block:
+              display: 'Bento Block'
+              icon: layout-split-right
+              fields:
+                -
+                  import: bento_block

@@ -57,6 +57,15 @@ class EventType extends BaseModel
                 'user' => auth()->user()?->full_name,
             ]);
         });
+
+        static::created(function () {
+            $cacheKeys = collect(['allEventTypes', 'experienceTypes', 'retreatTypes', 'fireTypes']);
+
+            $cacheKeys->each(function ($key) {
+                cache()->forget($key);
+            });
+
+        });
     }
 
     protected function casts(): array

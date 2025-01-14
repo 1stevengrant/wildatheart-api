@@ -1,0 +1,96 @@
+title: 'Button Cloud'
+fields:
+  -
+    handle: title
+    field:
+      type: group
+      display: Title
+      fields:
+        -
+          import: styled_text_block
+  -
+    handle: buttons
+    field:
+      type: replicator
+      display: Buttons
+      sets:
+        button:
+          display: Button
+          fields:
+            -
+              handle: text
+              field:
+                type: text
+                display: Text
+            -
+              handle: href
+              field:
+                type: link
+                display: Link
+            -
+              handle: left_icon
+              field:
+                type: group
+                display: 'Left Icon'
+                fields:
+                  -
+                    import: icon
+            -
+              handle: right_icon
+              field:
+                type: group
+                display: 'Right Icon'
+                fields:
+                  -
+                    import: icon
+            -
+              handle: open_in_modal
+              field:
+                type: toggle
+                display: 'Open In Modal'
+                if:
+                  open_in_new_tab: 'equals false'
+            -
+              handle: open_in_new_tab
+              field:
+                type: toggle
+                display: 'Open In New Tab'
+                if:
+                  open_in_modal: 'equals false'
+  -
+    handle: position
+    field:
+      options:
+        start: Align-left
+        center: Align-center
+        end: Align-right
+      max_items: 1
+      default: start
+      type: select
+      display: Alignment
+  -
+    handle: variant
+    field:
+      options:
+        primary: Primary
+        secondary: Secondary
+        cta: 'Call to Action'
+      default: primary
+      type: select
+      display: Variant
+  -
+    handle: size
+    field:
+      options:
+        -
+          key: large
+          value: Large
+        -
+          key: medium
+          value: Medium
+        -
+          key: small
+          value: Small
+      default: small
+      type: select
+      display: Size
