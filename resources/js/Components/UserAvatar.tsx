@@ -27,10 +27,7 @@ export const UserAvatar = ({
 
     return (
         <img
-            className={
-                className +
-                " rounded-full inline-block flex-shrink-0 object-cover"
-            }
+            className={`${className} rounded-full inline-block flex-shrink-0 object-cover border-2 border-white`}
             src={
                 containsBase64PNG(image)
                     ? image

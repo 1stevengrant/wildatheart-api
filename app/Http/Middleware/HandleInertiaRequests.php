@@ -6,7 +6,7 @@ use Inertia\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-//use Tightenco\Ziggy\Ziggy;
+// use Tightenco\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {

@@ -57,3 +57,29 @@ test('an event that has no materials order does not request the number of items 
 
     expect($this->user->events()->count())->toBe(1);
 });
+
+test('a retreat end date is 3 days after the start date', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => 10,
+    ]);
+
+    $event = $this->user->events()->first();
+    $startDate = \Carbon\Carbon::parse($this->startDate);
+    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+});
