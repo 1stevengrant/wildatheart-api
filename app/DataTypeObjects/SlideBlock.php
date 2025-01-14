@@ -15,6 +15,8 @@ class SlideBlock extends Data
 
     public ?string $title = null;
 
+    public ?string $subtitle = null;
+
     public ?string $featured_image_src = null;
 
     public ?string $tag = null;
@@ -46,6 +48,7 @@ enum CardVariant: string // Change to backed enum
     case landscape = 'landscape'; // Assign string values
     case portrait = 'portrait';
     case square = 'square';
+    case book = 'book';
 }
 
 #[TypeScript]

@@ -24,7 +24,6 @@ class PreviewBuilderService
 
     public function build(Entry $entry)
     {
-
         switch ($entry->blueprint->handle) {
             case 'podcast':
                 return $this->buildPodcastPreview($entry);
@@ -34,6 +33,8 @@ class PreviewBuilderService
                 return $this->buildSubsplashMediaItemPreview($entry);
             case 'experience_session':
                 return $this->buildExperienceSessionPreview($entry);
+            case 'book':
+                return $this->buildBookPreview($entry);
             case 'custom_media_item':
                 return $this->buildCustomMediaItemPreview($entry);
         }
@@ -145,6 +146,27 @@ class PreviewBuilderService
         if ($entry->description) {
             $preview->description = strip_tags($entry->description);
         }
+
+        return $preview;
+    }
+
+    private function buildBookPreview(Entry $entry)
+    {
+        $preview = new ContentPreview;
+        $bunnyCDN = new BunnyCDNService;
+
+        $preview->id = $entry->id;
+        $preview->title = $entry->title;
+        $preview->uri = $entry->uri;
+
+        if ($entry->images && $entry->images->vertical) {
+            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->images->vertical);
+        }
+
+        $preview->description = $entry->description;
+        $preview->published_at = $entry->publication_date;
+        $preview->collection = $entry->collection;
+        $preview->blueprint = $entry->blueprint;
 
         return $preview;
     }
