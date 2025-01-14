@@ -1,3 +1,5 @@
+import { EventGuidePageInterface } from "@/types/EventGuidePageInterface";
+
 export type EventType = {
     id: number;
     name: string;
@@ -23,5 +25,5 @@ export type EventType = {
     summary?: string;
     video_link?: string;
     updated_at: string;
-    event_guide_pages?: any;
+    event_guide_pages?: EventGuidePageInterface[];
 };
