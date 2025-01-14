@@ -83,6 +83,9 @@ class BlockBuilderService
             } elseif ($slide->type === 'content_in_taxonomy') {
                 $recentlyAddedSlide = $this->buildContentInTaxonomySlide($slide);
                 $processedBlock['slides'] = array_merge($processedBlock['slides'], $recentlyAddedSlide->slides);
+            } elseif ($slide->type === 'books') {
+                $booksSlide = $this->buildBooksSlide($slide);
+                $processedBlock['slides'] = array_merge($processedBlock['slides'], $booksSlide->slides);
             } else {
                 $processedBlock['slides'][] = $slide;
             }
@@ -188,7 +191,7 @@ class BlockBuilderService
     {
         $subsplashListSlide = new MediaItemsSlide;
         $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
@@ -262,6 +265,13 @@ class BlockBuilderService
         }
 
         $slide->trim_description_bool = true;
+        if ($entry->collection->handle === 'books') {
+            $slide->variant = CardVariant::book;
+            $slide->details = implode(', ', $entry->authors->pluck('author_name')->toArray());
+            if (!empty($entry->subtitle)) {
+                $slide->subtitle = $entry->subtitle;
+            }
+        }
 
         return $slide;
     }
@@ -274,6 +284,27 @@ class BlockBuilderService
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl.$image->path;
+        return $cdnUrl . $image->path;
+    }
+
+    public function buildBooksSlide($slide)
+    {
+        $booksSlide = new MediaItemsSlide;
+        $authorId = $slide->author->id;
+
+        $query = Entry::query()
+            ->where('published', true)
+            ->where('date', '<=', now())
+            ->where('collection', 'books')
+            ->where('data->authors', 'like', "%{$authorId}%")
+            ->orderBy('date', 'desc');
+
+        $recentItems = $query->limit($slide->limit ?? 10)->get();
+
+        foreach ($recentItems as $item) {
+            $booksSlide->slides[] = $this->createSlideFromEntry($item);
+        }
+
+        return $booksSlide;
     }
 }

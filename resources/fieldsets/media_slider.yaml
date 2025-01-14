@@ -115,3 +115,14 @@ fields:
                     type: text
                     display: 'Subsplash List ID'
                     instructions: 'Enter the ID of a Subsplash list you want to load items from.'
+            books:
+              display: Books
+              fields:
+                -
+                  handle: author
+                  field:
+                    max_items: 1
+                    collections:
+                      - authors
+                    type: entries
+                    display: Author
