@@ -15,11 +15,7 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $image = url('img/opengraph.png');
-        $title = 'Home';
-        $description = 'Wild at Heart is a platform for locally hosted fires, experiences, and retreats. Find your next adventure today!';
-        $url = url()->current();
-        $this->seoService->setMetadata($title, $description, $image, $url);
+        $this->seoService->setMetadata('Home', 'Wild at Heart is a platform for locally hosted fires, experiences, and retreats. Find your next adventure today!', url('img/opengraph.png'), url()->current());
 
         return inertia('HomePage', [
             'allEventTypes' => cache()->remember('allEventTypes', now()->addDay(), function () {
