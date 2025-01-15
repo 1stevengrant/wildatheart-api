@@ -9,6 +9,8 @@ type EventStats = {
     wahRetreats: EventTypeObject;
     captivatingRetreats: EventTypeObject;
     experiences: EventTypeObject;
+    captivatingFires: EventTypeObject;
+    survivalSchools: EventTypeObject;
 };
 type EventTypeObject = {
     count: number;
@@ -33,12 +35,12 @@ const Stat = ({
     return (
         <li>
             <div className={`flex space-x-2 items-center`}>
-                <span className="font-semibold text-gray-700">{label}:</span>
+                <span className="font-semibold text-n400">{label}:</span>
                 <span className="text-p200">{value.count}</span>
-                <div className={`text-grey text-sm`}>Hosts: {value.hosts}</div>
+                <div className={`text-n90 text-sm`}>Hosts: {value.hosts}</div>
             </div>
 
-            {statInfo && <div className={`text-grey text-sm`}>{statInfo}</div>}
+            {statInfo && <div className={`text-n90 text-sm`}>{statInfo}</div>}
         </li>
     );
 };
@@ -55,10 +57,8 @@ const StatCard = ({
     return (
         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
             <div className="p-6 bg-white">
-                <h2 className="text-2xl font-bold mb-4 text-n700">
-                    {title}
-                </h2>
-                {byline && <p className="text-grey italic">{byline}</p>}
+                <h2 className="text-2xl font-bold mb-4 text-n700">{title}</h2>
+                {byline && <p className="text-n500 italic">{byline}</p>}
                 <hr className="my-4" />
                 <ul className="space-y-3">{children}</ul>
             </div>
@@ -67,6 +67,7 @@ const StatCard = ({
 };
 const ReportingPage = () => {
     const { eventStats, date, yearStats, year } = usePage<PageProps>().props;
+    console.log(eventStats);
     return (
         <EmptyLayout title={`Reporting`}>
             <div className={`p-4`}>
@@ -75,8 +76,16 @@ const ReportingPage = () => {
                         <StatCard title={`Events Created After ${date}`}>
                             <Stat label={"Fires"} value={eventStats.fires} />
                             <Stat
+                                label={"Captivating Fires"}
+                                value={eventStats.captivatingFires}
+                            />
+                            <Stat
                                 label={"WAH Retreats"}
                                 value={eventStats.wahRetreats}
+                            />
+                            <Stat
+                                label={"Survival Schools"}
+                                value={eventStats.survivalSchools}
                             />
                             <Stat
                                 label={"Captivating Retreats"}
@@ -99,8 +108,17 @@ const ReportingPage = () => {
                                 statInfo={`(may have been created before ${year} but either stopped in ${year} or continued to burn)`}
                             />
                             <Stat
+                                label={"Captivating Fires"}
+                                value={yearStats.captivatingFires}
+                                statInfo={`(may have been created before ${year} but either stopped in ${year} or continued to burn)`}
+                            />
+                            <Stat
                                 label={"WAH Retreats"}
                                 value={yearStats.wahRetreats}
+                            />
+                            <Stat
+                                label={"Survival Schools"}
+                                value={yearStats.survivalSchools}
                             />
                             <Stat
                                 label={"Captivating Retreats"}
