@@ -66,6 +66,24 @@ class EventBuilder extends Builder
         return $this->whereIn('event_type_id', $eventTypes);
     }
 
+    public function captivatingFire(): EventBuilder
+    {
+        $eventTypes = EventType::whereIn('name', [
+            EventType::CAPTIVATING_FIRE,
+        ])->pluck('id');
+
+        return $this->whereIn('event_type_id', $eventTypes);
+    }
+
+    public function survivalSchool(): EventBuilder
+    {
+        $eventTypes = EventType::whereIn('name', [
+            EventType::SURVIVAL_SCHOOL,
+        ])->pluck('id');
+
+        return $this->whereIn('event_type_id', $eventTypes);
+    }
+
     public function experiences(): EventBuilder
     {
         $eventTypes = EventType::whereIn('name', [
