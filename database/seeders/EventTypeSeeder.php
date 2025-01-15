@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\EventType;
-use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class EventTypeSeeder extends Seeder
@@ -13,27 +11,7 @@ class EventTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        $eventTypes = collect([
-            EventType::FIRES,
-            EventType::WAH_RETREAT,
-            EventType::CAPTIVATING_CORE_RETREAT,
-            EventType::BECOMING_A_KING,
-            EventType::WAH_EXPERIENCE,
-            EventType::CAPTIVATING_EXPERIENCE,
-            EventType::BECOMING_A_KING_EXPERIENCE,
-            EventType::SURVIVAL_SCHOOL,
-            EventType::CAPTIVATING_FIRE,
-        ]);
-
-        $eventTypes->each(fn ($eventType) => EventType::create([
-            'name' => $eventType,
-            'summary' => fake()->sentence(5),
-            'description' => fake()->paragraphs(6, true),
-            'slug' => Str::slug($eventType),
-            'image' => fake()->imageUrl(),
-            'zapier_webhook_url' => 'https://hooks.zapier.com/hooks/catch/1234567/abcde',
-            'card_teaser_text' => fake()->paragraph,
-            'allow_materials_order' => true,
-        ]));
+        $sql = file_get_contents(database_path('seeders/event_types.sql'));
+        \DB::unprepared($sql);
     }
 }

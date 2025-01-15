@@ -34,7 +34,7 @@ export const Notification = ({
 
     const icon =
         type === "success" ? (
-            <CheckCircleIcon className="h-6 w-6 text-g300" aria-hidden="true" />
+            <CheckCircleIcon className="h-6 w-6 text-g250" aria-hidden="true" />
         ) : (
             <ExclamationCircleIcon
                 className="h-6 w-6 text-r200"

@@ -35,7 +35,7 @@ export const EventCardContent = (props: { event: Event }) => {
                             <UserAvatar image={event.host_photo} />
                         )}
                     </>
-                    <div className="text-xxs text-n40 leading-tighter">
+                    <div className="text-xs text-n40 leading-tighter">
                         {event.type_group === fireTypeGroup && (
                             <div>{event.name} Fire</div>
                         )}

@@ -137,7 +137,6 @@ class EventFactory extends Factory
             return [
                 'event_type_id' => EventType::where('name', EventType::SURVIVAL_SCHOOL)->first()->id,
                 'start_date' => now()->addDay(),
-                'end_date' => now()->addDays(3),
             ];
         });
     }

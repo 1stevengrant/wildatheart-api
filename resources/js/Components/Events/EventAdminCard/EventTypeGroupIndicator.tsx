@@ -10,6 +10,7 @@ import {
     fireTypeGroup,
     retreatTypeGroup,
 } from "@/helpers/eventTypeGroups";
+import { formatDateRange } from "@/helpers/formatDateRange";
 import { currentEventState } from "@/store";
 import { Event } from "@/types/Event";
 
@@ -32,6 +33,7 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
                     </EventTypeBadge>
                 </div>
             )}
+
             {event.type_group === retreatTypeGroup && (
                 <div className={eventTypeNameClasses}>
                     <div className={`${eventTypeClasses} ${isActiveEvent}`}>
@@ -39,9 +41,7 @@ export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
                     </div>
                     {event.start_date && (
                         <EventTypeBadge className={`hidden md:inline-flex`}>
-                            {dateFormatter(event.start_date, "MMM Do")}
-                            {event.end_date &&
-                                ` - ${dateFormatter(event.end_date, "MMM Do YYYY")}`}
+                            {formatDateRange(event.start_date, event.end_date)}
                         </EventTypeBadge>
                     )}
                 </div>
