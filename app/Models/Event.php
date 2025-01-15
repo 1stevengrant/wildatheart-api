@@ -23,21 +23,6 @@ class Event extends BaseModel
     protected static function boot(): void
     {
         parent::boot();
-        static::saving(function ($event) {
-            if ($event->eventType) {
-                $eventTypeName = $event->eventType->name;
-                if (str_contains(mb_strtolower($eventTypeName), EventType::TYPE_RETREAT)) {
-                    $event->type_group = EventType::TYPE_RETREAT;
-                }
-                if (str_contains(mb_strtolower($eventTypeName), EventType::TYPE_EXPERIENCE)) {
-                    $event->type_group = EventType::TYPE_EXPERIENCE;
-                }
-                if (str_contains(mb_strtolower($eventTypeName), EventType::TYPE_FIRE)) {
-                    $event->type_group = EventType::TYPE_FIRE;
-                }
-
-            }
-        });
 
         static::deleting(function ($event) {
             $event->attendees()->delete();
@@ -203,22 +188,6 @@ class Event extends BaseModel
         $this->attributes['state'] = getStateAbbreviation(mb_strtoupper($value));
     }
 
-    public function getTypeGroupAttribute(): string
-    {
-        $eventName = mb_strtolower($this->eventType->name);
-
-        if (str_contains($eventName, EventType::TYPE_RETREAT) || str_contains($eventName, 'school')) {
-            return EventType::TYPE_RETREAT;
-        }
-
-        if (str_contains($eventName, EventType::TYPE_EXPERIENCE)) {
-            return EventType::TYPE_EXPERIENCE;
-        }
-
-        return EventType::TYPE_FIRE;
-
-    }
-
     public function getEventTypeImageAttribute(): string
     {
         return $this->eventType->image ?? '';
@@ -284,80 +253,6 @@ class Event extends BaseModel
     {
         return $this->belongsTo(EventType::class);
     }
-
-    // scope methods
-    public function scopeWithinDistance(
-        $query,
-        $latitude,
-        $longitude,
-        $radius = 10,
-        $sex = null,
-        $typeGroup = null,
-        $types = null,
-        $startDate = null,
-        $endDate = null
-    ) {
-        $sex = $sex ?? '';
-        $typeGroup = $typeGroup ?? '';
-        $startDate = $startDate ?? '';
-        $endDate = $endDate ?? '';
-
-        $query
-            ->select(
-                'id',
-                'name',
-                'latitude',
-                'longitude',
-                'country',
-                'sex',
-                'event_type_id',
-                'start_date',
-                'end_date',
-                'user_id',
-                'country',
-                'region',
-                'city',
-                'district',
-                'state',
-                'is_private',
-            )
-            ->selectRaw(
-                '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
-                [$latitude, $longitude, $latitude]
-            )
-            ->whereNotNull('approved_at')
-            ->whereNull('deleted_at')
-            ->where('is_private', false)
-            ->having('distance', '<=', $radius)
-            ->orderBy('distance');
-
-        if ($sex) {
-            $query->where('sex', $sex);
-        }
-
-        if (! empty($types)) {
-            $query->whereIn('event_type_id', explode(',', $types));
-        }
-
-        if ($startDate) {
-            $query->whereRaw('(start_date >= ? OR start_date IS NULL)', [$startDate]);
-        } else {
-            $query->whereRaw('(start_date >= CURDATE() OR start_date IS NULL)');
-        }
-
-        if ($endDate) {
-            $query->whereRaw('(end_date <= ? OR end_date IS NULL)', [$endDate]);
-        }
-
-        if ($typeGroup) {
-            $query->whereHas('eventType', function ($query) use ($typeGroup) {
-                $query->where('name', 'like', '%'.$typeGroup.'%');
-            });
-        }
-
-        return $query;
-    }
-
 
     public function getHostPhotoAttribute(): string
     {

@@ -185,7 +185,7 @@ class EventBuilder extends Builder
     public function filterByTypeGroup(?string $typeGroup): EventBuilder
     {
         if ($typeGroup) {
-            return $this->where('type_group', $typeGroup);
+            return $this->whereRelation('eventtype', 'group_type', $typeGroup);
         }
 
         return $this;

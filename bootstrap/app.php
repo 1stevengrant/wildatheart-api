@@ -47,9 +47,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'agreed_to_host_agreement' => \App\Http\Middleware\HasAgreedToHostAgreementMiddleware::class,
-            'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-            'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'super_admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
         ]);
     })
