@@ -1,0 +1,3 @@
+.reporting .mantine-DatePickerInput-label {
+    @apply text-black text-lg capitalize !important;
+}
