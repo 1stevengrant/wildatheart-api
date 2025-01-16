@@ -8,6 +8,13 @@
     }
 }
 
+.mantine-DatePickerInput-monthsListControl, .mantine-DatePickerInput-yearsListControl {
+    @apply text-white !important;
+    &:hover {
+        @apply text-p200 !important;
+    }
+}
+
 .mantine-DatePickerInput-calendarHeaderControl {
     &:hover {
         @apply bg-transparent !important;

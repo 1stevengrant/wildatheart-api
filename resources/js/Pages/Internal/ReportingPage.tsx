@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { usePage } from "@inertiajs/react";
+import { usePage, router } from "@inertiajs/react";
+import { DatePickerInput } from "@mantine/dates";
 
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
@@ -12,6 +13,7 @@ type EventStats = {
     captivatingFires: EventTypeObject;
     survivalSchools: EventTypeObject;
 };
+
 type EventTypeObject = {
     count: number;
     hosts: number;
@@ -65,12 +67,38 @@ const StatCard = ({
         </div>
     );
 };
+
 const ReportingPage = () => {
     const { eventStats, date, yearStats, year } = usePage<PageProps>().props;
-    console.log(eventStats);
+    const [reportDate, setReportDate] = useState(new Date(date));
+
+    const handleReportDateChange = (value: Date | null) => {
+        if (value) {
+            setReportDate(value);
+            const formattedDate = value.toISOString().split("T")[0];
+            router.get(
+                "/internal/reporting",
+                { date: formattedDate },
+                { preserveState: true, preserveScroll: true }
+            );
+        }
+    };
+
     return (
         <EmptyLayout title={`Reporting`}>
-            <div className={`p-4`}>
+            <div className={`p-4 reporting`}>
+                <div className="grid grid-cols-3 gap-6">
+                    <div className="bg-white p-4 rounded-lg">
+                        <DatePickerInput
+                            className={`[&>.mantine-DatePickerInput-label]:text-black`}
+                            label="Report date"
+                            placeholder="Select report date"
+                            value={reportDate}
+                            clearable
+                            onChange={(value) => handleReportDateChange(value)}
+                        />
+                    </div>
+                </div>
                 <div className="grid grid-cols-3 gap-6">
                     {eventStats && (
                         <StatCard title={`Events Created After ${date}`}>

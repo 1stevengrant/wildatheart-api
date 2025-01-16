@@ -7,6 +7,7 @@
 @import "./components/phone.css";
 @import "./components/map.css";
 @import "./components/date.css";
+@import "./components/reporting.css";
 
 @import "tailwindcss/utilities";
 
