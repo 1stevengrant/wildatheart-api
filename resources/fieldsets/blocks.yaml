@@ -89,3 +89,9 @@ fields:
               fields:
                 -
                   import: bento_block
+            divider_block:
+              display: 'Divider Block'
+              icon: layout-table-row-insert
+              fields:
+                -
+                  import: divider_block
