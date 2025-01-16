@@ -1,0 +1,92 @@
+title: 'Divider Block'
+fields:
+  -
+    handle: show_line
+    field:
+      default: true
+      type: toggle
+      display: 'Show Line'
+  -
+    handle: spacing_top
+    field:
+      options:
+        -
+          key: 1
+          value: null
+        -
+          key: 2
+          value: null
+        -
+          key: 4
+          value: null
+        -
+          key: 8
+          value: null
+        -
+          key: 16
+          value: null
+        -
+          key: 32
+          value: null
+        -
+          key: 64
+          value: null
+      default: '4'
+      type: select
+      display: 'Spacing Top'
+  -
+    handle: spacing_bottom
+    field:
+      options:
+        -
+          key: 1
+          value: null
+        -
+          key: 2
+          value: null
+        -
+          key: 4
+          value: null
+        -
+          key: 8
+          value: null
+        -
+          key: 16
+          value: null
+        -
+          key: 32
+          value: null
+        -
+          key: 64
+          value: null
+      default: '4'
+      type: select
+      display: 'Spacing Bottom'
+  -
+    handle: width
+    field:
+      options:
+        -
+          key: full
+          value: 'Full Width'
+        -
+          key: container
+          value: 'Container Width'
+        -
+          key: screen-sm
+          value: 'Small Screen'
+        -
+          key: screen-md
+          value: 'Medium Screen'
+        -
+          key: screen-lg
+          value: 'Large Screen'
+        -
+          key: screen-xl
+          value: 'Extra-large Screen'
+        -
+          key: screen-2xl
+          value: 'XXL Screen'
+      type: select
+      display: Width
+      default: container
