@@ -40,6 +40,15 @@ tabs:
               default: 'https://local.wildatheart.org'
               type: text
               display: 'Find a group link'
+          -
+            handle: related_event_type
+            field:
+              resource: event_type
+              type: belongs_to
+              display: 'Relates To Event'
+              instructions: 'Choose the event type you want to load events from for the map.'
+              mode: select
+              create: false
       -
         display: Sessions
         fields:
