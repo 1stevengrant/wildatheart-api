@@ -95,3 +95,9 @@ fields:
               fields:
                 -
                   import: divider_block
+            video_block:
+              display: 'Video Block'
+              icon: media-webcam-video
+              fields:
+                -
+                  import: video_block

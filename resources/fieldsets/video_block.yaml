@@ -1,0 +1,51 @@
+title: 'Video Block'
+fields:
+  -
+    handle: preview_video_url
+    field:
+      type: link
+      display: 'Preview Video URL'
+  -
+    handle: preview_video_image
+    field:
+      container: s3
+      folder: files
+      type: assets
+      display: 'Preview Video Image'
+      max_files: 1
+  -
+    handle: video_button
+    field:
+      type: group
+      display: 'Video Button'
+      fields:
+        -
+          import: button
+  -
+    handle: width
+    field:
+      options:
+        -
+          key: full
+          value: 'Full Width'
+        -
+          key: container
+          value: 'Container Width'
+        -
+          key: screen-sm
+          value: 'Small Screen'
+        -
+          key: screen-md
+          value: 'Medium Screen'
+        -
+          key: screen-lg
+          value: 'Large Screen'
+        -
+          key: screen-xl
+          value: 'Extra-large Screen'
+        -
+          key: screen-2xl
+          value: 'XXL Screen'
+      type: select
+      display: Width
+      default: screen-md
