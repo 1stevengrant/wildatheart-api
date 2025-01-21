@@ -1,11 +1,18 @@
 <?php
 
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Address;
 use App\Models\EventType;
 use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);
-    $this->user = \App\Models\User::factory()->create();
+    $this->user = User::factory()->create();
+    $this->address = Address::factory()->create([
+        'user_id' => $this->user->id,
+        'is_primary' => true,
+    ]);
     $this->startDate = now()->addDays(10)->format('Y-m-d');
 });
 
@@ -60,6 +67,32 @@ test('an event that has no materials order does not request the number of items 
 
 test('a retreat end date is 3 days after the start date', function () {
     $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => 10,
+    ]);
+
+    $event = $this->user->events()->first();
+    $startDate = Carbon::parse($this->startDate);
+    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+});
+
+test('a Survival School end date is 4 days after the start date', function () {
+    $this->actingAs($this->user);
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
@@ -80,6 +113,6 @@ test('a retreat end date is 3 days after the start date', function () {
     ]);
 
     $event = $this->user->events()->first();
-    $startDate = \Carbon\Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    $startDate = Carbon::parse($this->startDate);
+    expect($event->end_date)->toBe($startDate->addDays(4)->format('Y-m-d'));
 });

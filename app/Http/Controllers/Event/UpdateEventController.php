@@ -18,7 +18,11 @@ class UpdateEventController extends Controller
 
         $request->validated();
 
-        EventDateHelper::adjustEndDateForRetreat($request, $event->eventType->name);
+        EventDateHelper::adjustEndDateForRetreat(
+            request: $request,
+            groupType: $event->eventType->group_type,
+            eventTypeName: $event->eventType->name
+        );
 
         $event->update($request->all());
 

@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'cache' => false, //intended for local development only
+    'cache' => false, // intended for local development only
 
     // 'cache' => [
     //     'expiry' => 60,

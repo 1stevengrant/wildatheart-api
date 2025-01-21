@@ -21,10 +21,10 @@ class GenerateTypeScript extends Command
             // path where your PHP classes are
             ->autoDiscoverTypes(base_path('app/DataTypeObjects'))
             // list of transformers
-            ->transformers([MyclabsEnumTransformer::class, DtoTransformer::class])
+            ->transformers([DtoTransformer::class])
             // file where TypeScript type definitions will be written
             ->formatter(PrettierFormatter::class)
-            ->outputFile(base_path().'/js/generated.d.ts');
+            ->outputFile(base_path() . '/js/generated.d.ts');
 
         TypeScriptTransformer::create($config)->transform();
 

@@ -1,0 +1,44 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+              display: 'Admin Title'
+          -
+            handle: content
+            field:
+              type: markdown
+              localizable: true
+          -
+            handle: start_date
+            field:
+              time_enabled: true
+              type: date
+              display: 'Start Date'
+              width: 50
+          -
+            handle: end_date
+            field:
+              time_enabled: true
+              type: date
+              display: 'End Date'
+              width: 50
+          -
+            handle: link_text
+            field:
+              type: text
+              display: 'Link Text'
+          -
+            handle: link_url
+            field:
+              type: link
+              display: 'Link URL'
+title: Alert
