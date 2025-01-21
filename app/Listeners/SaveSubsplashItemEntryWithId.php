@@ -7,7 +7,6 @@ use Statamic\Events\EntrySaved;
 
 class SaveSubsplashItemEntryWithId
 {
-
     // TODO: Fix bug where this creates new entries recursively
     // public function handle(EntrySaved $event)
     // {

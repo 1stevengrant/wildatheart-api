@@ -16,7 +16,7 @@ return [
      * OAuthJWT requires a key, username, and private key (SF_CONSUMER_SECRET)
      */
     'credentials' => [
-        //Required:
+        // Required:
         'consumerKey' => env('SF_CONSUMER_KEY'),
         'consumerSecret' => env('SF_CONSUMER_SECRET'),
         'callbackURI' => env('SF_CALLBACK_URI'),

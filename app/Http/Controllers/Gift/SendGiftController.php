@@ -31,7 +31,7 @@ class SendGiftController extends Controller
                 'country' => $event->country,
                 'host_name' => $event->host->full_name,
                 'host_photo' => $event->hostPhoto,
-            ]
+            ],
         ]);
     }
 }

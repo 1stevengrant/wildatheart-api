@@ -35,7 +35,11 @@ class HostEventTypeCreateEventController extends Controller
 
         $request->validated();
 
-        EventDateHelper::adjustEndDateForRetreat($request, $eventType->group_type);
+        EventDateHelper::adjustEndDateForRetreat(
+            request: $request,
+            groupType: $eventType->group_type,
+            eventTypeName: $eventType->name
+        );
 
         $event = auth()->user()->events()->create([
             'event_type_id' => $eventType->id,
