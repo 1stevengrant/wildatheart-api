@@ -1,0 +1,36 @@
+<?php
+
+namespace App\DataTypeObjects\API\V1\Content;
+
+use App\DataTypeObjects\API\V1\EntryResponse;
+use App\DataTypeObjects\Blueprint;
+use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+
+#[TypeScript]
+class AlertResponse extends Data
+{
+  public string $id;
+
+  public string $title;
+
+  public bool $private = false;
+
+  public bool $published = true;
+
+  public string $status = 'published';
+
+  public Blueprint $blueprint;
+
+  public string $locale = 'default';
+
+  public string $content;
+
+  public string $start_date;
+
+  public string $end_date;
+
+  public string $link_text;
+
+  public string $link_url;
+}
