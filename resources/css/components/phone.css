@@ -138,7 +138,10 @@
 }
 
 .react-international-phone-country-selector-dropdown__list-item-dial-code {
-    color: var(--react-international-phone-dropdown-item-dial-code-color, #ffffff);
+    color: var(
+        --react-international-phone-dropdown-item-dial-code-color,
+        #ffffff
+    );
     font-size: var(--react-international-phone-dropdown-item-font-size, 14px);
 }
 
