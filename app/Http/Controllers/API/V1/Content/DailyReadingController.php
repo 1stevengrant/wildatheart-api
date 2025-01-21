@@ -33,7 +33,6 @@ class DailyReadingController extends Controller
         if ($data) {
             foreach ($data as &$item) {
 
-
                 $dailyReading = DailyReadingResponse::from([
                     'transistor_episode' => TransistorPodcastEpisode::from($item),
                     'previous_episode_slug' => null,
@@ -82,7 +81,7 @@ class DailyReadingController extends Controller
         $dailyReadingsData = json_decode($jsonContents, true);
 
         if ($dailyReadingsData === null && json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException('Error decoding JSON: ' . json_last_error_msg());
+            throw new \RuntimeException('Error decoding JSON: '.json_last_error_msg());
         }
 
         $matchingReading = null;
