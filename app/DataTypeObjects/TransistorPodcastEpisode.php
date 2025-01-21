@@ -30,7 +30,7 @@ class Attributes extends Data
 
     public string $published_at;
 
-    public int $duration;
+    public ?int $duration;
 
     public bool $explicit;
 
