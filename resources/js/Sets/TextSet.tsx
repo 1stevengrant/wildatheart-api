@@ -4,7 +4,7 @@ export const TextSet = ({
     text,
     className = "",
 }: {
-    text: string;
+    text?: string;
     className?: string;
 }) => {
     return <Markdown className={className}>{text}</Markdown>;

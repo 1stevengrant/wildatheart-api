@@ -1,9 +1,9 @@
 :root {
-    --wah-form: #0F1C22;
+    --wah-form: #0f1c22;
     --react-international-phone-text-color: #fffff;
     --react-international-phone-selected-dropdown-item-background-color: var(
         --wah-form
     );
-    --wah-grey-border: #555E62;
-    --wah-grey-darker: #0F1C22;
+    --wah-grey-border: #555e62;
+    --wah-grey-darker: #0f1c22;
 }

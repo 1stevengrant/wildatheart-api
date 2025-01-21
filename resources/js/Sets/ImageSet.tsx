@@ -8,11 +8,13 @@ export const ImageSet = ({
     className = "",
     params,
 }: {
-    image: string;
+    image?: string;
     alt?: string;
     className?: string;
     params?: { [key: string]: string | number } | undefined;
 }) => {
+    if (!image) return null;
+
     return (
         <img
             alt={alt}

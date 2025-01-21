@@ -8,7 +8,8 @@
     }
 }
 
-.mantine-DatePickerInput-monthsListControl, .mantine-DatePickerInput-yearsListControl {
+.mantine-DatePickerInput-monthsListControl,
+.mantine-DatePickerInput-yearsListControl {
     @apply text-white !important;
     &:hover {
         @apply text-p200 !important;

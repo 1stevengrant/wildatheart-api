@@ -6,7 +6,7 @@ export const VideoSet = ({
     video,
     className = "",
 }: {
-    video: string;
+    video?: string;
     className?: string;
 }) => {
     if (!video) {
