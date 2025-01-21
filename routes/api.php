@@ -8,6 +8,7 @@ use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
+use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
@@ -52,6 +53,7 @@ Route::prefix('content')->group(function () {
                 Route::get('/', [PrayersEntryController::class, 'index'])->name('index');
                 Route::get('/{slug}', [PrayersEntryController::class, 'show'])->name('show');
             });
+            Route::get('/alerts', [AlertEntryController::class, 'index'])->name('alerts.index');
         });
     });
 });
