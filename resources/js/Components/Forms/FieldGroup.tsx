@@ -14,10 +14,7 @@ export default function FieldGroup({
     return (
         <div className="space-y-2">
             {label && (
-                <label
-                    className="block text-n700 select-none"
-                    htmlFor={name}
-                >
+                <label className="block text-n700 select-none" htmlFor={name}>
                     {label}:
                 </label>
             )}

@@ -15,9 +15,7 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
 
     return (
         <div>
-            <div
-                className={`rounded-lg p-4 border border-n700 relative`}
-            >
+            <div className={`rounded-lg p-4 border border-n700 relative`}>
                 {event.type_group !== "fire" && (
                     <EventPublicPrivate event={event} />
                 )}

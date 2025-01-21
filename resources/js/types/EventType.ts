@@ -23,5 +23,19 @@ export type EventType = {
     summary?: string;
     video_link?: string;
     updated_at: string;
-    event_guide_pages?: any;
+    event_guide_pages?: Array<GuidePage>;
 };
+
+export interface ContentBlock {
+    type: "body_set" | "video_set" | "image_set" | "accordion_set";
+    enabled: boolean;
+    body?: string;
+    video?: string;
+    image?: string;
+    accordion?: string;
+}
+
+export interface GuidePage {
+    page_title: string;
+    page_content: Array<ContentBlock>;
+}
