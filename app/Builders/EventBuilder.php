@@ -2,26 +2,13 @@
 
 namespace App\Builders;
 
+use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
 {
-    public function public(): EventBuilder
-    {
-        return $this->where('is_private', false);
-    }
-
-    public function published(): EventBuilder
-    {
-        return $this->whereNotNull('approved_at');
-    }
-
-    public function unpublished(): EventBuilder
-    {
-        return $this->whereNull('approved_at');
-    }
-
+    // Event Type Name
     public function fires(): EventBuilder
     {
         return $this->where('event_type_id', EventType::where('name', EventType::FIRES)->first()->id);
@@ -37,48 +24,44 @@ class EventBuilder extends Builder
         return $this->where('event_type_id', EventType::where('name', EventType::BECOMING_A_KING_EXPERIENCE)->first()->id);
     }
 
+    public function wahRetreat(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::WAH_RETREAT)->first()->id);
+    }
+
+    public function wahExperience(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::WAH_EXPERIENCE)->first()->id);
+    }
+
+    public function captivatingRetreat(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first()->id);
+    }
+
+    public function captivatingFire(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::CAPTIVATING_FIRE)->first()->id);
+    }
+
+    public function captivatingExperience(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::CAPTIVATING_EXPERIENCE)->first()->id);
+    }
+
+    public function survivalSchool(): EventBuilder
+    {
+        return $this->where('event_type_id', EventType::where('name', EventType::SURVIVAL_SCHOOL)->first()->id);
+    }
+
+    // Event Type Group
+
     public function retreats(): EventBuilder
     {
         $eventTypes = EventType::whereIn('name', [
             EventType::WAH_RETREAT,
             EventType::CAPTIVATING_CORE_RETREAT,
             EventType::BECOMING_A_KING,
-        ])->pluck('id');
-
-        return $this->whereIn('event_type_id', $eventTypes);
-    }
-
-    public function wahRetreat(): EventBuilder
-    {
-        $eventTypes = EventType::whereIn('name', [
-            EventType::WAH_RETREAT,
-        ])->pluck('id');
-
-        return $this->whereIn('event_type_id', $eventTypes);
-    }
-
-    public function captivatingRetreat(): EventBuilder
-    {
-        $eventTypes = EventType::whereIn('name', [
-            EventType::CAPTIVATING_CORE_RETREAT,
-        ])->pluck('id');
-
-        return $this->whereIn('event_type_id', $eventTypes);
-    }
-
-    public function captivatingFire(): EventBuilder
-    {
-        $eventTypes = EventType::whereIn('name', [
-            EventType::CAPTIVATING_FIRE,
-        ])->pluck('id');
-
-        return $this->whereIn('event_type_id', $eventTypes);
-    }
-
-    public function survivalSchool(): EventBuilder
-    {
-        $eventTypes = EventType::whereIn('name', [
-            EventType::SURVIVAL_SCHOOL,
         ])->pluck('id');
 
         return $this->whereIn('event_type_id', $eventTypes);
@@ -95,12 +78,44 @@ class EventBuilder extends Builder
         return $this->whereIn('event_type_id', $eventTypes);
     }
 
+    public function allFires(): EventBuilder
+    {
+        $eventTypes = EventType::whereIn('name', [
+            EventType::TYPE_FIRE,
+            EventType::CAPTIVATING_FIRE,
+        ])->pluck('id');
+
+        return $this->whereIn('event_type_id', $eventTypes);
+    }
+
+    // General Properties
+
+    public function public(): EventBuilder
+    {
+        return $this->where('is_private', false);
+    }
+
+    public function private(): EventBuilder
+    {
+        return $this->where('is_private', true);
+    }
+
+    public function published(): EventBuilder
+    {
+        return $this->whereNotNull('approved_at');
+    }
+
+    public function unpublished(): EventBuilder
+    {
+        return $this->whereNull('approved_at');
+    }
+
     public function upcoming(): EventBuilder
     {
         return $this->where('start_date', '>=', now());
     }
 
-    public function inTheLastYear(): EventBuilder
+    public function startedInTheLastYear(): EventBuilder
     {
         return $this->whereBetween('start_date', [now()->subYear(), now()]);
     }
@@ -133,7 +148,7 @@ class EventBuilder extends Builder
         return $this->where('start_date', '<', now());
     }
 
-    public function user(int $userId): EventBuilder
+    public function belongsToUser(int $userId): EventBuilder
     {
         return $this->where('user_id', $userId);
     }
@@ -164,11 +179,6 @@ class EventBuilder extends Builder
         return $this->where('is_private', false);
     }
 
-    public function private(): EventBuilder
-    {
-        return $this->where('is_private', true);
-    }
-
     public function approved(): EventBuilder
     {
         return $this->whereNotNull('approved_at');
@@ -193,7 +203,7 @@ class EventBuilder extends Builder
 
     public function filterBySex(?string $sex): EventBuilder
     {
-        if ($sex && in_array(mb_strtolower($sex), ['men', 'women'])) {
+        if ($sex && in_array(mb_strtolower($sex), [Event::FOR_MEN, Event::FOR_WOMEN])) {
             return $this->where('sex', mb_strtolower($sex));
         }
 
@@ -236,5 +246,10 @@ class EventBuilder extends Builder
     public function name(string $name, string $operator = '='): EventBuilder
     {
         return $this->where('name', $operator, "$name");
+    }
+
+    public function beginsAfter(string $date): EventBuilder
+    {
+        return $this->where('start_date', '>', $date);
     }
 }
