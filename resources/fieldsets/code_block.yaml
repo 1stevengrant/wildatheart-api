@@ -1,0 +1,8 @@
+title: 'Code Block'
+fields:
+  -
+    handle: html
+    field:
+      type: code
+      display: HTML
+      instructions: 'Enter the HTML you want to embed on the site.'
