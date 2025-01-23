@@ -38,3 +38,9 @@ fields:
               fields:
                 -
                   import: image_block
+            code_block:
+              display: 'Code Block'
+              icon: programming-script-code-brackets
+              fields:
+                -
+                  import: code_block
