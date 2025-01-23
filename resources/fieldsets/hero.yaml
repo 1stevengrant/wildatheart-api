@@ -172,3 +172,28 @@ fields:
       folder: wp-app/uploads
   -
     import: buttons
+  -
+    handle: height
+    field:
+      options:
+        -
+          key: 50
+          value: 50%
+        -
+          key: 66
+          value: 66%
+        -
+          key: 75
+          value: 75%
+        -
+          key: 80
+          value: 80%
+        -
+          key: 90
+          value: 90%
+        -
+          key: full
+          value: 'Full Screen'
+      type: select
+      display: Height
+      default: full
