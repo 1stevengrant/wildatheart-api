@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Models\Event;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -7,7 +8,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);
-    Event::truncate();
 });
 
 it('gets events that were last approved more than 90 days ago', function () {
@@ -80,7 +80,7 @@ it('does not get events with a start date of more than 1 year ago', function () 
     ]);
 
     $eventsInTheLastYear = Event::query()
-        ->inTheLastYear()
+        ->startedInTheLastYear()
         ->get();
 
     expect($eventsInTheLastYear->count())->toBe(0);
@@ -96,7 +96,7 @@ it('gets events with a start date in the last year', function () {
     ]);
 
     $eventsInTheLastYear = Event::query()
-        ->inTheLastYear()
+        ->startedInTheLastYear()
         ->get();
 
     expect($eventsInTheLastYear->count())->toBe(1);
@@ -182,4 +182,160 @@ it('gets events that that occurred this year', function () {
         ->get();
 
     expect($eventsThisYear->count())->toBe(1);
+});
+
+it('gets Fires', function () {
+    Event::factory()->fires()->create();
+
+    $events = Event::query()
+        ->fires()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets Captivating Fires', function () {
+    Event::factory()->captivatingFires()->create();
+
+    $events = Event::query()
+        ->captivatingFire()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets Captivating Core Retreats', function () {
+    Event::factory()->captivatingCoreRetreat()->create();
+
+    $events = Event::query()
+        ->captivatingRetreat()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets Captivating Experiences', function () {
+    Event::factory()->captivatingExperience()->create();
+
+    $events = Event::query()
+        ->captivatingExperience()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets Wild at Heart Retreats', function () {
+    Event::factory()->wahRetreat()->create();
+
+    $events = Event::query()
+        ->wahRetreat()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets Wild at Heart Experiences', function () {
+    Event::factory()->wahExperiences()->create();
+
+    $events = Event::query()
+        ->wahExperience()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets Becoming a King Retreats', function () {
+    Event::factory()->becomingAKingRetreat()->create();
+
+    $events = Event::query()
+        ->becomingAKingRetreats()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets Becoming a King Experiences', function () {
+    Event::factory()->becomingAKingExperience()->create();
+
+    $events = Event::query()
+        ->becomingAKingExperiences()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+it('gets Survival Schools', function () {
+    Event::factory()->survivalSchool()->create();
+
+    $events = Event::query()
+        ->survivalSchool()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets events after date', function () {
+    Event::factory()->fires()->create([
+        'start_date' => now()->subDay(),
+    ]);
+
+    $events = Event::query()
+        ->beginsAfter(now())
+        ->get();
+
+    expect($events->count())->toBe(0);
+});
+
+it('does not get private events', function () {
+    Event::factory()->fires()->create([
+        'is_private' => true,
+    ]);
+
+    $events = Event::query()
+        ->public()
+        ->get();
+
+    expect($events->count())->toBe(0);
+});
+
+it('gets approved events only', function () {
+    $event1 = Event::factory()->fires()->create([
+        'approved_at' => now(),
+    ]);
+
+    $event2 = Event::factory()->fires()->create([
+        'approved_at' => null,
+    ]);
+
+    $events = Event::query()
+        ->approved()
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets events belonging to user', function () {
+    $user = User::factory()->create();
+    Event::factory()->fires()->create([
+        'user_id' => $user->id,
+    ]);
+
+    Event::factory()->fires()->create();
+
+    $events = Event::query()
+        ->belongsToUser($user->id)
+        ->get();
+
+    expect($events->count())->toBe(1);
+});
+
+it('gets events created after', function () {
+    Event::factory()->fires()->create([
+        'created_at' => now()->subDay(),
+    ]);
+
+    $events = Event::query()
+        ->createdAfter(now()->subDay())
+        ->get();
+
+    expect($events->count())->toBe(1);
 });

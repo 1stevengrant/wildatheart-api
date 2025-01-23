@@ -25,7 +25,7 @@ class StatsController extends Controller
                         ],
                         [
                             'label' => 'Retreats in the past year',
-                            'count' => Event::query()->retreats()->inTheLastYear()->count(),
+                            'count' => Event::query()->retreats()->startedInTheLastYear()->count(),
                         ],
                         [
                             'label' => 'Countries with Retreats',
@@ -43,7 +43,7 @@ class StatsController extends Controller
                         ],
                         [
                             'label' => 'Experiences in the past year',
-                            'count' => Event::query()->experiences()->inTheLastYear()->count(),
+                            'count' => Event::query()->experiences()->startedInTheLastYear()->count(),
                         ],
                         [
                             'label' => 'Countries with Experiences',
