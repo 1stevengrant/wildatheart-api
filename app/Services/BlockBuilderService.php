@@ -191,7 +191,7 @@ class BlockBuilderService
     {
         $subsplashListSlide = new MediaItemsSlide;
         $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D='.$slide->subsplash_list_id;
+        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
 
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
@@ -284,19 +284,20 @@ class BlockBuilderService
 
         $cdnUrl = 'https://b-cdn.wildatheart.org/';
 
-        return $cdnUrl.$image->path;
+        return $cdnUrl . $image->path;
     }
 
     public function buildBooksSlide($slide)
     {
         $booksSlide = new MediaItemsSlide;
         $authorId = $slide->author->id;
-
+        $excludedBookIds = $slide->excluded_books->pluck('id');
         $query = Entry::query()
             ->where('published', true)
             ->where('date', '<=', now())
             ->where('collection', 'books')
             ->where('data->authors', 'like', "%{$authorId}%")
+            ->whereNotIn('id', $excludedBookIds)
             ->orderBy('date', 'desc');
 
         $recentItems = $query->limit($slide->limit ?? 10)->get();

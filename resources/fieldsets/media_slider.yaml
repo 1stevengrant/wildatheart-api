@@ -126,3 +126,11 @@ fields:
                       - authors
                     type: entries
                     display: Author
+                -
+                  handle: excluded_books
+                  field:
+                    collections:
+                      - books
+                    type: entries
+                    display: 'Excluded Books'
+                    instructions: 'The books you would like to exclude from the slider if they show up in the result.'
