@@ -192,7 +192,17 @@ module.exports = {
             typography: (theme) => ({
                 DEFAULT: {
                     css: {
+                        p: {
+                            fontSize: theme("fontSize.md"),
+                        },
+                        li: {
+                            fontSize: theme("fontSize.md"),
+                        },
+                        h1: {
+                            marginBottom: ".5rem",
+                        },
                         h2: {
+                            marginTop: "1rem",
                             marginBottom: ".5rem",
                         },
                     },

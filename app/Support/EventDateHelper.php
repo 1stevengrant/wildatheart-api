@@ -11,9 +11,7 @@ class EventDateHelper
     public static function adjustEndDateForRetreat(Request $request, string $groupType, ?string $eventTypeName = null): void
     {
         $days = match (true) {
-            $eventTypeName === EventType::SURVIVAL_SCHOOL && $groupType === EventType::TYPE_RETREAT => 4,
-            $eventTypeName === EventType::WAH_RETREAT && $groupType === EventType::TYPE_RETREAT => 3,
-            $groupType === EventType::TYPE_RETREAT => 3,  // Default for any retreat
+            $groupType === EventType::TYPE_RETREAT => 3,
             default => null
         };
 
