@@ -15,13 +15,7 @@ export const PageContent: React.FC<{ content: Array<ContentBlock> }> = ({
             .map((block, index) => {
                 switch (block.type) {
                     case "body_set":
-                        return (
-                            <TextSet
-                                key={index}
-                                text={block.body}
-                                className="prose-p:text-white prose-strong:text-white prose-ol:text-white prose-ul:text-white prose-li:text-white prose-li:marker:text-white prose-headings:text-white"
-                            />
-                        );
+                        return <TextSet key={index} text={block.body} />;
                     case "video_set":
                         return <VideoSet key={index} video={block.video} />;
                     case "image_set":
