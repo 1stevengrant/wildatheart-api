@@ -22,7 +22,7 @@ export const Accordion = ({
                 <Disclosure key={index}>
                     {({ open }) => (
                         <>
-                            <Disclosure.Button className="flex w-full items-center justify-between border-t px-2 py-2 text-white border-n700 focus:outline-none">
+                            <Disclosure.Button className="flex w-full items-center justify-between border-t px-2 py-2 text-white border-n700 focus:outline-none text-md">
                                 <div className="flex items-center font-semibold">
                                     <span className="text-left leading-tight">
                                         {item.accordion_box_title}

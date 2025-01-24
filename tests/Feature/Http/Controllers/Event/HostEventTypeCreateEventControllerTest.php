@@ -91,7 +91,7 @@ test('a retreat end date is 3 days after the start date', function () {
     expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
-test('a Survival School end date is 4 days after the start date', function () {
+test('a survival school end date is 4 days after the start date', function () {
     $this->actingAs($this->user);
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
@@ -114,5 +114,107 @@ test('a Survival School end date is 4 days after the start date', function () {
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(4)->format('Y-m-d'));
+    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+});
+
+test('a survival school is a retreat event type grouo', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => 10,
+    ]);
+
+    $event = $this->user->events()->first();
+    expect($event->eventType->group_type)->toBe(EventType::TYPE_RETREAT);
+});
+
+test('a becoming a king retreat end date is 4 days after the start date', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::BECOMING_A_KING))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => 10,
+    ]);
+
+    $event = $this->user->events()->first();
+    $startDate = Carbon::parse($this->startDate);
+    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+});
+
+test('a captivating retreat end date is 4 days after the start date', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::CAPTIVATING_CORE_RETREAT))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => 10,
+    ]);
+
+    $event = $this->user->events()->first();
+    $startDate = Carbon::parse($this->startDate);
+    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+});
+
+test('a fire should not have an end date is', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::FIRES))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => 10,
+    ]);
+
+    $event = $this->user->events()->first();
+    expect($event->end_date)->toBeNull();
 });
