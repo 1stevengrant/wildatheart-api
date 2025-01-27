@@ -13,20 +13,7 @@ tabs:
               validate:
                 - required
           -
-            handle: blocks
-            field:
-              remove_empty_nodes: false
-              type: bard
-              display: Blocks
-              sets:
-                new_set_group:
-                  display: 'New Set Group'
-                  sets:
-                    hero:
-                      display: Hero
-                      fields:
-                        -
-                          import: hero
+            import: blocks
           -
             handle: media_items
             field:
