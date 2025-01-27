@@ -107,3 +107,9 @@ fields:
               fields:
                 -
                   import: code_block
+            testimonials_block:
+              display: 'Testimonials Block'
+              icon: text-formatting-quotation
+              fields:
+                -
+                  import: testimonials_block
