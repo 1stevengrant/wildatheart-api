@@ -33,7 +33,7 @@ class MediaItemOrSeriesController extends Controller
         $slug = $slugOrUri;
 
         if (str_contains($slugOrUri, '/')) {
-            $uri = '/media/'.$slugOrUri;
+            $uri = '/media/' . $slugOrUri;
         }
 
         $seriesRedirects = [
@@ -47,7 +47,7 @@ class MediaItemOrSeriesController extends Controller
 
         if (config('features.is_custom_uri_enabled') && in_array($slug, $seriesRedirects)) {
             return RedirectResponse::from([
-                'redirect' => '/media/the-series/'.$slug,
+                'redirect' => '/media/the-series/' . $slug,
                 'code' => 301,
             ]);
         }
@@ -64,7 +64,9 @@ class MediaItemOrSeriesController extends Controller
             // Skip published and date checks for live preview or token access
 
             $token = Token::find($token);
-            $mediaItemOrSeries = LivePreview::item($token);
+            if ($token) {
+                $mediaItemOrSeries = LivePreview::item($token);
+            }
         } else {
             $mediaItemOrSeries = Entry::query()
                 ->where(function ($query) {
