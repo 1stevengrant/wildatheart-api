@@ -171,6 +171,11 @@ class Event extends BaseModel
         return route('view.event', ['event' => $this]);
     }
 
+    public function getAdminUrlAttribute(): string
+    {
+        return url(config('nova.path').'/resources/events/'.$this->id);
+    }
+
     public function getHostNameAttribute()
     {
         return $this->host->full_name;
