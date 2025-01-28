@@ -4,12 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Models\Event;
-use App\Models\Issue;
-use App\Models\Attendee;
 use Illuminate\Http\Request;
-use App\Observers\EventObserver;
-use App\Observers\IssueObserver;
-use App\Observers\AttendeeObserver;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -67,13 +62,7 @@ class AppServiceProvider extends ServiceProvider
         $this->bootRoute();
     }
 
-    public function bootEvent(): void
-    {
-        Event::observe(EventObserver::class);
-        Issue::observe(IssueObserver::class);
-        Attendee::observe(AttendeeObserver::class);
-
-    }
+    public function bootEvent(): void {}
 
     public function bootRoute(): void
     {
