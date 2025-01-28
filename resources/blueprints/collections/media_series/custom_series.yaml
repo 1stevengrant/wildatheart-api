@@ -26,6 +26,11 @@ tabs:
             field:
               type: text
               display: 'Subsplash Media Series ID'
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:
@@ -50,6 +55,8 @@ tabs:
             field:
               type: toggle
               display: 'Hide Navigation'
+          -
+            import: images
           -
             handle: content_type
             field:

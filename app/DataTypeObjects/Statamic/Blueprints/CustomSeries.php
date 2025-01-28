@@ -4,6 +4,7 @@ namespace App\DataTypeObjects\Statamic\Blueprints;
 
 use Spatie\LaravelData\Data;
 use App\DataTypeObjects\Blueprint;
+use App\DataTypeObjects\ImageData;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
