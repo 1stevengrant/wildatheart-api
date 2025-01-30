@@ -15,7 +15,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy(\App\Observers\EventObserver::class)]
 class Event extends BaseModel
 {
     use HasFactory, HasUuids, LogsActivity, SoftDeletes;
@@ -167,6 +169,11 @@ class Event extends BaseModel
     public function getUrlAttribute(): string
     {
         return route('view.event', ['event' => $this]);
+    }
+
+    public function getAdminUrlAttribute(): string
+    {
+        return url(config('nova.path').'/resources/events/'.$this->id);
     }
 
     public function getHostNameAttribute()

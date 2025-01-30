@@ -7,7 +7,6 @@ use Spatie\TypeScriptTransformer\TypeScriptTransformer;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 use Spatie\TypeScriptTransformer\Formatters\PrettierFormatter;
-use Spatie\TypeScriptTransformer\Transformers\MyclabsEnumTransformer;
 
 class GenerateTypeScript extends Command
 {
@@ -24,7 +23,7 @@ class GenerateTypeScript extends Command
             ->transformers([DtoTransformer::class])
             // file where TypeScript type definitions will be written
             ->formatter(PrettierFormatter::class)
-            ->outputFile(base_path() . '/js/generated.d.ts');
+            ->outputFile(base_path().'/js/generated.d.ts');
 
         TypeScriptTransformer::create($config)->transform();
 
