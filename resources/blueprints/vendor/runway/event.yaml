@@ -1,0 +1,175 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: name
+            field:
+              type: text
+              display: Name
+              width: 33
+          -
+            handle: event_type_id
+            field:
+              resource: event_type
+              type: belongs_to
+              display: 'Event Type'
+              width: 33
+          -
+            handle: user_id
+            field:
+              resource: user
+              type: belongs_to
+              display: 'User ID'
+              width: 33
+          -
+            handle: is_private
+            field:
+              type: toggle
+              display: 'Is Private'
+              width: 50
+          -
+            handle: phone
+            field:
+              input_type: tel
+              type: text
+              display: Phone
+              width: 50
+          -
+            handle: street_address
+            field:
+              type: text
+              display: 'Street Address'
+              width: 25
+          -
+            handle: state
+            field:
+              type: text
+              display: State
+              width: 25
+          -
+            handle: city
+            field:
+              type: text
+              display: City
+              width: 25
+          -
+            handle: zip
+            field:
+              type: text
+              display: ZIP
+              width: 25
+          -
+            handle: longitude
+            field:
+              type: text
+              display: Longitude
+              width: 50
+          -
+            handle: latitude
+            field:
+              type: text
+              display: Latitude
+              width: 50
+          -
+            handle: region
+            field:
+              type: text
+              display: Region
+              width: 33
+          -
+            handle: district
+            field:
+              type: text
+              display: District
+              width: 33
+          -
+            handle: locality
+            field:
+              type: text
+              display: Locality
+              width: 33
+          -
+            handle: neighborhood
+            field:
+              type: text
+              display: Neighborhood
+              width: 50
+          -
+            handle: place
+            field:
+              type: text
+              display: Place
+              width: 50
+          -
+            handle: gift_sent
+            field:
+              type: toggle
+              display: 'Gift Sent'
+              width: 33
+              visibility: read_only
+          -
+            handle: gift_requested
+            field:
+              type: toggle
+              display: 'Gift Requested'
+              width: 33
+              visibility: read_only
+          -
+            handle: welcome_sent
+            field:
+              type: toggle
+              display: 'Welcome Sent'
+              visibility: read_only
+              width: 50
+          -
+            handle: sex
+            field:
+              options:
+                -
+                  key: men
+                  value: men
+                -
+                  key: women
+                  value: women
+              type: radio
+              display: Sex
+              width: 50
+          -
+            handle: last_monthly_email_sent_at
+            field:
+              type: date
+              display: 'Last Monthly Email Sent At'
+              width: 33
+          -
+            handle: start_date
+            field:
+              type: date
+              display: 'Start Date'
+              width: 33
+          -
+            handle: end_date
+            field:
+              type: date
+              display: 'End Date'
+              width: 33
+              visibility: read_only
+          -
+            handle: description
+            field:
+              type: markdown
+              display: Description
+          -
+            handle: summary
+            field:
+              type: markdown
+              display: Summary
+          -
+            handle: number_of_items_in_material_order
+            field:
+              input_type: number
+              type: text
+              display: 'Number Of Items In Material Order'
+title: Event

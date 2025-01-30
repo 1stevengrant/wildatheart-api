@@ -20,6 +20,26 @@ return [
             'name' => 'Local Platform Pages',
             'cp_icon' => 'book-pages',
         ],
+
+        \App\Models\Event::class => [
+            'name' => 'Local Platform Events',
+            'cp_icon' => 'calendar',
+        ],
+
+        \App\Models\User::class => [
+            'name' => 'Local Platform Users',
+            'cp_icon' => 'users',
+        ],
+
+        \App\Models\Attendee::class => [
+            'name' => 'Local Platform Attendees',
+            'cp_icon' => 'user',
+        ],
+
+        \App\Models\EmailTemplate::class => [
+            'name' => 'Local Platform Email Templates',
+            'cp_icon' => 'email-utility',
+        ],
     ],
 
     /*
