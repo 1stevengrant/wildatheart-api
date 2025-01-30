@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 #[ObservedBy(\App\Observers\AttendeeObserver::class)]
 class Attendee extends BaseModel
 {
-    use HasFactory, LogsActivity, SoftDeletes;
+    use HasFactory, LogsActivity, SoftDeletes, HasRunwayResource;
 
     public function getFullnameAttribute(): string
     {

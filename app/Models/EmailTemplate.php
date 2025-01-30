@@ -7,10 +7,11 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class EmailTemplate extends BaseModel
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, HasRunwayResource;
 
     protected function casts(): array
     {

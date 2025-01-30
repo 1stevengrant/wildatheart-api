@@ -16,11 +16,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 #[ObservedBy(\App\Observers\EventObserver::class)]
 class Event extends BaseModel
 {
-    use HasFactory, HasUuids, LogsActivity, SoftDeletes;
+    use HasFactory, HasUuids, LogsActivity, SoftDeletes, HasRunwayResource;
 
     protected static function boot(): void
     {
