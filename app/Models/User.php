@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 use App\Builders\UserBuilder;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
-use Laravel\Nova\Auth\Impersonatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -15,14 +14,14 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasRoles, LogsActivity, Notifiable, SoftDeletes, HasRunwayResource;
+    use HasFactory, HasRoles, HasRunwayResource, LogsActivity, Notifiable, SoftDeletes;
 
     const ROLE_ADMIN = 'admin';
 

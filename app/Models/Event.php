@@ -13,15 +13,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 #[ObservedBy(\App\Observers\EventObserver::class)]
 class Event extends BaseModel
 {
-    use HasFactory, HasUuids, LogsActivity, SoftDeletes, HasRunwayResource;
+    use HasFactory, HasRunwayResource, HasUuids, LogsActivity, SoftDeletes;
 
     protected static function boot(): void
     {

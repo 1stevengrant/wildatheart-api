@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use StatamicRadPack\Runway\Traits\HasRunwayResource;
 
 class EmailTemplate extends BaseModel
 {
-    use HasFactory, LogsActivity, HasRunwayResource;
+    use HasFactory, HasRunwayResource, LogsActivity;
 
     protected function casts(): array
     {
