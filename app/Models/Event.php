@@ -174,7 +174,7 @@ class Event extends BaseModel
 
     public function getAdminUrlAttribute(): string
     {
-        return url(config('nova.path').'/resources/events/'.$this->id);
+        return url(config('statamic.cp.route').'/runway/event/'.$this->id);
     }
 
     public function getHostNameAttribute()
