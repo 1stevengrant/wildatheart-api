@@ -46,6 +46,7 @@ fields:
                       - heading-1
                       - hero-1
                       - hero-2
+                    collapse: true
                     sets:
                       new_set_group:
                         display: "New Set Group"
