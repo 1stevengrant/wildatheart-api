@@ -94,7 +94,7 @@ fields:
               fields:
                 - import: actions
             styled_text:
-              display: "Styled Text"
+              display: "Styled Text (DEPRECATED)"
               icon: text-formatting-all-caps
               fields:
                 - import: styled_text_block
