@@ -6,6 +6,38 @@ fields:
       remove_empty_nodes: false
       type: bard
       display: Blocks
+      buttons:
+        - bts_styles
+        - color
+        - h2
+        - h3
+        - bold
+        - italic
+        - unorderedlist
+        - orderedlist
+        - removeformat
+        - quote
+        - anchor
+        - image
+        - table
+        - prose-lg
+        - hero-1
+        - hero-2
+        - heading-1
+        - body-large
+        - body-base
+        - body-small
+        - body-xsmall
+      bts_styles:
+        - prose-lg
+        - body-base
+        - body-large
+        - body-small
+        - body-xsmall
+        - heading-1
+        - hero-1
+        - hero-2
+      collapse: true
       sets:
         hero:
           display: Hero

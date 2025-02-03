@@ -7,6 +7,9 @@ fields:
       type: bard
       display: Text
       buttons:
+        - bts_styles
+        - intro
+        - prose-lg
         - h2
         - h3
         - bold
@@ -23,6 +26,13 @@ fields:
         - alignleft
         - aligncenter
         - alignright
+        - alignjustify
+        - hero-1
+        - hero-2
+      bts_styles:
+        - prose-lg
+        - hero-1
+        - hero-2
   -
     handle: style
     field:

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad829e710296a485253f348caf5d5513",
+    "content-hash": "ce1c51bb328ce14063d2f5d854cdc2fe",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -2761,6 +2761,57 @@
             "time": "2022-05-21T17:30:32+00:00"
         },
         {
+            "name": "jacksleight/statamic-bard-texstyle",
+            "version": "3.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jacksleight/statamic-bard-texstyle.git",
+                "reference": "d0dc76eabfcaf1a15909b2f8bc10e12c6ba95239"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jacksleight/statamic-bard-texstyle/zipball/d0dc76eabfcaf1a15909b2f8bc10e12c6ba95239",
+                "reference": "d0dc76eabfcaf1a15909b2f8bc10e12c6ba95239",
+                "shasum": ""
+            },
+            "require": {
+                "statamic/cms": "^4.56|^5.0"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^7.4",
+                "orchestra/testbench": "^8.3",
+                "pestphp/pest": "^2.4",
+                "pestphp/pest-plugin-watch": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JackSleight\\StatamicBardTexstyle\\ServiceProvider"
+                    ]
+                },
+                "statamic": {
+                    "name": "Bard Texstyle",
+                    "editions": [
+                        "free",
+                        "pro"
+                    ],
+                    "description": "This Statamic addon allows you to add custom element styles and attributes to the Bard fieldtype."
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JackSleight\\StatamicBardTexstyle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "support": {
+                "issues": "https://github.com/jacksleight/statamic-bard-texstyle/issues",
+                "source": "https://github.com/jacksleight/statamic-bard-texstyle/tree/3.4.1"
+            },
+            "time": "2024-12-03T15:43:48+00:00"
+        },
+        {
             "name": "james-heinrich/getid3",
             "version": "v1.9.23",
             "source": {
@@ -5073,6 +5124,62 @@
                 "source": "https://github.com/jmespath/jmespath.php/tree/2.8.0"
             },
             "time": "2024-09-04T18:46:31+00:00"
+        },
+        {
+            "name": "ndx/statamic-bard-color-picker",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/new-data-services/statamic-bard-color-picker.git",
+                "reference": "79e0e89fbbd728a9153781611f5e1e0540f7a6e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/new-data-services/statamic-bard-color-picker/zipball/79e0e89fbbd728a9153781611f5e1e0540f7a6e4",
+                "reference": "79e0e89fbbd728a9153781611f5e1e0540f7a6e4",
+                "shasum": ""
+            },
+            "require": {
+                "statamic/cms": "^5.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.15",
+                "orchestra/testbench": "^8.0|^9.0",
+                "pestphp/pest": "^2.34"
+            },
+            "type": "statamic-addon",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ndx\\BardColorPicker\\ServiceProvider"
+                    ]
+                },
+                "statamic": {
+                    "name": "Bard Color Picker",
+                    "description": "Text color picker with swatches for Bard fields"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ndx\\BardColorPicker\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "new-data-services GmbH",
+                    "role": "Manufacturer"
+                }
+            ],
+            "description": "Text color picker with swatches for Bard fields",
+            "support": {
+                "issues": "https://github.com/new-data-services/statamic-bard-color-picker/issues",
+                "source": "https://github.com/new-data-services/statamic-bard-color-picker/tree/v2.0.1"
+            },
+            "time": "2025-01-24T10:08:16+00:00"
         },
         {
             "name": "nesbot/carbon",
