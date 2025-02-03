@@ -6,62 +6,8 @@ fields:
       default: true
       type: toggle
       display: 'Show Line'
-  -
-    handle: spacing_top
-    field:
-      options:
-        -
-          key: 1
-          value: null
-        -
-          key: 2
-          value: null
-        -
-          key: 4
-          value: null
-        -
-          key: 8
-          value: null
-        -
-          key: 16
-          value: null
-        -
-          key: 32
-          value: null
-        -
-          key: 64
-          value: null
-      default: '4'
-      type: select
-      display: 'Spacing Top'
-  -
-    handle: spacing_bottom
-    field:
-      options:
-        -
-          key: 1
-          value: null
-        -
-          key: 2
-          value: null
-        -
-          key: 4
-          value: null
-        -
-          key: 8
-          value: null
-        -
-          key: 16
-          value: null
-        -
-          key: 32
-          value: null
-        -
-          key: 64
-          value: null
-      default: '4'
-      type: select
-      display: 'Spacing Bottom'
+      width: 50
+      instructions: 'Display or hide horizontal rule.'
   -
     handle: width
     field:
@@ -90,3 +36,63 @@ fields:
       type: select
       display: Width
       default: container
+      width: 50
+      instructions: 'Set horizontal width for rule.'
+  -
+    handle: spacing_top
+    field:
+      options:
+        -
+          key: 1
+          value: null
+        -
+          key: 2
+          value: null
+        -
+          key: 4
+          value: null
+        -
+          key: 8
+          value: null
+        -
+          key: 16
+          value: null
+        -
+          key: 32
+          value: null
+        -
+          key: 64
+          value: null
+      default: '4'
+      type: select
+      display: 'Spacing Top'
+      width: 50
+  -
+    handle: spacing_bottom
+    field:
+      options:
+        -
+          key: 1
+          value: null
+        -
+          key: 2
+          value: null
+        -
+          key: 4
+          value: null
+        -
+          key: 8
+          value: null
+        -
+          key: 16
+          value: null
+        -
+          key: 32
+          value: null
+        -
+          key: 64
+          value: null
+      default: '4'
+      type: select
+      display: 'Spacing Bottom'
+      width: 50

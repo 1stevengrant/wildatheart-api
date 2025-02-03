@@ -1,9 +1,10 @@
-title: 'Container Block'
+title: "Container Block"
 fields:
-  -
-    handle: blocks
+  - handle: blocks
     field:
       buttons:
+        - bts_styles
+        - color
         - h2
         - h3
         - h4
@@ -14,33 +15,47 @@ fields:
         - unorderedlist
         - orderedlist
         - removeformat
+        - horizontalrule
         - quote
         - anchor
         - image
         - table
-        - horizontalrule
+        - prose-lg
+        - hero-1
+        - hero-2
+        - heading-1
+        - body-large
+        - body-base
+        - body-small
+        - body-xsmall
+      bts_styles:
+        - prose-lg
+        - body-base
+        - body-large
+        - body-small
+        - body-xsmall
+        - heading-1
+        - hero-1
+        - hero-2
       remove_empty_nodes: false
       type: bard
       display: Blocks
       container: s3
       sets:
         container_set_group:
-          display: 'Container Set Group'
+          display: "Container Set Group"
           sets:
             mini_bio:
-              display: 'Mini Bio'
+              display: "Mini Bio"
               fields:
-                -
-                  import: mini_bio_block
+                - import: mini_bio_block
             image:
               display: Image
               icon: media-image-picture-orientation
               fields:
-                -
-                  import: image_block
+                - import: image_block
             code_block:
-              display: 'Code Block'
+              display: "Code Block"
               icon: programming-script-code-brackets
               fields:
-                -
-                  import: code_block
+                - import: code_block

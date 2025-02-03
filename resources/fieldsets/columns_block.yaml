@@ -1,77 +1,98 @@
-title: 'Columns Block'
+title: "Columns Block"
 fields:
-  -
-    handle: columns
+  - handle: columns
     field:
       type: replicator
       display: Columns
       sets:
         new_set_group:
-          display: 'New Set Group'
+          display: "New Set Group"
           sets:
             column:
               display: Column
               fields:
-                -
-                  handle: blocks
+                - handle: blocks
                   field:
-                    type: replicator
+                    type: bard
                     display: Blocks
+                    buttons:
+                      - bts_styles
+                      - color
+                      - h2
+                      - h3
+                      - bold
+                      - italic
+                      - unorderedlist
+                      - orderedlist
+                      - removeformat
+                      - quote
+                      - anchor
+                      - image
+                      - table
+                      - prose-lg
+                      - hero-1
+                      - hero-2
+                      - heading-1
+                      - body-large
+                      - body-base
+                      - body-small
+                      - body-xsmall
+                    bts_styles:
+                      - prose-lg
+                      - body-base
+                      - body-large
+                      - body-small
+                      - body-xsmall
+                      - heading-1
+                      - hero-1
+                      - hero-2
+                    collapse: true
                     sets:
                       new_set_group:
-                        display: 'New Set Group'
+                        display: "New Set Group"
                         sets:
                           styled_text:
-                            display: 'Styled Text'
+                            display: "Styled Text"
                             icon: text-formatting-all-caps
                             fields:
-                              -
-                                import: styled_text_block
+                              - import: styled_text_block
                           image:
                             display: Image
                             icon: media-image-picture-orientation
                             fields:
-                              -
-                                import: image_block
+                              - import: image_block
                           buttons:
                             display: Buttons
                             fields:
-                              -
-                                import: buttons
+                              - import: buttons
                           button_cloud:
-                            display: 'Button Cloud'
+                            display: "Button Cloud"
                             fields:
-                              -
-                                import: button_cloud
-                -
-                  handle: column_width
+                              - import: button_cloud
+                - handle: column_width
                   field:
                     type: width
-                    display: 'Column Width Desktop'
+                    display: "Column Width Desktop"
                     options:
-                      - '20'
-                      - '25'
-                      - '33'
-                      - '40'
-                      - '50'
-                      - '60'
-                      - '66'
-                      - '75'
-                      - '80'
-                      - '100'
-                    default: '100'
-                -
-                  handle: horizontal_alignment
+                      - "20"
+                      - "25"
+                      - "33"
+                      - "40"
+                      - "50"
+                      - "60"
+                      - "66"
+                      - "75"
+                      - "80"
+                      - "100"
+                    default: "100"
+                - handle: horizontal_alignment
                   field:
                     options:
-                      -
-                        key: start
+                      - key: start
                         value: Left
-                      -
-                        key: center
+                      - key: center
                         value: Center
-                      -
-                        key: end
+                      - key: end
                         value: Right
                     type: select
-                    display: 'Horizontal Alignment'
+                    display: "Horizontal Alignment"
