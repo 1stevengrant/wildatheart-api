@@ -1,0 +1,79 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: given_name
+            field:
+              type: text
+              display: 'Given Name'
+          -
+            handle: family_name
+            field:
+              type: text
+              display: 'Family Name'
+          -
+            handle: email
+            field:
+              type: text
+              display: Email
+          -
+            handle: country
+            field:
+              type: text
+              display: Country
+          -
+            handle: country_code
+            field:
+              type: text
+              display: 'Country Code'
+          -
+            handle: phone
+            field:
+              type: text
+              display: Phone
+          -
+            handle: city
+            field:
+              type: text
+              display: City
+          -
+            handle: state
+            field:
+              type: text
+              display: State
+          -
+            handle: marketing_updates
+            field:
+              type: toggle
+              display: 'Marketing Updates'
+              validate: required
+          -
+            handle: contacted_on
+            field:
+              type: date
+              display: 'Contacted On'
+          -
+            handle: deleted_at
+            field:
+              type: date
+              display: 'Deleted At'
+          -
+            handle: user_id
+            field:
+              resource: user
+              type: belongs_to
+              display: 'User ID'
+          -
+            handle: event_id
+            field:
+              resource: event
+              type: belongs_to
+              display: 'Event ID'
+  sidebar:
+    display: Sidebar
+    sections:
+      - {  }
+title: Attendee

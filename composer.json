@@ -11,17 +11,15 @@
         "php": "^8.2",
         "ext-dom": "*",
         "ext-libxml": "*",
-        "alexazartsev/heroicon": "^2.0",
         "artesaos/seotools": "^1.3",
         "auth0/auth0-php": "^8.7",
         "fakerphp/faker": "^1.23",
         "inertiajs/inertia-laravel": "^1.0",
         "intervention/image": "^2.7",
-        "kiritokatklian/nova-permission": "^4.0",
+        "jacksleight/statamic-bard-texstyle": "^3.4",
         "ksubileau/color-thief-php": "^2.0",
         "laravel/framework": "^11.31",
         "laravel/horizon": "^5.29",
-        "laravel/nova": "^4.3",
         "laravel/pail": "^1.1",
         "laravel/pulse": "^1.2",
         "laravel/tinker": "^2.9",
@@ -29,6 +27,7 @@
         "league/csv": "^9.15",
         "league/flysystem-aws-s3-v3": "^3.0",
         "lorisleiva/laravel-actions": "^2.8",
+        "ndx/statamic-bard-color-picker": "^2.0",
         "omniphx/forrest": "^2.18",
         "repat/laravel-validator-emojis": "^0.3.0",
         "sentry/sentry-laravel": "^4.10",
@@ -43,7 +42,6 @@
         "statamic-rad-pack/runway": "^7.12",
         "statamic/cms": "^5.6",
         "statamic/eloquent-driver": "^4.17",
-        "stepanenko3/nova-command-runner": "^4.3",
         "symfony/http-client": "^7.0",
         "symfony/postmark-mailer": "^7.0",
         "tightenco/ziggy": "v2.0.0"
@@ -115,11 +113,5 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://nova.laravel.com"
-        }
-    ]
+    "prefer-stable": true
 }

@@ -6,6 +6,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 #[ObservedBy(\App\Observers\AttendeeObserver::class)]
 class Attendee extends BaseModel
 {
-    use HasFactory, LogsActivity, SoftDeletes;
+    use HasFactory, HasRunwayResource, LogsActivity, SoftDeletes;
 
     public function getFullnameAttribute(): string
     {
