@@ -126,7 +126,7 @@ return [
                     // ... add other color options as needed
                 ],
                 'rendered' => 'style',
-                'style_prefix' => 'color: '
+                'style_prefix' => 'color: ',
             ],
         ],
     ],
