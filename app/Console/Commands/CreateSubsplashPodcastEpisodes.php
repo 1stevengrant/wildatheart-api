@@ -109,6 +109,7 @@ class CreateSubsplashPodcastEpisodes extends Command
         $data = [
             'title' => data_get($media, 'title'),
             'subsplash_media_item_id' => data_get($media, 'id'),
+            'media_type' => ['podcast-episode'],
         ];
 
         $seriesId = data_get($media, '_embedded.media-series.id');
