@@ -21,10 +21,14 @@ class SendNewEventSlackAlert implements ShouldQueue
 
     public function handle(): void
     {
+        if (! config('slack-alerts.slack_alerts_enabled')) {
+            return;
+        }
         $event = $this->event;
         $hostName = $event->host->fullName;
         $location = $event->location;
         $name = $event->name;
+
 
         SlackAlert::to('events')
             ->blocks([
