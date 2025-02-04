@@ -2,6 +2,9 @@
 
 use App\Models\User;
 
+beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+});
 it('updates the user account', function () {
     $user = User::factory()->create();
 

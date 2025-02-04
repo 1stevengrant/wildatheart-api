@@ -2,14 +2,11 @@
 
 use App\Models\User;
 use App\Models\Event;
-use Database\Seeders\EventTypeSeeder;
 use App\Actions\Address\CreateAddress;
-use Database\Seeders\EmailTemplateSeeder;
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     User::factory()->create();
-    $this->seed(EmailTemplateSeeder::class);
-    $this->seed(EventTypeSeeder::class);
 });
 test('an address is added to the database', function () {
     $event = Event::factory()->fires()->create();

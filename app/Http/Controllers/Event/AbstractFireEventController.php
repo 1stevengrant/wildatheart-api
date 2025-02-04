@@ -11,7 +11,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
 use App\Actions\Event\CheckWelcomeStatus;
 use App\Actions\Event\CreateFireEventType;
-use App\Actions\User\SendVerificationEmail;
 
 abstract class AbstractFireEventController extends Controller
 {
@@ -39,12 +38,6 @@ abstract class AbstractFireEventController extends Controller
             user: auth()->user(),
             role: User::ROLE_HOST
         );
-
-        if (! auth()->user()->hasVerifiedEmail()) {
-            SendVerificationEmail::run(event: $event);
-
-            return Inertia::location(to_route('confirm.email', ['event' => $event]));
-        }
 
         ApproveEvent::run(event: $event);
 

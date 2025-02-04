@@ -14,11 +14,11 @@ class Auth0ServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Auth0::class, function () {
             return new Auth0([
-                'domain' => config('services.auth0.base_url'),
-                'clientId' => config('services.auth0.client_id'),
-                'clientSecret' => config('services.auth0.client_secret'),
-                'cookieSecret' => config('services.auth0.cookie_secret'),
-                'redirectUri' => config('services.auth0.redirect'),
+                'domain' => config('auth0.base_url'),
+                'clientId' => config('auth0.client_id'),
+                'clientSecret' => config('auth0.client_secret'),
+                'cookieSecret' => config('auth0.cookie_secret'),
+                'redirectUri' => config('auth0.redirect'),
             ]);
         });
     }

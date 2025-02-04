@@ -2,6 +2,9 @@
 
 use App\Actions\User\CreateUser;
 
+beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+});
 it('creates a new user', function () {
     $userAttributes = [
         'given_name' => 'John',

@@ -9,14 +9,6 @@ return [
         'scheme' => 'https',
     ],
 
-    'auth0' => [
-        'client_id' => env('AUTH0_CLIENT_ID'),
-        'client_secret' => env('AUTH0_CLIENT_SECRET'),
-        'redirect' => env('AUTH0_REDIRECT_URI'),
-        'base_url' => env('AUTH0_DOMAIN'),
-        'cookie_secret' => 'c1XhulxTocmsvHIQ1tBOp7McazNhkZVO',
-    ],
-
     'mapbox' => [
         'api_url' => 'https://api.mapbox.com/geocoding/v5/mapbox.places/',
         'api_key' => env('MAPBOX_API_KEY'),
