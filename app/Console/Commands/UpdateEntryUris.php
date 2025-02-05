@@ -9,7 +9,7 @@ class UpdateEntryUris extends Command
 {
     protected $signature = 'app:update-entry-uris';
 
-    protected $description = 'Command description';
+    protected $description = 'Update the URIs for all entries in all collections';
 
     public function handle()
     {
