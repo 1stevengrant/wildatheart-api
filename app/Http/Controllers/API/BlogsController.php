@@ -23,27 +23,29 @@ class BlogsController extends Controller
 
     public function index()
     {
-        // return cache()->remember('blogs.index', now()->addHour(), function () {
-        return Entry::query()
-            ->where('collection', 'blogs')
-            ->where('published', true)
-            ->orderBy('date', 'desc')
-            ->get()
-            ->map(function ($entry) {
-                return $this->createBlogResponse($entry);
-            });
-        // });
+        return cache()->remember('blogs.index', now()->addHour(), function () {
+            return Entry::query()
+                ->where('collection', 'blogs')
+                ->where('published', true)
+                ->orderBy('date', 'desc')
+                ->get()
+                ->map(function ($entry) {
+                    return $this->createBlogResponse($entry);
+                });
+        });
     }
 
     public function show(string $uri)
     {
-        $uriParts = explode('/', $uri);
+        return cache()->remember("blogs.show.{$uri}", now()->addHour(), function () use ($uri) {
+            $uriParts = explode('/', $uri);
 
-        if (count($uriParts) === 1) {
-            return $this->handleSingleSegmentUri($uriParts[0]);
-        }
+            if (count($uriParts) === 1) {
+                return $this->handleSingleSegmentUri($uriParts[0]);
+            }
 
-        return $this->handleDoubleSegmentUri($uri);
+            return $this->handleDoubleSegmentUri($uri);
+        });
     }
 
     protected function createBlogResponse(StatamicEntry $entry)
