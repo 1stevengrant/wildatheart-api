@@ -7,6 +7,18 @@ use App\Http\Controllers\Controller;
 
 class BlogsController extends Controller
 {
+    public const STASI = 'Stasi Eldredge';
+
+    public const JOHN = 'John Eldredge';
+
+    public const CRAIG = 'Craig McConnell';
+
+    public const MORGAN = 'Morgan Snyder';
+
+    public const BART = 'Bart Hansen';
+
+    public const UNKNOWN_AUTHOR = 'Unknown Author';
+
     public function index()
     {
         return cache()->remember('blogs.index', now()->addHour(), function () {
@@ -16,14 +28,16 @@ class BlogsController extends Controller
                 ->orderBy('date', 'desc')
                 ->get()
                 ->map(function ($entry) {
+                    $author = Entry::find($entry->get('author'))?->get('title');
 
                     return [
                         'id' => $entry->id(),
                         'title' => $entry->get('title'),
                         'published_date' => $entry->date()->format('F jS, Y'),
-                        'author' => Entry::find($entry->get('author'))?->get('title'),
+                        'author' => $author,
                         'summary' => $this->generateSummary($entry->get('content')),
                         'json_url' => route('content.blogs.show', $entry->id()),
+                        'url' => $this->generateUrl($author).$entry->slug(),
                     ];
                 });
         });
@@ -64,5 +78,19 @@ class BlogsController extends Controller
         }
 
         return $summary;
+    }
+
+    protected function generateUrl(?string $author)
+    {
+        match ($author) {
+            self::STASI => $url = '/blog/stasi',
+            self::JOHN => $url = '/blog/john',
+            self::CRAIG => $url = '/blog/craig',
+            self::MORGAN => $url = '/blog/morgan',
+            self::BART => $url = '/blog/bart',
+            default => $url = '/blog',
+        };
+
+        return $url.'/';
     }
 }

@@ -7,14 +7,13 @@ use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Stevebauman\Purify\Facades\Purify;
+use App\Http\Controllers\API\BlogsController;
 
 class ImportBlogs extends Command
 {
     protected $signature = 'app:import-blogs';
 
-    protected $description = 'Command description';
-
-    public const UNKNOWN_AUTHOR = 'Unknown Author';
+    protected $description = 'Import the blogs from Drupal';
 
     public function handle()
     {
@@ -31,12 +30,12 @@ class ImportBlogs extends Command
                 $title = strip_tags($blog['title']);
 
                 match (true) {
-                    str_contains($blog['slug'], 'stasi') => $author = 'Stasi Eldredge',
-                    str_contains($blog['slug'], 'john') => $author = 'John Eldredge',
-                    str_contains($blog['slug'], 'craig') => $author = 'Craig McConnell',
-                    str_contains($blog['slug'], 'morgan') => $author = 'Morgan Snyder',
-                    str_contains($blog['slug'], 'bart') => $author = 'Bart Hansen',
-                    default => $author = self::UNKNOWN_AUTHOR,
+                    str_contains($blog['slug'], 'stasi') => $author = BlogsController::STASI,
+                    str_contains($blog['slug'], 'john') => $author = BlogsController::JOHN,
+                    str_contains($blog['slug'], 'craig') => $author = BlogsController::CRAIG,
+                    str_contains($blog['slug'], 'morgan') => $author = BlogsController::MORGAN,
+                    str_contains($blog['slug'], 'bart') => $author = BlogsController::BART,
+                    default => $author = BlogsController::UNKNOWN_AUTHOR,
                 };
 
                 ray([
@@ -74,7 +73,7 @@ class ImportBlogs extends Command
 
     public function determinePublishedStatus($author): bool
     {
-        if ($author === self::UNKNOWN_AUTHOR || $author === 'Morgan Snyder') {
+        if ($author === BlogsController::UNKNOWN_AUTHOR || $author === BlogsController::MORGAN) {
             return false;
         }
 
