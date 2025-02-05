@@ -8,7 +8,6 @@ use Statamic\Events\AssetUploaded;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
 use Illuminate\Support\Facades\Event as LaravelEvent;
-use Illuminate\Support\Facades\Log;
 
 class CustomStatamicProvider extends ServiceProvider
 {
@@ -38,11 +37,11 @@ class CustomStatamicProvider extends ServiceProvider
                 if ($series) {
                     $seriesUri = $series->uri();
 
-                    return $seriesUri . '/' . $entry->slug;
+                    return $seriesUri.'/'.$entry->slug;
                 }
             }
 
-            return 'media' . '/' . $entry->slug();
+            return 'media'.'/'.$entry->slug();
         });
 
         Collection::computed('blogs', 'blog_url', function ($entry, $value) {
@@ -51,16 +50,16 @@ class CustomStatamicProvider extends ServiceProvider
 
                 $author = $entry->author;
                 if ($author) {
-                    // Most contributor slugs are using firstname-lastname slug 
+                    // Most contributor slugs are using firstname-lastname slug
                     // and we only need the first name for now.
                     $authorSlug = explode('-', $author->slug)[0];
 
-                    return  'blogs/' . $authorSlug . '/' . $entry->slug;
+                    return 'blogs/'.$authorSlug.'/'.$entry->slug;
                 }
             }
 
             // If there is no author, we will use the slug as is.
-            return 'blogs/' . $entry->slug;
+            return 'blogs/'.$entry->slug;
         });
 
         Statamic::vite('app', [

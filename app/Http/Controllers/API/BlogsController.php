@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\DataTypeObjects\API\V1\Content\BlogResponse;
 use Statamic\Facades\Entry;
 use App\Http\Controllers\Controller;
 use Statamic\Entries\Entry as StatamicEntry;
+use App\DataTypeObjects\API\V1\Content\BlogResponse;
 
 class BlogsController extends Controller
 {
@@ -100,10 +100,10 @@ class BlogsController extends Controller
             ->get()
             ->first(function ($entry) use ($slug) {
                 $slugParts = explode('-', $entry->slug);
+
                 return $slugParts[0] === $slug;
             });
     }
-
 
     protected function getBlogsByAuthor($author)
     {
@@ -131,6 +131,7 @@ class BlogsController extends Controller
             ->get()
             ->first(function ($entry) use ($authorSlug) {
                 $slugParts = explode('-', $entry->slug);
+
                 return $slugParts[0] === $authorSlug;
             });
 
@@ -184,6 +185,6 @@ class BlogsController extends Controller
             default => $url = '/blog',
         };
 
-        return $url . '/';
+        return $url.'/';
     }
 }

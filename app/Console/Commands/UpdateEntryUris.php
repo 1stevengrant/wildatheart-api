@@ -16,7 +16,7 @@ class UpdateEntryUris extends Command
         $collections = Collection::all();
 
         foreach ($collections as $collection) {
-            $this->info('Updating URIs for collection: ' . $collection->handle());
+            $this->info('Updating URIs for collection: '.$collection->handle());
             $collection->updateEntryUris();
         }
     }
