@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use Statamic\Facades\Entry;
 use App\Http\Controllers\Controller;
+use Statamic\Entries\Entry as StatamicEntry;
+use App\DataTypeObjects\API\V1\Content\BlogResponse;
 
 class BlogsController extends Controller
 {
@@ -28,38 +30,130 @@ class BlogsController extends Controller
                 ->orderBy('date', 'desc')
                 ->get()
                 ->map(function ($entry) {
-                    $author = Entry::find($entry->get('author'))?->get('title');
-
-                    return [
-                        'id' => $entry->id(),
-                        'title' => $entry->get('title'),
-                        'published_date' => $entry->date()->format('F jS, Y'),
-                        'author' => $author,
-                        'summary' => $this->generateSummary($entry->get('content')),
-                        'json_url' => route('content.blogs.show', $entry->id()),
-                        'url' => $this->generateUrl($author).$entry->slug(),
-                    ];
+                    return $this->createBlogResponse($entry);
                 });
         });
     }
 
-    public function show(string $id)
+    public function show(string $uri)
     {
-        return cache()->remember("blogs.show.{$id}", now()->addHour(), function () use ($id) {
-            $entry = Entry::find($id);
+        return cache()->remember("blogs.show.{$uri}", now()->addHour(), function () use ($uri) {
+            $uriParts = explode('/', $uri);
 
-            if (! $entry) {
-                return response()->json(['message' => 'Entry not found'], 404);
+            if (count($uriParts) === 1) {
+                return $this->handleSingleSegmentUri($uriParts[0]);
             }
 
-            return [
-                'id' => $entry->id(),
-                'title' => $entry->get('title'),
-                'published_date' => $entry->date()->format('F jS, Y'),
-                'author' => Entry::find($entry->get('author'))?->get('title'),
-                'content' => $entry->get('content'),
-            ];
+            return $this->handleDoubleSegmentUri($uri);
         });
+    }
+
+    protected function createBlogResponse(StatamicEntry $entry)
+    {
+        return BlogResponse::from([
+            ...$entry->toArray(),
+            'summary' => $this->generateSummary($entry->get('content')),
+            'author_name' => $entry->author ? $entry->author->title : null,
+            'published_date' => $entry->date(),
+        ]);
+    }
+
+    protected function handleSingleSegmentUri(string $slug)
+    {
+        // Try to find author blogs first
+        $author = $this->findAuthorBySlug($slug);
+        if ($author) {
+            return $this->getBlogsByAuthor($author);
+        }
+
+        // If no author found, try to find single blog
+        $entry = Entry::query()
+            ->where('collection', 'blogs')
+            ->where('uri', "/blogs/$slug")
+            ->first();
+
+        if (! $entry) {
+            return $this->notFoundResponse();
+        }
+
+        return $this->createBlogResponse($entry);
+    }
+
+    protected function handleDoubleSegmentUri(string $uri)
+    {
+        $entry = Entry::query()
+            ->where('collection', 'blogs')
+            ->where('uri', "/blogs/$uri")
+            ->first();
+
+        if (! $entry) {
+            return $this->notFoundResponse();
+        }
+
+        return $this->createBlogResponse($entry);
+    }
+
+    protected function findAuthorBySlug(string $slug)
+    {
+        return Entry::query()
+            ->where('collection', 'authors')
+            ->get()
+            ->first(function ($entry) use ($slug) {
+                $slugParts = explode('-', $entry->slug);
+
+                return $slugParts[0] === $slug;
+            });
+    }
+
+    protected function getBlogsByAuthor($author)
+    {
+        $entries = Entry::query()
+            ->where('collection', 'blogs')
+            ->where('author', $author->id())
+            ->get()
+            ->map(function ($entry) {
+                return $this->createBlogResponse($entry);
+            });
+
+        return BlogResponse::collection($entries);
+    }
+
+    protected function notFoundResponse()
+    {
+        return response()->json(['message' => 'Entry not found'], 404);
+    }
+
+    public function showByAuthor(string $authorSlug)
+    {
+        // return cache()->remember("blogs.show.{$id}", now()->addHour(), function () use ($id) {
+        $author = Entry::query()
+            ->where('collection', 'authors')
+            ->get()
+            ->first(function ($entry) use ($authorSlug) {
+                $slugParts = explode('-', $entry->slug);
+
+                return $slugParts[0] === $authorSlug;
+            });
+
+        $entries = Entry::query()
+            ->where('collection', 'blogs')
+            ->where('author', $author->id())
+            ->get()
+            ->map(function ($entry) {
+                return [
+                    ...$entry->toArray(),
+                    'summary' => $this->generateSummary($entry->get('content')),
+                ];
+            });
+
+        if (! $entries) {
+            return response()->json(['message' => 'Entry not found'], 404);
+        }
+
+        $response = BlogResponse::collection($entries);
+
+        return $response;
+        // });
     }
 
     protected function generateSummary(string $content)
