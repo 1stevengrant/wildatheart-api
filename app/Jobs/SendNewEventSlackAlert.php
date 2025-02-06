@@ -29,7 +29,6 @@ class SendNewEventSlackAlert implements ShouldQueue
         $location = $event->location;
         $name = $event->name;
 
-
         SlackAlert::to('events')
             ->blocks([
                 [

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AllEventsController;
+use App\Http\Controllers\API\BlogsController;
 use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\MediaItemDataController;
@@ -32,7 +33,10 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
 Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
+        Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs.index');
+        Route::get('/blogs/{id}', [BlogsController::class, 'show'])->name('blogs.show');
         Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
+
         Route::get('/media-by-series-id/{slug}', [MediaItemDataController::class, 'mediaBySeriesId'])->name('media.bySeriesId');
         Route::get('/media/redirects', [MediaItemDataController::class, 'getRedirects'])->name('media.getRedirects');
         Route::get('/media/{slug}', [MediaItemDataController::class, 'media'])->name('media');

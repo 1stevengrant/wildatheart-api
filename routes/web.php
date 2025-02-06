@@ -20,7 +20,6 @@ Route::prefix('support')->name('support.')->group(function () {
 });
 
 include 'auth.php';
-include 'emails.php';
 include 'admin.php';
 
 Route::get('attend/{event}', ViewEventListingController::class)->name('view.event');

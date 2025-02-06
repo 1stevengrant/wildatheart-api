@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Builders\UserBuilder;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
+use App\Jobs\CheckIfUserShouldBeAdmin;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -49,6 +50,10 @@ class User extends Authenticatable
     protected static function boot(): void
     {
         parent::boot();
+
+        static::created(function (User $user) {
+            CheckIfUserShouldBeAdmin::dispatch($user);
+        });
 
         static::creating(function ($model) {
             $model->uuid = (string) Str::uuid();
@@ -106,11 +111,6 @@ class User extends Authenticatable
         }
 
         return "{$this->given_name} {$this->family_name}";
-    }
-
-    public function emailVerifications(): HasMany
-    {
-        return $this->hasMany(EmailVerify::class);
     }
 
     public function hasVerifiedEmail(): bool

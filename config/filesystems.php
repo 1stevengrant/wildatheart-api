@@ -34,6 +34,11 @@ return [
             'throw' => false,
             'visibility' => 'public',
         ],
+
+        'memory' => [
+            'driver' => 'local',
+            'root' => storage_path('app/testing'),
+        ],
     ],
 
 ];

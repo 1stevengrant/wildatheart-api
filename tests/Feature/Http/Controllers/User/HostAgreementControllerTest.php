@@ -2,6 +2,10 @@
 
 use App\Models\User;
 
+beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+});
+
 test('that it sets a user as having agreed to the host agreement by adding a timestamp', function () {
     $user = User::factory()->create();
 
