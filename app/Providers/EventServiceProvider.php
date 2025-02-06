@@ -13,11 +13,9 @@ use Illuminate\Auth\Events\Login;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntryDeleted;
 use App\Observers\AttendeeObserver;
-use Illuminate\Auth\Events\Registered;
 use App\Listeners\LogStatamicEntryChanges;
 use App\Listeners\UpdateLastLoginDateTime;
 use App\Listeners\SaveSubsplashItemEntryWithId;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -28,9 +26,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
         Login::class => [
             UpdateLastLoginDateTime::class,
         ],

@@ -3,6 +3,7 @@
 use App\Models\User;
 
 beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->user = User::factory()->create();
 });
 

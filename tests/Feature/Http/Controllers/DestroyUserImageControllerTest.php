@@ -8,18 +8,27 @@ beforeEach(function () {
     $this->event = Event::factory()->fires()->create();
 });
 
-it('deletes a users profile photo', function () {
-    config(['filesystems.default' => 'memory']);
-    Storage::fake();
+test('deletes a users profile photo', function () {
+    // Mock both local and s3 disks since the model explicitly uses s3
+    Storage::fake('local');
+    Storage::fake('s3');
+
     $user = $this->event->host;
     $user->update(['image' => 'profile-photos/1234.jpg']);
 
-    $this->actingAs($user)
-        ->delete(route('user.profile-photo.destroy'))
-        ->assertStatus(303)
+    // Create a fake file to ensure it exists before deletion
+    Storage::disk('s3')->put(
+        'profile-photos/1234.jpg',
+        'fake-content'
+    );
+
+    $response = $this->actingAs($user)
+        ->delete(route('user.profile-photo.destroy'));
+
+    $response->assertStatus(303)
         ->assertSessionHas('notifications.message', 'Profile photo deleted!');
 
-    Storage::disk()->assertMissing('profile-photos/1234.jpg');
+    Storage::disk('s3')->assertMissing('profile-photos/1234.jpg');
 
     expect($user->fresh()->image)->toBeNull();
 });

@@ -46,6 +46,10 @@ jobs:
             REMOTE_DATABASE_PASSWORD=${{ secrets.FORGE_DB_PASSWORD }}
             AUTH0_AUDIENCE=https://pr-${{ github.event.number }}.gondor.wildatheart.org
             AUTH0_REDIRECT_URI=https://pr-${{ github.event.number }}.gondor.wildatheart.org/callback
+            AUTH0_MANAGEMENT_CLIENT_ID=${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
+            AUTH0_MANAGEMENT_CLIENT_SECRET=${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
+            AUTH0_MANAGEMENT_AUDIENCE=https://ransomed-heart.auth0.com/api/v2/
+            AUTH0_MANAGEMENT_OAUTH_TOKEN_ENDPOINT=https://ransomed-heart.auth0.com/oauth/token
             ${{ secrets.LARAVEL_ENV_KEYS }}
           FORGE_NGINX_TEMPLATE: 14550
         run: harbor provision
