@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use Illuminate\Support\Str;
 use App\Jobs\LogActivityJob;
 use Illuminate\Http\Request;
 use Auth0\SDK\Auth0 as Auth0SDK;
 use App\Http\Controllers\Controller;
 use Auth0\SDK\Exception\StateException;
 use Illuminate\Support\Facades\Session;
-use App\Services\Auth0\OAuthTokenService;
-use App\Actions\User\FindCreateUpdateUser;
-use App\Services\Auth0\GetUserProfileService;
 
 class CallbackController extends Controller
 {
@@ -32,16 +31,9 @@ class CallbackController extends Controller
             )));
 
             $auth0User = $this->auth0->getUser();
+            ray($auth0User);
 
-            $oauthToken = OAuthTokenService::run();
-            $auth0UserProfile = GetUserProfileService::run(
-                accessToken: $oauthToken['access_token'],
-                userId: $auth0User['sub']
-            );
-            $phone = $auth0UserProfile['user_metadata']['unverified_phone_number'] ?? null;
-            $auth0User['phone'] = $phone;
-
-            $user = FindCreateUpdateUser::run($auth0User);
+            $user = $this->findOrCreateUser($auth0User);
 
             auth()->login($user);
 
@@ -69,5 +61,18 @@ class CallbackController extends Controller
 
             return redirect()->route('login');
         }
+    }
+
+    protected function findOrCreateUser(array $auth0User): User
+    {
+        return User::firstOrCreate(
+            ['email' => $auth0User['email']],
+            [
+                'given_name' => $auth0User['given_name'] ?? null,
+                'family_name' => $auth0User['family_name'] ?? null,
+                'password' => bcrypt(Str::random(32)),
+                'provider_id' => $auth0User['sub'],
+            ]
+        );
     }
 }
