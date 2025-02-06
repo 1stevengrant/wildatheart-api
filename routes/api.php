@@ -33,8 +33,6 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
 Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
-        Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs.index');
-        Route::get('/blogs/{id}', [BlogsController::class, 'show'])->name('blogs.show');
         Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
 
         Route::get('/media-by-series-id/{slug}', [MediaItemDataController::class, 'mediaBySeriesId'])->name('media.bySeriesId');
@@ -45,6 +43,11 @@ Route::prefix('content')->group(function () {
         Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
         Route::prefix('v1')->name('v1.')->group(function () {
+
+            Route::prefix('blogs')->name('blogs.')->group(function () {
+                Route::get('/', [BlogsController::class, 'index'])->name('index');
+                Route::get('/{uri}', [BlogsController::class, 'show'])->name('show')->where('uri', '.*');
+            });
             Route::prefix('daily-reading')->name('dailyReading.')->group(function () {
                 Route::get('/', [DailyReadingController::class, 'index'])->name('index');
                 Route::get('/recent', [DailyReadingController::class, 'getRecent'])->name('getRecent');
