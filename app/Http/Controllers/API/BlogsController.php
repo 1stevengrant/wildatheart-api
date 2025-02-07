@@ -23,29 +23,27 @@ class BlogsController extends Controller
 
     public function index()
     {
-        return cache()->remember('blogs.index', now()->addHour(), function () {
-            return Entry::query()
-                ->where('collection', 'blogs')
-                ->where('published', true)
-                ->orderBy('date', 'desc')
-                ->get()
-                ->map(function ($entry) {
-                    return $this->createBlogResponse($entry);
-                });
-        });
+        return Entry::query()
+            ->where('collection', 'blogs')
+            ->where('published', true)
+            ->orderBy('date', 'desc')
+            ->get()
+            ->map(function ($entry) {
+                return $this->createBlogResponse($entry);
+            });
     }
 
     public function show(string $uri)
     {
-        return cache()->remember("blogs.show.{$uri}", now()->addHour(), function () use ($uri) {
-            $uriParts = explode('/', $uri);
 
-            if (count($uriParts) === 1) {
-                return $this->handleSingleSegmentUri($uriParts[0]);
-            }
+        $uriParts = explode('/', $uri);
 
-            return $this->handleDoubleSegmentUri($uri);
-        });
+        if (count($uriParts) === 1) {
+            return $this->handleSingleSegmentUri($uriParts[0]);
+        }
+
+        return $this->handleDoubleSegmentUri($uri);
+
     }
 
     protected function createBlogResponse(StatamicEntry $entry)
@@ -125,7 +123,6 @@ class BlogsController extends Controller
 
     public function showByAuthor(string $authorSlug)
     {
-        // return cache()->remember("blogs.show.{$id}", now()->addHour(), function () use ($id) {
         $author = Entry::query()
             ->where('collection', 'authors')
             ->get()
@@ -153,7 +150,6 @@ class BlogsController extends Controller
         $response = BlogResponse::collection($entries);
 
         return $response;
-        // });
     }
 
     protected function generateSummary(string $content)
