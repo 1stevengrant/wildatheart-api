@@ -38,8 +38,10 @@ class ImportBlogs extends Command
                     default => $author = BlogService::UNKNOWN_AUTHOR,
                 };
 
+                // get slug from drupal
+
                 ray([
-                    $author, $title,
+                    $author, $title, $blog['slug']
                 ]);
 
                 $authorEntry = Entry::query()
@@ -58,7 +60,7 @@ class ImportBlogs extends Command
 
                 $entry = Entry::make()
                     ->collection('blogs')
-                    ->slug($title)
+                    ->slug($this->generateSlug($blog['slug']))
                     ->data($newData)
                     ->published($this->determinePublishedStatus($author));
                 $publishedAtDate = Carbon::parse($blog['publishedAt']);
@@ -74,5 +76,11 @@ class ImportBlogs extends Command
     public function determinePublishedStatus(string $author): bool
     {
         return ! ($author === BlogService::UNKNOWN_AUTHOR || $author === BlogService::MORGAN);
+    }
+
+    public function generateSlug(string $slug): string
+    {
+        $slugParts = explode('/', $slug);
+        return end($slugParts);
     }
 }
