@@ -71,12 +71,8 @@ class ImportBlogs extends Command
         $this->output->progressFinish();
     }
 
-    public function determinePublishedStatus($author): bool
+    public function determinePublishedStatus(string $author): bool
     {
-        if ($author === BlogService::UNKNOWN_AUTHOR || $author === BlogService::MORGAN) {
-            return false;
-        }
-
-        return true;
+        return ! ($author === BlogService::UNKNOWN_AUTHOR || $author === BlogService::MORGAN);
     }
 }
