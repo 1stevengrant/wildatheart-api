@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use Illuminate\Http\JsonResponse;
-use Spatie\LaravelData\CursorPaginatedDataCollection;
-use Spatie\LaravelData\DataCollection;
-use Spatie\LaravelData\PaginatedDataCollection;
 use Statamic\Facades\Entry;
+use Illuminate\Http\JsonResponse;
+use Spatie\LaravelData\DataCollection;
 use Statamic\Entries\Entry as StatamicEntry;
+use Spatie\LaravelData\PaginatedDataCollection;
 use App\DataTypeObjects\API\V1\Content\BlogResponse;
+use Spatie\LaravelData\CursorPaginatedDataCollection;
 
 class BlogService
 {
@@ -21,6 +21,8 @@ class BlogService
     public const MORGAN = 'Morgan Snyder';
 
     public const BART = 'Bart Hansen';
+
+    public const UNKNOWN_AUTHOR = 'Unknown Author';
 
     public function createBlogResponse(StatamicEntry $entry): BlogResponse
     {
