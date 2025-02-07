@@ -4,10 +4,10 @@ namespace App\Console\Commands;
 
 use Carbon\Carbon;
 use Statamic\Facades\Entry;
+use App\Services\BlogService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Stevebauman\Purify\Facades\Purify;
-use App\Http\Controllers\API\BlogsController;
 
 class ImportBlogs extends Command
 {
@@ -30,12 +30,12 @@ class ImportBlogs extends Command
                 $title = strip_tags($blog['title']);
 
                 match (true) {
-                    str_contains($blog['slug'], 'stasi') => $author = BlogsController::STASI,
-                    str_contains($blog['slug'], 'john') => $author = BlogsController::JOHN,
-                    str_contains($blog['slug'], 'craig') => $author = BlogsController::CRAIG,
-                    str_contains($blog['slug'], 'morgan') => $author = BlogsController::MORGAN,
-                    str_contains($blog['slug'], 'bart') => $author = BlogsController::BART,
-                    default => $author = BlogsController::UNKNOWN_AUTHOR,
+                    str_contains($blog['slug'], 'stasi') => $author = BlogService::STASI,
+                    str_contains($blog['slug'], 'john') => $author = BlogService::JOHN,
+                    str_contains($blog['slug'], 'craig') => $author = BlogService::CRAIG,
+                    str_contains($blog['slug'], 'morgan') => $author = BlogService::MORGAN,
+                    str_contains($blog['slug'], 'bart') => $author = BlogService::BART,
+                    default => $author = BlogService::UNKNOWN_AUTHOR,
                 };
 
                 ray([
@@ -73,7 +73,7 @@ class ImportBlogs extends Command
 
     public function determinePublishedStatus($author): bool
     {
-        if ($author === BlogsController::UNKNOWN_AUTHOR || $author === BlogsController::MORGAN) {
+        if ($author === BlogService::UNKNOWN_AUTHOR || $author === BlogService::MORGAN) {
             return false;
         }
 
