@@ -10,9 +10,9 @@ class BlogResponse extends EntryResponse
 {
     public string $published_date;
 
-    public string $content;
+    public ?string $author_name;
 
     public string $summary;
 
-    public ?string $author_name;
+    public array|string|null $content;
 }

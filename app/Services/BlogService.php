@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use Statamic\Facades\Entry;
 use Illuminate\Http\JsonResponse;
+use Statamic\Eloquent\Entries\Entry;
 use Spatie\LaravelData\DataCollection;
-use Statamic\Entries\Entry as StatamicEntry;
 use Spatie\LaravelData\PaginatedDataCollection;
 use App\DataTypeObjects\API\V1\Content\BlogResponse;
 use Spatie\LaravelData\CursorPaginatedDataCollection;
@@ -24,7 +23,7 @@ class BlogService
 
     public const UNKNOWN_AUTHOR = 'Unknown Author';
 
-    public function createBlogResponse(StatamicEntry $entry): BlogResponse
+    public function createBlogResponse(Entry $entry): BlogResponse
     {
         return BlogResponse::from([
             ...$entry->toArray(),
@@ -34,7 +33,7 @@ class BlogService
         ]);
     }
 
-    public function handleSingleSegmentUri(string $slug)
+    public function handleSingleSegmentUri(string $slug): BlogResponse|JsonResponse|DataCollection|CursorPaginatedDataCollection|PaginatedDataCollection
     {
         // Try to find author blogs first
         $author = $this->findAuthorBySlug($slug);
@@ -55,7 +54,7 @@ class BlogService
         return $this->createBlogResponse($entry);
     }
 
-    public function handleDoubleSegmentUri(string $uri)
+    public function handleDoubleSegmentUri(string $uri): BlogResponse|JsonResponse
     {
         $entry = Entry::query()
             ->where('collection', 'blogs')
@@ -86,6 +85,7 @@ class BlogService
         $entries = Entry::query()
             ->where('collection', 'blogs')
             ->where('author', $author->id())
+            ->orderBy('date', 'desc')
             ->get()
             ->map(function ($entry) {
                 return $this->createBlogResponse($entry);
@@ -128,35 +128,47 @@ class BlogService
         return BlogResponse::collection($entries);
     }
 
-    public function generateSummary(string $content): array|false|string|null
+    private function generateSummary(string|array $content): string
     {
-        $content = strip_tags($content);
-        $content = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
-        $limit = 200;
+        $plainText = $this->extractPlainText($content);
 
-        if (mb_strlen($content, 'UTF-8') > $limit) {
-            $summary = mb_substr($content, 0, $limit, 'UTF-8');
-            $lastSpace = mb_strrpos($summary, ' ', 0, 'UTF-8');
-            $summary = $lastSpace !== false ? mb_substr($summary, 0, $lastSpace, 'UTF-8') : $summary;
-            $summary .= '...';
-        } else {
-            $summary = $content;
-        }
-
-        return $summary;
+        return $this->createSummary($plainText);
     }
 
-    public function generateUrl(?string $author): string
+    private function extractPlainText(string|array $content): string
     {
-        match ($author) {
-            self::STASI => $url = '/blog/stasi',
-            self::JOHN => $url = '/blog/john',
-            self::CRAIG => $url = '/blog/craig',
-            self::MORGAN => $url = '/blog/morgan',
-            self::BART => $url = '/blog/bart',
-            default => $url = '/blog',
-        };
+        if (is_string($content)) {
+            return strip_tags($content);
+        }
 
-        return $url.'/';
+        $text = [];
+        foreach ($content as $block) {
+            if ($block['type'] === 'paragraph' && isset($block['content'])) {
+                foreach ($block['content'] as $textBlock) {
+                    if (isset($textBlock['text'])) {
+                        $text[] = $textBlock['text'];
+                    }
+                }
+            }
+        }
+
+        return implode(' ', $text);
+    }
+
+    private function createSummary(string $text): string
+    {
+        $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+        $limit = 200;
+
+        if (mb_strlen($text, 'UTF-8') <= $limit) {
+            return $text;
+        }
+
+        $summary = mb_substr($text, 0, $limit, 'UTF-8');
+        $lastSpace = mb_strrpos($summary, ' ', 0, 'UTF-8');
+
+        return $lastSpace !== false
+            ? mb_substr($summary, 0, $lastSpace, 'UTF-8').'...'
+            : $summary.'...';
     }
 }

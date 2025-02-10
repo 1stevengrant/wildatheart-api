@@ -31,6 +31,9 @@ tabs:
                 - prayers
                 - sessions
               container: s3
+              smart_typography: true
+              save_html: true
+              word_count: true
               sets:
                 new_set_group:
                   display: 'New Set Group'
