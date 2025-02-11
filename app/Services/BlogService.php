@@ -5,12 +5,11 @@ namespace App\Services;
 use Illuminate\Http\JsonResponse;
 use Statamic\Eloquent\Entries\Entry;
 use Spatie\LaravelData\DataCollection;
-use Spatie\LaravelData\PaginatedDataCollection;
 use App\DataTypeObjects\API\V1\Content\BlogResponse;
-use Spatie\LaravelData\CursorPaginatedDataCollection;
 
 class BlogService
 {
+    // Keep original constants for backward compatibility
     public const STASI = 'Stasi Eldredge';
 
     public const JOHN = 'John Eldredge';
@@ -23,6 +22,16 @@ class BlogService
 
     public const UNKNOWN_AUTHOR = 'Unknown Author';
 
+    private function getEntryQuery()
+    {
+        return Entry::query()->where('collection', 'blogs');
+    }
+
+    private function getAuthorsQuery()
+    {
+        return Entry::query()->where('collection', 'authors');
+    }
+
     public function createBlogResponse(Entry $entry): BlogResponse
     {
         return BlogResponse::from([
@@ -30,10 +39,11 @@ class BlogService
             'summary' => $this->generateSummary($entry->get('content')),
             'author_name' => $entry->author ? $entry->author->title : null,
             'published_date' => $entry->date(),
+            'featured_image_src' => $entry->get('main_image'),
         ]);
     }
 
-    public function handleSingleSegmentUri(string $slug): BlogResponse|JsonResponse|DataCollection|CursorPaginatedDataCollection|PaginatedDataCollection
+    public function handleSingleSegmentUri(string $slug): BlogResponse|JsonResponse|DataCollection
     {
         // Try to find author blogs first
         $author = $this->findAuthorBySlug($slug);
@@ -42,54 +52,40 @@ class BlogService
         }
 
         // If no author found, try to find single blog
-        $entry = Entry::query()
-            ->where('collection', 'blogs')
+        $entry = $this->getEntryQuery()
             ->where('uri', "/blogs/$slug")
             ->first();
 
-        if (! $entry) {
-            return $this->notFoundResponse();
-        }
-
-        return $this->createBlogResponse($entry);
+        return $entry
+            ? $this->createBlogResponse($entry)
+            : $this->notFoundResponse();
     }
 
     public function handleDoubleSegmentUri(string $uri): BlogResponse|JsonResponse
     {
-        $entry = Entry::query()
-            ->where('collection', 'blogs')
+        $entry = $this->getEntryQuery()
             ->where('uri', "/blogs/$uri")
             ->first();
 
-        if (! $entry) {
-            return $this->notFoundResponse();
-        }
-
-        return $this->createBlogResponse($entry);
+        return $entry
+            ? $this->createBlogResponse($entry)
+            : $this->notFoundResponse();
     }
 
-    public function findAuthorBySlug(string $slug)
+    public function findAuthorBySlug(string $slug): ?Entry
     {
-        return Entry::query()
-            ->where('collection', 'authors')
+        return $this->getAuthorsQuery()
             ->get()
-            ->first(function ($entry) use ($slug) {
-                $slugParts = explode('-', $entry->slug);
-
-                return $slugParts[0] === $slug;
-            });
+            ->first(fn ($entry) => explode('-', $entry->slug)[0] === $slug);
     }
 
-    public function getBlogsByAuthor($author): PaginatedDataCollection|CursorPaginatedDataCollection|DataCollection
+    public function getBlogsByAuthor(Entry $author): DataCollection
     {
-        $entries = Entry::query()
-            ->where('collection', 'blogs')
+        $entries = $this->getEntryQuery()
             ->where('author', $author->id())
             ->orderBy('date', 'desc')
             ->get()
-            ->map(function ($entry) {
-                return $this->createBlogResponse($entry);
-            });
+            ->map(fn ($entry) => $this->createBlogResponse($entry));
 
         return BlogResponse::collection($entries);
     }
@@ -99,33 +95,15 @@ class BlogService
         return response()->json(['message' => 'Entry not found'], 404);
     }
 
-    public function showByAuthor(string $authorSlug): JsonResponse|DataCollection|CursorPaginatedDataCollection|PaginatedDataCollection
+    public function showByAuthor(string $authorSlug): JsonResponse|DataCollection
     {
-        $author = Entry::query()
-            ->where('collection', 'authors')
-            ->get()
-            ->first(function ($entry) use ($authorSlug) {
-                $slugParts = explode('-', $entry->slug);
+        $author = $this->findAuthorBySlug($authorSlug);
 
-                return $slugParts[0] === $authorSlug;
-            });
-
-        $entries = Entry::query()
-            ->where('collection', 'blogs')
-            ->where('author', $author->id())
-            ->get()
-            ->map(function ($entry) {
-                return [
-                    ...$entry->toArray(),
-                    'summary' => $this->generateSummary($entry->get('content')),
-                ];
-            });
-
-        if (! $entries) {
-            return response()->json(['message' => 'Entry not found'], 404);
+        if (! $author) {
+            return $this->notFoundResponse();
         }
 
-        return BlogResponse::collection($entries);
+        return $this->getBlogsByAuthor($author);
     }
 
     private function generateSummary(string|array $content): string

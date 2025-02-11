@@ -62,6 +62,7 @@ tabs:
               container: s3
               type: assets
               display: 'Main Image'
+              max_files: 1
   sidebar:
     display: Sidebar
     sections:
