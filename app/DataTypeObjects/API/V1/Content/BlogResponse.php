@@ -17,4 +17,6 @@ class BlogResponse extends EntryResponse
     public array|string|null $content;
 
     public array|string|null $featured_image_src;
+
+    public string $api_url;
 }

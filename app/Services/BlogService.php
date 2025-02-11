@@ -40,6 +40,7 @@ class BlogService
             'author_name' => $entry->author ? $entry->author->title : null,
             'published_date' => $entry->date(),
             'featured_image_src' => $entry->get('main_image'),
+            'api_url' => config('app.url').'/api/content/v1'.$entry->uri(),
         ]);
     }
 
