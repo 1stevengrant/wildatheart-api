@@ -54,7 +54,7 @@ class ImportBlogs extends Command
         return end($slugParts);
     }
 
-    public function createNewBlogEntry(array $blog)
+    public function createNewBlogEntry(array $blog): void
     {
         $this->info('Importing '.$blog['title']);
         $this->line('');
