@@ -5,13 +5,13 @@ Heart Fires Logo"></a></p>
 
 # Wild at Heart Local
 
-A Laravel-based platform for connecting like-hearted friends of Wild at Heart to events around the world.
+A Laravel-based platform for connecting like-hearted friends of Wild at Heart to events around the world via a map-based interface. Local also includes a headless CMS that powers the main Wild at Heart website.
 
 ## Requirements
 
 To run this locally you will need to make sure you have a SQL db and PHP running on your device. If you're on a Mac, you may want to consider installing the following tools:
 
--   Running PHP - [Laravel Valet](https://laravel.com/docs/10.x/valet) or [Laravel Herd](https://herd.laravel.com/)
+-   Running PHP - [Laravel Valet](https://laravel.com/docs/10.x/valet) or [Laravel Herd](https://herd.laravel.com/). Laravel Herd is the easiest way to get a Laravel project up and running locally.
 -   Running SQL - [DBngin](https://dbngin.com/)
 -   Running Redis - Laravel Herd includes Redis by default
 
@@ -23,7 +23,7 @@ To run this locally you will need to make sure you have a SQL db and PHP running
 
 You will also need to make sure you have the following tools installed:
 
--   [Composer](https://getcomposer.org/) for dependency management.
+-   [Composer](https://getcomposer.org/) for dependency management (included with Herd)
 
 ## Installation
 
@@ -77,6 +77,17 @@ Make sure your server meets the minimum requirements before you start. [Official
 
 ## Notes
 
--   useful when switching branches:
+-   useful terminal commands when switching branches:
 
-    php artisan cache:clear
+    php artisan cache:clear && php artisan config:clear && php artisan view:clear && php artisan route:clear && php artisan event:clear
+
+## Project Specifics
+- [Database](docs/database.md)
+- [Front End](docs/front-end.md)
+- [Auth](docs/auth.md)
+- [API](docs/api.md)
+- [Integrations](docs/integrations.md)
+- [CMS](docs/cms.md)
+- [Deployment](docs/deployment.md)
+- [Testing](docs/testing.md)
+
