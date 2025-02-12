@@ -45,6 +45,8 @@ class Event extends BaseModel
             'welcome_sent' => 'boolean',
             'gift_requested' => 'boolean',
             'sex' => EventSexEnum::class,
+            'view_count' => 'integer',
+            'attendee_count' => 'integer',
         ];
     }
 
@@ -53,6 +55,10 @@ class Event extends BaseModel
     const FOR_WOMEN = 'women';
 
     const DEFAULT_COUNTRY = 'us';
+
+    public const COUNT_TYPE_VIEW = 'view_count';
+
+    public const COUNT_TYPE_ATTENDEE = 'attendee_count';
 
     public function isHost(): bool
     {
