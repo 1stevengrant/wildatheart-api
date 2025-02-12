@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             $table->after('id', function (Blueprint $table) {
-                $table->unsignedInteger('view_count')->default(0);
-                $table->unsignedInteger('attendee_count')->default(0);
+                $table->unsignedBigInteger('view_count')->default(0);
+                $table->unsignedBigInteger('attendee_count')->default(0);
             });
         });
     }

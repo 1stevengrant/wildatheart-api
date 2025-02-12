@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Event;
 
-use App\Jobs\ImportEvent;
+use App\Jobs\Event\ImportEvent;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 

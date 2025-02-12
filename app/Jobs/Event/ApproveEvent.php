@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Event;
 
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use App\Mail\Event\EventApproved;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\LookupLatitudeLongitude;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
