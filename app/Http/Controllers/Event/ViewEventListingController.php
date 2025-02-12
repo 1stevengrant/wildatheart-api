@@ -36,7 +36,7 @@ class ViewEventListingController extends Controller
             logName: 'events',
             description: 'Viewed event listing',
             properties: ['event' => $event, 'user' => auth()->user() ?? null],
-            causedBy: auth()->user() ? auth()->user()->id : null,
+            causedBy: auth()->user() ?? null,
             performedOn: $event,
         ));
 
