@@ -32,13 +32,13 @@ class ViewEventListingController extends Controller
             url: url()->current(),
         );
 
-//        dispatch(new LogActivityJob(
-//            logName: 'events',
-//            description: 'Viewed event listing',
-//            properties: ['event' => $event, 'user' => auth()->user() ?? null],
-//            causedBy: auth()->user() ? auth()->user()->id : null,
-//            performedOn: $event,
-//        ));
+        dispatch(new LogActivityJob(
+            logName: 'events',
+            description: 'Viewed event listing',
+            properties: ['event' => $event, 'user' => auth()->user() ?? null],
+            causedBy: auth()->user() ?? null,
+            performedOn: $event,
+        ));
 
         return inertia('ViewEventPage', [
             'event' => EventResource::make($event)->resolve(),
