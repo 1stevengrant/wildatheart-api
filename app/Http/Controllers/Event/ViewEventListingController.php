@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\Actions\IncreaseEventCounts;
 use App\Models\Event;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ class ViewEventListingController extends Controller
         if (! $event->isApproved() && $event->user_id !== auth()->id()) {
             return redirect()->route('login');
         }
+
+        IncreaseEventCounts::dispatch($event, Event::COUNT_TYPE_VIEW);
 
         $this->seoService->setMetadata(
             title: "Connect with {$event->host_name} for {$event->name} in {$event->location}",

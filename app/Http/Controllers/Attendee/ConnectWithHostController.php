@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee;
 
+use App\Actions\IncreaseEventCounts;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use App\Services\SeoService;
@@ -51,6 +52,8 @@ class ConnectWithHostController extends Controller
             causedBy: $event,
             performedOn: $attendee,
         ));
+
+        IncreaseEventCounts::dispatch($event, Event::COUNT_TYPE_ATTENDEE);
 
         PostAttendeeContactToSlackJob::dispatch($attendee, $event);
 
