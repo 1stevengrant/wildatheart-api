@@ -38,7 +38,7 @@ const ConnectWithHostPage = () => {
         city: auth.user?.city ?? "",
         state: "",
         country: "",
-        opted_into_marketing: true,
+        opted_into_marketing: true as boolean,
     });
 
     const handleConfirmEmailPaste = (
