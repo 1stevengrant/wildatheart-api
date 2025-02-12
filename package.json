@@ -53,7 +53,7 @@
         "@tippyjs/react": "^4.2.6",
         "@u-wave/react-vimeo": "github:u-wave/react-vimeo",
         "@uidotdev/usehooks": "^2.4.1",
-        "axios": "^1.7.2",
+        "axios": "^1.7.9",
         "dayjs": "^1.11.11",
         "flowbite": "^2.5.2",
         "html-react-parser": "^5.1.9",
