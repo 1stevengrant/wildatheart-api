@@ -20,76 +20,76 @@ Statamic as a CMS ships with a headless API that is used in some parts of the Wi
 As we pull content from a number of different sources like Subsplash and Transistor.fm we have created a custom Statamic API that pulls in content from these sources and returns it in a format that is easy to consume by the front end.
 
 #### Alerts
-URL: `/api/content/v1/alerts`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\AlertEntryController@index`
+- URL: `/api/content/v1/alerts`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\AlertEntryController@index`
 
 #### Blogs
-URL: `/api/content/v1/blogs`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\BlogsController@index`
+- URL: `/api/content/v1/blogs`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\BlogsController@index`
 
 Returns a list of all blog posts
 
 #### Contributor Blogs & Single Blog Post
-URL: `/api/content/v1/blogs/{uri}`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\BlogsController@show`
+- URL: `/api/content/v1/blogs/{uri}`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\BlogsController@show`
 
 This endpoint can return the posts for a specific contributor or a single blog post.
 
 #### Daily Reading
-URL: `/api/content/v1/daily-reading`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@index`
+- URL: `/api/content/v1/daily-reading`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@index`
 
 This controller returns the daily reading content for the Wild at Heart website from the Transistor.fm API.
 
 #### Daily Reading Recent
-URL: `/api/content/v1/daily-reading/recent`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@getRecent`
+- URL: `/api/content/v1/daily-reading/recent`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@getRecent`
 
 Returns the most recent daily reading content.
 
 #### Daily Reading Redirect
-URL: `/api/content/v1/daily-reading/redirect/{slug}`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@redirect`
+- URL: `/api/content/v1/daily-reading/redirect/{slug}`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@redirect`
 
 This controller is used to redirect the user to the correct daily reading content based on the slug.
 
 #### Media or Series
-URL: `/api/content/v1/media-or-series/{slugOrUri}`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController@show`
+- URL: `/api/content/v1/media-or-series/{slugOrUri}`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController@show`
 
 @TODO: Add more information about this endpoint
 
 #### Media
-URL: `/api/content/v1/media/{slug}`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\MediaItemEntryController@media`
+- URL: `/api/content/v1/media/{slug}`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\MediaItemEntryController@media`
 
 @TODO: Add more information about this endpoint
 
 #### Page
-URL: `/api/content/v1/page/{slug}`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\PageEntryController@getPageBySlug`
+- URL: `/api/content/v1/page/{slug}`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\PageEntryController@getPageBySlug`
 
 This controller returns a page's content by its slug.
 
 #### Prayers
-URL: `/api/content/v1/prayers`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\PrayersEntryController@index`
+- URL: `/api/content/v1/prayers`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\PrayersEntryController@index`
 
 Returns a list of all prayers
 
 #### Prayers Single
-URL: `/api/content/v1/prayers/{slug}`
-Method: `GET`
-Controller: `App\Http\Controllers\API\V1\Content\PrayersEntryController@show`
+- URL: `/api/content/v1/prayers/{slug}`
+- Method: `GET`
+- Controller: `App\Http\Controllers\API\V1\Content\PrayersEntryController@show`
 
 Returns a single prayer by its slug.

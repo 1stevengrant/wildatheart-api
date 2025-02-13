@@ -1,3 +1,11 @@
+import TriggerAstroBuildFieldtype from "./components/fieldtypes/TriggerAstroBuildFieldtype.vue";
+Statamic.booting(() => {
+    Statamic.$components.register(
+        "trigger_astro_build-fieldtype",
+        TriggerAstroBuildFieldtype
+    );
+});
+
 // add a div with the environment name to the footer
 document.addEventListener("DOMContentLoaded", function () {
     const env = import.meta.env.VITE_APP_ENV;

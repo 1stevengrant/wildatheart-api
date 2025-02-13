@@ -65,6 +65,13 @@ tabs:
       -
         fields:
           -
+            handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: 'Trigger Astro Build Field'
+              hide_display: true
+              instructions: 'This content type is static and needs to rebuild the Astro front end.'
+          -
             handle: slug
             field:
               type: slug
