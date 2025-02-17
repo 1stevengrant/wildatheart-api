@@ -49,6 +49,7 @@ enum CardVariant: string // Change to backed enum
     case portrait = 'portrait';
     case square = 'square';
     case book = 'book';
+    case blog = 'blog-article';
 }
 
 #[TypeScript]
