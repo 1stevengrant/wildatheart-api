@@ -1,4 +1,4 @@
-import TriggerAstroBuildFieldtype from "./components/fieldtypes/TriggerAstroBuildFieldtype.vue";
+import TriggerAstroBuildFieldtype from "./Components/fieldtypes/TriggerAstroBuildFieldtype.vue";
 Statamic.booting(() => {
     Statamic.$components.register(
         "trigger_astro_build-fieldtype",
