@@ -62,4 +62,8 @@ return [
         'cache_duration' => env('TRANSISTOR_CACHE_DURATION'),
     ],
 
+    'cloudflare' => [
+        'astro_build_hook' => env('CLOUDFLARE_ASTRO_BUILD_HOOK'),
+    ],
+
 ];

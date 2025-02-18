@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react";
+import vue2 from "@vitejs/plugin-vue2";
 import laravel from "laravel-vite-plugin";
 import { defineConfig } from "vite";
 
@@ -14,6 +15,7 @@ export default defineConfig({
             refresh: true,
             detectTls: true,
         }),
+        vue2(),
         react(),
     ],
 });
