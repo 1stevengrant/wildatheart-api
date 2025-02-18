@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be4b8e5062be6531e3f684c78188ca2f",
+    "content-hash": "f33c129263aa7ef79a4ac30ffe921a79",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -2186,6 +2186,46 @@
                 }
             ],
             "time": "2023-10-12T05:21:21+00:00"
+        },
+        {
+            "name": "ghijk/wild-at-heart",
+            "version": "dev-feature/astro-dashboard",
+            "dist": {
+                "type": "path",
+                "url": "addons/ghijk/wild-at-heart",
+                "reference": "e40f4e8d4106f200031c41d18fc5d9c96d092ae0"
+            },
+            "require": {
+                "statamic/cms": "^5.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "statamic": {
+                    "name": "Wild At Heart",
+                    "description": "Wild At Heart addon"
+                },
+                "laravel": {
+                    "providers": [
+                        "Ghijk\\WildAtHeart\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ghijk\\WildAtHeart\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Ghijk\\WildAtHeart\\Tests\\": "tests"
+                }
+            },
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "graham-campbell/result-type",
@@ -17331,7 +17371,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "ghijk/wild-at-heart": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

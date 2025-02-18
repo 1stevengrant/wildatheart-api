@@ -1,0 +1,23 @@
+<?php
+
+namespace Ghijk\WildAtHeart\Http\Controllers\Actions;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\RequestException;
+
+class TriggerAstroBuildController extends Controller
+{
+    public function __invoke()
+    {
+        try {
+            $response = Http::post(config('services.cloudflare.astro_build_hook'));
+
+            return response()->json($response->json());
+        } catch (RequestException $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+}

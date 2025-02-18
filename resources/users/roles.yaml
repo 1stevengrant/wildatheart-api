@@ -1,4 +1,17 @@
-# admin:
-#   title: Administrator
-#   permissions:
-#     - super
+blog_editor:
+  title: 'Blog Editor'
+  permissions:
+    - 'access cp'
+    - 'view blogs entries'
+    - 'edit blogs entries'
+    - 'create blogs entries'
+    - 'delete blogs entries'
+    - 'publish blogs entries'
+    - 'reorder blogs entries'
+    - 'edit other authors blogs entries'
+    - 'publish other authors blogs entries'
+    - 'delete other authors blogs entries'
+    - 'view app assets'
+    - 'upload app assets'
+    - 'view s3 assets'
+    - 'upload s3 assets'

@@ -1,0 +1,37 @@
+{
+    "name": "ghijk/wild-at-heart",
+    "autoload": {
+        "psr-4": {
+            "Ghijk\\WildAtHeart\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ghijk\\WildAtHeart\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "statamic/cms": "^5.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Wild At Heart",
+            "description": "Wild At Heart addon"
+        },
+        "laravel": {
+            "providers": [
+                "Ghijk\\WildAtHeart\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
