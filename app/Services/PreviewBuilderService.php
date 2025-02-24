@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Statamic\Eloquent\Entries\Entry;
 use App\DataTypeObjects\ContentPreview;
+use App\DataTypeObjects\Previews\BlogPreview;
 use Statamic\Support\Str;
 
 /**
@@ -174,23 +175,35 @@ class PreviewBuilderService
         return $preview;
     }
 
-    private function buildBlogPreview(Entry $entry)
+    private function buildBlogPreview(Entry $entry): BlogPreview
     {
-        // dd($entry);
-        $plainText = strip_tags(Str::markdown(collect($entry->content)->pluck('text')->implode("\n")));
+        $html = null;
 
+        if (is_array($entry->content)) {
+            $html = Str::markdown(collect($entry->content)->pluck('text')->implode("\n"));
+        } else {
+            $html = $entry->content;
+        }
 
-        $preview = new ContentPreview;
+        $plainText = strip_tags($html);
+
+        $preview = new BlogPreview;
         $bunnyCDN = new BunnyCDNService;
 
         $preview->id = $entry->id;
         $preview->title = $entry->title;
         $preview->description = $plainText;
+        $preview->published_at = $entry->date;
         $preview->uri = $entry->uri;
+        $preview->collection = $entry->collection;
+        $preview->blueprint = $entry->blueprint;
         if ($entry->images && $entry->images->vertical) {
             $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->images->vertical);
         }
 
+        $author = $entry->augmentedValue('author')->value();
+        $preview->author_name = $author->author_name;
+        $preview->author_image_src = $bunnyCDN->getBunnyCDNUrl($author->image);
         return $preview;
     }
 }
