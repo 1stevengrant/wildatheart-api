@@ -2,68 +2,89 @@ tabs:
   main:
     display: Main
     sections:
-      - fields:
-          - handle: title
+      -
+        fields:
+          -
+            handle: title
             field:
               type: text
               required: true
               validate:
                 - required
-          - handle: description
+          -
+            handle: description
             field:
               type: markdown
               localizable: true
               display: Description
-          - handle: speakers
+          -
+            handle: speakers
             field:
               collections:
                 - authors
               type: entries
               display: Speakers
-          - handle: subsplash_series_id
+          -
+            handle: subsplash_series_id
             field:
               type: text
-              display: "Subsplash Series Id"
-          - handle: drupal_url
+              display: 'Subsplash Series Id'
+          -
+            handle: drupal_url
             field:
               type: text
-              display: "Drupal URL"
-          - handle: publish_schedule
+              display: 'Drupal URL'
+          -
+            handle: publish_schedule
             field:
               default: weekly
               type: text
-              display: "How often is it updated?"
-              instructions: "Leave blank if no longer releasing new episodes."
-          - handle: video_or_audio
+              display: 'How often is it updated?'
+              instructions: 'Leave blank if no longer releasing new episodes.'
+          -
+            handle: video_or_audio
             field:
               options:
-                video: "Video Podcast"
-                audio: "Audio Podcast"
+                video: 'Video Podcast'
+                audio: 'Audio Podcast'
               type: select
-              display: "Video or Audio"
-          - handle: spotify_url
+              display: 'Video or Audio'
+          -
+            handle: spotify_url
             field:
               type: link
-              display: "Spotify URL"
-          - handle: itunes_url
+              display: 'Spotify URL'
+          -
+            handle: itunes_url
             field:
               type: link
-              display: "iTunes URL"
-          - handle: youtube_url
+              display: 'iTunes URL'
+          -
+            handle: youtube_url
             field:
               type: link
-              display: "YouTube URL"
-          - handle: rss_feed_url
+              display: 'YouTube URL'
+          -
+            handle: rss_feed_url
             field:
               type: link
-              display: "RSS Feed URL"
+              display: 'RSS Feed URL'
   sidebar:
     display: Sidebar
     sections:
-      - fields:
-          - handle: slug
+      -
+        fields:
+          -
+            handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: 'Trigger Astro Build Field'
+              hide_display: true
+              instructions: 'This content type is static and needs to rebuild the Astro front end.'
+          -
+            handle: slug
             field:
               type: slug
               localizable: true
-              validate: "max:200"
+              validate: 'max:200'
 title: Podcast
