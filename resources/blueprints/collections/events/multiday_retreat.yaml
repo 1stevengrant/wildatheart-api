@@ -2,78 +2,68 @@ tabs:
   main:
     display: Main
     sections:
-      -
-        fields:
-          -
-            import: content
+      - fields:
+          - import: content
             config:
               title:
                 required: true
-          -
-            handle: event_logo
+          - handle: event_logo
             field:
               container: s3
               folder: wp-app/uploads
               type: assets
-              display: 'Event Logo'
+              display: "Event Logo"
               max_files: 1
-          -
-            handle: event_type
+          - handle: event_type
             field:
               taxonomies:
                 - event_types
               type: terms
-              display: 'Event Type'
+              display: "Event Type"
               max_items: 1
-          -
-            handle: related_event_type
+          - handle: related_event_type
             field:
               resource: event_type
               type: belongs_to
-              display: 'Relates To Event'
-              instructions: 'Choose the event type you want to load events from for the map.'
+              display: "Relates To Event"
+              instructions: "Choose the event type you want to load events from for the map."
               mode: select
               create: false
-      -
-        display: Testimonials
+      - display: Testimonials
         fields:
-          -
-            import: testimonials
-      -
-        display: 'Video Testimonials'
+          - import: testimonials
+      - display: "Video Testimonials"
         fields:
-          -
-            import: vertical_videos_block
+          - import: vertical_videos_block
   sidebar:
     display: Sidebar
     sections:
-      -
-        fields:
-          -
-            handle: slug
+      - fields:
+          - handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: "Trigger Astro Build Field"
+              hide_display: true
+              instructions: "This content type is static and needs to rebuild the Astro front end."
+          - handle: slug
             field:
               type: slug
               localizable: true
-              validate: 'max:200'
-          -
-            handle: date
+              validate: "max:200"
+          - handle: date
             field:
               type: date
               required: true
               default: now
               validate:
                 - required
-      -
-        display: Images
+      - display: Images
         fields:
-          -
-            import: images
+          - import: images
   hero:
     display: Hero
     sections:
-      -
-        display: Hero
+      - display: Hero
         fields:
-          -
-            import: hero
-title: 'Multi-day Retreat'
+          - import: hero
+title: "Multi-day Retreat"

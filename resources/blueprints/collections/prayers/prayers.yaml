@@ -3,28 +3,23 @@ tabs:
   main:
     display: Main
     sections:
-      -
-        fields:
-          -
-            handle: title
+      - fields:
+          - handle: title
             field:
               type: text
               required: true
               validate:
                 - required
-          -
-            handle: content
+          - handle: content
             field:
               remove_empty_nodes: false
               type: bard
               display: Content
-          -
-            handle: summary
+          - handle: summary
             field:
               type: textarea
               display: Summary
-          -
-            handle: pdf
+          - handle: pdf
             field:
               max_files: 1
               container: s3
@@ -33,8 +28,7 @@ tabs:
               folder: files/prayers
               dynamic: slug
               restrict: true
-          -
-            handle: mp3
+          - handle: mp3
             field:
               max_files: 1
               container: s3
@@ -43,29 +37,29 @@ tabs:
               folder: files/prayers
               dynamic: slug
               restrict: true
-          -
-            handle: drupal_url
+          - handle: drupal_url
             field:
               type: text
-              display: 'Drupal URL'
-      -
-        display: SEO
+              display: "Drupal URL"
+      - display: SEO
         fields:
-          -
-            import: seo
+          - import: seo
   sidebar:
     display: Sidebar
     sections:
-      -
-        fields:
-          -
-            handle: slug
+      - fields:
+          - handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: "Trigger Astro Build Field"
+              hide_display: true
+              instructions: "This content type is static and needs to rebuild the Astro front end."
+          - handle: slug
             field:
               type: slug
               localizable: true
-              validate: 'max:200'
-          -
-            handle: date
+              validate: "max:200"
+          - handle: date
             field:
               type: date
               required: true

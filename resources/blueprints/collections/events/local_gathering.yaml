@@ -1,42 +1,40 @@
-title: 'Local Gathering'
+title: "Local Gathering"
 tabs:
   main:
     display: Main
     sections:
-      -
-        display: Content
+      - display: Content
         fields:
-          -
-            import: content
+          - import: content
             config:
               title:
                 required: true
-          -
-            handle: related_content
+          - handle: related_content
             field:
               type: link
-              display: 'Related Content'
+              display: "Related Content"
   sidebar:
     display: Sidebar
     sections:
-      -
-        fields:
-          -
-            handle: slug
+      - fields:
+          - handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: "Trigger Astro Build Field"
+              hide_display: true
+              instructions: "This content type is static and needs to rebuild the Astro front end."
+          - handle: slug
             field:
               type: slug
               localizable: true
-              validate: 'max:200'
-          -
-            handle: date
+              validate: "max:200"
+          - handle: date
             field:
               type: date
               required: true
               default: now
               validate:
                 - required
-      -
-        display: Images
+      - display: Images
         fields:
-          -
-            import: images
+          - import: images

@@ -2,4 +2,37 @@ title: Event
 tabs:
   main:
     display: Main
-    fields: {  }
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: 'Trigger Astro Build Field'
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              required: true
+              default: now
+              validate:
+                - required

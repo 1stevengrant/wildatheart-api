@@ -23,6 +23,11 @@ tabs:
       -
         fields:
           -
+            handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: 'Trigger Astro Build Field'
+          -
             handle: slug
             field:
               type: slug

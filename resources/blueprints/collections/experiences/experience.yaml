@@ -3,57 +3,47 @@ tabs:
   main:
     display: Main
     sections:
-      -
-        display: Content
+      - display: Content
         fields:
-          -
-            import: content
+          - import: content
             config:
               title:
                 required: true
-          -
-            import: testimonials
-          -
-            handle: subsplash_series_id
+          - import: testimonials
+          - handle: subsplash_series_id
             field:
               type: text
-              display: 'Subsplash Series ID'
-          -
-            handle: experience_logo
+              display: "Subsplash Series ID"
+          - handle: experience_logo
             field:
               container: s3
               folder: wp-app/uploads
               type: assets
-              display: 'Experience Logo'
+              display: "Experience Logo"
               max_files: 1
-          -
-            handle: host_a_group_link
+          - handle: host_a_group_link
             field:
-              placeholder: 'https://local.wildatheart.org'
-              default: 'https://local.wildatheart.org'
+              placeholder: "https://local.wildatheart.org"
+              default: "https://local.wildatheart.org"
               type: text
-              display: 'Host a group link'
-          -
-            handle: find_a_group_link
+              display: "Host a group link"
+          - handle: find_a_group_link
             field:
-              placeholder: 'https://local.wildatheart.org'
-              default: 'https://local.wildatheart.org'
+              placeholder: "https://local.wildatheart.org"
+              default: "https://local.wildatheart.org"
               type: text
-              display: 'Find a group link'
-          -
-            handle: related_event_type
+              display: "Find a group link"
+          - handle: related_event_type
             field:
               resource: event_type
               type: belongs_to
-              display: 'Relates To Event'
-              instructions: 'Choose the event type you want to load events from for the map.'
+              display: "Relates To Event"
+              instructions: "Choose the event type you want to load events from for the map."
               mode: select
               create: false
-      -
-        display: Sessions
+      - display: Sessions
         fields:
-          -
-            handle: sessions
+          - handle: sessions
             field:
               collections:
                 - media_item
@@ -62,32 +52,31 @@ tabs:
   hero:
     display: Hero
     sections:
-      -
-        display: Hero
+      - display: Hero
         fields:
-          -
-            import: hero
+          - import: hero
   sidebar:
     display: Sidebar
     sections:
-      -
-        fields:
-          -
-            handle: slug
+      - fields:
+          - handle: trigger_astro_build_field
+            field:
+              type: trigger_astro_build
+              display: "Trigger Astro Build Field"
+              hide_display: true
+              instructions: "This content type is static and needs to rebuild the Astro front end."
+          - handle: slug
             field:
               type: slug
               localizable: true
-              validate: 'max:200'
-          -
-            handle: date
+              validate: "max:200"
+          - handle: date
             field:
               type: date
               required: true
               default: now
               validate:
                 - required
-      -
-        display: Images
+      - display: Images
         fields:
-          -
-            import: images
+          - import: images
