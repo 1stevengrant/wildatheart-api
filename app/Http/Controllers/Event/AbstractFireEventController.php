@@ -9,7 +9,6 @@ use App\Actions\Event\ApproveEvent;
 use App\Actions\User\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
-use App\Actions\Event\CheckWelcomeStatus;
 use App\Actions\Event\CreateFireEventType;
 
 abstract class AbstractFireEventController extends Controller
@@ -40,8 +39,6 @@ abstract class AbstractFireEventController extends Controller
         );
 
         ApproveEvent::run(event: $event);
-
-        CheckWelcomeStatus::run(event: $event);
 
         return Inertia::location(to_route('gift.index', ['event' => $event]));
     }

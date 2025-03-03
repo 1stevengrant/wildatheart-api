@@ -8,9 +8,11 @@ use Illuminate\Support\Str;
 use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use App\Jobs\Event\MarkWelcomeSentJob;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Attachment;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -35,7 +37,7 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
             EventType::BECOMING_A_KING_EXPERIENCE => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-experience-created'),
             EventType::BECOMING_A_KING => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-retreat-event-created'),
             EventType::SURVIVAL_SCHOOL => $this->emailTemplate = $this->getEmailTemplate('survival-school-created'),
-            EventType::FIRES => $this->emailTemplate = $this->getEmailTemplate('send-welcome-email'),
+            EventType::FIRES => $this->emailTemplate = $this->getEmailTemplate('send-fires-welcome-email'),
             EventType::CAPTIVATING_FIRE => $this->emailTemplate = $this->getEmailTemplate('captivating-fires-welcome-email'),
         };
     }
@@ -58,21 +60,27 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
         $content = $this->emailTemplate->body;
         $content = str_replace('[event_url]', $this->event->url, $content);
         $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
-        $content = str_replace('[email_address]', $this->event->host->email, $content);
+
         $this->emailContent = Str::markdown($content);
 
         return new Content(
-            markdown: 'mail.event.new-event-created',
+            markdown: 'emails.events.new-event-created'
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {
         return [];
+    }
+
+    public function send($mailer): void
+    {
+        parent::send($mailer);
+        MarkWelcomeSentJob::dispatch($this->event->id);
     }
 }
