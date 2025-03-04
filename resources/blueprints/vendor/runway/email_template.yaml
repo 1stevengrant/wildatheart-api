@@ -32,6 +32,11 @@ tabs:
               display: Subject
               validate: required
           -
+            handle: notes
+            field:
+              type: textarea
+              display: Notes
+          -
             handle: body
             field:
               type: markdown

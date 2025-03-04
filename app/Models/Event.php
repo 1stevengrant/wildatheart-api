@@ -43,6 +43,7 @@ class Event extends BaseModel
             'start_date' => 'date',
             'end_date' => 'date',
             'welcome_sent' => 'boolean',
+            'welcome_sent_at' => 'datetime',
             'gift_requested' => 'boolean',
             'sex' => EventSexEnum::class,
             'view_count' => 'integer',
