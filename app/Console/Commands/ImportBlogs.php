@@ -86,7 +86,7 @@ class ImportBlogs extends Command
 
     public function determinePublishedStatus($author): bool
     {
-        if ($author === BlogsController::UNKNOWN_AUTHOR || $author === BlogsController::MORGAN) {
+        if ($author === $this::UNKNOWN_AUTHOR || $author === $this::MORGAN) {
             return false;
         }
 
