@@ -203,7 +203,7 @@ class PreviewBuilderService
 
         $author = $entry->augmentedValue('author')->value();
         if ($author) {
-            $preview->author_name = $author->author_name;
+            $preview->author_name = $author->title;
             $preview->author_image_src = $bunnyCDN->getBunnyCDNUrl($author->image);
         }
         return $preview;
