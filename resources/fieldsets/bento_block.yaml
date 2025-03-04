@@ -58,6 +58,11 @@ fields:
                                   type: toggle
                                   display: 'Disable Aspect Ratio'
                                   instructions: 'Disables the forced aspect ratio. Useful within Bento Box.'
+                          theme_card_block:
+                            display: 'Theme Card'
+                            fields:
+                              -
+                                import: themecardblock
                 -
                   handle: row_span
                   field:

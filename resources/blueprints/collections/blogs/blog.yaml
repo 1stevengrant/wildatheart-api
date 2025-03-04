@@ -54,11 +54,7 @@ tabs:
               type: entries
               display: Categories
           -
-            handle: main_image
-            field:
-              container: s3
-              type: assets
-              display: 'Main Image'
+            import: seo
   sidebar:
     display: Sidebar
     sections:
@@ -85,4 +81,6 @@ tabs:
               default: now
               validate:
                 - required
+          -
+            import: images
 title: Blog
