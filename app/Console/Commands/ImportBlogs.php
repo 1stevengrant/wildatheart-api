@@ -37,6 +37,26 @@ class ImportBlogs extends Command
         collect($blogs)
             ->each(function ($blog) {
 
+                $bart = Entry::query()
+                    ->where('collection', 'authors')
+                    ->where('title', $this::BART)
+                    ->first();
+                if (!$bart) {
+
+                    $this->info('Creating contributor page for Bart');
+                    $bartData = [
+                        'title' => $this::BART
+                    ];
+
+                    Entry::make()
+                        ->collection('authors')
+                        ->slug($this::BART)
+                        ->data($bartData)
+                        ->date(now())
+                        ->published(true)
+                        ->save();
+                }
+
                 $this->info('Importing ' . $blog['title']);
                 $this->line('');
                 $title = strip_tags($blog['title']);
