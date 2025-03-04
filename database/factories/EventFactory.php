@@ -20,18 +20,18 @@ class EventFactory extends Factory
     public function definition(): array
     {
         return [
-            'phone' => $this->faker->phoneNumber(),
-            'street_address' => $this->faker->streetAddress(),
+            'phone' => fake()->phoneNumber(),
+            'street_address' => fake()->streetAddress(),
             'state' => 'Montana',
             'state_code' => 'MT',
-            'city' => $this->faker->city(),
-            'zip' => $this->faker->postcode(),
-            'longitude' => $this->faker->longitude(),
-            'latitude' => $this->faker->latitude(),
+            'city' => fake()->city(),
+            'zip' => fake()->postcode(),
+            'longitude' => fake()->longitude(),
+            'latitude' => fake()->latitude(),
             'user_id' => User::factory()->create()->id,
             'country' => 'US',
-            'name' => $this->faker->sentence(),
-            'sex' => $this->faker->randomElement([Event::FOR_MEN, Event::FOR_WOMEN]),
+            'name' => fake()->sentence(),
+            'sex' => fake()->randomElement([Event::FOR_MEN, Event::FOR_WOMEN]),
         ];
     }
 
