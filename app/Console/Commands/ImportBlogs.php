@@ -15,6 +15,18 @@ class ImportBlogs extends Command
 
     protected $description = 'Import the blogs from Drupal';
 
+    public const STASI = 'Stasi Eldredge';
+
+    public const JOHN = 'John Eldredge';
+
+    public const CRAIG = 'Craig McConnell';
+
+    public const MORGAN = 'Morgan Snyder';
+
+    public const BART = 'Bart Hansen';
+
+    public const UNKNOWN_AUTHOR = 'Unknown Author';
+
     public function handle()
     {
         $blogs = collect(Http::get('https://wildatheart.org/json/blogs')->json())
@@ -25,21 +37,22 @@ class ImportBlogs extends Command
         collect($blogs)
             ->each(function ($blog) {
 
-                $this->info('Importing '.$blog['title']);
+                $this->info('Importing ' . $blog['title']);
                 $this->line('');
                 $title = strip_tags($blog['title']);
 
                 match (true) {
-                    str_contains($blog['slug'], 'stasi') => $author = BlogsController::STASI,
-                    str_contains($blog['slug'], 'john') => $author = BlogsController::JOHN,
-                    str_contains($blog['slug'], 'craig') => $author = BlogsController::CRAIG,
-                    str_contains($blog['slug'], 'morgan') => $author = BlogsController::MORGAN,
-                    str_contains($blog['slug'], 'bart') => $author = BlogsController::BART,
-                    default => $author = BlogsController::UNKNOWN_AUTHOR,
+                    str_contains($blog['slug'], 'stasi') => $author = $this::STASI,
+                    str_contains($blog['slug'], 'john') => $author = $this::JOHN,
+                    str_contains($blog['slug'], 'craig') => $author = $this::CRAIG,
+                    str_contains($blog['slug'], 'morgan') => $author = $this::MORGAN,
+                    str_contains($blog['slug'], 'bart') => $author = $this::BART,
+                    default => $author = $this::UNKNOWN_AUTHOR,
                 };
 
                 ray([
-                    $author, $title,
+                    $author,
+                    $title,
                 ]);
 
                 $authorEntry = Entry::query()
