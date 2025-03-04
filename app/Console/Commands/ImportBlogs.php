@@ -50,6 +50,10 @@ class ImportBlogs extends Command
                     default => $author = $this::UNKNOWN_AUTHOR,
                 };
 
+                if ($author === $this::MORGAN) {
+                    $this->info('Skipping ' . $blog['title']);
+                    return;
+                }
                 ray([
                     $author,
                     $title,
