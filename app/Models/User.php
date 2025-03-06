@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Builders\UserBuilder;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
+use Laravolt\Avatar\Facade as Avatar;
 use App\Jobs\CheckIfUserShouldBeAdmin;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
@@ -127,6 +128,15 @@ class User extends Authenticatable
             Attendee::class,
             Event::class,
         );
+    }
+
+    public function profilePhoto()
+    {
+        if ($this->image) {
+            return $this->image;
+        }
+
+        return Avatar::create($this->email)->toBase64();
     }
 
     public function deleteProfilePhoto(): void

@@ -6,8 +6,6 @@ use Carbon\Carbon;
 use App\Enums\EventSexEnum;
 use App\Builders\EventBuilder;
 use Spatie\Activitylog\LogOptions;
-use App\Http\Resources\HostResource;
-use Laravolt\Avatar\Facade as Avatar;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
