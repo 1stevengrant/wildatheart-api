@@ -35,7 +35,6 @@ jobs:
           SUBDOMAIN_NAME: pr-${{ github.event.number }}
           FORGE_DEPLOY_SCRIPT: ${{ secrets.LARAVEL_DEPLOY_SCRIPT }}
           FORGE_JOB_SCHEDULER: true
-          FORGE_TIMEOUT_SECONDS: 300
           FORGE_DB_CREATION_REQUIRED: true
           FORGE_SSL_REQUIRED: true
           FORGE_WAIT_ON_SSL: true
