@@ -18,8 +18,8 @@ class EventResource extends JsonResource
 
         return [
             'host' => $this->host_name,
-            'hostObject' => HostResource::make($this->user)->resolve(),
-            'hostFriendlyName' => $this->user->given_name,
+            'host_object' => HostResource::make($this->user)->resolve(),
+            'host_friendly_name' => $this->user->given_name,
             'location' => $this->location,
             'name' => $this->title,
             'city' => $this->city,
@@ -28,10 +28,10 @@ class EventResource extends JsonResource
             'host_photo' => $this->user?->profilePhoto(),
             'url' => $this->url,
             'id' => $this->id,
-            'eventType' => $this->eventType?->slug,
-            'eventTypeImage' => $this->eventType?->image,
-            'eventTypeData' => $this->eventType,
-            'hostId' => $this->user->id,
+            'event_type' => $this->eventType?->slug,
+            'event_type_image' => $this->eventType?->image,
+            'event_type_data' => $this->eventType,
+            'host_id' => $this->user->id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'gift_requested' => $this->hasRequestedGift(),
@@ -40,9 +40,9 @@ class EventResource extends JsonResource
             'start_date' => $this->start_date ?? null,
             'endDate' => $this->end_date ?? null,
             'end_date' => $this->end_date ?? null,
-            'heroImage' => $this->hero_image ?? null,
-            'heroVideo' => $this->hero_video ?? null,
-            'isPrivate' => $this->is_private,
+            'hero_image' => $this->hero_image ?? null,
+            'hero_video' => $this->hero_video ?? null,
+            'is_private' => $this->is_private,
             'type_group' => $this->whenLoaded('eventType', function () {
                 return $this->eventType->group_type;
             }, null),

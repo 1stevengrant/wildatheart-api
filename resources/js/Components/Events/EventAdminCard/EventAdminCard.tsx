@@ -48,7 +48,6 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                         <div className={`flex items-center space-x-2 mt-2`}>
                             <div className="text-sm leading-tighter text-n40">
                                 Hosted by {event.host}
-                                {console.log(event)}
                             </div>
                         </div>
                     </div>

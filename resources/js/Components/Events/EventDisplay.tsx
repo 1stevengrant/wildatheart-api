@@ -26,9 +26,9 @@ export const EventDisplay = ({
         <div
             className={`${className} p-4 flex space-x-4 border rounded-md cursor-pointer border-n700`}
         >
-            {event.eventTypeImage && (
+            {event.event_type_image && (
                 <img
-                    src={imageGenerator(event.eventTypeImage, {
+                    src={imageGenerator(event.event_type_image, {
                         width: 100,
                         height: 100,
                     })}

@@ -45,7 +45,7 @@ const EditEventPage = () => {
     const page = useTypedPage();
     const user = page.props.auth.user!;
     const event = page.props.event as Event;
-    const eventTypeName = event.eventTypeData.name;
+    const eventTypeName = event.event_type_data.name;
     const route = useRoute();
 
     const pageTitle = `Editing ${event.name} ${singular(eventTypeName)}`;
@@ -68,7 +68,7 @@ const EditEventPage = () => {
         street_address: event.street_address,
         city: event.city,
         zip: event.zip,
-        is_private: event.isPrivate,
+        is_private: event.is_private,
         start_date: event.start_date,
     });
 
@@ -154,7 +154,7 @@ const EditEventPage = () => {
         dayjs(event.start_date).isValid() &&
             setStartDate(dayjs(event.start_date).toDate());
 
-        setIsPrivate(event.isPrivate);
+        setIsPrivate(event.is_private);
     }, []);
 
     const handleDateChange = (date: Date | null) => {
@@ -203,9 +203,9 @@ const EditEventPage = () => {
                                 setData("name", e.target.value);
                             }}
                         />
-                        {eventIsAFire(event.eventType) && <div>Fire</div>}
+                        {eventIsAFire(event.event_type) && <div>Fire</div>}
                     </div>
-                    {eventIsAFire(event.eventType) && (
+                    {eventIsAFire(event.event_type) && (
                         <Instruction>
                             This is the name that will be displayed on your Fire
                             page.
@@ -213,7 +213,7 @@ const EditEventPage = () => {
                     )}
                     <InputError message={errors.name} />
                 </div>
-                {eventIsAFire(event.eventType) && <FireNamingGuidelines />}
+                {eventIsAFire(event.event_type) && <FireNamingGuidelines />}
 
                 <MapboxSearch className={"mt-4"} />
                 <div className="mt-4 w-full h-[300px] md:h-[600px]">
@@ -251,7 +251,7 @@ const EditEventPage = () => {
                                     longitude={marker.lng}
                                     latitude={marker.lat}
                                 >
-                                    {eventIsAFire(event.eventType) ? (
+                                    {eventIsAFire(event.event_type) ? (
                                         <FireMarker className={"w-10 h-10"} />
                                     ) : (
                                         <MapPinIcon
@@ -263,7 +263,7 @@ const EditEventPage = () => {
                         </>
                     </Map>
                 </div>
-                {!eventIsAFire(event.eventType) && (
+                {!eventIsAFire(event.event_type) && (
                     <div className={`mt-4`}>
                         <DatePickerInput
                             label="Start date"

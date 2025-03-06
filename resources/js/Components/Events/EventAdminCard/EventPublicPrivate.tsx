@@ -5,7 +5,7 @@ export const EventPublicPrivate = ({ event }: { event: Event }) => {
         <div
             className={`bg-grey-darker px-4 rounded-full py-1 font-semibold absolute -top-4`}
         >
-            {event.isPrivate ? "Private" : "Public"}
+            {event.is_private ? "Private" : "Public"}
         </div>
     );
 };

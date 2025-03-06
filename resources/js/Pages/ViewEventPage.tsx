@@ -46,20 +46,20 @@ const ViewEventPage = () => {
     });
 
     const eventTitle = (event: Event) => {
-        switch (event.eventType) {
+        switch (event.event_type) {
             case EventTypeCaptivatingFires:
                 return `${event.name} Captivating Fire`;
             case EventTypeFires:
                 return `${event.name} Fire`;
             default:
-                return event.eventTypeData.name;
+                return event.event_type_data.name;
         }
     };
 
     const eventDate = (event: Event): string => {
         if (
-            event.eventType === EventTypeCaptivatingFires ||
-            event.eventType === EventTypeFires
+            event.event_type === EventTypeCaptivatingFires ||
+            event.event_type === EventTypeFires
         ) {
             return "";
         }
@@ -69,7 +69,7 @@ const ViewEventPage = () => {
                 EventTypeCaptivatingExperience,
                 EventTypeWahExperience,
                 EventTypeBecomingAKingExperience,
-            ].includes(event.eventType)
+            ].includes(event.event_type)
         ) {
             return `Starts on ${dateFormatter(event.startDate)}`;
         }
@@ -112,18 +112,18 @@ const ViewEventPage = () => {
                                 )}
                             </div>
 
-                            {event.eventTypeData.hero_video && (
+                            {event.event_type_data.hero_video && (
                                 <Vimeo
                                     responsive={true}
                                     className={`mt-[48px]`}
-                                    video={event.eventTypeData.hero_video}
+                                    video={event.event_type_data.hero_video}
                                     autoplay
                                 />
                             )}
 
-                            {event.eventTypeData.hero_image && (
+                            {event.event_type_data.hero_image && (
                                 <img
-                                    src={event.eventTypeData.hero_image}
+                                    src={event.event_type_data.hero_image}
                                     className={`mt-[48px]`}
                                     alt={``}
                                 />
@@ -131,14 +131,14 @@ const ViewEventPage = () => {
 
                             <KeyDetails event={event} />
                             <Markdown className={proseClasses}>
-                                {event.eventTypeData.description}
+                                {event.event_type_data.description}
                             </Markdown>
 
-                            {event.eventTypeData.photos &&
-                                event.eventTypeData.photos.length > 0 && (
+                            {event.event_type_data.photos &&
+                                event.event_type_data.photos.length > 0 && (
                                     <PhotoCarousel
                                         className={`mt-8`}
-                                        images={event.eventTypeData.photos}
+                                        images={event.event_type_data.photos}
                                     />
                                 )}
                         </div>

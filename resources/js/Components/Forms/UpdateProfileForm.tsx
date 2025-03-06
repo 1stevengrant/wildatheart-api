@@ -5,7 +5,6 @@ import { PhoneInput } from "react-international-phone";
 import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { FallbackAvatar } from "@/Components/FallbackAvatar";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
@@ -216,11 +215,6 @@ export const UpdateProfileForm = ({
                                             "inline-flex justify-center space-x-4"
                                         }
                                     >
-                                        {/*<FallbackAvatar*/}
-                                        {/*    name={user.fullname}*/}
-                                        {/*    md5email={user.md5email}*/}
-                                        {/*    size={135}*/}
-                                        {/*/>*/}
                                         <div
                                             className={`flex flex-col justify-center`}
                                         >

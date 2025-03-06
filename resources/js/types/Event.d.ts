@@ -1,7 +1,6 @@
 import { HostType } from "@/types/HostType";
 
 export type Event = {
-    eventTypeImage: string;
     approved_at: string;
     approved_by?: string;
     city: string;
@@ -11,13 +10,12 @@ export type Event = {
     district?: string;
     gift_requested: boolean;
     id: string;
-    eventType: string;
     event_type: any;
     event_type_image?: string;
-    eventTypeData: any;
+    event_type_data: any;
     host: string;
     host_name: string;
-    hostId: number;
+    host_id: number;
     is_existing: boolean;
     latitude: number;
     locality?: string;
@@ -43,6 +41,6 @@ export type Event = {
     endDate?: string;
     sex?: string;
     type_group?: string;
-    hostObject: HostType;
-    isPrivate: boolean;
+    host_object: HostType;
+    is_private: boolean;
 };
