@@ -3,12 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\BlogsController;
+use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
-use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;

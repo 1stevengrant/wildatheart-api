@@ -33,7 +33,7 @@ class MediaItemOrSeriesController extends Controller
         $slug = $slugOrUri;
 
         if (str_contains($slugOrUri, '/')) {
-            $uri = '/media/' . $slugOrUri;
+            $uri = '/media/'.$slugOrUri;
         }
 
         $seriesRedirects = [
@@ -47,7 +47,7 @@ class MediaItemOrSeriesController extends Controller
 
         if (config('features.is_custom_uri_enabled') && in_array($slug, $seriesRedirects)) {
             return RedirectResponse::from([
-                'redirect' => '/media/the-series/' . $slug,
+                'redirect' => '/media/the-series/'.$slug,
                 'code' => 301,
             ]);
         }
@@ -114,7 +114,7 @@ class MediaItemOrSeriesController extends Controller
         }
 
         // Don't get related media items if series isn't defined.
-        if (!!$mediaItemOrSeries->series) {
+        if ((bool) $mediaItemOrSeries->series) {
             $mediaItemsInSeries = Entry::query()
                 ->where('collection', 'media_item')
                 ->where('data->series', 'like', "%{$mediaItemOrSeries->series}")
