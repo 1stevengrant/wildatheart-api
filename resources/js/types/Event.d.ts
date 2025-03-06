@@ -17,7 +17,6 @@ export type Event = {
     eventTypeData: any;
     host: string;
     host_name: string;
-    host_photo: string;
     hostId: number;
     is_existing: boolean;
     latitude: number;
@@ -37,7 +36,7 @@ export type Event = {
     user_id: number;
     welcome_sent: boolean;
     zip?: string;
-    hostPhoto?: string;
+    host_photo?: string;
     start_date?: string;
     startDate?: string;
     end_date?: string;
