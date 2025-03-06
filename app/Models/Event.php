@@ -78,23 +78,23 @@ class Event extends BaseModel
     {
         if (mb_strtolower($this->country) === self::DEFAULT_COUNTRY || mb_strtolower($this->country) === 'united states') {
             if ($this->city && $this->region) {
-                return $this->city.', '.getStateAbbreviation($this->region);
+                return $this->city . ', ' . getStateAbbreviation($this->region);
             }
         }
 
         if (mb_strtolower($this->country) === 'new zealand') {
             if ($this->city && $this->region) {
-                return $this->city.', NZ';
+                return $this->city . ', NZ';
             }
         }
 
         if (mb_strtolower($this->country) === 'gb') {
             if ($this->city && $this->region) {
-                return $this->city.', UK';
+                return $this->city . ', UK';
             }
         }
 
-        return $this->city.', '.mb_strtoupper($this->country);
+        return $this->city . ', ' . mb_strtoupper($this->country);
     }
 
     public function getCityAttribute(): array|string
@@ -142,7 +142,7 @@ class Event extends BaseModel
 
     public function getAdminUrlAttribute(): string
     {
-        return url(config('statamic.cp.route').'/runway/event/'.$this->id);
+        return url(config('statamic.cp.route') . '/runway/event/' . $this->id);
     }
 
     public function getHostNameAttribute()
@@ -153,10 +153,10 @@ class Event extends BaseModel
     public function getTitleAttribute(): ?string
     {
         if ($this->eventType->name === EventType::FIRES) {
-            return $this->name.' Fire';
+            return $this->name . ' Fire';
         }
         if ($this->eventType->name === EventType::CAPTIVATING_FIRE) {
-            return $this->name.' Captivating Fire';
+            return $this->name . ' Captivating Fire';
         }
 
         return $this->eventType->name;

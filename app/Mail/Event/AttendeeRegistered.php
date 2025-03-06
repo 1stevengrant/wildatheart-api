@@ -63,9 +63,9 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
         $eventName = $this->event->eventType->name;
         $link = route('view.event', $this->event);
         if ($eventName === EventType::FIRES) {
-            $eventName = 'Fire (<a href="'.$link.'">'.$this->event->name.' Fire</a>)';
+            $eventName = 'Fire (<a href="' . $link . '">' . $this->event->name . ' Fire</a>)';
         } else {
-            $eventName = '<a href="'.$link.'">'.$this->event->eventType->name.'</a>';
+            $eventName = '<a href="' . $link . '">' . $this->event->eventType->name . '</a>';
         }
         $content = str_replace('[event_name]', $eventName, $content);
         $this->emailContent = $content;

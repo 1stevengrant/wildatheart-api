@@ -35,7 +35,7 @@ test('deployment artisan commands execute without failure', function () {
                 ->and(Artisan::output())->not->toContain('Exception');
 
         } catch (Exception $e) {
-            $this->fail("Command '$command' failed: ".$e->getMessage());
+            $this->fail("Command '$command' failed: " . $e->getMessage());
         }
     }
 

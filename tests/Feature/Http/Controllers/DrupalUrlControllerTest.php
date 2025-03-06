@@ -61,7 +61,7 @@ it('logs activity and redirects to the event when event is found', function () {
     ]);
 
     // Make a GET request to the /drupal/{legacyDrupalUrl} route
-    $response = $this->get('/drupal'.$legacyDrupalUrl);
+    $response = $this->get('/drupal' . $legacyDrupalUrl);
 
     // Assert the response redirects to the event's view route
     $response->assertRedirect(route('view.event', $event));
@@ -73,14 +73,14 @@ it('logs activity and redirects to event type when course matches', function () 
     $eventType = \App\Models\EventType::factory()->create(['name' => \App\Models\EventType::WAH_RETREAT]);
 
     // Make a GET request to the /drupal/courses/{course} route
-    $response = $this->get('/drupal/courses/'.$course);
+    $response = $this->get('/drupal/courses/' . $course);
 
     // Assert the response redirects to the event type's index route
     $response->assertRedirect(route('host.eventType.index', $eventType));
 
     // Assert the activity log was created with the correct description and user
     $this->assertDatabaseHas('activity_log', [
-        'description' => 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/'.$course,
+        'description' => 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
         'causer_id' => $this->user->id,
     ]);
 });
@@ -90,14 +90,14 @@ it('logs activity and redirects to home when course does not match', function ()
     $course = 'unknown-course';
 
     // Make a GET request to the /drupal/courses/{course} route
-    $response = $this->get('/drupal/courses/'.$course);
+    $response = $this->get('/drupal/courses/' . $course);
 
     // Assert the response redirects to the home route
     $response->assertRedirect(route('home'));
 
     // Assert the activity log was created with the correct description and user
     $this->assertDatabaseHas('activity_log', [
-        'description' => 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/'.$course,
+        'description' => 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
         'causer_id' => $this->user->id,
     ]);
 });

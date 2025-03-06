@@ -18,9 +18,9 @@ class UpdateCountsCommand extends Command
 
         foreach ($attendees as $attendee) {
             if ($attendee->event) {
-                $this->info('Updating counts for event: '.$attendee->event->name ?? $attendee->event);
+                $this->info('Updating counts for event: ' . $attendee->event->name ?? $attendee->event);
                 $attendee->event->increment('attendee_count');
-                $this->info('Attendee count is now: '.$attendee->event->attendee_count);
+                $this->info('Attendee count is now: ' . $attendee->event->attendee_count);
             }
 
         }

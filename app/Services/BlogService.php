@@ -53,7 +53,7 @@ class BlogService
             'author_name' => $entry->author ? $entry->author->title : null,
             'published_date' => $entry->date(),
             'featured_image_src' => $this->bunnyCDN->getBunnyCDNUrl($entry->images->vertical),
-            'api_url' => config('app.url').'/api/content/v1'.$entry->uri(),
+            'api_url' => config('app.url') . '/api/content/v1' . $entry->uri(),
         ]);
     }
 
@@ -160,7 +160,7 @@ class BlogService
         $lastSpace = mb_strrpos($summary, ' ', 0, 'UTF-8');
 
         return $lastSpace !== false
-          ? mb_substr($summary, 0, $lastSpace, 'UTF-8').'...'
-          : $summary.'...';
+          ? mb_substr($summary, 0, $lastSpace, 'UTF-8') . '...'
+          : $summary . '...';
     }
 }

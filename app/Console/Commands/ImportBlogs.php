@@ -56,7 +56,7 @@ class ImportBlogs extends Command
                         ->save();
                 }
 
-                $this->info('Importing '.$blog['title']);
+                $this->info('Importing ' . $blog['title']);
                 $this->line('');
                 $title = strip_tags($blog['title']);
 
@@ -70,7 +70,7 @@ class ImportBlogs extends Command
                 };
 
                 if ($author === $this::MORGAN) {
-                    $this->info('Skipping '.$blog['title']);
+                    $this->info('Skipping ' . $blog['title']);
 
                     return;
                 }
