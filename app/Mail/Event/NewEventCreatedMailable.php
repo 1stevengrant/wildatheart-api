@@ -59,7 +59,7 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
     {
         $content = $this->emailTemplate->body;
         $content = str_replace('[event_url]', $this->event->url, $content);
-        $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[event_host_name]', $this->event->user->given_name, $content);
 
         $this->emailContent = Str::markdown($content);
 

@@ -42,14 +42,14 @@ class HandleSendGiftController extends Controller
             event: $event
         );
 
-        Mail::to($event->host->email)
+        Mail::to($event->user->email)
             ->send(new GiftRequested($event));
 
         $dataTransferObject = new GoogleSheetDataTransferObject(
             webhookUrl: $event->eventType->zapier_webhook_url,
             eventId: $event->id,
             eventType: $event->eventType->name,
-            email: $event->host->email,
+            email: $event->user->email,
             quantity: '1',
             first_name: request('given_name'),
             last_name: request('family_name'),

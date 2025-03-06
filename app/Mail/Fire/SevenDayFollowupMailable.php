@@ -50,7 +50,7 @@ class SevenDayFollowupMailable extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
-        $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[event_host_name]', $this->event->user->given_name, $content);
         $content = str_replace('[button_inactive]', $this->getInactiveButtonComponent(), $content);
         $content = str_replace('[button_active]', $this->getActiveButtonComponent(), $content);
         $this->emailContent = \Str::markdown($content);

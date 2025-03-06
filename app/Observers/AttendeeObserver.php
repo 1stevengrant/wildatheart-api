@@ -11,7 +11,7 @@ class AttendeeObserver
 {
     public function created(Attendee $attendee): void
     {
-        Mail::to($attendee->event->host->email)
+        Mail::to($attendee->event->user->email)
             ->send(new AttendeeRegistered(
                 event: $attendee->event,
                 attendee: $attendee

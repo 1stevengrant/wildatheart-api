@@ -17,7 +17,7 @@ class EventResource extends JsonResource
         return [
             'host' => $this->host_name,
             'hostObject' => HostResource::make($this->user)->resolve(),
-            'hostFriendlyName' => $this->host->given_name,
+            'hostFriendlyName' => $this->user->given_name,
             'location' => $this->location,
             'name' => $this->name,
             'city' => $this->city,
@@ -29,7 +29,7 @@ class EventResource extends JsonResource
             'eventType' => $this->eventType->slug,
             'eventTypeImage' => $this->eventType->image,
             'eventTypeData' => $this->eventType,
-            'hostId' => $this->host->id,
+            'hostId' => $this->user->id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'gift_requested' => $this->hasRequestedGift(),

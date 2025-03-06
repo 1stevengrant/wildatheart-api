@@ -25,7 +25,7 @@ class SendNewEventSlackAlert implements ShouldQueue
             return;
         }
         $event = $this->event;
-        $hostName = $event->host->fullName;
+        $hostName = $event->user->fullname;
         $location = $event->location;
         $name = $event->name;
 

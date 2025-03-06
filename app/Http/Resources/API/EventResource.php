@@ -29,7 +29,7 @@ class EventResource extends JsonResource
             'type_group' => $this->eventType->group_type,
             'location' => $this->location,
             'country' => $this->country,
-            'host_name' => $this->host?->full_name ?? null,
+            'host_name' => $this->host?->fullname ?? null,
             'host_photo' => $this->host?->image ?? null,
             'sex' => $this->sex,
             'url' => $this->url,

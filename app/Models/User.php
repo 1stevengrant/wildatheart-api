@@ -99,11 +99,6 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    public function isAttending(Event $event): bool
-    {
-        return $this->attendees->contains('event_id', $event->id);
-    }
-
     public function getFullnameAttribute(): string
     {
         if ($this->given_name === null || $this->family_name === null) {
@@ -116,18 +111,6 @@ class User extends Authenticatable
     public function hasVerifiedEmail(): bool
     {
         return $this->email_verified_at !== null;
-    }
-
-    public function profilePhoto(): ?string
-    {
-        if ($this->image) {
-            makeImagePublic($this->image);
-
-            return $this->image;
-        }
-
-        return null;
-
     }
 
     protected function email(): Attribute
@@ -169,11 +152,6 @@ class User extends Authenticatable
         ])->save();
     }
 
-    public function generalContacts(): HasMany
-    {
-        return $this->hasMany(Attendee::class);
-    }
-
     public function newEloquentBuilder($query): UserBuilder
     {
         return new UserBuilder($query);
@@ -187,11 +165,6 @@ class User extends Authenticatable
     public function address(): HasMany
     {
         return $this->hasMany(Address::class);
-    }
-
-    public function getMd5EmailAttribute(): string
-    {
-        return md5($this->email);
     }
 
     public function isSuperAdmin(): bool

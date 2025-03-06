@@ -9,13 +9,13 @@ beforeEach(function () {
     $this->event = \App\Models\Event::factory()->fires()->create();
     $this->attendees = Attendee::factory()->count(3)->create([
         'event_id' => $this->event->id,
-        'user_id' => $this->event->host->id,
+        'user_id' => $this->event->user->id,
     ]);
 });
 
 test('it marks an attendee as contacted', function () {
 
-    $user = $this->event->host;
+    $user = $this->event->user;
     $attendee = $this->event->attendees->first();
     $this->actingAs($user)
         ->put(route('toggle.contacted', $attendee))
@@ -25,7 +25,7 @@ test('it marks an attendee as contacted', function () {
 });
 
 it('marks an attendee as not contacted', function () {
-    $user = $this->event->host;
+    $user = $this->event->user;
     $attendee = $this->event->attendees->first();
     $attendee->update([
         'contacted_on' => now(),

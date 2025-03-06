@@ -11,14 +11,14 @@ test('a user cannot claim a gift for an event that has already claimed a gift', 
     $event = Event::factory()->fires()->create([
         'gift_requested' => true,
     ]);
-    $this->actingAs($event->host)
+    $this->actingAs($event->user)
         ->get(route('gift.index', $event))
         ->assertStatus(403);
 });
 
 test("a gift for an event that hasn't been claimed, can be requested", function () {
     $event = Event::factory()->fires()->create();
-    $this->actingAs($event->host)
+    $this->actingAs($event->user)
         ->get(route('gift.index', $event))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
