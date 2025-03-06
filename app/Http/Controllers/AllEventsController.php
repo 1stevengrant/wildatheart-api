@@ -25,7 +25,7 @@ class AllEventsController extends Controller
                 ->approved()
                 ->active()
                 ->notPrivate()
-                ->with(['eventType', 'host'])
+                ->with(['eventType', 'user'])
                 ->orderBy('start_date', 'asc')
                 ->get();
         });

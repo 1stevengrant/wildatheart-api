@@ -5,9 +5,7 @@ import { EventAdminActions } from "@/Components/Events/EventAdminCard/EventAdmin
 import { EventPublicPrivate } from "@/Components/Events/EventAdminCard/EventPublicPrivate";
 import { EventTypeGroupIndicator } from "@/Components/Events/EventAdminCard/EventTypeGroupIndicator";
 import { EventTypeImage } from "@/Components/Events/EventTypeImage";
-
 import { defaultIconSize } from "@/helpers/defaultIconSize";
-import { EventTypeFires } from "@/helpers/eventNames";
 import { Event } from "@/types/Event";
 
 export const EventAdminCard = ({ event }: { event: Event }) => {
@@ -28,9 +26,6 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                         <div>
                             <p className="text-white">
                                 {event.name}{" "}
-                                {event.eventType === EventTypeFires && (
-                                    <span>Fire</span>
-                                )}
                                 {event.approved_at ? (
                                     <span
                                         className={`text-xxs bg-p200 text-white px-2 py-1 rounded-full ml-2`}
@@ -53,6 +48,7 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                         <div className={`flex items-center space-x-2 mt-2`}>
                             <div className="text-sm leading-tighter text-n40">
                                 Hosted by {event.host}
+                                {console.log(event)}
                             </div>
                         </div>
                     </div>

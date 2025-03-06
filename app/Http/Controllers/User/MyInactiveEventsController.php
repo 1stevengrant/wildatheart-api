@@ -16,7 +16,7 @@ class MyInactiveEventsController extends Controller
     {
         $events = auth()->user()
             ->events()->inactive()
-            ->with('host')
+            ->with(['user', 'eventType'])
             ->paginate()
             ->through(fn ($event) => EventResource::make($event)->resolve());
 

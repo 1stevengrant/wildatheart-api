@@ -152,11 +152,14 @@ class Event extends BaseModel
 
     public function getTitleAttribute(): ?string
     {
-        if ($this->name) {
+        if ($this->eventType->name === EventType::FIRES) {
             return $this->name.' Fire';
         }
+        if ($this->eventType->name === EventType::CAPTIVATING_FIRE) {
+            return $this->name.' Captivating Fire';
+        }
 
-        return null;
+        return $this->eventType->name;
     }
 
     public function setStateCodeAttribute($value): void

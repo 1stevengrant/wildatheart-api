@@ -14,27 +14,23 @@ class EventResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        ray($this->title);
+
         return [
             'host' => $this->host_name,
             'hostObject' => HostResource::make($this->user)->resolve(),
             'hostFriendlyName' => $this->user->given_name,
             'location' => $this->location,
-            'name' => $this->name,
+            'name' => $this->title,
             'city' => $this->city,
             'state' => $this->state,
             'country' => $this->country,
             'host_photo' => $this->user?->profilePhoto(),
             'url' => $this->url,
             'id' => $this->id,
-            'eventType' => $this->whenLoaded('eventType', function () {
-                return $this->eventType->slug;
-            }),
-            'eventTypeImage' => $this->whenLoaded('eventType', function () {
-                return $this->eventType->image;
-            }),
-            'eventTypeData' => $this->whenLoaded('eventType', function () {
-                return $this->eventType;
-            }),
+            'eventType' => $this->eventType?->slug,
+            'eventTypeImage' => $this->eventType?->image,
+            'eventTypeData' => $this->eventType,
             'hostId' => $this->user->id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,

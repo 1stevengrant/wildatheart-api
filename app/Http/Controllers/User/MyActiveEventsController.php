@@ -15,7 +15,7 @@ class MyActiveEventsController extends Controller
     {
         $activeEvents = auth()->user()
             ->events()->active()
-            ->with('user')
+            ->with(['user', 'eventType'])
             ->paginate()
             ->through(fn ($event) => EventResource::make($event)->resolve());
 
