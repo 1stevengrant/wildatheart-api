@@ -66,7 +66,7 @@ class DbSyncCommand extends Command
             $progressBar = $this->output->createProgressBar($totalSteps);
 
             if ($useSsh === true) {
-                echo $mysqlHostName.PHP_EOL;
+                echo $mysqlHostName . PHP_EOL;
                 $result = 0;
                 exec("ssh $sshUsername@$host -p$sshPort mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString > $fileName 2>/dev/null", $output, $result);
                 if ($result !== 0) {

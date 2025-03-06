@@ -21,7 +21,7 @@ class SupportRequestController extends Controller
         Issue::create([
             'email' => request('email'),
             'name' => request('name'),
-            'subject' => 'Fires Feedback: '.request('subject'),
+            'subject' => 'Fires Feedback: ' . request('subject'),
             'description' => request('description'),
         ]);
 

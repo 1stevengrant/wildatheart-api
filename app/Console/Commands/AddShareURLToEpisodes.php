@@ -50,7 +50,7 @@ class AddShareURLToEpisodes extends Command
             $slug = Str::slug($episode['attributes']['title']);
             $this->info($slug);
 
-            $alternate_url = 'https://wildatheart.org/daily-readings/'.$slug;
+            $alternate_url = 'https://wildatheart.org/daily-readings/' . $slug;
             $data = [
                 'episode' => ['alternate_url' => $alternate_url],
             ];

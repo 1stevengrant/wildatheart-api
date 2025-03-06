@@ -56,9 +56,9 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
         $content = str_replace('[host_name]', $this->event->user->given_name, $content);
         $link = route('view.event', $this->event);
         if ($eventName === EventType::FIRES) {
-            $eventName = '<a href="'.$link.'">'.$this->event->name.' Fire</a>';
+            $eventName = '<a href="' . $link . '">' . $this->event->name . ' Fire</a>';
         } else {
-            $eventName = '<a href="'.$link.'">'.$this->event->eventType->name.'</a>';
+            $eventName = '<a href="' . $link . '">' . $this->event->eventType->name . '</a>';
         }
         $content = str_replace('[event_title]', $eventName, $content);
         $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);

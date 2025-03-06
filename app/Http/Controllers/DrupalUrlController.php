@@ -37,7 +37,7 @@ class DrupalUrlController extends Controller
 
             dispatch(new LogActivityJob(
                 logName: self::LOG_NAME,
-                description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/'.$course,
+                description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
                 causedBy: $request->user(),
             ));
 
@@ -46,7 +46,7 @@ class DrupalUrlController extends Controller
 
         dispatch(new LogActivityJob(
             logName: self::LOG_NAME,
-            description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/'.$course,
+            description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
             causedBy: $request->user(),
         ));
 
@@ -77,11 +77,11 @@ class DrupalUrlController extends Controller
             $any .= '-0';
         }
 
-        $event = \App\Models\Event::whereLegacyDrupalUrl('/'.$any)->first();
+        $event = \App\Models\Event::whereLegacyDrupalUrl('/' . $any)->first();
         if (! $event) {
             dispatch(new LogActivityJob(
                 logName: self::LOG_NAME,
-                description: 'Redirected legacy Drupal URL to Laravel URL: drupal/'.$any,
+                description: 'Redirected legacy Drupal URL to Laravel URL: drupal/' . $any,
                 causedBy: $request->user(),
             ));
 
@@ -90,7 +90,7 @@ class DrupalUrlController extends Controller
 
         dispatch(new LogActivityJob(
             logName: self::LOG_NAME,
-            description: 'Redirected legacy Drupal URL to Laravel URL: drupal/'.$any,
+            description: 'Redirected legacy Drupal URL to Laravel URL: drupal/' . $any,
             causedBy: $request->user(),
         ));
 

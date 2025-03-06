@@ -26,7 +26,7 @@ class SendGridWebhookController extends Controller
 
                 if ($attendee || $user) {
                     SlackAlert::to('events')
-                        ->message('email to '.$item['email'].' '.$item['event']);
+                        ->message('email to ' . $item['email'] . ' ' . $item['event']);
                 }
             });
 

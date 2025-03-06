@@ -41,7 +41,7 @@ class ImportPrayers extends Command
         collect($drupalPrayers)
             ->each(function ($prayer) {
 
-                $this->info('Importing '.$prayer['title']);
+                $this->info('Importing ' . $prayer['title']);
                 $this->line('');
 
                 $existingPrayer = Entry::query()

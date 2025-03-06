@@ -35,7 +35,7 @@ class SendNewEventSlackAlert implements ShouldQueue
                     'type' => 'header',
                     'text' => [
                         'type' => 'plain_text',
-                        'text' => 'New '.Str::singular($event->eventType->name).'!',
+                        'text' => 'New ' . Str::singular($event->eventType->name) . '!',
                         'emoji' => true,
                     ],
                 ],
@@ -72,7 +72,7 @@ class SendNewEventSlackAlert implements ShouldQueue
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => '<'.route('view.event', $event).'|View Public Listing>',
+                        'text' => '<' . route('view.event', $event) . '|View Public Listing>',
                     ],
                 ],
             ]);

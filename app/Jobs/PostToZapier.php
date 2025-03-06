@@ -28,7 +28,7 @@ class PostToZapier implements ShouldQueue
     {
         dispatch(new LogActivityJob(
             logName: 'zapier',
-            description: 'Post to Zapier '.$this->dataTransferObject->webhookUrl,
+            description: 'Post to Zapier ' . $this->dataTransferObject->webhookUrl,
             properties: [
                 'data' => (array) $this->dataTransferObject,
             ]
@@ -41,14 +41,14 @@ class PostToZapier implements ShouldQueue
             if ($response->failed()) {
                 dispatch(new LogActivityJob(
                     logName: 'zapier',
-                    description: 'Post to Zapier failed '.$this->dataTransferObject->webhookUrl,
+                    description: 'Post to Zapier failed ' . $this->dataTransferObject->webhookUrl,
                     properties: [
                         'data' => (array) $this->dataTransferObject,
                         'response' => $response->body(),
                     ]
                 ));
 
-                throw new \Exception('Post to Zapier failed '.$this->dataTransferObject->webhookUrl);
+                throw new \Exception('Post to Zapier failed ' . $this->dataTransferObject->webhookUrl);
             }
         }
     }

@@ -42,9 +42,9 @@ class ImportAmazonBooks extends Command
                 $publish_date = date_create($item->{'ItemInfo'}->{'ContentInfo'}->{'PublicationDate'}->{'DisplayValue'});
                 $title = $item->{'ItemInfo'}->{'Title'}->{'DisplayValue'};
 
-                $this->info('ASIN: '.$item->{'ASIN'});
-                $this->info('  title: '.$title);
-                $this->info('  published: '.date_format($publish_date, 'Y/m/d'));
+                $this->info('ASIN: ' . $item->{'ASIN'});
+                $this->info('  title: ' . $title);
+                $this->info('  published: ' . date_format($publish_date, 'Y/m/d'));
 
                 // TODO: add entry to Statamic collection
             }
@@ -183,28 +183,28 @@ class ImportAmazonBooks extends Command
         $serviceName = 'ProductAdvertisingAPI';
         $region = 'us-east-1';
         $payload = '{'
-            .' "Resources": ['
-            .'  "Images.Primary.Large",'
-            .'  "ItemInfo.ByLineInfo",'
-            .'  "ItemInfo.ContentInfo",'
-            .'  "ItemInfo.ContentRating",'
-            .'  "ItemInfo.Classifications",'
-            .'  "ItemInfo.ExternalIds",'
-            .'  "ItemInfo.Features",'
-            .'  "ItemInfo.ManufactureInfo",'
-            .'  "ItemInfo.ProductInfo",'
-            .'  "ItemInfo.TechnicalInfo",'
-            .'  "ItemInfo.Title",'
-            .'  "ItemInfo.TradeInInfo",'
-            .'  "ParentASIN"'
-            .' ],'
-            .' "ItemIds": ['
-            .'"'.implode('","', $ASINs).'"'
-            .'],'
-            .' "PartnerTag": "'.$partnerTag.'",'
-            .' "PartnerType": "Associates",'
-            .' "Marketplace": "www.amazon.com"'
-            .'}';
+            . ' "Resources": ['
+            . '  "Images.Primary.Large",'
+            . '  "ItemInfo.ByLineInfo",'
+            . '  "ItemInfo.ContentInfo",'
+            . '  "ItemInfo.ContentRating",'
+            . '  "ItemInfo.Classifications",'
+            . '  "ItemInfo.ExternalIds",'
+            . '  "ItemInfo.Features",'
+            . '  "ItemInfo.ManufactureInfo",'
+            . '  "ItemInfo.ProductInfo",'
+            . '  "ItemInfo.TechnicalInfo",'
+            . '  "ItemInfo.Title",'
+            . '  "ItemInfo.TradeInInfo",'
+            . '  "ParentASIN"'
+            . ' ],'
+            . ' "ItemIds": ['
+            . '"' . implode('","', $ASINs) . '"'
+            . '],'
+            . ' "PartnerTag": "' . $partnerTag . '",'
+            . ' "PartnerType": "Associates",'
+            . ' "Marketplace": "www.amazon.com"'
+            . '}';
         $host = 'webservices.amazon.com';
         $uriPath = '/paapi5/getitems';
         $awsv4 = new AwsV4($accessKey, $secretKey);
@@ -220,7 +220,7 @@ class ImportAmazonBooks extends Command
         $headers = $awsv4->getHeaders();
         $headerString = '';
         foreach ($headers as $key => $value) {
-            $headerString .= $key.': '.$value."\r\n";
+            $headerString .= $key . ': ' . $value . "\r\n";
         }
         $params = [
             'http' => [
@@ -231,7 +231,7 @@ class ImportAmazonBooks extends Command
         ];
         $stream = stream_context_create($params);
 
-        $fp = @fopen('https://'.$host.$uriPath, 'rb', false, $stream);
+        $fp = @fopen('https://' . $host . $uriPath, 'rb', false, $stream);
 
         if (! $fp) {
             throw new Exception('Exception Occurred');

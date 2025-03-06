@@ -21,7 +21,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'given_name' => fake()->firstName(),
             'family_name' => fake()->lastName(),
-            'email' => Str::random().'@wildatheart.org',
+            'email' => Str::random() . '@wildatheart.org',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),

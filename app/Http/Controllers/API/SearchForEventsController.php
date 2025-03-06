@@ -51,6 +51,6 @@ class SearchForEventsController extends Controller
 
     private function generateCacheKey(array $validatedData): string
     {
-        return 'events_search_'.md5(json_encode($validatedData));
+        return 'events_search_' . md5(json_encode($validatedData));
     }
 }

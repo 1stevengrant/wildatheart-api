@@ -21,9 +21,9 @@ class BunnyCDNService
         $BUNNY_CDN_URL = config('services.bunny.s3_cdn_url');
 
         if (is_string($asset)) {
-            return $BUNNY_CDN_URL.'/'.$asset;
+            return $BUNNY_CDN_URL . '/' . $asset;
         }
 
-        return $BUNNY_CDN_URL.'/'.$asset->path;
+        return $BUNNY_CDN_URL . '/' . $asset->path;
     }
 }

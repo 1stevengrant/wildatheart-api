@@ -28,7 +28,7 @@ class EventOffsettingService
     {
         $groups = [];
         foreach ($events as $event) {
-            $key = round($event->latitude, 3).','.round($event->longitude, 3);
+            $key = round($event->latitude, 3) . ',' . round($event->longitude, 3);
             $groups[$key][] = $event;
         }
 

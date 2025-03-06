@@ -26,7 +26,7 @@ class LogStatamicEntryChanges
         if ($event instanceof EntryCreated) {
             dispatch(new LogActivityJob(
                 logName: self::LOG_NAME,
-                description: 'Entry created by '.($user instanceof Authenticatable ? $user->fullname : $user),
+                description: 'Entry created by ' . ($user instanceof Authenticatable ? $user->fullname : $user),
                 properties: $entry->data()->toArray(),
                 causedBy: $user,
             ));
@@ -36,7 +36,7 @@ class LogStatamicEntryChanges
 
             dispatch(new LogActivityJob(
                 logName: self::LOG_NAME,
-                description: 'Entry deleted by '.($user instanceof Authenticatable ? $user->fullname : $user),
+                description: 'Entry deleted by ' . ($user instanceof Authenticatable ? $user->fullname : $user),
                 properties: $entry->data()->toArray(),
                 causedBy: $user,
             ));
@@ -81,7 +81,7 @@ class LogStatamicEntryChanges
 
         dispatch(new LogActivityJob(
             logName: self::LOG_NAME,
-            description: 'Entry updated by '.($user instanceof Authenticatable ? $user->fullname : $user),
+            description: 'Entry updated by ' . ($user instanceof Authenticatable ? $user->fullname : $user),
             properties: $differences,
             causedBy: $user,
             tap: function (Activity $activity) use ($entry) {

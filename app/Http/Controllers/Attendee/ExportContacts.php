@@ -13,10 +13,10 @@ class ExportContacts extends Controller
     public function __invoke()
     {
         $eventId = request('event');
-        $csvFileName = 'contacts'.now()->timestamp.'.csv';
+        $csvFileName = 'contacts' . now()->timestamp . '.csv';
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="'.$csvFileName.'"',
+            'Content-Disposition' => 'attachment; filename="' . $csvFileName . '"',
         ];
 
         $handle = fopen('php://output', 'w');

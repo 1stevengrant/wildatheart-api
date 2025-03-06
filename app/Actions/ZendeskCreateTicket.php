@@ -23,7 +23,7 @@ class ZendeskCreateTicket
                 ],
             ];
 
-            $response = Http::withBasicAuth(config('services.zendesk.user').'/token', config('services.zendesk.token'))
+            $response = Http::withBasicAuth(config('services.zendesk.user') . '/token', config('services.zendesk.token'))
                 ->post(config('services.zendesk.ticket_api'), ['ticket' => $payload]);
 
             $statusCode = $response->status();

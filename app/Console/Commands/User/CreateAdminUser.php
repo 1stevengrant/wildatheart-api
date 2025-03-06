@@ -44,7 +44,7 @@ class CreateAdminUser extends Command
             'given_name' => $givenName,
             'email' => $email,
             'password' => bcrypt($password),
-            'name' => $givenName.' '.$familyName,
+            'name' => $givenName . ' ' . $familyName,
         ]);
 
         $user->assignRole(User::ROLE_ADMIN);
