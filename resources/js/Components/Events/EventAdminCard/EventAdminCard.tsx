@@ -5,7 +5,7 @@ import { EventAdminActions } from "@/Components/Events/EventAdminCard/EventAdmin
 import { EventPublicPrivate } from "@/Components/Events/EventAdminCard/EventPublicPrivate";
 import { EventTypeGroupIndicator } from "@/Components/Events/EventAdminCard/EventTypeGroupIndicator";
 import { EventTypeImage } from "@/Components/Events/EventTypeImage";
-import { FallbackAvatar } from "@/Components/FallbackAvatar";
+
 import { defaultIconSize } from "@/helpers/defaultIconSize";
 import { EventTypeFires } from "@/helpers/eventNames";
 import { Event } from "@/types/Event";
@@ -51,11 +51,6 @@ export const EventAdminCard = ({ event }: { event: Event }) => {
                             </p>
                         </div>
                         <div className={`flex items-center space-x-2 mt-2`}>
-                            <FallbackAvatar
-                                size={24}
-                                name={event.hostObject.full_name}
-                                md5email={event.hostObject.md5email}
-                            />
                             <div className="text-sm leading-tighter text-n40">
                                 Hosted by {event.host}
                             </div>

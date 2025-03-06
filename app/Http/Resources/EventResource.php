@@ -26,9 +26,15 @@ class EventResource extends JsonResource
             'host_photo' => $this->user?->profilePhoto(),
             'url' => $this->url,
             'id' => $this->id,
-            'eventType' => $this->eventType->slug,
-            'eventTypeImage' => $this->eventType->image,
-            'eventTypeData' => $this->eventType,
+            'eventType' => $this->whenLoaded('eventType', function () {
+                return $this->eventType->slug;
+            }),
+            'eventTypeImage' => $this->whenLoaded('eventType', function () {
+                return $this->eventType->image;
+            }),
+            'eventTypeData' => $this->whenLoaded('eventType', function () {
+                return $this->eventType;
+            }),
             'hostId' => $this->user->id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
@@ -41,7 +47,9 @@ class EventResource extends JsonResource
             'heroImage' => $this->hero_image ?? null,
             'heroVideo' => $this->hero_video ?? null,
             'isPrivate' => $this->is_private,
-            'type_group' => $this->eventType->group_type,
+            'type_group' => $this->whenLoaded('eventType', function () {
+                return $this->eventType->group_type;
+            }, null),
             'sex' => $this->sex,
         ];
     }

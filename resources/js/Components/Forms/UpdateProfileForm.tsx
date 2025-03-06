@@ -216,11 +216,11 @@ export const UpdateProfileForm = ({
                                             "inline-flex justify-center space-x-4"
                                         }
                                     >
-                                        <FallbackAvatar
-                                            name={user.full_name}
-                                            md5email={user.md5email}
-                                            size={135}
-                                        />
+                                        {/*<FallbackAvatar*/}
+                                        {/*    name={user.fullname}*/}
+                                        {/*    md5email={user.md5email}*/}
+                                        {/*    size={135}*/}
+                                        {/*/>*/}
                                         <div
                                             className={`flex flex-col justify-center`}
                                         >
