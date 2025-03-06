@@ -5,8 +5,8 @@ import { NoSearchResults } from "@/Components/NoSearchResults";
 import { FiltersPanel } from "@/Components/Search/FiltersPanel";
 import { QuickFilters } from "@/Components/Search/QuickFilters";
 import { isSelectedEvent } from "@/helpers/isSelectedEvent";
-import { currentEventState, showFilterPanelState } from "@/store";
-import { eventsListState } from "@/store/eventsAtom";
+import { showFilterPanelState } from "@/store";
+import { eventsListState, currentEventState } from "@/store/eventsAtom";
 
 export const SearchSidebar = () => {
     const [events] = useRecoilState(eventsListState);
