@@ -42,7 +42,7 @@ class CSVEventExport extends Command
                 $event->approved_at ? 'Active' : 'Inactive',
                 $event->created_at,
                 $event->start_date,
-                $event->host->fullname,
+                $event->user->fullname,
                 $event->address?->street_address,
                 $event->address?->city,
                 $event->address?->state,

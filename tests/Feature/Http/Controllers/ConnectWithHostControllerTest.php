@@ -31,7 +31,7 @@ it('makes a connection between the anonymous user and host', function () {
     $this->withoutExceptionHandling();
     $this->post(route('connect.store', $this->event), $this->attributes)
         ->assertRedirect(route('view.event', $this->event))
-        ->assertSessionHas('notifications.message', "Connected with {$this->event->host->fullName}!");
+        ->assertSessionHas('notifications.message', "Connected with {$this->event->user->fullname}!");
 
     Mail::assertQueued(AttendeeRegistered::class);
     Mail::assertQueued(AttendeeConnectedToHost::class);
@@ -44,7 +44,7 @@ it('allows an anonymous user to see the form to connect with an event host', fun
             ->component('ConnectWithHostPage')
         )
         ->assertStatus(200)
-        ->assertSeeHtml('Connect with '.$this->event->host_name);
+        ->assertSeeHtml('Connect with '.$this->event->user_name);
 });
 
 test('making a contact requires a first name', function () {

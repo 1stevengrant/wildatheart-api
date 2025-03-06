@@ -146,7 +146,7 @@ const ViewEventPage = () => {
                         <div className="relative hidden md:block md:w-1/3">
                             <Host
                                 host={event.host}
-                                hostPhoto={event.hostPhoto}
+                                host_photo={event.host_photo}
                             />
 
                             <ConnectWithHost className={"mt-6 sticky top-4"} />

@@ -8,7 +8,7 @@ beforeEach(function () {
 });
 
 test('it allows a user to soft delete their own event', function () {
-    $this->actingAs($this->event->host)
+    $this->actingAs($this->event->user)
         ->delete(route('delete.event', $this->event));
 
     expect($this->event->fresh()->deleted_at)->not->toBeNull();

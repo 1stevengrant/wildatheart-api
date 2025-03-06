@@ -34,7 +34,7 @@ class ConnectWithHostController extends Controller
         $request->validated();
 
         $attendee = $event->attendees()->create([
-            'user_id' => $event->host->id,
+            'user_id' => $event->user->id,
             'given_name' => $request->given_name,
             'family_name' => $request->family_name,
             'email' => $request->email,
@@ -58,7 +58,7 @@ class ConnectWithHostController extends Controller
         PostAttendeeContactToSlackJob::dispatch($attendee, $event);
 
         return to_route('view.event', $event)->with(['notifications' => [
-            'message' => "Connected with {$event->host->fullName}!",
+            'message' => "Connected with {$event->user->fullname}!",
             'connectedWithHost' => true,
             'type' => 'success',
         ],

@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use Statamic\Support\Str;
 use Statamic\Eloquent\Entries\Entry;
 use App\DataTypeObjects\ContentPreview;
 use App\DataTypeObjects\Previews\BlogPreview;
-use Statamic\Support\Str;
 
 /**
  * Service for building preview data for various blueprint and entry types in Statamic
@@ -206,6 +206,7 @@ class PreviewBuilderService
             $preview->author_name = $author->title;
             $preview->author_image_src = $bunnyCDN->getBunnyCDNUrl($author->image);
         }
+
         return $preview;
     }
 }

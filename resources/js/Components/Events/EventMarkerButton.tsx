@@ -11,7 +11,7 @@ import {
     retreatTypeGroup,
 } from "@/helpers/eventTypeGroups";
 import { usePopupInfo } from "@/Hooks/usePopupInfo";
-import { currentEventState } from "@/store";
+import { currentEventState } from "@/store/eventsAtom";
 import { Event } from "@/types/Event";
 
 const generalEventClasses = `w-8 h-8  flex items-center justify-center rounded-full hover:bg-p200 hover:stroke-white shadow-xl hover:shadow-none transition duration-150 ease-in-out`;

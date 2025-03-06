@@ -33,8 +33,8 @@ class PostAttendeeContactToSlackJob implements ShouldQueue
         SlackAlert::to('events')
             ->message(
                 (app()->isProduction() ? '' : '🚧 [TEST] ').
-                $this->attendee->fullName.' contacted '.
-                $this->event->host->fullName.' about their '.
+                $this->attendee->fullname.' contacted '.
+                $this->event->user->fullname.' about their '.
                 Str::singular($this->event->eventType->name).' in '.
                 $this->event->location.' !'
             );

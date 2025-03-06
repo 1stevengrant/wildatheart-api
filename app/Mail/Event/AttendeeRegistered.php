@@ -53,7 +53,7 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
-        $content = str_replace('[host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[host_name]', $this->event->user->given_name, $content);
         $content = str_replace('[attendee_fullname]', $this->attendee->given_name, $content);
         $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);
         $content = str_replace('[attendee_email]', $this->attendee->email, $content);

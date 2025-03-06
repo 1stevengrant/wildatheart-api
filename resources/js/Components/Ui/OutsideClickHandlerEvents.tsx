@@ -5,7 +5,7 @@ import { useSwipeable } from "react-swipeable";
 import { useRecoilState } from "recoil";
 
 import { EventCardMobile } from "@/Components/Events/EventCardMobile";
-import { currentEventState } from "@/store";
+import { currentEventState } from "@/store/eventsAtom";
 
 export const OutsideClickHandlerEvents = () => {
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);

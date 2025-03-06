@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 
+import { Event } from "@/types/Event";
 import { EventType } from "@/types/EventType";
 
 const eventsListState = atom({
@@ -17,4 +18,14 @@ const selectedEventTypeState = atom({
     default: null as EventType | null,
 });
 
-export { eventsListState, eventsListLoadingState, selectedEventTypeState };
+const currentEventState = atom<Event | null | undefined>({
+    key: "currentEvent",
+    default: undefined,
+});
+
+export {
+    eventsListState,
+    eventsListLoadingState,
+    selectedEventTypeState,
+    currentEventState,
+};

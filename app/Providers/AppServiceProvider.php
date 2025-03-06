@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Event::saving(function (Event $event): void {
-            $event->load('host', 'eventType');
+            $event->load('user', 'eventType');
         });
 
         Gate::define('viewPulse', function ($user) {

@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 import { EventCardContent } from "./EventCardContent";
 
 import { isSelectedEvent } from "@/helpers/isSelectedEvent";
-import { currentEventState } from "@/store";
+import { currentEventState } from "@/store/eventsAtom";
 import { Event } from "@/types/Event";
 
 export const EventCard = ({

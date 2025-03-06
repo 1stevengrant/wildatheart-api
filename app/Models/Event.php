@@ -6,8 +6,6 @@ use Carbon\Carbon;
 use App\Enums\EventSexEnum;
 use App\Builders\EventBuilder;
 use Spatie\Activitylog\LogOptions;
-use App\Http\Resources\HostResource;
-use Laravolt\Avatar\Facade as Avatar;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -61,11 +59,6 @@ class Event extends BaseModel
 
     public const COUNT_TYPE_ATTENDEE = 'attendee_count';
 
-    public function isHost(): bool
-    {
-        return auth()->check() && $this->user->id === auth()->user()->id;
-    }
-
     public function isApproved(): bool
     {
         return (bool) $this->approved_at;
@@ -74,32 +67,6 @@ class Event extends BaseModel
     public function hasRequestedGift(): bool
     {
         return (bool) $this->gift_requested;
-    }
-
-    public function hasAddress(): bool
-    {
-        return (bool) $this->address;
-    }
-
-    public function welcomeHasBeenSent()
-    {
-        return $this->welcome_sent;
-    }
-
-    public function hostPhoto(): string
-    {
-        if ($this->host->image) {
-            makeImagePublic($this->host->image);
-
-            return $this->host->image;
-        }
-
-        return Avatar::create($this->host->full_name)->toBase64();
-    }
-
-    public function allAttendeeEmails(): string
-    {
-        return implode(', ', $this->attendees->pluck('email')->toArray());
     }
 
     public function newEloquentBuilder($query): EventBuilder
@@ -163,12 +130,6 @@ class Event extends BaseModel
         $this->save();
     }
 
-    // attribute methods
-    public function getCoordinatesAttribute(): string
-    {
-        return $this->longitude.', '.$this->latitude;
-    }
-
     public function getEmailAttribute(): string
     {
         return $this->user->email;
@@ -186,7 +147,7 @@ class Event extends BaseModel
 
     public function getHostNameAttribute()
     {
-        return $this->host->full_name;
+        return $this->user->full_name;
     }
 
     public function getTitleAttribute(): ?string
@@ -203,11 +164,6 @@ class Event extends BaseModel
         $this->attributes['state'] = getStateAbbreviation(mb_strtoupper($value));
     }
 
-    public function getEventTypeImageAttribute(): string
-    {
-        return $this->eventType->image ?? '';
-    }
-
     public function getStartDateAttribute($value): ?string
     {
         return $value ? Carbon::parse($value)->format('Y-m-d') : null;
@@ -218,11 +174,6 @@ class Event extends BaseModel
         return $value ? Carbon::parse($value)->format('Y-m-d') : null;
     }
 
-    public function getHostObjectAttribute()
-    {
-        return HostResource::make($this->host);
-    }
-
     public function getLongitudeAttribute(): float
     {
         return round($this->attributes['longitude'], 2);
@@ -231,16 +182,6 @@ class Event extends BaseModel
     public function getLatitudeAttribute(): float
     {
         return round($this->attributes['latitude'], 2);
-    }
-
-    public function getMailingAddressAttribute(): string
-    {
-        $mailingAddress = $this->user->addresses()->where('is_primary', true)->first();
-        if (! $mailingAddress) {
-            return 'No mailing address found';
-        }
-
-        return $mailingAddress->street_address.' '.$mailingAddress->address2.' '.$mailingAddress->city.' '.$mailingAddress->state.' '.$mailingAddress->zip.' '.$mailingAddress->country;
     }
 
     // relationship methods
@@ -254,11 +195,6 @@ class Event extends BaseModel
         return $this->belongsTo(User::class);
     }
 
-    public function host(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
     public function address(): HasOne
     {
         return $this->hasOne(Address::class);
@@ -267,14 +203,5 @@ class Event extends BaseModel
     public function eventType(): BelongsTo
     {
         return $this->belongsTo(EventType::class);
-    }
-
-    public function getHostPhotoAttribute(): string
-    {
-        if ($this->host->image) {
-            return $this->host->image;
-        }
-
-        return Avatar::create($this->host->full_name)->toBase64();
     }
 }

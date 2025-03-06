@@ -35,7 +35,7 @@ class SendSevenDayFollowupCommand extends Command
                 activity('fire')
                     ->performedOn($fire)
                     ->log('Followup email sent');
-                Mail::to($fire->host->email)
+                Mail::to($fire->user->email)
                     ->send(new \App\Mail\Fire\SevenDayFollowupMailable($fire));
                 if (config('app.env') === 'local') {
                     dd();
