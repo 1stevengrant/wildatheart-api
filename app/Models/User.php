@@ -191,7 +191,7 @@ class User extends Authenticatable
             ->useLogName('users')
             ->setDescriptionForEvent(function (string $eventName) {
                 $user = auth()->user();
-                $userName = $user ? $user->full_name : 'System';
+                $userName = $user ? $user->fullname : 'System';
 
                 return "User type has been {$eventName} by {$userName}";
             });

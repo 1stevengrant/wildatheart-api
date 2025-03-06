@@ -71,7 +71,7 @@ class Page extends Model
             ->useLogName('pages')
             ->setDescriptionForEvent(function (string $eventName) {
                 $user = auth()->user();
-                $userName = $user ? $user->full_name : 'System';
+                $userName = $user ? $user->fullname : 'System';
 
                 return "Page has been {$eventName} by {$userName}";
             });

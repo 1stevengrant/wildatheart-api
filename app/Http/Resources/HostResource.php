@@ -18,7 +18,7 @@ class HostResource extends JsonResource
             'family_name' => $this->family_name,
             'given_name' => $this->given_name,
             'md5email' => $this->md5email,
-            'full_name' => $this->fullname,
+            'fullname' => $this->fullname,
         ];
     }
 }

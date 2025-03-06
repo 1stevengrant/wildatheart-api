@@ -114,7 +114,7 @@ class Attendee extends BaseModel
             ->useLogName('attendees')
             ->setDescriptionForEvent(function (string $eventName) {
                 $user = auth()->user();
-                $userName = $user ? $user->full_name : 'System';
+                $userName = $user ? $user->fullname : 'System';
 
                 return "Attendee has been {$eventName} by {$userName}";
             });

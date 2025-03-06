@@ -54,7 +54,7 @@ class EventType extends BaseModel
                 'id' => $model->id,
                 'changes' => $model->getDirty(),
                 'log_name' => 'event_types',
-                'user' => auth()->user()?->full_name,
+                'user' => auth()->user()?->fullname,
             ]);
         });
 
@@ -106,7 +106,7 @@ class EventType extends BaseModel
             ->useLogName('event_types')
             ->setDescriptionForEvent(function (string $eventName) {
                 $user = auth()->user();
-                $userName = $user ? $user->full_name : 'System';
+                $userName = $user ? $user->fullname : 'System';
 
                 return "Event type has been {$eventName} by {$userName}";
             });

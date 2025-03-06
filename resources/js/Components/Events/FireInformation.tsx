@@ -118,7 +118,7 @@ export const FireInformation = ({ user }: any) => {
     const [event, setEvent] = useState<any>({
         name: user.given_name + "'s",
         location: "Location TBC",
-        host: user.full_name,
+        host: user.fullname,
         host_photo: user.image,
         country: null,
         eventType: eventType,

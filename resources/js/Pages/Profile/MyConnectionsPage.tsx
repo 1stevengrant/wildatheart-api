@@ -49,7 +49,7 @@ const MyConnectionsPage = () => {
 
                         renderCell: (row) => (
                             <>
-                                <>{row.full_name}</>
+                                <>{row.fullname}</>
                             </>
                         ),
                     },

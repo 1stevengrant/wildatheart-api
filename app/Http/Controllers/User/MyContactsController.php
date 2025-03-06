@@ -20,6 +20,7 @@ class MyContactsController extends Controller
             'myEvents' => auth()->user()->events()->get(),
             'attendees' => new AttendeeCollection(
                 auth()->user()->attendees()
+                    ->with(['event.eventType'])
                     ->orderByName()
                     ->filter(Request::only('event_id'))
                     ->paginate()

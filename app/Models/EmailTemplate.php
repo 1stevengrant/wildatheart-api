@@ -46,7 +46,7 @@ class EmailTemplate extends BaseModel
             ->useLogName('email_templates')
             ->setDescriptionForEvent(function (string $eventName) {
                 $user = auth()->user();
-                $userName = $user ? $user->full_name : 'System';
+                $userName = $user ? $user->fullname : 'System';
 
                 return "Email Template has been {$eventName} by {$userName}";
             });

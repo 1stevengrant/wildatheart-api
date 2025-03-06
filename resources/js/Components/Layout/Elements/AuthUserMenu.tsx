@@ -28,7 +28,7 @@ export const AuthUserMenu = ({ auth }: { auth: any }) => {
                 >
                     <AuthUserAvatar auth={auth} />
                     <span className="sr-only">Your profile</span>
-                    <span aria-hidden="true">{auth.user.full_name}</span>
+                    <span aria-hidden="true">{auth.user.fullname}</span>
                 </button>
             </OutsideClickHandler>
         </li>

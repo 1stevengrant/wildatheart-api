@@ -20,9 +20,9 @@ export const StaticMap = ({
             return;
         }
         let mapMarkerUrl = "";
-        if (event?.eventType.includes("retreat")) {
+        if (event?.event_type.includes("retreat")) {
             mapMarkerUrl = "/svgs/map-marker-retreat.svg";
-        } else if (event?.eventType.includes("experience")) {
+        } else if (event?.event_type.includes("experience")) {
             mapMarkerUrl = "/svgs/map-marker-experience.svg";
         } else {
             mapMarkerUrl = "/svgs/map-marker-fire.svg";

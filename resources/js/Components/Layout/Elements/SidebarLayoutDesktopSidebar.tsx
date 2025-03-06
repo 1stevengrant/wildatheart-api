@@ -43,7 +43,7 @@ export const SidebarLayoutDesktopSidebar = ({ auth }: { auth: any }) => {
                                 <AuthUserAvatar auth={auth} />
                                 <span className="sr-only">Your profile</span>
                                 <span aria-hidden="true">
-                                    {auth.user.full_name}
+                                    {auth.user.fullname}
                                 </span>
                             </button>
                         </li>
