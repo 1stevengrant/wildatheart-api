@@ -11,7 +11,7 @@ import {
     retreatTypeGroup,
 } from "@/helpers/eventTypeGroups";
 import { formatDateRange } from "@/helpers/formatDateRange";
-import { currentEventState } from "@/store";
+import { currentEventState } from "@/store/eventsAtom";
 import { Event } from "@/types/Event";
 
 export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {

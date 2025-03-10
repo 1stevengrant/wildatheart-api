@@ -8,11 +8,9 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class BlogPreview extends ContentPreview
 {
+    public ?string $author_name = null;
 
+    public ?string $author_image_src = null;
 
-  public ?string $author_name = null;
-
-  public ?string $author_image_src = null;
-
-  public ?array $tags = null;
+    public ?array $tags = null;
 }

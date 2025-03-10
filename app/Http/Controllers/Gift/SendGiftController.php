@@ -29,8 +29,7 @@ class SendGiftController extends Controller
                 'type_group' => $event->eventType->group_type,
                 'location' => $event->location,
                 'country' => $event->country,
-                'host_name' => $event->host->full_name,
-                'host_photo' => $event->hostPhoto,
+                'host_name' => $event->user->fullname,
             ],
         ]);
     }

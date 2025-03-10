@@ -38,7 +38,7 @@ class SearchForEventsController extends Controller
                     $validatedData['ne_latitude'],
                     $validatedData['ne_longitude']
                 )
-                ->with(['eventType', 'host'])
+                ->with(['eventType', 'user'])
                 ->orderBy('start_date', 'asc')
                 ->get();
         });
@@ -51,6 +51,6 @@ class SearchForEventsController extends Controller
 
     private function generateCacheKey(array $validatedData): string
     {
-        return 'events_search_'.md5(json_encode($validatedData));
+        return 'events_search_' . md5(json_encode($validatedData));
     }
 }

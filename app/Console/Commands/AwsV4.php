@@ -76,16 +76,16 @@ class AwsV4
     private function prepareCanonicalRequest()
     {
         $canonicalURL = '';
-        $canonicalURL .= $this->httpMethodName."\n";
-        $canonicalURL .= $this->path."\n"."\n";
+        $canonicalURL .= $this->httpMethodName . "\n";
+        $canonicalURL .= $this->path . "\n" . "\n";
         $signedHeaders = '';
         foreach ($this->awsHeaders as $key => $value) {
-            $signedHeaders .= $key.';';
-            $canonicalURL .= $key.':'.$value."\n";
+            $signedHeaders .= $key . ';';
+            $canonicalURL .= $key . ':' . $value . "\n";
         }
         $canonicalURL .= "\n";
         $this->strSignedHeader = mb_substr($signedHeaders, 0, -1);
-        $canonicalURL .= $this->strSignedHeader."\n";
+        $canonicalURL .= $this->strSignedHeader . "\n";
         $canonicalURL .= $this->generateHex($this->payload);
 
         return $canonicalURL;
@@ -94,9 +94,9 @@ class AwsV4
     private function prepareStringToSign($canonicalURL)
     {
         $stringToSign = '';
-        $stringToSign .= $this->HMACAlgorithm."\n";
-        $stringToSign .= $this->xAmzDate."\n";
-        $stringToSign .= $this->currentDate.'/'.$this->regionName.'/'.$this->serviceName.'/'.$this->aws4Request."\n";
+        $stringToSign .= $this->HMACAlgorithm . "\n";
+        $stringToSign .= $this->xAmzDate . "\n";
+        $stringToSign .= $this->currentDate . '/' . $this->regionName . '/' . $this->serviceName . '/' . $this->aws4Request . "\n";
         $stringToSign .= $this->generateHex($canonicalURL);
 
         return $stringToSign;
@@ -135,7 +135,7 @@ class AwsV4
 
     private function buildAuthorizationString($strSignature)
     {
-        return $this->HMACAlgorithm.' '.'Credential='.$this->accessKey.'/'.$this->getDate().'/'.$this->regionName.'/'.$this->serviceName.'/'.$this->aws4Request.','.'SignedHeaders='.$this->strSignedHeader.','.'Signature='.$strSignature;
+        return $this->HMACAlgorithm . ' ' . 'Credential=' . $this->accessKey . '/' . $this->getDate() . '/' . $this->regionName . '/' . $this->serviceName . '/' . $this->aws4Request . ',' . 'SignedHeaders=' . $this->strSignedHeader . ',' . 'Signature=' . $strSignature;
     }
 
     private function generateHex($data)
@@ -145,7 +145,7 @@ class AwsV4
 
     private function getSignatureKey($key, $date, $regionName, $serviceName)
     {
-        $kSecret = 'AWS4'.$key;
+        $kSecret = 'AWS4' . $key;
         $kDate = hash_hmac('sha256', $date, $kSecret, true);
         $kRegion = hash_hmac('sha256', $regionName, $kDate, true);
         $kService = hash_hmac('sha256', $serviceName, $kRegion, true);

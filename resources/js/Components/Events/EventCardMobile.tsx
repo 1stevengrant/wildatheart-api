@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 
 import { EventCardContent } from "./EventCardContent";
 
-import { currentEventState } from "@/store";
+import { currentEventState } from "@/store/eventsAtom";
 
 export const EventCardMobile = ({ className }: { className?: string }) => {
     const [currentEvent] = useRecoilState(currentEventState);

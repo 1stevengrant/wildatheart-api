@@ -14,7 +14,7 @@ class EditEventController extends Controller
      */
     public function __invoke(Request $request, Event $event)
     {
-        if ($event->host->id !== auth()->id()) {
+        if ($event->user->id !== auth()->id()) {
             return redirect()->route('home');
         }
 

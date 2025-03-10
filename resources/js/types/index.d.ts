@@ -10,7 +10,7 @@ export interface User {
     id: number;
     given_name: string;
     family_name: string;
-    full_name: string;
+    fullname: string;
     email: string;
     opted_into_marketing: boolean;
     image: string;
@@ -58,7 +58,7 @@ export interface Attendee {
     updated_at: string;
     event_type_name: string;
     event_name: string;
-    full_name: string;
+    fullname: string;
 }
 
 export type PaginatedData<T> = {

@@ -40,7 +40,7 @@ test('a user cannot see an event that is unpublished', function () {
 
 test('only the host can see their unpublished event', function () {
     $this->withoutExceptionHandling();
-    $this->actingAs($this->notApprovedEvent->host)
+    $this->actingAs($this->notApprovedEvent->user)
         ->get(route('view.event', ['event' => $this->notApprovedEvent]))
         ->assertStatus(200);
 });

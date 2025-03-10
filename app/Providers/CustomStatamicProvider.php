@@ -37,11 +37,11 @@ class CustomStatamicProvider extends ServiceProvider
                 if ($series) {
                     $seriesUri = $series->uri();
 
-                    return $seriesUri.'/'.$entry->slug;
+                    return $seriesUri . '/' . $entry->slug;
                 }
             }
 
-            return 'media'.'/'.$entry->slug();
+            return 'media' . '/' . $entry->slug();
         });
 
         Collection::computed('blogs', 'blog_url', function ($entry, $value) {
@@ -54,12 +54,12 @@ class CustomStatamicProvider extends ServiceProvider
                     // and we only need the first name for now.
                     $authorSlug = explode('-', $author->slug)[0];
 
-                    return 'blogs/'.$authorSlug.'/'.$entry->slug;
+                    return 'blogs/' . $authorSlug . '/' . $entry->slug;
                 }
             }
 
             // If there is no author, we will use the slug as is.
-            return 'blogs/'.$entry->slug;
+            return 'blogs/' . $entry->slug;
         });
 
         Statamic::vite('app', [

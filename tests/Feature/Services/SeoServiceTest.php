@@ -7,5 +7,5 @@ beforeEach(function () {
 it('sets the appropriate meta data for a page', function () {
     $response = $this->get(route('view.event', $this->event));
 
-    expect($response)->assertSeeHtml("Connect with {$this->event->host_name} for {$this->event->name} in {$this->event->location}");
+    expect($response)->assertSeeHtml("Connect with {$this->event->user->fullname} for {$this->event->name} in {$this->event->location}");
 });

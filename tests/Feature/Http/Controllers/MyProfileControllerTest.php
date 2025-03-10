@@ -10,7 +10,7 @@ beforeEach(function () {
 });
 
 test('it shows my profile to be edited', function () {
-    $this->actingAs($this->event->host)
+    $this->actingAs($this->event->user)
         ->get(route('my.profile'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page

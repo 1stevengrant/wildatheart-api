@@ -57,7 +57,7 @@ class TransistorService
     {
         $TRANSISTOR_API_KEY = config('services.transistor.api_key');
 
-        $url = config('services.transistor.api_url').'episodes/'.$episodeId;
+        $url = config('services.transistor.api_url') . 'episodes/' . $episodeId;
 
         $response = Http::withHeaders([
             'x-api-key' => $TRANSISTOR_API_KEY,
@@ -90,7 +90,7 @@ class TransistorService
      */
     public function getRecent($showId, $count = 1)
     {
-        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status=published&pagination[per]='.$count;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
         $json = $this->transistorFetch($url);
 
         if (isset($json['errors']) || ! isset($json['data'])) {
@@ -104,7 +104,7 @@ class TransistorService
     {
         $pageSize = 1200;
 
-        $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]='.$pageSize;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize;
 
         $json = $this->transistorFetch($url);
 
@@ -121,7 +121,7 @@ class TransistorService
             while ($currentPage < $json['meta']['totalPages']) {
                 $currentPage += 1;
 
-                $url = config('services.transistor.api_url').'episodes?show_id='.$showId.'&status='.$status.'&pagination[per]='.$pageSize.'&pagination[page]='.$currentPage;
+                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize . '&pagination[page]=' . $currentPage;
                 $json = $this->transistorFetch($url);
                 if (! isset($json['errors'])) {
                     $data = array_merge($data, $json['data']);

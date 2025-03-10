@@ -12,7 +12,7 @@ class AttendeeCollection extends ResourceCollection
     {
         return $this->collection->map(fn ($attendee) => [
             'id' => $attendee->id,
-            'full_name' => $attendee->full_name,
+            'fullname' => $attendee->fullname,
             'family_name' => $attendee->family_name,
             'given_name' => $attendee->given_name,
             'phone' => $attendee->phone,

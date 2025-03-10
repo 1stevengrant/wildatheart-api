@@ -67,7 +67,7 @@ class Attendee extends BaseModel
     protected function contactNumber(): Attribute
     {
         return Attribute::make(
-            get: fn () => '+'.$this->country_code.$this->phone,
+            get: fn () => '+' . $this->country_code . $this->phone,
         );
     }
 
@@ -90,9 +90,9 @@ class Attendee extends BaseModel
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('given_name', 'like', '%'.$search.'%')
-                    ->orWhere('family_name_name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                $query->where('given_name', 'like', '%' . $search . '%')
+                    ->orWhere('family_name_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         })->when($filters['event_id'] ?? null, function ($query, $eventId) {
             $query->whereEventId($eventId);
@@ -114,7 +114,7 @@ class Attendee extends BaseModel
             ->useLogName('attendees')
             ->setDescriptionForEvent(function (string $eventName) {
                 $user = auth()->user();
-                $userName = $user ? $user->full_name : 'System';
+                $userName = $user ? $user->fullname : 'System';
 
                 return "Attendee has been {$eventName} by {$userName}";
             });

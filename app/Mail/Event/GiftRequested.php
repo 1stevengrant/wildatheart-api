@@ -38,7 +38,7 @@ class GiftRequested extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
-        $content = str_replace('[event_host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[event_host_name]', $this->event->user->given_name, $content);
         $content = str_replace('[email_address]', config('mail.from.address'), $content);
         $this->emailContent = $content;
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Statamic\Entries\Entry;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -52,7 +53,7 @@ class SubsplashService
         }
 
         $accessToken = $this->getAccessToken();
-        $token = 'Bearer '.$accessToken;
+        $token = 'Bearer ' . $accessToken;
 
         $response = Http::withHeaders([
             'Accept' => 'application/vnd.api+json',
@@ -87,6 +88,13 @@ class SubsplashService
     public function getMediaSeries($mediaSeriesId)
     {
         return $this->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$mediaSeriesId}");
+    }
+
+    public function getMediaSeriesFromItemId($mediaItemId)
+    {
+
+        $mediaItem = $this->getMediaItem($mediaItemId);
+        return (Arr::get($mediaItem, "_embedded.media-series.id", null));
     }
 
     public function getRelatedMediaItems($seriesId)

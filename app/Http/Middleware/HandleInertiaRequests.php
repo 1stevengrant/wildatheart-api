@@ -47,7 +47,16 @@ class HandleInertiaRequests extends Middleware
 
     protected function transformUser($user): array
     {
-        return array_merge($user->only('id', 'given_name', 'family_name', 'full_name', 'email', 'phone', 'opted_into_marketing', 'profile_step', 'md5email'), [
+        return array_merge($user->only(
+            'id',
+            'given_name',
+            'family_name',
+            'fullname',
+            'email',
+            'phone',
+            'opted_into_marketing',
+            'profile_step'
+        ), [
             'image' => $user->profilePhoto(),
         ]);
     }

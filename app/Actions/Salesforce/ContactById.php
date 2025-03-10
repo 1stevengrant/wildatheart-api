@@ -11,7 +11,7 @@ class ContactById
 
     public function handle(string $id)
     {
-        $result = Forrest::sobjects('Contact/'.$id);
+        $result = Forrest::sobjects('Contact/' . $id);
 
         return $result;
     }

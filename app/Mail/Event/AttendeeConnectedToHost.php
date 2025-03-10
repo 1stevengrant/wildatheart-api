@@ -38,7 +38,8 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $subject = $this->emailTemplate->subject;
-        $subject = str_replace('[event_title]', $this->event->title, $subject);
+
+        $subject = str_replace('[event_title]', $this->event->eventType->name, $subject);
 
         return new Envelope(
             subject: $subject
@@ -52,12 +53,12 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     {
         $content = $this->emailTemplate->body;
         $eventName = $this->event->eventType->name;
-        $content = str_replace('[host_name]', $this->event->host->given_name, $content);
+        $content = str_replace('[host_name]', $this->event->user->given_name, $content);
         $link = route('view.event', $this->event);
         if ($eventName === EventType::FIRES) {
-            $eventName = '<a href="'.$link.'">'.$this->event->name.' Fire</a>';
+            $eventName = '<a href="' . $link . '">' . $this->event->name . ' Fire</a>';
         } else {
-            $eventName = '<a href="'.$link.'">'.$this->event->eventType->name.'</a>';
+            $eventName = '<a href="' . $link . '">' . $this->event->eventType->name . '</a>';
         }
         $content = str_replace('[event_title]', $eventName, $content);
         $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);

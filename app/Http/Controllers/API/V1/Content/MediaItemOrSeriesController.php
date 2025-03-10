@@ -114,7 +114,7 @@ class MediaItemOrSeriesController extends Controller
         }
 
         // Don't get related media items if series isn't defined.
-        if (!!$mediaItemOrSeries->series) {
+        if ((bool) $mediaItemOrSeries->series) {
             $mediaItemsInSeries = Entry::query()
                 ->where('collection', 'media_item')
                 ->where('data->series', 'like', "%{$mediaItemOrSeries->series}")

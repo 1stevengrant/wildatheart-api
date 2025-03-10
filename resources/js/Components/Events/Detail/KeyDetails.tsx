@@ -5,14 +5,14 @@ import { Event } from "@/types/Event";
 export const KeyDetails = ({ event }: { event: Event }) => {
     return (
         <>
-            {event.eventTypeData.key_details &&
-                event.eventTypeData.key_details.length > 0 && (
+            {event.event_type_data.key_details &&
+                event.event_type_data.key_details.length > 0 && (
                     <div>
                         <HeadingOne className={`mt-[48px]`}>
                             Key Details
                         </HeadingOne>
                         <ul className={`my-8`}>
-                            {event.eventTypeData.key_details.map(
+                            {event.event_type_data.key_details.map(
                                 (item: KeyDetailItem) => (
                                     <li
                                         className="mb-4 flex items-start"

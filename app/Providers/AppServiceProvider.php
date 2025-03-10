@@ -8,6 +8,7 @@ use Statamic\Statamic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
@@ -35,12 +36,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Model::preventLazyLoading(! app()->isProduction());
+
         Statamic::vite('app', [
             'resources/js/cp.js',
         ]);
 
         Event::saving(function (Event $event): void {
-            $event->load('host', 'eventType');
+            $event->load('user', 'eventType');
         });
 
         Gate::define('viewPulse', function ($user) {

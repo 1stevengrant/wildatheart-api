@@ -13,7 +13,7 @@ test('deletes a users profile photo', function () {
     Storage::fake('local');
     Storage::fake('s3');
 
-    $user = $this->event->host;
+    $user = $this->event->user;
     $user->update(['image' => 'profile-photos/1234.jpg']);
 
     // Create a fake file to ensure it exists before deletion

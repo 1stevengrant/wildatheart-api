@@ -7,7 +7,6 @@ use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Stevebauman\Purify\Facades\Purify;
-use App\Http\Controllers\API\BlogsController;
 
 class ImportBlogs extends Command
 {
@@ -41,11 +40,11 @@ class ImportBlogs extends Command
                     ->where('collection', 'authors')
                     ->where('title', $this::BART)
                     ->first();
-                if (!$bart) {
+                if (! $bart) {
 
                     $this->info('Creating contributor page for Bart');
                     $bartData = [
-                        'title' => $this::BART
+                        'title' => $this::BART,
                     ];
 
                     Entry::make()
@@ -72,6 +71,7 @@ class ImportBlogs extends Command
 
                 if ($author === $this::MORGAN) {
                     $this->info('Skipping ' . $blog['title']);
+
                     return;
                 }
                 ray([

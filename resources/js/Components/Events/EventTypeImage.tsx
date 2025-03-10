@@ -4,10 +4,10 @@ import { Event } from "@/types/Event";
 export const EventTypeImage = ({ event }: { event: Event }) => {
     return (
         <>
-            {event.eventTypeImage ? (
+            {event.event_type_image ? (
                 <div>
                     <img
-                        src={imageGenerator(event.eventTypeImage, {
+                        src={imageGenerator(event.event_type_image, {
                             height: 100,
                             width: 100,
                         })}
@@ -17,7 +17,7 @@ export const EventTypeImage = ({ event }: { event: Event }) => {
                 </div>
             ) : (
                 <div className="rounded-lg border border-white bg-cover bg-center object-fill w-[100px] h-[100px]">
-                    {event.eventType}
+                    {event.event_type}
                 </div>
             )}
         </>

@@ -276,7 +276,7 @@ class BlockBuilderService
         if ($entry->collection->handle === 'blogs') {
             return $preview;
             $slide->variant = CardVariant::blog;
-            $slide->leader = "Article";
+            $slide->leader = 'Article';
             $slide->details = $entry->author->author_name;
         }
 

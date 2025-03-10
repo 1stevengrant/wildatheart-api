@@ -14,7 +14,7 @@ class BunnyCDNService
      */
     public function getBunnyCDNUrl(Asset|string|null $asset)
     {
-        if (!$asset) {
+        if (! $asset) {
             return null;
         }
 

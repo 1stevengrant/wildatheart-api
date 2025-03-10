@@ -13,10 +13,10 @@ class ExportConnections extends Controller
     public function __invoke()
     {
         $eventId = request('event');
-        $csvFileName = 'connections'.now()->timestamp.'.csv';
+        $csvFileName = 'connections' . now()->timestamp . '.csv';
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="'.$csvFileName.'"',
+            'Content-Disposition' => 'attachment; filename="' . $csvFileName . '"',
         ];
 
         $handle = fopen('php://output', 'w');

@@ -9,7 +9,7 @@ beforeEach(function () {
 });
 
 test('it shows a list of events belonging to the authenticated user', function () {
-    $this->actingAs($this->event->host)
+    $this->actingAs($this->event->user)
         ->get(route('my.events.active'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page

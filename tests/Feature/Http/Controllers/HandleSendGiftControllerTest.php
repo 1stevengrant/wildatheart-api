@@ -24,7 +24,7 @@ beforeEach(function () {
 });
 
 test('it creates an address for the event that can be shipped to', function () {
-    $response = $this->actingAs($this->event->host)
+    $response = $this->actingAs($this->event->user)
         ->post(route('gift.store', $this->event), $this->addressData);
 
     $response->assertRedirect(route('my.events.active'));
@@ -35,7 +35,7 @@ test('it creates an address for the event that can be shipped to', function () {
 });
 
 it('marks the gift as requested', function () {
-    $this->actingAs($this->event->host)
+    $this->actingAs($this->event->user)
         ->post(route('gift.store', $this->event), $this->addressData);
 
     expect($this->event->fresh()->gift_requested)->toBeTrue();
@@ -43,7 +43,7 @@ it('marks the gift as requested', function () {
 
 it('sends mail notification to admin about the request', function () {
     Mail::fake();
-    $this->actingAs($this->event->host)
+    $this->actingAs($this->event->user)
         ->post(route('gift.store', $this->event), $this->addressData);
 
     Mail::assertQueued(GiftRequested::class);
@@ -51,7 +51,7 @@ it('sends mail notification to admin about the request', function () {
 
 it('updates zapier about the request', function () {
     Queue::fake();
-    $this->actingAs($this->event->host)
+    $this->actingAs($this->event->user)
         ->post(route('gift.store', $this->event), $this->addressData);
 
     Queue::assertPushed(PostToZapier::class);

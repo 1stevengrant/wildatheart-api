@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Builders\UserBuilder;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
+use Laravolt\Avatar\Facade as Avatar;
 use App\Jobs\CheckIfUserShouldBeAdmin;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
@@ -99,11 +100,6 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    public function isAttending(Event $event): bool
-    {
-        return $this->attendees->contains('event_id', $event->id);
-    }
-
     public function getFullnameAttribute(): string
     {
         if ($this->given_name === null || $this->family_name === null) {
@@ -116,18 +112,6 @@ class User extends Authenticatable
     public function hasVerifiedEmail(): bool
     {
         return $this->email_verified_at !== null;
-    }
-
-    public function profilePhoto(): ?string
-    {
-        if ($this->image) {
-            makeImagePublic($this->image);
-
-            return $this->image;
-        }
-
-        return null;
-
     }
 
     protected function email(): Attribute
@@ -144,6 +128,15 @@ class User extends Authenticatable
             Attendee::class,
             Event::class,
         );
+    }
+
+    public function profilePhoto()
+    {
+        if ($this->image) {
+            return $this->image;
+        }
+
+        return Avatar::create($this->email)->toBase64();
     }
 
     public function deleteProfilePhoto(): void
@@ -169,11 +162,6 @@ class User extends Authenticatable
         ])->save();
     }
 
-    public function generalContacts(): HasMany
-    {
-        return $this->hasMany(Attendee::class);
-    }
-
     public function newEloquentBuilder($query): UserBuilder
     {
         return new UserBuilder($query);
@@ -187,11 +175,6 @@ class User extends Authenticatable
     public function address(): HasMany
     {
         return $this->hasMany(Address::class);
-    }
-
-    public function getMd5EmailAttribute(): string
-    {
-        return md5($this->email);
     }
 
     public function isSuperAdmin(): bool
@@ -208,7 +191,7 @@ class User extends Authenticatable
             ->useLogName('users')
             ->setDescriptionForEvent(function (string $eventName) {
                 $user = auth()->user();
-                $userName = $user ? $user->full_name : 'System';
+                $userName = $user ? $user->fullname : 'System';
 
                 return "User type has been {$eventName} by {$userName}";
             });

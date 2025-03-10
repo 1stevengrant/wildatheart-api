@@ -13,9 +13,9 @@ class GetUserProfileService
     {
         return Http::withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer '.$accessToken,
+            'Authorization' => 'Bearer ' . $accessToken,
         ])
-            ->get(config('auth0.management.audience').'users/'.$userId)
+            ->get(config('auth0.management.audience') . 'users/' . $userId)
             ->json();
     }
 }

@@ -11,7 +11,7 @@ class UpsertContact
 
     public function handle(string $externalId, array $data): void
     {
-        Forrest::sobjects('Contact/External_Id__c/'.$externalId, [
+        Forrest::sobjects('Contact/External_Id__c/' . $externalId, [
             'method' => 'patch',
             'body' => $data,
         ]);

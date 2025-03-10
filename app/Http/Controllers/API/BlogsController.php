@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use Statamic\Facades\Entry;
-use App\Http\Controllers\Controller;
-use Statamic\Entries\Entry as StatamicEntry;
-use App\DataTypeObjects\API\V1\Content\BlogResponse;
 use App\Services\BlogService;
-
+use App\Http\Controllers\Controller;
 
 class BlogsController extends Controller
 {
