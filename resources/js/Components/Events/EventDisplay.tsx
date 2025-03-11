@@ -5,7 +5,7 @@ import { EventInfo } from "@/Components/Events/EventInfo";
 import { EventLocation } from "@/Components/Events/EventLocation";
 import { EventName } from "@/Components/Events/EventName";
 import { HostedBy } from "@/Components/Events/HostedBy";
-import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
+import { UserAvatar } from "@/Components/UserAvatar";
 import { imageGenerator } from "@/helpers/user";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { Event } from "@/types/Event";
@@ -17,9 +17,6 @@ export const EventDisplay = ({
     event: Event;
     className?: string;
 }) => {
-    const page = useTypedPage();
-    const { auth } = page.props;
-
     useEffect(() => {}, [event]);
 
     return (
@@ -42,8 +39,8 @@ export const EventDisplay = ({
                     <EventLocation location={event.location} />
                 </div>
                 <EventHostInfo>
-                    <AuthUserAvatar auth={auth} />
-                    <HostedBy host={auth.user?.fullname} />
+                    <UserAvatar image={event.host_photo} />
+                    <HostedBy host={event.host} />
                 </EventHostInfo>
             </EventInfo>
         </div>
