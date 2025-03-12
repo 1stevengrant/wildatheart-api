@@ -15,3 +15,8 @@ tabs:
             field:
               type: array
               display: 'Color Palette'
+          -
+            handle: show_cdn_url_field
+            field:
+              type: show_cdn_url
+              display: 'CDN Url'
