@@ -207,4 +207,20 @@ class Event extends BaseModel
     {
         return $this->belongsTo(EventType::class);
     }
+
+    public const MATERIAL_ORDER_ITEMS = [
+        ['value' => '', 'label' => 'Select'],
+        ['value' => '0', 'label' => 'None'],
+        ['value' => '10', 'label' => '1-10'],
+        ['value' => '20', 'label' => '11-20'],
+        ['value' => '30', 'label' => '21-30'],
+        ['value' => '40', 'label' => '31-40'],
+        ['value' => '50', 'label' => '41-50'],
+        ['value' => '60', 'label' => '51-60'],
+        ['value' => '70', 'label' => '61-70'],
+        ['value' => '80', 'label' => '71-80'],
+        ['value' => '90', 'label' => '81-90'],
+        ['value' => '100', 'label' => '91-100'],
+        ['value' => '200', 'label' => '100+'],
+    ];
 }

@@ -27,6 +27,7 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
 import { EventTypeCaptivatingFires } from "@/helpers/eventNames";
+import { LOCATION_TBC } from "@/helpers/locationTbc";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
@@ -168,33 +169,34 @@ export const FireInformation = ({ user }: any) => {
         const location = await lookupLocation(lng, lat);
 
         let country = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("country")
-            )?.text,
-            region = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("region")
-            )?.text,
-            postcode = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("postcode")
-            )?.text,
-            district = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("district")
-            )?.text,
-            place = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("place")
-            )?.text,
-            locality = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("locality")
-            )?.text,
-            neighborhood = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("country")
+        )?.text;
+        const region = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("region")
+        )?.text;
+        const postcode = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("postcode")
+        )?.text;
+        const district = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("district")
+        )?.text;
+        const place = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("place")
+        )?.text;
+        const locality = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("locality")
+        )?.text;
+        const neighborhood = location.find(
+            (feature: { id: string | string[] }) =>
                 feature.id.includes("neighborhood")
-            )?.text,
-            streetAddress = location.find(
-                (feature: { id: string | string[] }) =>
-                    feature.id.includes("address")
-            )?.text,
-            poi = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("poi")
-            )?.text;
+        )?.text;
+        const streetAddress = location.find(
+            (feature: { id: string | string[] }) =>
+                feature.id.includes("address")
+        )?.text;
+        const poi = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("poi")
+        )?.text;
 
         // this is janky because Mapbox might return Puerto Rico as a region instead of a country
         // but this will work for now
@@ -328,12 +330,12 @@ export const FireInformation = ({ user }: any) => {
                     <div className="mt-4 space-y-4">
                         <PrimaryButton
                             disabled={
-                                event.location === "Location TBC" && processing
+                                processing || event.location === LOCATION_TBC
                             }
                             className={`w-full flex items-center justify-center`}
                         >
                             {processing ? <Spinner /> : null}
-                            {event.location === "Location TBC"
+                            {event.location === LOCATION_TBC
                                 ? "Pick a location to continue"
                                 : "Next"}
                         </PrimaryButton>
