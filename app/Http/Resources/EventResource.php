@@ -14,7 +14,6 @@ class EventResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        ray($this->title);
 
         return [
             'host' => $this->host_name,
