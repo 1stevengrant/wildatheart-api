@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Statamic\Facades\Entry;
+use Illuminate\Support\Facades\Cache;
 use App\Services\BlogService;
 use App\Http\Controllers\Controller;
 use App\Services\PreviewBuilderService;
@@ -17,25 +18,40 @@ class SearchController extends Controller
     public function index()
     {
         $collection = request()->query('collection', 'blogs');
-        $limit = request()->query('limit', 20);
+        $limit = request()->query('limit', 16);
         $authorSlug = request()->query('author_slug');
+        $page = request()->query('page');
 
-        $query = Entry::query()
-            ->where('collection', $collection)
-            ->where('published', true);
+        // Create a unique cache key based on the query parameters
+        $cacheKey = "search_{$collection}_{$limit}_{$authorSlug}_{$page}";
 
-        if ($authorSlug && $author = $this->blogService->findAuthorBySlug($authorSlug)) {
-            $query->where('author', $author->id());
-        }
+        // Check if the response is already cached
+        $output = Cache::remember($cacheKey, 60, function () use ($collection, $limit, $authorSlug) {
+            $query = Entry::query()
+                ->where('collection', $collection)
+                ->where('published', true);
 
-        $query->limit($limit)
-            ->orderBy('date', 'desc');
+            // Only apply the filter if 'media_type' exists
+            $query->where(function ($query) {
+                $query->whereNull('data->media_type')
+                    ->orWhereJsonDoesntContain('data->media_type', 'podcast-episode');
+            });
 
-        $entries = $query->paginate($limit);
+            if ($authorSlug && $author = $this->blogService->findAuthorBySlug($authorSlug)) {
+                $query->where('author', $author->id());
+            }
 
-        $output = $entries->toArray();
-        $output['data'] = $entries->map(function ($entry) {
-            return $this->previewService->build($entry);
+            $query->limit($limit)
+                ->orderBy('date', 'desc');
+
+            $entries = $query->paginate($limit);
+
+            $output = $entries->toArray();
+            $output['data'] = $entries->map(function ($entry) {
+                return $this->previewService->build($entry);
+            });
+
+            return $output;
         });
 
         return $output;
@@ -43,7 +59,6 @@ class SearchController extends Controller
 
     public function show(string $uri)
     {
-
         $uriParts = explode('/', $uri);
 
         if (count($uriParts) === 1) {
