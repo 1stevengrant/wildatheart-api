@@ -9,9 +9,6 @@ use App\Http\Resources\EventResource;
 
 class EditEventController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request, Event $event)
     {
         if ($event->user->id !== auth()->id()) {

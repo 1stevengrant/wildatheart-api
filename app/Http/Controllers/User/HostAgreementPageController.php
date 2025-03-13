@@ -8,9 +8,6 @@ use App\Http\Controllers\Controller;
 
 class HostAgreementPageController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $hostAgreement = GlobalSet::findByHandle('local_platform');

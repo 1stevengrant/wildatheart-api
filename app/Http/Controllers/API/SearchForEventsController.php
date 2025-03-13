@@ -14,9 +14,6 @@ class SearchForEventsController extends Controller
         private readonly EventOffsettingService $eventOffsettingService
     ) {}
 
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(SearchForEventsRequest $request)
     {
         $validatedData = $request->validated();

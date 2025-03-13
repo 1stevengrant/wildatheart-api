@@ -9,9 +9,6 @@ use App\Http\Controllers\Controller;
 
 class HostEventTypeSelectController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request, SeoService $seoService)
     {
         $seoService->setMetadata(

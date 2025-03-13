@@ -9,9 +9,6 @@ use App\Http\Controllers\Controller;
 
 class ToggleContactContactedController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request, Attendee $attendee)
     {
         abort_unless($attendee->user_id == auth()->user()->id, 403);

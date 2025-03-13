@@ -8,9 +8,6 @@ use App\Http\Controllers\Controller;
 
 class StatsController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $cacheKey = 'event_stats';

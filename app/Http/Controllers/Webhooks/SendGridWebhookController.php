@@ -10,9 +10,6 @@ use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class SendGridWebhookController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $data = collect(request()->all());

@@ -14,9 +14,6 @@ class ViewEventListingController extends Controller
 {
     public function __construct(public SeoService $seoService) {}
 
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request, Event $event)
     {
         if (! $event->isApproved() && $event->user_id !== auth()->id()) {

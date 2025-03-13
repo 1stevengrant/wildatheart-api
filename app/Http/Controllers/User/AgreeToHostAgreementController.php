@@ -7,9 +7,6 @@ use App\Http\Controllers\Controller;
 
 class AgreeToHostAgreementController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         auth()->user()->update(['agreed_to_host_agreement_date' => now()]);
