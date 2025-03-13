@@ -4,18 +4,14 @@ namespace App\Http\Controllers\Event;
 
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ToggleEventPrivacyRequest;
 
 class ToggleEventPrivacyController extends Controller
 {
-    public function __invoke(Event $event, Request $request)
+    public function __invoke(Event $event, ToggleEventPrivacyRequest $request)
     {
-        abort_unless($event->user_id == auth()->user()->id, 403);
-
-        $event->update([
-            'is_private' => ! $event->is_private,
-        ]);
+        $event->togglePrivacy();
 
         $eventPrivacy = $event->is_private ? 'private' : 'public';
 
@@ -26,7 +22,7 @@ class ToggleEventPrivacyController extends Controller
         ));
 
         return redirect()->back()->with(['notifications' => [
-            'message' => 'Event privacy updated',
+            'message' => 'Event is now ' . $eventPrivacy,
             'type' => 'success',
         ],
         ]);

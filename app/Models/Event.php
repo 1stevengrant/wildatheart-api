@@ -46,6 +46,7 @@ class Event extends BaseModel
             'sex' => EventSexEnum::class,
             'view_count' => 'integer',
             'attendee_count' => 'integer',
+            'is_private' => 'boolean',
         ];
     }
 
@@ -187,7 +188,6 @@ class Event extends BaseModel
         return round($this->attributes['latitude'], 2);
     }
 
-    // relationship methods
     public function attendees(): HasMany
     {
         return $this->hasMany(Attendee::class);
@@ -223,4 +223,16 @@ class Event extends BaseModel
         ['value' => '100', 'label' => '91-100'],
         ['value' => '200', 'label' => '100+'],
     ];
+
+    public function togglePrivacy(): void
+    {
+        $this->is_private = ! $this->is_private;
+        $this->save();
+    }
+
+    public function toggleApprovedAt(): void
+    {
+        $this->approved_at = $this->approved_at ? null : now();
+        $this->save();
+    }
 }
