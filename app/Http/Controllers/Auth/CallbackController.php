@@ -40,7 +40,13 @@ class CallbackController extends Controller
             dispatch(new LogActivityJob(
                 logName: 'auth',
                 description: 'user logged in',
-                properties: ['user' => $user, 'auth0User' => $auth0User],
+                properties: [
+                    'user' => [
+                        'id' => $user->id,
+                        'email' => $user->email,
+                    ],
+                    'auth0User' => $auth0User
+                ],
             ));
 
             $intendedUrl = Session::get('auth.intended_url');

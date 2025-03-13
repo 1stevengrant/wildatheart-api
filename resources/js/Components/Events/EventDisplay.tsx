@@ -7,7 +7,6 @@ import { EventName } from "@/Components/Events/EventName";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { imageGenerator } from "@/helpers/user";
-import useTypedPage from "@/Hooks/useTypedPage";
 import { Event } from "@/types/Event";
 
 export const EventDisplay = ({

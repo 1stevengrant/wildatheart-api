@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 import mapboxgl from "mapbox-gl";
 import { singular } from "pluralize";
@@ -27,6 +27,7 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
+import { LOCATION_TBC } from "@/helpers/locationTbc";
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
@@ -38,8 +39,17 @@ import { SidebarLayout } from "@/Layouts/SidebarLayout";
 import { selectedPlaceState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
 
+interface PageProps {
+    eventType: any; // Replace with proper type
+    eventSteps: any; // Replace with proper type
+    materialOrderItems: { value: string; label: string }[];
+    [key: string]: any; // This is the index signature that Inertia requires
+}
+
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();
+    const { materialOrderItems } = usePage<PageProps>().props;
+
     const { user } = page.props.auth as any;
 
     const [isPrivate, setIsPrivate] = useState(false);
@@ -173,33 +183,34 @@ const CreateEventEventTypePage = () => {
         const location = await lookupLocation(lng, lat);
 
         const country = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("country")
-            )?.text,
-            region = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("region")
-            )?.text,
-            postcode = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("postcode")
-            )?.text,
-            district = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("district")
-            )?.text,
-            place = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("place")
-            )?.text,
-            locality = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("locality")
-            )?.text,
-            neighborhood = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("country")
+        )?.text;
+        const region = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("region")
+        )?.text;
+        const postcode = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("postcode")
+        )?.text;
+        const district = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("district")
+        )?.text;
+        const place = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("place")
+        )?.text;
+        const locality = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("locality")
+        )?.text;
+        const neighborhood = location.find(
+            (feature: { id: string | string[] }) =>
                 feature.id.includes("neighborhood")
-            )?.text,
-            streetAddress = location.find(
-                (feature: { id: string | string[] }) =>
-                    feature.id.includes("address")
-            )?.text,
-            poi = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("poi")
-            )?.text;
+        )?.text;
+        const streetAddress = location.find(
+            (feature: { id: string | string[] }) =>
+                feature.id.includes("address")
+        )?.text;
+        const poi = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("poi")
+        )?.text;
 
         data.country = country;
         data.region = region;
@@ -285,11 +296,11 @@ const CreateEventEventTypePage = () => {
                         <PrimaryButton
                             onClick={handleSubmit}
                             disabled={
-                                event.location === "Location TBC" && processing
+                                processing || event.location === LOCATION_TBC
                             }
                         >
                             {processing ? <Spinner /> : null}
-                            {event.location === "Location TBC"
+                            {event.location === LOCATION_TBC
                                 ? "Pick a location to continue"
                                 : "Create Event & See Dashboard"}
                             <ArrowRightIcon className="ml-2 h-4 w-4" />
@@ -416,24 +427,7 @@ const CreateEventEventTypePage = () => {
                                                 );
                                             }}
                                             className={`text-white mt-2`}
-                                            options={[
-                                                { value: "", label: "Select" },
-                                                { value: "0", label: "None" },
-                                                { value: "10", label: "1-10" },
-                                                { value: "20", label: "11-20" },
-                                                { value: "30", label: "21-30" },
-                                                { value: "40", label: "31-40" },
-                                                { value: "50", label: "41-50" },
-                                                { value: "60", label: "51-60" },
-                                                { value: "70", label: "61-70" },
-                                                { value: "80", label: "71-80" },
-                                                { value: "90", label: "81-90" },
-                                                {
-                                                    value: "100",
-                                                    label: "91-100",
-                                                },
-                                                { value: "200", label: "100+" },
-                                            ]}
+                                            options={materialOrderItems}
                                         />
                                         <InputError
                                             message={
