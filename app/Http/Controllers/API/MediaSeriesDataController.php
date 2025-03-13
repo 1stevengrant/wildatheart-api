@@ -64,8 +64,6 @@ class MediaSeriesDataController extends Controller
             $mediaItemEntry = Entry::query()
                 ->find($mediaItem['id']);
 
-
-
             // If the associated media item isn't there, create it.
             if ($mediaItemEntry == null) {
 

@@ -2,8 +2,8 @@
 
 namespace App\Fieldtypes;
 
-use App\Services\BunnyCDNService;
 use Statamic\Fields\Fieldtype;
+use App\Services\BunnyCDNService;
 
 class ShowCdnUrl extends Fieldtype
 {
@@ -20,12 +20,12 @@ class ShowCdnUrl extends Fieldtype
     /**
      * Pre-process the data before it gets sent to the publish page.
      *
-     * @param mixed $data
+     * @param  mixed  $data
      * @return array|mixed
      */
     public function preProcess($data)
     {
-        $cdn = new BunnyCDNService();
+        $cdn = new BunnyCDNService;
 
         $asset = $this->field->parent();
         if ($asset) {
@@ -38,7 +38,7 @@ class ShowCdnUrl extends Fieldtype
     /**
      * Process the data before it gets saved.
      *
-     * @param mixed $data
+     * @param  mixed  $data
      * @return array|mixed
      */
     public function process($data)
