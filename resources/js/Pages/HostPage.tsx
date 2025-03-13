@@ -8,7 +8,7 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
-const Host = () => {
+const HostPage = () => {
     const page = useTypedPage();
     return (
         <EmptyLayout title={`Update Profile Information`}>
@@ -30,4 +30,4 @@ const Host = () => {
     );
 };
 
-export default Host;
+export default HostPage;
