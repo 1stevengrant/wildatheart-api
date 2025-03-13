@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\SubsplashService;
-use Illuminate\Console\Command;
 use Statamic\Facades\Entry;
+use Illuminate\Console\Command;
+use App\Services\SubsplashService;
 
 class CorrectSubsplashSeries extends Command
 {
@@ -22,31 +22,33 @@ class CorrectSubsplashSeries extends Command
             ->where('data->series', null)
             ->get();
 
-        $this->info("Located " . $entriesWithoutSeries->count() . " items with no series.");
-        $this->info("Attempting corrections...");
+        $this->info('Located ' . $entriesWithoutSeries->count() . ' items with no series.');
+        $this->info('Attempting corrections...');
 
-        $subsplash = new SubsplashService();
+        $subsplash = new SubsplashService;
 
         foreach ($entriesWithoutSeries as $entry) {
             // $this->line("Reparing " . $entry->title);
             $subsplashId = $entry->subsplash_media_item_id;
             $seriesId = $subsplash->getMediaSeriesFromItemId($subsplashId);
-            if (!$seriesId) {
+            if (! $seriesId) {
                 $this->newLine();
-                $this->error("No Series id found for " . $entry->title);
+                $this->error('No Series id found for ' . $entry->title);
+
                 continue;
             }
             $seriesEntry = Entry::query()
-                ->where('collection', "media_series")
+                ->where('collection', 'media_series')
                 ->where('id', $seriesId)
                 ->first();
 
-            if (!$seriesEntry) {
-                $this->error("No series entry found for " . $seriesEntry->title);
+            if (! $seriesEntry) {
+                $this->error('No series entry found for ' . $seriesEntry->title);
+
                 continue;
             }
 
-            $this->info("Attempt to update " . $entry->id);
+            $this->info('Attempt to update ' . $entry->id);
             $seriesId = $seriesEntry->id;
             $entry->series = "entry::$seriesId";
             $entry->save();
