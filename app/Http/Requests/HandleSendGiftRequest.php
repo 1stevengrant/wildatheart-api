@@ -22,16 +22,45 @@ class HandleSendGiftRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country' => 'required|max:255',
-            'given_name' => 'required|max:255|min:2',
-            'family_name' => 'required|max:255|min:2',
-            'company' => 'nullable',
-            'street_address' => 'required|max:255',
-            'address2' => 'nullable',
-            'city' => 'required|max:255',
-            'state' => ['required'],
-            'zip' => 'required|max:20|min:4',
-            'phone' => 'required',
+            'country' => [
+                'required',
+                'max:255',
+            ],
+            'given_name' => [
+                'required',
+                'max:255',
+                'min:2',
+            ],
+            'family_name' => [
+                'required',
+                'max:255',
+                'min:2',
+            ],
+            'company' => [
+                'nullable',
+            ],
+            'street_address' => [
+                'required',
+                'max:255',
+            ],
+            'address2' => [
+                'nullable',
+            ],
+            'city' => [
+                'required',
+                'max:255',
+            ],
+            'state' => [
+                'required',
+            ],
+            'zip' => [
+                'required',
+                'max:20',
+                'min:4',
+            ],
+            'phone' => [
+                'required',
+            ],
         ];
     }
 }
