@@ -21,10 +21,11 @@ class UpdateEventController extends Controller
 
         $event->update($request->all());
 
-        return to_route('my.events.active')->with(['notifications' => [
-            'message' => 'Event updated successfully!',
-            'type' => 'success',
-        ],
+        return to_route('my.events.active')->with([
+            'notifications' => [
+                'message' => 'Event updated successfully!',
+                'type' => 'success',
+            ],
         ]);
     }
 }
