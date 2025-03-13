@@ -1,26 +1,9 @@
 <template>
-
-    <div>
-        <div>
-            <a :href="value">{{ value }}</a>
-        </div>
-    </div>
-
+    <a :href="value">{{ value }}</a>
 </template>
 
 <script>
 export default {
-
     mixins: [Fieldtype],
-
-    data() {
-        return {
-            //
-        };
-    },
-
-    mounted() {
-    }
-
 };
 </script>
