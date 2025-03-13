@@ -46,24 +46,25 @@ class MediaSeriesDataController extends Controller
             return response()->json($series);
         }
 
-        $responseData['subtitle'] = $subsplashSeries['subtitle'];
+        $responseData['subtitle'] = data_get($subsplashSeries, 'subtitle', '');
 
         $responseData['subsplash_data'] = $subsplashSeries;
 
-        $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
-        $responseData['_embedded'] = $subsplashSeries['_embedded'];
+        $relatedMediaItemsUrl = data_get($subsplashSeries, '_links.media-items.href', '');
+        $responseData['_embedded'] = data_get($subsplashSeries, '_embedded', '');
 
         $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl);
 
         $subsplashMediaItemMap = [];
         $responseData['mediaItems'] = [];
-        foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
+        foreach (data_get($subsplashMediaItems, '_embedded.media-items', []) as $mediaItem) {
 
             $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
 
             $mediaItemEntry = Entry::query()
                 ->find($mediaItem['id']);
 
+            // If the associated media item isn't there, create it.
             if ($mediaItemEntry == null) {
 
                 $entry = Entry::make()

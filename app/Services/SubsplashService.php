@@ -94,7 +94,8 @@ class SubsplashService
     {
 
         $mediaItem = $this->getMediaItem($mediaItemId);
-        return (Arr::get($mediaItem, "_embedded.media-series.id", null));
+
+        return Arr::get($mediaItem, '_embedded.media-series.id', null);
     }
 
     public function getRelatedMediaItems($seriesId)

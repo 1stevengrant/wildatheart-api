@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\Models\Event;
 use App\Models\EventType;
 use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
@@ -26,6 +27,7 @@ class HostEventTypeCreateEventController extends Controller
         return inertia('Event/CreateEventEventTypePage', [
             'eventType' => $eventType,
             'eventSteps' => session('event_steps'),
+            'materialOrderItems' => Event::MATERIAL_ORDER_ITEMS,
         ]);
     }
 
