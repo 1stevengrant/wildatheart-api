@@ -57,13 +57,13 @@ export const ConfirmEventDetailsModal: React.FC<
                     </ul>
                 </div>
                 <div className="mt-6 flex justify-between gap-3">
-                    <SecondaryButton
+                    <button
                         type="button"
                         className="inline-flex items-center w-full justify-center rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
                         onClick={() => setOpen(false)}
                     >
                         Cancel
-                    </SecondaryButton>
+                    </button>
                     <PrimaryButton
                         className="w-full"
                         onClick={onConfirm}
