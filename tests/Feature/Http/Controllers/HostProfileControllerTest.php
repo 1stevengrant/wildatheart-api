@@ -21,7 +21,7 @@ it('shows the update profile form', function () {
         ->get(route('host.index'))
         ->assertStatus(200)
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Host')
+            ->component('HostPage')
         );
 });
 
