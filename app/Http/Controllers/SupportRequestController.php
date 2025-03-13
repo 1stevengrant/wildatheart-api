@@ -10,8 +10,6 @@ class SupportRequestController extends Controller
 {
     public function __invoke(SupportRequest $request)
     {
-        $request->validated();
-
         dispatch(new LogActivityJob(
             description: 'Issue created',
             causedBy: $request->user(),

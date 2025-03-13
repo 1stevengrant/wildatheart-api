@@ -35,8 +35,6 @@ class HostEventTypeCreateEventController extends Controller
     {
         ray(session('event_steps'));
 
-        $request->validated();
-
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,
             groupType: $eventType->group_type,

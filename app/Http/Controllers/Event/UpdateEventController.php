@@ -9,14 +9,9 @@ use App\Http\Requests\FireEventRequest;
 
 class UpdateEventController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(FireEventRequest $request, Event $event)
     {
         abort_unless(\Gate::allows('update', $event), 403);
-
-        $request->validated();
 
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,

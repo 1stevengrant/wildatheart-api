@@ -31,8 +31,6 @@ class ConnectWithHostController extends Controller
 
     public function store(ConnectWithHostRequest $request, Event $event)
     {
-        $request->validated();
-
         $attendee = $event->attendees()->create([
             'user_id' => $event->user->id,
             'given_name' => $request->given_name,
