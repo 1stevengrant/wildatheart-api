@@ -9,16 +9,10 @@ use App\Services\EventCreationStepHandlerService;
 
 class HostEventTypeScheduleController extends Controller
 {
-    protected EventCreationStepHandlerService $eventCreationStepHandlerService;
+    public function __construct(
+        protected EventCreationStepHandlerService $eventCreationStepHandlerService
+    ) {}
 
-    public function __construct(EventCreationStepHandlerService $eventCreationStepHandlerService)
-    {
-        $this->eventCreationStepHandlerService = $eventCreationStepHandlerService;
-    }
-
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(EventType $eventType, Request $request)
     {
         $this->eventCreationStepHandlerService->markStepComplete('guide', 'before');

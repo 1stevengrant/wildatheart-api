@@ -9,12 +9,9 @@ use App\Services\EventCreationStepHandlerService;
 
 class HostEventTypeMailingAddressController extends Controller
 {
-    protected EventCreationStepHandlerService $eventCreationStepHandlerService;
-
-    public function __construct(EventCreationStepHandlerService $eventCreationStepHandlerService)
-    {
-        $this->eventCreationStepHandlerService = $eventCreationStepHandlerService;
-    }
+    public function __construct(
+        protected EventCreationStepHandlerService $eventCreationStepHandlerService
+    ) {}
 
     /**
      * Display a listing of the resource.

@@ -13,12 +13,9 @@ use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HostEventTypeCreateEventController extends Controller
 {
-    protected EventCreationStepHandlerService $eventCreationStepHandlerService;
-
-    public function __construct(EventCreationStepHandlerService $eventCreationStepHandlerService)
-    {
-        $this->eventCreationStepHandlerService = $eventCreationStepHandlerService;
-    }
+    public function __construct(
+        protected EventCreationStepHandlerService $eventCreationStepHandlerService
+    ) {}
 
     public function index(EventType $eventType)
     {
