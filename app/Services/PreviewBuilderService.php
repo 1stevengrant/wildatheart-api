@@ -62,12 +62,19 @@ class PreviewBuilderService
         $preview->title = $entry->title;
         $preview->uri = $entry->uri;
         $preview->published_at = $entry->date;
+        $preview->collection = $entry->collection;
+        $preview->blueprint = $entry->blueprint;
 
         $subsplashMediaItem = $this->subsplash->getMediaItem($entry->subsplash_media_item_id);
+
+        if (!$subsplashMediaItem) {
+            return null;
+        }
+
         if (! empty($subsplashMediaItem['_embedded'])) {
-            $images = $subsplashMediaItem['_embedded']['images'];
+            $images = data_get($subsplashMediaItem, '_embedded.images', []);
             $wideImage = collect($images)->firstWhere('type', 'wide');
-            $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
+            $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href', null);
             $preview->featured_image_src = $wideImageUrl;
         }
 
