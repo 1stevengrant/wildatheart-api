@@ -24,6 +24,7 @@ import { PageProps } from "@/types";
 import { Event } from "@/types/Event";
 
 const ConnectWithHostPage = () => {
+    const [spamAgreement, setSpamAgreement] = useState(false);
     const page = usePage();
     const event = page.props.event as Event;
     const { auth } = page.props as unknown as PageProps;
@@ -263,10 +264,24 @@ const ConnectWithHostPage = () => {
                                         at Heart.
                                     </Instruction>
                                 </div>
+                                <div className="col-span-2 flex items-center space-x-4">
+                                    <Instruction className={`mt-1`}>
+                                        By connection with {event.host} you are
+                                        expressing interest in their event and
+                                        will not solicit or promote other events
+                                        or offerings.
+                                    </Instruction>
+                                    <SwitchComponent
+                                        checked={spamAgreement}
+                                        onChange={() =>
+                                            setSpamAgreement(!spamAgreement)
+                                        }
+                                    />
+                                </div>
                             </FormGrid>
                             <div className="mt-12">
                                 <PrimaryButton
-                                    disabled={processing}
+                                    disabled={processing || !spamAgreement}
                                     className={"w-full"}
                                 >
                                     Connect with {event.host}
