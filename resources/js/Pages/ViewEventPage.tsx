@@ -47,10 +47,8 @@ const ViewEventPage = () => {
 
     const eventTitle = (event: Event) => {
         switch (event.event_type) {
-            case EventTypeCaptivatingFires:
-                return `${event.name} Captivating Fire`;
-            case EventTypeFires:
-                return `${event.name} Fire`;
+            case EventTypeCaptivatingFires || EventTypeFires:
+                return `${event.name}`;
             default:
                 return event.event_type_data.name;
         }
