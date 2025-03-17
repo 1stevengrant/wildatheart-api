@@ -30,6 +30,8 @@ class Event extends BaseModel
         });
     }
 
+    protected $with = ['eventType'];
+
     protected function casts(): array
     {
         return [

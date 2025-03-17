@@ -3,7 +3,6 @@ import React from "react";
 import { Dialog } from "@headlessui/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { Modal } from "@/Components/Ui/Modal";
 import { Spinner } from "@/Components/Ui/Spinner";
@@ -46,28 +45,28 @@ export const FireConfirmationModal: React.FC<FireConfirmationModalProps> = ({
                             <span className="font-medium">Location:</span>{" "}
                             {eventLocation}
                         </li>
-                        {data.country && (
-                            <li>
-                                <span className="font-medium">Country:</span>{" "}
-                                {data.country}
-                            </li>
-                        )}
                         {data.region && (
                             <li>
                                 <span className="font-medium">Region:</span>{" "}
                                 {data.region}
                             </li>
                         )}
+                        {data.country && (
+                            <li>
+                                <span className="font-medium">Country:</span>{" "}
+                                {data.country}
+                            </li>
+                        )}
                     </ul>
                 </div>
                 <div className="mt-6 flex justify-between gap-3">
-                    <SecondaryButton
+                    <button
                         type="button"
                         className="inline-flex items-center w-full justify-center rounded-md border border-gray-300 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
                         onClick={() => setOpen(false)}
                     >
                         Edit Details
-                    </SecondaryButton>
+                    </button>
                     <PrimaryButton
                         className="w-full"
                         onClick={onConfirm}
