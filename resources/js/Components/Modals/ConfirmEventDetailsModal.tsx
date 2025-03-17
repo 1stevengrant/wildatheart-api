@@ -3,7 +3,6 @@ import React from "react";
 import { Dialog } from "@headlessui/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
 import { Modal } from "@/Components/Ui/Modal";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { EventFormDataType } from "@/types/EventFormDataType";
