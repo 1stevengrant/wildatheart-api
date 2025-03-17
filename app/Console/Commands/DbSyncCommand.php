@@ -20,94 +20,226 @@ class DbSyncCommand extends Command
             return self::SUCCESS;
         }
 
-        $useSsh = config('dbsync.useSsh');
-        $sshUsername = config('dbsync.sshUsername');
-        $sshPort = config('dbsync.sshPort');
-        $host = config('dbsync.host');
+        // Get configuration values
+        $config = $this->getConfiguration();
 
-        $mysqlHostName = config('dbsync.mysqlHostName');
-        $username = config('dbsync.username');
-        $database = config('dbsync.database');
-        $port = config('dbsync.port');
-        $password = config('dbsync.password');
-        $ignore = config('dbsync.ignore');
-        $ignoreTables = explode(',', $ignore);
-        $importSqlFile = config('dbsync.importSqlFile');
-        $removeFileAfterImport = config('dbsync.removeFileAfterImport');
-        $fileName = $this->option('filename') ?? config('dbsync.defaultFileName');
-        $mysqldumpSkipTzUtc = config('dbsync.mysqldumpSkipTzUtc') ? '--skip-tz-utc' : '';
-
-        $targetConnection = config('dbsync.targetConnection');
-        $defaultConnection = config('database.default');
-
-        $defaultConnection = empty($targetConnection) ? $defaultConnection : $targetConnection;
-
-        $localUsername = config("database.connections.{$defaultConnection}.username");
-        $localPassword = config("database.connections.{$defaultConnection}.password");
-        $localHostname = config("database.connections.{$defaultConnection}.host");
-        $localPort = config("database.connections.{$defaultConnection}.port");
-        $localDatabase = config("database.connections.{$defaultConnection}.database");
-        $localMysqlPath = config('dbsync.localMysqlPath');
-
-        if (empty($host) || empty($username) || empty($database)) {
+        if (empty($config['host']) || empty($config['username']) || empty($config['database'])) {
             $this->error('DB credentials not set, have you published the config and set ENV variables?');
 
             return self::SUCCESS;
         }
 
         if ($inTest === false) {
-            $ignoreString = null;
-
-            foreach ($ignoreTables as $name) {
-                $ignoreString .= " --ignore-table=$database.$name";
-            }
-
             $totalSteps = 2;
             $progressBar = $this->output->createProgressBar($totalSteps);
 
-            if ($useSsh === true) {
-                echo $mysqlHostName . PHP_EOL;
-                $result = 0;
-                exec("ssh $sshUsername@$host -p$sshPort mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString > $fileName 2>/dev/null", $output, $result);
-                if ($result !== 0) {
-                    $this->error('Export failed');
+            // Prepare tables for export
+            $ignoreTables = explode(',', $config['ignore']);
+            $excludeDataTables = !empty($config['excludeData']) ? explode(',', $config['excludeData']) : [];
 
-                    return self::FAILURE;
-                }
-            } else {
-                $result = 0;
-                exec("mysqldump --single-transaction --set-gtid-purged=OFF --port=$port --host=$mysqlHostName --user=$username --password=$password $database $ignoreString $mysqldumpSkipTzUtc --column-statistics=0 > $fileName 2>/dev/null", $output, $result);
-                if ($result !== 0) {
-                    $this->error('Export failed');
-
-                    return self::FAILURE;
-                }
+            // Export and import the database
+            $exportResult = $this->exportDatabase($config, $ignoreTables, $excludeDataTables);
+            if ($exportResult !== self::SUCCESS) {
+                return $exportResult;
             }
 
             $progressBar->advance();
 
-            $command = $localPassword
-                ? "$localMysqlPath -u$localUsername -h$localHostname -p$localPassword -P$localPort $localDatabase < $fileName 2>/dev/null"
-                : "$localMysqlPath -u$localUsername -h$localHostname -P$localPort $localDatabase < $fileName 2>/dev/null";
-
-            $result = 0;
-            exec($command, $output, $result);
-            if ($result !== 0) {
-                $this->error('Import failed');
-
-                return self::FAILURE;
+            $importResult = $this->importDatabase($config);
+            if ($importResult !== self::SUCCESS) {
+                return $importResult;
             }
 
             $progressBar->advance();
             $progressBar->finish();
 
-            if ($removeFileAfterImport === true) {
-                unlink($fileName);
+            // Clean up
+            if ($config['removeFileAfterImport'] === true) {
+                unlink($config['fileName']);
             }
         }
 
         $this->newLine();
         $this->info('DB Synced');
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Get all configuration values
+     *
+     * @return array
+     */
+    private function getConfiguration(): array
+    {
+        $targetConnection = config('dbsync.targetConnection');
+        $defaultConnection = config('database.default');
+        $defaultConnection = empty($targetConnection) ? $defaultConnection : $targetConnection;
+
+        return [
+            // Remote connection settings
+            'useSsh' => config('dbsync.useSsh'),
+            'sshUsername' => config('dbsync.sshUsername'),
+            'sshPort' => config('dbsync.sshPort'),
+            'host' => config('dbsync.host'),
+            'mysqlHostName' => config('dbsync.mysqlHostName'),
+            'username' => config('dbsync.username'),
+            'database' => config('dbsync.database'),
+            'port' => config('dbsync.port'),
+            'password' => config('dbsync.password'),
+            'ignore' => config('dbsync.ignore'),
+            'excludeData' => config('dbsync.excludeData'),
+            'mysqldumpSkipTzUtc' => config('dbsync.mysqldumpSkipTzUtc') ? '--skip-tz-utc' : '',
+
+            // Local settings
+            'localUsername' => config("database.connections.{$defaultConnection}.username"),
+            'localPassword' => config("database.connections.{$defaultConnection}.password"),
+            'localHostname' => config("database.connections.{$defaultConnection}.host"),
+            'localPort' => config("database.connections.{$defaultConnection}.port"),
+            'localDatabase' => config("database.connections.{$defaultConnection}.database"),
+            'localMysqlPath' => config('dbsync.localMysqlPath'),
+
+            // File settings
+            'importSqlFile' => config('dbsync.importSqlFile'),
+            'removeFileAfterImport' => config('dbsync.removeFileAfterImport'),
+            'fileName' => $this->option('filename') ?? config('dbsync.defaultFileName'),
+        ];
+    }
+
+    /**
+     * Export the database
+     *
+     * @param array $config
+     * @param array $ignoreTables
+     * @param array $excludeDataTables
+     * @return int
+     */
+    private function exportDatabase(array $config, array $ignoreTables, array $excludeDataTables): int
+    {
+        // Create ignore tables string
+        $ignoreString = $this->buildIgnoreString($config['database'], $ignoreTables);
+
+        // Handle structure-only tables
+        if (!empty($excludeDataTables)) {
+            return $this->exportWithStructureOnlyTables($config, $ignoreString, $excludeDataTables);
+        }
+
+        // Simple export without structure-only tables
+        return $this->executeExport($config, $ignoreString, $config['fileName']);
+    }
+
+    /**
+     * Build the ignore tables string
+     *
+     * @param string $database
+     * @param array $tables
+     * @return string
+     */
+    private function buildIgnoreString(string $database, array $tables): string
+    {
+        $ignoreString = '';
+        foreach ($tables as $name) {
+            if (trim($name) !== '') {
+                $ignoreString .= " --ignore-table=$database.$name";
+            }
+        }
+        return $ignoreString;
+    }
+
+    /**
+     * Export database with structure-only tables
+     *
+     * @param array $config
+     * @param string $ignoreString
+     * @param array $excludeDataTables
+     * @return int
+     */
+    private function exportWithStructureOnlyTables(array $config, string $ignoreString, array $excludeDataTables): int
+    {
+        // First export only structure for tables where we want structure but no data
+        $structureOnlyFile = 'structure_' . $config['fileName'];
+        $structureOnlyTables = implode(' ', array_map('trim', $excludeDataTables));
+
+        $structureResult = $this->executeExport(
+            $config,
+            '', // No ignore string for structure export
+            $structureOnlyFile,
+            '--no-data ' . $structureOnlyTables
+        );
+
+        if ($structureResult !== self::SUCCESS) {
+            $this->error('Structure export failed');
+            return self::FAILURE;
+        }
+
+        // Then export data for all tables excluding both the ignored tables and structure-only tables
+        $dataIgnoreString = $ignoreString;
+        foreach ($excludeDataTables as $name) {
+            if (trim($name) !== '') {
+                $dataIgnoreString .= " --ignore-table={$config['database']}.$name";
+            }
+        }
+
+        $dataOnlyFile = 'data_' . $config['fileName'];
+        $dataResult = $this->executeExport($config, $dataIgnoreString, $dataOnlyFile);
+
+        if ($dataResult !== self::SUCCESS) {
+            $this->error('Data export failed');
+            return self::FAILURE;
+        }
+
+        // Combine the files
+        exec("cat $structureOnlyFile $dataOnlyFile > {$config['fileName']}");
+        unlink($structureOnlyFile);
+        unlink($dataOnlyFile);
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Execute mysqldump export
+     *
+     * @param array $config
+     * @param string $ignoreString
+     * @param string $outputFile
+     * @param string $additionalOptions
+     * @return int
+     */
+    private function executeExport(array $config, string $ignoreString, string $outputFile, string $additionalOptions = ''): int
+    {
+        $commonOptions = "--single-transaction --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password={$config['password']} {$config['database']} $ignoreString $additionalOptions";
+
+        if ($config['useSsh'] === true) {
+            $command = "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} mysqldump $commonOptions > $outputFile 2>/dev/null";
+        } else {
+            $command = "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFile 2>/dev/null";
+        }
+
+        $result = 0;
+        exec($command, $output, $result);
+
+        return $result === 0 ? self::SUCCESS : self::FAILURE;
+    }
+
+    /**
+     * Import the database
+     *
+     * @param array $config
+     * @return int
+     */
+    private function importDatabase(array $config): int
+    {
+        $command = $config['localPassword']
+            ? "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -p{$config['localPassword']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>/dev/null"
+            : "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>/dev/null";
+
+        $result = 0;
+        exec($command, $output, $result);
+
+        if ($result !== 0) {
+            $this->error('Import failed');
+            return self::FAILURE;
+        }
 
         return self::SUCCESS;
     }
