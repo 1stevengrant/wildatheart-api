@@ -1,3 +1,5 @@
+import React from "react";
+
 import get from "lodash/get";
 
 interface TableProps<T> {
@@ -8,14 +10,12 @@ interface TableProps<T> {
         renderCell?: (row: T) => React.ReactNode;
     }[];
     rows: T[];
-    getRowDetailsUrl?: (row: T) => string;
     noDataMessage?: string;
 }
 
 export default function Table<T>({
     columns = [],
     rows = [],
-    getRowDetailsUrl,
     noDataMessage = "No data found.",
 }: TableProps<T>) {
     return (

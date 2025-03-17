@@ -28,6 +28,7 @@ class SendNewEventSlackAlert implements ShouldQueue
         $hostName = $event->user->fullname;
         $location = $event->location;
         $name = $event->name;
+        $adminUrl = $event->admin_url;
 
         SlackAlert::to('events')
             ->blocks([
@@ -65,7 +66,7 @@ class SendNewEventSlackAlert implements ShouldQueue
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => "<{$event->adminUrl}|View Event In Admin>",
+                        'text' => "<{$adminUrl}|View Event In Admin>",
                     ],
                 ],
                 [

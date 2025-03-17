@@ -9,9 +9,6 @@ use App\Http\Resources\API\EventResource;
 
 class UpcomingEventsController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $upcomingEvents = cache()->remember('public_upcoming_events', now()->addHour(), function () {

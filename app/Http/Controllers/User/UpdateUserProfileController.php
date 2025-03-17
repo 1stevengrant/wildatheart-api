@@ -2,23 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserProfileRequest;
 
 class UpdateUserProfileController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(Request $request)
+    public function __invoke(UpdateUserProfileRequest $request)
     {
-        request()->validate([
-            'given_name' => 'required|string|max:255|min:2',
-            'family_name' => 'required|string|max:255|min:2',
-            'phone' => 'required|max:20|min:9',
-            'opted_into_marketing' => 'required|boolean',
-            'image' => 'nullable|image|max:5120|mimes:jpg,jpeg,png',
-        ]);
 
         if ($request->hasFile('image')) {
             $request->user()->updateProfilePhoto($request->file('image'));
@@ -32,10 +22,11 @@ class UpdateUserProfileController extends Controller
             'profile_step' => 2,
         ]);
 
-        return redirect()->back()->with(['notifications' => [
-            'message' => 'User Profile Updated!',
-            'type' => 'success',
-        ],
+        return redirect()->back()->with([
+            'notifications' => [
+                'message' => 'User Profile Updated!',
+                'type' => 'success',
+            ],
         ]);
     }
 }

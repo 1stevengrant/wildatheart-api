@@ -22,6 +22,7 @@ import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
+import { ConfirmEventDetailsModal } from "@/Components/Modals/ConfirmEventDetailsModal";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
@@ -40,10 +41,10 @@ import { selectedPlaceState } from "@/store/mapAtom";
 import { EventFormDataType } from "@/types/EventFormDataType";
 
 interface PageProps {
-    eventType: any; // Replace with proper type
-    eventSteps: any; // Replace with proper type
+    eventType: any;
+    eventSteps: any;
     materialOrderItems: { value: string; label: string }[];
-    [key: string]: any; // This is the index signature that Inertia requires
+    [key: string]: any;
 }
 
 const CreateEventEventTypePage = () => {
@@ -57,6 +58,8 @@ const CreateEventEventTypePage = () => {
     const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [marker, setMarker] = useState<any>(null);
     const { zoom, handleUserLevelZoom } = useMapData();
+
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
     const lookupCurrentLocation = () => {
         if (navigator.geolocation) {
@@ -251,6 +254,11 @@ const CreateEventEventTypePage = () => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
+        setConfirmModalOpen(true);
+    };
+
+    const confirmSubmit = () => {
+        setConfirmModalOpen(false);
         post(
             route("host.eventType.create.store", { eventType: eventType.slug }),
             {
@@ -440,6 +448,15 @@ const CreateEventEventTypePage = () => {
                         </form>
                     </PageContainer>
                 </EmptyLayoutBody>
+
+                <ConfirmEventDetailsModal
+                    open={confirmModalOpen}
+                    setOpen={setConfirmModalOpen}
+                    data={data}
+                    eventLocation={event.location}
+                    processing={processing}
+                    onConfirm={confirmSubmit}
+                />
             </SidebarLayout>
         </>
     );

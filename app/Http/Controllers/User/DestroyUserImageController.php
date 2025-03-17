@@ -8,9 +8,6 @@ use App\Http\Controllers\Controller;
 
 class DestroyUserImageController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $request->user()->deleteProfilePhoto();

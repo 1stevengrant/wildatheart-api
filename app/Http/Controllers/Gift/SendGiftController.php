@@ -8,9 +8,6 @@ use App\Http\Controllers\Controller;
 
 class SendGiftController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request, Event $event)
     {
         abort_unless(! $event->hasRequestedGift(), 403, 'You have already requested your gift.');

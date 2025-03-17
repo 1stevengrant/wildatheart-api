@@ -14,13 +14,8 @@ use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HandleSendGiftController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Event $event, HandleSendGiftRequest $request)
     {
-        $request->validated();
-
         CreateAddress::run([
             'user_id' => auth()->user()->id,
             'given_name' => request('given_name'),

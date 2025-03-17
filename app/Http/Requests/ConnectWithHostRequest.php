@@ -22,15 +22,52 @@ class ConnectWithHostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'family_name' => 'required|string|max:255|min:2',
-            'given_name' => 'required|string|max:255|min:2',
-            'email' => 'required|email|max:255',
-            'confirm_email' => 'required|email|same:email',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'phone' => 'required|min:9|max:20',
-            'opted_into_marketing' => 'required|boolean',
+            'family_name' => [
+                'required',
+                'string',
+                'max:255',
+                'min:2',
+            ],
+            'given_name' => [
+                'required',
+                'string',
+                'max:255',
+                'min:2',
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+            ],
+            'confirm_email' => [
+                'required',
+                'email',
+                'same:email',
+            ],
+            'city' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'state' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'country' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'phone' => [
+                'required',
+                'min:9',
+                'max:20',
+            ],
+            'opted_into_marketing' => [
+                'required',
+                'boolean',
+            ],
         ];
     }
 }
