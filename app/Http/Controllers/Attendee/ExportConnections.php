@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Response;
 
 class ExportConnections extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke()
     {
         $eventId = request('event');

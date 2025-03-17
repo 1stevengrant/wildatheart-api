@@ -9,14 +9,9 @@ use App\Http\Requests\FireEventRequest;
 
 class UpdateEventController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(FireEventRequest $request, Event $event)
     {
         abort_unless(\Gate::allows('update', $event), 403);
-
-        $request->validated();
 
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,
@@ -26,10 +21,11 @@ class UpdateEventController extends Controller
 
         $event->update($request->all());
 
-        return to_route('my.events.active')->with(['notifications' => [
-            'message' => 'Event updated successfully!',
-            'type' => 'success',
-        ],
+        return to_route('my.events.active')->with([
+            'notifications' => [
+                'message' => 'Event updated successfully!',
+                'type' => 'success',
+            ],
         ]);
     }
 }

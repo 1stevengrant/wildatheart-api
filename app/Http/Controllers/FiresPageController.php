@@ -8,9 +8,6 @@ use App\Http\Resources\API\EventResource;
 
 class FiresPageController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $fires = cache()->remember('public_fires', now()->addHour(), function () {

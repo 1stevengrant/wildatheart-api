@@ -9,9 +9,6 @@ use App\Http\Resources\EventResource;
 
 class MyInactiveEventsController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $events = auth()->user()

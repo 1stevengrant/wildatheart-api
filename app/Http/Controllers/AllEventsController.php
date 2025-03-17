@@ -13,9 +13,6 @@ class AllEventsController extends Controller
         private readonly EventOffsettingService $eventOffsettingService
     ) {}
 
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request)
     {
         $startTime = microtime(true);

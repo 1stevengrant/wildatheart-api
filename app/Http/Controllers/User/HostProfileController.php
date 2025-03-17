@@ -13,6 +13,6 @@ class HostProfileController extends Controller
             return to_route('host.eventType.select');
         }
 
-        return inertia('Host');
+        return inertia('HostPage');
     }
 }

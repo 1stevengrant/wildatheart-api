@@ -22,18 +22,54 @@ class MailingAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_id' => 'nullable|integer',
-            'given_name' => 'required|string',
-            'family_name' => 'required|string',
-            'company' => 'nullable|string',
-            'street_address' => 'required|string',
-            'address2' => 'nullable|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'zip' => 'required|string',
-            'country' => 'required|string',
-            'phone' => 'nullable|string',
-            'is_primary' => 'nullable|boolean',
+            'event_id' => [
+                'nullable',
+                'integer',
+            ],
+            'given_name' => [
+                'required',
+                'string',
+            ],
+            'family_name' => [
+                'required',
+                'string',
+            ],
+            'company' => [
+                'nullable',
+                'string',
+            ],
+            'street_address' => [
+                'required',
+                'string',
+            ],
+            'address2' => [
+                'nullable',
+                'string',
+            ],
+            'city' => [
+                'required',
+                'string',
+            ],
+            'state' => [
+                'required',
+                'string',
+            ],
+            'zip' => [
+                'required',
+                'string',
+            ],
+            'country' => [
+                'required',
+                'string',
+            ],
+            'phone' => [
+                'nullable',
+                'string',
+            ],
+            'is_primary' => [
+                'nullable',
+                'boolean',
+            ],
         ];
     }
 }

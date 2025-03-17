@@ -23,6 +23,7 @@ import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
 import { RightColumn } from "@/Components/Layout/Elements/RightColumn";
 import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
+import { FireConfirmationModal } from "@/Components/Modals/FireConfirmationModal";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
@@ -44,6 +45,8 @@ export const FireInformation = ({ user }: any) => {
     const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [marker, setMarker] = useState<any>(null);
     const { handleUserLevelZoom, zoom } = useMapData();
+
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
     const lookupCurrentLocation = () => {
         if (navigator.geolocation) {
@@ -241,8 +244,13 @@ export const FireInformation = ({ user }: any) => {
         addEvent(lng, lat);
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const openConfirmModal = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setConfirmModalOpen(true);
+    };
+
+    const confirmSubmit = () => {
+        setConfirmModalOpen(false);
         const eventPostEndpoint =
             eventType.slug === EventTypeCaptivatingFires
                 ? route("host.captivating-fire.store")
@@ -254,111 +262,129 @@ export const FireInformation = ({ user }: any) => {
     };
 
     return (
-        <TwoColumnWrapper>
-            <LeftColumn>
-                <form
-                    onSubmit={handleSubmit}
-                    className={"max-w-[500px] mx-auto"}
-                >
-                    <HeadingOne className={"my-12"}>
-                        Tell us about your {singular(eventType.name)}
-                    </HeadingOne>
-                    <div>
-                        <InputLabel
-                            htmlFor="fire_name"
-                            value="Name Your Fire"
-                            required
-                        />
-                        <div className="flex items-center space-x-4">
-                            <TextInput
-                                id="name"
-                                name="name"
-                                value={data.name}
-                                autoComplete="off"
-                                isFocused={true}
-                                onChange={(e) => {
-                                    setData("name", e.target.value);
-                                    setEvent({
-                                        ...event,
-                                        name: e.target.value,
-                                    });
-                                }}
+        <>
+            <TwoColumnWrapper>
+                <LeftColumn>
+                    <form
+                        onSubmit={openConfirmModal}
+                        className={"max-w-[500px] mx-auto"}
+                    >
+                        <HeadingOne className={"my-12"}>
+                            Tell us about your {singular(eventType.name)}
+                        </HeadingOne>
+                        <div>
+                            <InputLabel
+                                htmlFor="fire_name"
+                                value="Name Your Fire"
+                                required
                             />
-                            <div>Fire</div>
+                            <div className="flex items-center space-x-4">
+                                <TextInput
+                                    id="name"
+                                    name="name"
+                                    value={data.name}
+                                    autoComplete="off"
+                                    isFocused={true}
+                                    onChange={(e) => {
+                                        setData("name", e.target.value);
+                                        setEvent({
+                                            ...event,
+                                            name: e.target.value,
+                                        });
+                                    }}
+                                />
+                                <div>Fire</div>
+                            </div>
+                            <Instruction>
+                                This is the name that will be displayed on your
+                                Fire page.
+                            </Instruction>
+                            <InputError message={errors.name} />
                         </div>
-                        <Instruction>
-                            This is the name that will be displayed on your Fire
-                            page.
-                        </Instruction>
-                        <InputError message={errors.name} />
-                    </div>
-                    <FireNamingGuidelines />
-                    <EventDisplay event={event} className={"md:hidden mt-4"} />
-                    <MapboxSearch className={"mt-4"} />
-                    <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
-                        <Map
-                            mapLib={mapboxgl}
-                            ref={mapRef}
-                            {...commonMapProps}
-                            initialViewState={{
-                                zoom: 6,
-                            }}
-                            onClick={(event) => {
-                                handleMapClick(event);
-                            }}
-                            onZoomEnd={() =>
-                                handleUserLevelZoom(
-                                    mapRef.current?.getZoom() || 6
-                                )
-                            }
-                        >
-                            <GeolocateControl position="top-left" />
-                            <NavigationControl position="top-left" />
-                            <>
-                                {marker && (
-                                    <Marker
-                                        longitude={marker.lng}
-                                        latitude={marker.lat}
-                                    >
-                                        <FireMarker className={"w-10 h-10"} />
-                                    </Marker>
-                                )}
-                            </>
-                        </Map>
-                    </div>
+                        <FireNamingGuidelines />
+                        <EventDisplay
+                            event={event}
+                            className={"md:hidden mt-4"}
+                        />
+                        <MapboxSearch className={"mt-4"} />
+                        <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
+                            <Map
+                                mapLib={mapboxgl}
+                                ref={mapRef}
+                                {...commonMapProps}
+                                initialViewState={{
+                                    zoom: 6,
+                                }}
+                                onClick={(event) => {
+                                    handleMapClick(event);
+                                }}
+                                onZoomEnd={() =>
+                                    handleUserLevelZoom(
+                                        mapRef.current?.getZoom() || 6
+                                    )
+                                }
+                            >
+                                <GeolocateControl position="top-left" />
+                                <NavigationControl position="top-left" />
+                                <>
+                                    {marker && (
+                                        <Marker
+                                            longitude={marker.lng}
+                                            latitude={marker.lat}
+                                        >
+                                            <FireMarker
+                                                className={"w-10 h-10"}
+                                            />
+                                        </Marker>
+                                    )}
+                                </>
+                            </Map>
+                        </div>
 
-                    <div className="mt-4 space-y-4">
-                        <PrimaryButton
-                            disabled={
-                                processing || event.location === LOCATION_TBC
-                            }
-                            className={`w-full flex items-center justify-center`}
-                        >
-                            {processing ? <Spinner /> : null}
-                            {event.location === LOCATION_TBC
-                                ? "Pick a location to continue"
-                                : "Next"}
-                        </PrimaryButton>
-                        <Link
-                            className={
-                                "text-n40 w-full inline-block text-center"
-                            }
-                            href={route("home")}
-                        >
-                            Cancel
-                        </Link>
-                    </div>
-                </form>
-            </LeftColumn>
+                        <div className="mt-4 space-y-4">
+                            <PrimaryButton
+                                disabled={
+                                    processing ||
+                                    event.location === LOCATION_TBC
+                                }
+                                className={`w-full flex items-center justify-center`}
+                                type="submit"
+                            >
+                                {processing ? <Spinner /> : null}
+                                {event.location === LOCATION_TBC
+                                    ? "Pick a location to continue"
+                                    : "Next"}
+                            </PrimaryButton>
+                            <Link
+                                className={
+                                    "text-n40 w-full inline-block text-center"
+                                }
+                                href={route("home")}
+                            >
+                                Cancel
+                            </Link>
+                        </div>
+                    </form>
+                </LeftColumn>
 
-            <RightColumn className={``}>
-                <div>
-                    <EventDisplay
-                        className={"max-w-[350px] mx-auto hidden lg:flex"}
-                        event={event}
-                    />
-                </div>
-            </RightColumn>
-        </TwoColumnWrapper>
+                <RightColumn className={``}>
+                    <div>
+                        <EventDisplay
+                            className={"max-w-[350px] mx-auto hidden lg:flex"}
+                            event={event}
+                        />
+                    </div>
+                </RightColumn>
+            </TwoColumnWrapper>
+
+            <FireConfirmationModal
+                open={confirmModalOpen}
+                setOpen={setConfirmModalOpen}
+                data={data}
+                eventLocation={event.location}
+                processing={processing}
+                onConfirm={confirmSubmit}
+            />
+        </>
     );
 };

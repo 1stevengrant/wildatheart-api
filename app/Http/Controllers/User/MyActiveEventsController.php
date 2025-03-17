@@ -8,9 +8,6 @@ use App\Http\Resources\EventResource;
 
 class MyActiveEventsController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke()
     {
         $activeEvents = auth()->user()

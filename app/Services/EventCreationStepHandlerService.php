@@ -4,19 +4,6 @@ namespace App\Services;
 
 class EventCreationStepHandlerService
 {
-    public function markStepIncomplete($step, $subStep = null): void
-    {
-        $eventSteps = session('event_steps');
-
-        if ($subStep) {
-            $eventSteps[$step][$subStep] = false;
-        } else {
-            $eventSteps[$step] = false;
-        }
-
-        session(['event_steps' => $eventSteps]);
-    }
-
     public function markStepComplete($step, $subStep = null): void
     {
         $eventSteps = session('event_steps');

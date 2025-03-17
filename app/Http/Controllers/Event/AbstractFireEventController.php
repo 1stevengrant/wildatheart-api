@@ -26,7 +26,6 @@ abstract class AbstractFireEventController extends Controller
 
     public function store(FireEventRequest $request)
     {
-        $request->validated();
 
         $event = CreateFireEventType::make()->handle(
             eventType: EventType::where('name', $this->getEventType())->first(),
