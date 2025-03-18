@@ -276,26 +276,23 @@ class SubsplashService
      *                                      their uri, the id associated to their series
      * @return string A slug that is not in use yet.
      */
-    public function generateUniqueSlug(string $title, string $fallback, ?string $mediaItemSeriesID)
-    {
-        // First, make a standard slug using the title.
-        $uniqueSlug = Str::slug($title);
+    public function generateUniqueSlug(
+        string $title,
+        string $fallback,
+        ?string $mediaItemSeriesID
+    ) {
+        $slugifiedTitle = Str::slug($title);
 
-        // Retreive any items that have the same slug and
-        // the same series.
         $query = Entry::query()
             ->where('collection', 'media_item')
-            ->where('slug', $uniqueSlug);
+            ->where('slug', $slugifiedTitle);
 
         if ($mediaItemSeriesID) {
             $query->where('series', "entry::$mediaItemSeriesID");
         }
 
-        $entryWithSlug = $query->first();
-
-        // If any such items exist, we create a unique slug for it.
-        if (! $entryWithSlug) {
-            return $uniqueSlug;
+        if (!$query->first()) {
+            return $slugifiedTitle;
         }
 
         return Str::slug("$title-$fallback");
