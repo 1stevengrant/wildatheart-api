@@ -10,6 +10,7 @@ class GetLatestSubsplashMedia extends Command
     protected $signature = 'app:get-latest-subsplash-media';
 
     protected $description = 'Imports latest Subplash items.';
+
     protected $full = false;
 
     protected function configure()
@@ -24,7 +25,7 @@ class GetLatestSubsplashMedia extends Command
 
     public function handle(): void
     {
-        $this->info("Fetching items from Subsplash...");
+        $this->info('Fetching items from Subsplash...');
         try {
 
             $totalMediaItems = 0;
@@ -37,14 +38,14 @@ class GetLatestSubsplashMedia extends Command
 
                 // Only process the first batch if 'full' argument
                 // was not provided.
-                if (!$this->option('full')) {
+                if (! $this->option('full')) {
                     $nextPage = null;
                 }
             }
 
             $this->info("Retreived $totalMediaItems items.");
         } catch (\Exception $e) {
-            $this->error("Problem running command:");
+            $this->error('Problem running command:');
             $this->error($e->getMessage());
         }
     }
@@ -53,15 +54,15 @@ class GetLatestSubsplashMedia extends Command
     {
         // Retrieve items on current page.
         $subsplashResponse = $this->subsplash->subsplashFetch($nextPage);
-        $mediaItemsInResponse = data_get($subsplashResponse, "_embedded.media-items");
+        $mediaItemsInResponse = data_get($subsplashResponse, '_embedded.media-items');
 
         // Update next page if available.
-        $nextPage = data_get($subsplashResponse, "_links.next.href", null);
+        $nextPage = data_get($subsplashResponse, '_links.next.href', null);
 
         // Increment the total item counter.
         $totalMediaItems = $totalMediaItems + count($mediaItemsInResponse);
 
-        if ($errors = data_get($subsplashResponse, "errors")) {
+        if ($errors = data_get($subsplashResponse, 'errors')) {
             foreach ($errors as $error) {
                 $this->error($error);
             }
@@ -82,7 +83,7 @@ class GetLatestSubsplashMedia extends Command
             $bar->advance();
         }
 
-        $bar->setMessage("Chunk finished.");
+        $bar->setMessage('Chunk finished.');
         $bar->finish();
         $this->output->newLine(2); // Add some space after the progress bar
 

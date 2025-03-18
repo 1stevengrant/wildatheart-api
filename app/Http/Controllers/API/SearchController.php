@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use Statamic\Facades\Entry;
-use Illuminate\Support\Facades\Cache;
 use App\Services\BlogService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Services\PreviewBuilderService;
 
 class SearchController extends Controller
@@ -31,7 +31,6 @@ class SearchController extends Controller
                 ->where('collection', $collection)
                 ->where('published', true)
                 ->orderBy('date', 'desc');
-
 
             if ($authorSlug && $author = $this->blogService->findAuthorBySlug($authorSlug)) {
                 $query->where('author', $author->id());

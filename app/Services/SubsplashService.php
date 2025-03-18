@@ -4,10 +4,10 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class SubsplashService
 {
@@ -143,7 +143,7 @@ class SubsplashService
         $mediaItemTitle = data_get($mediaItem, 'title');
         $mediaItemDate = Carbon::parse(data_get($mediaItem, 'date'));
         $mediaItemDateOnly = $mediaItemDate->format('Y-m-d');
-        $mediaItemSeriesID = data_get($mediaItem, "_embedded.media-series.id");
+        $mediaItemSeriesID = data_get($mediaItem, '_embedded.media-series.id');
 
         // Check if the entry already exists
         $entry = Entry::query()
@@ -159,7 +159,9 @@ class SubsplashService
             ->first();
 
         // If this is a custom item, return it.
-        if (!!$customItem) return $customItem;
+        if ((bool) $customItem) {
+            return $customItem;
+        }
 
         // If the entry does not exist, create it
         if (! $entry) {
@@ -173,7 +175,7 @@ class SubsplashService
 
         $data = [
             'title' => $mediaItemTitle,
-            'subsplash_media_item_id' => $mediaItemID
+            'subsplash_media_item_id' => $mediaItemID,
         ];
 
         // If there is an associated series, associate it to the entry.
@@ -263,16 +265,15 @@ class SubsplashService
 
     /**
      * A helper method that provides a slug that hasn't been used yet.
-     * 
+     *
      * Note: This method only works for Media Item entries as they have been
      * configured to use their associated series as part of their uri meaning
      * it is possible for items to have the same slug and not overlap.
-     * 
-     * @param string $title The title to slugify.
-     * @param string $fallback The fallback text to add if the slugified title is already in use. 
-     * @param ?string $mediaItemSeriesID For entries that incorporate their associated series into 
-     * their uri, the id associated to their series
-     * 
+     *
+     * @param  string  $title  The title to slugify.
+     * @param  string  $fallback  The fallback text to add if the slugified title is already in use.
+     * @param  ?string  $mediaItemSeriesID  For entries that incorporate their associated series into
+     *                                      their uri, the id associated to their series
      * @return string A slug that is not in use yet.
      */
     public function generateUniqueSlug(string $title, string $fallback, ?string $mediaItemSeriesID)
@@ -292,10 +293,11 @@ class SubsplashService
 
         $entryWithSlug = $query->first();
 
-        // If any such items exist, we create a unique slug for it. 
-        if (!$entryWithSlug) {
+        // If any such items exist, we create a unique slug for it.
+        if (! $entryWithSlug) {
             return $uniqueSlug;
         }
+
         return Str::slug("$title-$fallback");
     }
 }

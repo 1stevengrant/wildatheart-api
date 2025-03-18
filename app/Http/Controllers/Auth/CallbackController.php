@@ -45,7 +45,7 @@ class CallbackController extends Controller
                         'id' => $user->id,
                         'email' => $user->email,
                     ],
-                    'auth0User' => $auth0User
+                    'auth0User' => $auth0User,
                 ],
             ));
 

@@ -67,7 +67,7 @@ class MediaItemDataController extends Controller
 
         $subsplashMediaItem = $subsplash->getMediaItem($mediaItem->id);
 
-        $responseData['date'] = data_get($subsplashMediaItem, "date");
+        $responseData['date'] = data_get($subsplashMediaItem, 'date');
 
         if (isset($subsplashMediaItem['errors']) && $subsplashMediaItem['errors'][0]['code'] === 'resource_not_found') {
             return response()->json($mediaItem);
