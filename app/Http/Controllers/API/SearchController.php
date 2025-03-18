@@ -29,13 +29,9 @@ class SearchController extends Controller
         $output = Cache::remember($cacheKey, 60, function () use ($collection, $limit, $authorSlug) {
             $query = Entry::query()
                 ->where('collection', $collection)
-                ->where('published', true);
+                ->where('published', true)
+                ->orderBy('date', 'desc');
 
-            // Only apply the filter if 'media_type' exists
-            $query->where(function ($query) {
-                $query->whereNull('data->media_type')
-                    ->orWhereJsonDoesntContain('data->media_type', 'podcast-episode');
-            });
 
             if ($authorSlug && $author = $this->blogService->findAuthorBySlug($authorSlug)) {
                 $query->where('author', $author->id());
