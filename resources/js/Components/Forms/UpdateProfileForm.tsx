@@ -177,29 +177,17 @@ export const UpdateProfileForm = ({
                     <div className="space-y-4">
                         {/* Photo Preview/Display */}
                         {photoPreview ? (
-                            <div>
-                                <p className="text-sm text-gray-600 mb-2">
-                                    New Photo Preview
-                                </p>
-                                <div
-                                    className="w-[100px] h-[100px] rounded-full bg-cover bg-center"
-                                    style={{
-                                        backgroundImage: `url('${photoPreview}')`,
-                                    }}
-                                ></div>
-                            </div>
+                            <div
+                                className="w-[100px] h-[100px] rounded-full bg-cover bg-center"
+                                style={{
+                                    backgroundImage: `url('${photoPreview}')`,
+                                }}
+                            />
                         ) : user.image ? (
-                            <div>
-                                <p className="text-sm text-gray-600 mb-2">
-                                    {isDefaultAvatar
-                                        ? "Default Avatar"
-                                        : "Current Photo"}
-                                </p>
-                                <UserAvatar
-                                    image={user.image}
-                                    className="w-[100px] h-[100px]"
-                                />
-                            </div>
+                            <UserAvatar
+                                image={user.image}
+                                className="w-[100px] h-[100px]"
+                            />
                         ) : null}
 
                         {/* Buttons */}
@@ -253,7 +241,7 @@ export const UpdateProfileForm = ({
                                     </div>
                                     <button
                                         type="button"
-                                        className={`${photoButtonClass} text-red-500 hover:text-red-700 hover:border-red-500 border-red-500`}
+                                        className={`${photoButtonClass} text-red-500 hover:text-red-700 hover:border-red-700 border-red-500`}
                                         onClick={deletePhoto}
                                     >
                                         Yes, Remove Photo
