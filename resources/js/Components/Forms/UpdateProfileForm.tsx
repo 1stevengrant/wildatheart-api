@@ -10,6 +10,7 @@ import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import TextInput from "@/Components/Forms/TextInput";
+import { Spinner } from "@/Components/Ui/Spinner";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { scrollToError } from "@/helpers/scrollToError";
 import useRoute from "@/Hooks/useRoute";
@@ -34,7 +35,10 @@ export const UpdateProfileForm = ({
 
     const route = useRoute();
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+    const [confirmingPhotoDelete, setConfirmingPhotoDelete] = useState(false);
     const photoRef = useRef<HTMLInputElement>(null);
+
+    const isDefaultAvatar = user.image?.startsWith("data:image/");
 
     const updateProfileInformation = (event: React.FormEvent) => {
         event.preventDefault();
@@ -59,6 +63,7 @@ export const UpdateProfileForm = ({
             onSuccess: () => {
                 setPhotoPreview(null);
                 clearPhotoFileInput();
+                setConfirmingPhotoDelete(false);
             },
         });
     };
@@ -168,69 +173,93 @@ export const UpdateProfileForm = ({
                         value="Profile Photo"
                         className={`mb-4`}
                     />
-                    {photoPreview ? (
-                        <div className="mt-2 inline-flex justify-center space-x-4">
+
+                    <div className="space-y-4">
+                        {/* Photo Preview/Display */}
+                        {photoPreview ? (
                             <div
-                                className="block rounded-full bg-cover bg-center bg-no-repeat w-[134px] h-[134px]"
+                                className="w-[100px] h-[100px] rounded-full bg-cover bg-center"
                                 style={{
                                     backgroundImage: `url('${photoPreview}')`,
                                 }}
                             />
-                            <div className={`flex flex-col justify-center`}>
-                                <button
-                                    type="button"
-                                    className={`${photoButtonClass}`}
-                                    onClick={deletePhoto}
-                                >
-                                    Remove Photo
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            {user.image ? (
-                                <div
-                                    className={`inline-flex justify-center space-x-4`}
-                                >
-                                    <UserAvatar
-                                        image={user.image}
-                                        className={"w-[134px] h-[134px]"}
-                                    />
-                                    <div
-                                        className={`flex flex-col justify-center`}
+                        ) : user.image ? (
+                            <UserAvatar
+                                image={user.image}
+                                className="w-[100px] h-[100px]"
+                            />
+                        ) : null}
+
+                        {/* Buttons */}
+                        <div className="flex flex-wrap gap-2">
+                            {!confirmingPhotoDelete && (
+                                <>
+                                    {/* Photo selection button */}
+                                    <button
+                                        type="button"
+                                        className={photoButtonClass}
+                                        onClick={selectNewPhoto}
                                     >
+                                        {photoPreview
+                                            ? "Choose Different Photo"
+                                            : user.image && !isDefaultAvatar
+                                              ? "Change Photo"
+                                              : "Add Photo"}
+                                    </button>
+
+                                    {/* Remove photo button - only show for non-default photos */}
+                                    {(photoPreview ||
+                                        (user.image && !isDefaultAvatar)) && (
                                         <button
                                             type="button"
-                                            className={`${photoButtonClass}`}
-                                            onClick={deletePhoto}
+                                            className={photoButtonClass}
+                                            onClick={() => {
+                                                if (photoPreview) {
+                                                    setPhotoPreview(null);
+                                                    clearPhotoFileInput();
+                                                } else {
+                                                    setConfirmingPhotoDelete(
+                                                        true
+                                                    );
+                                                }
+                                            }}
                                         >
-                                            Remove Photo
+                                            {photoPreview
+                                                ? "Remove New Photo"
+                                                : "Remove Photo"}
                                         </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <>
-                                    <div
-                                        className={
-                                            "inline-flex justify-center space-x-4"
-                                        }
-                                    >
-                                        <div
-                                            className={`flex flex-col justify-center`}
-                                        >
-                                            <button
-                                                type="button"
-                                                className={`${photoButtonClass}`}
-                                                onClick={selectNewPhoto}
-                                            >
-                                                Select New Photo
-                                            </button>
-                                        </div>
-                                    </div>
+                                    )}
                                 </>
                             )}
-                        </>
-                    )}
+
+                            {/* Photo deletion confirmation */}
+                            {confirmingPhotoDelete && (
+                                <>
+                                    <div className="w-full text-sm text-red-600 mb-2">
+                                        Are you sure you want to remove your
+                                        photo?
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className={`${photoButtonClass}`}
+                                        onClick={deletePhoto}
+                                    >
+                                        Yes, Remove Photo
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={photoButtonClass}
+                                        onClick={() =>
+                                            setConfirmingPhotoDelete(false)
+                                        }
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
                     <InputError message={form.errors.image} />
                 </div>
 
@@ -265,7 +294,14 @@ export const UpdateProfileForm = ({
                         form.processing || !isValidPhoneNumber(form.data.phone)
                     }
                 >
-                    {buttonText ?? "Save"}
+                    {form.processing ? (
+                        <>
+                            <Spinner className="mr-2 h-4 w-4" />
+                            Saving Profile...
+                        </>
+                    ) : (
+                        buttonText ?? "Save"
+                    )}
                 </PrimaryButton>
                 <Link
                     href={route("home")}
