@@ -66,32 +66,7 @@ class MediaSeriesDataController extends Controller
 
             // If the associated media item isn't there, create it.
             if ($mediaItemEntry == null) {
-
-                $entry = Entry::make()
-                    ->published(true)
-                    ->blueprint('subsplash_media_item')
-                    ->collection('media_item')
-                    ->id($mediaItem['id'])
-                    ->slug($mediaItem['slug']);
-
-                $date = Carbon::now();
-
-                $entry->date($date);
-                $data = [
-                    'title' => $mediaItem['title'],
-                    'subsplash_media_item_id' => $mediaItem['id'],
-                ];
-
-                if (isset($mediaItem['_embedded']) && isset($mediaItem['_embedded']['media-series'])) {
-                    $seriesId = $mediaItem['_embedded']['media-series']['id'];
-                    $data['series'] = "entry::$seriesId";
-                }
-
-                $entry->data($data);
-
-                $entry->save();
-
-                $mediaItemEntry = $entry;
+                $mediaItemEntry = $subsplash->saveMediaItemAsEntry($mediaItem);
             }
 
             $responseData['mediaItems'][] = [
