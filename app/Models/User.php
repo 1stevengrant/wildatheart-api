@@ -201,4 +201,13 @@ class User extends Authenticatable
     {
         return $this->addresses()->where('is_primary', true)->first();
     }
+
+    public function hasCompleteProfile(): bool
+    {
+        return
+            ! empty($this->family_name) &&
+            ! empty($this->given_name) &&
+            filter_var($this->email, FILTER_VALIDATE_EMAIL) &&
+            ! empty($this->phone);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Event;
+use App\Jobs\TagWeGiveDonorJob;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Artisan;
 use App\Jobs\Event\SendNewEventSlackAlert;
@@ -21,6 +22,8 @@ class EventObserver
         $event->update([
             'sex' => determineSexOfEvent($event->eventType),
         ]);
+
+        TagWeGiveDonorJob::dispatch($event);
     }
 
     public function updated(Event $event): void

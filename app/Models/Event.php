@@ -237,4 +237,38 @@ class Event extends BaseModel
         $this->approved_at = $this->approved_at ? null : now();
         $this->save();
     }
+
+    public function getWeGiveTagAttribute(): ?int
+    {
+        // these magic numbers are the tag ids in WeGive environments
+
+        if (app()->isProduction()) {
+            $eventTypeMappings = [
+                EventType::FIRES => 239,
+                EventType::CAPTIVATING_FIRE => 240,
+                EventType::WAH_EXPERIENCE => 241,
+                EventType::WAH_RETREAT => 242,
+                EventType::SURVIVAL_SCHOOL => 243,
+                EventType::BECOMING_A_KING_EXPERIENCE => 244,
+                EventType::BECOMING_A_KING => 245,
+                EventType::CAPTIVATING_EXPERIENCE => 246,
+                EventType::CAPTIVATING_CORE_RETREAT => 247,
+            ];
+        } else {
+
+            $eventTypeMappings = [
+                EventType::FIRES => 281,
+                EventType::WAH_EXPERIENCE => 282,
+                EventType::WAH_RETREAT => 283,
+                EventType::SURVIVAL_SCHOOL => 284,
+                EventType::BECOMING_A_KING_EXPERIENCE => 285,
+                EventType::BECOMING_A_KING => 286,
+                EventType::CAPTIVATING_EXPERIENCE => 287,
+                EventType::CAPTIVATING_CORE_RETREAT => 288,
+                EventType::CAPTIVATING_FIRE => 289,
+            ];
+        }
+
+        return $eventTypeMappings[$this->eventType->name] ?? null;
+    }
 }
