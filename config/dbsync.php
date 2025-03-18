@@ -53,6 +53,12 @@ return [
     'ignore' => env('REMOTE_DATABASE_IGNORE_TABLES', ''),
 
     /*
+     * provide a comma separated list of tables to exclude data from, but include structure
+     * these tables will have their structure exported but not their data
+     */
+    'excludeData' => env('REMOTE_DATABASE_EXCLUDE_DATA', ''),
+
+    /*
      * Sets if the exported SQL file will be imported into the current database connection
      */
     'importSqlFile' => env('REMOTE_IMPORT_FILE', 'true'),
