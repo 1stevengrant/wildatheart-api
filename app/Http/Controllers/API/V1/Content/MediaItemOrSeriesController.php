@@ -118,6 +118,7 @@ class MediaItemOrSeriesController extends Controller
             $mediaItemsInSeries = Entry::query()
                 ->where('collection', 'media_item')
                 ->where('data->series', 'like', "%{$mediaItemOrSeries->series}")
+                ->limit(15)
                 ->get();
 
             // $mediaItem = $mediaItem->toArray();
