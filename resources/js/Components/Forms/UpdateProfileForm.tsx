@@ -241,7 +241,7 @@ export const UpdateProfileForm = ({
                                     </div>
                                     <button
                                         type="button"
-                                        className={`${photoButtonClass} text-red-500 hover:text-red-700 hover:border-red-700 border-red-500`}
+                                        className={`${photoButtonClass}`}
                                         onClick={deletePhoto}
                                     >
                                         Yes, Remove Photo
