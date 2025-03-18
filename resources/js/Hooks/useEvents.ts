@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import axios, { CancelTokenSource } from "axios";
 import { LngLatBounds } from "react-map-gl";
@@ -11,8 +11,46 @@ export const useEvents = () => {
     const setEvents = useSetRecoilState(eventsListState);
     const zoomAttemptsRef = useRef(0);
     const isZoomingRef = useRef(false);
-    const MIN_EVENTS = 3;
+    const pendingRequestRef = useRef(false);
+    const latestBoundsRef = useRef<LngLatBounds | null>(null);
+    const latestParamsRef = useRef<{
+        currentSex: string;
+        types: number[];
+        typeGroup: string;
+        startDateString: string;
+        endDateString: string;
+    } | null>(null);
+
+    const MIN_EVENTS = 1;
     const MAX_ZOOM_ATTEMPTS = 5;
+
+    // Clear zooming state and process any pending requests
+    useEffect(() => {
+        if (
+            !isZoomingRef.current &&
+            pendingRequestRef.current &&
+            latestBoundsRef.current &&
+            latestParamsRef.current
+        ) {
+            const params = latestParamsRef.current;
+            pendingRequestRef.current = false;
+
+            // Use a timeout to ensure we don't immediately re-enter a zooming state
+            setTimeout(() => {
+                // Create a new AbortController for this request
+                const controller = new AbortController();
+                getEvents(
+                    latestBoundsRef.current!,
+                    params.currentSex,
+                    params.types,
+                    params.typeGroup,
+                    params.startDateString,
+                    params.endDateString,
+                    controller.signal
+                );
+            }, 100);
+        }
+    }, [isZoomingRef.current]);
 
     const getEvents = async (
         bounds: LngLatBounds,
@@ -23,7 +61,19 @@ export const useEvents = () => {
         endDateString: string,
         signal: AbortSignal
     ): Promise<{ count: number; shouldZoomOut: boolean }> => {
+        // Store the latest parameters in case we need to retry after zooming
+        latestBoundsRef.current = bounds;
+        latestParamsRef.current = {
+            currentSex,
+            types,
+            typeGroup,
+            startDateString,
+            endDateString,
+        };
+
+        // If we're currently zooming, mark the request as pending and return
         if (!bounds || isZoomingRef.current) {
+            pendingRequestRef.current = true;
             return { count: 0, shouldZoomOut: false };
         }
 
@@ -101,10 +151,12 @@ export const useEvents = () => {
     const resetZoomAttempts = () => {
         zoomAttemptsRef.current = 0;
         isZoomingRef.current = false;
+        pendingRequestRef.current = false;
     };
 
     const setZoomingComplete = () => {
         isZoomingRef.current = false;
+        // Let the useEffect handle pending requests
     };
 
     return { getEvents, showLoading, resetZoomAttempts, setZoomingComplete };
