@@ -78,3 +78,28 @@ tabs:
               default: now
               validate:
                 - required
+          -
+            handle: content_type
+            field:
+              type: terms
+              taxonomies:
+                - content_type
+              display: 'Content Type'
+              mode: select
+          -
+            handle: topics
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: Topics
+              mode: select
+          -
+            handle: media_type
+            field:
+              type: terms
+              taxonomies:
+                - media_type
+              display: 'Media Type'
+              mode: select
+              max_items: 1

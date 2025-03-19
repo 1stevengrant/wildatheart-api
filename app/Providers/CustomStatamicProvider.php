@@ -8,6 +8,7 @@ use Statamic\Events\AssetUploaded;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
 use Illuminate\Support\Facades\Event as LaravelEvent;
+use Statamic\Facades\Entry;
 
 class CustomStatamicProvider extends ServiceProvider
 {
@@ -32,9 +33,20 @@ class CustomStatamicProvider extends ServiceProvider
 
         Collection::computed('media_item', 'custom_url', function ($entry, $value) {
 
+
             if ($entry->series) {
+
                 $series = $entry->series->value();
+
                 if ($series) {
+                    $podcast = Entry::query()
+                        ->where('collection', 'podcasts')
+                        ->where('data->subsplash_series_id', $series->id)
+                        ->first();
+
+                    if ($podcast) {
+                        return $podcast->uri() . '/' . $entry->slug;
+                    }
                     $seriesUri = $series->uri();
 
                     return $seriesUri . '/' . $entry->slug;
