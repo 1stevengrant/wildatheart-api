@@ -67,7 +67,7 @@ class PreviewBuilderService
 
         $subsplashMediaItem = $this->subsplash->getMediaItem($entry->subsplash_media_item_id);
 
-        if (!$subsplashMediaItem) {
+        if (! $subsplashMediaItem) {
             return null;
         }
 
