@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Cache;
 
 class SubsplashService
 {
+    private $podcastIDs;
+
     public function getAccessToken()
     {
 
@@ -180,6 +182,12 @@ class SubsplashService
 
         // If there is an associated series, associate it to the entry.
         if ($mediaItemSeriesID) {
+
+            // Use the series ID to see if this item is a podcast.
+            if ($this->isPodcast($mediaItemSeriesID)) {
+                $data['media_type'] = ['podcast-episode'];
+            }
+
             $mediaSeries = Entry::query()
                 ->where('collection', 'media_series')
                 ->where('id', $mediaItemSeriesID)
@@ -193,7 +201,7 @@ class SubsplashService
             $data['series'] = "entry::$mediaItemSeriesID";
         }
 
-        $uniqueSlug = $this->generateUniqueSlug($mediaItemTitle, $mediaItemDateOnly, $mediaItemSeriesID);
+        $uniqueSlug = $this->generateUniqueSlug($entry->id, $mediaItemTitle, $mediaItemDateOnly, $mediaItemSeriesID);
 
         $entry->date($mediaItemDate)
             ->slug($uniqueSlug)
@@ -264,12 +272,32 @@ class SubsplashService
     }
 
     /**
+     * A helper method that checks if a Series ID belongs to a Podcast.
+     *
+     * @param  string  $seriesId  the ID of the Subsplash series
+     * @return bool True if series id is a podcast
+     */
+    private function isPodcast(string $seriesId): bool
+    {
+
+        if (! $this->podcastIDs) {
+            $this->podcastIDs = Entry::query()
+                ->where('collection', 'podcasts')
+                ->get()
+                ->pluck('subsplash_series_id');
+        }
+
+        return $this->podcastIDs->contains($seriesId);
+    }
+
+    /**
      * A helper method that provides a slug that hasn't been used yet.
      *
      * Note: This method only works for Media Item entries as they have been
      * configured to use their associated series as part of their uri meaning
      * it is possible for items to have the same slug and not overlap.
      *
+     * @param  string  $entryId  The id of the entry this is working with.
      * @param  string  $title  The title to slugify.
      * @param  string  $fallback  The fallback text to add if the slugified title is already in use.
      * @param  ?string  $mediaItemSeriesID  For entries that incorporate their associated series into
@@ -277,6 +305,7 @@ class SubsplashService
      * @return string A slug that is not in use yet.
      */
     public function generateUniqueSlug(
+        string $entryId,
         string $title,
         string $fallback,
         ?string $mediaItemSeriesID
@@ -291,7 +320,9 @@ class SubsplashService
             $query->where('series', "entry::$mediaItemSeriesID");
         }
 
-        if (!$query->first()) {
+        $result = $query->first();
+
+        if (! $result || $result->id == $entryId) {
             return $slugifiedTitle;
         }
 

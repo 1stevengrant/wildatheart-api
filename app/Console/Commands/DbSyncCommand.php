@@ -35,7 +35,7 @@ class DbSyncCommand extends Command
 
             // Prepare tables for export
             $ignoreTables = explode(',', $config['ignore']);
-            $excludeDataTables = !empty($config['excludeData']) ? explode(',', $config['excludeData']) : [];
+            $excludeDataTables = ! empty($config['excludeData']) ? explode(',', $config['excludeData']) : [];
 
             // Export and import the database
             $exportResult = $this->exportDatabase($config, $ignoreTables, $excludeDataTables);
@@ -67,8 +67,6 @@ class DbSyncCommand extends Command
 
     /**
      * Get all configuration values
-     *
-     * @return array
      */
     private function getConfiguration(): array
     {
@@ -108,11 +106,6 @@ class DbSyncCommand extends Command
 
     /**
      * Export the database
-     *
-     * @param array $config
-     * @param array $ignoreTables
-     * @param array $excludeDataTables
-     * @return int
      */
     private function exportDatabase(array $config, array $ignoreTables, array $excludeDataTables): int
     {
@@ -120,7 +113,7 @@ class DbSyncCommand extends Command
         $ignoreString = $this->buildIgnoreString($config['database'], $ignoreTables);
 
         // Handle structure-only tables
-        if (!empty($excludeDataTables)) {
+        if (! empty($excludeDataTables)) {
             return $this->exportWithStructureOnlyTables($config, $ignoreString, $excludeDataTables);
         }
 
@@ -130,10 +123,6 @@ class DbSyncCommand extends Command
 
     /**
      * Build the ignore tables string
-     *
-     * @param string $database
-     * @param array $tables
-     * @return string
      */
     private function buildIgnoreString(string $database, array $tables): string
     {
@@ -143,16 +132,12 @@ class DbSyncCommand extends Command
                 $ignoreString .= " --ignore-table=$database.$name";
             }
         }
+
         return $ignoreString;
     }
 
     /**
      * Export database with structure-only tables
-     *
-     * @param array $config
-     * @param string $ignoreString
-     * @param array $excludeDataTables
-     * @return int
      */
     private function exportWithStructureOnlyTables(array $config, string $ignoreString, array $excludeDataTables): int
     {
@@ -169,6 +154,7 @@ class DbSyncCommand extends Command
 
         if ($structureResult !== self::SUCCESS) {
             $this->error('Structure export failed');
+
             return self::FAILURE;
         }
 
@@ -185,6 +171,7 @@ class DbSyncCommand extends Command
 
         if ($dataResult !== self::SUCCESS) {
             $this->error('Data export failed');
+
             return self::FAILURE;
         }
 
@@ -198,12 +185,6 @@ class DbSyncCommand extends Command
 
     /**
      * Execute mysqldump export
-     *
-     * @param array $config
-     * @param string $ignoreString
-     * @param string $outputFile
-     * @param string $additionalOptions
-     * @return int
      */
     private function executeExport(array $config, string $ignoreString, string $outputFile, string $additionalOptions = ''): int
     {
@@ -223,9 +204,6 @@ class DbSyncCommand extends Command
 
     /**
      * Import the database
-     *
-     * @param array $config
-     * @return int
      */
     private function importDatabase(array $config): int
     {
@@ -238,6 +216,7 @@ class DbSyncCommand extends Command
 
         if ($result !== 0) {
             $this->error('Import failed');
+
             return self::FAILURE;
         }
 
