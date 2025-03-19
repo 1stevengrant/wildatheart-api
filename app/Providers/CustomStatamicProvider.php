@@ -3,12 +3,12 @@
 namespace App\Providers;
 
 use Statamic\Statamic;
+use Statamic\Facades\Entry;
 use Statamic\Facades\Collection;
 use Statamic\Events\AssetUploaded;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
 use Illuminate\Support\Facades\Event as LaravelEvent;
-use Statamic\Facades\Entry;
 
 class CustomStatamicProvider extends ServiceProvider
 {
@@ -32,7 +32,6 @@ class CustomStatamicProvider extends ServiceProvider
         });
 
         Collection::computed('media_item', 'custom_url', function ($entry, $value) {
-
 
             if ($entry->series) {
 

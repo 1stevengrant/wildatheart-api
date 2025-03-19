@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Cache;
 
 class SubsplashService
 {
-
     private $podcastIDs;
 
     public function getAccessToken()
@@ -181,9 +180,6 @@ class SubsplashService
             'subsplash_media_item_id' => $mediaItemID,
         ];
 
-
-
-
         // If there is an associated series, associate it to the entry.
         if ($mediaItemSeriesID) {
 
@@ -277,20 +273,20 @@ class SubsplashService
 
     /**
      * A helper method that checks if a Series ID belongs to a Podcast.
-     * 
-     * @param string $seriesId the ID of the Subsplash series
-     * 
+     *
+     * @param  string  $seriesId  the ID of the Subsplash series
      * @return bool True if series id is a podcast
      */
     private function isPodcast(string $seriesId): bool
     {
 
-        if (!$this->podcastIDs) {
+        if (! $this->podcastIDs) {
             $this->podcastIDs = Entry::query()
                 ->where('collection', 'podcasts')
                 ->get()
-                ->pluck("subsplash_series_id");
+                ->pluck('subsplash_series_id');
         }
+
         return $this->podcastIDs->contains($seriesId);
     }
 
@@ -301,7 +297,7 @@ class SubsplashService
      * configured to use their associated series as part of their uri meaning
      * it is possible for items to have the same slug and not overlap.
      *
-     * @param  string  $entryId  The id of the entry this is working with. 
+     * @param  string  $entryId  The id of the entry this is working with.
      * @param  string  $title  The title to slugify.
      * @param  string  $fallback  The fallback text to add if the slugified title is already in use.
      * @param  ?string  $mediaItemSeriesID  For entries that incorporate their associated series into
@@ -326,7 +322,7 @@ class SubsplashService
 
         $result = $query->first();
 
-        if (!$result || $result->id == $entryId) {
+        if (! $result || $result->id == $entryId) {
             return $slugifiedTitle;
         }
 
