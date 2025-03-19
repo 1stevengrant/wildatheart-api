@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use Statamic\Facades\Entry;
-use Illuminate\Support\Facades\Cache;
 use App\Services\BlogService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Services\PreviewBuilderService;
 
 class SearchController extends Controller
@@ -29,13 +29,8 @@ class SearchController extends Controller
         $output = Cache::remember($cacheKey, 60, function () use ($collection, $limit, $authorSlug) {
             $query = Entry::query()
                 ->where('collection', $collection)
-                ->where('published', true);
-
-            // Only apply the filter if 'media_type' exists
-            $query->where(function ($query) {
-                $query->whereNull('data->media_type')
-                    ->orWhereJsonDoesntContain('data->media_type', 'podcast-episode');
-            });
+                ->where('published', true)
+                ->orderBy('date', 'desc');
 
             if ($authorSlug && $author = $this->blogService->findAuthorBySlug($authorSlug)) {
                 $query->where('author', $author->id());

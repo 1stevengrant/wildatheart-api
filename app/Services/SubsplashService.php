@@ -4,12 +4,15 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
 class SubsplashService
 {
+    private $podcastIDs;
+
     public function getAccessToken()
     {
 
@@ -138,11 +141,29 @@ class SubsplashService
 
     public function saveMediaItemAsEntry($mediaItem)
     {
+        $mediaItemID = data_get($mediaItem, 'id');
+        $mediaItemTitle = data_get($mediaItem, 'title');
+        $mediaItemDate = Carbon::parse(data_get($mediaItem, 'date'));
+        $mediaItemDateOnly = $mediaItemDate->format('Y-m-d');
+        $mediaItemSeriesID = data_get($mediaItem, '_embedded.media-series.id');
+
         // Check if the entry already exists
         $entry = Entry::query()
             ->where('collection', 'media_item')
-            ->where('id', data_get($mediaItem, 'id'))
+            ->where('id', $mediaItemID)
             ->first();
+
+        // Check if custom media item is already associated to this id.
+        $customItem = Entry::query()
+            ->where('collection', 'media_item')
+            ->where('blueprint', 'custom_media_item')
+            ->where('data->subsplash_media_item_id', $mediaItemID)
+            ->first();
+
+        // If this is a custom item, return it.
+        if ((bool) $customItem) {
+            return $customItem;
+        }
 
         // If the entry does not exist, create it
         if (! $entry) {
@@ -151,38 +172,43 @@ class SubsplashService
                 ->blueprint('subsplash_media_item')
                 ->collection('media_item')
                 ->id(data_get($mediaItem, 'id'))
-                ->slug(data_get($mediaItem, 'title'));
+                ->slug($mediaItemTitle);
         }
 
-        $publishedAt = data_get($mediaItem, 'published_at');
-        $entry->date(Carbon::parse($publishedAt));
-
-        $entry->slug(data_get($mediaItem, 'title'));
-
         $data = [
-            'title' => data_get($mediaItem, 'title'),
-            'subsplash_media_item_id' => data_get($mediaItem, 'id'),
+            'title' => $mediaItemTitle,
+            'subsplash_media_item_id' => $mediaItemID,
         ];
 
-        $seriesId = data_get($mediaItem, '_embedded.media-series.id');
+        // If there is an associated series, associate it to the entry.
+        if ($mediaItemSeriesID) {
 
-        if ($seriesId) {
+            // Use the series ID to see if this item is a podcast.
+            if ($this->isPodcast($mediaItemSeriesID)) {
+                $data['media_type'] = ['podcast-episode'];
+            }
 
             $mediaSeries = Entry::query()
                 ->where('collection', 'media_series')
-                ->where('id', $seriesId)
+                ->where('id', $mediaItemSeriesID)
                 ->first();
 
             if (! $mediaSeries) {
-                $mediaSeries = $this->getMediaSeries($seriesId);
+                $mediaSeries = $this->getMediaSeries($mediaItemSeriesID);
                 $this->saveMediaSeriesAsEntry($mediaSeries);
             }
 
-            $data['series'] = "entry::$seriesId";
+            $data['series'] = "entry::$mediaItemSeriesID";
         }
 
-        $entry->data($data);
-        $entry->save();
+        $uniqueSlug = $this->generateUniqueSlug($entry->id, $mediaItemTitle, $mediaItemDateOnly, $mediaItemSeriesID);
+
+        $entry->date($mediaItemDate)
+            ->slug($uniqueSlug)
+            ->data($data)
+            ->save();
+
+        return $entry;
     }
 
     public function saveMediaSeriesAsEntry($mediaSeries)
@@ -243,5 +269,63 @@ class SubsplashService
 
             $entry->save();
         }
+    }
+
+    /**
+     * A helper method that checks if a Series ID belongs to a Podcast.
+     *
+     * @param  string  $seriesId  the ID of the Subsplash series
+     * @return bool True if series id is a podcast
+     */
+    private function isPodcast(string $seriesId): bool
+    {
+
+        if (! $this->podcastIDs) {
+            $this->podcastIDs = Entry::query()
+                ->where('collection', 'podcasts')
+                ->get()
+                ->pluck('subsplash_series_id');
+        }
+
+        return $this->podcastIDs->contains($seriesId);
+    }
+
+    /**
+     * A helper method that provides a slug that hasn't been used yet.
+     *
+     * Note: This method only works for Media Item entries as they have been
+     * configured to use their associated series as part of their uri meaning
+     * it is possible for items to have the same slug and not overlap.
+     *
+     * @param  string  $entryId  The id of the entry this is working with.
+     * @param  string  $title  The title to slugify.
+     * @param  string  $fallback  The fallback text to add if the slugified title is already in use.
+     * @param  ?string  $mediaItemSeriesID  For entries that incorporate their associated series into
+     *                                      their uri, the id associated to their series
+     * @return string A slug that is not in use yet.
+     */
+    public function generateUniqueSlug(
+        string $entryId,
+        string $title,
+        string $fallback,
+        ?string $mediaItemSeriesID
+    ) {
+        $slugifiedTitle = Str::slug($title);
+
+        $query = Entry::query()
+            ->where('collection', 'media_item')
+            ->where('slug', $slugifiedTitle);
+
+        if ($mediaItemSeriesID) {
+            $query->where('series', "entry::$mediaItemSeriesID");
+        }
+
+        $result = $query->first();
+
+        if (! $result || $result->id == $entryId) {
+            return $slugifiedTitle;
+        }
+
+        return Str::slug("$title-$fallback");
     }
 }

@@ -67,6 +67,8 @@ class MediaItemDataController extends Controller
 
         $subsplashMediaItem = $subsplash->getMediaItem($mediaItem->id);
 
+        $responseData['date'] = data_get($subsplashMediaItem, 'date');
+
         if (isset($subsplashMediaItem['errors']) && $subsplashMediaItem['errors'][0]['code'] === 'resource_not_found') {
             return response()->json($mediaItem);
         }
@@ -103,6 +105,7 @@ class MediaItemDataController extends Controller
             $responseData['series'] = $subsplashSeries;
             $seriesEntry = Entry::query()
                 ->where('id', $seriesId)
+                ->limit(20)
                 ->first();
 
             if (! $seriesEntry) {
@@ -179,6 +182,8 @@ class MediaItemDataController extends Controller
             $mediaItemEntries = Entry::query()
                 ->where('collection', 'media_item')
                 ->where('data->series', 'like', "%{$seriesId}")
+                ->orderBy('date', 'desc')
+                ->limit(20)
                 ->get();
 
             if ($mediaItemEntries->isEmpty()) {
