@@ -213,17 +213,17 @@ class Event extends BaseModel
     public const MATERIAL_ORDER_ITEMS = [
         ['value' => '', 'label' => 'Select'],
         ['value' => '0', 'label' => 'None'],
-        ['value' => '10', 'label' => '1-10'],
-        ['value' => '20', 'label' => '11-20'],
-        ['value' => '30', 'label' => '21-30'],
-        ['value' => '40', 'label' => '31-40'],
-        ['value' => '50', 'label' => '41-50'],
-        ['value' => '60', 'label' => '51-60'],
-        ['value' => '70', 'label' => '61-70'],
-        ['value' => '80', 'label' => '71-80'],
-        ['value' => '90', 'label' => '81-90'],
-        ['value' => '100', 'label' => '91-100'],
-        ['value' => '200', 'label' => '100+'],
+        ['value' => '1 x 10-pack', 'label' => '1-10'],
+        ['value' => '2 x 10-pack', 'label' => '11-20'],
+        ['value' => '3 x 10-pack', 'label' => '21-30'],
+        ['value' => '4 x 10-pack', 'label' => '31-40'],
+        ['value' => '5 x 10-pack', 'label' => '41-50'],
+        ['value' => '6 x 10-pack', 'label' => '51-60'],
+        ['value' => '7 x 10-pack', 'label' => '61-70'],
+        ['value' => '8 x 10-pack', 'label' => '71-80'],
+        ['value' => '9 x 10-pack', 'label' => '81-90'],
+        ['value' => '10 x 10-pack', 'label' => '91-100'],
+        ['value' => '20 x 10-pack', 'label' => '100+'],
     ];
 
     public function togglePrivacy(): void
