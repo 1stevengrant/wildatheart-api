@@ -241,6 +241,7 @@ class Event extends BaseModel
     public function getWeGiveTagAttribute(): ?int
     {
         // these magic numbers are the tag ids in WeGive environments
+        // found at https://dashboard.wegive.com/data/tags/
 
         if (app()->isProduction()) {
             $eventTypeMappings = [
