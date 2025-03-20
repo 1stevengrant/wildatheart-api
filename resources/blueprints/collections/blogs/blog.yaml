@@ -20,7 +20,6 @@ tabs:
               link_collections:
                 - blogs
                 - books
-                - categories
                 - authors
                 - events
                 - experiences
@@ -29,15 +28,7 @@ tabs:
                 - pages
                 - podcasts
                 - prayers
-                - sessions
               container: s3
-              sets:
-                new_set_group:
-                  display: 'New Set Group'
-                  sets:
-                    new_set:
-                      display: 'New Set'
-                      fields: {  }
           -
             handle: author
             field:
@@ -46,13 +37,11 @@ tabs:
                 - authors
               type: entries
               display: Author
-          -
-            handle: categories
-            field:
-              collections:
-                - categories
-              type: entries
-              display: Categories
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
           -
             import: seo
   sidebar:
