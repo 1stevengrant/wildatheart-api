@@ -9,8 +9,10 @@ use App\Http\Controllers\UpcomingEventsController;
 use App\Http\Controllers\CreateSupportTicketController;
 use App\Http\Controllers\Event\ViewEventListingController;
 use App\Http\Controllers\Attendee\ConnectWithHostController;
+use App\Http\Controllers\User\CompleteUserProfileController;
 use App\Http\Controllers\Webhooks\SendGridWebhookController;
 use App\Http\Controllers\HandleMonthlyHostFireEmailController;
+use App\Http\Controllers\User\IncompleteUserProfileController;
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -52,4 +54,9 @@ Route::prefix('drupal')->name('drupal.')->group(function () {
 Route::name('upcoming.')->group(function () {
     Route::get('upcoming', UpcomingEventsController::class)->name('events');
     Route::get('fires', FiresPageController::class)->name('fires');
+});
+
+Route::prefix('users')->name('users.')->group(function () {
+    Route::get('incomplete', IncompleteUserProfileController::class)->name('incomplete');
+    Route::get('complete', CompleteUserProfileController::class)->name('complete');
 });

@@ -1,5 +1,9 @@
 @if (app()->isProduction())
     <script
+        src="https://js.sentry-cdn.com/c3c215abd7614fb4840a1dd95d476424.min.js"
+        crossorigin="anonymous"
+    ></script>
+    <script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-CT9GZRL7RX"
     ></script>

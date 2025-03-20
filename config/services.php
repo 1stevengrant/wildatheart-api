@@ -66,4 +66,8 @@ return [
         'astro_build_hook' => env('CLOUDFLARE_ASTRO_BUILD_HOOK'),
     ],
 
+    'wegive' => [
+        'api_key' => env('WEGIVE_API_KEY'),
+    ],
+
 ];
