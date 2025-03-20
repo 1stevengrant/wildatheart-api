@@ -88,6 +88,12 @@ class SubsplashService
         return $this->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItemId}");
     }
 
+    public function findMediaItemByTitle($title)
+    {
+        dump("Searching for:$title");
+        return $this->subsplashFetch("https://core.subsplash.com/media/v1/media-items?filter%5Btitle%5D=*" . urlencode($title) . "*");
+    }
+
     public function getMediaSeries($mediaSeriesId)
     {
         return $this->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$mediaSeriesId}");
@@ -165,6 +171,7 @@ class SubsplashService
             return $customItem;
         }
 
+
         // If the entry does not exist, create it
         if (! $entry) {
             $entry = Entry::make()
@@ -175,10 +182,9 @@ class SubsplashService
                 ->slug($mediaItemTitle);
         }
 
-        $data = [
-            'title' => $mediaItemTitle,
-            'subsplash_media_item_id' => $mediaItemID,
-        ];
+        $data = $entry->data();
+        $data['title'] = $mediaItemTitle;
+        $data['subsplash_media_item_id'] = $mediaItemID;
 
         // If there is an associated series, associate it to the entry.
         if ($mediaItemSeriesID) {

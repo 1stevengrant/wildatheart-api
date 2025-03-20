@@ -1016,7 +1016,7 @@
   },
   "12993": {
     "id": "12993",
-    "dest_id": null,
+    "dest_id": "a33f483d-f49d-4eb8-bea5-1564290d3a5a",
     "source_data": {
       "nid": "12993",
       "title": "Advanced User's Guide",
@@ -10403,7 +10403,7 @@
   },
   "13104": {
     "id": "13104",
-    "dest_id": null,
+    "dest_id": "de451c41-0c00-4cbd-99d3-4cb37d12528f",
     "source_data": {
       "nid": "13104",
       "title": "Platinum Collection - Session Questions PDF",
