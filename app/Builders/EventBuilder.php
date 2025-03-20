@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
 {
-    // Event Type Name
     public function fires(): EventBuilder
     {
         return $this->where('event_type_id', EventType::where('name', EventType::FIRES)->first()->id);
@@ -53,8 +52,6 @@ class EventBuilder extends Builder
     {
         return $this->where('event_type_id', EventType::where('name', EventType::SURVIVAL_SCHOOL)->first()->id);
     }
-
-    // Event Type Group
 
     public function retreats(): EventBuilder
     {
@@ -251,5 +248,21 @@ class EventBuilder extends Builder
     public function beginsAfter(string $date): EventBuilder
     {
         return $this->where('start_date', '>', $date);
+    }
+
+    public function inCountry(array $countries): EventBuilder
+    {
+        return $this->where(function ($query) use ($countries) {
+            foreach ($countries as $country) {
+                $query->orWhere('country', 'like', "%$country%");
+            }
+        });
+    }
+
+    public function inCity(string $city): EventBuilder
+    {
+        return $this->where(function ($query) use ($city) {
+            $query->where('city', 'like', "%$city%");
+        });
     }
 }
