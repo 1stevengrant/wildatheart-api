@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+
+class UpdateUserPhoneNumbersCommand extends Command
+{
+    protected $signature = 'app:update-user-phone-numbers';
+
+    protected $description = 'Command description';
+
+    public function handle()
+    {
+        $usersWithoutPhone = \App\Models\User::whereNull('phone')->whereNotNull('provider_id')->get();
+
+        $bar = $this->output->createProgressBar($usersWithoutPhone->count());
+
+        $bar->start();
+
+        foreach ($usersWithoutPhone as $user) {
+            \App\Jobs\User\UpdateProfileFromAuth0Job::dispatch($user);
+            $bar->advance();
+        }
+
+        $bar->finish();
+    }
+}

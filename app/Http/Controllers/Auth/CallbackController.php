@@ -10,6 +10,7 @@ use Auth0\SDK\Auth0 as Auth0SDK;
 use App\Http\Controllers\Controller;
 use Auth0\SDK\Exception\StateException;
 use Illuminate\Support\Facades\Session;
+use App\Jobs\User\UpdateProfileFromAuth0Job;
 
 class CallbackController extends Controller
 {
@@ -34,6 +35,8 @@ class CallbackController extends Controller
             ray($auth0User);
 
             $user = $this->findOrCreateUser($auth0User);
+
+            UpdateProfileFromAuth0Job::dispatch($user);
 
             auth()->login($user);
 
