@@ -8,7 +8,7 @@ class UpdateUserPhoneNumbersCommand extends Command
 {
     protected $signature = 'app:update-user-phone-numbers';
 
-    protected $description = 'Command description';
+    protected $description = 'update the user phone numbers from auth0';
 
     public function handle()
     {
