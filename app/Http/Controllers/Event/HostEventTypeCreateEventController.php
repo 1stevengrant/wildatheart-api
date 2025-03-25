@@ -30,8 +30,6 @@ class HostEventTypeCreateEventController extends Controller
 
     public function store(EventRequest $request, EventType $eventType)
     {
-        ray(session('event_steps'));
-
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,
             groupType: $eventType->group_type,

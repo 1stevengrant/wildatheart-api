@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EventRequest extends FormRequest
@@ -28,9 +29,11 @@ class EventRequest extends FormRequest
             'start_date' => ['required', 'date'],
         ];
 
+        $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
+
         $rules['number_of_items_in_material_order'] = $this->route('eventType')?->hasMaterialsOrder()
-            ? ['required', 'numeric']
-            : ['nullable', 'numeric'];
+            ? ['required', 'string', 'in:' . implode(',', $validValues)]
+            : ['nullable', 'string', 'in:' . implode(',', $validValues)];
 
         return $rules;
     }
