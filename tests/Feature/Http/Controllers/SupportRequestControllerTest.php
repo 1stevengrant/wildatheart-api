@@ -31,6 +31,19 @@ test('a support ticket requires an email address', function () {
     $response->assertSessionHasErrors('email');
 });
 
+test('a support ticket requires a valid email address with valid dns and rfs', function () {
+    $attributes = [
+        'name' => 'John Doe',
+        'subject' => 'Test feedback',
+        'description' => 'This is a test feedback',
+        'email' => 'hello@digitalevangelistnet',
+    ];
+
+    $response = $this->post(route('support.store'), $attributes);
+
+    $response->assertSessionHasErrors('email');
+});
+
 test('a support ticket requires a valid email address', function () {
     $attributes = [
         'name' => 'John Doe',
