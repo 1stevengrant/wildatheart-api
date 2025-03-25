@@ -145,7 +145,7 @@ class SubsplashService
         return $mediaItems;
     }
 
-    public function saveMediaItemAsEntry($mediaItem)
+    public function saveMediaItemAsEntry($mediaItem, $updateSlug = false)
     {
         $mediaItemID = data_get($mediaItem, 'id');
         $mediaItemTitle = data_get($mediaItem, 'title');
@@ -173,6 +173,7 @@ class SubsplashService
 
 
         // If the entry does not exist, create it
+        $entryCreated = false;
         if (! $entry) {
             $entry = Entry::make()
                 ->published(true)
@@ -180,6 +181,7 @@ class SubsplashService
                 ->collection('media_item')
                 ->id(data_get($mediaItem, 'id'))
                 ->slug($mediaItemTitle);
+            $entryCreated = true;
         }
 
         $data = $entry->data();
@@ -207,10 +209,15 @@ class SubsplashService
             $data['series'] = "entry::$mediaItemSeriesID";
         }
 
-        $uniqueSlug = $this->generateUniqueSlug($entry->id, $mediaItemTitle, $mediaItemDateOnly, $mediaItemSeriesID);
+
+        // Update to uniqe slug if entry is just now being created
+        // or if $updateSlug is true.
+        if ($entryCreated || $updateSlug) {
+            $uniqueSlug = $this->generateUniqueSlug($entry->id, $mediaItemTitle, $mediaItemDateOnly, $mediaItemSeriesID);
+            $entry->slug($uniqueSlug);
+        }
 
         $entry->date($mediaItemDate)
-            ->slug($uniqueSlug)
             ->data($data)
             ->save();
 
