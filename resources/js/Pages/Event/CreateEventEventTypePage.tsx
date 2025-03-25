@@ -423,12 +423,7 @@ const CreateEventEventTypePage = () => {
                                                     | HTMLSelectElement
                                                 >
                                             ) => {
-                                                const value =
-                                                    e.target.value === ""
-                                                        ? null
-                                                        : Number(
-                                                              e.target.value
-                                                          );
+                                                const value = e.target.value;
                                                 setData(
                                                     "number_of_items_in_material_order",
                                                     value
