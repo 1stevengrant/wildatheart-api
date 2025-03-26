@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Str;
+use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Statamic\Facades\Entry;
-use Illuminate\Support\Str;
 
 class GenerateRedirects extends Command
 {
@@ -17,25 +17,24 @@ class GenerateRedirects extends Command
     public function handle()
     {
 
-        $response = Http::get("https://wildatheart.org/json/podcasts");
+        $response = Http::get('https://wildatheart.org/json/podcasts');
         $data = $response->json();
 
         $onlyPodcasts = collect($data)->filter(function ($item) {
-            $url = data_get($item, 'url');;
+            $url = data_get($item, 'url');
 
-            return !preg_match("/\/rhplay\/[^\/]+$/", $url)
-                && !str_contains($url, "rhplay/video")
-                && !str_contains($url, "rhplay/audio");
+            return ! preg_match("/\/rhplay\/[^\/]+$/", $url)
+                && ! str_contains($url, 'rhplay/video')
+                && ! str_contains($url, 'rhplay/audio');
         });
 
-        if (!$data) {
+        if (! $data) {
             $this->error('Failed to fetch podcast data');
+
             return 1;
         }
 
-
         $fileName = $this->getFileName('podcast_redirects.txt');
-
 
         Storage::makeDirectory('redirects');
 
@@ -43,7 +42,7 @@ class GenerateRedirects extends Command
         $ignoreRoutes = [
             '/psa-back-next-week',
             "John Eldredge Explains Why Understanding Isn't Healing and how Jesus Is Integrating Force of the Universe", // changed title
-            '/140-marriage-self-care-and-deeper-questions' // AS episode that appears to have been deleted
+            '/140-marriage-self-care-and-deeper-questions', // AS episode that appears to have been deleted
         ];
 
         $fallbackRoutes = [
@@ -55,24 +54,23 @@ class GenerateRedirects extends Command
             $url = data_get($item, 'url');
 
             $line = $url;
-            $line .= " ";
+            $line .= ' ';
 
             $title = data_get($item, 'title');
             $slug = Str::slug($title);
             $entry = Entry::query()->where('slug', $slug)->first();
 
-
             if ($entry) {
                 $entryTitle = $entry->title;
                 $this->info("Found $entryTitle");
                 $line .= $entry->uri;
-                $line .= " 301";
+                $line .= ' 301';
                 Storage::append($fileName, $line);
             } elseif (in_array($url, $ignoreRoutes)) {
                 $this->info("Skipping $title");
             } elseif ($fallback = data_get($fallbackRoutes, $url)) {
                 $line .= $fallback;
-                $line .= " 301";
+                $line .= ' 301';
             } else {
                 $this->error("Could not find $title");
                 $missingEntries[] = $title;
@@ -83,7 +81,6 @@ class GenerateRedirects extends Command
             $this->error($entry);
         }
 
-
         $this->info("Written to $fileName");
     }
 
@@ -91,20 +88,21 @@ class GenerateRedirects extends Command
     {
         $fileDate = now()->format('Ymd');
         $fileDateMillis = round(microtime(true) * 1000);
+
         return "{$fileDate}_{$fileDateMillis}_{$fileName}";
     }
 
-    private function create_pathauto_slug($string, $options = array())
+    private function create_pathauto_slug($string, $options = [])
     {
         // Default options matching Pathauto's defaults
-        $defaults = array(
+        $defaults = [
             'separator' => '-',
             'transliterate' => false,
             'reduce_ascii' => false,
             'lowercase' => true,
             'maxlength' => 100,
-            'ignore_words' => 'a, an, as, at, before, but, by, for, from, in, into, like, of, off, on, over, plus, since, than, the, this, that, to, up, via, with'
-        );
+            'ignore_words' => 'a, an, as, at, before, but, by, for, from, in, into, like, of, off, on, over, plus, since, than, the, this, that, to, up, via, with',
+        ];
 
         $options = array_merge($defaults, $options);
 
@@ -123,7 +121,7 @@ class GenerateRedirects extends Command
         }
 
         // Replace punctuation with separator
-        $punctuation = array(
+        $punctuation = [
             ' ' => $options['separator'],
             '_' => $options['separator'],
             '/' => $options['separator'],
@@ -280,8 +278,8 @@ class GenerateRedirects extends Command
             '⋼' => $options['separator'],
             '⋽' => $options['separator'],
             '⋾' => $options['separator'],
-            '⋿' => $options['separator']
-        );
+            '⋿' => $options['separator'],
+        ];
 
         $output = strtr($output, $punctuation);
 
@@ -291,7 +289,7 @@ class GenerateRedirects extends Command
         }
 
         // Remove ignored words
-        if (!empty($options['ignore_words'])) {
+        if (! empty($options['ignore_words'])) {
             $ignore_words = explode(',', $options['ignore_words']);
             $ignore_words = array_map('trim', $ignore_words);
             $ignore_pattern = '/\b(' . implode('|', array_map('preg_quote', $ignore_words)) . ')\b/i';
@@ -303,19 +301,19 @@ class GenerateRedirects extends Command
 
         // Convert to lowercase if enabled
         if ($options['lowercase']) {
-            $output = strtolower($output);
+            $output = mb_strtolower($output);
         }
 
         // Trim separators from beginning and end
-        $output = trim($output, $options['separator']);
+        $output = mb_trim($output, $options['separator']);
 
         // Truncate to max length
-        if (strlen($output) > $options['maxlength']) {
-            $output = substr($output, 0, $options['maxlength']);
+        if (mb_strlen($output) > $options['maxlength']) {
+            $output = mb_substr($output, 0, $options['maxlength']);
             // Find the last separator and truncate there
-            $last_separator = strrpos($output, $options['separator']);
+            $last_separator = mb_strrpos($output, $options['separator']);
             if ($last_separator !== false) {
-                $output = substr($output, 0, $last_separator);
+                $output = mb_substr($output, 0, $last_separator);
             }
         }
 

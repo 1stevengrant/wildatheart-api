@@ -2,22 +2,22 @@
 
 namespace App\Observers;
 
-use App\Http\Integrations\Cloudflare\CloudflareConnector;
-use App\Http\Integrations\Cloudflare\Requests\KV\DeleteRequest;
-use App\Http\Integrations\Cloudflare\Requests\KV\PutRequest;
-use App\Models\Redirect;
 use Exception;
+use App\Models\Redirect;
+use App\Http\Integrations\Cloudflare\CloudflareConnector;
+use App\Http\Integrations\Cloudflare\Requests\KV\PutRequest;
+use App\Http\Integrations\Cloudflare\Requests\KV\DeleteRequest;
 
 class RedirectObserver
 {
-
     private string $cloudflareAccountId;
+
     private string $cloudflareNamespaceID;
 
     public function __construct(private CloudflareConnector $cloudflare)
     {
-        $this->cloudflareAccountId = config("cloudflare.account_id");
-        $this->cloudflareNamespaceID = config("cloudflare.kv_redirects_id");
+        $this->cloudflareAccountId = config('cloudflare.account_id');
+        $this->cloudflareNamespaceID = config('cloudflare.kv_redirects_id');
     }
 
     public function created(Redirect $redirect): void
@@ -25,10 +25,10 @@ class RedirectObserver
         $source = $redirect->source;
 
         $putRequest = new PutRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, urlencode($source));
-        $putRequest->body()->add("value", $redirect->destination);
+        $putRequest->body()->add('value', $redirect->destination);
         $response = $this->cloudflare->send($putRequest);
         $body = $response->object();
-        if (!$body->success) {
+        if (! $body->success) {
             throw new Exception(json_encode($body->errors));
         }
     }
@@ -44,7 +44,7 @@ class RedirectObserver
         $deleteRequest = new DeleteRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, urlencode($source));
         $response = $this->cloudflare->send($deleteRequest);
         $body = $response->object();
-        if (!$body->success) {
+        if (! $body->success) {
             throw new Exception(json_encode($body->errors));
         }
     }

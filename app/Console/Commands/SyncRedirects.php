@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Redirect;
+use Illuminate\Console\Command;
 use App\Http\Integrations\Cloudflare\CloudflareConnector;
 use App\Http\Integrations\Cloudflare\Requests\KV\GetRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\ListRequest;
-use App\Models\Redirect;
-use Illuminate\Console\Command;
 
 class SyncRedirects extends Command
 {
@@ -16,8 +16,8 @@ class SyncRedirects extends Command
 
     public function handle()
     {
-        $cloudflareAccountId = config("cloudflare.account_id");
-        $cloudflareNamespaceID = config("cloudflare.kv_redirects_id");
+        $cloudflareAccountId = config('cloudflare.account_id');
+        $cloudflareNamespaceID = config('cloudflare.kv_redirects_id');
 
         $cloudflare = new CloudflareConnector;
         $listItemsRequest = new ListRequest($cloudflareAccountId, $cloudflareNamespaceID);
@@ -28,8 +28,8 @@ class SyncRedirects extends Command
         $allResults = [];
         $cursor = $body->result_info->cursor;
 
-        while (!!$cursor) {
-            $this->info("requesting batch");
+        while ((bool) $cursor) {
+            $this->info('requesting batch');
             $listItemsRequest = new ListRequest($cloudflareAccountId, $cloudflareNamespaceID);
             $listItemsRequest->query()->add('cursor', $cursor);
             $response = $cloudflare->send($listItemsRequest);
@@ -67,6 +67,6 @@ class SyncRedirects extends Command
             ['destination', 'updated_at'] // columns to update if record exists
         );
 
-        $this->info("Sync completed successfully.");
+        $this->info('Sync completed successfully.');
     }
 }

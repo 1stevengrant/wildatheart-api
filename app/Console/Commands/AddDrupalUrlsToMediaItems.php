@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\SubsplashService;
-use Illuminate\Console\Command;
 use Statamic\Facades\Entry;
+use Illuminate\Console\Command;
+use App\Services\SubsplashService;
 
 // This is a mess, but it's a one off command that fixes the stuff thats in there now.
 class AddDrupalUrlsToMediaItems extends Command
@@ -15,7 +15,7 @@ class AddDrupalUrlsToMediaItems extends Command
 
     public function handle()
     {
-        $subsplash = new SubsplashService();
+        $subsplash = new SubsplashService;
 
         $this->info('Starting to update drupal_url for media items...');
         $allMediaData = $this->getAllMediaData();
@@ -35,11 +35,12 @@ class AddDrupalUrlsToMediaItems extends Command
             $bar->advance();
 
             // Skip if there's no dest_id or source_data.url
-            if (!isset($mediaItem['dest_id']) || !isset($mediaItem['source_data']['url'])) {
+            if (! isset($mediaItem['dest_id']) || ! isset($mediaItem['source_data']['url'])) {
                 $id = $mediaItem['id'];
                 $this->error("dest_id or source_data.url missing for $id");
                 $skippedItems[] = $id;
                 $skipped++;
+
                 continue;
             }
 
@@ -54,15 +55,16 @@ class AddDrupalUrlsToMediaItems extends Command
                     ->where('id', $destId)
                     ->first();
 
-                if (!$entry) {
+                if (! $entry) {
                     $mediaItem = $subsplash->getMediaItem($destId);
-                    if (data_get($mediaItem, "id")) {
+                    if (data_get($mediaItem, 'id')) {
                         $this->error("No entry found for: $destId");
                         $notFound++;
                     }
                     $this->error("\nSubsplash media item with id: $destId no longer exists. Skipping.");
                     $deletedItems[] = $destId;
                     $skipped++;
+
                     continue;
                 }
 
@@ -84,20 +86,20 @@ class AddDrupalUrlsToMediaItems extends Command
         foreach ($deletedItems as $i => $item) {
             $mediaData = collect($allMediaData)->firstWhere('dest_id', $item);
             $title = data_get($mediaData, 'source_data.title', $item);
-            $drupalUrl  = data_get($mediaData, 'source_data.url', $item);
+            $drupalUrl = data_get($mediaData, 'source_data.url', $item);
 
             $newTitle = $this->cleanTitle($title);
 
             $this->info("searching for $newTitle");
             $response = $subsplash->findMediaItemByTitle($newTitle);
-            $mediaItems = data_get($response, "_embedded.media-items");
+            $mediaItems = data_get($response, '_embedded.media-items');
 
             if ($mediaItems) {
                 $newMediaItem = collect($mediaItems)->first(function ($item) {
                     return str_contains($item['title'], '(2012)');
                 });
 
-                $newMediaItemId = data_get($newMediaItem, "id");
+                $newMediaItemId = data_get($newMediaItem, 'id');
 
                 if ($newMediaItemId) {
 
@@ -107,7 +109,7 @@ class AddDrupalUrlsToMediaItems extends Command
                         ->where('id', $newMediaItemId)
                         ->first();
 
-                    if (!$entry) {
+                    if (! $entry) {
                         $this->error("no entry found for id $newMediaItemId");
                     }
 
@@ -142,11 +144,10 @@ class AddDrupalUrlsToMediaItems extends Command
         return Command::SUCCESS;
     }
 
-
-
     private function removePrefix(string $title)
     {
         $explodedTitle = explode(' - ', $title);
+
         return $explodedTitle[count($explodedTitle) - 1];
     }
 
@@ -160,6 +161,7 @@ class AddDrupalUrlsToMediaItems extends Command
     {
         $titleWithoutPrefix = $this->removePrefix($title);
         $titleWithoutArticle = $this->removeAorAn($titleWithoutPrefix);
+
         return $titleWithoutArticle;
     }
 
