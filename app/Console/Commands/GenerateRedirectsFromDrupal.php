@@ -8,11 +8,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
-class GenerateRedirects extends Command
+class GenerateRedirectsFromDrupal extends Command
 {
     protected $signature = 'app:generate-redirects';
 
-    protected $description = 'Generates redirects for cloudflare';
+    protected $description = 'Generates redirects from Drupal';
 
     public function handle()
     {
@@ -39,6 +39,8 @@ class GenerateRedirects extends Command
         Storage::makeDirectory('redirects');
 
         $missingEntries = [];
+
+        // Discovered a few things that were imported and then deleted.
         $ignoreRoutes = [
             '/psa-back-next-week',
             "John Eldredge Explains Why Understanding Isn't Healing and how Jesus Is Integrating Force of the Universe", // changed title
