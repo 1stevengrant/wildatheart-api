@@ -1,0 +1,58 @@
+nav:
+  reorder:
+    - content
+    - local_platform
+    - settings
+    - fields
+  sections:
+    content:
+      reorder:
+        - 'content::collections::pages'
+        - 'content::media'
+        - 'content::collections::blogs'
+        - 'content::collections::books'
+        - 'content::collections::contributors'
+        - 'content::collections::events'
+        - 'content::collections'
+        - 'content::navigation'
+        - 'content::taxonomies'
+        - 'content::assets'
+      items:
+        'content::collections::pages': '@move'
+        'content::media':
+          action: '@create'
+          display: Media
+          url: collections/media_item
+          children:
+            'content::collections::media_item': '@move'
+            'content::collections::media_series': '@move'
+            'content::collections::experiences': '@move'
+            'content::collections::podcasts': '@move'
+            'content::collections::prayers': '@move'
+        'content::collections::blogs': '@move'
+        'content::collections::books': '@move'
+        'content::collections::contributors': '@move'
+        'content::collections::events': '@move'
+        'content::collections': '@hide'
+        'content::navigation': '@hide'
+    local_platform:
+      action: '@create'
+      display: 'Local Platform'
+      items:
+        'content::local_platform_events':
+          action: '@move'
+          children:
+            'content::local_platform_event_types': '@move'
+            'content::local_platform_pages': '@move'
+        'content::local_platform_users':
+          action: '@move'
+          children:
+            'content::local_platform_attendees': '@move'
+        'content::globals': '@move'
+        'content::local_platform_email_templates': '@move'
+    settings:
+      reorder:
+        - 'content::collections::alerts'
+      items:
+        'content::collections::alerts': '@move'
+        'content::redirects': '@move'
