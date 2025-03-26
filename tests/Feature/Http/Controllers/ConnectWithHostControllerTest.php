@@ -71,6 +71,12 @@ test('making a contact requires a valid email', function () {
         ->assertSessionHasErrors('email');
 });
 
+test('making a contact requires an email with valid dns & rfs', function () {
+
+    $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['email' => 'setev@@@@gmailcom']))
+        ->assertSessionHasErrors('email');
+});
+
 test('making a contact requires a city for the attendee', function () {
 
     $this->post(route('connect.store', $this->event), array_merge($this->attributes, ['city' => '']))
