@@ -6,12 +6,13 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Traits\Body\HasJsonBody;
+use Saloon\Traits\Body\HasStringBody;
 
 class PutRequest extends Request implements HasBody
 {
-    use HasJsonBody;
+    use HasStringBody;
 
-    public function __construct(protected string $account, protected string $namespace, protected string $key) {}
+    public function __construct(protected string $account, protected string $namespace, protected array $redirect) {}
 
     /**
      * The HTTP method of the request
@@ -23,6 +24,12 @@ class PutRequest extends Request implements HasBody
      */
     public function resolveEndpoint(): string
     {
-        return "/accounts/{$this->account}/storage/kv/namespaces/{$this->namespace}/values/{$this->key}";
+        $encodedSource = urlencode($this->redirect['source']);
+        return "/accounts/{$this->account}/storage/kv/namespaces/{$this->namespace}/values/{$encodedSource}";
+    }
+
+    protected function defaultBody(): string
+    {
+        return $this->redirect["destination"];
     }
 }
