@@ -62,10 +62,6 @@ return [
         'cache_duration' => env('TRANSISTOR_CACHE_DURATION'),
     ],
 
-    'cloudflare' => [
-        'astro_build_hook' => env('CLOUDFLARE_ASTRO_BUILD_HOOK'),
-    ],
-
     'wegive' => [
         'api_key' => env('WEGIVE_API_KEY'),
     ],
