@@ -8,11 +8,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
-class GenerateRedirectsFromDrupal extends Command
+class GeneratePodcastRedirectsFromDrupal extends Command
 {
-    protected $signature = 'app:generate-redirects';
+    protected $signature = 'app:generate-podcast-redirects';
 
-    protected $description = 'Generates redirects from Drupal';
+    protected $description = 'Generates redirects from Drupal podcast pages';
 
     public function handle()
     {
