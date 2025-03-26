@@ -10,16 +10,20 @@ import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 const HostPage = () => {
     const page = useTypedPage();
+
     return (
         <EmptyLayout title={`Update Profile Information`}>
             <TwoColumnWrapper>
                 <LeftColumn>
                     <div className={`max-w-[500px] mx-auto`}>
                         <HeadingOne className={`mb-8`}>
-                            We're stoked you want to start a Fire! Just a few
+                            We're stoked you want to host an event! Just a few
                             questions.
                         </HeadingOne>
-                        <UpdateProfileForm user={page.props.auth.user!} />
+                        <UpdateProfileForm
+                            redirectTo={route("host.eventType.select")}
+                            user={page.props.auth.user!}
+                        />
                     </div>
                 </LeftColumn>
                 <RightColumn className={`bg-campfire bg-cover bg-center`}>
