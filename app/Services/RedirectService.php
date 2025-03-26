@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DataTransferObjects\RedirectData;
 use App\Http\Integrations\Cloudflare\CloudflareConnector;
 use App\Http\Integrations\Cloudflare\Requests\KV\DeleteRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\PutRequest;
@@ -22,6 +23,9 @@ class RedirectService
     $this->cloudflareNamespaceID = config('cloudflare.kv_redirects_id');
   }
 
+  /**
+   * @return \App\DataTransferObjects\RedirectData[]
+   */
   public function getRedirectsFromFile(string $file): array
   {
     if (!Storage::exists($file)) {
@@ -38,13 +42,10 @@ class RedirectService
     }
 
     $validRedirects = collect($redirects)->map(function ($redirect) {
-
       $parsedRedirect = explode(" ", $redirect);
-      return [
-        'source' => $parsedRedirect[0],
-        'destination' => $parsedRedirect[1]
-      ];
+      return new RedirectData($parsedRedirect[0], $parsedRedirect[1]);
     });
+
     return $validRedirects->toArray();
   }
 
@@ -65,6 +66,9 @@ class RedirectService
     return $redirect;
   }
 
+  /**
+   * @param \App\DataTransferObjects\RedirectData[] $redirects 
+   */
   public function createBulk(array $redirects): object
   {
 
@@ -73,7 +77,7 @@ class RedirectService
     $unsuccessfulKeys = $body->result->unsuccessful_keys;
 
     $successfulRedirects = collect($redirects)
-      ->filter(fn($redirect) => !in_array($redirect['source'], $unsuccessfulKeys))
+      ->filter(fn($redirect) => !in_array($redirect->source, $unsuccessfulKeys))
       ->toArray();
 
     $redirect = Redirect::upsert(
@@ -92,10 +96,7 @@ class RedirectService
 
   public function createInCloudflare(string $source, string $destination)
   {
-    $redirect = [
-      "source" => $source,
-      "destination" => $destination
-    ];
+    $redirect = new RedirectData($source, $destination);
     $putRequest = new PutRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirect);
     $response = $this->cloudflare->send($putRequest);
     $body = $response->object();
@@ -105,6 +106,10 @@ class RedirectService
     }
   }
 
+
+  /** 
+   * @param \App\DataTransferObjects\RedirectData[] $redirects 
+   * */
   public function createBulkInCloudflare(array $redirects)
   {
     $putBulkRequest = new PutRequestBulk($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirects);
