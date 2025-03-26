@@ -25,6 +25,7 @@ class PutRequest extends Request implements HasBody
     public function resolveEndpoint(): string
     {
         $encodedSource = urlencode($this->redirect->source);
+
         return "/accounts/{$this->account}/storage/kv/namespaces/{$this->namespace}/values/{$encodedSource}";
     }
 

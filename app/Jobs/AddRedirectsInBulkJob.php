@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use App\Services\RedirectService;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AddRedirectsInBulkJob implements ShouldQueue
 {

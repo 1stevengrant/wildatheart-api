@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\AddRedirectsInBulkJob;
 use Exception;
 use Illuminate\Console\Command;
+use App\Jobs\AddRedirectsInBulkJob;
 use Illuminate\Support\Facades\Storage;
 
 class BulkImportRedirects extends Command
@@ -18,14 +18,15 @@ class BulkImportRedirects extends Command
         $filePath = $this->argument('filePath');
         $filePathInDir = "redirects/$filePath";
 
-        if (!Storage::exists($filePathInDir)) {
+        if (! Storage::exists($filePathInDir)) {
             $this->error("File not found: $filePathInDir");
+
             return;
         }
 
         try {
             AddRedirectsInBulkJob::dispatch($filePathInDir);
-            $this->info("Created AddRedirectsInBulkJob");
+            $this->info('Created AddRedirectsInBulkJob');
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }

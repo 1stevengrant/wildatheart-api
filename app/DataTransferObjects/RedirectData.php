@@ -6,8 +6,8 @@ use Spatie\LaravelData\Data;
 
 class RedirectData extends Data
 {
-  public function __construct(
-    public string $source,
-    public string $destination
-  ) {}
+    public function __construct(
+        public string $source,
+        public string $destination
+    ) {}
 }
