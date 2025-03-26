@@ -5,6 +5,7 @@ namespace App\Jobs\User;
 use Exception;
 use Throwable;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Bus\Queueable;
 use App\Actions\User\UpdateUser;
 use Illuminate\Support\Facades\DB;
