@@ -128,7 +128,7 @@ class DbSyncCommand extends Command
     {
         $ignoreString = '';
         foreach ($tables as $name) {
-            if (trim($name) !== '') {
+            if (mb_trim($name) !== '') {
                 $ignoreString .= " --ignore-table=$database.$name";
             }
         }
@@ -161,7 +161,7 @@ class DbSyncCommand extends Command
         // Then export data for all tables excluding both the ignored tables and structure-only tables
         $dataIgnoreString = $ignoreString;
         foreach ($excludeDataTables as $name) {
-            if (trim($name) !== '') {
+            if (mb_trim($name) !== '') {
                 $dataIgnoreString .= " --ignore-table={$config['database']}.$name";
             }
         }

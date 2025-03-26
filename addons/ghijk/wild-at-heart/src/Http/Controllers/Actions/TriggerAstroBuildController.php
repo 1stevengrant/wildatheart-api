@@ -11,7 +11,7 @@ class TriggerAstroBuildController extends Controller
     public function __invoke()
     {
         try {
-            $response = Http::post(config('services.cloudflare.astro_build_hook'));
+            $response = Http::post(config('cloudflare.astro_build_hook'));
 
             return response()->json($response->json());
         } catch (RequestException $e) {
