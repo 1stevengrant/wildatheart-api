@@ -5,6 +5,8 @@ nav:
     - settings
     - fields
   sections:
+    top_level:
+      'top_level::dashboard': '@hide'
     content:
       reorder:
         - 'content::collections::pages'
