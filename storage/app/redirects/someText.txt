@@ -1,2 +1,2 @@
-/test /destination-2 301
-/test-2 /destination-2 301
+/test /destination-3 301
+/test-2 /destination-3 301

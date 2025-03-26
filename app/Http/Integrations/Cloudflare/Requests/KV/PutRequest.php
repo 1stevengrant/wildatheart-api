@@ -5,7 +5,6 @@ namespace App\Http\Integrations\Cloudflare\Requests\KV;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Contracts\Body\HasBody;
-use Saloon\Traits\Body\HasJsonBody;
 use Saloon\Traits\Body\HasStringBody;
 
 class PutRequest extends Request implements HasBody

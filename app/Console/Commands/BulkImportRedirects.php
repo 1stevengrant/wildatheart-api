@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\AddRedirect;
-use App\Services\RedirectService;
+use App\Jobs\AddRedirectsInBulkJob;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class BulkImportRedirects extends Command
 {
@@ -13,18 +13,19 @@ class BulkImportRedirects extends Command
 
     protected $description = 'Imports redirects into Cloudflare KV';
 
-    public function handle(RedirectService $redirectService)
+    public function handle()
     {
         $filePath = $this->argument('filePath');
         $filePathInDir = "redirects/$filePath";
 
-        try {
-            $redirects = $redirectService->getRedirectsFromFile($filePathInDir);
+        if (!Storage::exists($filePathInDir)) {
+            $this->error("File not found: $filePathInDir");
+            return;
+        }
 
-            foreach ($redirects as $redirect) {
-                $this->info("Dispatching job for {$redirect['source']} -> {$redirect['destination']}");
-                AddRedirect::dispatch($redirect['source'], $redirect['destination']);
-            }
+        try {
+            AddRedirectsInBulkJob::dispatch($filePathInDir);
+            $this->info("Created AddRedirectsInBulkJob");
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }

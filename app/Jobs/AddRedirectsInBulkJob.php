@@ -6,20 +6,21 @@ use App\Services\RedirectService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class AddRedirect implements ShouldQueue
+class AddRedirectsInBulkJob implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(public string $source, public string $destination) {}
+    public function __construct(public string $file) {}
 
     /**
      * Execute the job.
      */
     public function handle(RedirectService $redirectService): void
     {
-        $redirectService->create($this->source, $this->destination);
+        $redirects = $redirectService->getRedirectsFromFile($this->file);
+        $redirectService->createBulk($redirects);
     }
 }
