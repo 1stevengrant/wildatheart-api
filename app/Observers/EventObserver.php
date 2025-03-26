@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Event;
-use App\Jobs\TagWeGiveDonorJob;
+use App\Jobs\User\TagWeGiveDonorJob;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Artisan;
 use App\Jobs\Event\SendNewEventSlackAlert;

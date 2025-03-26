@@ -3,9 +3,9 @@
 namespace App\Console\Commands\User;
 
 use App\Models\Event;
-use App\Jobs\TagWeGiveDonorJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\User\TagWeGiveDonorJob;
 
 class AddWeGiveTagsToExistingHosts extends Command
 {
