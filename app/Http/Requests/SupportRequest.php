@@ -24,7 +24,7 @@ class SupportRequest extends FormRequest
         return [
             'email' => [
                 'required',
-                'email',
+                'email:rfc,dns',
                 'max:255',
             ],
             'name' => [
