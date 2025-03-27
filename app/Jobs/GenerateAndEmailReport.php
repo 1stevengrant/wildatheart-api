@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
-use App\Enums\ReportFormat;
 use App\Enums\ReportName;
+use App\Enums\ReportFormat;
 use App\Services\ReportService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class GenerateAndEmailReport implements ShouldQueue
 {
@@ -26,10 +26,10 @@ class GenerateAndEmailReport implements ShouldQueue
         $reportCSV = $reportService->generate($this->report, $this->format);
 
         $filePath = storage_path('app/tmp/report.csv');
-        $storagePath = "tmp/report.csv";
+        $storagePath = 'tmp/report.csv';
         Storage::put($storagePath, $reportCSV);
 
-        $date = now()->format("m/d/Y");
+        $date = now()->format('m/d/Y');
 
         Mail::to($this->email)
             ->cc('nic@wildatheart.org')

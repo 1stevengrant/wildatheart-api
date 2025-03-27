@@ -4,5 +4,5 @@ namespace App\Enums;
 
 enum ReportFormat: string
 {
-  case CSV = 'csv';
+    case CSV = 'csv';
 }

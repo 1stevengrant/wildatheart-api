@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Enums\ReportName;
-use App\Jobs\GenerateAndEmailReport;
 use Illuminate\Console\Command;
+use App\Jobs\GenerateAndEmailReport;
 
 class GenerateReport extends Command
 {

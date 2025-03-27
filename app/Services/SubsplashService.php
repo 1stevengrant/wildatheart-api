@@ -91,7 +91,8 @@ class SubsplashService
     public function findMediaItemByTitle($title)
     {
         dump("Searching for:$title");
-        return $this->subsplashFetch("https://core.subsplash.com/media/v1/media-items?filter%5Btitle%5D=*" . urlencode($title) . "*");
+
+        return $this->subsplashFetch('https://core.subsplash.com/media/v1/media-items?filter%5Btitle%5D=*' . urlencode($title) . '*');
     }
 
     public function getMediaSeries($mediaSeriesId)
@@ -171,7 +172,6 @@ class SubsplashService
             return $customItem;
         }
 
-
         // If the entry does not exist, create it
         $entryCreated = false;
         if (! $entry) {
@@ -208,7 +208,6 @@ class SubsplashService
 
             $data['series'] = "entry::$mediaItemSeriesID";
         }
-
 
         // Update to uniqe slug if entry is just now being created
         // or if $updateSlug is true.
