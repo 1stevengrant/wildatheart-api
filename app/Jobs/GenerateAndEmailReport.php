@@ -10,7 +10,7 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
-class EmailLocalReport implements ShouldQueue
+class GenerateAndEmailReport implements ShouldQueue
 {
     use Queueable;
 

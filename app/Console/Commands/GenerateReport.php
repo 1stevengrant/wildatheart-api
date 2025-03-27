@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\EmailLocalReport;
 use App\Enums\ReportName;
+use App\Jobs\GenerateAndEmailReport;
 use Illuminate\Console\Command;
 
 class GenerateReport extends Command
@@ -18,7 +18,7 @@ class GenerateReport extends Command
         $report = ReportName::from($this->argument('report'));
         $title = $this->option('title');
 
-        EmailLocalReport::dispatch($email, $report, $title);
+        GenerateAndEmailReport::dispatch($email, $report, $title);
         $this->info('CSV report generated and emailed successfully');
     }
 }

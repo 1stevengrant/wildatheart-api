@@ -1,7 +1,7 @@
 <?php
 
-use App\Jobs\EmailLocalReport;
 use App\Enums\ReportName;
+use App\Jobs\GenerateAndEmailReport;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -17,7 +17,7 @@ Schedule::command('app:send-seven-day-followup')->daily();
 // Schedule::command('app:get-latest-subsplash-media')->hourly();
 
 // Generate the monthly BAKR report and send to Morgan.
-Schedule::job(new EmailLocalReport(
+Schedule::job(new GenerateAndEmailReport(
     'morgan@becomegoodsoil.com',
     ReportName::BAKR_HOSTS,
     'Becoming A King Retreat Hosts'
