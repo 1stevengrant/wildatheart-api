@@ -38,9 +38,10 @@ class ReportMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.report',
+            markdown: 'emails.report',
             with: [
                 'date' => $this->date,
+                'reportName' => $this->reportName,
             ],
         );
     }
