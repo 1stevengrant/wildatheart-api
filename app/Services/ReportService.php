@@ -3,19 +3,9 @@
 namespace App\Services;
 
 use App\DataTransferObjects\ReportData;
-use App\Models\User;
-use App\Models\EventType;
+use App\Enums\ReportFormat;
+use App\Enums\ReportName;
 use App\Models\Event;
-
-enum ReportFormat: string
-{
-  case CSV = 'csv';
-}
-
-enum ReportName: string
-{
-  case BAKR_HOSTS = 'getBAKRHosts';
-}
 
 class ReportService
 {

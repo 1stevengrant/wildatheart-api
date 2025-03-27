@@ -2,7 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Services\ReportName;
+use App\Enums\ReportFormat;
+use App\Enums\ReportName;
 use App\Services\ReportService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -13,14 +14,16 @@ class EmailLocalReport implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(private string $email)
-    {
-        //
-    }
+    public function __construct(
+        private string $email,
+        private ReportName $report,
+        private string $reportTitle,
+        private ReportFormat $format = ReportFormat::CSV,
+    ) {}
 
     public function handle(ReportService $reportService): void
     {
-        $reportCSV = $reportService->generate(ReportName::BAKR_HOSTS);
+        $reportCSV = $reportService->generate($this->report, $this->format);
 
         $filePath = storage_path('app/tmp/report.csv');
         $storagePath = "tmp/report.csv";
@@ -30,7 +33,7 @@ class EmailLocalReport implements ShouldQueue
 
         Mail::to($this->email)
             ->cc('nic@wildatheart.org')
-            ->send(new \App\Mail\ReportMailable($date, $filePath, "Becoming A King Retreat Hosts"));
+            ->send(new \App\Mail\ReportMailable($date, $filePath, $this->reportTitle));
 
         Storage::delete($storagePath);
     }
