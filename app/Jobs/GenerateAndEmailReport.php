@@ -27,6 +27,8 @@ class GenerateAndEmailReport implements ShouldQueue
 
         $filePath = storage_path('app/tmp/report.csv');
         $storagePath = 'tmp/report.csv';
+
+        // TODO: Store files in S3 and provide secure link in email.
         Storage::put($storagePath, $reportCSV);
 
         $date = now()->format('m/d/Y');
