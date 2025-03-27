@@ -3,21 +3,18 @@
 namespace App\Console\Commands;
 
 use App\Jobs\EmailLocalReport;
-use App\Services\ReportService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
 class GenerateReport extends Command
 {
-    protected $signature = 'app:generate-report';
+    protected $signature = 'app:generate-report {email}';
 
-    protected $description = 'Command description';
+    protected $description = 'Generates and emails a CSV report to the provided emails';
 
     public function handle()
     {
-
-        EmailLocalReport::dispatch("nic@nicbovee.com");
+        $email = $this->argument('email');
+        EmailLocalReport::dispatch($email);
         $this->info('CSV report generated and emailed successfully');
     }
 }

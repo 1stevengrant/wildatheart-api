@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Services\ReportName;
 use App\Services\ReportService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -12,35 +13,22 @@ class EmailLocalReport implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(private string $email)
     {
         //
     }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(ReportService $reportService): array
+    public function handle(ReportService $reportService): void
     {
-        $result = $reportService->generate();
-        $headers = [
-            "given_name" => "First Name",
-            "family_name" => "Last Name",
-            "email" => "Email"
-        ];
+        $reportCSV = $reportService->generate(ReportName::BAKR_HOSTS);
 
-        $csv = $reportService->generateCSV($headers, $result->toArray());
-        $filePath = storage_path('app/tmp/test.csv');
-        Storage::put("tmp/test.csv", $csv);
+        $filePath = storage_path('app/tmp/report.csv');
+        Storage::put("tmp/report.csv", $reportCSV);
 
         $date = now()->format("m/d/Y");
 
         Mail::to($this->email)
-            ->send(new \App\Mail\ReportMailable($date, $filePath));
-
-        return $result;
+            ->cc('nic@wildatheart.org')
+            ->send(new \App\Mail\ReportMailable($date, $filePath, "Becoming A King Retreat Hosts"));
     }
 }

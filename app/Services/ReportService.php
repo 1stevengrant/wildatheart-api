@@ -2,41 +2,57 @@
 
 namespace App\Services;
 
+use App\DataTransferObjects\ReportData;
 use App\Models\User;
 use App\Models\EventType;
 use App\Models\Event;
 
+enum ReportFormat: string
+{
+  case CSV = 'csv';
+}
+
+enum ReportName: string
+{
+  case BAKR_HOSTS = 'getBAKRHosts';
+}
+
 class ReportService
 {
-  public function generate()
+  /**
+   * Generates a named report and returns it in the chosen format.
+   * 
+   * @param ReportName $reportName 
+   * @param ReportFormat $format
+   * 
+   * @return string|null Returns null if config is invalid, otherwise returns formatted report as string.
+   */
+  public function generate(ReportName $reportName, ReportFormat $format = ReportFormat::CSV): string | null
   {
+    switch ($reportName) {
+      case ReportName::BAKR_HOSTS:
+        $report = $this->getBAKRHosts();
+        break;
+    }
 
-    $hosts = $this->getBAKRHosts();
-    return $hosts;
+    switch ($format) {
+      case ReportFormat::CSV:
+        return $this->generateCSV($report);
+    }
 
-
-
-    // // Create/open the file
-    // $handle = fopen(storage_path("app/bak_hosts.csv"), "w");
-    // // Write headers
-    // fputcsv($handle, ["ID", "Family Name", "Given Name", "Email", "Address"]);
-    // // Write data rows
-    // foreach ($csvData as $row) {
-    //   fputcsv($handle, [
-    //     $row["id"],
-    //     $row["family_name"],
-    //     $row["given_name"],
-    //     $row["email"],
-    //     implode(", ", $row["address"])
-    //   ]);
-    // }
-    // fclose($handle);
-    // echo "CSV saved to: " . storage_path("app/bak_hosts.csv");
+    return null;
   }
 
-  private function getBAKRHosts()
+  private function getBAKRHosts(): ReportData
   {
-    return Event::query()
+    $headers = [
+      "given_name" => "First Name",
+      "family_name" => "Last Name",
+      "email" => "Email",
+      "IS_BAKR_HOST" => "IS_BAKR_HOST"
+    ];
+
+    $data =  Event::query()
       ->becomingAKingRetreats()
       ->with("user")
       ->get()
@@ -46,32 +62,35 @@ class ReportService
         fn($host) => [
           "given_name" => $host->given_name,
           "family_name" => $host->family_name,
-          "email" => $host->email
+          "email" => $host->email,
+          "IS_BAKR_HOST" => "TRUE"
         ]
-      );
-    // ->map(
-    //   fn($event) => [
-    //     "host" => $event->host,
-    //     "event" => $event
-    //   ]
-    // )
-    // ->unique("user.id")
-    // ->values();
+      )
+      ->toArray();
+
+    return new ReportData($headers, $data);
   }
 
   /**
    * @param array<string,string> $headers Key-value pairs where keys are data fields and values are header labels
    * @param array<string,string> $data Key-value pairs where keys are data fields and values are corresponding data
    */
-  public function generateCSV(array $headers, array $data)
+  public function generateCSV(ReportData $report)
   {
-    $csv = join(",", $headers);
+    $twoMBInBytes = (5 * 1024 * 1024);
+    $csv = fopen('php://temp/maxmemory:' . $twoMBInBytes, 'r+');
 
-    foreach ($data as $itemIndex => $item) {
-      $csv .= "\n";
-      $headerKeys = array_keys($headers);
-      $csv .= join(",", array_map(fn($key) => data_get($item, $key, ""), $headerKeys));
+    fputcsv($csv, array_values($report->headers));
+
+    foreach ($report->data as $item) {
+      $headerKeys = array_keys($report->headers);
+      fputcsv($csv, array_map(
+        fn($key) => data_get($item, $key, ""),
+        $headerKeys
+      ));
     }
-    return $csv;
+
+    rewind($csv);
+    return stream_get_contents($csv);
   }
 }

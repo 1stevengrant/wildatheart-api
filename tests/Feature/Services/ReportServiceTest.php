@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\ReportService;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
   $this->reportService = new ReportService;
@@ -34,7 +35,37 @@ it(
 
     $csv = $this->reportService->generateCSV($headers, $data);
 
-    $expectedOutput = "First Name,Last Name,Age\nNic,Bovee,31\nDani,Bovee,31";
+    $expectedOutput = "\"First Name\",\"Last Name\",Age\nNic,Bovee,31\nDani,Bovee,31\n";
+    expect($csv)->toBe($expectedOutput);
+  }
+);
+
+it(
+  'escapes special characters in CSV',
+  function () {
+    $data = [
+      [
+        "first_name" => "John, with comma",
+        "last_name" => "Smith \"quotes\"",
+        "notes" => "Has \n newline"
+      ],
+      [
+        "first_name" => "Jane",
+        "last_name" => "Doe",
+        "notes" => "Normal text"
+      ]
+    ];
+
+    $headers = [
+      "first_name" => "First Name",
+      "last_name" => "Last Name",
+      "notes" => "Notes"
+    ];
+
+    $csv = $this->reportService->generateCSV($headers, $data);
+
+    Storage::put("test.csv", $csv);
+    $expectedOutput = "\"First Name\",\"Last Name\",Notes\n\"John, with comma\",\"Smith \"\"quotes\"\"\",\"Has \n newline\"\nJane,Doe,\"Normal text\"\n";
     expect($csv)->toBe($expectedOutput);
   }
 );

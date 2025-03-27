@@ -18,7 +18,8 @@ class ReportMailable extends Mailable
    */
   public function __construct(
     private string $date,
-    private string $filePath
+    private string $filePath,
+    private string $reportName = ""
   ) {}
 
   /**
@@ -27,7 +28,7 @@ class ReportMailable extends Mailable
   public function envelope(): Envelope
   {
     return new Envelope(
-      subject: "Generated Report {$this->date}",
+      subject: "{$this->reportName} Report - {$this->date}",
     );
   }
 
@@ -51,9 +52,11 @@ class ReportMailable extends Mailable
    */
   public function attachments(): array
   {
+    $fileName = $this->reportName . " " . now()->format("m-d-Y_") . 'report.csv';
+
     return [
       Attachment::fromPath($this->filePath)
-        ->as('report.csv')
+        ->as($fileName)
         ->withMime('text/csv'),
     ];
   }
