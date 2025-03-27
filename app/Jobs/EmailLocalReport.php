@@ -23,12 +23,15 @@ class EmailLocalReport implements ShouldQueue
         $reportCSV = $reportService->generate(ReportName::BAKR_HOSTS);
 
         $filePath = storage_path('app/tmp/report.csv');
-        Storage::put("tmp/report.csv", $reportCSV);
+        $storagePath = "tmp/report.csv";
+        Storage::put($storagePath, $reportCSV);
 
         $date = now()->format("m/d/Y");
 
         Mail::to($this->email)
             ->cc('nic@wildatheart.org')
             ->send(new \App\Mail\ReportMailable($date, $filePath, "Becoming A King Retreat Hosts"));
+
+        Storage::delete($storagePath);
     }
 }
