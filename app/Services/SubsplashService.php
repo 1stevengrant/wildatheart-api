@@ -209,7 +209,6 @@ class SubsplashService
             $data['series'] = "entry::$mediaItemSeriesID";
         }
 
-
         // Update to uniqe slug if entry is just now being created
         // or if $updateSlug is true.
         if ($entryCreated || $updateSlug) {
