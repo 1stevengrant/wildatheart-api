@@ -185,7 +185,7 @@ class User extends Authenticatable
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logAll() // Log all attributes since you're using $guarded
+            ->logAll()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName('users')
@@ -207,7 +207,6 @@ class User extends Authenticatable
         return
             ! empty($this->family_name) &&
             ! empty($this->given_name) &&
-            filter_var($this->email, FILTER_VALIDATE_EMAIL) &&
-            ! empty($this->phone);
+            filter_var($this->email, FILTER_VALIDATE_EMAIL);
     }
 }

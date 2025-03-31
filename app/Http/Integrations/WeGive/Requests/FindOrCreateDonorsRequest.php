@@ -12,11 +12,11 @@ class FindOrCreateDonorsRequest extends Request implements HasBody
     use HasJsonBody;
 
     public function __construct(
-        protected string $email,
-        protected string $firstName,
-        protected string $lastName,
-        protected string $phone,
-        protected ?array $address = null
+        protected string  $email,
+        protected ?string  $firstName = null,
+        protected ?string  $lastName = null,
+        protected ?string $phone = null,
+        protected ?array  $address = null
     ) {}
 
     protected Method $method = Method::POST;
