@@ -11,7 +11,7 @@ class AddWeGiveTagsToExistingHosts extends Command
 {
     protected $signature = 'wegive:add-tags:existing-hosts';
 
-    protected $description = 'Command description';
+    protected $description = 'Adds a WeGive tag to existing event hosts';
 
     public function handle(): int
     {
