@@ -12,6 +12,10 @@ return [
     */
 
     'resources' => [
+        \App\Models\Redirect::class => [
+            'name' => 'Redirects',
+        ],
+
         \App\Models\EventType::class => [
             'name' => 'Local Platform Event Types',
         ],

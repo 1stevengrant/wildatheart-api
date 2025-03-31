@@ -15,7 +15,7 @@ if (! function_exists('getStateAbbreviation')) {
             return mb_strtoupper($stateName);
         }
 
-        $normalizedName = ucwords(mb_strtolower(trim($stateName)));
+        $normalizedName = ucwords(mb_strtolower(mb_trim($stateName)));
 
         static $stateAbbreviations = null;
 
@@ -318,7 +318,7 @@ if (! function_exists('getCountries')) {
 if (! function_exists('getCountryCodeFromCountryName')) {
     function getCountryCodeFromCountryName(string $countryName): string
     {
-        $normalizedName = mb_strtolower(trim($countryName));
+        $normalizedName = mb_strtolower(mb_trim($countryName));
         $countryCode = Cache::get("country_code:{$normalizedName}");
 
         if ($countryCode === null) {

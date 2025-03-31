@@ -1,0 +1,17 @@
+tabs:
+  main:
+    fields:
+      -
+        handle: source
+        field:
+          type: text
+          display: Source
+          validate: required
+      -
+        handle: destination
+        field:
+          type: text
+          display: Destination
+          validate: required
+  sidebar:
+    fields: {  }
