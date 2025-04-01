@@ -50,6 +50,7 @@ class CustomStatamicProvider extends ServiceProvider
                         return $session->id === $entry->id;
                     });
                     $sessionIndexPlusOne = $sessionIndex + 1;
+
                     return $experience->uri() . '/session-' . $sessionIndexPlusOne;
                 }
             }

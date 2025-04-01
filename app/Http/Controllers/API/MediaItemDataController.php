@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use Carbon\Carbon;
 use Statamic\Entries\Entry;
 use App\Services\SubsplashService;
 use App\Http\Controllers\Controller;
@@ -122,7 +121,6 @@ class MediaItemDataController extends Controller
                 ->orderBy('date', 'desc')
                 ->limit(20)
                 ->get();
-
 
             $responseData['mediaItems'] = [];
 

@@ -343,14 +343,14 @@ class SubsplashService
         return Str::slug("$title-$fallback");
     }
 
-    public function getSeriesInStatamic(string $seriesId): Entry | null
+    public function getSeriesInStatamic(string $seriesId): ?Entry
     {
         return Entry::query()
-            ->where("collection", "media_series")
-            ->where("id", $seriesId)
+            ->where('collection', 'media_series')
+            ->where('id', $seriesId)
             ->orWhere(function ($query) use ($seriesId) {
-                $query->where("blueprint", "custom_series")
-                    ->where("subsplash_media_series_id", $seriesId);
+                $query->where('blueprint', 'custom_series')
+                    ->where('subsplash_media_series_id', $seriesId);
             })
             ->first();
     }
