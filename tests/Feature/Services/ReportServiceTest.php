@@ -1,5 +1,6 @@
 <?php
 
+use App\DataTransferObjects\ReportData;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,7 +33,8 @@ it(
             'age' => 'Age',
         ];
 
-        $csv = $this->reportService->generateCSV($headers, $data);
+        $reportData = new ReportData($headers, $data);
+        $csv = $this->reportService->generateCSV($reportData);
 
         $expectedOutput = "\"First Name\",\"Last Name\",Age\nNic,Bovee,31\nDani,Bovee,31\n";
         expect($csv)->toBe($expectedOutput);
@@ -61,9 +63,9 @@ it(
             'notes' => 'Notes',
         ];
 
-        $csv = $this->reportService->generateCSV($headers, $data);
+        $reportData = new ReportData($headers, $data);
+        $csv = $this->reportService->generateCSV($reportData);
 
-        Storage::put('test.csv', $csv);
         $expectedOutput = "\"First Name\",\"Last Name\",Notes\n\"John, with comma\",\"Smith \"\"quotes\"\"\",\"Has \n newline\"\nJane,Doe,\"Normal text\"\n";
         expect($csv)->toBe($expectedOutput);
     }
