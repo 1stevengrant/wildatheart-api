@@ -3,6 +3,7 @@
 namespace App\Jobs\User;
 
 use Exception;
+use JsonException;
 use Throwable;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
@@ -84,12 +85,12 @@ class TagWeGiveDonorJob implements ShouldQueue
             && $this->event->user->email
             && $this->event->user->given_name
             && $this->event->user->family_name
-            && $this->event->user->phone
             && $this->event->we_give_tag;
     }
 
     /**
      * Find or create a WeGive donor
+     * @throws JsonException
      */
     private function findOrCreateDonor(WeGiveConnector $connector): ?string
     {
@@ -120,6 +121,10 @@ class TagWeGiveDonorJob implements ShouldQueue
         }
     }
 
+    /**
+     * @throws FatalRequestException
+     * @throws RequestException
+     */
     private function tagDonor(WeGiveConnector $connector, string $donorId): void
     {
         $tagDonorsRequest = new TagDonorsRequest(

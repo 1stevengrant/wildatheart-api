@@ -3,6 +3,7 @@
 namespace App\Console\Commands\User;
 
 use App\Models\Event;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\User\TagWeGiveDonorJob;
@@ -20,6 +21,7 @@ class AddWeGiveTagsToExistingHosts extends Command
             foreach ($events as $event) {
                 try {
 
+                    /** @var User|null $user */
                     $user = $event->user;
 
                     if (! $user) {
