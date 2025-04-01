@@ -343,7 +343,7 @@ class SubsplashService
         return Str::slug("$title-$fallback");
     }
 
-    public function getSeriesInStatamic(string $seriesId)
+    public function getSeriesInStatamic(string $seriesId): Entry | null
     {
         return Entry::query()
             ->where("collection", "media_series")
