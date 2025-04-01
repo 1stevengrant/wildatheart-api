@@ -152,11 +152,13 @@ class BlockBuilderService
         }
 
         $seriesId = $slide->media_items_from_series->id;
+        $subsplash = new SubsplashService;
+        $statamicSeries = $subsplash->getSeriesInStatamic($seriesId);
 
         $mediaItemsFromSeries = Entry::query()
             ->where('collection', 'media_item')
             ->where('published', true)
-            ->where('data->series', 'like', "%{$seriesId}")
+            ->where('data->series', 'like', "%{$statamicSeries->id}")
             ->orderBy('date', 'asc')
             ->get();
 
@@ -193,15 +195,13 @@ class BlockBuilderService
         $subsplash = new SubsplashService;
         $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
-
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
             $series = $item['_embedded']['media-series'];
             $images = $series['_embedded']['images'];
             $wideImage = collect($images)->firstWhere('type', 'wide');
             $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
 
-            $entry = Entry::find($series['id']);
-
+            $entry = $subsplash->getSeriesInStatamic($series['id']);
             // Need to import series if it doesn't exist
             if (! $entry) {
                 continue;
