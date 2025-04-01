@@ -129,7 +129,6 @@ class MediaItemOrSeriesController extends Controller
             return CustomSeries::from($response);
         }
 
-        // dd($response);
         return SubsplashMediaSeries::from($response);
     }
 
