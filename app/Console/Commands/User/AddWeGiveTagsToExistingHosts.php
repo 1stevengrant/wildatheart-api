@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\User;
 
-use App\Models\Event;
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\User\TagWeGiveDonorJob;

@@ -3,8 +3,8 @@
 namespace App\Jobs\User;
 
 use Exception;
-use JsonException;
 use Throwable;
+use JsonException;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use Illuminate\Bus\Queueable;
@@ -42,6 +42,9 @@ class TagWeGiveDonorJob implements ShouldQueue
      */
     public function handle(): void
     {
+        if (! app()->isProduction()) {
+            return;
+        }
 
         if (! $this->validateEventData()) {
             Log::error('TagWeGiveDonorJob: Missing required user data', ['event_id' => $this->event->id]);
@@ -90,6 +93,7 @@ class TagWeGiveDonorJob implements ShouldQueue
 
     /**
      * Find or create a WeGive donor
+     *
      * @throws JsonException
      */
     private function findOrCreateDonor(WeGiveConnector $connector): ?string
