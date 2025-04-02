@@ -168,7 +168,12 @@ class BlockBuilderService
             $slide = SlideBlock::from($preview);
 
             $slide->variant = CardVariant::portrait;
-            $slide->trim_description_bool = true;
+            $slide->trim_description_bool = false;
+
+            if ($mediaItem->blueprint->handle === "subsplash_media_item") {
+                $slide->trim_description_bool = true;
+            }
+
             $slide->href = $mediaItem->date > now() && ! $mediaItem->make_scheduled_page_public ? null : $mediaItem->uri;
             $slide->is_coming_soon = $mediaItem->date > now() && ! $mediaItem->make_scheduled_page_public;
             $slide->date = $mediaItem->date;

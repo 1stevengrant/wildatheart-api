@@ -70,6 +70,7 @@ class PreviewBuilderService
         if (! $subsplashMediaItem) {
             return null;
         }
+        $preview->blueprint = data_get($subsplashMediaItem, 'blueprint');
 
         if (! empty($subsplashMediaItem['_embedded'])) {
             $images = data_get($subsplashMediaItem, '_embedded.images', []);
