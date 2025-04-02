@@ -4,7 +4,9 @@ namespace App\Jobs\User;
 
 use Exception;
 use Throwable;
+use JsonException;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Bus\Queueable;
 use App\Actions\User\UpdateUser;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +42,9 @@ class TagWeGiveDonorJob implements ShouldQueue
      */
     public function handle(): void
     {
+        if (! app()->isProduction()) {
+            return;
+        }
 
         if (! $this->validateEventData()) {
             Log::error('TagWeGiveDonorJob: Missing required user data', ['event_id' => $this->event->id]);
@@ -83,12 +88,13 @@ class TagWeGiveDonorJob implements ShouldQueue
             && $this->event->user->email
             && $this->event->user->given_name
             && $this->event->user->family_name
-            && $this->event->user->phone
             && $this->event->we_give_tag;
     }
 
     /**
      * Find or create a WeGive donor
+     *
+     * @throws JsonException
      */
     private function findOrCreateDonor(WeGiveConnector $connector): ?string
     {
@@ -119,6 +125,10 @@ class TagWeGiveDonorJob implements ShouldQueue
         }
     }
 
+    /**
+     * @throws FatalRequestException
+     * @throws RequestException
+     */
     private function tagDonor(WeGiveConnector $connector, string $donorId): void
     {
         $tagDonorsRequest = new TagDonorsRequest(

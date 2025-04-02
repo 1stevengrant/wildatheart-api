@@ -100,13 +100,30 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    public function getFullnameAttribute(): string
+    public function fullname(): Attribute
     {
-        if ($this->given_name === null || $this->family_name === null) {
-            return $this->email;
-        }
+        return Attribute::make(
+            get: function (): string {
+                if ($this->given_name === null || $this->family_name === null) {
+                    return $this->email;
+                }
 
-        return "{$this->given_name} {$this->family_name}";
+                return "{$this->given_name} {$this->family_name}";
+            }
+        );
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            get: function (): string {
+                if ($this->given_name === null || $this->family_name === null) {
+                    return $this->email;
+                }
+
+                return "{$this->given_name} {$this->family_name}";
+            }
+        );
     }
 
     public function hasVerifiedEmail(): bool
@@ -185,7 +202,7 @@ class User extends Authenticatable
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logAll() // Log all attributes since you're using $guarded
+            ->logAll()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName('users')
@@ -207,7 +224,6 @@ class User extends Authenticatable
         return
             ! empty($this->family_name) &&
             ! empty($this->given_name) &&
-            filter_var($this->email, FILTER_VALIDATE_EMAIL) &&
-            ! empty($this->phone);
+            filter_var($this->email, FILTER_VALIDATE_EMAIL);
     }
 }

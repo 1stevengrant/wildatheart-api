@@ -24,7 +24,7 @@ return [
     /*
      * The channels to which the notification will be sent.
      */
-    'channels' => ['mail'],
+    'channels' => env('APP_ENV') === 'testing' ? ['mail'] : ['slack'],
 
     'mail' => [
         'to' => ['email@example.com'],
