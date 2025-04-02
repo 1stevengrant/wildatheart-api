@@ -13,9 +13,9 @@ class FindOrCreateDonorsRequest extends Request implements HasBody
 
     public function __construct(
         protected string $email,
-        protected string $firstName,
-        protected string $lastName,
-        protected string $phone,
+        protected ?string $firstName = null,
+        protected ?string $lastName = null,
+        protected ?string $phone = null,
         protected ?array $address = null
     ) {}
 

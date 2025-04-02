@@ -34,7 +34,7 @@ it('creates a new event of a given type', function () {
         'is_private' => false,
         'state' => 'MT',
         'start_date' => $this->startDate,
-        'number_of_items_in_material_order' => 10,
+        'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
     expect($this->user->events()->count())->toBe(1);
@@ -70,7 +70,7 @@ test('an event with a materials order needs to match the values in the event mod
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::BECOMING_A_KING))->first();
     $eventType->allow_materials_order = true;
     $eventType->save();
-    $this->post(route('host.eventType.create.store', $eventType), [
+    $response = $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
         'zip' => '12345',
@@ -136,7 +136,7 @@ test('a retreat end date is 3 days after the start date', function () {
         'is_private' => false,
         'state' => 'MT',
         'start_date' => $this->startDate,
-        'number_of_items_in_material_order' => 10,
+        'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
     $event = $this->user->events()->first();
@@ -162,7 +162,7 @@ test('a survival school end date is 4 days after the start date', function () {
         'is_private' => false,
         'state' => 'MT',
         'start_date' => $this->startDate,
-        'number_of_items_in_material_order' => 10,
+        'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
     $event = $this->user->events()->first();
@@ -188,7 +188,7 @@ test('a survival school is a retreat event type group', function () {
         'is_private' => false,
         'state' => 'MT',
         'start_date' => $this->startDate,
-        'number_of_items_in_material_order' => 10,
+        'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
     $event = $this->user->events()->first();
@@ -213,7 +213,7 @@ test('a becoming a king retreat end date is 4 days after the start date', functi
         'is_private' => false,
         'state' => 'MT',
         'start_date' => $this->startDate,
-        'number_of_items_in_material_order' => 10,
+        'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
     $event = $this->user->events()->first();
@@ -239,7 +239,7 @@ test('a captivating retreat end date is 4 days after the start date', function (
         'is_private' => false,
         'state' => 'MT',
         'start_date' => $this->startDate,
-        'number_of_items_in_material_order' => 10,
+        'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
     $event = $this->user->events()->first();
@@ -265,7 +265,7 @@ test('a fire should not have an end date is', function () {
         'is_private' => false,
         'state' => 'MT',
         'start_date' => $this->startDate,
-        'number_of_items_in_material_order' => 10,
+        'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
     $event = $this->user->events()->first();

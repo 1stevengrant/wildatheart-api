@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\User;
 
+use App\Models\User;
 use App\Models\Event;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +12,7 @@ class AddWeGiveTagsToExistingHosts extends Command
 {
     protected $signature = 'wegive:add-tags:existing-hosts';
 
-    protected $description = 'Command description';
+    protected $description = 'Adds a WeGive tag to existing event hosts';
 
     public function handle(): int
     {
@@ -20,6 +21,7 @@ class AddWeGiveTagsToExistingHosts extends Command
             foreach ($events as $event) {
                 try {
 
+                    /** @var User|null $user */
                     $user = $event->user;
 
                     if (! $user) {

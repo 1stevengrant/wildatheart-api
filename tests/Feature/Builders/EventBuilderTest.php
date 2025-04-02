@@ -331,6 +331,7 @@ it('gets events belonging to user', function () {
 it('gets events created after', function () {
     Event::factory()->fires()->create([
         'created_at' => now()->subDay(),
+        'user_id' => User::factory()->create(),
     ]);
 
     $events = Event::query()
