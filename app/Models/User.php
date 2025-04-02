@@ -100,13 +100,30 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    public function getFullnameAttribute(): string
+    public function fullname(): Attribute
     {
-        if ($this->given_name === null || $this->family_name === null) {
-            return $this->email;
-        }
+        return Attribute::make(
+            get: function (): string {
+                if ($this->given_name === null || $this->family_name === null) {
+                    return $this->email;
+                }
 
-        return "{$this->given_name} {$this->family_name}";
+                return "{$this->given_name} {$this->family_name}";
+            }
+        );
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            get: function (): string {
+                if ($this->given_name === null || $this->family_name === null) {
+                    return $this->email;
+                }
+
+                return "{$this->given_name} {$this->family_name}";
+            }
+        );
     }
 
     public function hasVerifiedEmail(): bool
