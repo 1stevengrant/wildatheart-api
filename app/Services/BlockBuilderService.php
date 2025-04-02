@@ -152,36 +152,39 @@ class BlockBuilderService
         }
 
         $seriesId = $slide->media_items_from_series->id;
+        $subsplash = new SubsplashService;
+        $statamicSeries = $subsplash->getSeriesInStatamic($seriesId);
+
 
         $mediaItemsFromSeries = Entry::query()
             ->where('collection', 'media_item')
             ->where('published', true)
-            ->where('data->series', 'like', "%{$seriesId}")
+            ->where('data->series', 'like', "%{$statamicSeries->id}")
             ->orderBy('date', 'asc')
             ->get();
 
         foreach ($mediaItemsFromSeries as $mediaItem) {
-            $mediaItemsFromSeriesSlide->slides[] = SlideBlock::from([
-                'id' => $mediaItem->id,
-                'tag' => $mediaItem->position >= 1 ? "{$mediaItem->media_type} {$mediaItem->position}" : $mediaItem->media_type,
-                'title' => $mediaItem->title,
-                'featured_image_src' => $this->imageFromCDN($mediaItem->images->wide),
-                'description' => $mediaItem->description,
-                'variant' => CardVariant::portrait,
-                'trim_description_bool' => false,
-                'href' => $mediaItem->date > now() && ! $mediaItem->make_scheduled_page_public ? null : $mediaItem->uri,
-                'is_coming_soon' => $mediaItem->date > now() && ! $mediaItem->make_scheduled_page_public,
-                'date' => $mediaItem->date,
-                'right_cta' => ButtonProps::from([
-                    'text' => "Play {$mediaItem->media_type}",
-                    'href' => $mediaItem->date > now() ? null : $mediaItem->uri,
-                    'variant' => 'cta',
-                    'leftIcon' => IconProps::from([
-                        'name' => 'play',
-                    ]),
-                    'rightIcon' => IconProps::from([]),
+            $preview = $this->previewBuilder->build($mediaItem);
+            $slide = SlideBlock::from($preview);
+
+            $slide->variant = CardVariant::portrait;
+            $slide->trim_description_bool = false;
+            $slide->href = $mediaItem->date > now() && ! $mediaItem->make_scheduled_page_public ? null : $mediaItem->uri;
+            $slide->is_coming_soon = $mediaItem->date > now() && ! $mediaItem->make_scheduled_page_public;
+            $slide->date = $mediaItem->date;
+            $slide->right_cta = ButtonProps::from([
+                'text' => "Play {$mediaItem->media_type}",
+                'href' => $mediaItem->date > now() ? null : $mediaItem->uri,
+                'variant' => 'cta',
+                'leftIcon' => IconProps::from([
+                    'name' => 'play',
                 ]),
+                'rightIcon' => IconProps::from([]),
             ]);
+
+            $slide->tag = $mediaItem->position >= 1 ? "{$mediaItem->media_type} {$mediaItem->position}" : $mediaItem->media_type;
+
+            $mediaItemsFromSeriesSlide->slides[] = $slide;
         }
 
         return $mediaItemsFromSeriesSlide;
@@ -193,15 +196,13 @@ class BlockBuilderService
         $subsplash = new SubsplashService;
         $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
         $subsplashList = $subsplash->subsplashFetch($url);
-
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
             $series = $item['_embedded']['media-series'];
             $images = $series['_embedded']['images'];
             $wideImage = collect($images)->firstWhere('type', 'wide');
             $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
 
-            $entry = Entry::find($series['id']);
-
+            $entry = $subsplash->getSeriesInStatamic($series['id']);
             // Need to import series if it doesn't exist
             if (! $entry) {
                 continue;

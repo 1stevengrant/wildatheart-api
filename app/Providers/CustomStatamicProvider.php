@@ -33,6 +33,28 @@ class CustomStatamicProvider extends ServiceProvider
 
         Collection::computed('media_item', 'custom_url', function ($entry, $value) {
 
+            /**
+             * Experience Sessions are presented sequentially in this format:
+             * /experience/{EXPERIENCE_SLUG}/session-{POSITION_OF_ITEM_IN_EXPERIENCE}
+             */
+            if ($entry->blueprint->handle === 'experience_session') {
+                $experience = Entry::query()
+                    ->where('collection', 'experiences')
+                    ->where(function ($query) use ($entry) {
+                        $query->whereJsonContains('data->sessions', $entry->id);
+                    })
+                    ->first();
+
+                if ($experience) {
+                    $sessionIndex = $experience->sessions->search(function ($session) use ($entry) {
+                        return $session->id === $entry->id;
+                    });
+                    $sessionIndexPlusOne = $sessionIndex + 1;
+
+                    return $experience->uri() . '/session-' . $sessionIndexPlusOne;
+                }
+            }
+
             if ($entry->series) {
 
                 $series = $entry->series->value();
