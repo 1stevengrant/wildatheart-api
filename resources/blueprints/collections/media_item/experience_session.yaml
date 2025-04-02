@@ -85,12 +85,6 @@ tabs:
       -
         fields:
           -
-            handle: slug
-            field:
-              type: slug
-              localizable: true
-              validate: 'max:200'
-          -
             handle: date
             field:
               type: date

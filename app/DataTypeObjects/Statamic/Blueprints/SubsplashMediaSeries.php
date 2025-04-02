@@ -14,19 +14,19 @@ class SubsplashMediaSeries extends Data
         $this->blueprint = Blueprint::from(['title' => 'Subsplash Media Series', 'handle' => 'subsplash_media_series']);
     }
 
-    public string $id;
+    public ?string $id;
 
-    public string $title;
+    public ?string $title;
 
-    public string $slug;
+    public ?string $slug;
 
-    public string $uri;
+    public ?string $uri;
 
-    public string $url;
+    public ?string $url;
 
     public Blueprint $blueprint;
 
-    public string $subtitle;
+    public ?string $subtitle;
 
-    public array $subsplash_data;
+    // public array $subsplash_data;
 }

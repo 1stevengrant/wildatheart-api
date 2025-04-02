@@ -63,9 +63,9 @@ class MediaSeriesDataController extends Controller
             $mediaItemEntry = Entry::query()
                 ->find($mediaItem['id']);
 
-            // If the associated media item isn't there, create it.
+            // The media hasn't been imported yet. Skip it.
             if ($mediaItemEntry == null) {
-                $mediaItemEntry = $subsplash->saveMediaItemAsEntry($mediaItem);
+                continue;
             }
 
             $responseData['mediaItems'][] = [
