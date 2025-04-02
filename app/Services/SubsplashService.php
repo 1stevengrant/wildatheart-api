@@ -196,10 +196,7 @@ class SubsplashService
                 $data['media_type'] = ['podcast-episode'];
             }
 
-            $mediaSeries = Entry::query()
-                ->where('collection', 'media_series')
-                ->where('id', $mediaItemSeriesID)
-                ->first();
+            $mediaSeries = $this->getSeriesInStatamic($mediaItemSeriesID);
 
             if (! $mediaSeries) {
                 $mediaSeries = $this->getMediaSeries($mediaItemSeriesID);
@@ -351,6 +348,10 @@ class SubsplashService
             ->orWhere(function ($query) use ($seriesId) {
                 $query->where('blueprint', 'custom_series')
                     ->where('subsplash_media_series_id', $seriesId);
+            })
+            ->orWhere(function ($query) use ($seriesId) {
+                $query->where('collection', 'experiences')
+                    ->where('subsplash_series_id', $seriesId);
             })
             ->first();
     }
