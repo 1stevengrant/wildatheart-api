@@ -54,10 +54,26 @@ class FindOrCreateDonorJob implements ShouldQueue
             return;
         }
 
-        $weGiveConnector = new WeGiveConnector;
-
         try {
+            if ($this->event->user->wegive_donor_id) {
+                dispatch(new LogActivityJob(
+                    logName: WeGiveConnector::INFO_LOG_NAME,
+                    description: 'Using existing WeGive donor ID',
+                    properties: [
+                        'donor' => $this->event->user->wegive_donor_id,
+                    ],
+                    causedBy: $this->event->user,
+                    performedOn: $this->event->user,
+                ));
+
+                dispatch(new TagDonorJob($this->event));
+
+                return;
+            }
+
+            $weGiveConnector = new WeGiveConnector;
             $donorId = $this->findOrCreateDonor($weGiveConnector);
+
             if (! $donorId) {
                 dispatch(new LogActivityJob(
                     logName: WeGiveConnector::ERROR_LOG_NAME,
@@ -86,7 +102,7 @@ class FindOrCreateDonorJob implements ShouldQueue
         } catch (Exception $e) {
             dispatch(new LogActivityJob(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
-                description: 'Unhandled exception in FindOrCreateWeGiveDonorJob',
+                description: 'Unhandled exception in FindOrCreateDonorJob',
                 properties: [
                     'event_id' => $this->event->id,
                     'exception' => $e->getMessage(),
@@ -110,7 +126,6 @@ class FindOrCreateDonorJob implements ShouldQueue
      * @throws FatalRequestException
      * @throws JsonException
      * @throws RequestException
-     * @throws JsonException
      */
     private function findOrCreateDonor(WeGiveConnector $connector): ?string
     {
