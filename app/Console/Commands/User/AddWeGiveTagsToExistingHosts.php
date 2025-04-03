@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\User;
 
+use Exception;
 use App\Models\User;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
@@ -51,11 +52,11 @@ class AddWeGiveTagsToExistingHosts extends Command
                             ],
                         ]);
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     dispatch(
                         new LogActivityJob(
                             logName: WeGiveConnector::ERROR_LOG_NAME,
-                            description: 'Error tagging donor',
+                            description: 'AddWeGiveTagsToExistingHosts Error',
                             properties: [
                                 'event_id' => $event->id,
                                 'user_id' => $user->id ?? null,

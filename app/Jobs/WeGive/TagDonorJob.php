@@ -2,7 +2,7 @@
 
 namespace App\Jobs\WeGive;
 
-use Exception;
+use JsonException;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use Illuminate\Queue\SerializesModels;
@@ -35,6 +35,7 @@ class TagDonorJob implements ShouldQueue
     /**
      * @throws FatalRequestException
      * @throws RequestException
+     * @throws JsonException
      */
     public function handle(): void
     {
@@ -56,13 +57,16 @@ class TagDonorJob implements ShouldQueue
 
         try {
             $this->tagDonor($weGiveConnector, $this->event->user->wegive_donor_id);
-        } catch (Exception $e) {
+        } catch (FatalRequestException|RequestException $e) {
             dispatch(new LogActivityJob(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Unhandled exception in TagWeGiveDonorJob',
                 properties: [
                     'event_id' => $this->event->id,
-                    'exception' => $e->getMessage(),
+                    'error' => $e->getMessage(),
+                    'response' => $e->getResponse() && method_exists($e->getResponse(), 'json') ?
+                        ($e->getResponse()->json() ?? 'Invalid JSON') :
+                        null,
                 ],
                 causedBy: $this->event->user,
                 performedOn: $this->event->user,
@@ -82,6 +86,7 @@ class TagDonorJob implements ShouldQueue
     /**
      * @throws FatalRequestException
      * @throws RequestException
+     * @throws JsonException
      */
     private function tagDonor(WeGiveConnector $connector, string $donorId): void
     {
@@ -91,7 +96,7 @@ class TagDonorJob implements ShouldQueue
         );
 
         try {
-            $connector->send($tagDonorsRequest);
+            $response = $connector->send($tagDonorsRequest);
 
             dispatch(new LogActivityJob(
                 logName: WeGiveConnector::INFO_LOG_NAME,
@@ -99,6 +104,9 @@ class TagDonorJob implements ShouldQueue
                 properties: [
                     'tag' => $this->event->we_give_tag,
                     'donor' => $donorId,
+                    'response' => $response->json() && method_exists($response, 'json') ?
+                        ($response->json() ?? 'Invalid JSON') :
+                        null,
                 ],
                 causedBy: $this->event->user,
                 performedOn: $this->event->user,
@@ -111,6 +119,9 @@ class TagDonorJob implements ShouldQueue
                     'tag' => $this->event->we_give_tag,
                     'donor' => $donorId,
                     'error' => $e->getMessage(),
+                    'response' => $e->getResponse() && method_exists($e->getResponse(), 'json') ?
+                        ($e->getResponse()->json() ?? 'Invalid JSON') :
+                        null,
                 ],
                 causedBy: $this->event->user,
                 performedOn: $this->event->user,

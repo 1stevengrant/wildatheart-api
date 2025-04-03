@@ -159,6 +159,9 @@ class FindOrCreateDonorJob implements ShouldQueue
                 description: 'Created donor',
                 properties: [
                     'donor' => $response->json()['data']['id'] ?? null,
+                    'response' => $response->json() && method_exists($response, 'json') ?
+                        ($response->json() ?? 'Invalid JSON') :
+                        null,
                 ],
                 causedBy: $this->event->user,
                 performedOn: $this->event->user,
@@ -172,6 +175,9 @@ class FindOrCreateDonorJob implements ShouldQueue
                 properties: [
                     'event_id' => $this->event->id,
                     'error' => $e->getMessage(),
+                    'response' => $e->getResponse() && method_exists($e->getResponse(), 'json') ?
+                        ($e->getResponse()->json() ?? 'Invalid JSON') :
+                        null,
                 ],
                 causedBy: $this->event->user,
                 performedOn: $this->event->user,
