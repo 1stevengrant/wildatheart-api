@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Jobs\User;
+namespace App\Jobs\WeGive;
 
 use Exception;
 use Throwable;
 use JsonException;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
-use Illuminate\Bus\Queueable;
 use App\Actions\User\UpdateUser;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Saloon\Exceptions\Request\RequestException;
 use App\Http\Integrations\WeGive\WeGiveConnector;
 use Saloon\Exceptions\Request\FatalRequestException;
-use App\Http\Integrations\WeGive\Requests\TagDonorsRequest;
 use App\Http\Integrations\WeGive\Requests\FindOrCreateDonorsRequest;
 
-class TagWeGiveDonorJob implements ShouldQueue
+class FindOrCreateDonorJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -42,12 +40,16 @@ class TagWeGiveDonorJob implements ShouldQueue
      */
     public function handle(): void
     {
-        if (! app()->isProduction()) {
-            return;
-        }
-
         if (! $this->validateEventData()) {
-            Log::error('TagWeGiveDonorJob: Missing required user data', ['event_id' => $this->event->id]);
+            dispatch(new LogActivityJob(
+                logName: WeGiveConnector::ERROR_LOG_NAME,
+                description: 'Missing required user data',
+                properties: [
+                    'event_id' => $this->event->id,
+                ],
+                causedBy: $this->event->user,
+                performedOn: $this->event->user,
+            ));
 
             return;
         }
@@ -55,9 +57,18 @@ class TagWeGiveDonorJob implements ShouldQueue
         $weGiveConnector = new WeGiveConnector;
 
         try {
-
             $donorId = $this->findOrCreateDonor($weGiveConnector);
             if (! $donorId) {
+                dispatch(new LogActivityJob(
+                    logName: WeGiveConnector::ERROR_LOG_NAME,
+                    description: 'Donor not found or created',
+                    properties: [
+                        'event_id' => $this->event->id,
+                    ],
+                    causedBy: $this->event->user,
+                    performedOn: $this->event->user,
+                ));
+
                 return;
             }
 
@@ -70,13 +81,19 @@ class TagWeGiveDonorJob implements ShouldQueue
                 );
             });
 
-            $this->tagDonor($weGiveConnector, $donorId);
+            dispatch(new TagDonorJob($this->event));
 
         } catch (Exception $e) {
-            Log::error('TagWeGiveDonorJob unhandled exception: ' . $e->getMessage(), [
-                'event_id' => $this->event->id,
-                'trace' => $e->getTraceAsString(),
-            ]);
+            dispatch(new LogActivityJob(
+                logName: WeGiveConnector::ERROR_LOG_NAME,
+                description: 'Unhandled exception in FindOrCreateWeGiveDonorJob',
+                properties: [
+                    'event_id' => $this->event->id,
+                    'exception' => $e->getMessage(),
+                ],
+                causedBy: $this->event->user,
+                performedOn: $this->event->user,
+            ));
 
             throw $e;
         }
@@ -84,26 +101,34 @@ class TagWeGiveDonorJob implements ShouldQueue
 
     private function validateEventData(): bool
     {
-        return $this->event->user
-            && $this->event->user->email
-            && $this->event->user->given_name
-            && $this->event->user->family_name
-            && $this->event->we_give_tag;
+        return $this->event->user && $this->event->user->email;
     }
 
     /**
      * Find or create a WeGive donor
      *
+     * @throws FatalRequestException
+     * @throws JsonException
+     * @throws RequestException
      * @throws JsonException
      */
     private function findOrCreateDonor(WeGiveConnector $connector): ?string
     {
         $requestData = [
             'email' => $this->event->user->email,
-            'firstName' => $this->event->user->given_name,
-            'lastName' => $this->event->user->family_name,
-            'phone' => $this->event->user->phone,
         ];
+
+        if ($this->event->user->given_name) {
+            $requestData['firstName'] = $this->event->user->given_name;
+        }
+
+        if ($this->event->user->family_name) {
+            $requestData['lastName'] = $this->event->user->family_name;
+        }
+
+        if ($this->event->user->phone) {
+            $requestData['phone'] = $this->event->user->phone;
+        }
 
         if ($this->event->user->primaryAddress()) {
             $requestData['address'] = $this->event->user->primaryAddress()->toArray();
@@ -114,47 +139,28 @@ class TagWeGiveDonorJob implements ShouldQueue
         try {
             $response = $connector->send($findOrCreateDonorRequest);
 
-            return $response->json()['data']['id'] ?? null;
-        } catch (FatalRequestException|RequestException $e) {
-            Log::error('WeGive API error: ' . $e->getMessage(), [
-                'event_id' => $this->event->id,
-                'request' => 'FindOrCreateDonorsRequest',
-            ]);
-
-            return null;
-        }
-    }
-
-    /**
-     * @throws FatalRequestException
-     * @throws RequestException
-     */
-    private function tagDonor(WeGiveConnector $connector, string $donorId): void
-    {
-        $tagDonorsRequest = new TagDonorsRequest(
-            donorIds: [$donorId],
-            tagIds: [$this->event->we_give_tag],
-        );
-
-        try {
-            $connector->send($tagDonorsRequest);
-
             dispatch(new LogActivityJob(
-                logName: 'wegive',
-                description: 'Tagged donor',
+                logName: WeGiveConnector::INFO_LOG_NAME,
+                description: 'Created donor',
                 properties: [
-                    'tag' => $this->event->we_give_tag,
-                    'donor' => $donorId,
+                    'donor' => $response->json()['data']['id'] ?? null,
                 ],
                 causedBy: $this->event->user,
                 performedOn: $this->event->user,
             ));
+
+            return $response->json()['data']['id'] ?? null;
         } catch (FatalRequestException|RequestException $e) {
-            Log::error('WeGive API error: ' . $e->getMessage(), [
-                'event_id' => $this->event->id,
-                'request' => 'TagDonorsRequest',
-                'donor_id' => $donorId,
-            ]);
+            dispatch(new LogActivityJob(
+                logName: WeGiveConnector::ERROR_LOG_NAME,
+                description: 'Error creating donor',
+                properties: [
+                    'event_id' => $this->event->id,
+                    'error' => $e->getMessage(),
+                ],
+                causedBy: $this->event->user,
+                performedOn: $this->event->user,
+            ));
 
             throw $e;
         }
