@@ -111,4 +111,9 @@ class UserBuilder extends Builder
     {
         return $this->whereNull('last_login_at');
     }
+
+    public function byWeGiveId(int $weGiveId): UserBuilder
+    {
+        return $this->where('wegive_donor_id', $weGiveId);
+    }
 }

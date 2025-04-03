@@ -3,9 +3,9 @@
 namespace App\Observers;
 
 use App\Models\Event;
-use App\Jobs\User\TagWeGiveDonorJob;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Artisan;
+use App\Jobs\WeGive\FindOrCreateDonorJob;
 use App\Jobs\Event\SendNewEventSlackAlert;
 use App\Mail\Event\NewEventCreatedMailable;
 
@@ -23,7 +23,7 @@ class EventObserver
             'sex' => determineSexOfEvent($event->eventType),
         ]);
 
-        TagWeGiveDonorJob::dispatch($event);
+        FindOrCreateDonorJob::dispatch($event);
     }
 
     public function updated(Event $event): void

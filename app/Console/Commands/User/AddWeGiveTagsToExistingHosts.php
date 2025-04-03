@@ -4,9 +4,10 @@ namespace App\Console\Commands\User;
 
 use App\Models\User;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use App\Jobs\User\TagWeGiveDonorJob;
+use App\Jobs\WeGive\FindOrCreateDonorJob;
+use App\Http\Integrations\WeGive\WeGiveConnector;
 
 class AddWeGiveTagsToExistingHosts extends Command
 {
@@ -25,13 +26,20 @@ class AddWeGiveTagsToExistingHosts extends Command
                     $user = $event->user;
 
                     if (! $user) {
-                        Log::warning("Event ID {$event->id} has no associated user");
+
+                        dispatch(new LogActivityJob(
+                            logName: WeGiveConnector::WARNING_LOG_NAME,
+                            description: 'Event has no associated user',
+                            properties: [
+                                'event_id' => $event->id,
+                            ]
+                        ));
 
                         continue;
                     }
 
                     if ($user->hasCompleteProfile()) {
-                        TagWeGiveDonorJob::dispatch($event);
+                        FindOrCreateDonorJob::dispatch($event);
                     } else {
                         $this->table(['ID', 'Given Name', 'Family Name', 'Email', 'Phone'], [
                             [
@@ -44,7 +52,18 @@ class AddWeGiveTagsToExistingHosts extends Command
                         ]);
                     }
                 } catch (\Exception $e) {
-                    Log::error("Error processing event ID {$event->id}: {$e->getMessage()}");
+                    dispatch(
+                        new LogActivityJob(
+                            logName: WeGiveConnector::ERROR_LOG_NAME,
+                            description: 'Error tagging donor',
+                            properties: [
+                                'event_id' => $event->id,
+                                'user_id' => $user->id ?? null,
+                                'error' => $e->getMessage(),
+                            ]
+                        )
+                    );
+                    throw $e;
                 }
             }
         });
