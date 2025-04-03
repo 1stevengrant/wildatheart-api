@@ -1,8 +1,7 @@
 <?php
 
-use App\DataTransferObjects\ReportData;
 use App\Services\ReportService;
-use Illuminate\Support\Facades\Storage;
+use App\DataTransferObjects\ReportData;
 
 beforeEach(function () {
     $this->reportService = new ReportService;
