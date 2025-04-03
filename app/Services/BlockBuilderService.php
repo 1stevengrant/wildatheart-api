@@ -155,7 +155,6 @@ class BlockBuilderService
         $subsplash = new SubsplashService;
         $statamicSeries = $subsplash->getSeriesInStatamic($seriesId);
 
-
         $mediaItemsFromSeries = Entry::query()
             ->where('collection', 'media_item')
             ->where('published', true)
@@ -170,7 +169,7 @@ class BlockBuilderService
             $slide->variant = CardVariant::portrait;
             $slide->trim_description_bool = false;
 
-            if ($mediaItem->blueprint->handle === "subsplash_media_item") {
+            if ($mediaItem->blueprint->handle === 'subsplash_media_item') {
                 $slide->trim_description_bool = true;
             }
 
