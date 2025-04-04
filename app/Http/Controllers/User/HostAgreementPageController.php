@@ -10,10 +10,9 @@ class HostAgreementPageController extends Controller
     public function index()
     {
         $hostAgreement = GlobalSet::findByHandle('local_platform');
-        $hostAgreement = $hostAgreement->in('default')->get('host_agreement_content');
 
         return inertia('HostAgreementPage', [
-            'hostAgreement' => $hostAgreement,
+            'hostAgreement' => $hostAgreement->in('default')->get('host_agreement_content'),
         ]);
     }
 

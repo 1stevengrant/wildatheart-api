@@ -13,14 +13,14 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { eventTypeBackground } from "@/helpers/eventTypeBackground";
 import { getRouteForEventType } from "@/helpers/getRouteForEventType";
 import { imageGenerator } from "@/helpers/user";
-import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { EventType } from "@/types/EventType";
 import { EventTypeActionButton } from "@/types/EventTypeActionButton";
 
-const ResourcesPage = () => {
-    const page = useTypedPage();
-    const eventTypes = page.props.eventTypes as EventType[];
+const ResourcesPage = ({
+    eventTypes,
+}: {
+    eventTypes: App.Data.EventTypesData[];
+}) => {
     const pageTitle = "Event Resources";
     return (
         <HostDashboardLayout pageTitle={pageTitle}>
@@ -28,14 +28,14 @@ const ResourcesPage = () => {
             <div
                 className={`grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4 max-w-5xl mt-12`}
             >
-                {eventTypes.map((eventType: EventType) => (
+                {eventTypes.map((eventType: App.Data.EventTypesData) => (
                     <div
                         key={eventType.id}
                         className={`p-6 bg-gradient-to-br ${eventTypeBackground(eventType.slug)} end-n800 rounded-2xl shadow-xl flex space-x-4 md:flex-col md:space-x-0`}
                     >
                         {eventType.image && (
                             <img
-                                alt={eventType.name}
+                                alt={eventType.name ?? ""}
                                 className={`rounded-xl`}
                                 src={imageGenerator(eventType.image, {
                                     width: 200,
@@ -66,7 +66,7 @@ const ResourcesPage = () => {
                                     />
                                 }
                                 text={`Host New ${singular(eventType.name)}`}
-                                url={getRouteForEventType(eventType)}
+                                url={getRouteForEventType(eventType.slug)}
                             />
                             {eventType.video_link && (
                                 <ListItem
