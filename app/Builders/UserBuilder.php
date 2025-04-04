@@ -122,7 +122,6 @@ class UserBuilder extends Builder
         return $this->whereNull('wegive_donor_id');
     }
 
-
     public function hasNoProviderId(): UserBuilder
     {
         return $this->whereNull('provider_id');

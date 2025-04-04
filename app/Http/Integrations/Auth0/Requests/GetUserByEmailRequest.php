@@ -10,9 +10,7 @@ class GetUserByEmailRequest extends Request
 {
     use AcceptsJson;
 
-    public function __construct(protected string $email)
-    {
-    }
+    public function __construct(protected string $email) {}
 
     /**
      * The HTTP method of the request
