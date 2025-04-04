@@ -10,7 +10,7 @@ class UpdateUserPhoneNumbersCommand extends Command
 
     protected $description = 'update the user phone numbers from auth0';
 
-    public function handle()
+    public function handle(): void
     {
         $usersWithoutPhone = \App\Models\User::whereNull('phone')->whereNotNull('provider_id')->get();
 

@@ -6,7 +6,7 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Plugins\AcceptsJson;
 
-class GetUserByEmail extends Request
+class GetUserByEmailRequest extends Request
 {
     use AcceptsJson;
 
@@ -31,7 +31,7 @@ class GetUserByEmail extends Request
     {
         return [
             'q' => 'email:"' . $this->email . '"',
-            'search_engine' => 'v3', // Required for Lucene syntax
+            'search_engine' => 'v3',
         ];
     }
 }
