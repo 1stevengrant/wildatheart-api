@@ -43,8 +43,10 @@ jobs:
           FORGE_ENV_KEYS: |
             REMOTE_DATABASE_EXCLUDE_DATA=activity_log,failed_jobs,issues,pulse_aggregates,pulse_entries,pulse_values
             LOCAL_MYSQL_PATH=/usr/bin/mysql
+            REMOTE_USE_SSH: true
             REMOTE_DATABASE_USERNAME=forge
-            REMOTE_DATABASE_NAME=wah_local_prod
+            REMOTE_DATABASE_HOST=10.0.0.4
+            REMOTE_DATABASE_NAME=wildatheartlocalplatform_production
             REMOTE_DATABASE_PASSWORD=${{ secrets.FORGE_DB_PASSWORD }}
             AUTH0_AUDIENCE=https://pr-${{ github.event.number }}.gondor.wildatheart.org
             AUTH0_REDIRECT_URI=https://pr-${{ github.event.number }}.gondor.wildatheart.org/callback
