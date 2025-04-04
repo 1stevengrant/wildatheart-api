@@ -116,4 +116,25 @@ class UserBuilder extends Builder
     {
         return $this->where('wegive_donor_id', $weGiveId);
     }
+
+    public function hasNoWeGiveId(): UserBuilder
+    {
+        return $this->whereNull('wegive_donor_id');
+    }
+
+
+    public function hasNoProviderId(): UserBuilder
+    {
+        return $this->whereNull('provider_id');
+    }
+
+    public function hasNoProvider(): UserBuilder
+    {
+        return $this->whereNull('provider');
+    }
+
+    public function hasProvider(): UserBuilder
+    {
+        return $this->whereNotNull('provider');
+    }
 }
