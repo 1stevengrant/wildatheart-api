@@ -12,7 +12,6 @@ use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\UpdateEventController;
 use App\Http\Controllers\Event\StandardFireController;
 use App\Http\Controllers\Event\HostEventTypeController;
-use App\Http\Controllers\Gift\HandleSendGiftController;
 use App\Http\Controllers\User\MyActiveEventsController;
 use App\Http\Controllers\Event\CaptivatingFireController;
 use App\Http\Controllers\User\DestroyUserImageController;
@@ -22,8 +21,6 @@ use App\Http\Controllers\User\UpdateUserProfileController;
 use App\Http\Controllers\Event\HostEventTypeFaqsController;
 use App\Http\Controllers\Event\ToggleEventPrivacyController;
 use App\Http\Controllers\Event\HostEventTypeBeforeController;
-use App\Http\Controllers\Event\HostEventTypeSelectController;
-use App\Http\Controllers\User\AgreeToHostAgreementController;
 use App\Http\Controllers\Event\HostEventTypeScheduleController;
 use App\Http\Controllers\Event\ToggleEventApprovedAtController;
 use App\Http\Controllers\Event\HostEventTypeCreateEventController;
@@ -33,9 +30,9 @@ use App\Http\Controllers\Event\HostEventTypeMailingAddressController;
 Route::middleware(['auth'])->group(function () {
 
     Route::prefix('host')->name('host.')->group(function () {
-        Route::get('agreement', HostAgreementPageController::class)->name('agreement');
-        Route::post('agreement', AgreeToHostAgreementController::class)->name('agreement.store');
-        Route::get('select', HostEventTypeSelectController::class)->name('eventType.select');
+        Route::get('agreement', [HostAgreementPageController::class, 'index'])->name('agreement');
+        Route::post('agreement', [HostAgreementPageController::class, 'store'])->name('agreement.store');
+        Route::get('select', ResourcesController::class)->name('eventType.select');
     });
 
     Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
@@ -52,8 +49,8 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('gift')->name('gift.')->group(function () {
-            Route::get('{event}', SendGiftController::class)->name('index');
-            Route::post('{event}', HandleSendGiftController::class)->name('store');
+            Route::get('{event}', [SendGiftController::class, 'index'])->name('index');
+            Route::post('{event}', [SendGiftController::class, 'store'])->name('store');
         });
 
         Route::prefix('host/{eventType}')->name('host.eventType.')->group(function () {

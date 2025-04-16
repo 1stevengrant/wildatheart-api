@@ -40,6 +40,7 @@
         "spatie/laravel-permission": "^6.10",
         "spatie/laravel-ray": "^1.36",
         "spatie/laravel-slack-alerts": "^1.2",
+        "spatie/laravel-typescript-transformer": "^2.5",
         "spatie/typescript-transformer": "^2.3",
         "squirephp/countries-en": "^3.5",
         "statamic-rad-pack/runway": "^7.12",

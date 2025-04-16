@@ -74,7 +74,8 @@ class CallbackController extends Controller
 
     protected function findOrCreateUser(array $auth0User): User
     {
-        return User::firstOrCreate(
+
+        $user = User::firstOrCreate(
             ['email' => $auth0User['email']],
             [
                 'given_name' => $auth0User['given_name'] ?? null,
@@ -83,5 +84,13 @@ class CallbackController extends Controller
                 'provider_id' => $auth0User['sub'],
             ]
         );
+
+        dispatch(new LogActivityJob(
+            logName: 'auth',
+            description: 'Created user',
+            properties: ['user' => $user->toArray()],
+        ));
+
+        return $user;
     }
 }

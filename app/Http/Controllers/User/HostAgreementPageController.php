@@ -2,19 +2,28 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
 use Statamic\Facades\GlobalSet;
 use App\Http\Controllers\Controller;
 
 class HostAgreementPageController extends Controller
 {
-    public function __invoke(Request $request)
+    public function index()
     {
         $hostAgreement = GlobalSet::findByHandle('local_platform');
-        $hostAgreement = $hostAgreement->in('default')->get('host_agreement_content');
 
         return inertia('HostAgreementPage', [
-            'hostAgreement' => $hostAgreement,
+            'hostAgreement' => $hostAgreement->in('default')->get('host_agreement_content'),
         ]);
+    }
+
+    public function store()
+    {
+        auth()->user()->update(['agreed_to_host_agreement_date' => now()]);
+        $redirectTo = session()->pull('host_agreement_redirect_to');
+        if ($redirectTo) {
+            return redirect()->route($redirectTo);
+        }
+
+        return redirect()->route('my.profile');
     }
 }
