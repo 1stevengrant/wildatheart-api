@@ -16,6 +16,7 @@ use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
+use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,9 @@ Route::prefix('content')->group(function () {
                 Route::get('/{slug}', [PrayersEntryController::class, 'show'])->name('show');
             });
             Route::get('/alerts', [AlertEntryController::class, 'index'])->name('alerts.index');
+            Route::prefix('subsplash')->name('subsplash.')->group(function () {
+                Route::get('/prayers', [SubsplashAppController::class, 'prayers'])->name('prayers');
+            });
         });
     });
 });
