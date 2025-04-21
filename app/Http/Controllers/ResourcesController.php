@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventType;
+use App\Data\EventTypesData;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -14,7 +15,7 @@ class ResourcesController extends Controller
         });
 
         return inertia('ResourcesPage', [
-            'eventTypes' => $eventTypes,
+            'eventTypes' => EventTypesData::collection($eventTypes),
         ]);
     }
 }

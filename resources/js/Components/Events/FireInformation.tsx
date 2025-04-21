@@ -359,7 +359,7 @@ export const FireInformation = ({ user }: any) => {
                                 className={
                                     "text-n40 w-full inline-block text-center"
                                 }
-                                href={route("home")}
+                                href={route("host.eventType.select")}
                             >
                                 Cancel
                             </Link>
