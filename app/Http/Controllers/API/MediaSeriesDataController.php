@@ -52,11 +52,19 @@ class MediaSeriesDataController extends Controller
         $relatedMediaItemsUrl = data_get($subsplashSeries, '_links.media-items.href', '');
         $responseData['_embedded'] = data_get($subsplashSeries, '_embedded', '');
 
-        $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl);
+        $allItems = [];
+
+        $nextUrl = $relatedMediaItemsUrl;
+        while ($nextUrl) {
+            $subsplashMediaItems = $subsplash->subsplashFetch($nextUrl);
+            $allItems = array_merge($allItems, data_get($subsplashMediaItems, '_embedded.media-items', []));
+            $nextUrl = data_get($subsplashMediaItems, "_links.next.href");
+        }
+
 
         $subsplashMediaItemMap = [];
         $responseData['mediaItems'] = [];
-        foreach (data_get($subsplashMediaItems, '_embedded.media-items', []) as $mediaItem) {
+        foreach ($allItems as $mediaItem) {
 
             $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
 
