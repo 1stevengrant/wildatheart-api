@@ -97,7 +97,7 @@ const ViewEventPage = () => {
                     <div className="md:space-x-8 md:flex">
                         <div className="md:w-2/3">
                             <div className="flex items-center space-x-4">
-                                <h1 className="mb-1 flex items-center text-3xl leading-tighter">
+                                <h1 className="mb-1 flex items-center text-3xl leading-tighter capitalize">
                                     {eventTitle(event)}
                                     {!event.approved_at && <UnpublishedBadge />}
                                 </h1>
