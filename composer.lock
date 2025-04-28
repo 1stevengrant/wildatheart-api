@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2546911facb5c8526cd8a0d099663271",
+    "content-hash": "43bfcb6eb3ae8d746c8262608e934346",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -2187,7 +2187,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-feature/WAH-1302",
+            "version": "dev-prod",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",

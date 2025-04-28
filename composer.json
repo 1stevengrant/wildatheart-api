@@ -16,7 +16,6 @@
         "fakerphp/faker": "^1.23",
         "ghijk/wild-at-heart": "*@dev",
         "inertiajs/inertia-laravel": "^2.0",
-        "intervention/image": "^2.7",
         "jacksleight/statamic-bard-texstyle": "^3.4",
         "ksubileau/color-thief-php": "^2.0",
         "laravel/framework": "^11.31",
