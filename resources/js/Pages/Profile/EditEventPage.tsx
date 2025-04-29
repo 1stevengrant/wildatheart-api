@@ -48,7 +48,7 @@ const EditEventPage = () => {
     const eventTypeName = event.event_type_data.name;
     const route = useRoute();
 
-    const pageTitle = `Editing ${event.name} ${singular(eventTypeName)}`;
+    const pageTitle = `Editing ${event.name}`;
 
     const [marker, setMarker] = useState<any>({
         lat: event.latitude,
