@@ -18,7 +18,10 @@ class SubscribeToCommunicationListJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public readonly string $listId, public readonly User $user) {}
+    public function __construct(
+        public readonly string $listId,
+        public readonly User $user
+    ) {}
 
     /**
      * Execute the job.

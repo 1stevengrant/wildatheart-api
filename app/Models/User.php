@@ -76,7 +76,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'date_opted_into_marketing' => 'datetime',
+            'opted_into_marketing' => 'boolean',
             'id' => 'integer',
+            'updated_at' => 'datetime',
+            'created_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'super' => 'boolean',
+            'agreed_to_host_agreement_date' => 'datetime',
+            'last_login' => 'datetime',
+            'preferences' => 'array',
+            'profile_step' => 'integer',
+
         ];
     }
 
