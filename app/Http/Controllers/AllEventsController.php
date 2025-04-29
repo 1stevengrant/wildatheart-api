@@ -23,7 +23,7 @@ class AllEventsController extends Controller
                 ->active()
                 ->notPrivate()
                 ->with(['eventType', 'user'])
-                ->orderBy('start_date', 'asc')
+                ->orderBy('start_date')
                 ->get();
         });
         $endEventsTime = microtime(true);
