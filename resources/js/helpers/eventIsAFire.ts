@@ -1,5 +1,10 @@
-import { EventTypeFires } from "@/helpers/eventNames";
+import {
+    EventTypeFires,
+    EventTypeCaptivatingFires,
+} from "@/helpers/eventNames";
 
-export const eventIsAFire = (event: string) => {
-    return event === EventTypeFires;
+export const eventIsAFire = (eventType: string) => {
+    return (
+        eventType === EventTypeFires || eventType === EventTypeCaptivatingFires
+    );
 };
