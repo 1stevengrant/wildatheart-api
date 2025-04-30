@@ -64,6 +64,7 @@ class DailyReadingController extends Controller
                 ]);
                 if (isset($item['attributes']['title'])) {
                     $dailyReading->current_episode_slug = Str::slug($item['attributes']['title'], '-');
+                    $dailyReading->uri =  '/daily-reading/' . Str::slug($item['attributes']['title'], '-');
                 }
                 $dailyReadings[] = $dailyReading;
             }

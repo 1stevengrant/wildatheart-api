@@ -29,18 +29,23 @@ class SubsplashAppController extends Controller
         return response()->json($this->subsplashAppService->getPrayerAudio($id));
     }
 
-    public function readPrayer($id)
+    public function dailyReading($id)
     {
-        return response($this->subsplashAppService->getPrayerRead($id));
+        return response()->json($this->subsplashAppService->getDailyReading($id));
     }
 
-    public function dailyReadings()
+    public function dailyReadingToday()
+    {
+        return response()->json($this->subsplashAppService->getDailyReadingToday());
+    }
+
+    public function dailyReadingsListen($id = null)
+    {
+        return response()->json($this->subsplashAppService->getDailyReadingAudio($id));
+    }
+
+    public function dailyReadingsList()
     {
         return response()->json($this->subsplashAppService->getDailyReadingList());
     }
-
-    // public function dailyReading($id)
-    // {
-    //     return response()->json($this->subsplashAppService->getDailyReading($id));
-    // }
 }

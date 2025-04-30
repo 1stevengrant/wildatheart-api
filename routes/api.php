@@ -66,10 +66,14 @@ Route::prefix('content')->group(function () {
             });
             Route::get('/alerts', [AlertEntryController::class, 'index'])->name('alerts.index');
             Route::prefix('subsplash')->name('subsplash.')->group(function () {
+                Route::get('/daily-readings', [SubsplashAppController::class, 'dailyReadingToday'])->name('dailyReadings');
+                Route::get('/daily-readings/listen', [SubsplashAppController::class, 'dailyReadingsListen'])->name('dailyReadingsListen');
+                Route::get('/daily-readings/listen/{id?}', [SubsplashAppController::class, 'dailyReadingsListen'])->name('dailyReadingsListen');
+                Route::get('/daily-readings/list', [SubsplashAppController::class, 'dailyReadingsList'])->name('dailyReadingsList');
+                Route::get('/daily-readings/{id}', [SubsplashAppController::class, 'dailyReading'])->name('dailyReadingById');
                 Route::get('/prayers', [SubsplashAppController::class, 'prayers'])->name('prayers');
                 Route::get('/prayers/{id}', [SubsplashAppController::class, 'prayer'])->name('prayer');
                 Route::get('/prayers/listen/{id}', [SubsplashAppController::class, 'listenPrayer'])->name('listenPrayer');
-                Route::get('/prayers/read/{id}', [SubsplashAppController::class, 'readPrayer'])->name('readPrayer');
             });
         });
     });
