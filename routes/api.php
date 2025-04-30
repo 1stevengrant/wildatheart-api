@@ -14,9 +14,9 @@ use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
+use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
-use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 
 /*
 |--------------------------------------------------------------------------
