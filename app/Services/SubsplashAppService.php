@@ -16,7 +16,7 @@ class SubsplashAppService
   function __construct(private TransistorService $transistor)
   {
     $transistor = new TransistorService();
-    $this->baseUrl = config('app.url');
+    $this->baseUrl = "https://outpost.wildatheart.us";
   }
 
   public function getPrayerList()
@@ -32,6 +32,20 @@ class SubsplashAppService
     $prayer = Entry::findOrFail($id)->toArray();
 
     return $this->transformPrayer($prayer, $this->baseUrl);
+  }
+
+  public function getPrayerAudio($id)
+  {
+    $prayer = Entry::findOrFail($id)->toArray();
+
+    return $this->transformPrayerAudio($prayer, $this->baseUrl);
+  }
+
+  public function getPrayerRead($id)
+  {
+    $prayer = Entry::findOrFail($id)->toArray();
+
+    return $this->transformPrayerRead($prayer, $this->baseUrl);
   }
 
   public function getDailyReadingList()
@@ -55,32 +69,138 @@ class SubsplashAppService
    */
   public function transformPrayer($prayer, $baseUrl)
   {
+
+    // dd($prayer);
+    $mp3 = null;
+    if ($prayer['mp3']) {
+      $bunnyCDNService = new BunnyCDNService;
+      $mp3 = $bunnyCDNService->getBunnyCDNUrl($prayer['mp3']['path']);
+    }
+
     return [
-      'title' => $prayer['title'],
+      'header' => [
+        'title' => 'Prayer'
+      ],
+      'items' => [
+        [
+          'title' => 'Read',
+          'actions' => [
+            [
+              'handler' => 'browser',
+              'style' => 'internal',
+              'contentUrl' => config("app.frontend_url") . "subsplash/prayers/" . $prayer['id']
+            ]
+          ]
+        ],
+        [
+          'title' => 'Listen & Share',
+          'actions' => [
+            [
+              'handler' => 'detail',
+              'url' => route('content.v1.subsplash.listenPrayer', ['id' => $prayer['id']])
+            ]
+          ]
+        ]
+      ]
+    ];
+    return [
+
       'media' => [
         [
           'downloadable' => true,
-          'url' => $prayer['audio_url'] ?? '',
+          'url' => $mp3 ?? '',
           'format' => 'mp3',
           'images' => [
             [
-              'url' => $baseUrl . '/assets/images/wah/wah-prayers-wide@1x.jpg'
+              'url' => 'https://b-cdn.wildatheart.org/files/prayers/wide-prayers.png'
             ]
           ]
         ]
       ],
       'images' => [
         [
-          'url' => $baseUrl . '/assets/images/wah/wah-prayers-wide@3x.jpg'
+          'url' => 'https://b-cdn.wildatheart.org/files/prayers/wide-prayers.png',
+          "width" => 1920,
+          "height" => 692
         ],
-        [
-          'url' => $baseUrl . '/assets/images/wah/wah-prayers-wide@2x.jpg'
+        "actionSheet" => [
+          "items" => [
+            [
+              "actions" => [
+                [
+                  "handler" => "defaultShare",
+                  "body" => "Check this out from Wild at Heart - " . $prayer['title']
+                ]
+              ]
+            ]
+          ]
         ],
-        [
-          'url' => $baseUrl . '/assets/images/wah/wah-prayers-wide@1x.jpg'
-        ]
+        "body" => "",
+        "subtitle" => "",
+        "title" => $prayer['title'],
+        "itemGroups" => []
+
       ]
     ];
+  }
+
+  public function transformPrayerAudio($prayer, $baseUrl)
+  {
+
+    // dd($prayer);
+    $mp3 = null;
+    if ($prayer['mp3']) {
+      $bunnyCDNService = new BunnyCDNService;
+      $mp3 = $bunnyCDNService->getBunnyCDNUrl($prayer['mp3']['path']);
+    }
+
+    return [
+      "header" => [
+        'title' => $prayer['title'],
+      ],
+      'media' => [
+        [
+          'downloadable' => true,
+          'url' => $mp3 ?? '',
+          'format' => 'mp3',
+          'images' => [
+            [
+              'url' => 'https://b-cdn.wildatheart.org/files/prayers/wide-prayers.png'
+            ]
+          ]
+        ]
+      ],
+      'images' => [
+        [
+          'url' => 'https://b-cdn.wildatheart.org/files/prayers/wide-prayers.png',
+          "width" => 1920,
+          "height" => 692
+        ],
+      ],
+      "actionSheet" => [
+        "items" => [
+          [
+            "actions" => [
+              [
+                "handler" => "defaultShare",
+                "url" => trim(config('app.frontend_url'), "/") . $prayer['uri'],
+                "body" => "Check this out from Wild at Heart - " . $prayer['title']
+              ]
+            ]
+          ]
+        ]
+      ],
+      "body" => "",
+      "subtitle" => "",
+      "title" => $prayer['title'],
+      "itemGroups" => []
+
+    ];
+  }
+
+  public function transformPrayerRead($prayer, $baseUrl)
+  {
+    return $prayer['content'];
   }
 
   /**
@@ -99,7 +219,7 @@ class SubsplashAppService
         'actions' => [
           [
             'handler' => 'subtabs',
-            'url' => $baseUrl . '/prayer/' . $prayer['id']
+            'url' => route('content.v1.subsplash.prayer', ['id' => $prayer['id']])
           ]
         ]
       ];
@@ -113,7 +233,7 @@ class SubsplashAppService
           [
             'images' => [
               [
-                'url' => $baseUrl . '/assets/images/wah/wah-prayers-banner@3x.jpg',
+                'url' => 'https://b-cdn.wildatheart.org/files/prayers/wide-prayers.png',
                 'width' => 1920,
                 'height' => 692
               ]

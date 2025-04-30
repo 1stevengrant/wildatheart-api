@@ -24,6 +24,16 @@ class SubsplashAppController extends Controller
         return response()->json($this->subsplashAppService->getPrayer($id));
     }
 
+    public function listenPrayer($id)
+    {
+        return response()->json($this->subsplashAppService->getPrayerAudio($id));
+    }
+
+    public function readPrayer($id)
+    {
+        return response($this->subsplashAppService->getPrayerRead($id));
+    }
+
     public function dailyReadings()
     {
         return response()->json($this->subsplashAppService->getDailyReadingList());
