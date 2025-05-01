@@ -64,6 +64,8 @@ return [
 
     'wegive' => [
         'api_key' => env('WEGIVE_API_KEY'),
+        // Attendee tag found at https://dashboard.wegive.com/data/tags
+        'attendee_tag_id' => env('WEGIVE_ATTENDEE_TAG_ID'),
     ],
 
 ];
