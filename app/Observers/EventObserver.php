@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Event;
+use App\Jobs\WeGive\TagDonorJob;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Artisan;
 use App\Jobs\WeGive\FindOrCreateDonorJob;
@@ -19,11 +21,16 @@ class EventObserver
 
         Artisan::call('app:clear-event-cache');
 
-        $event->update([
-            'sex' => determineSexOfEvent($event->eventType),
-        ]);
 
-        FindOrCreateDonorJob::dispatch($event);
+        Bus::chain([
+            new FindOrCreateDonorJob(
+                donorModel: $event->user,
+            ),
+            new TagDonorJob(
+                taggable: $event->user,
+                weGiveTagId: $event->weGiveTag,
+            ),
+        ])->dispatch();
     }
 
     public function updated(Event $event): void
