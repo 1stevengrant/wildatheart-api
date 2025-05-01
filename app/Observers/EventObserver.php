@@ -21,7 +21,6 @@ class EventObserver
 
         Artisan::call('app:clear-event-cache');
 
-
         Bus::chain([
             new FindOrCreateDonorJob(
                 donorModel: $event->user,

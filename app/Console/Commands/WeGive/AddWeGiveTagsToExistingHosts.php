@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\User;
+namespace App\Console\Commands\WeGive;
 
 use Exception;
 use App\Models\User;
