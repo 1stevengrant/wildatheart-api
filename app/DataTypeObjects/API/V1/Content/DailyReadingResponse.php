@@ -12,4 +12,6 @@ class DailyReadingResponse extends Data
     public TransistorPodcastEpisode $transistor_episode;
 
     public ?string $current_episode_slug;
+
+    public ?string $uri;
 }
