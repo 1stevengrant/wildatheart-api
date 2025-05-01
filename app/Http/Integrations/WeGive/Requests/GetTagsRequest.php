@@ -17,6 +17,6 @@ class GetTagsRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return '/tags';
+        return '/dashboard/tags';
     }
 }

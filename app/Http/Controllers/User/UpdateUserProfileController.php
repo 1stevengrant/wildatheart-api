@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserProfileRequest;
+use App\Jobs\WeGive\SubscribeToCommunicationListJob;
 
 class UpdateUserProfileController extends Controller
 {
@@ -21,6 +22,13 @@ class UpdateUserProfileController extends Controller
             'opted_into_marketing' => request('opted_into_marketing'),
             'profile_step' => 2,
         ]);
+
+        if ($request->opted_into_marketing) {
+            SubscribeToCommunicationListJob::dispatch(
+                listId: config('services.wegive.marketing_list_id'),
+                user: auth()->user(),
+            );
+        }
 
         return redirect()->back()->with([
             'notifications' => [
