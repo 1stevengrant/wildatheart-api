@@ -100,7 +100,7 @@ class EventType extends BaseModel
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logAll() // Log all attributes since you're using $guarded
+            ->logAll()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName('event_types')

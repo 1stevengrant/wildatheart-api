@@ -271,3 +271,53 @@ test('a fire should not have an end date is', function () {
     $event = $this->user->events()->first();
     expect($event->end_date)->toBeNull();
 });
+
+test('an event that has no items in a material order, does not get passed to Zapier', function () {
+    Queue::fake();
+
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::FIRES))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '0',
+    ]);
+    \Illuminate\Support\Facades\Queue::assertNotPushed(\App\Jobs\PostToZapier::class);
+});
+
+test('an event that has items in a material order, does get passed to Zapier', function () {
+    Queue::fake();
+
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '1 x 10-pack',
+    ]);
+    \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\PostToZapier::class);
+});
