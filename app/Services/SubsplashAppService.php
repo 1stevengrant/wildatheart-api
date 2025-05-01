@@ -266,27 +266,27 @@ class SubsplashAppService
         ];
     }
 
-    public function getDailyReadingAudio($id)
+    public function getDailyReadingAudio($id = null)
     {
         $reading = null;
-        $title = null;
-        $uri = null;
+
         if ($id) {
+            // Get a specific daily reading
             $url = config('services.transistor.api_url') . 'episodes/' . $id;
-            $reading = $this->transistor->transistorFetch($url);
-            $title = data_get($reading, 'data.attributes.title');
-            $uri = '/daily-readings/' . data_get($reading, 'data.attributes.slug');
+            $response = $this->transistor->transistorFetch($url);
+            $reading = data_get($response, 'data');
         } else {
+            // Get the most recent daily reading
             $dailyReadingController = app(DailyReadingController::class);
             $request = new Request;
             $request->merge(['limit' => 1]);
-
-            $reading = $dailyReadingController->getRecent($request)->first()->toArray();
-            $title = data_get($reading, 'transistor_episode.attributes.title');
-            $uri = config('app.frontend_url') . '/daily-reading/' . data_get($reading, 'uri');
+            $response = $dailyReadingController->getRecent($request)->first()->toArray();
+            $reading = data_get($response, 'transistor_episode');
         }
 
-        $mp3 = data_get($reading, 'transistor_episode.attributes.media_url');
+        $title = data_get($reading, 'attributes.title');
+        $mp3 = data_get($reading, 'attributes.media_url');
+        $uri = '/daily-readings/' . data_get($reading, 'attributes.slug');
 
         return [
             'header' => [

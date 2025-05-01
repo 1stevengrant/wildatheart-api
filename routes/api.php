@@ -67,7 +67,6 @@ Route::prefix('content')->group(function () {
             Route::get('/alerts', [AlertEntryController::class, 'index'])->name('alerts.index');
             Route::prefix('subsplash')->name('subsplash.')->group(function () {
                 Route::get('/daily-readings', [SubsplashAppController::class, 'dailyReadingToday'])->name('dailyReadings');
-                Route::get('/daily-readings/listen', [SubsplashAppController::class, 'dailyReadingsListen'])->name('dailyReadingsListen');
                 Route::get('/daily-readings/listen/{id?}', [SubsplashAppController::class, 'dailyReadingsListen'])->name('dailyReadingsListen');
                 Route::get('/daily-readings/list', [SubsplashAppController::class, 'dailyReadingsList'])->name('dailyReadingsList');
                 Route::get('/daily-readings/{id}', [SubsplashAppController::class, 'dailyReading'])->name('dailyReadingById');
