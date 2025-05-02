@@ -30,6 +30,7 @@ class CreateFireEventType
             'district' => $eventDataTransferObject->district,
             'locality' => $eventDataTransferObject->locality,
             'neighborhood' => $eventDataTransferObject->neighborhood,
+            'sex' => $eventType->sex,
         ]);
 
         dispatch(new LogActivityJob(
