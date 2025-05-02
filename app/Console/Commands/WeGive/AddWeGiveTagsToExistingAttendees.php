@@ -29,7 +29,7 @@ class AddWeGiveTagsToExistingAttendees extends Command
                     dispatch(
                         new LogActivityJob(
                             logName: WeGiveConnector::ERROR_LOG_NAME,
-                            description: 'AddWeGiveTagsToExistingHosts Error',
+                            description: 'AddWeGiveTagsToExistingAttendees Error',
                             properties: [
                                 'attendee_id' => $attendee->id,
                                 'error' => $e->getMessage(),

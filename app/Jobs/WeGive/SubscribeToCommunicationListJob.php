@@ -3,6 +3,7 @@
 namespace App\Jobs\WeGive;
 
 use App\Models\User;
+use App\Models\Attendee;
 use App\Jobs\LogActivityJob;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +21,7 @@ class SubscribeToCommunicationListJob implements ShouldQueue
      */
     public function __construct(
         public readonly string $listId,
-        public readonly User $user
+        public readonly Attendee|User $listMember
     ) {}
 
     /**
@@ -30,10 +31,10 @@ class SubscribeToCommunicationListJob implements ShouldQueue
     {
         $subscribeToListRequest = new SubscribeToCommunicationListRequest(
             communicationListId: $this->listId,
-            email: $this->user->email,
-            firstName: $this->user->given_name,
-            lastName: $this->user->family_name,
-            phone: $this->user->phone,
+            email: $this->listMember->email,
+            firstName: $this->listMember->given_name,
+            lastName: $this->listMember->family_name,
+            phone: $this->listMember->phone,
         );
 
         try {
@@ -44,7 +45,7 @@ class SubscribeToCommunicationListJob implements ShouldQueue
                     logName: WeGiveConnector::INFO_LOG_NAME,
                     description: 'Subscribed user to WeGive communication list ' . $this->listId,
                     properties: [
-                        'user_id' => $this->user->id,
+                        'user_id' => $this->listMember->id,
                         'list_id' => $this->listId,
                     ]
                 );
@@ -55,7 +56,7 @@ class SubscribeToCommunicationListJob implements ShouldQueue
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Failed to subscribe user to WeGive communication list',
                 properties: [
-                    'user_id' => $this->user->id,
+                    'user_id' => $this->listMember->id,
                     'list_id' => $this->listId,
                     'error' => $e->getMessage(),
                 ]
