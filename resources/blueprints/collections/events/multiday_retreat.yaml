@@ -10,14 +10,6 @@ tabs:
               title:
                 required: true
           -
-            handle: event_logo
-            field:
-              container: s3
-              folder: wp-app/uploads
-              type: assets
-              display: 'Event Logo'
-              max_files: 1
-          -
             handle: event_type
             field:
               taxonomies:
@@ -25,6 +17,22 @@ tabs:
               type: terms
               display: 'Event Type'
               max_items: 1
+          -
+            handle: is_local_event
+            field:
+              type: toggle
+              display: 'Is this a Local Event?'
+              instructions: 'This allows you to choose a logo for the event and displays the event stats in the sidebar.'
+          -
+            handle: event_logo
+            field:
+              container: s3
+              folder: wp-app/uploads
+              type: assets
+              display: 'Event Logo'
+              max_files: 1
+              if:
+                is_local_event: 'equals true'
           -
             handle: related_event_type
             field:
@@ -34,6 +42,8 @@ tabs:
               instructions: 'Choose the event type you want to load events from for the map.'
               mode: select
               create: false
+              if:
+                is_local_event: 'equals true'
       -
         display: Testimonials
         fields:
