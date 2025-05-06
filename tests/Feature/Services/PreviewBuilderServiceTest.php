@@ -1,6 +1,5 @@
 <?php
 
-use Mockery;
 use Statamic\Facades\Entry;
 use App\Services\BunnyCDNService;
 use App\Services\SubsplashService;
