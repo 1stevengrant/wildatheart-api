@@ -31,6 +31,8 @@ class User extends Authenticatable
 
     const ROLE_ATTENDEE = 'attendee';
 
+    const PROFILE_COMPLETE = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -162,6 +164,10 @@ class User extends Authenticatable
     {
         if ($this->image) {
             return $this->image;
+        }
+
+        if ($this->given_name && $this->family_name) {
+            return Avatar::create($this->fullname)->toBase64();
         }
 
         return Avatar::create($this->email)->toBase64();

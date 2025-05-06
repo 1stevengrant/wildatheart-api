@@ -11,7 +11,7 @@ beforeEach(function () {
         'given_name' => 'John',
         'family_name' => 'Doe',
         'phone' => '1234567890',
-        'opted_into_marketing' => true,
+        'opted_into_marketing' => 1,
     ];
 });
 
@@ -26,7 +26,7 @@ it('shows the update profile form', function () {
 });
 
 it('redirects to the create an event page if the user has already completed the profile', function () {
-    $this->user->update(['profile_step' => 2]);
+    $this->user->update(['profile_step' => User::PROFILE_COMPLETE]);
 
     $this->actingAs($this->user)
         ->get(route('host.index'))
@@ -46,7 +46,7 @@ it('allows the user to update their profile', function () {
     expect($this->user->fresh()->given_name)->toBe('John')
         ->and($this->user->fresh()->family_name)->toBe('Doe')
         ->and($this->user->fresh()->phone)->toBe('1234567890')
-        ->and($this->user->fresh()->opted_into_marketing)->toBe(1);
+        ->and($this->user->fresh()->opted_into_marketing)->toBeTrue();
 
 });
 

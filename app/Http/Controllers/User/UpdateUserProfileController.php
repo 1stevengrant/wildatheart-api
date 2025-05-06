@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserProfileRequest;
 use App\Jobs\WeGive\SubscribeToCommunicationListJob;
@@ -24,8 +25,17 @@ class UpdateUserProfileController extends Controller
             'given_name' => $request->input('given_name'),
             'family_name' => $request->input('family_name'),
             'phone' => $request->input('phone'),
-            'profile_step' => 2,
+            'profile_step' => User::PROFILE_COMPLETE,
+            'opted_into_marketing' => $newOptIn,
         ];
+
+        if ($user->profile_step < User::PROFILE_COMPLETE && $newOptIn) {
+            $updateData['date_opted_into_marketing'] = now();
+            SubscribeToCommunicationListJob::dispatch(
+                listId: config('services.wegive.marketing_list_id'),
+                listMember: $user
+            );
+        }
 
         if ($previousOptIn !== $newOptIn) {
             $updateData['opted_into_marketing'] = $newOptIn;
@@ -34,9 +44,10 @@ class UpdateUserProfileController extends Controller
                 $updateData['date_opted_into_marketing'] = now();
                 SubscribeToCommunicationListJob::dispatch(
                     listId: config('services.wegive.marketing_list_id'),
-                    user: $user
+                    listMember: $user
                 );
             } else {
+
                 UnsubscribeFromCommunicationListJob::dispatch(
                     donorIds: [$user->wegive_donor_id],
                     user: $user,
