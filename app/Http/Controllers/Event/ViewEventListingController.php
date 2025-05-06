@@ -17,7 +17,7 @@ class ViewEventListingController extends Controller
     public function __invoke(Request $request, Event $event)
     {
         if (! $event->isApproved() && $event->user_id !== auth()->id()) {
-            return redirect()->route('login');
+            return to_route('login');
         }
 
         IncreaseEventCountsJob::dispatch(event: $event, countType: Event::COUNT_TYPE_VIEW);

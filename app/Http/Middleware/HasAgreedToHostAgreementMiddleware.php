@@ -18,7 +18,7 @@ class HasAgreedToHostAgreementMiddleware
         if (! auth()->user()->hasAgreedToHostAgreement()) {
             session()->put('host_agreement_redirect_to', request()->route()->getName());
 
-            return redirect()->route('host.agreement');
+            return to_route('host.agreement');
         }
 
         return $next($request);
