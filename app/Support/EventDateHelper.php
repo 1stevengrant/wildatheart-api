@@ -15,12 +15,6 @@ class EventDateHelper
             default => null
         };
 
-        ray([
-            'event_type_name' => $eventTypeName,
-            'group_type' => $groupType,
-            'days' => $days,
-        ]);
-
         if (isset($days)) {
             $request->merge([
                 'end_date' => Carbon::parse($request->start_date)->addDays($days)->format('Y-m-d'),

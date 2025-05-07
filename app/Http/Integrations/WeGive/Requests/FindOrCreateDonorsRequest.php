@@ -23,7 +23,7 @@ class FindOrCreateDonorsRequest extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return '/donors/find-or-create';
+        return '/dashboard/donors/find-or-create';
     }
 
     protected function defaultBody(): array

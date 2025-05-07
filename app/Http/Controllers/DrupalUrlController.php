@@ -18,7 +18,7 @@ class DrupalUrlController extends Controller
             causedBy: $request->user(),
         ));
 
-        return redirect()->route('home');
+        return to_route('home');
     }
 
     public function courses(Request $request, string $course)
@@ -41,7 +41,7 @@ class DrupalUrlController extends Controller
                 causedBy: $request->user(),
             ));
 
-            return redirect()->route('host.eventType.index', $eventType);
+            return to_route('host.eventType.index', $eventType);
         }
 
         dispatch(new LogActivityJob(
@@ -50,7 +50,7 @@ class DrupalUrlController extends Controller
             causedBy: $request->user(),
         ));
 
-        return redirect()->route('home');
+        return to_route('home');
     }
 
     /**
@@ -85,7 +85,7 @@ class DrupalUrlController extends Controller
                 causedBy: $request->user(),
             ));
 
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         dispatch(new LogActivityJob(
@@ -94,6 +94,6 @@ class DrupalUrlController extends Controller
             causedBy: $request->user(),
         ));
 
-        return redirect()->route('view.event', $event);
+        return to_route('view.event', $event);
     }
 }

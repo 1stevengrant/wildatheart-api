@@ -24,7 +24,7 @@ class WeGiveConnector extends Connector
 
     public function resolveBaseUrl(): string
     {
-        return 'https://api.wegive.com/api/dashboard';
+        return 'https://api.wegive.com/api';
     }
 
     public function defaultHeaders(): array

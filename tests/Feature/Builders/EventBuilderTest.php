@@ -152,17 +152,19 @@ it('gets active events', function () {
 });
 
 it('gets events that were updated this year', function () {
+    $now = now();
+
     Event::factory()->wahRetreat()->create([
-        'created_at' => now()->subYear(),
-        'updated_at' => now()->startOfYear(),
+        'created_at' => $now->copy()->subYear(),
+        'updated_at' => $now->copy()->startOfYear(),
     ]);
 
     Event::factory()->wahRetreat()->create([
-        'updated_at' => now()->subYear(),
+        'updated_at' => $now->copy()->subYear(),
     ]);
 
     $eventsUpdatedThisYear = Event::query()
-        ->whereBetween('updated_at', [now()->startOfYear(), now()])
+        ->whereBetween('updated_at', [$now->copy()->startOfYear(), $now])
         ->get();
 
     expect($eventsUpdatedThisYear->count())->toBe(1);

@@ -27,7 +27,7 @@ class TagDonorsRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return '/tags/tag-donors';
+        return '/dashboard/tags/tag-donors';
     }
 
     /**

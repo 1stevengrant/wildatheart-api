@@ -59,7 +59,10 @@ class HostEventTypeCreateEventController extends Controller
 
         $mailingAddress = auth()->user()->primaryAddress();
 
-        if ($eventType->hasZapier() && $eventType->hasMaterialsOrder()) {
+        if ($eventType->hasZapier() &&
+            $eventType->hasMaterialsOrder() &&
+            $request->number_of_items_in_material_order != '0'
+        ) {
             $dataTransferObject = new GoogleSheetDataTransferObject(
                 webhookUrl: $eventType->zapier_webhook_url,
                 eventId: $event->id,
@@ -80,6 +83,6 @@ class HostEventTypeCreateEventController extends Controller
             PostToZapier::dispatch($dataTransferObject);
         }
 
-        return redirect()->route('my.events.active', ['event' => $event]);
+        return to_route('my.events.active', ['event' => $event]);
     }
 }

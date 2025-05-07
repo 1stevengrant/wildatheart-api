@@ -53,6 +53,6 @@ class HostEventTypeMailingAddressController extends Controller
             'is_primary' => true,
         ]);
 
-        return redirect()->route('host.eventType.create', $eventType);
+        return to_route('host.eventType.create', $eventType);
     }
 }
