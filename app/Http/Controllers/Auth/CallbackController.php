@@ -68,7 +68,7 @@ class CallbackController extends Controller
                 properties: ['exception' => $e],
             ));
 
-            return redirect()->route('login');
+            return to_route('login');
         }
     }
 

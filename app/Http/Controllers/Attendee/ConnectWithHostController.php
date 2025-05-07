@@ -10,6 +10,7 @@ use App\Http\Resources\EventResource;
 use App\Jobs\Event\IncreaseEventCountsJob;
 use App\Jobs\PostAttendeeContactToSlackJob;
 use App\Http\Requests\ConnectWithHostRequest;
+use App\Jobs\WeGive\SubscribeToCommunicationListJob;
 
 class ConnectWithHostController extends Controller
 {
@@ -50,6 +51,13 @@ class ConnectWithHostController extends Controller
             causedBy: $event,
             performedOn: $attendee,
         ));
+
+        if ($attendee->hasOptedIntoMarketing()) {
+            SubscribeToCommunicationListJob::dispatch(
+                listMember: $attendee,
+                listId: config('services.wegive.marketing_list_id')
+            );
+        }
 
         IncreaseEventCountsJob::class::dispatch($event, Event::COUNT_TYPE_ATTENDEE);
 

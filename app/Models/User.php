@@ -31,6 +31,8 @@ class User extends Authenticatable
 
     const ROLE_ATTENDEE = 'attendee';
 
+    const PROFILE_COMPLETE = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -76,7 +78,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'date_opted_into_marketing' => 'datetime',
+            'opted_into_marketing' => 'boolean',
             'id' => 'integer',
+            'updated_at' => 'datetime',
+            'created_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'super' => 'boolean',
+            'agreed_to_host_agreement_date' => 'datetime',
+            'last_login' => 'datetime',
+            'preferences' => 'array',
+            'profile_step' => 'integer',
+
         ];
     }
 
@@ -151,6 +164,10 @@ class User extends Authenticatable
     {
         if ($this->image) {
             return $this->image;
+        }
+
+        if ($this->given_name && $this->family_name) {
+            return Avatar::create($this->fullname)->toBase64();
         }
 
         return Avatar::create($this->email)->toBase64();

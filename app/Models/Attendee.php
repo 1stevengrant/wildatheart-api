@@ -119,4 +119,9 @@ class Attendee extends BaseModel
                 return "Attendee has been {$eventName} by {$userName}";
             });
     }
+
+    public function hasOptedIntoMarketing(): bool
+    {
+        return $this->marketing_updates;
+    }
 }

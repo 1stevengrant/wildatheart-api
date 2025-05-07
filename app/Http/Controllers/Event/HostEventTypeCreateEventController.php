@@ -83,6 +83,6 @@ class HostEventTypeCreateEventController extends Controller
             PostToZapier::dispatch($dataTransferObject);
         }
 
-        return redirect()->route('my.events.active', ['event' => $event]);
+        return to_route('my.events.active', ['event' => $event]);
     }
 }

@@ -12,7 +12,7 @@ class EditEventController extends Controller
     public function __invoke(Request $request, Event $event)
     {
         if ($event->user->id !== auth()->id()) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         return inertia('Profile/EditEventPage', [

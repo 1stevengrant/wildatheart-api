@@ -289,6 +289,7 @@ declare namespace App.DataTypeObjects.API.V1.Content {
     export type DailyReadingResponse = {
         transistor_episode: App.DataTypeObjects.TransistorPodcastEpisode;
         current_episode_slug: string | null;
+        uri: string | null;
     };
 }
 declare namespace App.DataTypeObjects.API.V1.Content.Prayers {
