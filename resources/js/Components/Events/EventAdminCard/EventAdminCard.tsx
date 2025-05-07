@@ -6,71 +6,67 @@ import { EventPublicPrivate } from "@/Components/Events/EventAdminCard/EventPubl
 import { EventTypeGroupIndicator } from "@/Components/Events/EventAdminCard/EventTypeGroupIndicator";
 import { EventTypeImage } from "@/Components/Events/EventTypeImage";
 import { defaultIconSize } from "@/helpers/defaultIconSize";
-import { Event } from "@/types/Event";
+import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 
-export const EventAdminCard = ({ event }: { event: Event }) => {
-    const eventLinkClasses = `hover:bg-p200 bg-[#353535] rounded flex items-center space-x-2 capitalize px-2 md:px-4 py-2 font-semibold`;
+const statusBadge = (approvedAt?: string | null) => (
+    <span
+        className={`text-xxs px-2 py-1 rounded-full ${
+            approvedAt ? "bg-p200" : "bg-grey-darker"
+        } text-white`}
+    >
+        {approvedAt ? "Published" : "Unpublished"}
+    </span>
+);
+
+const footerLinks = (id: string) => [
+    { href: route("resources"), Icon: NewspaperIcon, label: "Resources" },
+    {
+        href: route("my.contacts", { event_id: id }),
+        Icon: UserGroupIcon,
+        label: "Contacts",
+    },
+];
+
+export const EventAdminCard = ({ event }: { event: App.Data.EventData }) => {
+    const linkClasses =
+        "hover:bg-p200 bg-n900 rounded flex items-center space-x-2 capitalize px-2 md:px-4 py-2 font-semibold";
 
     return (
         <div>
-            <div className={`rounded-lg p-4 border border-n700 relative`}>
-                {event.type_group !== "fire" && (
+            <div className="rounded-lg p-4 border border-n700 relative">
+                {event.type_group !== fireTypeGroup && (
                     <EventPublicPrivate event={event} />
                 )}
-                <div className={`flex space-x-4 mt-2`}>
+                <div className="flex space-x-4 mt-2">
                     <EventTypeImage event={event} />
-                    <div
-                        className={`md:flex-1 md:flex md:flex-col md:justify-between`}
-                    >
+                    <div className="md:flex-1 md:flex md:flex-col md:justify-between">
                         <EventTypeGroupIndicator event={event} />
                         <div>
-                            <p className="text-white">
-                                {event.name}{" "}
-                                {event.approved_at ? (
-                                    <span
-                                        className={`text-xxs bg-p200 text-white px-2 py-1 rounded-full ml-2`}
-                                    >
-                                        Published
-                                    </span>
-                                ) : (
-                                    <span
-                                        className={`text-xxs bg-grey-darker text-white px-2 py-1 rounded-full ml-2`}
-                                    >
-                                        Unpublished
-                                    </span>
+                            <p className="text-white flex items-center space-x-2">
+                                {event.type_group !== fireTypeGroup && (
+                                    <span>{event.display_name}</span>
                                 )}
+                                {statusBadge(event.approved_at)}
                             </p>
-
                             <p className="text-sm text-white">
                                 {event.location}
                             </p>
                         </div>
-                        <div className={`flex items-center space-x-2 mt-2`}>
-                            <div className="text-sm leading-tighter text-n40">
-                                Hosted by {event.host}
-                            </div>
-                        </div>
+                        <p className="text-sm leading-tight text-n40 mt-2">
+                            Hosted by {event.host}
+                        </p>
                     </div>
                 </div>
             </div>
-            <div
-                className={`flex items-center justify-between bg-[#292929] px-4 -mt-2 py-4 relative rounded-b-lg`}
-            >
-                <div className={`flex items-center space-x-2`}>
-                    <Link
-                        href={route("resources")}
-                        className={eventLinkClasses}
-                    >
-                        <NewspaperIcon className={defaultIconSize} />
-                        <span>Resources</span>
-                    </Link>
-                    <Link
-                        className={eventLinkClasses}
-                        href={route("my.contacts", { event_id: event.id })}
-                    >
-                        <UserGroupIcon className={defaultIconSize} />
-                        <span>Contacts</span>
-                    </Link>
+
+            <div className="flex items-center justify-between bg-black border-b border-l border-n700 border-r px-4 -mt-2 py-4 rounded-b-lg relative">
+                <div className="flex items-center space-x-2">
+                    {footerLinks(event.id).map(({ href, Icon, label }) => (
+                        <Link key={label} href={href} className={linkClasses}>
+                            <Icon className={defaultIconSize} />
+                            <span>{label}</span>
+                        </Link>
+                    ))}
                 </div>
                 <EventAdminActions event={event} />
             </div>

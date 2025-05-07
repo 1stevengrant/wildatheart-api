@@ -17,6 +17,8 @@ readonly class CreateEventDataTransferObject
         public ?string $district,
         public ?string $locality,
         public ?string $neighborhood,
+        public ?string $cadence = null,
+        public ?string $startDate = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -34,6 +36,8 @@ readonly class CreateEventDataTransferObject
             district: $data['district'] ?? null,
             locality: $data['locality'] ?? null,
             neighborhood: $data['neighborhood'] ?? null,
+            cadence: $data['cadence'] ?? null,
+            startDate: $data['start_date'] ?? null,
         );
     }
 }

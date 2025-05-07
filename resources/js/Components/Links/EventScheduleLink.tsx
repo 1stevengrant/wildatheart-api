@@ -3,7 +3,11 @@ import { Link } from "@inertiajs/react";
 
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 
-export const EventScheduleLink = ({ eventType }: { eventType: any }) => {
+export const EventScheduleLink = ({
+    eventType,
+}: {
+    eventType: App.Data.EventTypeData;
+}) => {
     return (
         <Link
             className={primaryButtonClasses}

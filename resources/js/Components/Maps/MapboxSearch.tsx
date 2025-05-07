@@ -37,7 +37,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
     );
 
     const inputClassName = useMemo(() => {
-        return `w-full border-2 bg-black rounded-lg border-transparent py-2 pl-3 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${
+        return `w-full border bg-n900 rounded-lg border-transparent py-2 pl-3 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${
             query.trim().length > 0
                 ? "rounded-bl-none rounded-br-none focus:border-b-transparent"
                 : ""
@@ -48,10 +48,11 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
         <div className={`${className} relative w-full z-10`}>
             <InputLabel htmlFor="event_location" className="mb-1">
                 Event Location
+                <span className={`text-r200 pl-1`}>*</span>
             </InputLabel>
             <Combobox value={selected} onChange={handleSelect}>
                 <div className="relative">
-                    <div className="relative flex w-full cursor-default items-center rounded-lg border-2 bg-black pl-4 border-n400 focus-within:border-p200">
+                    <div className="relative flex w-full cursor-default items-center rounded-lg border bg-n900 pl-4 border-n400 focus-within:border-p200">
                         <MapPinIcon className="h-5 w-5 text-white" />
                         <Combobox.Input
                             id="event_location"
@@ -64,7 +65,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                             placeholder="Search for a place"
                         />
                     </div>
-                    <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-n900 ring-opacity-5 focus:outline-none sm:text-sm">
                         {isLoading ? (
                             <div className="relative cursor-default select-none px-4 py-2 text-gray-700">
                                 Loading...

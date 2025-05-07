@@ -1,5 +1,3 @@
-import React from "react";
-
 import { DateFilters } from "@/Components/API/Filters/DateFilters";
 import { ExperiencesFilter } from "@/Components/API/Filters/ExperiencesFilter";
 import { FiresFilter } from "@/Components/API/Filters/FiresFilter";

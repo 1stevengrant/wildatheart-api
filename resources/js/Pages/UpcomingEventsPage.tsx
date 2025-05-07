@@ -5,10 +5,9 @@ import { MobileEventListCard } from "@/Components/Events/MobileEventListCard";
 import { UpcomingEventsNav } from "@/Components/Nav/UpcomingEventsNav";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { Event } from "@/types/Event";
 
 interface UpcomingEvents {
-    [date: string]: Event[];
+    [date: string]: App.Data.EventData[];
 }
 
 interface PageProps {

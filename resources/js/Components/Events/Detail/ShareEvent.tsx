@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -7,13 +7,12 @@ import { useSetRecoilState } from "recoil";
 
 import { Modal } from "@/Components/Ui/Modal";
 import { reactNotificationState } from "@/store";
-import { Event } from "@/types/Event";
 
 export const ShareEvent = ({ className = "" }: { className?: string }) => {
     const [isOpen, setOpen] = useState(false);
     const setReactNotifications = useSetRecoilState(reactNotificationState);
     const page = usePage();
-    const event = page.props.event as Event;
+    const event = page.props.event as App.Data.EventData;
     const shareLinks = [
         {
             title: "Facebook",

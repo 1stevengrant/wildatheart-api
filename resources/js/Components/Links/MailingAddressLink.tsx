@@ -2,9 +2,12 @@ import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { Link } from "@inertiajs/react";
 
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
-import { EventType } from "@/types/EventType";
 
-export const MailingAddressLink = ({ eventType }: { eventType: EventType }) => {
+export const MailingAddressLink = ({
+    eventType,
+}: {
+    eventType: App.Data.EventTypeData;
+}) => {
     return (
         <Link
             className={primaryButtonClasses}

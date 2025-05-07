@@ -42,7 +42,7 @@ class TagDonorJob implements ShouldQueue
     public function handle(): void
     {
         if (! $this->taggable->wegive_donor_id) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Missing required tagging data',
                 properties: [
@@ -50,7 +50,7 @@ class TagDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->taggable,
                 performedOn: $this->taggable,
-            ));
+            );
 
             return;
         }
@@ -60,7 +60,7 @@ class TagDonorJob implements ShouldQueue
         try {
             $this->tagDonor($weGiveConnector, $this->taggable->wegive_donor_id);
         } catch (FatalRequestException|RequestException $e) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Unhandled exception in TagWeGiveDonorJob',
                 properties: [
@@ -72,7 +72,7 @@ class TagDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->taggable,
                 performedOn: $this->taggable,
-            ));
+            );
 
             throw $e;
         }
@@ -93,7 +93,7 @@ class TagDonorJob implements ShouldQueue
         try {
             $response = $connector->send($tagDonorsRequest);
 
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::INFO_LOG_NAME,
                 description: 'Tagged donor',
                 properties: [
@@ -105,9 +105,9 @@ class TagDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->taggable,
                 performedOn: $this->taggable,
-            ));
+            );
         } catch (FatalRequestException|RequestException $e) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Error tagging donor',
                 properties: [
@@ -120,7 +120,7 @@ class TagDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->taggable,
                 performedOn: $this->taggable,
-            ));
+            );
 
             throw $e;
         }

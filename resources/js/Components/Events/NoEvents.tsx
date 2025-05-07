@@ -1,15 +1,12 @@
-import React from "react";
-
 import { useRecoilState } from "recoil";
 
 import { imageGenerator } from "@/helpers/user";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedEventTypeState } from "@/store/eventsAtom";
-import { EventType } from "@/types/EventType";
 
 export const NoEvents = ({ type }: { type: string }) => {
     const { eventTypes } = useTypedPage().props;
-    const typedEventTypes = eventTypes as EventType[];
+    const typedEventTypes = eventTypes as App.Data.EventTypeData[];
     const [selectedEventType, setSelectedEventType] = useRecoilState(
         selectedEventTypeState
     );

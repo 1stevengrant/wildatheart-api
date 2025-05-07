@@ -21,11 +21,10 @@ import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
-import { Event } from "@/types/Event";
 
 const ConnectWithHostPage = () => {
     const page = usePage();
-    const event = page.props.event as Event;
+    const event = page.props.event as App.Data.EventData;
     const { auth } = page.props as unknown as PageProps;
     const [processing, setProcessing] = useState(false);
     const form = useForm({

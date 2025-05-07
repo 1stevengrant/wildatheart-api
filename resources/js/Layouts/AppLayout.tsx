@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 
 import { Head } from "@inertiajs/react";
 
@@ -7,20 +7,18 @@ import { MainHeader } from "@/Components/Layout/Elements/MainHeader";
 import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
 import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
 
-interface IAppLayoutProps {
-    title: string;
-    showFooter?: boolean;
-    className?: string;
-    childClassName?: string;
-}
-
 export const AppLayout = ({
     title,
     children,
     showFooter,
     className = "",
     childClassName = "",
-}: PropsWithChildren<IAppLayoutProps>) => {
+}: PropsWithChildren<{
+    title: string;
+    showFooter?: boolean;
+    className?: string;
+    childClassName?: string;
+}>) => {
     return (
         <div className={`flex flex-col h-[100dvh] ${className}`}>
             <Head title={title} />

@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { EventHeader } from "@/Components/EventTypes/EventTypeHeader";
 import { TabNavigation } from "@/Components/EventTypes/TabNavigation";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { EventType } from "@/types/EventType";
 
 const EventGuidePage = () => {
     const page = useTypedPage();
-    const eventType = page.props.eventType as EventType;
+    const eventType = page.props.eventType as App.Data.EventTypeData;
     const pageTitle = `${eventType.name} Guide`;
     const [selectedTab, setSelectedTab] = useState(0);
 

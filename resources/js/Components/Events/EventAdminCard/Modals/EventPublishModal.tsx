@@ -1,5 +1,3 @@
-import React from "react";
-
 import { EyeIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useForm } from "@inertiajs/react";
 
@@ -13,7 +11,6 @@ import {
     eventAdminActionButtonClass,
     eventAdminActionButtonTextClass,
 } from "@/helpers/eventAdminActionButtonClass";
-import { Event } from "@/types/Event";
 
 export const EventPublishModal = ({
     open,
@@ -22,7 +19,7 @@ export const EventPublishModal = ({
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
-    event: Event;
+    event: App.Data.EventData;
 }) => {
     const form = useForm({
         approved_at: new Date().toISOString(),

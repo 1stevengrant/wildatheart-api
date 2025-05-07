@@ -2,15 +2,19 @@ import { Link } from "@inertiajs/react";
 
 import { EventCardContent } from "../EventCardContent";
 
-import { IEventCardProps } from "@/types/IEventCardProps";
-
 export const EventResult = ({
     event,
     className = "",
     onClick,
     onMouseEnter,
     onMouseLeave,
-}: IEventCardProps) => {
+}: {
+    event: App.Data.EventData;
+    className?: string;
+    onClick?: (event: App.Data.EventData) => void;
+    onMouseEnter?: (event: any) => void;
+    onMouseLeave?: (event: any) => void;
+}) => {
     return (
         <div
             className={`relative hidden rounded-md bg-black p-2 shadow-lg md:block md:p-4 border hover:border-p200 ${className}`}

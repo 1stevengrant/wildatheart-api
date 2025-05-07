@@ -1,8 +1,6 @@
-import { Event } from "@/types/Event";
-
 export const isSelectedEvent = (
-    event: Event,
-    currentEvent: Event | undefined | null,
+    event: App.Data.EventData,
+    currentEvent: App.Data.EventData | undefined | null,
     borderColor?: string
 ) => {
     return event.id === currentEvent?.id

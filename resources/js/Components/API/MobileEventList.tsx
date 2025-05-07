@@ -3,7 +3,6 @@ import { useRecoilState } from "recoil";
 import { MobileEventListCard } from "@/Components/Events/MobileEventListCard";
 import { ShowMapButton } from "@/Components/Maps/ShowMapButton";
 import { eventsListState } from "@/store/eventsAtom";
-import { Event } from "@/types/Event";
 
 export const MobileEventList = ({ ...props }) => {
     const [events] = useRecoilState(eventsListState);
@@ -17,7 +16,7 @@ export const MobileEventList = ({ ...props }) => {
             </div>
             <div className={`overflow-y-scroll flex-1`}>
                 <ul className={`flex flex-col space-y-4`}>
-                    {events.map((event: Event) => {
+                    {events.map((event: App.Data.EventData) => {
                         return (
                             <MobileEventListCard event={event} key={event.id} />
                         );

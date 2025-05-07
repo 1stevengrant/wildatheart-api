@@ -41,7 +41,7 @@ class FindOrCreateDonorJob implements ShouldQueue
     public function handle(): void
     {
         if (! $this->donorModel->email) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Missing required user data',
                 properties: [
@@ -49,14 +49,14 @@ class FindOrCreateDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->donorModel,
                 performedOn: $this->donorModel,
-            ));
+            );
 
             return;
         }
 
         try {
             if ($this->donorModel->wegive_donor_id) {
-                dispatch(new LogActivityJob(
+                LogActivityJob::dispatch(
                     logName: WeGiveConnector::INFO_LOG_NAME,
                     description: 'Using existing WeGive donor ID',
                     properties: [
@@ -64,7 +64,7 @@ class FindOrCreateDonorJob implements ShouldQueue
                     ],
                     causedBy: $this->donorModel,
                     performedOn: $this->donorModel,
-                ));
+                );
 
                 return;
             }
@@ -73,7 +73,7 @@ class FindOrCreateDonorJob implements ShouldQueue
             $donorId = $this->findOrCreateDonor($weGiveConnector);
 
             if (! $donorId) {
-                dispatch(new LogActivityJob(
+                LogActivityJob::dispatch(
                     logName: WeGiveConnector::ERROR_LOG_NAME,
                     description: 'Donor not found or created',
                     properties: [
@@ -81,7 +81,7 @@ class FindOrCreateDonorJob implements ShouldQueue
                     ],
                     causedBy: $this->donorModel,
                     performedOn: $this->donorModel,
-                ));
+                );
 
                 return;
             }
@@ -93,7 +93,7 @@ class FindOrCreateDonorJob implements ShouldQueue
             });
 
         } catch (Exception $e) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Unhandled exception in FindOrCreateDonorJob',
                 properties: [
@@ -102,7 +102,7 @@ class FindOrCreateDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->donorModel,
                 performedOn: $this->donorModel,
-            ));
+            );
 
             throw $e;
         }
@@ -138,7 +138,7 @@ class FindOrCreateDonorJob implements ShouldQueue
         try {
             $response = $connector->send($findOrCreateDonorRequest);
 
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::INFO_LOG_NAME,
                 description: 'Created donor',
                 properties: [
@@ -149,11 +149,11 @@ class FindOrCreateDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->donorModel,
                 performedOn: $this->donorModel,
-            ));
+            );
 
             return $response->json()['data']['id'] ?? null;
         } catch (FatalRequestException|RequestException $e) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Error creating donor',
                 properties: [
@@ -165,7 +165,7 @@ class FindOrCreateDonorJob implements ShouldQueue
                 ],
                 causedBy: $this->donorModel,
                 performedOn: $this->donorModel,
-            ));
+            );
 
             throw $e;
         }

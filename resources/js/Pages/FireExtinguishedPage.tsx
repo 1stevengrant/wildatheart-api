@@ -7,11 +7,10 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { scrollToError } from "@/helpers/scrollToError";
 import { usePageContent } from "@/Hooks/usePageContent";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { Event } from "@/types/Event";
 
 const FireExtinguishedPage = () => {
     const page = usePage();
-    const event = page.props.event as Event;
+    const event = page.props.event as App.Data.EventData;
     const destroyUrl = page.props.destroyUrl as string;
     const form = useForm();
     const { contentBlocks } = usePageContent();

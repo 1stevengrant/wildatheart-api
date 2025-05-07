@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
     FolderPlusIcon,
     LinkIcon,
@@ -9,17 +7,17 @@ import {
 import { singular } from "pluralize";
 
 import { ListItem } from "@/Components/EventResources/ListItem";
+import { Image } from "@/Components/Image";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { eventTypeBackground } from "@/helpers/eventTypeBackground";
 import { getRouteForEventType } from "@/helpers/getRouteForEventType";
-import { imageGenerator } from "@/helpers/user";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { EventTypeActionButton } from "@/types/EventTypeActionButton";
 
 const ResourcesPage = ({
     eventTypes,
 }: {
-    eventTypes: App.Data.EventTypesData[];
+    eventTypes: App.Data.EventTypeData[];
 }) => {
     const pageTitle = "Event Resources";
     return (
@@ -28,19 +26,17 @@ const ResourcesPage = ({
             <div
                 className={`grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4 max-w-5xl mt-12`}
             >
-                {eventTypes.map((eventType: App.Data.EventTypesData) => (
+                {eventTypes.map((eventType: App.Data.EventTypeData) => (
                     <div
                         key={eventType.id}
                         className={`p-6 bg-gradient-to-br ${eventTypeBackground(eventType.slug)} end-n800 rounded-2xl shadow-xl flex space-x-4 md:flex-col md:space-x-0`}
                     >
                         {eventType.image && (
-                            <img
-                                alt={eventType.name ?? ""}
+                            <Image
+                                src={eventType.image}
+                                imageDimensions={{ width: 200, height: 200 }}
                                 className={`rounded-xl`}
-                                src={imageGenerator(eventType.image, {
-                                    width: 200,
-                                    height: 200,
-                                })}
+                                alt={eventType.name}
                             />
                         )}
                         <ul className={`text-sm font-medium mt-4 space-y-3`}>

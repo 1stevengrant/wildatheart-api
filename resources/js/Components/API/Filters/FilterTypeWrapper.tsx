@@ -1,12 +1,14 @@
 import React from "react";
 
-import { IFilterTypeWrapperProps } from "@/types/IFilterTypeWrapperProps";
-
 export const FilterTypeWrapper = ({
     text = "",
     icon,
     title = "",
-}: IFilterTypeWrapperProps) => {
+}: {
+    text?: string;
+    icon?: React.ReactNode;
+    title?: string;
+}) => {
     return (
         <>
             <div className={`flex items-center space-x-4`}>

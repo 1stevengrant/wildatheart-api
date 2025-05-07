@@ -1,29 +1,24 @@
-import React from "react";
-
 import { Dialog } from "@headlessui/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { Modal } from "@/Components/Ui/Modal";
 import { Spinner } from "@/Components/Ui/Spinner";
-import { EventFormDataType } from "@/types/EventFormDataType";
 
-interface FireConfirmationModalProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    data: EventFormDataType;
-    eventLocation: string;
-    processing: boolean;
-    onConfirm: () => void;
-}
-
-export const FireConfirmationModal: React.FC<FireConfirmationModalProps> = ({
+export const FireConfirmationModal = ({
     open,
     setOpen,
     data,
     eventLocation,
     processing,
     onConfirm,
+}: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    data: App.Data.EventFormData;
+    eventLocation: string;
+    processing: boolean;
+    onConfirm: () => void;
 }) => {
     return (
         <Modal open={open} setOpen={setOpen}>
@@ -55,6 +50,20 @@ export const FireConfirmationModal: React.FC<FireConfirmationModalProps> = ({
                             <li>
                                 <span className="font-medium">Country:</span>{" "}
                                 {data.country}
+                            </li>
+                        )}
+                        {data.start_date && (
+                            <li>
+                                <span className="font-medium">Start Date:</span>{" "}
+                                {new Date(data.start_date).toLocaleDateString()}
+                            </li>
+                        )}
+                        {data.cadence && (
+                            <li>
+                                <span className="font-medium">Cadence:</span>{" "}
+                                <span className={`capitalize`}>
+                                    {data.cadence}
+                                </span>
                             </li>
                         )}
                     </ul>

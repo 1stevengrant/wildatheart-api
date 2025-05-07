@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Event;
+use App\Data\EventData;
 use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
-use App\Http\Resources\API\EventResource;
 use App\Http\Requests\API\SearchForEventsRequest;
 
 class SearchForEventsController extends Controller
@@ -36,13 +36,13 @@ class SearchForEventsController extends Controller
                     $validatedData['ne_longitude']
                 )
                 ->with(['eventType', 'user'])
-                ->orderBy('start_date', 'asc')
+                ->orderBy('start_date')
                 ->get();
         });
 
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
-        return response()->json(EventResource::collection($offsetEvents));
+        return response()->json(EventData::collection($offsetEvents));
 
     }
 

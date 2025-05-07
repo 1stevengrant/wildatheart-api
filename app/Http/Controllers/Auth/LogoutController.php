@@ -19,11 +19,11 @@ class LogoutController extends Controller
 
     public function __invoke(Request $request)
     {
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: 'auth',
             description: 'user logged out',
             properties: ['user' => auth()->user()],
-        ));
+        );
 
         auth()->logout();
 

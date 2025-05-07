@@ -33,10 +33,10 @@ import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { selectedPlaceState } from "@/store/mapAtom";
-import { Event } from "@/types/Event";
 
 const EditEventPage = () => {
-    const { startDate, setStartDate, resetAllDates, maxDate } = useDates();
+    const { startDate, maxDate, handleStartDateChange, setStartDate } =
+        useDates();
     const mapRef = useRef<any>(null);
     const [selectedPlace] = useRecoilState(selectedPlaceState);
     const { handleUserLevelZoom } = useMapData();
@@ -44,7 +44,7 @@ const EditEventPage = () => {
 
     const page = useTypedPage();
     const user = page.props.auth.user!;
-    const event = page.props.event as Event;
+    const event = page.props.event as App.Data.EventData;
     const eventTypeName = event.event_type_data.name;
     const route = useRoute();
 
@@ -70,6 +70,7 @@ const EditEventPage = () => {
         zip: event.zip,
         is_private: event.is_private,
         start_date: event.start_date,
+        cadence: event.cadence,
     });
 
     useEffect(() => {
@@ -83,7 +84,7 @@ const EditEventPage = () => {
             const latitude = selectedPlace.center[1],
                 longitude = selectedPlace.center[0];
 
-            addEvent(longitude, latitude);
+            addEvent(longitude, latitude).then((r) => console.log(r));
         }
     }, [selectedPlace]);
 
@@ -157,18 +158,6 @@ const EditEventPage = () => {
         setIsPrivate(event.is_private);
     }, []);
 
-    const handleDateChange = (date: Date | null) => {
-        setStartDate(date);
-
-        if (date) {
-            const transformedDate = dayjs(date).format("YYYY-MM-DD");
-            setData("start_date", transformedDate);
-        } else {
-            setData("start_date", "");
-            resetAllDates();
-        }
-    };
-
     const flyTo = (
         coordinates: [number, number],
         duration: number = 2000,
@@ -184,15 +173,19 @@ const EditEventPage = () => {
 
     return (
         <HostDashboardLayout pageTitle={pageTitle}>
-            <HeadingOne>{pageTitle}</HeadingOne>
+            <HeadingOne>
+                {eventIsAFire(event.event_type_slug)
+                    ? `Editing ${event.name}`
+                    : `Editing ${event.event_type_data.name}`}
+            </HeadingOne>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <InputLabel
-                        htmlFor="name"
-                        value={`Name of ${eventTypeName}`}
-                        required
-                    />
-                    <div className="flex items-center space-x-4">
+                {eventIsAFire(event.event_type_slug) && (
+                    <div>
+                        <InputLabel
+                            htmlFor="name"
+                            value={`Name of ${singular(eventTypeName)}`}
+                            required
+                        />
                         <TextInput
                             id="name"
                             name="name"
@@ -203,17 +196,61 @@ const EditEventPage = () => {
                                 setData("name", e.target.value);
                             }}
                         />
-                        {eventIsAFire(event.event_type) && <div>Fire</div>}
-                    </div>
-                    {eventIsAFire(event.event_type) && (
+
                         <Instruction>
                             This is the name that will be displayed on your Fire
                             page.
                         </Instruction>
-                    )}
-                    <InputError message={errors.name} />
+
+                        <InputError message={errors.name} />
+                        <FireNamingGuidelines />
+                    </div>
+                )}
+
+                <div className={`mt-4`}>
+                    <DatePickerInput
+                        label="Start date"
+                        placeholder="Select start date"
+                        minDate={new Date()}
+                        value={startDate}
+                        maxDate={maxDate}
+                        clearable
+                        required
+                        onChange={(date) =>
+                            handleStartDateChange(date, setData)
+                        }
+                    />
+                    <InputError message={errors.start_date} />
                 </div>
-                {eventIsAFire(event.event_type) && <FireNamingGuidelines />}
+
+                {eventIsAFire(event.event_type_slug) && (
+                    <div className="mt-4">
+                        <InputLabel
+                            htmlFor="cadence"
+                            value={singular(eventTypeName) + " Cadence"}
+                            required
+                        />
+                        <select
+                            id="cadence"
+                            name="cadence"
+                            value={data.cadence || ""}
+                            className="select-input"
+                            onChange={(e) => {
+                                setData("cadence", e.target.value);
+                            }}
+                        >
+                            <option value="">Choose a cadence</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="bi-weekly">Bi-Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
+                        <Instruction>
+                            How often do you want to host this Fire event?
+                        </Instruction>
+                        <InputError message={errors.cadence} />
+                    </div>
+                )}
 
                 <MapboxSearch className={"mt-4"} />
                 <div className="mt-4 w-full h-[300px] md:h-[600px]">
@@ -251,7 +288,7 @@ const EditEventPage = () => {
                                     longitude={marker.lng}
                                     latitude={marker.lat}
                                 >
-                                    {eventIsAFire(event.event_type) ? (
+                                    {eventIsAFire(event.event_type_slug) ? (
                                         <FireMarker className={"w-10 h-10"} />
                                     ) : (
                                         <MapPinIcon
@@ -263,19 +300,9 @@ const EditEventPage = () => {
                         </>
                     </Map>
                 </div>
-                {!eventIsAFire(event.event_type) && (
-                    <div className={`mt-4`}>
-                        <DatePickerInput
-                            label="Start date"
-                            placeholder="Select start date"
-                            minDate={new Date()}
-                            value={startDate}
-                            maxDate={maxDate}
-                            clearable
-                            onChange={(value) => handleDateChange(value)}
-                        />
-                        <InputError message={errors.start_date} />
 
+                {!eventIsAFire(event.event_type_slug) && (
+                    <div className={`mt-4`}>
                         <label
                             className={`flex items-center space-x-4 hover:cursor-pointer`}
                         >

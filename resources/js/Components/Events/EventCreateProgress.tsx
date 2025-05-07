@@ -4,7 +4,7 @@ import { usePage } from "@inertiajs/react";
 import pluralize from "pluralize";
 
 import { CircleIcon } from "@/Components/Icons/CircleIcon";
-import { imageGenerator } from "@/helpers/user";
+import { Image } from "@/Components/Image";
 
 const EventStep = ({ step }: { step: number }) => {
     return <div className={`text-xxs text-n40`}>Step {step}</div>;
@@ -61,21 +61,15 @@ export const EventCreateProgress = () => {
                         className={`border-2 p-2 border-n700 rounded-lg mt-4 flex items-center`}
                     >
                         <div>
-                            <img
+                            <Image
+                                src={eventType.image}
                                 className={`rounded-lg md:hidden`}
-                                src={imageGenerator(eventType.image, {
-                                    width: 100,
-                                    height: 100,
-                                })}
                                 alt={eventType.name}
                             />
-                            <img
+                            <Image
+                                src={eventType.image}
                                 className={`hidden rounded-lg lg:block`}
-                                src={imageGenerator(eventType.image, {
-                                    width: 150,
-                                    height: 150,
-                                })}
-                                alt={eventName}
+                                alt={eventType.name}
                             />
                         </div>
                         <div className={`ml-6 leading-tight`}>

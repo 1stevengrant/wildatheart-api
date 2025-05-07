@@ -7,7 +7,6 @@ use App\Jobs\WeGive\TagDonorJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Artisan;
-use App\Jobs\WeGive\FindOrCreateDonorJob;
 use App\Jobs\Event\SendNewEventSlackAlert;
 use App\Mail\Event\NewEventCreatedMailable;
 
@@ -22,12 +21,9 @@ class EventObserver
         Artisan::call('app:clear-event-cache');
 
         Bus::chain([
-            new FindOrCreateDonorJob(
-                donorModel: $event->user,
-            ),
             new TagDonorJob(
                 taggable: $event->user,
-                weGiveTagId: $event->weGiveTag,
+                weGiveTagId: $event->eventType->wegive_tag,
             ),
         ])->dispatch();
     }

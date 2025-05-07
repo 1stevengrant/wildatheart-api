@@ -1,0 +1,3 @@
+.select-input {
+    @apply mt-1 block w-full border border-n400 bg-n900 focus:border-p200 focus:ring-p300 rounded-md text-sm;
+}

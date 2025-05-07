@@ -1,14 +1,10 @@
-import React from "react";
-
 import { Accordion } from "@/Components/Accordion";
 import { ImageSet } from "@/Sets/ImageSet";
 import { TextSet } from "@/Sets/TextSet";
 import { VideoSet } from "@/Sets/VideoSet";
 import { ContentBlock } from "@/types/EventType";
 
-export const PageContent: React.FC<{ content: Array<ContentBlock> }> = ({
-    content,
-}) => (
+export const PageContent = ({ content }: { content: Array<ContentBlock> }) => (
     <>
         {content
             .filter((block) => block.enabled)

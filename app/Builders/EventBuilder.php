@@ -134,10 +134,33 @@ class EventBuilder extends Builder
 
     public function active(): EventBuilder
     {
-        return $this->where(function ($query) {
+        $alwaysActiveWithStartDate = [
+            EventType::FIRES,
+            EventType::CAPTIVATING_FIRE,
+        ];
+
+        return $this->where(function ($query) use ($alwaysActiveWithStartDate) {
             $query->whereNull('start_date')
-                ->orWhere('start_date', '>=', now());
-        });
+                ->orWhere(function ($subQuery) use ($alwaysActiveWithStartDate) {
+                    // For special event types: active if start_date exists
+                    $subQuery->whereIn('event_type_id', function ($eventTypeQuery) use ($alwaysActiveWithStartDate) {
+                        $eventTypeQuery->select('id')
+                            ->from('event_types')
+                            ->whereIn('name', $alwaysActiveWithStartDate);
+                    })
+                        ->whereNotNull('start_date');
+                })
+                ->orWhere(function ($subQuery) use ($alwaysActiveWithStartDate) {
+                    // For normal event types: active if start_date is in the future
+                    $subQuery->whereNotIn('event_type_id', function ($eventTypeQuery) use ($alwaysActiveWithStartDate) {
+                        $eventTypeQuery->select('id')
+                            ->from('event_types')
+                            ->whereIn('name', $alwaysActiveWithStartDate);
+                    })
+                        ->where('start_date', '>=', now());
+                });
+        }
+        );
     }
 
     public function inactive(): EventBuilder

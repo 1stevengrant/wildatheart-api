@@ -4,11 +4,10 @@ import { Link, usePage } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { blackButtonClasses } from "@/helpers/blackButtonClasses";
-import { Event } from "@/types/Event";
 
 export const ConnectWithHost = ({ className }: { className?: string }) => {
     const page = usePage();
-    const event = page.props.event as Event;
+    const event = page.props.event as App.Data.EventData;
     const hasConnectedWithHost =
         (page.props.notifications as { connectedWithHost?: boolean })
             ?.connectedWithHost ?? false;

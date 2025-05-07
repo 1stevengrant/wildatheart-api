@@ -19,11 +19,11 @@ class ToggleContactContactedController extends Controller
                 'contacted_on' => null,
             ]);
 
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 description: 'Contact unmarked as not contacted',
                 causedBy: auth()->user(),
                 performedOn: $attendee,
-            ));
+            );
 
             return redirect()->back()->with(['notifications' => [
                 'message' => 'Contact updated',
@@ -35,11 +35,11 @@ class ToggleContactContactedController extends Controller
             'contacted_on' => now(),
         ]);
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Contact marked as contacted',
             causedBy: auth()->user(),
             performedOn: $attendee,
-        ));
+        );
 
         return redirect()->back()->with(['notifications' => [
             'message' => 'Contact updated',

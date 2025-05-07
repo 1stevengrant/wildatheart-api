@@ -5,10 +5,8 @@ import { Logo } from "@/Components/Ui/Logo";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 type Status = 503 | 500 | 404 | 403;
-type ErrorProps = {
-    status: Status;
-};
-const Error = ({ status }: ErrorProps) => {
+
+const Error = ({ status }: { status: Status }) => {
     const title = {
         503: "503: Service Unavailable",
         500: "500: Server Error",

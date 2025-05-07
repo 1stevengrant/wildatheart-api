@@ -26,27 +26,27 @@ class PostToZapier implements ShouldQueue
      */
     public function handle(): void
     {
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: 'zapier',
             description: 'Post to Zapier ' . $this->dataTransferObject->webhookUrl,
             properties: [
                 'data' => (array) $this->dataTransferObject,
             ]
-        ));
+        );
 
         if (config('services.zapier.enabled')) {
 
             $response = Http::post($this->dataTransferObject->webhookUrl, (array) $this->dataTransferObject);
 
             if ($response->failed()) {
-                dispatch(new LogActivityJob(
+                LogActivityJob::dispatch(
                     logName: 'zapier',
                     description: 'Post to Zapier failed ' . $this->dataTransferObject->webhookUrl,
                     properties: [
                         'data' => (array) $this->dataTransferObject,
                         'response' => $response->body(),
                     ]
-                ));
+                );
 
                 throw new \Exception('Post to Zapier failed ' . $this->dataTransferObject->webhookUrl);
             }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { Link, useForm } from "@inertiajs/react";
+import { DatePickerInput } from "@mantine/dates";
 import mapboxgl from "mapbox-gl";
 import { singular } from "pluralize";
 import Map, {
@@ -33,12 +34,13 @@ import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
 import { oneHour } from "@/helpers/timeConstants";
+import { useDates } from "@/Hooks/useDates";
 import { useMapData } from "@/Hooks/useMapData";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState } from "@/store/mapAtom";
-import { EventFormDataType } from "@/types/EventFormDataType";
 
 export const FireInformation = ({ user }: any) => {
+    const { startDate, handleStartDateChange, maxDate } = useDates();
     const page = useTypedPage();
     const eventType = page.props.eventType as any;
     const mapRef = useRef<any>(null);
@@ -127,10 +129,12 @@ export const FireInformation = ({ user }: any) => {
         country: null,
         eventType: eventType,
         hostEmail: user.email,
+        cadence: "",
+        start_date: null,
     });
 
     const { data, setData, post, processing, errors } =
-        useForm<EventFormDataType>({
+        useForm<App.Data.EventFormData>({
             name: `${user.given_name}'s`,
             state: "",
             city: "",
@@ -144,6 +148,11 @@ export const FireInformation = ({ user }: any) => {
             neighborhood: "",
             street_address: "",
             poi: "",
+            cadence: "",
+            start_date: null,
+            is_private: false,
+            end_date: null,
+            number_of_items_in_material_order: null,
         });
 
     useEffect(() => {
@@ -278,29 +287,80 @@ export const FireInformation = ({ user }: any) => {
                                 value="Name Your Fire"
                                 required
                             />
-                            <div className="flex items-center space-x-4">
-                                <TextInput
-                                    id="name"
-                                    name="name"
-                                    value={data.name}
-                                    autoComplete="off"
-                                    isFocused={true}
-                                    onChange={(e) => {
-                                        setData("name", e.target.value);
-                                        setEvent({
-                                            ...event,
-                                            name: e.target.value,
-                                        });
-                                    }}
-                                />
-                                <div>Fire</div>
-                            </div>
+                            <TextInput
+                                id="name"
+                                name="name"
+                                value={data.name}
+                                autoComplete="off"
+                                isFocused={true}
+                                onChange={(e) => {
+                                    setData("name", e.target.value);
+                                    setEvent({
+                                        ...event,
+                                        name: e.target.value,
+                                    });
+                                }}
+                            />
                             <Instruction>
                                 This is the name that will be displayed on your
                                 Fire page.
                             </Instruction>
                             <InputError message={errors.name} />
                         </div>
+
+                        {/* Start Date Field */}
+                        <div className={`mt-4`}>
+                            <DatePickerInput
+                                label="Start date"
+                                placeholder="Select start date"
+                                minDate={new Date()}
+                                value={startDate}
+                                maxDate={maxDate}
+                                clearable
+                                required
+                                onChange={(date) =>
+                                    handleStartDateChange(date, setData)
+                                }
+                            />
+                            <InputError message={errors.start_date} />
+                            <Instruction>
+                                When would you like to start your Fire?
+                            </Instruction>
+                            <InputError message={errors.start_date} />
+                        </div>
+
+                        {/* Cadence Selection */}
+                        <div className="mt-4">
+                            <InputLabel
+                                htmlFor="cadence"
+                                value={singular(eventType.name) + " Cadence"}
+                                required
+                            />
+                            <select
+                                id="cadence"
+                                name="cadence"
+                                value={data.cadence || ""}
+                                className="select-input"
+                                onChange={(e) => {
+                                    setData("cadence", e.target.value);
+                                    setEvent({
+                                        ...event,
+                                        cadence: e.target.value,
+                                    });
+                                }}
+                            >
+                                <option value="">Choose a cadence</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="bi-weekly">Bi-Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                            </select>
+                            <Instruction>
+                                How often do you want to host this Fire event?
+                            </Instruction>
+                            <InputError message={errors.cadence} />
+                        </div>
+
                         <FireNamingGuidelines />
                         <EventDisplay
                             event={event}

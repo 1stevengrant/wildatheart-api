@@ -13,11 +13,11 @@ class ToggleEventApprovedAtController extends Controller
     {
         $event->toggleApprovedAt();
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Toggle Event Approved At',
             causedBy: auth()->user(),
             performedOn: $event
-        ));
+        );
 
         return to_route('my.events.active')->with([
             'notifications' => [

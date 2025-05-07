@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Tab } from "@headlessui/react";
 
 import { PageContent } from "@/Components/EventTypes/PageContent";
@@ -10,11 +8,15 @@ import {
 } from "@/helpers/tabClasses";
 import { GuidePage } from "@/types/EventType";
 
-export const TabNavigation: React.FC<{
+export const TabNavigation = ({
+    pages,
+    selectedTab,
+    onChange,
+}: {
     pages: Array<GuidePage>;
     selectedTab: number;
     onChange: (index: number) => void;
-}> = ({ pages, selectedTab, onChange }) => (
+}) => (
     <Tab.Group selectedIndex={selectedTab} onChange={onChange}>
         <Tab.List
             className={`${tabListClasses} flex-col md:flex-row text-left md:text-center space-x-0 md:space-x-4`}

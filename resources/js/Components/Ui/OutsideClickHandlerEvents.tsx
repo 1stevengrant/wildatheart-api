@@ -1,5 +1,3 @@
-import React from "react";
-
 import OutsideClickHandler from "react-outside-click-handler";
 import { useSwipeable } from "react-swipeable";
 import { useRecoilState } from "recoil";

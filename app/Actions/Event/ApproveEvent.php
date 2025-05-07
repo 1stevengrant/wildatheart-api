@@ -16,9 +16,9 @@ class ApproveEvent
         $event->update([
             'approved_at' => now(),
         ]);
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Event approved',
             performedOn: $event,
-        ));
+        );
     }
 }

@@ -10,6 +10,8 @@ beforeEach(function () {
 it('validates valid fire event data', function () {
     $validator = Validator::make([
         'name' => 'Forest Incident',
+        'start_date' => now()->addDays(10)->format('Y-m-d'),
+        'cadence' => 'Weekly',
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
@@ -24,6 +26,8 @@ it('fails validation when name ends with fire', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
+        'start_date' => now()->addDays(10)->format('Y-m-d'),
+        'cadence' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();
@@ -35,6 +39,8 @@ it('fails validation when name contains emoji', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
+        'start_date' => now()->addDays(10)->format('Y-m-d'),
+        'cadence' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();
@@ -46,6 +52,8 @@ it('fails validation when name is too short', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
+        'start_date' => now()->addDays(10)->format('Y-m-d'),
+        'cadence' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();
@@ -57,19 +65,21 @@ it('fails validation when required fields are missing', function () {
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue()
+        ->and($validator->errors()->has('start_date'))->toBeTrue()
+        ->and($validator->errors()->has('cadence'))->toBeTrue()
         ->and($validator->errors()->has('country'))->toBeTrue()
         ->and($validator->errors()->has('latitude'))->toBeTrue()
         ->and($validator->errors()->has('longitude'))->toBeTrue();
 });
 
 it('fails validation when name is longer than 255 characters', function () {
-    $longName = str_repeat('a', 256);
-
     $validator = Validator::make([
-        'name' => $longName,
+        'name' => str_repeat('a', 256),
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
+        'start_date' => now()->addDays(10)->format('Y-m-d'),
+        'cadence' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();

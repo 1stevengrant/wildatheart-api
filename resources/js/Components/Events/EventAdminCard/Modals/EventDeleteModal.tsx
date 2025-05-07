@@ -1,5 +1,3 @@
-import React from "react";
-
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useForm } from "@inertiajs/react";
@@ -14,19 +12,16 @@ import {
     eventAdminActionButtonClass,
     eventAdminActionButtonTextClass,
 } from "@/helpers/eventAdminActionButtonClass";
-import { Event } from "@/types/Event";
-
-interface EventDeleteModalProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    event: Event;
-}
 
 export const EventDeleteModal = ({
     open,
     setOpen,
     event,
-}: EventDeleteModalProps) => {
+}: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    event: App.Data.EventData;
+}) => {
     const form = useForm({});
     const deleteEvent = async () => {
         form.delete(route("delete.event", [event]), {

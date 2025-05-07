@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
 import Vimeo from "@u-wave/react-vimeo";

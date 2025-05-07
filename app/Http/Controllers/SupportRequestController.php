@@ -10,11 +10,11 @@ class SupportRequestController extends Controller
 {
     public function __invoke(SupportRequest $request)
     {
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Issue created',
             causedBy: $request->user(),
             performedOn: $request->user(),
-        ));
+        );
 
         Issue::create([
             'email' => request('email'),

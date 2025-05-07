@@ -4,14 +4,19 @@ import mapboxgl from "mapbox-gl";
 
 import { NoWebGLSupport } from "@/Components/Maps/NoWebGLSupport";
 import { config } from "@/helpers/config";
-import { IStaticMapProps } from "@/interfaces/IStaticMapProps";
+
 
 export const StaticMap = ({
     lat,
     lng,
     event,
     className = "",
-}: IStaticMapProps) => {
+}: {
+    lat: number;
+    lng: number;
+    event: App.Data.EventData | null;
+    className?: string;
+}) => {
     const [mapIsSupported, setMapIsSupported] = useState(true);
     useEffect(() => {
         mapboxgl.accessToken = import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN;
@@ -19,10 +24,11 @@ export const StaticMap = ({
             setMapIsSupported(false);
             return;
         }
-        let mapMarkerUrl = "";
-        if (event?.event_type.includes("retreat")) {
+        let mapMarkerUrl;
+        console.log(event);
+        if (event?.event_type.group_type.includes("retreat")) {
             mapMarkerUrl = "/svgs/map-marker-retreat.svg";
-        } else if (event?.event_type.includes("experience")) {
+        } else if (event?.event_type.group_type.includes("experience")) {
             mapMarkerUrl = "/svgs/map-marker-experience.svg";
         } else {
             mapMarkerUrl = "/svgs/map-marker-fire.svg";
@@ -36,7 +42,7 @@ export const StaticMap = ({
         const map = new mapboxgl.Map({
             container: "mapContainer",
             style: config("services.mapbox.style"),
-            center: [lng, lat], // coordinates of the marker (lon, lat)
+            center: [lng, lat],
             zoom: 9,
             attributionControl: false,
             interactive: false,

@@ -1,79 +1,31 @@
-import React from "react";
-
 import { useRecoilState } from "recoil";
 
 import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
-import { EventSex } from "@/Components/EventSex";
-import { dateFormatter } from "@/helpers/dateFormatter";
-import {
-    experienceTypeGroup,
-    fireTypeGroup,
-    retreatTypeGroup,
-} from "@/helpers/eventTypeGroups";
-import { formatDateRange } from "@/helpers/formatDateRange";
 import { currentEventState } from "@/store/eventsAtom";
-import { Event } from "@/types/Event";
 
-export const EventTypeGroupIndicator = ({ event }: { event: Event }) => {
-    const eventTypeClasses = `text-n40 font-semibold text-sm`;
-    const eventTypeNameClasses = `flex items-center justify-between space-x-4`;
-
+export const EventTypeGroupIndicator = ({
+    event,
+}: {
+    event: App.Data.EventData;
+}) => {
     const [currentEvent] = useRecoilState(currentEventState);
-    const isActiveEvent =
-        event.id === currentEvent?.id ? "text-p200" : "text-n40";
+    const isActive = event.id === currentEvent?.id;
+
+    if (!event.type_group) return null;
+
     return (
         <>
-            {event.type_group === fireTypeGroup && (
-                <div className={eventTypeNameClasses}>
-                    <div className={`${eventTypeClasses} ${isActiveEvent}`}>
-                        Monthly Gathering for <EventSex sex={event.sex} />
-                    </div>
-                    <EventTypeBadge className={`hidden md:inline-flex`}>
-                        Monthly
-                    </EventTypeBadge>
+            <div className={`flex items-center justify-between space-x-4`}>
+                <div className={`${isActive ? "text-p200" : "text-n40"}`}>
+                    <span className={`text-sm`}>{event.card_title}</span>
                 </div>
-            )}
-
-            {event.type_group === retreatTypeGroup && (
-                <div className={eventTypeNameClasses}>
-                    <div className={`${eventTypeClasses} ${isActiveEvent}`}>
-                        Multi-Day Retreat for <EventSex sex={event.sex} />
-                    </div>
-                    {event.start_date && (
-                        <EventTypeBadge className={`hidden md:inline-flex`}>
-                            {formatDateRange(event.start_date, event.end_date)}
-                        </EventTypeBadge>
-                    )}
-                </div>
-            )}
-
-            {event?.type_group === experienceTypeGroup && (
-                <div className={eventTypeNameClasses}>
-                    <div className={`${eventTypeClasses} ${isActiveEvent}`}>
-                        6-part video study for <EventSex sex={event.sex} />
-                    </div>
-                    <EventTypeBadge className={`hidden md:inline-flex`}>
-                        Starts {dateFormatter(event.start_date)}
-                    </EventTypeBadge>
-                </div>
-            )}
-
-            {event?.type_group === experienceTypeGroup && (
-                <EventTypeBadge className={`my-2 inline-flex md:hidden`}>
-                    Starts {dateFormatter(event.start_date)}
+                <EventTypeBadge className={`hidden md:block`}>
+                    {event.badge_display}
                 </EventTypeBadge>
-            )}
-
-            {event?.type_group === fireTypeGroup && (
-                <EventTypeBadge className={`my-2 inline-flex md:hidden`}>
-                    Monthly
-                </EventTypeBadge>
-            )}
-            {event?.type_group === retreatTypeGroup && (
-                <EventTypeBadge className={`my-2 md:hidden`}>
-                    Starts {dateFormatter(event.start_date)}
-                </EventTypeBadge>
-            )}
+            </div>
+            <EventTypeBadge className="my-2 inline-flex md:hidden">
+                {event.badge_display}
+            </EventTypeBadge>
         </>
     );
 };

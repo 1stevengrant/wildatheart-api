@@ -3,7 +3,7 @@ import React from "react";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 
 interface LocationProps {
-    location: string;
+    location?: string;
     children?: React.ReactNode;
     className?: string;
 }
