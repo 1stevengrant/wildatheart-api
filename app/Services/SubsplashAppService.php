@@ -67,31 +67,38 @@ class SubsplashAppService
             $mp3 = $bunnyCDNService->getBunnyCDNUrl($prayer['mp3']['path']);
         }
 
+        $items = [
+
+            [
+                'title' => 'Read',
+                'actions' => [
+                    [
+                        'handler' => 'browser',
+                        'style' => 'internal',
+                        'contentUrl' => config('app.frontend_url') . 'subsplash/prayers/' . $prayer['id'],
+                    ],
+                ],
+            ],
+        ];
+
+        if ($mp3) {
+            $items[] =
+              [
+                  'title' => 'Listen & Share',
+                  'actions' => [
+                      [
+                          'handler' => 'detail',
+                          'url' => route('content.v1.subsplash.listenPrayer', ['id' => $prayer['id']]),
+                      ],
+                  ],
+              ];
+        }
+
         return [
             'header' => [
                 'title' => 'Prayer',
             ],
-            'items' => [
-                [
-                    'title' => 'Read',
-                    'actions' => [
-                        [
-                            'handler' => 'browser',
-                            'style' => 'internal',
-                            'contentUrl' => config('app.frontend_url') . 'subsplash/prayers/' . $prayer['id'],
-                        ],
-                    ],
-                ],
-                [
-                    'title' => 'Listen & Share',
-                    'actions' => [
-                        [
-                            'handler' => 'detail',
-                            'url' => route('content.v1.subsplash.listenPrayer', ['id' => $prayer['id']]),
-                        ],
-                    ],
-                ],
-            ],
+            'items' => $items,
         ];
     }
 
