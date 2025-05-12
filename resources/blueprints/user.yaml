@@ -1,24 +1,70 @@
 title: User
-fields:
-  - handle: name
-    field:
-      type: text
-      display: Name
-  - handle: email
-    field:
-      type: text
-      input: email
-      display: Email Address
-  - handle: roles
-    field:
-      type: user_roles
-      width: 50
-  - handle: groups
-    field:
-      type: user_groups
-      width: 50
-  - handle: avatar
-    field:
-      type: assets
-      max_files: 1
-      container: s3
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: family_name
+            field:
+              type: text
+              display: 'Family Name'
+              width: 50
+          -
+            handle: given_name
+            field:
+              type: text
+              display: 'Given Name'
+              width: 50
+          -
+            handle: name
+            field:
+              type: text
+              display: Name
+          -
+            handle: email
+            field:
+              type: text
+              input_type: email
+              display: 'Email Address'
+              listable: true
+              input: email
+          -
+            handle: roles
+            field:
+              type: user_roles
+              mode: select
+              width: 50
+              listable: true
+              filterable: false
+          -
+            handle: groups
+            field:
+              type: user_groups
+              mode: select
+              width: 50
+              listable: true
+              filterable: false
+          -
+            handle: avatar
+            field:
+              type: assets
+              max_files: 1
+              container: s3
+          -
+            handle: wegive_donor_id
+            field:
+              type: text
+              display: 'WeGive Donor ID'
+          -
+            handle: salesforce_contact_id
+            field:
+              type: text
+              display: 'Salesforce Contact ID'
+          -
+            handle: phone
+            field:
+              input_type: tel
+              type: text
+              display: Phone
