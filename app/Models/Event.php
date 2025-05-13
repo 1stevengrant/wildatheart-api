@@ -311,13 +311,13 @@ class Event extends BaseModel
                         if ($startDate->month === $endDate->month && $startDate->year === $endDate->year) {
                             $endFormat = $endDate->year !== $currentYear ? 'jS Y' : 'jS';
 
-                            return $startDate->format('M jS') . '&mdash;' . $endDate->format($endFormat);
+                            return $startDate->format('M jS') . '—' . $endDate->format($endFormat);
                         }
 
                         // Different months or years
                         $endFormat = $endDate->year !== $currentYear ? 'M jS Y' : 'M jS';
 
-                        return $startDate->format('M jS') . '&mdash;' . $endDate->format($endFormat);
+                        return $startDate->format('M jS') . '—' . $endDate->format($endFormat);
                     }
                 }
 
