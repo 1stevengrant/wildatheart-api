@@ -41,7 +41,7 @@
         "spatie/laravel-typescript-transformer": "^2.5",
         "spatie/typescript-transformer": "^2.3",
         "squirephp/countries-en": "^3.5",
-        "statamic-rad-pack/runway": "^7.12",
+        "statamic-rad-pack/runway": "^8.3",
         "statamic/cms": "^5.6",
         "statamic/eloquent-driver": "^4.17",
         "stevebauman/purify": "^6.2",
