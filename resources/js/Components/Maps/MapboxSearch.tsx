@@ -37,7 +37,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
     );
 
     const inputClassName = useMemo(() => {
-        return `w-full border bg-n900 rounded-lg border-transparent py-2 pl-3 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${
+        return `w-full border bg-n900 rounded-lg border-transparent py-2 pl-1 md:pl-2 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${
             query.trim().length > 0
                 ? "rounded-bl-none rounded-br-none focus:border-b-transparent"
                 : ""
@@ -52,7 +52,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
             </InputLabel>
             <Combobox value={selected} onChange={handleSelect}>
                 <div className="relative">
-                    <div className="relative flex w-full cursor-default items-center rounded-lg border bg-n900 overflow-hidden pl-4 border-n400 focus-within:border-p200">
+                    <div className="relative flex w-full cursor-default items-center rounded-lg border bg-n900 overflow-hidden pl-2 md:pl-4 border-n400 focus-within:border-p200">
                         <MapPinIcon className="h-5 w-5 text-white" />
                         <Combobox.Input
                             id="event_location"
@@ -65,17 +65,17 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                             placeholder="Search for a place"
                         />
                     </div>
-                    <Combobox.Options className=" p-6 absolute mt-1 max-h-72 w-full overflow-auto rounded-md bg-white shadow-lg ring-1 ring-n900 ring-opacity-5 focus:outline-none sm:text-sm">
+                    <Combobox.Options className=" md:text-base text-body-small p-2 md:p-6 absolute mt-1 max-h-72 w-full overflow-auto rounded-md bg-white shadow-lg ring-1 ring-n900 ring-opacity-5 focus:outline-none">
                         {isLoading ? (
-                            <div className="relative cursor-default select-none px-6 py-2 text-gray-700">
+                            <div className="relative cursor-default select-none px-5 py-2 text-gray-700">
                                 Loading...
                             </div>
                         ) : error ? (
-                            <div className="relative cursor-default select-none px-6 py-2 text-r200">
+                            <div className="relative cursor-default select-none px-5 py-2 text-r200">
                                 {error}
                             </div>
                         ) : results.length === 0 && query !== "" ? (
-                            <div className="relative cursor-default select-none px-6 py-2 text-gray-700">
+                            <div className="relative cursor-default select-none px-5 py-2 text-gray-700">
                                 Nothing found.
                             </div>
                         ) : (
@@ -83,7 +83,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                                 <Combobox.Option
                                     key={place.id}
                                     className={({ active }) =>
-                                        `my-0 relative cursor-default select-none py-2 pl-4 md:pl-6 pr-4 rounded-md ${
+                                        `my-0 relative cursor-default select-none py-2 pl-6 md:pl-5 pr-4 rounded-md ${
                                             active && "bg-p200"
                                         }`
                                     }
@@ -92,10 +92,11 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                                     {({ selected, active }) => (
                                         <>
                                             <span
-                                                className={`md:text-base  text-body-small block truncate align-middle
- ${selected ? "font-medium" : "font-normal"} ${
-     active ? "text-white" : "text-gray-900"
- }`}
+                                                className={`md:text-base  text-body-small block truncate align-middle ${selected ? "font-medium" : "font-normal"} ${
+                                                    active
+                                                        ? "text-white"
+                                                        : "text-gray-900"
+                                                }`}
                                             >
                                                 {place.place_name}
                                             </span>
@@ -108,7 +109,7 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
                                                     }`}
                                                 >
                                                     <MapPinIcon
-                                                        className="h-5 w-5"
+                                                        className="h-5 w-5 hidden"
                                                         aria-hidden="true"
                                                     />
                                                 </span>
