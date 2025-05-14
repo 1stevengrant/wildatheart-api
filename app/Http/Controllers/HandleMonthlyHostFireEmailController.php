@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Models\Event;
+use App\Data\PageData;
+use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Fire\ConfirmFireUnpublishedMailable;
@@ -16,27 +18,39 @@ class HandleMonthlyHostFireEmailController extends Controller
             'approved_at' => now(),
         ]);
 
-        activity('fire')
-            ->performedOn($event)
-            ->causedBy($event->user)
-            ->log('Fire published');
+        LogActivityJob::dispatch(
+            logName: 'fire',
+            description: 'Fire published',
+            properties: [
+                'event_id' => $event->id,
+                'user_id' => $event->user->id,
+            ],
+            causedBy: $event->user,
+            performedOn: $event,
+        );
 
         return inertia('FireBurningPage', [
-            'pageContent' => Page::bySlug('fire-burning-page'),
+            'pageContent' => PageData::from(Page::bySlug('fire-burning-page')),
         ]);
     }
 
     public function show(Event $event)
     {
-        activity('fire')
-            ->performedOn($event)
-            ->causedBy($event->user)
-            ->log('Fire unpublished page viewed');
+        LogActivityJob::dispatch(
+            logName: 'fire',
+            description: 'Fire unpublished page viewed',
+            properties: [
+                'event_id' => $event->id,
+                'user_id' => $event->user->id,
+            ],
+            causedBy: $event->user,
+            performedOn: $event,
+        );
 
         return inertia('FireExtinguishedPage', [
             'event' => $event,
             'destroyUrl' => URL::signedRoute('fire.extinguish.destroy', ['event' => $event]),
-            'pageContent' => Page::bySlug('fire-extinguished-page'),
+            'pageContent' => PageData::from(Page::bySlug('fire-extinguished-page')),
         ]);
     }
 
@@ -44,10 +58,16 @@ class HandleMonthlyHostFireEmailController extends Controller
     {
         $event->unpublish();
 
-        activity('fire')
-            ->performedOn($event)
-            ->causedBy($event->user)
-            ->log('Fire unpublished');
+        LogActivityJob::dispatch(
+            logName: 'fire',
+            description: 'Fire unpublished',
+            properties: [
+                'event_id' => $event->id,
+                'user_id' => $event->user->id,
+            ],
+            causedBy: $event->user,
+            performedOn: $event,
+        );
 
         Mail::to($event->user->email)
             ->send(new ConfirmFireUnpublishedMailable($event));

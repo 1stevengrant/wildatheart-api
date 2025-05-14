@@ -1,4 +1,7 @@
+import Markdown from "react-markdown";
+
 import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
+import { proseClasses } from "@/helpers/proseClasses";
 
 export const ContentBlocksComponent = ({
     contentBlocks,
@@ -10,14 +13,19 @@ export const ContentBlocksComponent = ({
     return (
         <>
             {contentBlocks && (
-                <div
-                    className={`prose prose-lg prose-p:text-white prose-h1:text-white prose-h2:text-white prose-h3:text-white prose-h4:text-white ${className}`}
-                >
+                <div className={`${className} ${proseClasses}`}>
                     {contentBlocks.map((block: any, index: number) => {
                         switch (block.type) {
-                            case "text-block":
-                                return <p key={index}>{block.fields.text}</p>;
-                            case "video-block":
+                            case "text_block":
+                                return (
+                                    <Markdown
+                                        className={proseClasses}
+                                        key={index}
+                                    >
+                                        {block.text}
+                                    </Markdown>
+                                );
+                            case "video_block":
                                 return (
                                     <VideoPlayer src={block.fields.video_url} />
                                 );

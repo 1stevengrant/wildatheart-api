@@ -8,6 +8,7 @@ use App\Models\EventType;
 use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
@@ -37,7 +38,6 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
-        $content = $this->emailTemplate->body;
         $subject = $this->emailTemplate->subject;
         $subject = str_replace('[attendee_name]', $this->attendee->fullname, $subject);
 
@@ -72,6 +72,12 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
 
         return new Content(
             markdown: 'emails.attendee-registered',
+            with: [
+                'emailContent' => $this->emailContent,
+                'keepActiveLink' => URL::signedRoute('fire.burn', ['event' => $this->event]),
+                'removeFireLink' => URL::signedRoute('fire.extinguish', ['event' => $this->event]),
+                'manageFireLink' => route('my.events.edit', ['event' => $this->event]),
+            ]
         );
     }
 

@@ -9,13 +9,16 @@ import { usePageContent } from "@/Hooks/usePageContent";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { Event } from "@/types/Event";
 
-const FireExtinguishedPage = () => {
+const FireExtinguishedPage = ({
+    pageContent,
+}: {
+    pageContent: App.Data.PageData;
+}) => {
     const page = usePage();
     const event = page.props.event as Event;
     const destroyUrl = page.props.destroyUrl as string;
     const form = useForm();
     const { contentBlocks } = usePageContent();
-
     const extinguishFire = async () => {
         form.post(destroyUrl, {
             preserveScroll: true,

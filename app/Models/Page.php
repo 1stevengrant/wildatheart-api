@@ -44,6 +44,8 @@ class Page extends Model
     {
         return [
             'content' => 'array',
+            'new_content' => 'array',
+            'is_active' => 'bool',
         ];
     }
 
