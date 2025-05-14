@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use Statamic\Entries\Entry;
 use App\DataTypeObjects\IconProps;
 use App\DataTypeObjects\SlideBlock;
@@ -185,6 +186,10 @@ class BlockBuilderService
                 ]),
                 'rightIcon' => IconProps::from([]),
             ]);
+
+            if ($mediaItem->collection->handle === 'media_item') {
+                $slide->tags = [Carbon::parse($mediaItem->date)->format('F d, Y')];
+            }
 
             $slide->tag = $mediaItem->position >= 1 ? "{$mediaItem->media_type} {$mediaItem->position}" : $mediaItem->media_type;
 
