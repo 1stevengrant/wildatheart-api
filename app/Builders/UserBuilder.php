@@ -136,4 +136,10 @@ class UserBuilder extends Builder
     {
         return $this->whereNotNull('provider');
     }
+
+    public function byVerificationToken(string $verificationToken): UserBuilder
+    {
+        return $this->where('email_verification_token', $verificationToken);
+
+    }
 }

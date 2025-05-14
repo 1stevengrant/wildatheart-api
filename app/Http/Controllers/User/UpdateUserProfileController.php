@@ -3,51 +3,74 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserProfileRequest;
 use App\Jobs\WeGive\SubscribeToCommunicationListJob;
 use App\Jobs\WeGive\UnsubscribeFromCommunicationListJob;
+use App\Notifications\EmailChangeVerificationNotification;
 
 class UpdateUserProfileController extends Controller
 {
     public function __invoke(UpdateUserProfileRequest $request)
     {
         $user = $request->user();
+        $message = 'No changes were made to your profile.';
+        $hasChanges = false;
 
+        // Handle profile photo upload
         if ($request->hasFile('image')) {
             $user->updateProfilePhoto($request->file('image'));
+            $hasChanges = true;
+            $message = 'User Profile Updated!';
         }
 
+        // Handle email change with verification
+        if ($request->filled('new_email') && $request->new_email !== $user->email) {
+            $user->update([
+                'pending_email' => $request->new_email,
+                'email_verification_token' => Str::random(64),
+            ]);
+
+            $user->notify(new EmailChangeVerificationNotification($user->email_verification_token));
+
+            $hasChanges = true;
+            $message = 'Your profile has been updated. Please check your new email address to verify the change.';
+        }
+
+        $fieldsToUpdate = [];
+
+        // Track changes for individual fields
+        if ($request->given_name !== $user->given_name) {
+            $fieldsToUpdate['given_name'] = $request->given_name;
+            $hasChanges = true;
+        }
+
+        if ($request->family_name !== $user->family_name) {
+            $fieldsToUpdate['family_name'] = $request->family_name;
+            $hasChanges = true;
+        }
+
+        if ($request->phone !== $user->phone) {
+            $fieldsToUpdate['phone'] = $request->phone;
+            $hasChanges = true;
+        }
+
+        // Handle marketing opt-in/opt-out with WeGive integration
         $previousOptIn = $user->opted_into_marketing;
         $newOptIn = $request->boolean('opted_into_marketing');
 
-        $updateData = [
-            'given_name' => $request->input('given_name'),
-            'family_name' => $request->input('family_name'),
-            'phone' => $request->input('phone'),
-            'profile_step' => User::PROFILE_COMPLETE,
-            'opted_into_marketing' => $newOptIn,
-        ];
-
-        if ($user->profile_step < User::PROFILE_COMPLETE && $newOptIn) {
-            $updateData['date_opted_into_marketing'] = now();
-            SubscribeToCommunicationListJob::dispatch(
-                listId: config('services.wegive.marketing_list_id'),
-                listMember: $user
-            );
-        }
-
-        if ($previousOptIn !== $newOptIn) {
-            $updateData['opted_into_marketing'] = $newOptIn;
+        if ($newOptIn !== $previousOptIn) {
+            $fieldsToUpdate['opted_into_marketing'] = $newOptIn;
+            $hasChanges = true;
 
             if ($newOptIn) {
-                $updateData['date_opted_into_marketing'] = now();
+                $fieldsToUpdate['date_opted_into_marketing'] = now();
                 SubscribeToCommunicationListJob::dispatch(
                     listId: config('services.wegive.marketing_list_id'),
                     listMember: $user
                 );
             } else {
-
                 UnsubscribeFromCommunicationListJob::dispatch(
                     donorIds: [$user->wegive_donor_id],
                     user: $user,
@@ -56,12 +79,33 @@ class UpdateUserProfileController extends Controller
             }
         }
 
-        $user->update($updateData);
+        // Handle profile completion step
+        if ($user->profile_step < User::PROFILE_COMPLETE) {
+            $fieldsToUpdate['profile_step'] = User::PROFILE_COMPLETE;
+            $hasChanges = true;
+
+            // If user is newly opting into marketing during profile completion
+            if ($newOptIn && ! $previousOptIn && ! isset($fieldsToUpdate['date_opted_into_marketing'])) {
+                $fieldsToUpdate['date_opted_into_marketing'] = now();
+                SubscribeToCommunicationListJob::dispatch(
+                    listId: config('services.wegive.marketing_list_id'),
+                    listMember: $user
+                );
+            }
+        }
+
+        // Update only if there are changes
+        if (! empty($fieldsToUpdate)) {
+            $user->update($fieldsToUpdate);
+            if ($message === 'No changes were made to your profile.') {
+                $message = 'User Profile Updated!';
+            }
+        }
 
         return redirect()->back()->with([
             'notifications' => [
-                'message' => 'User Profile Updated!',
-                'type' => 'success',
+                'message' => $message,
+                'type' => $hasChanges ? 'success' : 'info',
             ],
         ]);
     }

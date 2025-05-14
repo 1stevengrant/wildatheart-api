@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
 
         $middleware->validateCsrfTokens(except: [
-            'webhooks/sendgrid',
+            'webhooks/*',
         ]);
 
         $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);

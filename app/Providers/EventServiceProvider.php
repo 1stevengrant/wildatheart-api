@@ -2,17 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Event;
-use App\Models\Issue;
-use App\Models\Attendee;
 use Statamic\Events\EntrySaved;
-use App\Observers\EventObserver;
-use App\Observers\IssueObserver;
 use Statamic\Events\EntrySaving;
 use Illuminate\Auth\Events\Login;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntryDeleted;
-use App\Observers\AttendeeObserver;
 use App\Listeners\LogStatamicEntryChanges;
 use App\Listeners\UpdateLastLoginDateTime;
 use App\Listeners\SaveSubsplashItemEntryWithId;
@@ -58,10 +52,4 @@ class EventServiceProvider extends ServiceProvider
     {
         return false;
     }
-
-    protected $observers = [
-        Event::class => [EventObserver::class],
-        Issue::class => [IssueObserver::class],
-        Attendee::class => [AttendeeObserver::class],
-    ];
 }

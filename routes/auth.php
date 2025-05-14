@@ -10,6 +10,7 @@ use App\Http\Controllers\User\MyContactsController;
 use App\Http\Controllers\User\HostProfileController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\UpdateEventController;
+use App\Http\Controllers\VerifyEmailChangeController;
 use App\Http\Controllers\Event\StandardFireController;
 use App\Http\Controllers\Event\HostEventTypeController;
 use App\Http\Controllers\User\MyActiveEventsController;
@@ -35,7 +36,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('select', ResourcesController::class)->name('eventType.select');
     });
 
-    Route::put('user/profile', UpdateUserProfileController::class)->name('user.profile');
+    Route::get('verify-email-change/{token}', VerifyEmailChangeController::class)->name('verify-email-change');
+
+    Route::put('profile', UpdateUserProfileController::class)->name('user.profile');
 
     Route::middleware(['agreed_to_host_agreement'])->group(function () {
 

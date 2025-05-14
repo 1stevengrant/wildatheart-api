@@ -13,6 +13,7 @@ use App\Http\Controllers\User\CompleteUserProfileController;
 use App\Http\Controllers\Webhooks\SendGridWebhookController;
 use App\Http\Controllers\HandleMonthlyHostFireEmailController;
 use App\Http\Controllers\User\IncompleteUserProfileController;
+use App\Http\Controllers\Webhooks\SalesforceWebhookController;
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -33,6 +34,7 @@ Route::prefix('connect')->name('connect.')->group(function () {
 
 Route::name('webhooks.')->prefix('webhooks')->group(function () {
     Route::post('sendgrid', SendGridWebhookController::class)->name('sendgrid');
+    Route::post('salesforce', SalesforceWebhookController::class)->name('salesforce');
 });
 
 Route::prefix('fire/{event}')

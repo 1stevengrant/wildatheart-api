@@ -29,6 +29,7 @@ export const UpdateProfileForm = ({
         family_name: user.family_name ?? "",
         phone: user.phone ?? "",
         email: user.email ?? "",
+        new_email: "",
         image: null as File | null,
         opted_into_marketing: Boolean(user.opted_into_marketing) ?? true,
     });
@@ -36,6 +37,7 @@ export const UpdateProfileForm = ({
     const route = useRoute();
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [confirmingPhotoDelete, setConfirmingPhotoDelete] = useState(false);
+    const [isChangingEmail, setIsChangingEmail] = useState(false);
     const photoRef = useRef<HTMLInputElement>(null);
 
     const isDefaultAvatar = user.image?.startsWith("data:image/");
@@ -47,6 +49,8 @@ export const UpdateProfileForm = ({
             preserveScroll: "errors",
             onSuccess: () => {
                 clearPhotoFileInput();
+                setIsChangingEmail(false);
+                form.setData("new_email", "");
                 router.get(redirectTo);
             },
             onError: () => scrollToError(),
@@ -139,8 +143,54 @@ export const UpdateProfileForm = ({
 
                 <div className="col-span-2">
                     <InputLabel htmlFor="email" value="Email" required />
-                    <div>{form.data.email}</div>
+                    {isChangingEmail ? (
+                        <div className="space-y-2">
+                            <div className="text-sm text-n60">
+                                Current email: {form.data.email}
+                            </div>
+                            <TextInput
+                                id="new_email"
+                                name="new_email"
+                                type="email"
+                                value={form.data.new_email}
+                                autoComplete="email"
+                                onChange={(e) =>
+                                    form.setData("new_email", e.target.value)
+                                }
+                                placeholder="Enter new email address"
+                            />
+                            <div className="flex space-x-2">
+                                <button
+                                    type="button"
+                                    className="text-sm text-gray-500 underline"
+                                    onClick={() => {
+                                        setIsChangingEmail(false);
+                                        form.setData("new_email", "");
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                            <div className="text-xs text-amber-600">
+                                A verification email will be sent to your new
+                                address. Your email won't be updated until you
+                                verify it.
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="flex justify-between items-center">
+                            <div>{form.data.email}</div>
+                            <button
+                                type="button"
+                                className="text-sm text-p200 underline hover:no-underline"
+                                onClick={() => setIsChangingEmail(true)}
+                            >
+                                Change email
+                            </button>
+                        </div>
+                    )}
                     <InputError message={form.errors.email} />
+                    <InputError message={form.errors.new_email} />
                 </div>
 
                 <div className="col-span-2">

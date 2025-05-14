@@ -28,6 +28,7 @@ return [
         'callback_uri' => env('SALESFORCE_CALLBACK_URI'),
         'key' => env('SALESFORCE_KEY'),
         'secret' => env('SALESFORCE_SECRET'),
+        'webhook_secret' => env('SALESFORCE_WEBHOOK_SECRET'),
     ],
 
     'slack' => [

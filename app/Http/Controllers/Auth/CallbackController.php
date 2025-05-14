@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Jobs\LogActivityJob;
 use Illuminate\Http\Request;
 use Auth0\SDK\Auth0 as Auth0SDK;
+use App\Jobs\WeGive\CreateDonorJob;
 use App\Http\Controllers\Controller;
 use Auth0\SDK\Exception\StateException;
 use Illuminate\Support\Facades\Session;
@@ -37,6 +38,10 @@ class CallbackController extends Controller
             $user = $this->findOrCreateUser($auth0User);
 
             UpdateProfileFromAuth0Job::dispatch($user);
+
+            if (! $user->wegive_donor_id) {
+                CreateDonorJob::dispatch($user);
+            }
 
             auth()->login($user);
 

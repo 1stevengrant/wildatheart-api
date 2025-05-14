@@ -23,7 +23,8 @@ class LogActivityJob implements ShouldQueue
         public array $properties = [],
         public ?Model $causedBy = null,
         public ?Model $performedOn = null,
-        public ?Closure $tap = null
+        public ?Closure $tap = null,
+        public ?string $event = '',
     ) {}
 
     /**
@@ -34,6 +35,7 @@ class LogActivityJob implements ShouldQueue
         $activity = activity()
             ->inLog($this->logName)
             ->causedBy($this->causedBy)
+            ->event($this->event)
             ->withProperties($this->properties);
 
         if ($this->performedOn instanceof Model) {

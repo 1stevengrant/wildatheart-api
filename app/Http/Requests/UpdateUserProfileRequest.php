@@ -2,23 +2,16 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserProfileRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize(): true
     {
-        return auth()->check();
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -26,29 +19,41 @@ class UpdateUserProfileRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                'min:2',
             ],
             'family_name' => [
                 'required',
                 'string',
                 'max:255',
-                'min:2',
             ],
             'phone' => [
                 'required',
-                'max:20',
-                'min:9',
+                'string',
+                'max:255',
             ],
-            'opted_into_marketing' => [
-                'required',
-                'boolean',
+            'new_email' => [
+                'nullable',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore(auth()->id()),
+                Rule::unique('users', 'pending_email')->ignore(auth()->id()),
             ],
             'image' => [
                 'nullable',
                 'image',
-                'max:5120',
-                'mimes:jpg,jpeg,png',
+                'max:1024',
             ],
+            'opted_into_marketing' => [
+                'nullable',
+                'boolean',
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'new_email.unique' => 'This email address is already in use.',
         ];
     }
 }
