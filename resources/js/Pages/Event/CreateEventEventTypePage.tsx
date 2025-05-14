@@ -313,7 +313,7 @@ const CreateEventEventTypePage = () => {
                             <MapboxSearch className={"mt-4"} />
 
                             <div
-                                className={`w-full h-[300px] md:h-[600px] mt-4`}
+                                className={`w-full h-[300px] md:h-[40vh] mt-4`}
                             >
                                 <Map
                                     mapLib={mapboxgl}
