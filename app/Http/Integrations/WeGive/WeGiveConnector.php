@@ -14,11 +14,11 @@ class WeGiveConnector extends Connector
 {
     use HasRateLimits;
 
-    public const ERROR_LOG_NAME = 'wegive_error';
+    public const string ERROR_LOG_NAME = 'wegive_error';
 
-    public const WARNING_LOG_NAME = 'wegive_warning';
+    public const string WARNING_LOG_NAME = 'wegive_warning';
 
-    public const INFO_LOG_NAME = 'wegive';
+    public const string INFO_LOG_NAME = 'wegive';
 
     public ?int $tries = 3;
 
