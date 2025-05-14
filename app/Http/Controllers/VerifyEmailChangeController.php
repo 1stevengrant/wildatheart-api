@@ -33,7 +33,7 @@ class VerifyEmailChangeController extends Controller
         }
 
         if ($user->provider_id) {
-            UpdateUserJob::dispatch($user->provider_id, $user->email, true);
+            UpdateUserJob::dispatch($user->provider_id, $user->email);
         }
 
         return redirect()->route('my.profile')->with([
