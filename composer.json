@@ -30,6 +30,7 @@
         "ndx/statamic-bard-color-picker": "^2.0",
         "repat/laravel-validator-emojis": "^0.3.0",
         "saloonphp/laravel-plugin": "^3.0",
+        "saloonphp/rate-limit-plugin": "^2.0",
         "saloonphp/saloon": "^3.0",
         "sentry/sentry-laravel": "^4.10",
         "spatie/laravel-activitylog": "^4.8",
@@ -47,7 +48,8 @@
         "stevebauman/purify": "^6.2",
         "symfony/http-client": "^7.0",
         "symfony/postmark-mailer": "^7.0",
-        "tightenco/ziggy": "v2.0.0"
+        "tightenco/ziggy": "v2.0.0",
+        "ext-redis": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.10",
