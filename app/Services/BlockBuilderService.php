@@ -10,6 +10,7 @@ use App\DataTypeObjects\ButtonProps;
 use App\DataTypeObjects\CardVariant;
 use App\DataTypeObjects\HeroTitleBlock;
 use App\DataTypeObjects\MediaItemsSlide;
+use Carbon\Carbon;
 
 class BlockBuilderService
 {
@@ -185,6 +186,10 @@ class BlockBuilderService
                 ]),
                 'rightIcon' => IconProps::from([]),
             ]);
+
+            if ($mediaItem->collection->handle === 'media_item') {
+                $slide->tags = [Carbon::parse($mediaItem->date)->format('F d, Y')];
+            }
 
             $slide->tag = $mediaItem->position >= 1 ? "{$mediaItem->media_type} {$mediaItem->position}" : $mediaItem->media_type;
 

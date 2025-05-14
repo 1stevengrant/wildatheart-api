@@ -40,6 +40,8 @@ class SlideBlock extends Data
     public ?bool $is_coming_soon = null;
 
     public ?string $date = null;
+
+    public ?array $tags = null;
 }
 
 #[TypeScript]
