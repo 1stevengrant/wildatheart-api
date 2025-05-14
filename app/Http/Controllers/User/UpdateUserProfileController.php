@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserProfileRequest;
-use App\Notifications\EmailChangeVerificationNotification;
 use App\Jobs\WeGive\SubscribeToCommunicationListJob;
 use App\Jobs\WeGive\UnsubscribeFromCommunicationListJob;
+use App\Notifications\EmailChangeVerificationNotification;
 
 class UpdateUserProfileController extends Controller
 {
@@ -85,7 +85,7 @@ class UpdateUserProfileController extends Controller
             $hasChanges = true;
 
             // If user is newly opting into marketing during profile completion
-            if ($newOptIn && !$previousOptIn && !isset($fieldsToUpdate['date_opted_into_marketing'])) {
+            if ($newOptIn && ! $previousOptIn && ! isset($fieldsToUpdate['date_opted_into_marketing'])) {
                 $fieldsToUpdate['date_opted_into_marketing'] = now();
                 SubscribeToCommunicationListJob::dispatch(
                     listId: config('services.wegive.marketing_list_id'),
@@ -95,7 +95,7 @@ class UpdateUserProfileController extends Controller
         }
 
         // Update only if there are changes
-        if (!empty($fieldsToUpdate)) {
+        if (! empty($fieldsToUpdate)) {
             $user->update($fieldsToUpdate);
             if ($message === 'No changes were made to your profile.') {
                 $message = 'User Profile Updated!';
