@@ -41,6 +41,7 @@ import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState } from "@/store/mapAtom";
 
 export const FireInformation = ({ user }: any) => {
+    const [startDatePosition, setStartDatePosition] = useState(0);
     const { startDate, handleStartDateChange, maxDate } = useDates();
     const page = useTypedPage();
     const eventType = page.props.eventType as any;
@@ -271,6 +272,14 @@ export const FireInformation = ({ user }: any) => {
         });
     };
 
+    useEffect(() => {
+        const startDateElement = document.getElementById("startDate");
+        if (startDateElement) {
+            const rect = startDateElement.getBoundingClientRect();
+            setStartDatePosition(rect.top);
+        }
+    }, []);
+
     return (
         <>
             <TwoColumnWrapper>
@@ -312,7 +321,7 @@ export const FireInformation = ({ user }: any) => {
                         <FireNamingGuidelines />
 
                         {/* Start Date Field */}
-                        <div className={`mt-4`}>
+                        <div id="startDate" className={`mt-4`}>
                             <DatePickerInput
                                 label="Start date"
                                 placeholder="Select start date"
@@ -360,8 +369,10 @@ export const FireInformation = ({ user }: any) => {
                         </div>
 
                         <EventDisplay
+                            className={`md:hidden mt-4 `}
                             event={event}
-                            className={"md:hidden mt-4"}
+                            startDate={data.start_date}
+                            frequency={data.frequency}
                         />
                         <MapboxSearch className={"mt-4"} />
                         <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
@@ -424,10 +435,13 @@ export const FireInformation = ({ user }: any) => {
                     </form>
                 </LeftColumn>
 
-                <RightColumn className={``}>
+                <RightColumn className={`!justify-start`}>
                     <div>
                         <EventDisplay
-                            className={"max-w-[350px] mx-auto hidden lg:flex"}
+                            style={{
+                                marginTop: startDatePosition,
+                            }}
+                            className={`max-w-[350px] mx-auto hidden lg:flex `}
                             event={event}
                             startDate={data.start_date}
                             frequency={data.frequency}

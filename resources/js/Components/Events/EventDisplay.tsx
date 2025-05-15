@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { usePage } from "@inertiajs/react";
 
@@ -13,10 +13,12 @@ import { UserAvatar } from "@/Components/UserAvatar";
 
 export const EventDisplay = ({
     event,
+    style = {},
     className = "",
     startDate = "",
     frequency = "",
 }: {
+    style?: React.CSSProperties;
     event: App.Data.EventData;
     className?: string;
     startDate?: string | null | undefined;
@@ -32,7 +34,7 @@ export const EventDisplay = ({
         try {
             const date = new Date(dateString);
             const day = date.getDate();
-            const month = date.toLocaleDateString("en-US", { month: "long" });
+            const month = date.toLocaleDateString("en-US", { month: "short" });
 
             // Add ordinal suffix (st, nd, rd, th)
             const getOrdinalSuffix = (day: number): string => {
@@ -57,6 +59,7 @@ export const EventDisplay = ({
 
     return (
         <div
+            style={style}
             className={`${className} p-4 flex space-x-4 border rounded-md cursor-pointer border-n700`}
         >
             <Image src={eventType.image} className={`rounded-md flex-grow-0`} />
