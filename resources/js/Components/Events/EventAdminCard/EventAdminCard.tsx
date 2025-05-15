@@ -11,7 +11,7 @@ import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 const statusBadge = (approvedAt?: string | null) => (
     <span
         className={`text-xxs px-2 py-1 rounded-full ${
-            approvedAt ? "bg-p200" : "bg-grey-darker"
+            approvedAt ? "bg-p200" : "bg-n700"
         } text-white`}
     >
         {approvedAt ? "Published" : "Unpublished"}
