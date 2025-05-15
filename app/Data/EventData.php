@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\Event;
 use App\Enums\EventSexEnum;
 use Spatie\LaravelData\Data;
+use App\Enums\Event\FrequencyEnum;
+use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -47,7 +49,8 @@ class EventData extends Data
         public EventSexEnum $sex,
         public string $url,
         public int $group_size,
-        public ?string $frequency,
+        #[WithCast(EnumCast::class)]
+        public ?FrequencyEnum $frequency,
         public ?string $hero_image,
         public ?string $hero_video,
         public bool $is_private,

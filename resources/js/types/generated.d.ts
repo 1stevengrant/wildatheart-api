@@ -48,7 +48,7 @@ declare namespace App.Data {
         sex: App.Enums.EventSexEnum;
         url: string;
         group_size: number;
-        frequency: string | null;
+        frequency: App.Enums.Event.FrequencyEnum | null;
         hero_image: string | null;
         hero_video: string | null;
         is_private: boolean;
@@ -320,6 +320,7 @@ declare namespace App.DataTypeObjects {
         href: string | null;
         is_coming_soon: boolean | null;
         date: string | null;
+        tags: Array<any> | null;
     };
     export type StatamicValue = {
         value: string;
@@ -397,6 +398,44 @@ declare namespace App.DataTypeObjects.API.V1.Content {
         transistor_episode: App.DataTypeObjects.TransistorPodcastEpisode;
         current_episode_slug: string | null;
         uri: string | null;
+    };
+    export type ExperienceResponse = {
+        blocks: Array<any> | null;
+        height: string | null;
+        images: Array<any> | null;
+        position: string | null;
+        sessions: Array<any> | null;
+        subtitle: string | null;
+        hero_logo: string | null;
+        hero_title: Array<any> | null;
+        updated_by: number;
+        button_link: string | null;
+        button_text: string | null;
+        description: Array<any> | null;
+        leader_text: string | null;
+        hero_variant: string | null;
+        testimonials: Array<any> | null;
+        hero_subtitle: Array<any> | null;
+        experience_logo: Array<any> | null;
+        find_a_group_link: string | null;
+        host_a_group_link: string | null;
+        featured_video_url: string | null;
+        related_event_type: string | null;
+        subsplash_series_id: string | null;
+        background_video_url: string | null;
+        featured_video_fallback_image: string | null;
+        background_video_fallback_image: Array<any> | null;
+        sessionData: Array<any> | null;
+        id: string;
+        title: string;
+        private: boolean;
+        published: boolean;
+        status: string;
+        slug: string;
+        uri: string | null;
+        url: string | null;
+        blueprint: App.DataTypeObjects.Blueprint;
+        locale: string;
     };
 }
 declare namespace App.DataTypeObjects.API.V1.Content.Prayers {
