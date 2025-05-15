@@ -32,7 +32,7 @@ class CreateFireEventType
             'neighborhood' => $eventDataTransferObject->neighborhood,
             'sex' => $eventType->sex,
             'start_date' => $eventDataTransferObject->startDate,
-            'cadence' => $eventDataTransferObject->cadence,
+            'frequency' => $eventDataTransferObject->frequency,
         ]);
 
         LogActivityJob::dispatch(

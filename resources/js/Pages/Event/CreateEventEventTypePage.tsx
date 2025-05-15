@@ -158,7 +158,7 @@ const CreateEventEventTypePage = () => {
             start_date: null,
             number_of_items_in_material_order: null,
             end_date: null,
-            cadence: null,
+            frequency: null,
         });
 
     useEffect(() => {

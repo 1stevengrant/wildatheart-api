@@ -26,6 +26,6 @@ class EventFormData extends Data
         public ?string $start_date = null,
         public ?string $end_date = null,
         public ?string $number_of_items_in_material_order = null,
-        public ?string $cadence = null,
+        public ?string $frequency = null,
     ) {}
 }

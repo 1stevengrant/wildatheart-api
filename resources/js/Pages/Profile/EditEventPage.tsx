@@ -21,6 +21,7 @@ import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import TextInput from "@/Components/Forms/TextInput";
+import { FrequencyOptions } from "@/Components/FrequencyOptions";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
@@ -70,7 +71,7 @@ const EditEventPage = () => {
         zip: event.zip,
         is_private: event.is_private,
         start_date: event.start_date,
-        cadence: event.cadence,
+        frequency: event.frequency,
     });
 
     useEffect(() => {
@@ -226,29 +227,25 @@ const EditEventPage = () => {
                 {eventIsAFire(event.event_type_slug) && (
                     <div className="mt-4">
                         <InputLabel
-                            htmlFor="cadence"
-                            value={singular(eventTypeName) + " Cadence"}
+                            htmlFor="frequency"
+                            value={singular(eventTypeName) + " frequency"}
                             required
                         />
                         <select
-                            id="cadence"
-                            name="cadence"
-                            value={data.cadence || ""}
+                            id="frequency"
+                            name="frequency"
+                            value={data.frequency || ""}
                             className="select-input"
                             onChange={(e) => {
-                                setData("cadence", e.target.value);
+                                setData("frequency", e.target.value);
                             }}
                         >
-                            <option value="">Choose a cadence</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="bi-weekly">Bi-Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="quarterly">Quarterly</option>
+                            <FrequencyOptions />
                         </select>
                         <Instruction>
                             How often do you want to host this Fire event?
                         </Instruction>
-                        <InputError message={errors.cadence} />
+                        <InputError message={errors.frequency} />
                     </div>
                 )}
 

@@ -17,7 +17,7 @@ readonly class CreateEventDataTransferObject
         public ?string $district,
         public ?string $locality,
         public ?string $neighborhood,
-        public ?string $cadence = null,
+        public ?string $frequency = null,
         public ?string $startDate = null,
     ) {}
 
@@ -36,7 +36,7 @@ readonly class CreateEventDataTransferObject
             district: $data['district'] ?? null,
             locality: $data['locality'] ?? null,
             neighborhood: $data['neighborhood'] ?? null,
-            cadence: $data['cadence'] ?? null,
+            frequency: $data['frequency'] ?? null,
             startDate: $data['start_date'] ?? null,
         );
     }

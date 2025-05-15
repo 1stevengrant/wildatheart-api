@@ -40,7 +40,7 @@ class FireEventRequest extends FormRequest
                 'required',
                 'date',
             ],
-            'cadence' => [
+            'frequency' => [
                 'required',
                 'string',
             ],

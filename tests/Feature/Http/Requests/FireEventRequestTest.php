@@ -11,7 +11,7 @@ it('validates valid fire event data', function () {
     $validator = Validator::make([
         'name' => 'Forest Incident',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'cadence' => 'Weekly',
+        'frequency' => 'Weekly',
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
@@ -27,7 +27,7 @@ it('fails validation when name ends with fire', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'cadence' => 'Weekly',
+        'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();
@@ -40,7 +40,7 @@ it('fails validation when name contains emoji', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'cadence' => 'Weekly',
+        'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();
@@ -53,7 +53,7 @@ it('fails validation when name is too short', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'cadence' => 'Weekly',
+        'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();
@@ -66,7 +66,7 @@ it('fails validation when required fields are missing', function () {
 
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has('start_date'))->toBeTrue()
-        ->and($validator->errors()->has('cadence'))->toBeTrue()
+        ->and($validator->errors()->has('frequency'))->toBeTrue()
         ->and($validator->errors()->has('country'))->toBeTrue()
         ->and($validator->errors()->has('latitude'))->toBeTrue()
         ->and($validator->errors()->has('longitude'))->toBeTrue();
@@ -79,7 +79,7 @@ it('fails validation when name is longer than 255 characters', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'cadence' => 'Weekly',
+        'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue();

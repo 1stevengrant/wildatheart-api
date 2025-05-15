@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->enum('cadence', [
+            $table->enum('frequency', [
                 'weekly',
-                'bi-weekly',
+                'biweekly',
+                'varies',
                 'monthly',
                 'quarterly',
             ])->after('event_type_id')->nullable();
@@ -27,7 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->dropColumn('cadence');
+            $table->dropColumn('frequency');
         });
     }
 };

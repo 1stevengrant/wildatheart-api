@@ -19,6 +19,7 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
+import { FrequencyOptions } from "@/Components/FrequencyOptions";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
 import { RightColumn } from "@/Components/Layout/Elements/RightColumn";
@@ -129,7 +130,7 @@ export const FireInformation = ({ user }: any) => {
         country: null,
         eventType: eventType,
         hostEmail: user.email,
-        cadence: "",
+        frequency: "monthly",
         start_date: null,
     });
 
@@ -148,7 +149,7 @@ export const FireInformation = ({ user }: any) => {
             neighborhood: "",
             street_address: "",
             poi: "",
-            cadence: "",
+            frequency: "monthly",
             start_date: null,
             is_private: false,
             end_date: null,
@@ -308,6 +309,8 @@ export const FireInformation = ({ user }: any) => {
                             <InputError message={errors.name} />
                         </div>
 
+                        <FireNamingGuidelines />
+
                         {/* Start Date Field */}
                         <div className={`mt-4`}>
                             <DatePickerInput
@@ -326,42 +329,36 @@ export const FireInformation = ({ user }: any) => {
                             <Instruction>
                                 When would you like to start your Fire?
                             </Instruction>
-                            <InputError message={errors.start_date} />
                         </div>
 
-                        {/* Cadence Selection */}
+                        {/* frequency Selection */}
                         <div className="mt-4">
                             <InputLabel
-                                htmlFor="cadence"
-                                value={singular(eventType.name) + " Cadence"}
+                                htmlFor="frequency"
+                                value={singular(eventType.name) + " frequency"}
                                 required
                             />
                             <select
-                                id="cadence"
-                                name="cadence"
-                                value={data.cadence || ""}
+                                id="frequency"
+                                name="frequency"
+                                value={data.frequency || ""}
                                 className="select-input"
                                 onChange={(e) => {
-                                    setData("cadence", e.target.value);
+                                    setData("frequency", e.target.value);
                                     setEvent({
                                         ...event,
-                                        cadence: e.target.value,
+                                        frequency: e.target.value,
                                     });
                                 }}
                             >
-                                <option value="">Choose a cadence</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="bi-weekly">Bi-Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="quarterly">Quarterly</option>
+                                <FrequencyOptions />
                             </select>
                             <Instruction>
                                 How often do you want to host this Fire event?
                             </Instruction>
-                            <InputError message={errors.cadence} />
+                            <InputError message={errors.frequency} />
                         </div>
 
-                        <FireNamingGuidelines />
                         <EventDisplay
                             event={event}
                             className={"md:hidden mt-4"}
@@ -432,6 +429,8 @@ export const FireInformation = ({ user }: any) => {
                         <EventDisplay
                             className={"max-w-[350px] mx-auto hidden lg:flex"}
                             event={event}
+                            startDate={data.start_date}
+                            frequency={data.frequency}
                         />
                     </div>
                 </RightColumn>

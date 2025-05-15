@@ -58,11 +58,11 @@ export const FireConfirmationModal = ({
                                 {new Date(data.start_date).toLocaleDateString()}
                             </li>
                         )}
-                        {data.cadence && (
+                        {data.frequency && (
                             <li>
-                                <span className="font-medium">Cadence:</span>{" "}
+                                <span className="font-medium">frequency:</span>{" "}
                                 <span className={`capitalize`}>
-                                    {data.cadence}
+                                    {data.frequency}
                                 </span>
                             </li>
                         )}

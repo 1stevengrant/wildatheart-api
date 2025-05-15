@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Enums\EventSexEnum;
 use App\Builders\EventBuilder;
+use App\Enums\Event\FrequencyEnum;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -47,6 +48,7 @@ class Event extends BaseModel
             'view_count' => 'integer',
             'attendee_count' => 'integer',
             'is_private' => 'boolean',
+            'frequency' => FrequencyEnum::class,
         ];
     }
 
@@ -331,21 +333,23 @@ class Event extends BaseModel
                     }
                 }
 
-                // Fire: Logic depends on date and cadence
+                // Fire: Logic depends on date and frequency
                 if ($this->isFire()) {
+
                     if ($this->start_date) {
                         $startDate = Carbon::parse($this->start_date);
-                        $now = Carbon::now();
 
                         // If date hasn't passed yet
-                        if ($startDate->greaterThan($now)) {
+                        if ($startDate->greaterThan(now())) {
+                            ray('date has not passed', $this->frequency);
                             $format = $startDate->year !== $currentYear ? 'M jS Y' : 'M jS';
 
                             return $startDate->format($format);
                         }
-                        // If date has passed and event has cadence
-                        if ($this->cadence) {
-                            return $startDate->format('l') . ' ' . $this->cadence;
+                        // If date has passed and event has frequency
+                        if ($this->frequency) {
+
+                            return $startDate->format('D, ') . ' ' . ucwords($this->frequency);
                         }
                     }
 
