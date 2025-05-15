@@ -237,7 +237,11 @@ const EditEventPage = () => {
                             value={data.frequency || ""}
                             className="select-input"
                             onChange={(e) => {
-                                setData("frequency", e.target.value);
+                                setData(
+                                    "frequency",
+                                    e.target
+                                        .value as App.Enums.Event.FrequencyEnum
+                                );
                             }}
                         >
                             <FrequencyOptions />

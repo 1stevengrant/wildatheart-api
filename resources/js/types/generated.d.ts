@@ -83,7 +83,7 @@ declare namespace App.Data {
         start_date: string | null;
         end_date: string | null;
         number_of_items_in_material_order: string | null;
-        frequency: string | null;
+        frequency: App.Enums.Event.FrequencyEnum | null;
     };
     export type EventTypeData = {
         id: number;
