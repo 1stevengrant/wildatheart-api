@@ -70,4 +70,9 @@ return [
         'marketing_list_id' => env('WEGIVE_MARKETING_LIST_ID', 'xxx'),
     ],
 
+    'ipinfo' => [
+        'token' => env('IPINFO_TOKEN'),
+        'refresh_threshold_days' => env('IPINFO_REFRESH_THRESHOLD_DAYS', 30),
+    ],
+
 ];
