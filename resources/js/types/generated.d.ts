@@ -474,5 +474,5 @@ declare namespace App.Enums.Event {
         | "weekly"
         | "monthly"
         | "quarterly"
-        | "custom";
+        | "varies";
 }
