@@ -80,3 +80,4 @@ Route::prefix('content')->group(function () {
 
 Route::get('events/search', SearchForEventsController::class)->name('api.events.search');
 Route::get('events/all', AllEventsController::class)->name('api.events.all');
+Route::get('events/dashboard', \App\Http\Controllers\API\EventsDashboardController::class)->name('api.events.dashboard');
