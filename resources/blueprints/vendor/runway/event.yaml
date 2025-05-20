@@ -145,10 +145,10 @@ tabs:
               display: Sex
               width: 50
           -
-            handle: last_monthly_email_sent_at
+            handle: last_checkin_email_sent_at
             field:
               type: date
-              display: 'Last Monthly Email Sent At'
+              display: 'Last Checkin Email Sent At'
               width: 33
           -
             handle: start_date

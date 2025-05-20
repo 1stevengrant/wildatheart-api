@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Fire\ConfirmFireUnpublishedMailable;
@@ -13,13 +14,18 @@ class HandleMonthlyHostFireEmailController extends Controller
     public function update(Event $event)
     {
         $event->update([
+            'last_checkin_confirmed_at' => now(),
+            'last_checkin_email_sent_at' => now(),
+            'last_checkin_reminder_sent_at' => null,
+            'auto_unpublished' => false,
             'approved_at' => now(),
         ]);
 
-        activity('fire')
-            ->performedOn($event)
-            ->causedBy($event->user)
-            ->log('Fire published');
+        LogActivityJob::dispatch(
+            description: 'Fire published',
+            causedBy: $event->user,
+            performedOn: $event,
+        );
 
         return inertia('FireBurningPage', [
             'pageContent' => Page::bySlug('fire-burning-page'),
@@ -28,10 +34,11 @@ class HandleMonthlyHostFireEmailController extends Controller
 
     public function show(Event $event)
     {
-        activity('fire')
-            ->performedOn($event)
-            ->causedBy($event->user)
-            ->log('Fire unpublished page viewed');
+        LogActivityJob::dispatch(
+            description: 'Fire unpublished page viewed',
+            causedBy: $event->user,
+            performedOn: $event,
+        );
 
         return inertia('FireExtinguishedPage', [
             'event' => $event,
@@ -42,12 +49,16 @@ class HandleMonthlyHostFireEmailController extends Controller
 
     public function destroy(Event $event)
     {
-        $event->unpublish();
+        $event->update([
+            'approved_at' => null,
+            'auto_unpublished' => false,
+        ]);
 
-        activity('fire')
-            ->performedOn($event)
-            ->causedBy($event->user)
-            ->log('Fire unpublished');
+        LogActivityJob::dispatch(
+            description: 'Fire unpublished',
+            causedBy: $event->user,
+            performedOn: $event,
+        );
 
         Mail::to($event->user->email)
             ->send(new ConfirmFireUnpublishedMailable($event));

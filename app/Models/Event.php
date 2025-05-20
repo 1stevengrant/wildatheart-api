@@ -49,6 +49,10 @@ class Event extends BaseModel
             'view_count' => 'integer',
             'attendee_count' => 'integer',
             'is_private' => 'boolean',
+            'last_checkin_email_sent_at' => 'datetime',
+            'last_checkin_reminder_sent_at' => 'datetime',
+            'last_checkin_confirmed_at' => 'datetime',
+            'auto_unpublished' => 'boolean',
         ];
     }
 
@@ -271,5 +275,10 @@ class Event extends BaseModel
         }
 
         return $eventTypeMappings[$this->eventType->name] ?? null;
+    }
+
+    public function hasBeenAutoUnpublished(): bool
+    {
+        return (bool) $this->auto_unpublished;
     }
 }
