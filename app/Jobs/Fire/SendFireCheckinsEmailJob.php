@@ -29,6 +29,7 @@ class SendFireCheckinsEmailJob implements ShouldQueue
         $ninetyDaysAgo = now()->subDays(90);
 
         Event::query()
+            ->with(['user'])
             ->allFires()
             ->published()
             ->where(function ($query) use ($ninetyDaysAgo) {

@@ -30,6 +30,7 @@ class SendFireCheckinsReminderEmailJob implements ShouldQueue
         $sevenDaysAgo = now()->subDays(7);
 
         Event::query()
+            ->with(['user'])
             ->allFires()
             ->lastCheckinReminderNotSent()
             ->where('last_checkin_email_sent_at', '<=', $sevenDaysAgo)

@@ -31,6 +31,7 @@ class AutoUnpublishUnconfirmedFiresJob implements ShouldQueue
         $threeDaysAfterReminder = now()->subDays(3);
 
         Event::query()
+            ->with(['user'])
             ->allFires()
             ->lastCheckinReminderSent()
             ->where('last_checkin_reminder_sent_at', '<=', $threeDaysAfterReminder)
