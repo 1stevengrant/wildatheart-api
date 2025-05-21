@@ -24,13 +24,13 @@ return [
     /*
      * The channels to which the notification will be sent.
      */
-    'channels' => env('APP_ENV') === 'testing' ? ['mail'] : ['slack'],
+    'channels' => env('APP_ENV') === 'testing' ? ['mail'] : ['slack', 'mail'],
 
     'mail' => [
-        'to' => ['email@example.com'],
+        'to' => ['steven@wildatheart.org'],
     ],
 
     'slack' => [
-        'webhook_url' => config('services.slack.webhook_url'),
+        'webhook_url' => env('SLACK_WEBHOOK_URL'),
     ],
 ];
