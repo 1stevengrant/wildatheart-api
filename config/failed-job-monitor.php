@@ -27,7 +27,7 @@ return [
     'channels' => env('APP_ENV') === 'testing' ? ['mail'] : ['slack', 'mail'],
 
     'mail' => [
-        'to' => ['steven@wildatheart.org'],
+        'to' => ['steven@wildatheart.org', 'nic@wildatheart.org'],
     ],
 
     'slack' => [
