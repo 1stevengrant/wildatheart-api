@@ -39,7 +39,7 @@ it('does not get events that were approved less than 90 days ago', function () {
 it('gets events where the last monthly email was sent more than 7 days ago', function () {
     Event::factory()->fires()->create([
         'name' => 'Event 1',
-        'last_monthly_email_sent_at' => now()->subDays(8),
+        'last_checkin_email_sent_at' => now()->subDays(8),
     ]);
 
     $eventQuery1 = Event::query()
@@ -329,16 +329,19 @@ it('gets events belonging to user', function () {
 
     expect($events->count())->toBe(1);
 });
-
 it('gets events created after', function () {
-    Event::factory()->fires()->create([
-        'created_at' => now()->subDay(),
+    $timestamp = '2023-01-01 12:00:00';
+
+    $event = Event::factory()->fires()->create([
+        'created_at' => $timestamp,
         'user_id' => User::factory()->create(),
     ]);
 
     $events = Event::query()
-        ->createdAfter(now()->subDay())
+        ->createdAfter($timestamp)
         ->get();
 
-    expect($events->count())->toBe(1);
-})->skip();
+    // Check if found events include our created event
+    expect($events->contains('id', $event->id))->toBeTrue()
+        ->and($events->count())->toBe(1);
+});

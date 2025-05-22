@@ -25,7 +25,7 @@ class ConfirmFireUnpublishedMailable extends Mailable implements ShouldQueue
      */
     public function __construct(public Event $event)
     {
-        $this->emailTemplate = $this->getEmailTemplate('fire-made-inactive');
+        $this->emailTemplate = $this->getEmailTemplate(EmailTemplate::FIRE_MADE_INACTIVE);
     }
 
     /**
