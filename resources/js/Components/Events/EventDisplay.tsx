@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
 import { usePage } from "@inertiajs/react";
+import dayjs from "dayjs";
 
 import { EventHostInfo } from "@/Components/Events/EventHostInfo";
 import { EventInfo } from "@/Components/Events/EventInfo";
@@ -10,6 +11,7 @@ import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { Image } from "@/Components/Image";
 import { UserAvatar } from "@/Components/UserAvatar";
+import { formatDate } from "@/helpers/formatDate";
 
 export const EventDisplay = ({
     event,
@@ -27,35 +29,6 @@ export const EventDisplay = ({
     useEffect(() => {}, [event]);
     const { props } = usePage();
     const eventType = props.eventType as App.Data.EventTypeData;
-
-    const formatDate = (dateString: string | null | undefined): string => {
-        if (!dateString) return "";
-
-        try {
-            const date = new Date(dateString);
-            const day = date.getDate();
-            const month = date.toLocaleDateString("en-US", { month: "short" });
-
-            // Add ordinal suffix (st, nd, rd, th)
-            const getOrdinalSuffix = (day: number): string => {
-                if (day >= 11 && day <= 13) return "th";
-                switch (day % 10) {
-                    case 1:
-                        return "st";
-                    case 2:
-                        return "nd";
-                    case 3:
-                        return "rd";
-                    default:
-                        return "th";
-                }
-            };
-
-            return `${day}${getOrdinalSuffix(day)} ${month}`;
-        } catch (error) {
-            return dateString;
-        }
-    };
 
     return (
         <div

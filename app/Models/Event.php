@@ -349,7 +349,7 @@ class Event extends BaseModel
                         // If date has passed and event has frequency
                         if ($this->frequency) {
 
-                            return $startDate->format('D, ') . ' ' . ucwords($this->frequency->label());
+                            return ucwords($this->frequency->label());
                         }
                     }
 
