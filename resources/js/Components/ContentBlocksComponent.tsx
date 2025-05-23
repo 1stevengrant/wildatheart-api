@@ -1,4 +1,5 @@
-import { VideoPlayer } from "@/Components/Events/Detail/VideoPlayer";
+import Markdown from "react-markdown";
+import ReactPlayer from "react-player";
 
 export const ContentBlocksComponent = ({
     contentBlocks,
@@ -11,16 +12,18 @@ export const ContentBlocksComponent = ({
         <>
             {contentBlocks && (
                 <div
-                    className={`prose prose-lg prose-p:text-white prose-h1:text-white prose-h2:text-white prose-h3:text-white prose-h4:text-white ${className}`}
+                    className={`prose prose-lg prose-p:text-white prose-h1:text-white prose-h2:text-white prose-h3:text-white prose-h4:text-white prose-a:text-p200 [&_a:hover]:no-underline  ${className}`}
                 >
                     {contentBlocks.map((block: any, index: number) => {
                         switch (block.type) {
-                            case "text-block":
-                                return <p key={index}>{block.fields.text}</p>;
-                            case "video-block":
+                            case "text_block":
                                 return (
-                                    <VideoPlayer src={block.fields.video_url} />
+                                    <Markdown key={index}>
+                                        {block.text}
+                                    </Markdown>
                                 );
+                            case "video_block":
+                                return <ReactPlayer url={block.video} />;
                             default:
                                 return null;
                         }

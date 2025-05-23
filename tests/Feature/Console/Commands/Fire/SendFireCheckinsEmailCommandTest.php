@@ -8,11 +8,13 @@ use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use App\Mail\EventAutoUnpublishedMail;
-use App\Mail\Fire\SevenDayFollowupMailable;
-use App\Jobs\Fire\MonthlyFireCleanupEmailToHostJob;
 use App\Jobs\Fire\SendFireCheckinsEmailJob;
-use App\Jobs\Fire\SendFireCheckinsReminderEmailJob;
+use App\Mail\Fire\SevenDayFollowupMailable;
 use App\Jobs\Fire\AutoUnpublishUnconfirmedFiresJob;
+use App\Jobs\Fire\MonthlyFireCleanupEmailToHostJob;
+use App\Jobs\Fire\SendFireCheckinsReminderEmailJob;
+use App\Jobs\Fire\UnpublishSingleUnconfirmedFireJob;
+use App\Jobs\Fire\SendSingleFireCheckinReminderEmailJob;
 
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);
@@ -55,7 +57,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         // Check that the MonthlyFireCleanupEmailToHostJob was dispatched for this fire
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class, function ($job) use ($fire) {
@@ -83,7 +85,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class);
         $fire->refresh();
@@ -113,7 +115,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class);
     });
@@ -134,7 +136,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertNotPushed(MonthlyFireCleanupEmailToHostJob::class);
     });
@@ -157,7 +159,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertNotPushed(MonthlyFireCleanupEmailToHostJob::class);
     });
@@ -178,7 +180,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertNotPushed(MonthlyFireCleanupEmailToHostJob::class);
     });
@@ -199,7 +201,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertNotPushed(MonthlyFireCleanupEmailToHostJob::class);
     });
@@ -221,7 +223,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         $fire->refresh();
         expect($fire->last_checkin_reminder_sent_at)->toBeNull();
@@ -243,7 +245,7 @@ describe('Initial 90-day check-in emails', function () {
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class);
     });
@@ -269,7 +271,19 @@ describe('7-day follow-up reminder emails', function () {
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsReminderEmailJob())->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Assert that the individual job was dispatched
+        Queue::assertPushed(SendSingleFireCheckinReminderEmailJob::class, function ($job) use ($fire) {
+            return $job->event->id === $fire->id;
+        });
+
+        // Execute the individual job manually
+        Queue::assertPushed(SendSingleFireCheckinReminderEmailJob::class, function ($job) {
+            $job->handle();
+
+            return true;
+        });
 
         Mail::assertQueued(SevenDayFollowupMailable::class, function ($mail) use ($fire) {
             return $mail->event->id === $fire->id;
@@ -295,7 +309,10 @@ describe('7-day follow-up reminder emails', function () {
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsReminderEmailJob())->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Assert that no individual jobs were dispatched
+        Queue::assertNotPushed(SendSingleFireCheckinReminderEmailJob::class);
 
         Mail::assertNotQueued(SevenDayFollowupMailable::class);
     });
@@ -316,7 +333,10 @@ describe('7-day follow-up reminder emails', function () {
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsReminderEmailJob())->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Assert that no individual jobs were dispatched
+        Queue::assertNotPushed(SendSingleFireCheckinReminderEmailJob::class);
 
         Mail::assertNotQueued(SevenDayFollowupMailable::class);
     });
@@ -337,7 +357,10 @@ describe('7-day follow-up reminder emails', function () {
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsReminderEmailJob())->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Assert that no individual jobs were dispatched
+        Queue::assertNotPushed(SendSingleFireCheckinReminderEmailJob::class);
 
         Mail::assertNotQueued(SevenDayFollowupMailable::class);
     });
@@ -359,7 +382,10 @@ describe('7-day follow-up reminder emails', function () {
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
 
         // Execute the job manually
-        (new SendFireCheckinsReminderEmailJob())->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Assert that no individual jobs were dispatched
+        Queue::assertNotPushed(SendSingleFireCheckinReminderEmailJob::class);
 
         Mail::assertNotQueued(SevenDayFollowupMailable::class);
     });
@@ -382,7 +408,19 @@ describe('Auto-unpublishing fires', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute the job manually
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
+
+        // Assert that the individual job was dispatched
+        Queue::assertPushed(UnpublishSingleUnconfirmedFireJob::class, function ($job) use ($fire) {
+            return $job->event->id === $fire->id;
+        });
+
+        // Execute the individual job manually
+        Queue::assertPushed(UnpublishSingleUnconfirmedFireJob::class, function ($job) {
+            $job->handle();
+
+            return true;
+        });
 
         $fire->refresh();
         expect($fire->isApproved())->toBeFalse()
@@ -419,7 +457,7 @@ describe('Auto-unpublishing fires', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute the job manually
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
 
         $fire->refresh();
         expect($fire->isApproved())->toBeTrue()
@@ -444,7 +482,7 @@ describe('Auto-unpublishing fires', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute the job manually
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
 
         $fire->refresh();
         expect($fire->isApproved())->toBeTrue()
@@ -467,7 +505,7 @@ describe('Auto-unpublishing fires', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute the job manually
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
 
         $fire->refresh();
         expect($fire->isApproved())->toBeTrue()
@@ -491,7 +529,7 @@ describe('Auto-unpublishing fires', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute the job manually
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
 
         Mail::assertNotQueued(EventAutoUnpublishedMail::class);
     });
@@ -513,7 +551,7 @@ describe('Auto-unpublishing fires', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute the job manually
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
 
         $fire->refresh();
         expect($fire->hasBeenAutoUnpublished())->toBeFalse();
@@ -544,7 +582,7 @@ describe('Full workflow integration', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute the first job manually
-        (new SendFireCheckinsEmailJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class);
         $fire->refresh();
@@ -561,7 +599,19 @@ describe('Full workflow integration', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class, 2);
 
         // Execute the second job manually
-        (new SendFireCheckinsReminderEmailJob())->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Assert that the individual job was dispatched
+        Queue::assertPushed(SendSingleFireCheckinReminderEmailJob::class, function ($job) use ($fire) {
+            return $job->event->id === $fire->id;
+        });
+
+        // Execute the individual job manually
+        Queue::assertPushed(SendSingleFireCheckinReminderEmailJob::class, function ($job) {
+            $job->handle();
+
+            return true;
+        });
 
         Mail::assertQueued(SevenDayFollowupMailable::class);
         $fire->refresh();
@@ -578,7 +628,19 @@ describe('Full workflow integration', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class, 3);
 
         // Execute the third job manually
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
+
+        // Assert that the individual job was dispatched
+        Queue::assertPushed(UnpublishSingleUnconfirmedFireJob::class, function ($job) use ($fire) {
+            return $job->event->id === $fire->id;
+        });
+
+        // Execute the individual job manually
+        Queue::assertPushed(UnpublishSingleUnconfirmedFireJob::class, function ($job) {
+            $job->handle();
+
+            return true;
+        });
 
         $fire->refresh();
         expect($fire->isApproved())->toBeFalse()
@@ -623,9 +685,34 @@ describe('Full workflow integration', function () {
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
 
         // Execute all jobs manually
-        (new SendFireCheckinsEmailJob())->handle();
-        (new SendFireCheckinsReminderEmailJob())->handle();
-        (new AutoUnpublishUnconfirmedFiresJob())->handle();
+        (new SendFireCheckinsEmailJob)->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Assert that the individual job was dispatched for the fire that needs a reminder
+        Queue::assertPushed(SendSingleFireCheckinReminderEmailJob::class, function ($job) use ($fireNeedsReminder) {
+            return $job->event->id === $fireNeedsReminder->id;
+        });
+
+        // Execute the individual job manually
+        Queue::assertPushed(SendSingleFireCheckinReminderEmailJob::class, function ($job) {
+            $job->handle();
+
+            return true;
+        });
+
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
+
+        // Assert that the individual job was dispatched for the fire to unpublish
+        Queue::assertPushed(UnpublishSingleUnconfirmedFireJob::class, function ($job) use ($fireToUnpublish) {
+            return $job->event->id === $fireToUnpublish->id;
+        });
+
+        // Execute the individual job manually
+        Queue::assertPushed(UnpublishSingleUnconfirmedFireJob::class, function ($job) {
+            $job->handle();
+
+            return true;
+        });
 
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class, 1);
         Mail::assertQueued(SevenDayFollowupMailable::class, 1);

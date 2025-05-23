@@ -63,7 +63,7 @@ class HandleMonthlyHostFireEmailController extends Controller
         Mail::to($event->user->email)
             ->send(new ConfirmFireUnpublishedMailable($event));
 
-        return inertia('HomePage')
+        return to_route('home')
             ->with(['notifications' => [
                 'type' => 'success',
                 'message' => 'Your Fire has been extinguished.',
