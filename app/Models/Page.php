@@ -44,6 +44,7 @@ class Page extends Model
     {
         return [
             'content' => 'array',
+            'new_content' => 'array',
         ];
     }
 
