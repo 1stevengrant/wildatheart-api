@@ -1,14 +1,11 @@
-import React from "react";
-
 import { Link, usePage } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { whiteButtonClasses } from "@/helpers/whiteButtonClasses";
-import { Event } from "@/types/Event";
 
 export const MobileConnect = () => {
     const page = usePage();
-    const event = page.props.event as Event;
+    const event = page.props.event as App.Data.EventData;
     const hasConnectedWithHost =
         (page.props.notifications as { connectedWithHost?: boolean })
             ?.connectedWithHost ?? false;

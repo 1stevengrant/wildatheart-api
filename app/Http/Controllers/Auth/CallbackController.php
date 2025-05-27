@@ -26,13 +26,12 @@ class CallbackController extends Controller
     {
         try {
             $response = $this->auth0->exchange();
-            abort_unless($response, 401, dispatch(new LogActivityJob(
+            abort_unless($response, 401, LogActivityJob::dispatch(
                 logName: 'auth',
                 description: 'Unauthorized access attempt',
-            )));
+            ));
 
             $auth0User = $this->auth0->getUser();
-            ray($auth0User);
 
             $user = $this->findOrCreateUser($auth0User);
 
@@ -40,7 +39,7 @@ class CallbackController extends Controller
 
             auth()->login($user);
 
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: 'auth',
                 description: 'user logged in',
                 properties: [
@@ -50,7 +49,7 @@ class CallbackController extends Controller
                     ],
                     'auth0User' => $auth0User,
                 ],
-            ));
+            );
 
             $intendedUrl = Session::get('auth.intended_url');
 
@@ -62,11 +61,11 @@ class CallbackController extends Controller
             ]);
 
         } catch (StateException $e) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: 'auth',
                 description: 'Unauthorized access attempt',
                 properties: ['exception' => $e],
-            ));
+            );
 
             return to_route('login');
         }
@@ -85,11 +84,11 @@ class CallbackController extends Controller
             ]
         );
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: 'auth',
             description: 'Created user',
             properties: ['user' => $user->toArray()],
-        ));
+        );
 
         return $user;
     }

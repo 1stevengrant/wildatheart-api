@@ -1,5 +1,3 @@
-import React from "react";
-
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
 
@@ -19,7 +17,7 @@ import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
 const BeforeEventTypePageFooter = () => {
     const page = usePage();
-    const eventType = page.props.eventType as any;
+    const eventType = page.props.eventType as App.Data.EventTypeData;
     const route = useRoute();
     return (
         <EmptyLayoutFooter>

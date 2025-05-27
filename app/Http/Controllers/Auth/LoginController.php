@@ -23,15 +23,15 @@ class LoginController extends Controller
         $this->auth0->clear();
         session(['url.intended' => url()->previous()]);
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: 'auth',
             description: 'Clearing Auth0 Session',
-        ));
+        );
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: 'auth',
             description: 'Redirecting to Auth0 Login',
-        ));
+        );
 
         return Inertia::location($this->auth0->login());
     }

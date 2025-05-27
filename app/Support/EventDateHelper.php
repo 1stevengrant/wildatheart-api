@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class EventDateHelper
 {
-    public static function adjustEndDateForRetreat(Request $request, string $groupType, ?string $eventTypeName = null): void
+    public static function adjustEndDateForRetreat(Request $request, string $groupType): void
     {
         $days = match (true) {
             $groupType === EventType::TYPE_RETREAT => 3,

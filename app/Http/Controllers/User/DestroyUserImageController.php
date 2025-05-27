@@ -12,11 +12,11 @@ class DestroyUserImageController extends Controller
     {
         $request->user()->deleteProfilePhoto();
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Profile photo deleted',
             causedBy: $request->user(),
             performedOn: $request->user(),
-        ));
+        );
 
         return back(303)->with(['notifications' => [
             'message' => 'Profile photo deleted!',

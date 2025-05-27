@@ -72,7 +72,7 @@ Make sure your server meets the minimum requirements before you start. [Official
 1. Follow installation steps above.
 2. Make sure you have a `wahlocal_test` database created.
 3. If you're using Herd, set your PHP memory limit to at least 256M.
-4. Copy `.env.testing.example` to `.env.testing` and fill in the missing variables..
+4. Copy `.env.testing.example` to `.env.testing` and fill in the missing variables.
 5. Run the tests with `./vendor/bin/pest`.
 
 ## Notes
@@ -82,12 +82,12 @@ Make sure your server meets the minimum requirements before you start. [Official
     php artisan cache:clear && php artisan config:clear && php artisan view:clear && php artisan route:clear && php artisan event:clear
 
 ## Project Specifics
-- [Database](docs/database.md)
-- [Front End](docs/front-end.md)
-- [Auth](docs/auth.md)
-- [API](docs/api.md)
-- [Integrations](docs/integrations.md)
-- [CMS](docs/cms.md)
-- [Deployment](docs/deployment.md)
-- [Testing](docs/testing.md)
 
+-   [Database](docs/database.md)
+-   [Front End](docs/front-end.md)
+-   [Auth](docs/auth.md)
+-   [API](docs/api.md)
+-   [Integrations](docs/integrations.md)
+-   [CMS](docs/cms.md)
+-   [Deployment](docs/deployment.md)
+-   [Testing](docs/testing.md)

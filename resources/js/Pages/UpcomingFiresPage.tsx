@@ -7,7 +7,6 @@ import { MobileEventListCard } from "@/Components/Events/MobileEventListCard";
 import { UpcomingEventsNav } from "@/Components/Nav/UpcomingEventsNav";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { AppLayout } from "@/Layouts/AppLayout";
-import { Event } from "@/types/Event";
 
 const useDebounce = (value: any, delay: any) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -31,7 +30,7 @@ const UpcomingFiresPage = () => {
 
     const upcomingFires = (
         fires as {
-            data: Event[];
+            data: App.Data.EventData[];
         }
     ).data;
 
@@ -39,7 +38,7 @@ const UpcomingFiresPage = () => {
     const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
 
     const filteredFires = useMemo(() => {
-        return upcomingFires.filter((event: Event) => {
+        return upcomingFires.filter((event: App.Data.EventData) => {
             const searchRegex = new RegExp(debouncedSearchTerm, "i");
             return (
                 searchRegex.test(event.host_name) ||
@@ -79,7 +78,7 @@ const UpcomingFiresPage = () => {
                 )}
                 {filteredFires.length > 0 ? (
                     <ul className={`grid md:grid-cols-3 gap-6`}>
-                        {filteredFires.map((event: Event) => (
+                        {filteredFires.map((event: App.Data.EventData) => (
                             <li
                                 key={event.id}
                                 className={`lg:border lg:border-n400 lg:rounded-md lg:hover:border-p200 transition-all ease-in-out`}

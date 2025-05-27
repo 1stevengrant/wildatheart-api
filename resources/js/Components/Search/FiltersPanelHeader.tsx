@@ -1,5 +1,3 @@
-import React from "react";
-
 import { CloseFilterPanelButton } from "@/Components/Search/CloseFilterPanelButton";
 
 export const FiltersPanelHeader = () => {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Data\EventData;
 use App\Models\EventType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EventResource;
 
 class MyInactiveEventsController extends Controller
 {
@@ -15,7 +15,7 @@ class MyInactiveEventsController extends Controller
             ->events()->inactive()
             ->with(['user', 'eventType'])
             ->paginate()
-            ->through(fn ($event) => EventResource::make($event)->resolve());
+            ->through(fn ($event) => EventData::fromModel($event));
 
         return inertia('Profile/MyInactiveEventsPage', [
             'events' => $events,

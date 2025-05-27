@@ -19,7 +19,7 @@ return [
     | Search Indexes
     |--------------------------------------------------------------------------
     |
-    | Here you can define all of the available search indexes.
+    | Here you can define all the available search indexes.
     |
     */
 

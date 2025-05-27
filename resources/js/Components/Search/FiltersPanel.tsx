@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 
 import { Transition } from "@headlessui/react";
 import { useRecoilState } from "recoil";

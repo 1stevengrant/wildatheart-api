@@ -21,17 +21,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
+#[\Illuminate\Database\Eloquent\Attributes\ObservedBy(\App\Observers\UserObserver::class)]
 class User extends Authenticatable
 {
     use HasFactory, HasRoles, HasRunwayResource, LogsActivity, Notifiable, SoftDeletes;
 
-    const ROLE_ADMIN = 'admin';
+    public const string ROLE_ADMIN = 'admin';
 
-    const ROLE_HOST = 'host';
+    public const string ROLE_HOST = 'host';
 
-    const ROLE_ATTENDEE = 'attendee';
+    public const string ROLE_ATTENDEE = 'attendee';
 
-    const PROFILE_COMPLETE = 2;
+    public const int PROFILE_COMPLETE = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -242,5 +243,12 @@ class User extends Authenticatable
             ! empty($this->family_name) &&
             ! empty($this->given_name) &&
             filter_var($this->email, FILTER_VALIDATE_EMAIL);
+    }
+
+    protected function md5Email(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => md5($this->email)
+        );
     }
 }

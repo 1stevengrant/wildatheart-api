@@ -38,10 +38,9 @@ import { useMapData } from "@/Hooks/useMapData";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 import { selectedPlaceState } from "@/store/mapAtom";
-import { EventFormDataType } from "@/types/EventFormDataType";
 
 interface PageProps {
-    eventType: any;
+    eventType: App.Data.EventTypeData;
     eventSteps: any;
     materialOrderItems: { value: string; label: string }[];
     [key: string]: any;
@@ -141,7 +140,7 @@ const CreateEventEventTypePage = () => {
     });
 
     const { data, setData, post, processing, errors } =
-        useForm<EventFormDataType>({
+        useForm<App.Data.EventFormData>({
             name: `${user.given_name}'s`,
             state: "",
             city: "",
@@ -157,7 +156,9 @@ const CreateEventEventTypePage = () => {
             poi: "",
             is_private: false,
             start_date: null,
-            number_of_items_in_material_order: "",
+            number_of_items_in_material_order: null,
+            end_date: null,
+            frequency: null,
         });
 
     useEffect(() => {
@@ -269,25 +270,8 @@ const CreateEventEventTypePage = () => {
     };
 
     const eventType = page.props.eventType as any;
-    const handleDateChange = (date: Date | null) => {
-        setStartDate(date);
 
-        if (date) {
-            setStartDateString(date.toISOString().split("T")[0]);
-            setData("start_date", date);
-        } else {
-            setData("start_date", null);
-            resetAllDates();
-        }
-    };
-
-    const {
-        startDate,
-        setStartDate,
-        setStartDateString,
-        resetAllDates,
-        maxDate,
-    } = useDates();
+    const { startDate, handleStartDateChange, maxDate } = useDates();
 
     return (
         <>
@@ -329,7 +313,7 @@ const CreateEventEventTypePage = () => {
                             <MapboxSearch className={"mt-4"} />
 
                             <div
-                                className={`w-full h-[300px] md:h-[600px] mt-4`}
+                                className={`w-full h-[300px] md:h-[40vh] mt-4`}
                             >
                                 <Map
                                     mapLib={mapboxgl}
@@ -369,8 +353,9 @@ const CreateEventEventTypePage = () => {
                                     value={startDate}
                                     maxDate={maxDate}
                                     clearable
-                                    onChange={(value) =>
-                                        handleDateChange(value)
+                                    required
+                                    onChange={(date) =>
+                                        handleStartDateChange(date, setData)
                                     }
                                 />
                                 <InputError message={errors.start_date} />

@@ -13,10 +13,10 @@ class UpdateUserRole
     public function handle(User $user, string $role): void
     {
         $user->assignRole($role);
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Update User Role',
             causedBy: auth()->user(),
             performedOn: $user
-        ));
+        );
     }
 }

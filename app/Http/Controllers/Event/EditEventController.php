@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Event;
 
 use App\Models\Event;
+use App\Data\EventData;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EventResource;
 
 class EditEventController extends Controller
 {
@@ -16,7 +16,7 @@ class EditEventController extends Controller
         }
 
         return inertia('Profile/EditEventPage', [
-            'event' => EventResource::make($event)->resolve(),
+            'event' => EventData::fromModel($event),
         ]);
     }
 }

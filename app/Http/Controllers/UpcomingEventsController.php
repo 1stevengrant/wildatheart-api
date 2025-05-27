@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Event;
+use App\Data\EventData;
 use Illuminate\Http\Request;
-use App\Http\Resources\API\EventResource;
 
 class UpcomingEventsController extends Controller
 {
@@ -18,7 +18,7 @@ class UpcomingEventsController extends Controller
                 ->published()
                 ->get();
         });
-        $upcomingEvents = EventResource::collection($upcomingEvents);
+        $upcomingEvents = EventData::collection($upcomingEvents);
 
         $upcomingEvents = $upcomingEvents->groupBy(function ($val) {
             return Carbon::parse($val->start_date)->format('M Y');

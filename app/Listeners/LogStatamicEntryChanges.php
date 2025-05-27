@@ -24,22 +24,22 @@ class LogStatamicEntryChanges
         }
 
         if ($event instanceof EntryCreated) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: self::LOG_NAME,
                 description: 'Entry created by ' . ($user instanceof Authenticatable ? $user->fullname : $user),
                 properties: $entry->data()->toArray(),
                 causedBy: $user,
-            ));
+            );
         }
 
         if ($event instanceof EntryDeleted) {
 
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: self::LOG_NAME,
                 description: 'Entry deleted by ' . ($user instanceof Authenticatable ? $user->fullname : $user),
                 properties: $entry->data()->toArray(),
                 causedBy: $user,
-            ));
+            );
         }
     }
 
@@ -79,7 +79,7 @@ class LogStatamicEntryChanges
             return;
         }
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: self::LOG_NAME,
             description: 'Entry updated by ' . ($user instanceof Authenticatable ? $user->fullname : $user),
             properties: $differences,
@@ -87,6 +87,6 @@ class LogStatamicEntryChanges
             tap: function (Activity $activity) use ($entry) {
                 $activity->statamic_entry_id = $entry->id();
             }
-        ));
+        );
     }
 }

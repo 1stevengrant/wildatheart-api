@@ -1,9 +1,95 @@
 declare namespace App.Data {
-    export type EventTypesData = {
+    export type AttendeeData = {
+        event_id: number;
+        user_id: number | null;
+        family_name: string;
+        given_name: string;
+        email: string;
+        country: string;
+        country_code: string;
+        phone: string;
+        city: string;
+        state: string;
+        marketing_updates: boolean;
+        contacted_on: string;
+        created_at: string;
+        updated_at: string;
+        event_type_name: string;
+        event_name: string;
+        fullname: string;
+    };
+    export type EventData = {
+        id: string;
+        name: string;
+        longitude: number;
+        latitude: number;
+        badge_display: string;
+        display_longitude: number;
+        display_latitude: number;
+        display_name: string | null;
+        start_date: string | null;
+        startDate: string | null;
+        end_date: string | null;
+        endDate: string | null;
+        event_type_id: number | null;
+        event_type_name: string | null;
+        event_type: App.Data.EventTypeData;
+        event_type_image: string;
+        type_group: string | null;
+        location: string;
+        city: string | null;
+        state: string | null;
+        country: string | null;
+        host: string;
+        host_name: string;
+        host_friendly_name: string | null;
+        host_id: number | null;
+        host_photo: string;
+        sex: App.Enums.EventSexEnum;
+        url: string;
+        group_size: number;
+        frequency: App.Enums.Event.FrequencyEnum | null;
+        hero_image: string | null;
+        hero_video: string | null;
+        is_private: boolean;
+        gift_requested: boolean;
+        approved_at: string | null;
+        host_object: App.Data.HostData;
+        event_type_data: App.Data.EventTypeData;
+        card_title: string;
+        event_type_slug: string;
+        region: string | null;
+        district: string | null;
+        locality: string | null;
+        neighborhood: string | null;
+        street_address: string | null;
+        zip: string | null;
+    };
+    export type EventFormData = {
+        name: string;
+        state: string | null;
+        city: string | null;
+        zip: string | null;
+        country: string | null;
+        latitude: number | null;
+        longitude: number | null;
+        region: string | null;
+        district: string | null;
+        locality: string | null;
+        neighborhood: string | null;
+        street_address: string | null;
+        poi: string | null;
+        is_private: boolean | null;
+        start_date: string | null;
+        end_date: string | null;
+        number_of_items_in_material_order: string | null;
+        frequency: App.Enums.Event.FrequencyEnum | null;
+    };
+    export type EventTypeData = {
         id: number;
         allow_materials_order: boolean;
         number_of_items_in_material_order_label: string | null;
-        group_type: string | null;
+        group_type: string;
         name: string;
         filter_name: string | null;
         order: number;
@@ -22,7 +108,7 @@ declare namespace App.Data {
         registration_before_your_event_text: string | null;
         event_schedule: Array<any> | null;
         event_faqs: Array<any> | null;
-        image: string | null;
+        image: string;
         hero_image: string | null;
         hero_video: string | null;
         photos: Array<any> | null;
@@ -30,6 +116,27 @@ declare namespace App.Data {
         key_details: Array<any> | null;
         action_buttons: Array<any> | null;
         new_content: Array<any> | null;
+    };
+    export type HostData = {
+        family_name: string | null;
+        given_name: string | null;
+        md5email: string | null;
+        fullname: string | null;
+        photo: string | null;
+    };
+    export type UserData = {
+        id: number;
+        given_name: string;
+        family_name: string;
+        fullname: string;
+        email: string;
+        opted_into_marketing: boolean;
+        image: string;
+        profile_step: number;
+        phone: string;
+        city: string;
+        state: string;
+        postal_code: string;
     };
 }
 declare namespace App.DataTypeObjects {
@@ -213,6 +320,7 @@ declare namespace App.DataTypeObjects {
         href: string | null;
         is_coming_soon: boolean | null;
         date: string | null;
+        tags: Array<any> | null;
     };
     export type StatamicValue = {
         value: string;
@@ -291,6 +399,44 @@ declare namespace App.DataTypeObjects.API.V1.Content {
         current_episode_slug: string | null;
         uri: string | null;
     };
+    export type ExperienceResponse = {
+        blocks: Array<any> | null;
+        height: string | null;
+        images: Array<any> | null;
+        position: string | null;
+        sessions: Array<any> | null;
+        subtitle: string | null;
+        hero_logo: string | null;
+        hero_title: Array<any> | null;
+        updated_by: number;
+        button_link: string | null;
+        button_text: string | null;
+        description: Array<any> | null;
+        leader_text: string | null;
+        hero_variant: string | null;
+        testimonials: Array<any> | null;
+        hero_subtitle: Array<any> | null;
+        experience_logo: Array<any> | null;
+        find_a_group_link: string | null;
+        host_a_group_link: string | null;
+        featured_video_url: string | null;
+        related_event_type: string | null;
+        subsplash_series_id: string | null;
+        background_video_url: string | null;
+        featured_video_fallback_image: string | null;
+        background_video_fallback_image: Array<any> | null;
+        sessionData: Array<any> | null;
+        id: string;
+        title: string;
+        private: boolean;
+        published: boolean;
+        status: string;
+        slug: string;
+        uri: string | null;
+        url: string | null;
+        blueprint: App.DataTypeObjects.Blueprint;
+        locale: string;
+    };
 }
 declare namespace App.DataTypeObjects.API.V1.Content.Prayers {
     export type PrayersShowResponse = {
@@ -360,4 +506,12 @@ declare namespace App.Enums {
     export type EventSexEnum = "men" | "women";
     export type ReportFormat = "csv";
     export type ReportName = "getBAKRHosts";
+}
+declare namespace App.Enums.Event {
+    export type FrequencyEnum =
+        | "biweekly"
+        | "weekly"
+        | "monthly"
+        | "quarterly"
+        | "varies";
 }

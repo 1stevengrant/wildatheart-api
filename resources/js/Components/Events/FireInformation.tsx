@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { Link, useForm } from "@inertiajs/react";
+import { DatePickerInput } from "@mantine/dates";
 import mapboxgl from "mapbox-gl";
 import { singular } from "pluralize";
 import Map, {
@@ -18,6 +19,7 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
+import { FrequencyOptions } from "@/Components/FrequencyOptions";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
 import { RightColumn } from "@/Components/Layout/Elements/RightColumn";
@@ -33,12 +35,14 @@ import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
 import { oneHour } from "@/helpers/timeConstants";
+import { useDates } from "@/Hooks/useDates";
 import { useMapData } from "@/Hooks/useMapData";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { selectedPlaceState } from "@/store/mapAtom";
-import { EventFormDataType } from "@/types/EventFormDataType";
 
 export const FireInformation = ({ user }: any) => {
+    const [startDatePosition, setStartDatePosition] = useState(0);
+    const { startDate, handleStartDateChange, maxDate } = useDates();
     const page = useTypedPage();
     const eventType = page.props.eventType as any;
     const mapRef = useRef<any>(null);
@@ -127,10 +131,12 @@ export const FireInformation = ({ user }: any) => {
         country: null,
         eventType: eventType,
         hostEmail: user.email,
+        frequency: "monthly",
+        start_date: null,
     });
 
     const { data, setData, post, processing, errors } =
-        useForm<EventFormDataType>({
+        useForm<App.Data.EventFormData>({
             name: `${user.given_name}'s`,
             state: "",
             city: "",
@@ -144,6 +150,11 @@ export const FireInformation = ({ user }: any) => {
             neighborhood: "",
             street_address: "",
             poi: "",
+            frequency: "monthly",
+            start_date: null,
+            is_private: false,
+            end_date: null,
+            number_of_items_in_material_order: null,
         });
 
     useEffect(() => {
@@ -261,6 +272,14 @@ export const FireInformation = ({ user }: any) => {
         });
     };
 
+    useEffect(() => {
+        const startDateElement = document.getElementById("startDate");
+        if (startDateElement) {
+            const rect = startDateElement.getBoundingClientRect();
+            setStartDatePosition(rect.top);
+        }
+    }, []);
+
     return (
         <>
             <TwoColumnWrapper>
@@ -278,33 +297,86 @@ export const FireInformation = ({ user }: any) => {
                                 value="Name Your Fire"
                                 required
                             />
-                            <div className="flex items-center space-x-4">
-                                <TextInput
-                                    id="name"
-                                    name="name"
-                                    value={data.name}
-                                    autoComplete="off"
-                                    isFocused={true}
-                                    onChange={(e) => {
-                                        setData("name", e.target.value);
-                                        setEvent({
-                                            ...event,
-                                            name: e.target.value,
-                                        });
-                                    }}
-                                />
-                                <div>Fire</div>
-                            </div>
+                            <TextInput
+                                id="name"
+                                name="name"
+                                value={data.name}
+                                autoComplete="off"
+                                isFocused={true}
+                                onChange={(e) => {
+                                    setData("name", e.target.value);
+                                    setEvent({
+                                        ...event,
+                                        name: e.target.value,
+                                    });
+                                }}
+                            />
                             <Instruction>
                                 This is the name that will be displayed on your
                                 Fire page.
                             </Instruction>
                             <InputError message={errors.name} />
                         </div>
+
                         <FireNamingGuidelines />
+
+                        {/* Start Date Field */}
+                        <div id="startDate" className={`mt-4`}>
+                            <DatePickerInput
+                                label="Start date"
+                                placeholder="Select start date"
+                                minDate={new Date()}
+                                value={startDate}
+                                maxDate={maxDate}
+                                clearable
+                                required
+                                onChange={(date) =>
+                                    handleStartDateChange(date, setData)
+                                }
+                            />
+                            <InputError message={errors.start_date} />
+                            <Instruction>
+                                When would you like to start your Fire?
+                            </Instruction>
+                        </div>
+
+                        {/* frequency Selection */}
+                        <div className="mt-4">
+                            <InputLabel
+                                htmlFor="frequency"
+                                value={singular(eventType.name) + " frequency"}
+                                required
+                            />
+                            <select
+                                id="frequency"
+                                name="frequency"
+                                value={data.frequency || ""}
+                                className="select-input"
+                                onChange={(e) => {
+                                    setData(
+                                        "frequency",
+                                        e.target
+                                            .value as App.Enums.Event.FrequencyEnum
+                                    );
+                                    setEvent({
+                                        ...event,
+                                        frequency: e.target.value,
+                                    });
+                                }}
+                            >
+                                <FrequencyOptions />
+                            </select>
+                            <Instruction>
+                                How often do you want to host this Fire event?
+                            </Instruction>
+                            <InputError message={errors.frequency} />
+                        </div>
+
                         <EventDisplay
+                            className={`md:hidden mt-4 `}
                             event={event}
-                            className={"md:hidden mt-4"}
+                            startDate={data.start_date}
+                            frequency={data.frequency}
                         />
                         <MapboxSearch className={"mt-4"} />
                         <div className={`w-full h-[300px] md:h-[600px] mt-4`}>
@@ -367,11 +439,16 @@ export const FireInformation = ({ user }: any) => {
                     </form>
                 </LeftColumn>
 
-                <RightColumn className={``}>
+                <RightColumn className={`!justify-start`}>
                     <div>
                         <EventDisplay
-                            className={"max-w-[350px] mx-auto hidden lg:flex"}
+                            style={{
+                                marginTop: startDatePosition,
+                            }}
+                            className={`max-w-[350px] mx-auto hidden lg:flex `}
                             event={event}
+                            startDate={data.start_date}
+                            frequency={data.frequency}
                         />
                     </div>
                 </RightColumn>

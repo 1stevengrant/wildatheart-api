@@ -31,13 +31,15 @@ class CreateFireEventType
             'locality' => $eventDataTransferObject->locality,
             'neighborhood' => $eventDataTransferObject->neighborhood,
             'sex' => $eventType->sex,
+            'start_date' => $eventDataTransferObject->startDate,
+            'frequency' => $eventDataTransferObject->frequency,
         ]);
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Create Event',
             causedBy: $user,
             performedOn: $event,
-        ));
+        );
 
         return $event;
     }

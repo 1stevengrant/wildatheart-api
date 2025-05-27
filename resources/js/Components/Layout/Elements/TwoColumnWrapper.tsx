@@ -6,15 +6,13 @@ import { useRecoilState } from "recoil";
 import { Notification } from "@/Components/Layout/Notifications/Notification";
 import { reactNotificationState } from "@/store";
 
-interface TwoColumnWrapperProps {
-    className?: string;
-    children: React.ReactNode;
-}
-
 export const TwoColumnWrapper = ({
     className = "",
     children,
-}: TwoColumnWrapperProps) => {
+}: {
+    className?: string;
+    children: React.ReactNode;
+}) => {
     const { notifications } = usePage<any>().props;
     const [reactNotifications] = useRecoilState(reactNotificationState);
     return (

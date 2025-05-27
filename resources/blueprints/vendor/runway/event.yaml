@@ -5,6 +5,13 @@ tabs:
       -
         fields:
           -
+            handle: id
+            field:
+              type: text
+              display: ID
+              width: 50
+              visibility: read_only
+          -
             handle: name
             field:
               type: text

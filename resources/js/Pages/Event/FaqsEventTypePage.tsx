@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Disclosure } from "@headlessui/react";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -15,7 +13,11 @@ import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
-const FaqsEventTypePageFooter = ({ eventType }: { eventType: any }) => {
+const FaqsEventTypePageFooter = ({
+    eventType,
+}: {
+    eventType: App.Data.EventTypeData;
+}) => {
     return (
         <EmptyLayoutFooter>
             <Link

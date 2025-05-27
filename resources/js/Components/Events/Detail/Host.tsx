@@ -4,8 +4,8 @@ import { UserAvatar } from "@/Components/UserAvatar";
 
 type HostProps = {
     className?: string;
-    host: string;
-    host_photo?: string;
+    host: string | null;
+    host_photo?: string | null;
 };
 
 export const Host = ({ className = "", host, host_photo }: HostProps) => {

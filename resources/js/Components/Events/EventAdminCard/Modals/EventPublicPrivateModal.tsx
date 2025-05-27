@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -14,14 +14,13 @@ import {
     eventAdminActionButtonClass,
     eventAdminActionButtonTextClass,
 } from "@/helpers/eventAdminActionButtonClass";
-import { Event } from "@/types/Event";
 
 export const EventPublicPrivateModal = ({
     open,
     setOpen,
     event,
 }: {
-    event: Event;
+    event: App.Data.EventData;
     open: boolean;
     setOpen: (open: boolean) => void;
 }) => {
@@ -29,7 +28,6 @@ export const EventPublicPrivateModal = ({
         is_private: event.is_private,
     });
 
-    // Memoize toggle-related content to avoid recalculation on rerenders
     const toggleContent = useMemo(() => {
         return {
             buttonText: event.is_private ? "Make Public" : "Make Private",

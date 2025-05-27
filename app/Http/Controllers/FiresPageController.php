@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Data\EventData;
 use Illuminate\Http\Request;
-use App\Http\Resources\API\EventResource;
 
 class FiresPageController extends Controller
 {
@@ -19,7 +19,7 @@ class FiresPageController extends Controller
         });
 
         return inertia('UpcomingFiresPage', [
-            'fires' => EventResource::collection($fires),
+            'fires' => EventData::collection($fires),
         ]);
     }
 }

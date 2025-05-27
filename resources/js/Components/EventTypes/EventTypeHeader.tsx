@@ -1,17 +1,18 @@
-import React from "react";
+import { Image } from "@/Components/Image";
 
-import { imageGenerator } from "@/helpers/user";
-
-export const EventHeader: React.FC<{ title: string; image?: string }> = ({
+export const EventHeader = ({
     title,
     image,
+}: {
+    title: string;
+    image?: string;
 }) => (
     <div className="flex items-center space-x-4 mb-4">
         {image && (
-            <img
-                alt={title}
-                className="rounded-xl"
-                src={imageGenerator(image, { width: 150, height: 150 })}
+            <Image
+                src={image}
+                imageDimensions={{ width: 150, height: 150 }}
+                className={`rounded-xl`}
             />
         )}
         <h1 className="text-[24px] font-bold leading-tight">{title}</h1>

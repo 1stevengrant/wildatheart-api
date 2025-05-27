@@ -8,11 +8,11 @@ import Table from "@/Components/Table";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { Attendee, PaginatedData } from "@/types";
+import { PaginatedData } from "@/types";
 
 const MyContactsPage = () => {
     const { attendees } = usePage<{
-        attendees: PaginatedData<Attendee>;
+        attendees: PaginatedData<App.Data.AttendeeData>;
     }>().props;
 
     const {

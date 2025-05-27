@@ -5,13 +5,11 @@ import classNames from "classnames";
 
 import { profileNavItemClasses } from "@/helpers/profileNavItemClasses";
 
-interface ProfileNavItemProps {
+export const ProfileNavItem = ({ icon, link, text }: {
     icon: React.ReactNode;
     link: string;
     text: string;
-}
-
-export const ProfileNavItem = ({ icon, link, text }: ProfileNavItemProps) => {
+}) => {
     const isActive = route().current(link + "*");
 
     const textClasses = classNames({

@@ -1,29 +1,25 @@
-import React from "react";
-
 import { Dialog } from "@headlessui/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { Modal } from "@/Components/Ui/Modal";
 import { Spinner } from "@/Components/Ui/Spinner";
-import { EventFormDataType } from "@/types/EventFormDataType";
+import { formatDate } from "@/helpers/formatDate";
 
-interface FireConfirmationModalProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    data: EventFormDataType;
-    eventLocation: string;
-    processing: boolean;
-    onConfirm: () => void;
-}
-
-export const FireConfirmationModal: React.FC<FireConfirmationModalProps> = ({
+export const FireConfirmationModal = ({
     open,
     setOpen,
     data,
     eventLocation,
     processing,
     onConfirm,
+}: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    data: App.Data.EventFormData;
+    eventLocation: string;
+    processing: boolean;
+    onConfirm: () => void;
 }) => {
     return (
         <Modal open={open} setOpen={setOpen}>
@@ -55,6 +51,20 @@ export const FireConfirmationModal: React.FC<FireConfirmationModalProps> = ({
                             <li>
                                 <span className="font-medium">Country:</span>{" "}
                                 {data.country}
+                            </li>
+                        )}
+                        {data.start_date && (
+                            <li>
+                                <span className="font-medium">Start Date:</span>{" "}
+                                {formatDate(data.start_date)}
+                            </li>
+                        )}
+                        {data.frequency && (
+                            <li>
+                                <span className="font-medium">frequency:</span>{" "}
+                                <span className={`capitalize`}>
+                                    {data.frequency}
+                                </span>
                             </li>
                         )}
                     </ul>

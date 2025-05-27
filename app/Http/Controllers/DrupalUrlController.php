@@ -12,11 +12,11 @@ class DrupalUrlController extends Controller
 
     public function index(Request $request)
     {
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: self::LOG_NAME,
             description: 'Redirected legacy Drupal URL to Laravel URL: drupal',
             causedBy: $request->user(),
-        ));
+        );
 
         return to_route('home');
     }
@@ -35,20 +35,20 @@ class DrupalUrlController extends Controller
         if (isset($eventTypes[$course])) {
             $eventType = EventType::whereName($eventTypes[$course])->first();
 
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: self::LOG_NAME,
                 description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
                 causedBy: $request->user(),
-            ));
+            );
 
             return to_route('host.eventType.index', $eventType);
         }
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: self::LOG_NAME,
             description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
             causedBy: $request->user(),
-        ));
+        );
 
         return to_route('home');
     }
@@ -79,20 +79,20 @@ class DrupalUrlController extends Controller
 
         $event = \App\Models\Event::whereLegacyDrupalUrl('/' . $any)->first();
         if (! $event) {
-            dispatch(new LogActivityJob(
+            LogActivityJob::dispatch(
                 logName: self::LOG_NAME,
                 description: 'Redirected legacy Drupal URL to Laravel URL: drupal/' . $any,
                 causedBy: $request->user(),
-            ));
+            );
 
             return to_route('home');
         }
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             logName: self::LOG_NAME,
             description: 'Redirected legacy Drupal URL to Laravel URL: drupal/' . $any,
             causedBy: $request->user(),
-        ));
+        );
 
         return to_route('view.event', $event);
     }

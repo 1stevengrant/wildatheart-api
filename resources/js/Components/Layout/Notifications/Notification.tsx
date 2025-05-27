@@ -10,17 +10,15 @@ import { useSetRecoilState } from "recoil";
 
 import { reactNotificationState } from "@/store";
 
-interface INotificationProps {
-    message: string;
-    type?: "success" | "error";
-    duration?: number;
-}
-
 export const Notification = ({
     message,
     type = "success",
     duration = 2500,
-}: INotificationProps) => {
+}: {
+    message: string;
+    type?: "success" | "error";
+    duration?: number;
+}) => {
     const [show, setShow] = useState(true);
     const setReactNotifications = useSetRecoilState(reactNotificationState);
 

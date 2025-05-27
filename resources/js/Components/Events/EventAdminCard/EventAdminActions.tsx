@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     ClipboardDocumentCheckIcon,
@@ -19,9 +19,9 @@ import {
     eventAdminActionButtonTextClass,
 } from "@/helpers/eventAdminActionButtonClass";
 import { reactNotificationState } from "@/store";
-import { Event } from "@/types/Event";
+import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 
-export const EventAdminActions = ({ event }: { event: Event }) => {
+export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
     const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
     const [reactNotifications, setReactNotifications] = useRecoilState(
         reactNotificationState
@@ -75,7 +75,7 @@ export const EventAdminActions = ({ event }: { event: Event }) => {
                 onOutsideClick={() => setActionDrawerOpen(false)}
             >
                 <div
-                    className={`border-black border bg-[#292929] p-4 rounded-lg z-20 w-[200px] shadow-lg absolute right-0 space-y-1.5 ${event.type_group !== "fire" ? `-bottom-[191px]` : `-bottom-[145px]`} ${actionDrawerOpen ? `block` : `hidden`}`}
+                    className={`border-black border bg-n900 p-4 rounded-lg z-20 w-[200px] shadow-lg absolute right-0 space-y-1.5 ${event.type_group !== "fire" ? `-bottom-[191px]` : `-bottom-[145px]`} ${actionDrawerOpen ? `block` : `hidden`}`}
                 >
                     {event.approved_at ? (
                         <EventUnpublishModal
@@ -119,7 +119,7 @@ export const EventAdminActions = ({ event }: { event: Event }) => {
                             Copy Link
                         </span>
                     </button>
-                    {event.type_group !== "fire" && (
+                    {event.type_group !== fireTypeGroup && (
                         <EventPublicPrivateModal
                             open={openEventPublicPrivateModal}
                             setOpen={setOpenEventPublicPrivateModal}

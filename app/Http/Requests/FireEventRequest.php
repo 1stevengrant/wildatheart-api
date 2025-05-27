@@ -14,7 +14,7 @@ class FireEventRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -36,6 +36,14 @@ class FireEventRequest extends FormRequest
             'country' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
+            'start_date' => [
+                'required',
+                'date',
+            ],
+            'frequency' => [
+                'required',
+                'string',
+            ],
         ];
     }
 }

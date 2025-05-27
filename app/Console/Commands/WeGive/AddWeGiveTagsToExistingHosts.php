@@ -28,13 +28,13 @@ class AddWeGiveTagsToExistingHosts extends Command
 
                     if (! $user) {
 
-                        dispatch(new LogActivityJob(
+                        LogActivityJob::dispatch(
                             logName: WeGiveConnector::WARNING_LOG_NAME,
                             description: 'Event has no associated user',
                             properties: [
                                 'event_id' => $event->id,
                             ]
-                        ));
+                        );
 
                         continue;
                     }

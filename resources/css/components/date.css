@@ -1,5 +1,5 @@
 .mantine-Popover-dropdown {
-    @apply bg-black border-black !important;
+    @apply bg-n900 border-n900 !important;
 }
 
 .mantine-DatePickerInput-calendarHeaderLevel {
@@ -23,7 +23,7 @@
 }
 
 .mantine-DatePickerInput-day {
-    @apply bg-black text-white !important;
+    @apply bg-n900 text-white !important;
 
     &:hover {
         @apply border border-white !important;
@@ -34,7 +34,7 @@
     }
 
     &[data-outside="true"] {
-        @apply bg-black text-white !important;
+        @apply bg-n900 text-white !important;
         opacity: unset !important;
     }
 
@@ -59,9 +59,13 @@
     @apply text-n70 block mb-2 text-sm font-semibold !important;
 }
 
-.mantine-DatePickerInput-input,
+
 .mantine-DatePickerInput-wrapper {
-    @apply rounded-lg text-white bg-black border border-n400 !important;
+    @apply rounded-lg text-white bg-n900 border-none text-sm !important;
+}
+
+.mantine-DatePickerInput-input {
+    @apply bg-n900 border border-n400 text-white !important ;
 }
 
 .mantine-DatePickerInput-input {

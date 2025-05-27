@@ -1,20 +1,18 @@
 import { imageGenerator } from "@/helpers/user";
 
-interface IUserAvatarProps {
-    className?: string;
-    image?: string;
-    alt?: string;
-    height?: number;
-    width?: number;
-}
-
 export const UserAvatar = ({
     className = "h-6 w-6",
     image,
     alt = "",
     height = 100,
     width = 100,
-}: IUserAvatarProps) => {
+}: {
+    className?: string;
+    image?: string;
+    alt?: string;
+    height?: number;
+    width?: number;
+}) => {
     const containsBase64PNG = (
         imageString: string | undefined | null
     ): boolean => {
@@ -27,7 +25,7 @@ export const UserAvatar = ({
 
     return (
         <img
-            className={`${className} rounded-full inline-block flex-shrink-0 object-cover border-2 border-white`}
+            className={`${className} rounded-full inline-block flex-shrink-0 object-cover border border-white`}
             src={
                 containsBase64PNG(image)
                     ? image

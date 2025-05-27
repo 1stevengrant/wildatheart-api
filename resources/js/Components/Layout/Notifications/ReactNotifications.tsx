@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useRecoilState } from "recoil";
 
 import { Notification } from "@/Components/Layout/Notifications/Notification";

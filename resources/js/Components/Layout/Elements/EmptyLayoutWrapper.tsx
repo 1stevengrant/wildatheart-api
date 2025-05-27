@@ -1,9 +1,9 @@
 import React from "react";
 
-type EmptyLayoutWrapperProps = {
+export const EmptyLayoutWrapper = ({
+    children,
+}: {
     children: React.ReactNode;
-};
-
-export const EmptyLayoutWrapper = ({ children }: EmptyLayoutWrapperProps) => {
+}) => {
     return <div className={`flex flex-col h-full`}>{children}</div>;
 };
