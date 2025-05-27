@@ -4,14 +4,20 @@ namespace App\Jobs\Fire;
 
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EventAutoUnpublishedMail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class UnpublishFireJob implements ShouldQueue
+class UnpublishSingleUnconfirmedFireJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $tries = 5;
+
+    public int $retryAfter = 300;
 
     /**
      * Create a new job instance.
@@ -26,10 +32,11 @@ class UnpublishFireJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->event->unpublish();
+        $this->event->update([
+            'approved_at' => null,
+            'auto_unpublished' => true,
+        ]);
 
-        activity('fire')
-            ->performedOn($this->event)
-            ->log('Fire unpublished automatically');
+        Mail::to($this->event->user->email)->send(new EventAutoUnpublishedMail($this->event));
     }
 }

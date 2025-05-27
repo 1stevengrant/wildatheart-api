@@ -13,6 +13,8 @@ class EmailTemplate extends BaseModel
 {
     use HasFactory, HasRunwayResource, LogsActivity;
 
+    public const FIRE_MADE_INACTIVE = 'fire-made-inactive';
+
     protected function casts(): array
     {
         return [

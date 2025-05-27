@@ -33,16 +33,5 @@ class MonthlyFireCleanupEmailToHostJob implements ShouldQueue
 
         Mail::to($this->event->user)
             ->send(new \App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable($this->event));
-
-        $this->event->update(['last_monthly_email_sent_at' => $this->lastMonthlySentAtDate()]);
-    }
-
-    protected function lastMonthlySentAtDate()
-    {
-        if (! app()->isProduction()) {
-            return now()->subDays(10);
-        }
-
-        return now();
     }
 }

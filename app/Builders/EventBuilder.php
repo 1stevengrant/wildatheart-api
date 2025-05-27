@@ -78,7 +78,7 @@ class EventBuilder extends Builder
     public function allFires(): EventBuilder
     {
         $eventTypes = EventType::whereIn('name', [
-            EventType::TYPE_FIRE,
+            EventType::FIRES,
             EventType::CAPTIVATING_FIRE,
         ])->pluck('id');
 
@@ -119,12 +119,15 @@ class EventBuilder extends Builder
 
     public function updatedAgo(int $days): EventBuilder
     {
-        return $this->where('updated_at', '<', now()->subDays($days));
+        return $this->where(function ($query) use ($days) {
+            $query->where('updated_at', '<', now()->subDays($days))
+                ->orWhereNull('updated_at');
+        });
     }
 
     public function lastMonthlyEmailSentAgo(int $days, string $operator = '<'): EventBuilder
     {
-        return $this->where('last_monthly_email_sent_at', $operator, now()->subDays($days));
+        return $this->where('last_checkin_email_sent_at', $operator, now()->subDays($days));
     }
 
     public function lastApprovedAt(int $days, string $operator = '>='): EventBuilder
@@ -287,5 +290,30 @@ class EventBuilder extends Builder
         return $this->where(function ($query) use ($city) {
             $query->where('city', 'like', "%$city%");
         });
+    }
+
+    public function hasNotConfirmedCheckin(): EventBuilder
+    {
+        return $this->whereNull('last_checkin_confirmed_at');
+    }
+
+    public function notAutoUnpublished(): EventBuilder
+    {
+        return $this->where('auto_unpublished', false);
+    }
+
+    public function lastCheckinNotConfirmed(): EventBuilder
+    {
+        return $this->whereNull('last_checkin_confirmed_at');
+    }
+
+    public function lastCheckinReminderNotSent(): EventBuilder
+    {
+        return $this->whereNull('last_checkin_reminder_sent_at');
+    }
+
+    public function lastCheckinReminderSent(): EventBuilder
+    {
+        return $this->whereNotNull('last_checkin_reminder_sent_at');
     }
 }
