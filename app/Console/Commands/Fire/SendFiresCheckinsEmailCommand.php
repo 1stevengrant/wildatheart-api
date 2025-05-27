@@ -4,8 +4,8 @@ namespace App\Console\Commands\Fire;
 
 use Illuminate\Console\Command;
 use App\Jobs\Fire\SendFireCheckinsEmailJob;
-use App\Jobs\Fire\SendFireCheckinsReminderEmailJob;
 use App\Jobs\Fire\AutoUnpublishUnconfirmedFiresJob;
+use App\Jobs\Fire\SendFireCheckinsReminderEmailJob;
 
 class SendFiresCheckinsEmailCommand extends Command
 {
