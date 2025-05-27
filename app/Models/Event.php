@@ -341,7 +341,6 @@ class Event extends BaseModel
 
                         // If date hasn't passed yet
                         if ($startDate->greaterThan(now())) {
-                            ray('date has not passed', $this->frequency);
                             $format = $startDate->year !== $currentYear ? 'M jS Y' : 'M jS';
 
                             return $startDate->format($format);
