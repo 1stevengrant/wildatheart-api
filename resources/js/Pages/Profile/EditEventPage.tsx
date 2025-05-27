@@ -154,7 +154,7 @@ const EditEventPage = () => {
         }, 50);
 
         dayjs(event.start_date).isValid() &&
-            setStartDate(dayjs(event.start_date).toDate());
+            setStartDate(dayjs(event.start_date?.split("T")[0]).toDate());
 
         setIsPrivate(event.is_private);
     }, []);
