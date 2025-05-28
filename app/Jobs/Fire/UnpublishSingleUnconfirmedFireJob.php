@@ -35,6 +35,7 @@ class UnpublishSingleUnconfirmedFireJob implements ShouldQueue
         $this->event->update([
             'approved_at' => null,
             'auto_unpublished' => true,
+            'auto_unpublished_at' => now(),
         ]);
 
         Mail::to($this->event->user->email)->send(new EventAutoUnpublishedMail($this->event));

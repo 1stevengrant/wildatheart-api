@@ -24,7 +24,9 @@ return [
     /*
      * The channels to which the notification will be sent.
      */
-    'channels' => env('APP_ENV') === 'testing' ? ['mail'] : ['slack', 'mail'],
+    'channels' => env('APP_ENV') === 'production'
+        ? ['slack', 'mail']
+        : ['mail'],
 
     'mail' => [
         'to' => ['steven@wildatheart.org', 'nic@wildatheart.org'],

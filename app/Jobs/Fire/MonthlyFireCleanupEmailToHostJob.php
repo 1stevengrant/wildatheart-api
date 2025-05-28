@@ -33,5 +33,10 @@ class MonthlyFireCleanupEmailToHostJob implements ShouldQueue
 
         Mail::to($this->event->user)
             ->send(new \App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable($this->event));
+
+        $this->event->update([
+            'last_checkin_email_sent_at' => now(),
+            'last_checkin_reminder_sent_at' => null,
+        ]);
     }
 }
