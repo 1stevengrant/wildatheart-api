@@ -35,17 +35,36 @@ export const EventDisplay = ({
             style={style}
             className={`${className} p-4 flex space-x-4 border rounded-md cursor-pointer border-n700`}
         >
-            <Image src={eventType.image} className={`rounded-md flex-grow-0`} />
+            {eventType ? (
+                <Image
+                    src={eventType.image}
+                    className={`rounded-md flex-grow-0`}
+                />
+            ) : (
+                <Image
+                    src={event.event_type_image}
+                    className={`rounded-md flex-grow-0`}
+                />
+            )}
+
             <EventInfo>
                 <div className={`leading-tight`}>
                     <div
                         className={`flex justify-between items-center space-x-2`}
                     >
-                        <EventName name={event.name} />
+                        <EventName name={event.display_name} />
                         <EventTypeBadge
                             className={`bg-white text-sm text-n500 capitalize`}
                         >
-                            {startDate ? `${formatDate(startDate)}` : frequency}
+                            {event ? (
+                                <>{event.badge_display}</>
+                            ) : (
+                                <>
+                                    {startDate
+                                        ? `${formatDate(startDate)}`
+                                        : frequency}
+                                </>
+                            )}
                         </EventTypeBadge>
                     </div>
                     <EventLocation location={event.location} />

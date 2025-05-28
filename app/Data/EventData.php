@@ -17,7 +17,7 @@ class EventData extends Data
 {
     public function __construct(
         public string $id,
-        public string $name,
+        public ?string $name,
         public float $longitude,
         public float $latitude,
         public string $badge_display,

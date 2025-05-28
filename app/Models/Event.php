@@ -232,8 +232,7 @@ class Event extends BaseModel
                     return $this->name . ' Captivating Fire';
                 }
 
-                // Return default value or handle other cases
-                return $this->name;
+                return $this->eventType->name;
             },
         );
     }
