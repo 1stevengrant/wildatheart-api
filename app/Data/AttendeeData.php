@@ -10,7 +10,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class AttendeeData extends Data
 {
     public function __construct(
-        public int $event_id,
+        public string $event_id,
         public ?int $user_id,
         public string $family_name,
         public string $given_name,
