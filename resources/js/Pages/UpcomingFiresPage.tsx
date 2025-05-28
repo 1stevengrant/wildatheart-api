@@ -43,7 +43,7 @@ const UpcomingFiresPage = () => {
             return (
                 searchRegex.test(event.host_name) ||
                 searchRegex.test(event.location) ||
-                searchRegex.test(event.name)
+                searchRegex.test(event.name || "")
             );
         });
     }, [upcomingFires, debouncedSearchTerm]);

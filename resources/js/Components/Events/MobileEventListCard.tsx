@@ -15,7 +15,7 @@ export const MobileEventListCard = ({
                 <div>
                     <Image
                         src={event.event_type_image}
-                        alt={event.name}
+                        alt={event.name ?? ""}
                         className={`w-24 h-24 rounded-lg flex-shrink-0`}
                     />
                 </div>
