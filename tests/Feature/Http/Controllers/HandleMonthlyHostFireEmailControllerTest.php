@@ -1,0 +1,33 @@
+<?php
+
+beforeEach(function () {
+    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+
+    $this->fire = \App\Models\Event::factory()->fires()->approved()->create();
+});
+
+it('updates a Fire as a result of clicking a link in the email', function () {
+
+    $url = \Illuminate\Support\Facades\URL::signedRoute('fire.burn', ['event' => $this->fire]);
+
+    $this->get($url);
+
+    $this->fire->refresh();
+    expect($this->fire->last_checkin_confirmed_at)->not->toBeNull()
+        ->and($this->fire->last_checkin_email_sent_at)->not->toBeNull()
+        ->and($this->fire->last_checkin_reminder_sent_at)->toBeNull()
+        ->and($this->fire->auto_unpublished)->toBeFalse()
+        ->and($this->fire->auto_unpublished_at)->toBeNull()
+        ->and($this->fire->approved_at)->not->toBeNull();
+});
+
+it('extinguishes a Fire as a result of clicking a link in the email', function () {
+
+    $url = \Illuminate\Support\Facades\URL::signedRoute('fire.extinguish.destroy', ['event' => $this->fire]);
+
+    $this->post($url);
+
+    $this->fire->refresh();
+    expect($this->fire->approved_at)->toBeNull()
+        ->and($this->fire->auto_unpublished)->toBeFalse();
+});

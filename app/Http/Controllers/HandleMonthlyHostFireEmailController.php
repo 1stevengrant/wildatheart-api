@@ -18,6 +18,7 @@ class HandleMonthlyHostFireEmailController extends Controller
             'last_checkin_email_sent_at' => now(),
             'last_checkin_reminder_sent_at' => null,
             'auto_unpublished' => false,
+            'auto_unpublished_at' => null,
             'approved_at' => now(),
         ]);
 

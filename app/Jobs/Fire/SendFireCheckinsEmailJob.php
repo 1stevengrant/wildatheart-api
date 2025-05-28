@@ -47,10 +47,6 @@ class SendFireCheckinsEmailJob implements ShouldQueue
             })
             ->each(function (Event $event) {
                 MonthlyFireCleanupEmailToHostJob::dispatch($event);
-                $event->update([
-                    'last_checkin_email_sent_at' => now(),
-                    'last_checkin_reminder_sent_at' => null,
-                ]);
             });
     }
 }
