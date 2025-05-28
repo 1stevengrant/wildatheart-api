@@ -20,8 +20,9 @@ class HostAgreementPageController extends Controller
     {
         auth()->user()->update(['agreed_to_host_agreement_date' => now()]);
         $redirectTo = session()->pull('host_agreement_redirect_to');
+
         if ($redirectTo) {
-            return to_route($redirectTo);
+            return redirect($redirectTo);
         }
 
         return to_route('my.profile');
