@@ -4,6 +4,7 @@ namespace App\Jobs\User;
 
 use Log;
 use App\Models\User;
+use App\Jobs\LogActivityJob;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Http\Integrations\Auth0\Auth0Connector;
@@ -22,6 +23,21 @@ class UpdateProfileFromAuth0Job implements ShouldQueue
 
     public function handle(): void
     {
+        if (! $this->user->provider_id) {
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'User profile update skipped due to missing provider_id',
+                properties: [
+                    'user' => [
+                        'id' => $this->user->id,
+                        'email' => $this->user->email,
+                    ],
+                ]
+            );
+
+            return;
+        }
+
         $connector = new Auth0Connector;
         $getUserProfileRequest = new GetUserProfileRequest($this->user->provider_id);
 
