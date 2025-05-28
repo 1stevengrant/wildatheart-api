@@ -284,7 +284,9 @@ const ConnectWithHostPage = () => {
                 </LeftColumn>
                 <RightColumn>
                     <EventDisplay
-                        className={"max-w-[350px] mx-auto hidden lg:flex"}
+                        className={
+                            "max-w-[350px] md:max-w-[400px] mx-auto hidden lg:flex"
+                        }
                         event={event}
                     />
                 </RightColumn>

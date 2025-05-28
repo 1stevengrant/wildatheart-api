@@ -17,7 +17,9 @@ export const Host = ({ className = "", host, host_photo }: HostProps) => {
                 )}
                 <div>
                     <p className="text-sm">Your Host ·</p>
-                    <p className="capitalize text-2xl font-medium">{host}</p>
+                    <p className="capitalize text-2xl font-medium leading-6">
+                        {host}
+                    </p>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ declare namespace App.Data {
     };
     export type EventData = {
         id: string;
-        name: string;
+        name: string | null;
         longitude: number;
         latitude: number;
         badge_display: string;
