@@ -1,6 +1,6 @@
 import React from "react";
 
-import { imageGenerator } from "@/helpers/user";
+import { Image } from "@/Components/Image";
 
 export const ImageSet = ({
     image,
@@ -16,10 +16,11 @@ export const ImageSet = ({
     if (!image) return null;
 
     return (
-        <img
+        <Image
+            src={image}
+            imageDimensions={params}
             alt={alt}
             className={className}
-            src={imageGenerator(image, params)}
         />
     );
 };

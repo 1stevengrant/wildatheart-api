@@ -15,11 +15,11 @@ class ToggleEventPrivacyController extends Controller
 
         $eventPrivacy = $event->is_private ? 'private' : 'public';
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Toggle Event Privacy',
             causedBy: auth()->user(),
             performedOn: $event
-        ));
+        );
 
         return redirect()->back()->with(['notifications' => [
             'message' => 'Event is now ' . $eventPrivacy,

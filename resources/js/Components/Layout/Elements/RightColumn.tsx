@@ -9,7 +9,7 @@ export const RightColumn = ({
 }) => {
     return (
         <div
-            className={className + " md:w-1/2 md:flex flex-col justify-center"}
+            className={`${className} md:w-1/2 md:flex flex-col justify-center`}
         >
             {children}
         </div>

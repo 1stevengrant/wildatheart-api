@@ -1,14 +1,11 @@
-import React, { FC } from "react";
+import { Image } from "@/Components/Image";
 
-import { imageGenerator } from "@/helpers/user";
-
-type PhotoCarouselProps = {
-    className?: string;
-    images: string[];
-};
-export const PhotoCarousel: FC<PhotoCarouselProps> = ({
+export const PhotoCarousel = ({
     className,
     images,
+}: {
+    className?: string;
+    images: string[];
 }) => {
     return (
         <div
@@ -18,10 +15,10 @@ export const PhotoCarousel: FC<PhotoCarouselProps> = ({
             <ul className="m-0 grid snap-x snap-mandatory gap-4 overflow-x-auto p-0 card-grid md:gap-6">
                 {images?.map((image, index) => (
                     <li key={index} className="m-0 snap-center list-none p-0">
-                        <img
-                            src={imageGenerator(image, { height: 200 })}
-                            className="rounded-lg"
-                            alt=""
+                        <Image
+                            src={image}
+                            imageDimensions={{ height: 200 }}
+                            className={`rounded-lg`}
                         />
                     </li>
                 ))}

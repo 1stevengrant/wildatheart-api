@@ -1,24 +1,24 @@
-import React from "react";
-
 import { Dialog } from "@headlessui/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { Modal } from "@/Components/Ui/Modal";
 import { Spinner } from "@/Components/Ui/Spinner";
-import { EventFormDataType } from "@/types/EventFormDataType";
 
-interface EventConfirmationModalProps {
+export const ConfirmEventDetailsModal = ({
+    open,
+    setOpen,
+    data,
+    eventLocation,
+    processing,
+    onConfirm,
+}: {
     open: boolean;
     setOpen: (open: boolean) => void;
-    data: EventFormDataType;
+    data: App.Data.EventFormData;
     eventLocation: string;
     processing: boolean;
     onConfirm: () => void;
-}
-
-export const ConfirmEventDetailsModal: React.FC<
-    EventConfirmationModalProps
-> = ({ open, setOpen, data, eventLocation, processing, onConfirm }) => {
+}) => {
     return (
         <Modal open={open} setOpen={setOpen}>
             <div>

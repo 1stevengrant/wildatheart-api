@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Link } from "@inertiajs/react";
 import { useRecoilState } from "recoil";
 
@@ -7,14 +5,12 @@ import { EventCardContent } from "./EventCardContent";
 
 import { isSelectedEvent } from "@/helpers/isSelectedEvent";
 import { currentEventState } from "@/store/eventsAtom";
-import { Event } from "@/types/Event";
-
 export const EventCard = ({
     event,
     className = "",
     attrs,
 }: {
-    event: Event;
+    event: App.Data.EventData;
     className?: string;
     attrs?: any;
 }) => {

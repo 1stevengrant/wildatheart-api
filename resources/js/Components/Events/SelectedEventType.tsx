@@ -4,18 +4,17 @@ import { Transition } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import Markdown from "react-markdown";
 
+import { Image } from "@/Components/Image";
 import { TagGroup } from "@/Components/TagGroup";
 import { TagItem } from "@/Components/TagItem";
 import { eventTypeBackground } from "@/helpers/eventTypeBackground";
-import { imageGenerator } from "@/helpers/user";
-import { EventType } from "@/types/EventType";
 
 export const SelectedEventType = ({
     eventType,
     attrs,
     hideTippy,
 }: {
-    eventType: EventType;
+    eventType: App.Data.EventTypeData;
     attrs?: any;
     hideTippy: () => void;
 }) => {
@@ -46,12 +45,9 @@ export const SelectedEventType = ({
                         />
                     </div>
                     {eventType.image && (
-                        <img
-                            className={`rounded-xl my-4`}
-                            src={imageGenerator(eventType.image, {
-                                width: 200,
-                                height: 200,
-                            })}
+                        <Image
+                            src={eventType.image}
+                            imageDimensions={{ width: 200, height: 200 }}
                             alt={eventType.name}
                         />
                     )}

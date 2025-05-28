@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use Inertia\Response;
+use App\Data\AttendeeData;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
-use App\Http\Resources\AttendeeCollection;
 
 class MyContactsController extends Controller
 {
@@ -15,7 +15,7 @@ class MyContactsController extends Controller
         return inertia('Profile/MyContactsPage', [
             'filters' => Request::all('event_id'),
             'myEvents' => auth()->user()->events()->get(),
-            'attendees' => new AttendeeCollection(
+            'attendees' => AttendeeData::collection(
                 auth()->user()->attendees()
                     ->with(['event.eventType'])
                     ->orderByName()

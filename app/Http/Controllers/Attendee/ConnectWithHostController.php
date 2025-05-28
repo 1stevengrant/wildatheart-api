@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Models\Event;
+use App\Data\EventData;
 use App\Jobs\LogActivityJob;
 use App\Services\SeoService;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EventResource;
 use App\Jobs\Event\IncreaseEventCountsJob;
 use App\Jobs\PostAttendeeContactToSlackJob;
 use App\Http\Requests\ConnectWithHostRequest;
@@ -26,7 +26,7 @@ class ConnectWithHostController extends Controller
         );
 
         return inertia('ConnectWithHostPage', [
-            'event' => EventResource::make($event)->resolve(),
+            'event' => EventData::fromModel($event),
         ]);
     }
 
@@ -45,12 +45,12 @@ class ConnectWithHostController extends Controller
             'marketing_updates' => $request->opted_into_marketing,
         ]);
 
-        dispatch(new LogActivityJob(
+        LogActivityJob::dispatch(
             description: 'Connected with Host',
             properties: ['attendee' => $attendee, 'event' => $event],
             causedBy: $event,
             performedOn: $attendee,
-        ));
+        );
 
         if ($attendee->hasOptedIntoMarketing()) {
             SubscribeToCommunicationListJob::dispatch(

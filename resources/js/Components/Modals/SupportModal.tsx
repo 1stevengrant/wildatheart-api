@@ -1,4 +1,4 @@
-import React, { FormEventHandler, useState } from "react";
+import { FormEventHandler, useState } from "react";
 
 import { Dialog } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";

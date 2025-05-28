@@ -1,17 +1,15 @@
 import { Switch } from "@headlessui/react";
 import classNames from "classnames";
 
-interface SwitchComponentProps {
-    checked: boolean;
-    onChange: (checked: boolean) => void;
-    label?: string;
-}
-
 export const SwitchComponent = ({
     checked,
     onChange,
     label,
-}: SwitchComponentProps) => {
+}: {
+    checked: boolean;
+    onChange: (checked: boolean) => void;
+    label?: string;
+}) => {
     return (
         <>
             {label && (

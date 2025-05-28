@@ -2,13 +2,15 @@ import React, { Fragment } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 
-interface ModalProps {
+export const Modal = ({
+    open,
+    setOpen,
+    children,
+}: {
     open: boolean;
     setOpen: (open: boolean) => void;
     children: React.ReactNode;
-}
-
-export const Modal = ({ open, setOpen, children }: ModalProps) => {
+}) => {
     return (
         <Transition.Root show={open} as={Fragment}>
             <Dialog as="div" className="relative z-[10001]" onClose={setOpen}>

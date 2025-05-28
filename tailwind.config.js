@@ -195,6 +195,9 @@ module.exports = {
                         p: {
                             fontSize: theme("fontSize.md"),
                         },
+                        strong: {
+                            color: theme("colors.white"),
+                        },
                         li: {
                             fontSize: theme("fontSize.md"),
                         },

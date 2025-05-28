@@ -22,12 +22,11 @@ import { selectClasses } from "@/helpers/selectClasses";
 import { imageGenerator } from "@/helpers/user";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PageProps } from "@/types";
-import { Event } from "@/types/Event";
 
 const SendGiftPage = () => {
     const page = usePage();
     const { auth } = page.props as unknown as PageProps;
-    const event = page.props.event as Event;
+    const event = page.props.event as App.Data.EventData;
 
     const phoneNumber = auth.user.phone
         ? auth.user.phone.replace(/\s/g, "")

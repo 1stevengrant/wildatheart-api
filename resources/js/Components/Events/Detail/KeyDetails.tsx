@@ -1,8 +1,18 @@
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import { KeyDetailItem } from "@/interfaces/KeyDetailItem";
-import { Event } from "@/types/Event";
 
-export const KeyDetails = ({ event }: { event: Event }) => {
+type KeyDetailItem = {
+    id: string;
+    icon: string;
+    type: string;
+    headline: string;
+    description: string;
+    fields: {
+        icon: string;
+        headline: string;
+        description: string;
+    };
+};
+export const KeyDetails = ({ event }: { event: App.Data.EventData }) => {
     return (
         <>
             {event.event_type_data.key_details &&
@@ -16,7 +26,7 @@ export const KeyDetails = ({ event }: { event: Event }) => {
                                 (item: KeyDetailItem) => (
                                     <li
                                         className="mb-4 flex items-start"
-                                        key={item.id} // Changed from index to item.id
+                                        key={item.id}
                                     >
                                         <div
                                             dangerouslySetInnerHTML={{
@@ -28,7 +38,7 @@ export const KeyDetails = ({ event }: { event: Event }) => {
                                             <p className="font-medium">
                                                 {item.headline}
                                             </p>
-                                            <p className="text-sm text-[#B8B8B8]">
+                                            <p className="text-sm text-n80">
                                                 {item.description}
                                             </p>
                                         </div>

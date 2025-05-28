@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Menu } from "@headlessui/react";
 import OutsideClickHandler from "react-outside-click-handler";

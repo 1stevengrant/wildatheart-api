@@ -1,5 +1,7 @@
 import Markdown from "react-markdown";
 
+import { proseClasses } from "@/helpers/proseClasses";
+
 export const TextSet = ({
     text,
     className = "",
@@ -8,10 +10,6 @@ export const TextSet = ({
     className?: string;
 }) => {
     return (
-        <Markdown
-            className={`${className} prose-p:text-white prose-strong:text-white prose-ol:text-white prose-ul:text-white prose-li:text-white prose-li:marker:text-white prose-headings:text-white prose-a:text-p200 hover:prose-a:no-underline`}
-        >
-            {text}
-        </Markdown>
+        <Markdown className={`${className} ${proseClasses}`}>{text}</Markdown>
     );
 };

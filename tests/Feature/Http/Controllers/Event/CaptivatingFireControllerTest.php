@@ -23,6 +23,8 @@ it('creates a captivating fire', function () {
         'district' => 'Greater Los Angeles',
         'locality' => 'Downtown',
         'neighborhood' => 'Skid Row',
+        'start_date' => now()->addDays(10)->format('Y-m-d'),
+        'frequency' => 'Weekly',
     ];
 
     $this->post(route('host.captivating-fire.store'), $attributes);

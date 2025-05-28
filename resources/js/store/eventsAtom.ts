@@ -1,8 +1,5 @@
 import { atom } from "recoil";
 
-import { Event } from "@/types/Event";
-import { EventType } from "@/types/EventType";
-
 const eventsListState = atom({
     key: "EventsList",
     default: [],
@@ -15,10 +12,10 @@ const eventsListLoadingState = atom({
 
 const selectedEventTypeState = atom({
     key: "SelectedEventType",
-    default: null as EventType | null,
+    default: null as App.Data.EventTypeData | null,
 });
 
-const currentEventState = atom<Event | null | undefined>({
+const currentEventState = atom<App.Data.EventData | null | undefined>({
     key: "currentEvent",
     default: undefined,
 });

@@ -7,7 +7,6 @@ import { NoEvents } from "@/Components/Events/NoEvents";
 import { HostNewEvent } from "@/Components/Profile/HostNewEvent";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { Event } from "@/types/Event";
 
 const MyActiveEventsPage = () => {
     const pageTitle = `My Active Events`;
@@ -15,7 +14,7 @@ const MyActiveEventsPage = () => {
 
     const activeEvents = (
         events as {
-            data: Event[];
+            data: App.Data.EventData[];
             meta: { links: any };
         }
     ).data;
@@ -28,7 +27,7 @@ const MyActiveEventsPage = () => {
 
             {activeEvents.length > 0 ? (
                 <EventGrid className={`mt-8`}>
-                    {activeEvents.map((event: Event) => (
+                    {activeEvents.map((event: App.Data.EventData) => (
                         <EventAdminCard event={event} key={event.id} />
                     ))}
                 </EventGrid>

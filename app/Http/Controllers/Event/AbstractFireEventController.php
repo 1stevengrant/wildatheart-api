@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Event;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\EventType;
+use App\Data\EventTypeData;
 use App\Actions\Event\ApproveEvent;
 use App\Actions\User\UpdateUserRole;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ abstract class AbstractFireEventController extends Controller
     public function index()
     {
         return inertia($this->getViewName(), [
-            'eventType' => EventType::where('name', $this->getEventType())->first(),
+            'eventType' => EventTypeData::fromModel(EventType::where('name', $this->getEventType())->first()),
         ]);
     }
 

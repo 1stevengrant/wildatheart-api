@@ -1,51 +1,34 @@
-import React from "react";
-
 import { Link } from "@inertiajs/react";
 
+import { Image } from "@/Components/Image";
 import { UserAvatar } from "@/Components/UserAvatar";
-import { dateFormatter } from "@/helpers/dateFormatter";
-import { EVENT_FOR_MEN } from "@/helpers/eventSex";
-import {
-    experienceTypeGroup,
-    fireTypeGroup,
-    retreatTypeGroup,
-} from "@/helpers/eventTypeGroups";
-import { imageGenerator } from "@/helpers/user";
-import { Event } from "@/types/Event";
+import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 
-export const MobileEventListCard = ({ event }: { event: Event }) => {
+export const MobileEventListCard = ({
+    event,
+}: {
+    event: App.Data.EventData;
+}) => {
     return (
         <li className={`border border-n400 rounded-lg p-4`}>
             <Link className={`flex space-x-4`} href={event.url}>
                 <div>
-                    <img
-                        src={imageGenerator(event.event_type_image)}
+                    <Image
+                        src={event.event_type_image}
                         alt={event.name}
                         className={`w-24 h-24 rounded-lg flex-shrink-0`}
                     />
                 </div>
                 <div className={`flex-1 flex flex-col justify-between`}>
                     <div className={`leading-tighter text-xxs`}>
-                        <p className={`text-n40`}>
-                            {event.type_group === experienceTypeGroup &&
-                                `6-part video study for ${event.sex === EVENT_FOR_MEN ? `Men` : `Women`}`}
-                            {event.type_group === fireTypeGroup && (
-                                <span>Monthly Gathering For Men</span>
-                            )}
-                            {event.type_group === retreatTypeGroup &&
-                                `Multi-Day retreat for ${event.sex === EVENT_FOR_MEN ? `Men` : `Women`}`}
-                        </p>
+                        <p className={`text-n40`}>{event.card_title}</p>
                         <p className={`font-medium text-base mb-3`}>
                             {event.location}
                         </p>
                         <span
                             className={`px-4 py-0.5 rounded-full border border-white inline-block mb-1`}
                         >
-                            {event.type_group === fireTypeGroup && `Monthly`}
-                            {event.type_group === retreatTypeGroup &&
-                                `${dateFormatter(event.start_date)} - ${dateFormatter(event.end_date)}`}
-                            {event.type_group === experienceTypeGroup &&
-                                `Starts on ${dateFormatter(event.start_date)}`}
+                            {event.badge_display}
                         </span>
                     </div>
                     <div className={`flex items-center space-x-2 mt-1`}>

@@ -1,4 +1,8 @@
-export const FireNamingGuidelines = ({ className }: { className?: string }) => {
+export const FireNamingGuidelines = ({
+    className = "",
+}: {
+    className?: string;
+}) => {
     return (
         <div className={`${className} text-sm text-n40 mt-4`}>
             <p>Fire Naming Guidelines</p>
