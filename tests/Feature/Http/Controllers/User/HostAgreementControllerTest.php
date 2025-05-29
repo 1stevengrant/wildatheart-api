@@ -27,7 +27,7 @@ test('that it redirects to the intended route after agreeing to the host agreeme
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->withSession(['host_agreement_redirect_to' => 'my.profile'])
+        ->withSession(['host_agreement_redirect_to' => route('my.profile')])
         ->post(route('host.agreement.store'))
         ->assertRedirect(route('my.profile'));
 });

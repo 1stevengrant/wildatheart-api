@@ -51,4 +51,22 @@ class UpdateUserProfileRequest extends FormRequest
             ],
         ];
     }
+
+    /**
+     * Get the custom messages for the validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'given_name.required' => 'First name is required.',
+            'family_name.required' => 'Last name is required.',
+            'phone.required' => 'The phone number is required.',
+            'opted_into_marketing.required' => 'You must indicate whether you opt into marketing communications.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.max' => 'The image size must not exceed 5MB.',
+            'image.mimes' => 'The image must be a file of type: jpg, jpeg, png.',
+        ];
+    }
 }
