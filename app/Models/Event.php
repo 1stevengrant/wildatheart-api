@@ -216,7 +216,7 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function () {
-                return $this->user->fullname;
+                return ucwords($this->user->fullname);
             }
         );
     }

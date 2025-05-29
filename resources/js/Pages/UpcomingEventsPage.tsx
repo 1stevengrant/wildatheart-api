@@ -1,49 +1,37 @@
-import { usePage } from "@inertiajs/react";
-
 import { EventCard } from "@/Components/Events/EventCard";
-import { MobileEventListCard } from "@/Components/Events/MobileEventListCard";
 import { UpcomingEventsNav } from "@/Components/Nav/UpcomingEventsNav";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { AppLayout } from "@/Layouts/AppLayout";
 
-interface UpcomingEvents {
-    [date: string]: App.Data.EventData[];
-}
-
-interface PageProps {
-    upcomingEvents: UpcomingEvents;
-
-    [key: string]: any;
-}
-
-const UpcomingEventsPage = () => {
-    const { upcomingEvents } = usePage<PageProps>().props;
+const UpcomingEventsPage = ({
+    upcomingEvents,
+}: {
+    upcomingEvents: Record<string, App.Data.EventData[]>;
+}) => {
     return (
         <AppLayout title={"Upcoming Events"}>
             <div className={`p-4`}>
                 <UpcomingEventsNav />
                 <HeadingOne className={`mb-4`}>Upcoming Events</HeadingOne>
-                {Object.entries(upcomingEvents).map(([date, events]) => (
-                    <div key={date} className={`mb-4`}>
-                        <h2 className={`text-lg mb-4`}>{date}</h2>
-                        <ul className={`grid md:grid-cols-3 gap-6`}>
-                            {events.map((event: any) => (
-                                <li
-                                    key={event.data.id}
-                                    className={`lg:border lg:border-n400 lg:rounded-md lg:hover:border-p200 transition-all ease-in-out`}
+
+                {Object.entries(upcomingEvents).map(([monthYear, events]) => (
+                    <div key={monthYear} className="mb-8">
+                        {/* Month/Year Header */}
+                        <h2 className="text-2xl font-bold mb-4 text-white">
+                            {monthYear}
+                        </h2>
+
+                        {/* Events for this month */}
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {events.map((event) => (
+                                <div
+                                    key={event.id}
+                                    className="bg-n800 p-1 rounded-lg"
                                 >
-                                    <EventCard
-                                        className={`hidden lg:block `}
-                                        event={event.data}
-                                    />
-                                    <ul className={`lg:hidden`}>
-                                        <MobileEventListCard
-                                            event={event.data}
-                                        />
-                                    </ul>
-                                </li>
+                                    <EventCard event={event} />
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     </div>
                 ))}
             </div>

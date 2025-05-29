@@ -13,15 +13,27 @@ class UpcomingEventsController extends Controller
     {
         $upcomingEvents = cache()->remember('public_upcoming_events', now()->addHour(), function () {
             return Event::query()
+                ->with(['user'])
                 ->upcoming()
                 ->public()
                 ->published()
                 ->get();
         });
-        $upcomingEvents = EventData::collection($upcomingEvents);
 
-        $upcomingEvents = $upcomingEvents->groupBy(function ($val) {
-            return Carbon::parse($val->start_date)->format('M Y');
+        // Group the models first
+        $groupedEvents = $upcomingEvents->groupBy(function ($event) {
+            return Carbon::parse($event->start_date)->format('M Y');
+        });
+
+        // Sort the groups by date
+        $sortedGroups = $groupedEvents->sortBy(function ($events, $monthYear) {
+            // Take the first event from each group to get the sort date
+            return Carbon::parse($events->first()->start_date);
+        });
+
+        // Then convert each group to DataCollection
+        $upcomingEvents = $sortedGroups->map(function ($events) {
+            return EventData::collection($events);
         });
 
         return inertia('UpcomingEventsPage', [

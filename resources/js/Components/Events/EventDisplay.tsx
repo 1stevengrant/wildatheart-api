@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
 import { usePage } from "@inertiajs/react";
-import dayjs from "dayjs";
 
 import { EventHostInfo } from "@/Components/Events/EventHostInfo";
 import { EventInfo } from "@/Components/Events/EventInfo";

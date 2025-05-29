@@ -5,7 +5,11 @@ import classNames from "classnames";
 
 import { profileNavItemClasses } from "@/helpers/profileNavItemClasses";
 
-export const ProfileNavItem = ({ icon, link, text }: {
+export const ProfileNavItem = ({
+    icon,
+    link,
+    text,
+}: {
     icon: React.ReactNode;
     link: string;
     text: string;
