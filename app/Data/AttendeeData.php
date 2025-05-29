@@ -21,11 +21,11 @@ class AttendeeData extends Data
         public string $city,
         public string $state,
         public bool $marketing_updates,
-        public string $contacted_on,
+        public ?string $contacted_on,
         public string $created_at,
         public string $updated_at,
-        public string $event_type_name,
-        public string $event_name,
+        public ?string $event_type_name,
+        public ?string $event_name,
         public string $fullname,
     ) {}
 
@@ -46,8 +46,8 @@ class AttendeeData extends Data
             contacted_on: $attendee->contacted_on,
             created_at: $attendee->created_at,
             updated_at: $attendee->updated_at,
-            event_type_name: $attendee->event_type_name,
-            event_name: $attendee->event_name,
+            event_type_name: $attendee->event->eventType?->name,
+            event_name: $attendee->event->display_name,
             fullname: $attendee->fullname
         );
     }
