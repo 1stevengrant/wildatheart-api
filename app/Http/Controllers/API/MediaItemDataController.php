@@ -91,7 +91,6 @@ class MediaItemDataController extends Controller
 
         $responseData['_embedded'] = $subsplashMediaItem['_embedded'];
 
-
         if (isset($subsplashMediaItem['position'])) {
             $responseData['position'] = $subsplashMediaItem['position'];
         }
