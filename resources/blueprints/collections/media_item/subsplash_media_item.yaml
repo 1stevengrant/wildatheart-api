@@ -18,6 +18,18 @@ tabs:
               type: text
               display: 'Subsplash Media Item ID'
           -
+            handle: vimeo_id
+            field:
+              type: text
+              display: 'Vimeo ID'
+              instructions: 'If a Vimeo ID is provided, it will override the Subsplash player.'
+          -
+            handle: is_vertical_video
+            field:
+              type: toggle
+              display: 'Vertical Video?'
+              instructions: 'Modifies layout slightly for vertical videos.'
+          -
             handle: drupal_url
             field:
               type: text
