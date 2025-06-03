@@ -207,22 +207,24 @@ const EditEventPage = () => {
                         <FireNamingGuidelines />
                     </div>
                 )}
+                {!eventIsAFire(event.event_type_slug) && (
+                    <div className={`mt-4`}>
+                        <DatePickerInput
+                            label="Start date"
+                            placeholder="Select start date"
+                            minDate={new Date()}
+                            value={startDate}
+                            maxDate={maxDate}
+                            clearable
+                            required
+                            onChange={(date) =>
+                                handleStartDateChange(date, setData)
+                            }
+                        />
+                        <InputError message={errors.start_date} />
+                    </div>
+                )}
 
-                <div className={`mt-4`}>
-                    <DatePickerInput
-                        label="Start date"
-                        placeholder="Select start date"
-                        minDate={new Date()}
-                        value={startDate}
-                        maxDate={maxDate}
-                        clearable
-                        required
-                        onChange={(date) =>
-                            handleStartDateChange(date, setData)
-                        }
-                    />
-                    <InputError message={errors.start_date} />
-                </div>
 
                 {eventIsAFire(event.event_type_slug) && (
                     <div className="mt-4">

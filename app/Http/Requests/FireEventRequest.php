@@ -36,10 +36,6 @@ class FireEventRequest extends FormRequest
             'country' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
-            'start_date' => [
-                'required',
-                'date',
-            ],
             'frequency' => [
                 'required',
                 'string',

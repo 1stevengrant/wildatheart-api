@@ -17,7 +17,7 @@ export const EventDisplay = ({
     style = {},
     className = "",
     startDate = "",
-    frequency = "",
+    frequency,
 }: {
     style?: React.CSSProperties;
     event: App.Data.EventData;
@@ -55,15 +55,7 @@ export const EventDisplay = ({
                         <EventTypeBadge
                             className={`bg-white text-sm text-n500 capitalize`}
                         >
-                            {event ? (
-                                <>{event.badge_display}</>
-                            ) : (
-                                <>
-                                    {startDate
-                                        ? `${formatDate(startDate)}`
-                                        : frequency}
-                                </>
-                            )}
+                            {!event.id ? frequency : event.badge_display}
                         </EventTypeBadge>
                     </div>
                     <EventLocation location={event.location} />

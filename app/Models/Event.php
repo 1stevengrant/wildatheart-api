@@ -339,20 +339,9 @@ class Event extends BaseModel
                 // Fire: Logic depends on date and frequency
                 if ($this->isFire()) {
 
-                    if ($this->start_date) {
-                        $startDate = Carbon::parse($this->start_date);
+                    if ($this->frequency) {
 
-                        // If date hasn't passed yet
-                        if ($startDate->greaterThan(now())) {
-                            $format = $startDate->year !== $currentYear ? 'M jS Y' : 'M jS';
-
-                            return $startDate->format($format);
-                        }
-                        // If date has passed and event has frequency
-                        if ($this->frequency) {
-
-                            return ucwords($this->frequency->label());
-                        }
+                        return ucwords($this->frequency->label());
                     }
 
                     return 'Monthly';
@@ -379,12 +368,12 @@ class Event extends BaseModel
 
     public function isApproved(): bool
     {
-        return (bool) $this->approved_at;
+        return (bool)$this->approved_at;
     }
 
     public function hasRequestedGift(): bool
     {
-        return (bool) $this->gift_requested;
+        return (bool)$this->gift_requested;
     }
 
     public function isFire(): bool
@@ -422,7 +411,7 @@ class Event extends BaseModel
 
     public function togglePrivacy(): void
     {
-        $this->is_private = ! $this->is_private;
+        $this->is_private = !$this->is_private;
         $this->save();
     }
 
@@ -469,6 +458,6 @@ class Event extends BaseModel
 
     public function hasBeenAutoUnpublished(): bool
     {
-        return (bool) $this->auto_unpublished;
+        return (bool)$this->auto_unpublished;
     }
 }

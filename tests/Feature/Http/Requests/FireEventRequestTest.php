@@ -10,7 +10,6 @@ beforeEach(function () {
 it('validates valid fire event data', function () {
     $validator = Validator::make([
         'name' => 'Forest Incident',
-        'start_date' => now()->addDays(10)->format('Y-m-d'),
         'frequency' => 'Weekly',
         'country' => 'USA',
         'latitude' => '40.7128',
@@ -26,7 +25,6 @@ it('fails validation when name ends with fire', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'start_date' => now()->addDays(10)->format('Y-m-d'),
         'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
@@ -39,7 +37,6 @@ it('fails validation when name contains emoji', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'start_date' => now()->addDays(10)->format('Y-m-d'),
         'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
@@ -52,7 +49,6 @@ it('fails validation when name is too short', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'start_date' => now()->addDays(10)->format('Y-m-d'),
         'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
@@ -65,7 +61,6 @@ it('fails validation when required fields are missing', function () {
     ], (new FireEventRequest)->rules());
 
     expect($validator->fails())->toBeTrue()
-        ->and($validator->errors()->has('start_date'))->toBeTrue()
         ->and($validator->errors()->has('frequency'))->toBeTrue()
         ->and($validator->errors()->has('country'))->toBeTrue()
         ->and($validator->errors()->has('latitude'))->toBeTrue()
@@ -78,7 +73,6 @@ it('fails validation when name is longer than 255 characters', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'start_date' => now()->addDays(10)->format('Y-m-d'),
         'frequency' => 'Weekly',
     ], (new FireEventRequest)->rules());
 
