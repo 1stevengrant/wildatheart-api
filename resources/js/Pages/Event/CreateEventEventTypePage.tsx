@@ -380,7 +380,7 @@ const CreateEventEventTypePage = () => {
                                         </div>
                                     </div>
                                 </label>
-                                {eventType.allow_materials_order && (
+                                {Boolean(eventType.allow_materials_order) && (
                                     <div className={`mt-4`}>
                                         <p>
                                             We'll send you free{" "}

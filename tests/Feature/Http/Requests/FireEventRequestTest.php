@@ -62,7 +62,6 @@ it('fails validation when required fields are missing', function () {
 
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has('frequency'))->toBeTrue()
-        ->and($validator->errors()->has('country'))->toBeTrue()
         ->and($validator->errors()->has('latitude'))->toBeTrue()
         ->and($validator->errors()->has('longitude'))->toBeTrue();
 });

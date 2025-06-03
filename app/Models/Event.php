@@ -368,12 +368,12 @@ class Event extends BaseModel
 
     public function isApproved(): bool
     {
-        return (bool)$this->approved_at;
+        return (bool) $this->approved_at;
     }
 
     public function hasRequestedGift(): bool
     {
-        return (bool)$this->gift_requested;
+        return (bool) $this->gift_requested;
     }
 
     public function isFire(): bool
@@ -411,7 +411,7 @@ class Event extends BaseModel
 
     public function togglePrivacy(): void
     {
-        $this->is_private = !$this->is_private;
+        $this->is_private = ! $this->is_private;
         $this->save();
     }
 
@@ -458,6 +458,6 @@ class Event extends BaseModel
 
     public function hasBeenAutoUnpublished(): bool
     {
-        return (bool)$this->auto_unpublished;
+        return (bool) $this->auto_unpublished;
     }
 }

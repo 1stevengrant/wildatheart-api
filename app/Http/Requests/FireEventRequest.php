@@ -33,7 +33,6 @@ class FireEventRequest extends FormRequest
                 new ShouldNotEndWithFire,
                 new DoesntContainEmojis,
             ],
-            'country' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
             'frequency' => [
