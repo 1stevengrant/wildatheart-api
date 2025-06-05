@@ -68,7 +68,7 @@ class ReportService
             ->unique('user.id')
             ->pluck('user')
             ->map(
-                fn($host) => [
+                fn ($host) => [
                     'given_name' => $host->given_name,
                     'family_name' => $host->family_name,
                     'email' => $host->email,
@@ -165,7 +165,7 @@ class ReportService
         foreach ($report->data as $item) {
             $headerKeys = array_keys($report->headers);
             fputcsv($csv, array_map(
-                fn($key) => data_get($item, $key, ''),
+                fn ($key) => data_get($item, $key, ''),
                 $headerKeys
             ));
         }

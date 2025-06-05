@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Enums\ReportName;
 use Illuminate\Console\Command;
 use App\Jobs\GenerateAndEmailReport;
-use App\Models\Event;
 
 class GenerateReport extends Command
 {
