@@ -90,7 +90,7 @@ class MediaItemDataController extends Controller
         $responseData['is_vertical_video'] = $mediaItem->is_vertical_video;
         $responseData['images'] = $mediaItem->images;
 
-        $responseData['_embedded'] = $subsplashMediaItem['_embedded'];
+        $responseData['_embedded'] = data_get($subsplashMediaItem, '_embedded');
 
         if (isset($subsplashMediaItem['position'])) {
             $responseData['position'] = $subsplashMediaItem['position'];
