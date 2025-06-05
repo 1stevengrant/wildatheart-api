@@ -11,7 +11,6 @@ class MyContactsController extends Controller
 {
     public function __invoke(Request $request): Response
     {
-
         return inertia('Profile/MyContactsPage', [
             'filters' => Request::all('event_id'),
             'myEvents' => auth()->user()->events()->get(),

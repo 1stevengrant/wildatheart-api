@@ -5,7 +5,6 @@ import mapboxgl from "mapbox-gl";
 import { NoWebGLSupport } from "@/Components/Maps/NoWebGLSupport";
 import { config } from "@/helpers/config";
 
-
 export const StaticMap = ({
     lat,
     lng,

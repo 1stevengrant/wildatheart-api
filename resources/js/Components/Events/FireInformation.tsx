@@ -42,7 +42,7 @@ import { selectedPlaceState } from "@/store/mapAtom";
 
 export const FireInformation = ({ user }: any) => {
     const [startDatePosition, setStartDatePosition] = useState(0);
-    const { startDate, handleStartDateChange, maxDate } = useDates();
+    // const { startDate, handleStartDateChange, maxDate } = useDates();
     const page = useTypedPage();
     const eventType = page.props.eventType as any;
     const mapRef = useRef<any>(null);
@@ -273,7 +273,7 @@ export const FireInformation = ({ user }: any) => {
     };
 
     useEffect(() => {
-        const startDateElement = document.getElementById("startDate");
+        const startDateElement = document.getElementById("frequency");
         if (startDateElement) {
             const rect = startDateElement.getBoundingClientRect();
             setStartDatePosition(rect.top);
@@ -321,27 +321,27 @@ export const FireInformation = ({ user }: any) => {
                         <FireNamingGuidelines />
 
                         {/* Start Date Field */}
-                        <div id="startDate" className={`mt-4`}>
-                            <DatePickerInput
-                                label="Start date"
-                                placeholder="Select start date"
-                                minDate={new Date()}
-                                value={startDate}
-                                maxDate={maxDate}
-                                clearable
-                                required
-                                onChange={(date) =>
-                                    handleStartDateChange(date, setData)
-                                }
-                            />
-                            <InputError message={errors.start_date} />
-                            <Instruction>
-                                When would you like to start your Fire?
-                            </Instruction>
-                        </div>
+                        {/*<div id="startDate" className={`mt-4`}>*/}
+                        {/*    <DatePickerInput*/}
+                        {/*        label="Start date"*/}
+                        {/*        placeholder="Select start date"*/}
+                        {/*        minDate={new Date()}*/}
+                        {/*        value={startDate}*/}
+                        {/*        maxDate={maxDate}*/}
+                        {/*        clearable*/}
+                        {/*        required*/}
+                        {/*        onChange={(date) =>*/}
+                        {/*            handleStartDateChange(date, setData)*/}
+                        {/*        }*/}
+                        {/*    />*/}
+                        {/*    <InputError message={errors.start_date} />*/}
+                        {/*    <Instruction>*/}
+                        {/*        When would you like to start your Fire?*/}
+                        {/*    </Instruction>*/}
+                        {/*</div>*/}
 
                         {/* frequency Selection */}
-                        <div className="mt-4">
+                        <div className="mt-4" id="frequency">
                             <InputLabel
                                 htmlFor="frequency"
                                 value={singular(eventType.name) + " frequency"}

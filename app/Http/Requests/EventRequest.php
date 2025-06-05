@@ -23,7 +23,6 @@ class EventRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'country' => ['required', 'string'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
             'start_date' => ['required', 'date'],

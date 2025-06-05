@@ -38,6 +38,14 @@ class HostEventTypeMailingAddressController extends Controller
             'is_primary' => false,
         ]);
 
+        if (empty(auth()->user()->family_name) || empty(auth()->user()->given_name)) {
+            auth()->user()->update([
+                'given_name' => $request->given_name,
+                'family_name' => $request->family_name,
+                'name' => $request->given_name . ' ' . $request->family_name,
+            ]);
+        }
+
         auth()->user()->addresses()->create([
             'user_id' => auth()->id(),
             'given_name' => $request->given_name,

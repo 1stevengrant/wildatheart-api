@@ -32,7 +32,6 @@ class UpdateEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
             'start_date' => [

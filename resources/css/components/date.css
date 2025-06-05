@@ -59,13 +59,12 @@
     @apply text-n70 block mb-2 text-sm font-semibold !important;
 }
 
-
 .mantine-DatePickerInput-wrapper {
     @apply rounded-lg text-white bg-n900 border-none text-sm !important;
 }
 
 .mantine-DatePickerInput-input {
-    @apply bg-n900 border border-n400 text-white !important ;
+    @apply bg-n900 border border-n400 text-white !important;
 }
 
 .mantine-DatePickerInput-input {

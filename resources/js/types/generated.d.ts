@@ -11,11 +11,11 @@ declare namespace App.Data {
         city: string;
         state: string;
         marketing_updates: boolean;
-        contacted_on: string;
+        contacted_on: string | null;
         created_at: string;
         updated_at: string;
-        event_type_name: string;
-        event_name: string;
+        event_type_name: string | null;
+        event_name: string | null;
         fullname: string;
     };
     export type EventData = {

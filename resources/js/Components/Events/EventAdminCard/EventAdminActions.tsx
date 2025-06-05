@@ -18,8 +18,8 @@ import {
     eventAdminActionButtonClass,
     eventAdminActionButtonTextClass,
 } from "@/helpers/eventAdminActionButtonClass";
-import { reactNotificationState } from "@/store";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
+import { reactNotificationState } from "@/store";
 
 export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
     const [actionDrawerOpen, setActionDrawerOpen] = useState(false);

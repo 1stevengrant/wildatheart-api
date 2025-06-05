@@ -64,6 +64,12 @@ describe('Initial 90-day check-in emails', function () {
             return $job->event->id === $fire->id;
         });
 
+        // Execute the MonthlyFireCleanupEmailToHostJob manually
+        $jobInstance = Queue::pushedJobs()[MonthlyFireCleanupEmailToHostJob::class][0]['job'] ?? null;
+        if ($jobInstance) {
+            $jobInstance->handle();
+        }
+
         $fire->refresh();
         expect($fire->last_checkin_email_sent_at)->not->toBeNull()
             ->and($fire->last_checkin_reminder_sent_at)->toBeNull();
@@ -88,6 +94,13 @@ describe('Initial 90-day check-in emails', function () {
         (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class);
+
+        // Execute the MonthlyFireCleanupEmailToHostJob manually
+        $jobInstance = Queue::pushedJobs()[MonthlyFireCleanupEmailToHostJob::class][0]['job'] ?? null;
+        if ($jobInstance) {
+            $jobInstance->handle();
+        }
+
         $fire->refresh();
         expect($fire->last_checkin_email_sent_at)->toBeGreaterThan(now()->subMinute());
     });
@@ -224,6 +237,8 @@ describe('Initial 90-day check-in emails', function () {
 
         // Execute the job manually
         (new SendFireCheckinsEmailJob)->handle();
+
+        (new MonthlyFireCleanupEmailToHostJob($fire))->handle();
 
         $fire->refresh();
         expect($fire->last_checkin_reminder_sent_at)->toBeNull();
@@ -585,6 +600,8 @@ describe('Full workflow integration', function () {
         (new SendFireCheckinsEmailJob)->handle();
 
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class);
+        (new MonthlyFireCleanupEmailToHostJob($fire))->handle();
+
         $fire->refresh();
         expect($fire->last_checkin_email_sent_at)->not->toBeNull();
 
@@ -650,9 +667,7 @@ describe('Full workflow integration', function () {
         Carbon::setTestNow();
     });
 
-    it(/**
-     * @throws Exception
-     */ 'handles multiple fires in different states', function () {
+    it('handles multiple fires in different states', function () {
         $user = User::factory()->create();
 
         $fireNeedsInitial = createFireEvent([
@@ -717,6 +732,8 @@ describe('Full workflow integration', function () {
         Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class, 1);
         Mail::assertQueued(SevenDayFollowupMailable::class, 1);
         Mail::assertQueued(EventAutoUnpublishedMail::class, 1);
+
+        (new MonthlyFireCleanupEmailToHostJob($fireNeedsInitial))->handle();
 
         $fireNeedsInitial->refresh();
         expect($fireNeedsInitial->last_checkin_email_sent_at)->not->toBeNull();

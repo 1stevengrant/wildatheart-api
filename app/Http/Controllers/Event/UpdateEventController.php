@@ -32,8 +32,6 @@ class UpdateEventController extends Controller
                 );
             }
 
-            ray($formRequest->validated());
-
             $event->update($formRequest->validated());
 
             return to_route('my.events.active')->with([

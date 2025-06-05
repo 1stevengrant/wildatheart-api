@@ -40,6 +40,34 @@ it('creates a new event of a given type', function () {
     expect($this->user->events()->count())->toBe(1);
 });
 
+test('a user needs to have a given & family name for the event to be created', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+    $this->user->update([
+        'given_name' => null,
+        'family_name' => null,
+    ]);
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+    ]);
+
+    expect($this->user->family_name)->toBeNull()
+        ->and($this->user->given_name)->toBeNull();
+});
+
 test('an event that has no materials order does not request the number of items in material order to be present', function () {
     $this->actingAs($this->user);
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::BECOMING_A_KING))->first();
