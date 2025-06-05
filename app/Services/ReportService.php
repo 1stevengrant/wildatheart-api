@@ -21,6 +21,27 @@ class ReportService
             case ReportName::BAKR_HOSTS:
                 $report = $this->getBAKRHosts();
                 break;
+            case ReportName::WAHR_HOSTS:
+                $report = $this->getWAHRHosts();
+                break;
+            case ReportName::BAKR_EXPERIENCE_HOSTS:
+                $report = $this->getBAKRExperienceHosts();
+                break;
+            case ReportName::WAHR_EXPERIENCE_HOSTS:
+                $report = $this->getWAHExperienceHosts();
+                break;
+            case ReportName::FIRES_HOSTS:
+                $report = $this->getFiresHosts();
+                break;
+            case ReportName::CAPTIVATING_RETRAT_HOSTS:
+                $report = $this->getCAPRHosts();
+                break;
+            case ReportName::CAPTIVATING_EXPERIENCE_HOSTS:
+                $report = $this->getCAPExperienceHosts();
+                break;
+            case ReportName::SURVIVAL_SCHOOL_HOSTS:
+                $report = $this->getSurvivalSchoolHosts();
+                break;
         }
 
         switch ($format) {
@@ -47,7 +68,7 @@ class ReportService
             ->unique('user.id')
             ->pluck('user')
             ->map(
-                fn ($host) => [
+                fn($host) => [
                     'given_name' => $host->given_name,
                     'family_name' => $host->family_name,
                     'email' => $host->email,
@@ -55,6 +76,77 @@ class ReportService
                 ]
             )
             ->toArray();
+
+        return new ReportData($headers, $data);
+    }
+
+    private function getBAKRExperienceHosts(): ReportData
+    {
+        return $this->getHostData(Event::query()->becomingAKingExperiences());
+    }
+
+    private function getWAHRHosts(): ReportData
+    {
+        return $this->getHostData(Event::query()->wahRetreat());
+    }
+
+    private function getWAHExperienceHosts(): ReportData
+    {
+        return $this->getHostData(Event::query()->wahExperience());
+    }
+
+    private function getFiresHosts(): ReportData
+    {
+        return $this->getHostData(Event::query()->fires());
+    }
+
+    private function getCAPRHosts(): ReportData
+    {
+        return $this->getHostData(Event::query()->captivatingRetreat());
+    }
+
+    private function getCAPExperienceHosts(): ReportData
+    {
+        return $this->getHostData(Event::query()->captivatingExperience());
+    }
+
+    private function getSurvivalSchoolHosts(): ReportData
+    {
+        return $this->getHostData(Event::query()->survivalSchool());
+    }
+
+    private function getHostData($query): ReportData
+    {
+        $headers = [
+            'given_name' => 'First Name',
+            'family_name' => 'Last Name',
+            'email' => 'Email',
+            'mailing_address' => 'Mailing Address',
+            'city' => 'City',
+            'state' => 'State',
+            'zip' => 'Zip',
+            'country' => 'Country',
+        ];
+
+        $data = $query
+            ->with(['user', 'user.addresses' => function ($query) {
+                $query->where('is_primary', true);
+            }])
+            ->get()
+            ->unique('user.id')
+            ->pluck('user')
+            ->map(function ($user) {
+                return [
+                    'given_name' => $user->given_name,
+                    'family_name' => $user->family_name,
+                    'email' => $user->email,
+                    'mailing_address' => $user->addresses->first()?->full_address ?? '',
+                    'city' => $user->addresses->first()?->city ?? '',
+                    'state' => $user->addresses->first()?->state ?? '',
+                    'zip' => $user->addresses->first()?->zip ?? '',
+                    'country' => $user->addresses->first()?->country ?? '',
+                ];
+            })->toArray();
 
         return new ReportData($headers, $data);
     }
@@ -73,7 +165,7 @@ class ReportService
         foreach ($report->data as $item) {
             $headerKeys = array_keys($report->headers);
             fputcsv($csv, array_map(
-                fn ($key) => data_get($item, $key, ''),
+                fn($key) => data_get($item, $key, ''),
                 $headerKeys
             ));
         }

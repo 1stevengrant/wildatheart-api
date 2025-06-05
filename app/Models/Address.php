@@ -31,4 +31,9 @@ class Address extends BaseModel
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getFullAddressAttribute(): string
+    {
+        return "{$this->street_address} {$this->city}, {$this->state} {$this->zip} {$this->country}";
+    }
 }
