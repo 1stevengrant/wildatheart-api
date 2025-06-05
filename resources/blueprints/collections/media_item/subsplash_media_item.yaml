@@ -115,3 +115,5 @@ tabs:
               display: 'Media Type'
               mode: select
               max_items: 1
+          -
+            import: images
