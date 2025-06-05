@@ -80,9 +80,9 @@ class MediaItemDataController extends Controller
             // Handle unlisted Vimeo videos that have a format like "1067873475/63a07f9357"
             if (str_contains($mediaItem->vimeo_id, '/')) {
                 [$videoId, $hash] = explode('/', $mediaItem->vimeo_id);
-                $responseData['media_iframe_url'] = "https://player.vimeo.com/video/{$videoId}?h={$hash}&badge=0&autopause=0&player_id=0&app_id=58479";
+                $responseData['media_iframe_url'] = "https://player.vimeo.com/video/{$videoId}?h={$hash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1";
             } else {
-                $responseData['media_iframe_url'] = "https://player.vimeo.com/video/{$mediaItem->vimeo_id}?badge=0&autopause=0&player_id=0&app_id=58479";
+                $responseData['media_iframe_url'] = "https://player.vimeo.com/video/{$mediaItem->vimeo_id}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1";
             }
         } else {
             $responseData['media_iframe_url'] = "https://subsplash.com/+f83c/embed/mi/{$shortCode}?audio&video&info&logoWatermark&shareable&embeddable";
