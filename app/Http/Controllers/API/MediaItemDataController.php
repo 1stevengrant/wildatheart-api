@@ -88,6 +88,7 @@ class MediaItemDataController extends Controller
             $responseData['media_iframe_url'] = "https://subsplash.com/+f83c/embed/mi/{$shortCode}?audio&video&info&logoWatermark&shareable&embeddable";
         }
         $responseData['is_vertical_video'] = $mediaItem->is_vertical_video;
+        $responseData['images'] = $mediaItem->images;
 
         $responseData['_embedded'] = $subsplashMediaItem['_embedded'];
 
