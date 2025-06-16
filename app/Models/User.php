@@ -7,12 +7,12 @@ use App\Builders\UserBuilder;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
 use Laravolt\Avatar\Facade as Avatar;
-use App\Jobs\CheckIfUserShouldBeAdmin;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
+use App\Jobs\Admin\CheckIfUserShouldBeAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -122,22 +122,14 @@ class User extends Authenticatable
                     return $this->email;
                 }
 
-                return "{$this->given_name} {$this->family_name}";
+                return "$this->given_name $this->family_name";
             }
         );
     }
 
     public function name(): Attribute
     {
-        return Attribute::make(
-            get: function (): string {
-                if ($this->given_name === null || $this->family_name === null) {
-                    return $this->email;
-                }
-
-                return "{$this->given_name} {$this->family_name}";
-            }
-        );
+        return $this->fullname();
     }
 
     public function hasVerifiedEmail(): bool

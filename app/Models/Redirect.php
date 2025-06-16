@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Observers\RedirectObserver;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-// Redirect.php
 #[ObservedBy([RedirectObserver::class])]
 class Redirect extends BaseModel
 {
-    /** @use HasFactory<\Database\Factories\RedirectFactory> */
-    use HasFactory, HasRunwayResource;
+    use HasRunwayResource;
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

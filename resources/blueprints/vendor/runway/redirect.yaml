@@ -1,17 +1,51 @@
 tabs:
   main:
-    fields:
+    display: Main
+    sections:
       -
-        handle: source
-        field:
-          type: text
-          display: Source
-          validate: required
-      -
-        handle: destination
-        field:
-          type: text
-          display: Destination
-          validate: required
+        fields:
+          -
+            handle: source
+            field:
+              type: text
+              display: Source
+              validate: required
+          -
+            handle: destination
+            field:
+              type: text
+              display: Destination
+              validate: required
+          -
+            handle: user
+            field:
+              resource: user
+              title_format: name
+              type: belongs_to
+              display: User
+              visibility: computed
+          -
+            handle: status_code
+            field:
+              type: text
+              display: 'Status Code'
+              visibility: read_only
+          -
+            handle: count
+            field:
+              input_type: number
+              type: text
+              display: Count
+              visibility: read_only
+          -
+            handle: system_origin
+            field:
+              type: text
+              display: 'System Origin'
+              visibility: read_only
+              default: statamic
   sidebar:
-    fields: {  }
+    display: Sidebar
+    sections:
+      - {  }
+title: Redirect

@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use Exception;
+use JsonException;
 use App\Models\Redirect;
 use Illuminate\Support\Facades\Storage;
 use App\DataTransferObjects\RedirectData;
+use Saloon\Exceptions\Request\RequestException;
+use Saloon\Exceptions\Request\FatalRequestException;
 use App\Http\Integrations\Cloudflare\CloudflareConnector;
 use App\Http\Integrations\Cloudflare\Requests\KV\PutRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\DeleteRequest;
@@ -13,18 +16,19 @@ use App\Http\Integrations\Cloudflare\Requests\KV\PutRequestBulk;
 
 class RedirectService
 {
-    private string $cloudflareAccountId;
-
-    private string $cloudflareNamespaceID;
-
-    public function __construct(private CloudflareConnector $cloudflare)
-    {
-        $this->cloudflareAccountId = config('cloudflare.account_id');
-        $this->cloudflareNamespaceID = config('cloudflare.kv_redirects_id');
+    public function __construct(
+        public CloudflareConnector $cloudflare,
+        public string $cloudflareAccountId = '',
+        public string $cloudflareNamespaceID = ''
+    ) {
+        $this->cloudflareAccountId = $cloudflareAccountId ?: config('cloudflare.account_id');
+        $this->cloudflareNamespaceID = $cloudflareNamespaceID ?: config('cloudflare.kv_redirects_id');
     }
 
     /**
-     * @return \App\DataTransferObjects\RedirectData[]
+     * @return RedirectData[]
+     *
+     * @throws Exception
      */
     public function getRedirectsFromFile(string $file): array
     {
@@ -36,9 +40,9 @@ class RedirectService
 
         $redirects = explode("\n", $contents);
 
-        $cloudflareBulkMaxium = 10000;
-        if (count($redirects) === $cloudflareBulkMaxium) {
-            throw new Exception("The maximum number of items you may import at one time is $cloudflareBulkMaxium");
+        $cloudflareBulkMaximum = 10000;
+        if (count($redirects) >= $cloudflareBulkMaximum) {
+            throw new Exception("The maximum number of items you may import at one time is $cloudflareBulkMaximum");
         }
 
         $validRedirects = collect($redirects)->map(function ($redirect) {
@@ -50,12 +54,17 @@ class RedirectService
         return $validRedirects->toArray();
     }
 
+    /**
+     * @throws FatalRequestException
+     * @throws RequestException
+     * @throws JsonException
+     */
     public function create(string $source, string $destination): int
     {
         $this->createInCloudflare($source, $destination);
 
         // if that works, add it to the DB
-        $redirect = Redirect::upsert(
+        return Redirect::upsert(
             [
                 'source' => $source,
                 'destination' => $destination,
@@ -63,12 +72,12 @@ class RedirectService
             ['source'],
             ['destination', 'updated_at']
         );
-
-        return $redirect;
     }
 
     /**
-     * @param  \App\DataTransferObjects\RedirectData[]  $redirects
+     * @param  RedirectData[]  $redirects
+     *
+     * @throws Exception
      */
     public function createBulk(array $redirects): object
     {
@@ -81,7 +90,7 @@ class RedirectService
             ->filter(fn ($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
             ->toArray();
 
-        $redirect = Redirect::upsert(
+        Redirect::upsert(
             $successfulRedirects,
             ['source'],
             ['destination', 'updated_at']
@@ -90,13 +99,22 @@ class RedirectService
         return $body;
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete($source): void
     {
         $this->deleteFromCloudflare($source);
         Redirect::where('source', $source)->delete();
     }
 
-    public function createInCloudflare(string $source, string $destination)
+    /**
+     * @throws FatalRequestException
+     * @throws RequestException
+     * @throws JsonException
+     * @throws Exception
+     */
+    public function createInCloudflare(string $source, string $destination): void
     {
         $redirect = new RedirectData($source, $destination);
         $putRequest = new PutRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirect);
@@ -109,9 +127,14 @@ class RedirectService
     }
 
     /**
-     * @param  \App\DataTransferObjects\RedirectData[]  $redirects
-     * */
-    public function createBulkInCloudflare(array $redirects)
+     * @param  RedirectData[]  $redirects
+     *
+     * @throws FatalRequestException
+     * @throws RequestException
+     * @throws JsonException
+     * @throws Exception
+     */
+    public function createBulkInCloudflare(array $redirects): mixed
     {
         $putBulkRequest = new PutRequestBulk($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirects);
         $response = $this->cloudflare->send($putBulkRequest);
@@ -124,7 +147,13 @@ class RedirectService
         return $body;
     }
 
-    public function deleteFromCloudflare(string $source)
+    /**
+     * @throws FatalRequestException
+     * @throws RequestException
+     * @throws JsonException
+     * @throws Exception
+     */
+    public function deleteFromCloudflare(string $source): void
     {
         $deleteRequest = new DeleteRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, urlencode($source));
         $response = $this->cloudflare->send($deleteRequest);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Redirects;
 
 use Illuminate\Support\Str;
 use Statamic\Facades\Entry;
@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
-class GeneratePodcastRedirectsFromDrupal extends Command
+class GeneratePodcastRedirectsFromDrupalCommand extends Command
 {
     protected $signature = 'app:generate-podcast-redirects';
 

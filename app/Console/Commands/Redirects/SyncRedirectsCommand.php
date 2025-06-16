@@ -1,20 +1,28 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Redirects;
 
+use JsonException;
 use App\Models\Redirect;
 use Illuminate\Console\Command;
+use Saloon\Exceptions\Request\RequestException;
+use Saloon\Exceptions\Request\FatalRequestException;
 use App\Http\Integrations\Cloudflare\CloudflareConnector;
 use App\Http\Integrations\Cloudflare\Requests\KV\GetRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\ListRequest;
 
-class SyncRedirects extends Command
+class SyncRedirectsCommand extends Command
 {
     protected $signature = 'app:sync-redirects';
 
     protected $description = 'Updates all redirects stored in the redirects table with latest KV value';
 
-    public function handle()
+    /**
+     * @throws FatalRequestException
+     * @throws RequestException
+     * @throws JsonException
+     */
+    public function handle(): void
     {
         $cloudflareAccountId = config('cloudflare.account_id');
         $cloudflareNamespaceID = config('cloudflare.kv_redirects_id');
@@ -28,7 +36,7 @@ class SyncRedirects extends Command
         $allResults = [];
         $cursor = $body->result_info->cursor;
 
-        while ((bool) $cursor) {
+        while ($cursor) {
             $this->info('requesting batch');
             $listItemsRequest = new ListRequest($cloudflareAccountId, $cloudflareNamespaceID);
             $listItemsRequest->query()->add('cursor', $cursor);
@@ -40,7 +48,7 @@ class SyncRedirects extends Command
             $cursor = $body->result_info->cursor;
         }
         $allResultsCount = count($allResults);
-        $this->info("Discovered {$allResultsCount} items.");
+        $this->info("Discovered $allResultsCount items.");
 
         // Collect all redirects data first
         $redirectsData = [];
@@ -60,7 +68,7 @@ class SyncRedirects extends Command
         }
 
         // Perform bulk upsert
-        $this->info("Performing bulk upsert of {$allResultsCount} redirects...");
+        $this->info("Performing bulk upsert of $allResultsCount redirects...");
         Redirect::upsert(
             $redirectsData,
             ['source'], // unique key

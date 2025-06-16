@@ -8,8 +8,8 @@ use App\Jobs\LogActivityJob;
 use App\Services\SeoService;
 use App\Http\Controllers\Controller;
 use App\Jobs\Event\IncreaseEventCountsJob;
-use App\Jobs\PostAttendeeContactToSlackJob;
 use App\Http\Requests\ConnectWithHostRequest;
+use App\Jobs\Admin\PostAttendeeContactToSlackJob;
 use App\Jobs\WeGive\SubscribeToCommunicationListJob;
 
 class ConnectWithHostController extends Controller

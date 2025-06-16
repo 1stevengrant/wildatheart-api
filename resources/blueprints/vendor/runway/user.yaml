@@ -9,6 +9,8 @@ tabs:
             field:
               type: text
               display: Name
+              listable: false
+              visibility: hidden
           -
             handle: given_name
             field:
@@ -25,11 +27,13 @@ tabs:
               type: text
               display: Email
               validate: required
+              visibility: read_only
           -
             handle: salesforce_contact_id
             field:
               type: text
               display: 'Salesforce Contact Id'
+              visibility: read_only
           -
             handle: phone
             field:
@@ -60,11 +64,13 @@ tabs:
             field:
               type: text
               display: 'Provider Id'
+              visibility: read_only
           -
             handle: provider
             field:
               type: text
               display: Provider
+              visibility: read_only
           -
             handle: email_verified_at
             field:
@@ -75,6 +81,7 @@ tabs:
             field:
               type: text
               display: Password
+              visibility: read_only
           -
             handle: opted_into_marketing
             field:
@@ -86,6 +93,7 @@ tabs:
             field:
               type: text
               display: 'Remember Token'
+              visibility: read_only
           -
             handle: super
             field:
@@ -93,27 +101,16 @@ tabs:
               display: Super
               validate: required
           -
-            handle: avatar
-            field:
-              type: text
-              display: Avatar
-          -
             handle: last_login
             field:
               type: date
               display: 'Last Login'
+              visibility: read_only
           -
             handle: deleted_at
             field:
               type: date
               display: 'Deleted At'
-          -
-            handle: image
-            field:
-              max_files: 1
-              container: app
-              type: assets
-              display: Image
   sidebar:
     display: Sidebar
     sections:

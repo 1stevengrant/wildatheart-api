@@ -356,3 +356,25 @@ if (! function_exists('deepArrayCompare')) {
         return $array1 === $array2;
     }
 }
+
+if (! function_exists('cleanPath')) {
+    /**
+     * Clean and normalize a URL path by removing query parameters, fragments,
+     * and ensuring it starts with a forward slash.
+     *
+     * @param  string  $path  The path to clean
+     * @return string The cleaned path with leading slash
+     */
+    function cleanPath(string $path): string
+    {
+        // Remove leading/trailing slashes and clean up the path
+        $path = trim($path, '/');
+
+        // Remove any query parameters or fragments
+        $path = strtok($path, '?');
+        $path = strtok($path, '#');
+
+        // Ensure path starts with forward slash
+        return '/' . ltrim($path, '/');
+    }
+}

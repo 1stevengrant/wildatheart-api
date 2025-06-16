@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\ReportName;
 use Illuminate\Console\Command;
-use App\Jobs\GenerateAndEmailReport;
+use App\Jobs\Admin\GenerateAndEmailReport;
 
 class GenerateReport extends Command
 {

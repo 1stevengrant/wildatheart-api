@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Admin;
 
 use App\Models\Event;
 use App\Models\Attendee;

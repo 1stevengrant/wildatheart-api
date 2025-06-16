@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Admin;
 
 use App\Services\RedirectService;
 use Illuminate\Foundation\Queue\Queueable;

@@ -3,8 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Issue;
-use App\Jobs\ReportIssueToSlack;
 use App\Actions\ZendeskCreateTicket;
+use App\Jobs\Assets\ReportIssueToSlack;
 
 class IssueObserver
 {

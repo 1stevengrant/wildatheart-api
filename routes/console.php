@@ -1,8 +1,8 @@
 <?php
 
 use App\Enums\ReportName;
-use App\Jobs\GenerateAndEmailReport;
 use Illuminate\Support\Facades\Schedule;
+use App\Jobs\Admin\GenerateAndEmailReport;
 
 Schedule::command(\App\Console\Commands\Fire\SendFiresCheckinsEmailCommand::class)->daily();
 Schedule::command('app:get-latest-subsplash-media')->everyFifteenMinutes();
