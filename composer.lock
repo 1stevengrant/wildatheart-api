@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40f3b92217dc937b28326c610cc78e77",
+    "content-hash": "9caa9187984c46e1a32c73110ba310bc",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -950,16 +950,16 @@
         },
         {
             "name": "auth0/auth0-php",
-            "version": "8.13.0",
+            "version": "8.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auth0/auth0-PHP.git",
-                "reference": "3acf0f4d847f355eada5ac3f3336b175238c8ef1"
+                "reference": "03579f7e6bd59f6f0009dbd83900594019e3f422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/3acf0f4d847f355eada5ac3f3336b175238c8ef1",
-                "reference": "3acf0f4d847f355eada5ac3f3336b175238c8ef1",
+                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/03579f7e6bd59f6f0009dbd83900594019e3f422",
+                "reference": "03579f7e6bd59f6f0009dbd83900594019e3f422",
                 "shasum": ""
             },
             "require": {
@@ -1043,9 +1043,9 @@
             ],
             "support": {
                 "issues": "https://github.com/auth0/auth0-PHP/issues",
-                "source": "https://github.com/auth0/auth0-PHP/tree/8.13.0"
+                "source": "https://github.com/auth0/auth0-PHP/tree/8.14.0"
             },
-            "time": "2024-11-15T11:08:53+00:00"
+            "time": "2025-05-15T20:00:31+00:00"
         },
         {
             "name": "aws/aws-crt-php",
@@ -2127,7 +2127,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-hotfix/missing-package",
+            "version": "dev-prod",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",
@@ -3439,6 +3439,86 @@
                 "source": "https://github.com/laravel/horizon/tree/v5.32.0"
             },
             "time": "2025-05-09T14:58:32+00:00"
+        },
+        {
+            "name": "laravel/nightwatch",
+            "version": "v1.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/nightwatch.git",
+                "reference": "a3eb15c4c853b63ebf2317ac13f4789fa2f890de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/nightwatch/zipball/a3eb15c4c853b63ebf2317ac13f4789fa2f890de",
+                "reference": "a3eb15c4c853b63ebf2317ac13f4789fa2f890de",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zlib": "*",
+                "guzzlehttp/promises": "^2.0",
+                "laravel/framework": "^10.0|^11.0|^12.0",
+                "monolog/monolog": "^3.0",
+                "nesbot/carbon": "^2.0|^3.0",
+                "php": "^8.2",
+                "psr/http-message": "^1.0|^2.0",
+                "psr/log": "^1.0|^2.0|^3.0",
+                "symfony/console": "^6.0|^7.0",
+                "symfony/http-foundation": "^6.0|^7.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.0",
+                "guzzlehttp/psr7": "^2.0",
+                "laravel/horizon": "^5.4",
+                "laravel/pint": "1.21.0",
+                "mockery/mockery": "^1.0",
+                "mongodb/laravel-mongodb": "^5.0",
+                "orchestra/testbench": "^8.0|^9.0|^10.0",
+                "orchestra/testbench-core": "^8.0|^9.0|^10.0",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^10.0|^11.0",
+                "ramsey/uuid": "^4.0",
+                "spatie/laravel-ignition": "^2.0",
+                "symfony/mailer": "^6.0|^7.0",
+                "symfony/mime": "^6.0|^7.0",
+                "symfony/var-dumper": "^6.0|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Nightwatch\\NightwatchServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Nightwatch\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The official Laravel Nightwatch package.",
+            "homepage": "https://nightwatch.laravel.com",
+            "keywords": [
+                "Insights",
+                "laravel",
+                "monitoring"
+            ],
+            "support": {
+                "docs": "https://nightwatch.laravel.com/docs",
+                "issues": "https://github.com/laravel/nightwatch/issues",
+                "source": "https://github.com/laravel/nightwatch"
+            },
+            "time": "2025-06-17T05:59:26+00:00"
         },
         {
             "name": "laravel/pail",
@@ -17660,7 +17740,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-dom": "*",
         "ext-libxml": "*"
     },
