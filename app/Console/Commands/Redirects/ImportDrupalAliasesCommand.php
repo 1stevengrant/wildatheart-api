@@ -54,7 +54,6 @@ class ImportDrupalAliasesCommand extends Command
             $imported = $this->importAliases($drupalAliases);
 
             $this->info("✓ Successfully imported {$imported} URL aliases as redirects");
-
         } catch (Exception $e) {
             $this->error('Import failed: ' . $e->getMessage());
 
@@ -119,8 +118,8 @@ class ImportDrupalAliasesCommand extends Command
                 // Clean and validate the alias data
                 // For URL aliases, the 'alias' becomes the source (what users type)
                 // and 'source' becomes the destination (where they go)
-                $source = cleanPath($alias->alias);
-                $destination = cleanPath($alias->source);
+                $source = cleanPath($alias->source);
+                $destination = cleanPath($alias->alias);
 
                 if (empty($source) || empty($destination)) {
                     continue;
@@ -138,7 +137,6 @@ class ImportDrupalAliasesCommand extends Command
                 );
 
                 $imported++;
-
             } catch (Exception $e) {
                 $this->warn("Failed to import alias: $alias->alias -> $alias->source");
                 $this->warn("Error: {$e->getMessage()}");
