@@ -13,7 +13,7 @@ use App\Http\Integrations\Cloudflare\CloudflareConnector;
 use App\Http\Integrations\Cloudflare\Requests\KV\PutRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\DeleteRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\PutRequestBulk;
-use Illuminate\Support\Collection;
+
 
 class RedirectService
 {
@@ -31,7 +31,7 @@ class RedirectService
      *
      * @throws Exception
      */
-    public function getRedirectsFromFile(string $file): Collection
+    public function getRedirectsFromFile(string $file): array
     {
         if (! Storage::exists($file)) {
             throw new Exception("File not found: $file");
@@ -59,7 +59,7 @@ class RedirectService
         }
 
 
-        return $validRedirects;
+        return $validRedirects->all();
     }
 
     /**
