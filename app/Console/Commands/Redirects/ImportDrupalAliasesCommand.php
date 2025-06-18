@@ -16,7 +16,7 @@ class ImportDrupalAliasesCommand extends Command
 
     public const array EXCLUDED_SOURCE_PATHS = ['user', 'file/', 'taxonomy/'];
 
-    public const array EXCLUDED_ALIAS_PATHS = [];
+    public const array EXCLUDED_ALIAS_PATHS = ['allies/'];
 
     public const string DRUPAL_CONNECTION = 'drupal';
 
