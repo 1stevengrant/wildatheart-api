@@ -16,7 +16,7 @@ class BulkImportRedirectsCommand extends Command
     public function handle()
     {
         $filePath = $this->argument('filePath');
-        $filePathInDir = "redirects/$filePath";
+        $filePathInDir = "app/redirects/$filePath";
 
         if (! Storage::exists($filePathInDir)) {
             $this->error("File not found: $filePathInDir");
