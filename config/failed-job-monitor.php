@@ -33,6 +33,6 @@ return [
     ],
 
     'slack' => [
-        'webhook_url' => env('SLACK_WEBHOOK_URL'),
+        'webhook_url' => env('FAILED_JOB_MONITOR_SLACK'),
     ],
 ];
