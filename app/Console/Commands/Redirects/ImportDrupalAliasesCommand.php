@@ -115,7 +115,46 @@ class ImportDrupalAliasesCommand extends Command
         $bar = $this->output->createProgressBar($drupalAliases->count());
         $bar->start();
 
-        foreach ($drupalAliases->chunk(9999) as $chunk) {
+        // First find the aliases that are duplicates
+        $groupedAliases = $drupalAliases->groupBy('source');
+        $duplicateSources = $groupedAliases->filter(function ($aliases) {
+            return $aliases->count() > 1;
+        });
+
+
+        $nonDuplicateAliases = $drupalAliases->filter(function ($alias) use ($duplicateSources) {
+            return !$duplicateSources->has($alias->source);
+        });
+
+        $duplicateRedirects = [];
+        foreach ($duplicateSources as $duplicateSource) {
+
+            for ($i = 0; $i < $duplicateSource->count(); $i++) {
+                $alias = $duplicateSource[$i];
+                // keep the first alias as the primary redirect
+                if ($i === 0) {
+                    $source = cleanPath($alias->source);
+                    $destination = cleanPath($alias->alias);
+                    $nonDuplicateAliases[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+                } else {
+                    // add the rest of the aliases as duplicate redirects using the alias as the source
+                    $source = cleanPath($alias->alias);
+                    $destination = cleanPath($alias->source);
+                    $dplicaetRedirects[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+                }
+            }
+        }
+
+        if (!empty($duplicateRedirects)) {
+            AddRedirectsInBulkFromArrayJob::dispatch($duplicateRedirects);
+        }
+
+
+        if ($duplicateSources->isNotEmpty()) {
+            $this->warn("\nFound " . $duplicateSources->count() . " sources with multiple aliases:");
+        }
+
+        foreach ($nonDuplicateAliases->chunk(9999) as $chunk) {
             $redirects = [];
             foreach ($chunk as $alias) {
                 try {
