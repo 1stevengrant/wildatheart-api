@@ -101,7 +101,7 @@ class RedirectService
         Redirect::upsert(
             $successfulRedirects,
             ['source'],
-            ['destination', 'updated_at']
+            ['destination', 'updated_at', 'status_code', 'count', 'system_origin']
         );
 
         return $body;
