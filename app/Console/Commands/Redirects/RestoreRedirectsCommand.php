@@ -15,7 +15,7 @@ class RestoreRedirectsCommand extends Command
 
   public function handle()
   {
-    $filePath = $this->argument('filePath');
+    $filePath = storage_path($this->argument('filePath'));
 
     if (! Storage::exists($filePath)) {
       $this->error("No redirects found in $filePath");
