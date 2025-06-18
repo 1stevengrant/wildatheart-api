@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands\Redirects;
 
+use App\DataTransferObjects\RedirectData;
+use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 use Exception;
 use App\Models\Redirect;
 use Illuminate\Console\Command;
@@ -113,36 +115,30 @@ class ImportDrupalAliasesCommand extends Command
         $bar = $this->output->createProgressBar($drupalAliases->count());
         $bar->start();
 
-        foreach ($drupalAliases as $alias) {
-            try {
-                // Clean and validate the alias data
-                // For URL aliases, the 'alias' becomes the source (what users type)
-                // and 'source' becomes the destination (where they go)
-                $source = cleanPath($alias->source);
-                $destination = cleanPath($alias->alias);
+        foreach ($drupalAliases->chunk(9999) as $chunk) {
+            $redirects = [];
+            foreach ($chunk as $alias) {
+                try {
+                    // Clean and validate the alias data
+                    // For URL aliases, the 'alias' becomes the source (what users type)
+                    // and 'source' becomes the destination (where they go)
+                    $source = cleanPath($alias->source);
+                    $destination = cleanPath($alias->alias);
 
-                if (empty($source) || empty($destination)) {
-                    continue;
+                    if (empty($source) || empty($destination)) {
+                        continue;
+                    }
+
+                    $redirects[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+                    $imported++;
+                } catch (Exception $e) {
+                    $this->warn("Failed to import alias: $alias->alias -> $alias->source");
+                    $this->warn("Error: {$e->getMessage()}");
                 }
 
-                // Insert or update the redirect
-                Redirect::updateOrCreate(
-                    ['source' => $source],
-                    [
-                        'destination' => $destination,
-                        'status_code' => 301, // Default to 301 redirect
-                        'count' => 0,
-                        'system_origin' => 'drupal_alias',
-                    ]
-                );
-
-                $imported++;
-            } catch (Exception $e) {
-                $this->warn("Failed to import alias: $alias->alias -> $alias->source");
-                $this->warn("Error: {$e->getMessage()}");
+                $bar->advance();
             }
-
-            $bar->advance();
+            AddRedirectsInBulkFromArrayJob::dispatch($redirects);
         }
 
         $bar->finish();
