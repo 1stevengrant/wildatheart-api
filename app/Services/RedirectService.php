@@ -13,7 +13,7 @@ use App\Http\Integrations\Cloudflare\CloudflareConnector;
 use App\Http\Integrations\Cloudflare\Requests\KV\PutRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\DeleteRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\PutRequestBulk;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class RedirectService
 {
