@@ -37,19 +37,26 @@ class RedirectService
         }
 
         $contents = Storage::get($file);
+        $validRedirects = [];
 
-        $redirects = explode("\n", $contents);
+        if (str_ends_with($file, '.json')) {
+            $json = json_decode($contents, true);
+            $validRedirects = collect($json)->map(function ($redirect) {
+                return new RedirectData($redirect['source'], $redirect['destination']);
+            });
+        } else {
+            $redirects = explode("\n", $contents);
+            $validRedirects = collect($redirects)->map(function ($redirect) {
+                $parsedRedirect = explode(' ', $redirect);
+                return new RedirectData($parsedRedirect[0], $parsedRedirect[1]);
+            });
+        }
 
         $cloudflareBulkMaximum = 10000;
-        if (count($redirects) >= $cloudflareBulkMaximum) {
+        if (count($validRedirects) >= $cloudflareBulkMaximum) {
             throw new Exception("The maximum number of items you may import at one time is $cloudflareBulkMaximum");
         }
 
-        $validRedirects = collect($redirects)->map(function ($redirect) {
-            $parsedRedirect = explode(' ', $redirect);
-
-            return new RedirectData($parsedRedirect[0], $parsedRedirect[1]);
-        });
 
         return $validRedirects->toArray();
     }
@@ -87,7 +94,7 @@ class RedirectService
         $unsuccessfulKeys = $body->result->unsuccessful_keys;
 
         $successfulRedirects = collect($redirects)
-            ->filter(fn ($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
+            ->filter(fn($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
             ->toArray();
 
         Redirect::upsert(
