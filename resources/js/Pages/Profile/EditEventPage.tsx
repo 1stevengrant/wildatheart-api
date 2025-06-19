@@ -96,6 +96,7 @@ const EditEventPage = () => {
 
     const handleMapClick = (event: MapLayerMouseEvent) => {
         const { lat, lng } = event.lngLat;
+
         addEvent(lng, lat).then((r) => console.log(r));
     };
 
@@ -104,48 +105,52 @@ const EditEventPage = () => {
         const location = await lookupLocation(lng, lat);
 
         const country = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("country")
-            )?.text,
-            region = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("region")
-            )?.text,
-            postcode = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("postcode")
-            )?.text,
-            district = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("district")
-            )?.text,
-            place = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("place")
-            )?.text,
-            locality = location.find((feature: { id: string | string[] }) =>
-                feature.id.includes("locality")
-            )?.text,
-            neighborhood = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("country")
+        )?.text;
+        const region = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("region")
+        )?.text;
+        const postcode = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("postcode")
+        )?.text;
+        const district = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("district")
+        )?.text;
+        const place = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("place")
+        )?.text;
+        const locality = location.find((feature: { id: string | string[] }) =>
+            feature.id.includes("locality")
+        )?.text;
+        const neighborhood = location.find(
+            (feature: { id: string | string[] }) =>
                 feature.id.includes("neighborhood")
-            )?.text,
-            streetAddress = location.find(
-                (feature: { id: string | string[] }) =>
-                    feature.id.includes("address")
-            )?.text;
+        )?.text;
+        const streetAddress = location.find(
+            (feature: { id: string | string[] }) =>
+                feature.id.includes("address")
+        )?.text;
 
-        data.country = country;
-        data.region = region;
-        data.state = region;
-        data.district = district;
-        data.locality = locality;
-        data.neighborhood = neighborhood;
-        data.street_address = streetAddress;
-        data.latitude = lat;
-        data.longitude = lng;
-        data.city =
-            place ??
-            locality ??
-            district ??
-            region ??
-            country ??
-            "Middle of Nowhere";
-        data.zip = postcode;
+        setData((prevData) => ({
+            ...prevData,
+            country: country,
+            region: region,
+            state: region,
+            district: district,
+            locality: locality,
+            neighborhood: neighborhood,
+            street_address: streetAddress,
+            latitude: lat,
+            longitude: lng,
+            city:
+                place ??
+                locality ??
+                district ??
+                region ??
+                country ??
+                "Middle of Nowhere",
+            zip: postcode,
+        }));
     };
 
     useEffect(() => {

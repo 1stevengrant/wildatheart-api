@@ -5,9 +5,12 @@ namespace App\Http\Requests;
 use Carbon\Carbon;
 use App\Models\EventType;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Concerns\HasLocationRules;
 
 class UpdateEventRequest extends FormRequest
 {
+    use HasLocationRules;
+
     public function authorize(): bool
     {
         return auth()->check();
@@ -31,14 +34,8 @@ class UpdateEventRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'start_date' => [
-                'required',
-                'date',
-            ],
-            'end_date' => 'date|after_or_equal:start_date',
-        ];
+        return array_merge($this->getLocationRules(), [
+            'start_date' => ['required', 'date'],
+        ]);
     }
 }
