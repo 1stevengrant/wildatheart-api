@@ -6,6 +6,7 @@ use App\DataTransferObjects\RedirectData;
 use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 use Exception;
 use App\Models\Redirect;
+use Barryvdh\LaravelIdeHelper\Alias;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -124,6 +125,11 @@ class ImportDrupalAliasesCommand extends Command
 
         $nonDuplicateAliases = $drupalAliases->filter(function ($alias) use ($duplicateSources) {
             return !$duplicateSources->has($alias->source);
+        })->map(function ($alias) {
+            $source = cleanPath($alias->source);
+            $destination = cleanPath($alias->alias);
+            $redirect = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+            return $redirect;
         });
 
         $duplicateRedirects = [];
@@ -140,7 +146,7 @@ class ImportDrupalAliasesCommand extends Command
                     // add the rest of the aliases as duplicate redirects using the alias as the source
                     $source = cleanPath($alias->alias);
                     $destination = cleanPath($alias->source);
-                    $dplicaetRedirects[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+                    $duplicateRedirects[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
                 }
             }
         }
@@ -155,23 +161,26 @@ class ImportDrupalAliasesCommand extends Command
         }
 
         foreach ($nonDuplicateAliases->chunk(9999) as $chunk) {
+            $count = 0;
             $redirects = [];
             foreach ($chunk as $alias) {
+
+
                 try {
                     // Clean and validate the alias data
                     // For URL aliases, the 'alias' becomes the source (what users type)
-                    // and 'source' becomes the destination (where they go)
                     $source = cleanPath($alias->source);
-                    $destination = cleanPath($alias->alias);
+                    $destination = cleanPath($alias->destination);
 
-                    if (empty($source) || empty($destination)) {
+
+                    if (empty($source) || empty($destination) || !$alias) {
                         continue;
                     }
 
-                    $redirects[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+                    $redirects[] = $alias;
                     $imported++;
                 } catch (Exception $e) {
-                    $this->warn("Failed to import alias: $alias->alias -> $alias->source");
+                    $this->warn("Failed to import alias: $alias->destination -> $alias->source");
                     $this->warn("Error: {$e->getMessage()}");
                 }
 
