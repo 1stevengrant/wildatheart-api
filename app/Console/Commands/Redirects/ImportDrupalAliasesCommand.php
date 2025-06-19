@@ -160,7 +160,7 @@ class ImportDrupalAliasesCommand extends Command
             $this->warn("\nFound " . $duplicateSources->count() . " sources with multiple aliases:");
         }
 
-        foreach ($nonDuplicateAliases->chunk(9999) as $chunk) {
+        foreach ($nonDuplicateAliases->chunk(5000) as $chunk) {
             $count = 0;
             $redirects = [];
             foreach ($chunk as $alias) {
