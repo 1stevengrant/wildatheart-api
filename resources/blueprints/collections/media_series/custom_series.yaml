@@ -50,6 +50,7 @@ tabs:
               default: now
               validate:
                 - required
+              time_enabled: true
           -
             handle: hide_navigation
             field:
