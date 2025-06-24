@@ -71,6 +71,7 @@ tabs:
               default: now
               validate:
                 - required
+              time_enabled: true
           -
             handle: content_type
             field:

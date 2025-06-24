@@ -8,18 +8,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AddRedirectsInBulkFromArrayJob implements ShouldQueue
 {
-  use Queueable;
+    use Queueable;
 
-  /**
-   * Create a new job instance.
-   */
-  public function __construct(public array $redirects) {}
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(public array $redirects) {}
 
-  /**
-   * Execute the job.
-   */
-  public function handle(RedirectService $redirectService): void
-  {
-    $redirectService->createBulk($this->redirects);
-  }
+    /**
+     * Execute the job.
+     */
+    public function handle(RedirectService $redirectService): void
+    {
+        $redirectService->createBulk($this->redirects);
+    }
 }
