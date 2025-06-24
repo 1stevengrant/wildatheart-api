@@ -180,7 +180,9 @@ class SubsplashService
                 ->blueprint('subsplash_media_item')
                 ->collection('media_item')
                 ->id(data_get($mediaItem, 'id'))
+                ->date($mediaItemDate)
                 ->slug($mediaItemTitle);
+
             $entryCreated = true;
         }
 
@@ -213,7 +215,7 @@ class SubsplashService
             $entry->slug($uniqueSlug);
         }
 
-        $entry->date($mediaItemDate)
+        $entry
             ->data($data)
             ->save();
 
