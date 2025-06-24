@@ -65,6 +65,15 @@ tabs:
               default: now
               validate:
                 - required
+              time_enabled: true
           -
             import: images
+          -
+            handle: content_type
+            field:
+              type: terms
+              taxonomies:
+                - content_type
+              display: 'Content Type'
+              mode: select
 title: 'Media Item'

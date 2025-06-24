@@ -166,7 +166,7 @@ class ImportDrupalRedirectsCommand extends Command
         }
 
         // Clean up the destination
-        $destination = trim($destination);
+        $destination = mb_trim($destination);
 
         // If it's not already a full URL, ensure it starts with /
         if (! str_contains($destination, '://') && ! str_starts_with($destination, '/')) {

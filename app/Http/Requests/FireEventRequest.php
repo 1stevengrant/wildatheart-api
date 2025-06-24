@@ -5,10 +5,13 @@ namespace App\Http\Requests;
 use App\Rules\ShouldNotEndWithFire;
 use Illuminate\Foundation\Http\FormRequest;
 use Repat\LaravelRules\DoesntContainEmojis;
+use App\Http\Requests\Concerns\HasLocationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class FireEventRequest extends FormRequest
 {
+    use HasLocationRules;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -24,7 +27,7 @@ class FireEventRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return array_merge($this->getLocationRules(), [
             'name' => [
                 'required',
                 'string',
@@ -33,12 +36,10 @@ class FireEventRequest extends FormRequest
                 new ShouldNotEndWithFire,
                 new DoesntContainEmojis,
             ],
-            'latitude' => 'required',
-            'longitude' => 'required',
             'frequency' => [
                 'required',
                 'string',
             ],
-        ];
+        ]);
     }
 }

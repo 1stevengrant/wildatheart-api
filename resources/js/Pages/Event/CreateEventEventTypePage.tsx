@@ -216,23 +216,25 @@ const CreateEventEventTypePage = () => {
             feature.id.includes("poi")
         )?.text;
 
-        data.country = country;
-        data.region = region;
-        data.district = district;
-        data.locality = locality;
-        data.neighborhood = neighborhood;
-        data.street_address = streetAddress;
-        data.poi = poi;
-        data.latitude = lat;
-        data.longitude = lng;
-        data.city =
-            place ??
-            locality ??
-            district ??
-            region ??
-            country ??
-            "Middle of Nowhere";
-        data.zip = postcode;
+        setData(prevData => ({
+            ...prevData,
+            country: country,
+            region: region,
+            district: district,
+            locality: locality,
+            neighborhood: neighborhood,
+            street_address: streetAddress,
+            poi: poi,
+            latitude: lat,
+            longitude: lng,
+            city: place ??
+                locality ??
+                district ??
+                region ??
+                country ??
+                "Middle of Nowhere",
+            zip: postcode
+        }));
 
         setEvent({
             ...event,

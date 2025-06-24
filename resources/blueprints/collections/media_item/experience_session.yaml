@@ -92,8 +92,31 @@ tabs:
               default: now
               validate:
                 - required
+              time_enabled: true
       -
         display: Images
         fields:
           -
             import: images
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: content_type
+            field:
+              type: terms
+              taxonomies:
+                - content_type
+              display: 'Content Type'
+              mode: select
+          -
+            handle: media_type
+            field:
+              type: terms
+              taxonomies:
+                - media_type
+              display: 'Media Type'
+              mode: select

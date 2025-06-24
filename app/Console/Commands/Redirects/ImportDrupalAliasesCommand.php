@@ -7,6 +7,9 @@ use App\Models\Redirect;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\LaravelIdeHelper\Alias;
+use App\DataTransferObjects\RedirectData;
+use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 
 class ImportDrupalAliasesCommand extends Command
 {
@@ -16,7 +19,7 @@ class ImportDrupalAliasesCommand extends Command
 
     public const array EXCLUDED_SOURCE_PATHS = ['user', 'file/', 'taxonomy/'];
 
-    public const array EXCLUDED_ALIAS_PATHS = [];
+    public const array EXCLUDED_ALIAS_PATHS = ['allies/'];
 
     public const string DRUPAL_CONNECTION = 'drupal';
 
@@ -54,7 +57,6 @@ class ImportDrupalAliasesCommand extends Command
             $imported = $this->importAliases($drupalAliases);
 
             $this->info("✓ Successfully imported {$imported} URL aliases as redirects");
-
         } catch (Exception $e) {
             $this->error('Import failed: ' . $e->getMessage());
 
@@ -114,37 +116,74 @@ class ImportDrupalAliasesCommand extends Command
         $bar = $this->output->createProgressBar($drupalAliases->count());
         $bar->start();
 
-        foreach ($drupalAliases as $alias) {
-            try {
-                // Clean and validate the alias data
-                // For URL aliases, the 'alias' becomes the source (what users type)
-                // and 'source' becomes the destination (where they go)
-                $source = cleanPath($alias->alias);
-                $destination = cleanPath($alias->source);
+        // First find the aliases that are duplicates
+        $groupedAliases = $drupalAliases->groupBy('source');
+        $duplicateSources = $groupedAliases->filter(function ($aliases) {
+            return $aliases->count() > 1;
+        });
 
-                if (empty($source) || empty($destination)) {
-                    continue;
+        $nonDuplicateAliases = $drupalAliases->filter(function ($alias) use ($duplicateSources) {
+            return ! $duplicateSources->has($alias->source);
+        })->map(function ($alias) {
+            $source = cleanPath($alias->source);
+            $destination = cleanPath($alias->alias);
+            $redirect = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+
+            return $redirect;
+        });
+
+        $duplicateRedirects = [];
+        foreach ($duplicateSources as $duplicateSource) {
+
+            for ($i = 0; $i < $duplicateSource->count(); $i++) {
+                $alias = $duplicateSource[$i];
+                // keep the first alias as the primary redirect
+                if ($i === 0) {
+                    $source = cleanPath($alias->source);
+                    $destination = cleanPath($alias->alias);
+                    $nonDuplicateAliases[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+                } else {
+                    // add the rest of the aliases as duplicate redirects using the alias as the source
+                    $source = cleanPath($alias->alias);
+                    $destination = cleanPath($alias->source);
+                    $duplicateRedirects[] = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+                }
+            }
+        }
+
+        if (! empty($duplicateRedirects)) {
+            AddRedirectsInBulkFromArrayJob::dispatch($duplicateRedirects);
+        }
+
+        if ($duplicateSources->isNotEmpty()) {
+            $this->warn("\nFound " . $duplicateSources->count() . ' sources with multiple aliases:');
+        }
+
+        foreach ($nonDuplicateAliases->chunk(5000) as $chunk) {
+            $count = 0;
+            $redirects = [];
+            foreach ($chunk as $alias) {
+
+                try {
+                    // Clean and validate the alias data
+                    // For URL aliases, the 'alias' becomes the source (what users type)
+                    $source = cleanPath($alias->source);
+                    $destination = cleanPath($alias->destination);
+
+                    if (empty($source) || empty($destination) || ! $alias) {
+                        continue;
+                    }
+
+                    $redirects[] = $alias;
+                    $imported++;
+                } catch (Exception $e) {
+                    $this->warn("Failed to import alias: $alias->destination -> $alias->source");
+                    $this->warn("Error: {$e->getMessage()}");
                 }
 
-                // Insert or update the redirect
-                Redirect::updateOrCreate(
-                    ['source' => $source],
-                    [
-                        'destination' => $destination,
-                        'status_code' => 301, // Default to 301 redirect
-                        'count' => 0,
-                        'system_origin' => 'drupal_alias',
-                    ]
-                );
-
-                $imported++;
-
-            } catch (Exception $e) {
-                $this->warn("Failed to import alias: $alias->alias -> $alias->source");
-                $this->warn("Error: {$e->getMessage()}");
+                $bar->advance();
             }
-
-            $bar->advance();
+            AddRedirectsInBulkFromArrayJob::dispatch($redirects);
         }
 
         $bar->finish();
