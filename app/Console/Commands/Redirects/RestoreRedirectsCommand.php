@@ -9,24 +9,25 @@ use App\Jobs\Admin\AddRedirectsInBulkJob;
 
 class RestoreRedirectsCommand extends Command
 {
-  protected $signature = 'app:restore-redirects {filePath : A text file containing redirects to import.}';
+    protected $signature = 'app:restore-redirects {filePath : A text file containing redirects to import.}';
 
-  protected $description = 'Restores redirects from a JSON file';
+    protected $description = 'Restores redirects from a JSON file';
 
-  public function handle()
-  {
-    $filePath = $this->argument('filePath');
+    public function handle()
+    {
+        $filePath = $this->argument('filePath');
 
-    if (! Storage::exists($filePath)) {
-      $this->error("No redirects found in $filePath");
-      return;
+        if (! Storage::exists($filePath)) {
+            $this->error("No redirects found in $filePath");
+
+            return;
+        }
+
+        try {
+            AddRedirectsInBulkJob::dispatch($filePath);
+            $this->info('Created AddRedirectsInBulkJob');
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
     }
-
-    try {
-      AddRedirectsInBulkJob::dispatch($filePath);
-      $this->info('Created AddRedirectsInBulkJob');
-    } catch (Exception $exception) {
-      $this->error($exception->getMessage());
-    }
-  }
 }

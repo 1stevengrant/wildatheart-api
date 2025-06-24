@@ -368,13 +368,13 @@ if (! function_exists('cleanPath')) {
     function cleanPath(string $path): string
     {
         // Remove leading/trailing slashes and clean up the path
-        $path = trim($path, '/');
+        $path = mb_trim($path, '/');
 
         // Remove any query parameters or fragments
         $path = strtok($path, '?');
         $path = strtok($path, '#');
 
         // Ensure path starts with forward slash
-        return '/' . ltrim($path, '/');
+        return '/' . mb_ltrim($path, '/');
     }
 }

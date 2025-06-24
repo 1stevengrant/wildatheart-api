@@ -14,7 +14,6 @@ use App\Http\Integrations\Cloudflare\Requests\KV\PutRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\DeleteRequest;
 use App\Http\Integrations\Cloudflare\Requests\KV\PutRequestBulk;
 
-
 class RedirectService
 {
     public function __construct(
@@ -49,6 +48,7 @@ class RedirectService
             $redirects = explode("\n", $contents);
             $validRedirects = collect($redirects)->map(function ($redirect) {
                 $parsedRedirect = explode(' ', $redirect);
+
                 return new RedirectData($parsedRedirect[0], $parsedRedirect[1]);
             });
         }
@@ -57,7 +57,6 @@ class RedirectService
         if (count($validRedirects) >= $cloudflareBulkMaximum) {
             throw new Exception("The maximum number of items you may import at one time is $cloudflareBulkMaximum");
         }
-
 
         return $validRedirects->all();
     }
@@ -95,7 +94,7 @@ class RedirectService
         $unsuccessfulKeys = $body->result->unsuccessful_keys;
 
         $successfulRedirects = collect($redirects)
-            ->filter(fn($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
+            ->filter(fn ($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
             ->toArray();
 
         Redirect::upsert(

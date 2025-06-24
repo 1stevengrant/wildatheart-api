@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands\Redirects;
 
-use App\DataTransferObjects\RedirectData;
-use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 use Exception;
 use App\Models\Redirect;
-use Barryvdh\LaravelIdeHelper\Alias;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\LaravelIdeHelper\Alias;
+use App\DataTransferObjects\RedirectData;
+use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 
 class ImportDrupalAliasesCommand extends Command
 {
@@ -122,13 +122,13 @@ class ImportDrupalAliasesCommand extends Command
             return $aliases->count() > 1;
         });
 
-
         $nonDuplicateAliases = $drupalAliases->filter(function ($alias) use ($duplicateSources) {
-            return !$duplicateSources->has($alias->source);
+            return ! $duplicateSources->has($alias->source);
         })->map(function ($alias) {
             $source = cleanPath($alias->source);
             $destination = cleanPath($alias->alias);
             $redirect = new RedirectData($source, $destination, 301, 0, 'drupal_alias');
+
             return $redirect;
         });
 
@@ -151,13 +151,12 @@ class ImportDrupalAliasesCommand extends Command
             }
         }
 
-        if (!empty($duplicateRedirects)) {
+        if (! empty($duplicateRedirects)) {
             AddRedirectsInBulkFromArrayJob::dispatch($duplicateRedirects);
         }
 
-
         if ($duplicateSources->isNotEmpty()) {
-            $this->warn("\nFound " . $duplicateSources->count() . " sources with multiple aliases:");
+            $this->warn("\nFound " . $duplicateSources->count() . ' sources with multiple aliases:');
         }
 
         foreach ($nonDuplicateAliases->chunk(5000) as $chunk) {
@@ -165,15 +164,13 @@ class ImportDrupalAliasesCommand extends Command
             $redirects = [];
             foreach ($chunk as $alias) {
 
-
                 try {
                     // Clean and validate the alias data
                     // For URL aliases, the 'alias' becomes the source (what users type)
                     $source = cleanPath($alias->source);
                     $destination = cleanPath($alias->destination);
 
-
-                    if (empty($source) || empty($destination) || !$alias) {
+                    if (empty($source) || empty($destination) || ! $alias) {
                         continue;
                     }
 
