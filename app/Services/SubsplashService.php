@@ -158,7 +158,13 @@ class SubsplashService
         $entry = Entry::query()
             ->where('collection', 'media_item')
             ->where('id', $mediaItemID)
+            ->orWhere('data->subsplash_media_item_id', $mediaItemID)
             ->first();
+
+        // If the entry exists and the override subsplash content toggle is set, don't update it.
+        if ($entry && $entry->data()->get('override_subsplash_content')) {
+            return $entry;
+        }
 
         // Check if custom media item is already associated to this id.
         $customItem = Entry::query()
