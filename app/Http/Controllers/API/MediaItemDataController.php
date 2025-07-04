@@ -57,14 +57,16 @@ class MediaItemDataController extends Controller
     {
         $responseData = [];
 
-        $responseData['id'] = $mediaItem->id;
+        $mediaItemId = $mediaItem->data()->get('subsplash_media_item_id');
+
+        $responseData['id'] = $mediaItemId;
         $responseData['slug'] = $mediaItem->slug;
         $responseData['uri'] = $mediaItem->uri;
         $responseData['blueprint'] = $mediaItem->blueprint;
 
         $subsplash = new SubsplashService;
 
-        $subsplashMediaItem = $subsplash->getMediaItem($mediaItem->id);
+        $subsplashMediaItem = $subsplash->getMediaItem($mediaItemId);
 
         $responseData['date'] = data_get($subsplashMediaItem, 'date');
 
