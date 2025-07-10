@@ -68,7 +68,9 @@ class MediaSeriesDataController extends Controller
             $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
 
             $mediaItemEntry = Entry::query()
-                ->find($mediaItem['id']);
+                ->where('id', $mediaItem['id'])
+                ->orWhere('data->subsplash_media_item_id', $mediaItem['id'])
+                ->first();
 
             // The media hasn't been imported yet. Skip it.
             if ($mediaItemEntry == null) {
