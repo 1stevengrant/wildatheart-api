@@ -98,6 +98,7 @@ jobs:
           WAH_LOCAL_API_URL: "https://local-staging.wildatheart.org/api/v1"
           CONTENT_API_V1_URL: "https://local-staging.wildatheart.org/api/content/v1"
           CONTENT_API_AUTH_TOKEN: "Basic d2FoOndhaA=="
+          NODE_ENV: development
       - name: Run Integration Tests Through A Fresh Build
         working-directory: astro
         run: BASE_URL=http://localhost:4321 npx playwright test
