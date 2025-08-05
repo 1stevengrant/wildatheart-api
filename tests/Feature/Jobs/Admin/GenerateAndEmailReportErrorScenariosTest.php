@@ -11,8 +11,8 @@ use App\Jobs\Admin\GenerateAndEmailReport;
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
-    // Use fake storage and mail
-    Storage::fake();
+    // Use fake storage and mail - specifically fake the local disk
+    Storage::fake('local');
     Mail::fake();
 
     // Mock the ReportService
@@ -39,7 +39,7 @@ it('handles ReportService exception gracefully', function () {
 
     // Verify no email was sent and no file remnants
     Mail::assertNothingSent();
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
 });
 
 it('handles email sending with invalid addresses', function () {
@@ -59,7 +59,7 @@ it('handles email sending with invalid addresses', function () {
     $job->handle($this->reportService);
 
     // Assert - File should still be cleaned up
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
     // Note: Laravel's Mail fake doesn't validate email format, so this test
     // verifies the job completes without throwing exceptions
 });
@@ -84,7 +84,7 @@ it('handles very large CSV content that might cause memory issues', function () 
 
     // Assert
     Mail::assertSent(ReportMailable::class);
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
 });
 
 it('handles empty or null CSV content from ReportService', function () {
@@ -104,7 +104,7 @@ it('handles empty or null CSV content from ReportService', function () {
 
     // Assert - Should handle null gracefully
     Mail::assertSent(ReportMailable::class);
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
 });
 
 it('tests different report types work correctly', function () {
@@ -133,7 +133,7 @@ it('tests different report types work correctly', function () {
         $job->handle($this->reportService);
 
         // Assert
-        Storage::assertMissing('tmp/report.csv');
+        Storage::disk('local')->assertMissing('tmp/report.csv');
     }
 
     // All reports should have been sent

@@ -32,13 +32,16 @@ class GenerateAndEmailReport implements ShouldQueue
 
         $storagePath = 'tmp/report.csv';
 
+        // Use local disk for temporary files (needed for email attachments even when main storage is S3)
+        $localDisk = Storage::disk('local');
+
         // Ensure the tmp directory exists
-        Storage::makeDirectory('tmp');
+        $localDisk->makeDirectory('tmp');
 
-        // TODO: Store files in S3 and provide secure link in email.
-        Storage::put($storagePath, $reportCSV);
+        // Store file on local disk for attachment
+        $localDisk->put($storagePath, $reportCSV);
 
-        $filePath = Storage::path($storagePath);
+        $filePath = $localDisk->path($storagePath);
 
         $date = now()->format('m/d/Y');
 
@@ -46,6 +49,7 @@ class GenerateAndEmailReport implements ShouldQueue
             ->cc('nic@wildatheart.org')
             ->send(new \App\Mail\ReportMailable($date, $filePath, $this->reportTitle));
 
-        Storage::delete($storagePath);
+        // Clean up local temporary file
+        $localDisk->delete($storagePath);
     }
 }

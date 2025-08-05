@@ -11,8 +11,8 @@ use App\Jobs\Admin\GenerateAndEmailReport;
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
-    // Use fake storage and mail
-    Storage::fake();
+    // Use fake storage and mail - specifically fake the local disk
+    Storage::fake('local');
     Mail::fake();
 
     // Mock the ReportService
@@ -38,8 +38,8 @@ it('successfully generates and emails a report', function () {
     $job->handle($this->reportService);
 
     // Assert
-    // Check that the file was created and then deleted
-    Storage::assertMissing('tmp/report.csv');
+    // Check that the file was created and then deleted from local disk
+    Storage::disk('local')->assertMissing('tmp/report.csv');
 
     // Check that email was sent
     Mail::assertSent(ReportMailable::class, function ($mail) use ($email, $reportTitle) {
@@ -62,7 +62,7 @@ it('creates tmp directory if it does not exist', function () {
         ->andReturn($csvContent);
 
     // Ensure tmp directory doesn't exist initially
-    expect(Storage::exists('tmp'))->toBeFalse();
+    expect(Storage::disk('local')->exists('tmp'))->toBeFalse();
 
     // Act
     $job = new GenerateAndEmailReport($email, $report, $reportTitle);
@@ -143,7 +143,7 @@ it('cleans up temporary file after sending email', function () {
 
     // Assert
     // File should be cleaned up after email is sent
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
     Mail::assertSent(ReportMailable::class);
 });
 
@@ -212,7 +212,7 @@ it('handles empty CSV content', function () {
 
     // Assert
     Mail::assertSent(ReportMailable::class);
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
 });
 
 it('handles large CSV content', function () {
@@ -238,7 +238,7 @@ it('handles large CSV content', function () {
 
     // Assert
     Mail::assertSent(ReportMailable::class);
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
 });
 
 it('handles special characters in CSV content', function () {
@@ -259,5 +259,5 @@ it('handles special characters in CSV content', function () {
 
     // Assert
     Mail::assertSent(ReportMailable::class);
-    Storage::assertMissing('tmp/report.csv');
+    Storage::disk('local')->assertMissing('tmp/report.csv');
 });
