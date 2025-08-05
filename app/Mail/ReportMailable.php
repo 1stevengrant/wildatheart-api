@@ -17,9 +17,9 @@ class ReportMailable extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        private string $date,
-        private string $filePath,
-        private string $reportName = ''
+        private readonly string $date,
+        private readonly string $filePath,
+        private readonly string $reportName = ''
     ) {}
 
     /**
@@ -28,7 +28,7 @@ class ReportMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "{$this->reportName} Report - {$this->date}",
+            subject: "$this->reportName Report - $this->date",
         );
     }
 
