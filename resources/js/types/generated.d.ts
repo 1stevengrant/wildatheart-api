@@ -505,7 +505,15 @@ declare namespace App.DataTypeObjects.Statamic.Blueprints {
 declare namespace App.Enums {
     export type EventSexEnum = "men" | "women";
     export type ReportFormat = "csv";
-    export type ReportName = "getBAKRHosts";
+    export type ReportName =
+        | "getBAKRHosts"
+        | "getWAHRHosts"
+        | "getBAKRExperienceHosts"
+        | "getWAHExperienceHosts"
+        | "getFiresHosts"
+        | "getCAPRHosts"
+        | "getCAPExperienceHosts"
+        | "getSurvivalSchoolHosts";
 }
 declare namespace App.Enums.Event {
     export type FrequencyEnum =
