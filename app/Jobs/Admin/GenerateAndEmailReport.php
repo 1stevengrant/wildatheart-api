@@ -15,21 +15,33 @@ class GenerateAndEmailReport implements ShouldQueue
     use Queueable;
 
     public function __construct(
-        private string $email,
-        private ReportName $report,
-        private string $reportTitle,
-        private ReportFormat $format = ReportFormat::CSV,
+        private readonly string $email,
+        private readonly ReportName $report,
+        private readonly string $reportTitle,
+        private readonly ReportFormat $format = ReportFormat::CSV,
     ) {}
 
     public function handle(ReportService $reportService): void
     {
         $reportCSV = $reportService->generate($this->report, $this->format);
 
-        $filePath = storage_path('app/tmp/report.csv');
+        // Handle null or empty CSV content
+        if ($reportCSV === null) {
+            $reportCSV = '';
+        }
+
         $storagePath = 'tmp/report.csv';
 
-        // TODO: Store files in S3 and provide secure link in email.
-        Storage::put($storagePath, $reportCSV);
+        // Use local disk for temporary files (needed for email attachments even when main storage is S3)
+        $localDisk = Storage::disk('local');
+
+        // Ensure the tmp directory exists
+        $localDisk->makeDirectory('tmp');
+
+        // Store file on local disk for attachment
+        $localDisk->put($storagePath, $reportCSV);
+
+        $filePath = $localDisk->path($storagePath);
 
         $date = now()->format('m/d/Y');
 
@@ -37,6 +49,7 @@ class GenerateAndEmailReport implements ShouldQueue
             ->cc('nic@wildatheart.org')
             ->send(new \App\Mail\ReportMailable($date, $filePath, $this->reportTitle));
 
-        Storage::delete($storagePath);
+        // Clean up local temporary file
+        $localDisk->delete($storagePath);
     }
 }
