@@ -14,11 +14,14 @@ export default function Pagination({ links = [] }: PaginationProps) {
 
     return (
         <div className="flex flex-wrap mt-6 -mb-1">
-            {links?.map((link) => {
+            {links?.map((link, index) => {
                 return link?.url === null ? (
-                    <PageInactive key={link.label} label={link.label} />
+                    <PageInactive
+                        key={`inactive-${index}`}
+                        label={link.label}
+                    />
                 ) : (
-                    <PaginationItem key={link.label} {...link} />
+                    <PaginationItem key={`active-${index}`} {...link} />
                 );
             })}
         </div>
@@ -36,13 +39,13 @@ function PaginationItem({ active, label, url }: PaginationItem) {
         [
             "mr-1 mb-1",
             "px-4 py-3",
-            "border-2 border-n400 rounded",
+            "border-2 rounded",
             "text-sm font-semibold",
-            "hover:border-white",
             "focus:outline-none focus:border-p200 focus:text-p200",
         ],
         {
-            "bg-black border-p200 text-p200": active,
+            "border-p200 text-p200 hover:border-p200 hover:text-p200": active,
+            "border-white text-white hover:border-p200 hover:text-p200": !active,
         }
     );
 
@@ -61,7 +64,7 @@ function PaginationItem({ active, label, url }: PaginationItem) {
 
 function PageInactive({ label }: Pick<PaginationItem, "label">) {
     const className = classNames(
-        "mr-1 mb-1 px-4 py-3 text-sm font-semibold border-2 rounded border-solid border-n400 text-n400 cursor-not-allowed"
+        "mr-1 mb-1 px-4 py-3 text-sm font-semibold border-2 rounded border-n400 text-n400 cursor-not-allowed"
     );
 
     /**
