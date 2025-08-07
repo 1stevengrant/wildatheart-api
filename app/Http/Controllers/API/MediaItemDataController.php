@@ -145,10 +145,11 @@ class MediaItemDataController extends Controller
 
             foreach ($mediaItemEntries as $mediaItemEntry) {
 
+                $mediaItemId = $mediaItemEntry->data()->get('subsplash_media_item_id');
                 // Handle scenario where Subsplash API isn't returning accurately
-                if (! isset($subsplashMediaItemMap[$mediaItemEntry->id])) {
-                    $mediaItem = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItemEntry->id}");
-                    $subsplashMediaItemMap[$mediaItemEntry->id] = $mediaItem;
+                if (! isset($subsplashMediaItemMap[$mediaItemId])) {
+                    $mediaItem = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-items/{$mediaItemId}");
+                    $subsplashMediaItemMap[$mediaItemId] = $mediaItem;
                 }
 
                 $subsplashMediaItem = $subsplash->getMediaItem($mediaItemEntry->subsplash_media_item_id);
