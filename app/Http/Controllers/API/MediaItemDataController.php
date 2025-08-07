@@ -125,7 +125,7 @@ class MediaItemDataController extends Controller
             $responseData['series']['uri'] = $seriesEntry->uri;
             $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
 
-            $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl);
+            $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl . "&filter[status]=published");
 
             $subsplashMediaItemMap = [];
 
@@ -137,6 +137,8 @@ class MediaItemDataController extends Controller
             $mediaItemEntries = Entry::query()
                 ->where('collection', 'media_item')
                 ->where('data->series', 'like', "%{$seriesEntry->id}")
+                ->where('published', true)
+                ->where('date', '<=', now())
                 ->orderBy('date', 'desc')
                 ->limit(20)
                 ->get();
