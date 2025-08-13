@@ -45,7 +45,8 @@ function PaginationItem({ active, label, url }: PaginationItem) {
         ],
         {
             "border-p200 text-p200 hover:border-p200 hover:text-p200": active,
-            "border-white text-white hover:border-p200 hover:text-p200": !active,
+            "border-white text-white hover:border-p200 hover:text-p200":
+                !active,
         }
     );
 

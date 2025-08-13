@@ -7,9 +7,7 @@ use function Pest\Laravel\actingAs;
 
 use Database\Seeders\DatabaseSeeder;
 use Spatie\Activitylog\Models\Activity;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);
 });

@@ -3,9 +3,7 @@
 namespace Tests\Feature\Http\Controllers\API\V1\Content;
 
 use Statamic\Facades\Entry;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });

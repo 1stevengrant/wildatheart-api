@@ -1,20 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 
-import { MapPinIcon } from "@heroicons/react/24/solid";
-import { Link, useForm } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
-import mapboxgl from "mapbox-gl";
 import { singular } from "pluralize";
-import Map, {
-    GeolocateControl,
-    MapLayerMouseEvent,
-    Marker,
-    NavigationControl,
-} from "react-map-gl";
-import { useRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
+import { EventMap } from "@/Components/EventMap";
 import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
@@ -22,159 +14,76 @@ import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import TextInput from "@/Components/Forms/TextInput";
 import { FrequencyOptions } from "@/Components/FrequencyOptions";
-import { FireMarker } from "@/Components/Icons/FireMarker";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import { config } from "@/helpers/config";
 import { eventIsAFire } from "@/helpers/eventIsAFire";
-import { lookupLocation } from "@/helpers/lookupLocation";
 import { useDates } from "@/Hooks/useDates";
-import { useMapData } from "@/Hooks/useMapData";
+import { useEventForm } from "@/Hooks/useEventForm";
+import { useEventLocation } from "@/Hooks/useEventLocation";
 import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { selectedPlaceState } from "@/store/mapAtom";
 
 const EditEventPage = () => {
     const { startDate, maxDate, handleStartDateChange, setStartDate } =
         useDates();
-    const mapRef = useRef<any>(null);
-    const [selectedPlace] = useRecoilState(selectedPlaceState);
-    const { handleUserLevelZoom } = useMapData();
-    const [isPrivate, setIsPrivate] = useState(false);
-
     const page = useTypedPage();
+    const route = useRoute();
+
     const user = page.props.auth.user!;
     const event = page.props.event as App.Data.EventData;
     const eventTypeName = event.event_type_data.name;
-    const route = useRoute();
-
     const pageTitle = `Editing ${event.name}`;
 
-    const [marker, setMarker] = useState<any>({
-        lat: event.latitude,
-        lng: event.longitude,
+    // Custom hooks
+    const {
+        data,
+        errors,
+        put,
+        isPrivate,
+        handlePrivacyToggle,
+        updateLocationData,
+        setData,
+    } = useEventForm({
+        initialData: {
+            name: event.name || `${user.given_name}'s`,
+            state: event.state,
+            latitude: event.latitude,
+            longitude: event.longitude,
+            country: event.country,
+            region: event.region,
+            district: event.district,
+            locality: event.locality,
+            neighborhood: event.neighborhood,
+            street_address: event.street_address,
+            city: event.city,
+            zip: event.zip,
+            is_private: event.is_private,
+            start_date: event.start_date,
+            frequency: event.frequency,
+        },
+        user,
     });
 
-    const { data, setData, errors, put } = useForm({
-        name: event.name || `${user.given_name}'s`,
-        state: event.state,
-        latitude: event.latitude,
-        longitude: event.longitude,
-        country: event.country,
-        region: event.region,
-        district: event.district,
-        locality: event.locality,
-        neighborhood: event.neighborhood,
-        street_address: event.street_address,
-        city: event.city,
-        zip: event.zip,
-        is_private: event.is_private,
-        start_date: event.start_date,
-        frequency: event.frequency,
-    });
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+        useEventLocation({
+            initialLocation: {
+                latitude: event.latitude,
+                longitude: event.longitude,
+            },
+            onLocationChange: updateLocationData,
+        });
 
     useEffect(() => {
-        if (selectedPlace) {
-            mapRef.current?.flyTo({
-                essential: false,
-                center: selectedPlace.center,
-                duration: 2000,
-                zoom: 6,
-            });
-            const latitude = selectedPlace.center[1],
-                longitude = selectedPlace.center[0];
-
-            addEvent(longitude, latitude).then((r) => console.log(r));
+        // Set initial start date
+        if (dayjs(event.start_date).isValid()) {
+            setStartDate(dayjs(event.start_date?.split("T")[0]).toDate());
         }
-    }, [selectedPlace]);
+    }, [event.start_date, setStartDate]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(route("update.event", event.id));
-    };
-
-    const handleMapClick = (event: MapLayerMouseEvent) => {
-        const { lat, lng } = event.lngLat;
-
-        addEvent(lng, lat).then((r) => console.log(r));
-    };
-
-    const addEvent = async (lng: number, lat: number) => {
-        setMarker({ lat, lng });
-        const location = await lookupLocation(lng, lat);
-
-        const country = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("country")
-        )?.text;
-        const region = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("region")
-        )?.text;
-        const postcode = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("postcode")
-        )?.text;
-        const district = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("district")
-        )?.text;
-        const place = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("place")
-        )?.text;
-        const locality = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("locality")
-        )?.text;
-        const neighborhood = location.find(
-            (feature: { id: string | string[] }) =>
-                feature.id.includes("neighborhood")
-        )?.text;
-        const streetAddress = location.find(
-            (feature: { id: string | string[] }) =>
-                feature.id.includes("address")
-        )?.text;
-
-        setData((prevData) => ({
-            ...prevData,
-            country: country,
-            region: region,
-            state: region,
-            district: district,
-            locality: locality,
-            neighborhood: neighborhood,
-            street_address: streetAddress,
-            latitude: lat,
-            longitude: lng,
-            city:
-                place ??
-                locality ??
-                district ??
-                region ??
-                country ??
-                "Middle of Nowhere",
-            zip: postcode,
-        }));
-    };
-
-    useEffect(() => {
-        setTimeout(() => {
-            flyTo([event.longitude, event.latitude], 0, 6);
-        }, 50);
-
-        dayjs(event.start_date).isValid() &&
-            setStartDate(dayjs(event.start_date?.split("T")[0]).toDate());
-
-        setIsPrivate(event.is_private);
-    }, []);
-
-    const flyTo = (
-        coordinates: [number, number],
-        duration: number = 2000,
-        zoom: number = 6
-    ) => {
-        mapRef.current?.flyTo({
-            essential: false,
-            center: coordinates,
-            duration: duration,
-            zoom: zoom,
-        });
     };
 
     return (
@@ -184,6 +93,7 @@ const EditEventPage = () => {
                     ? `Editing ${event.name}`
                     : `Editing ${event.event_type_data.name}`}
             </HeadingOne>
+
             <form onSubmit={handleSubmit}>
                 {eventIsAFire(event.event_type_slug) && (
                     <div>
@@ -198,22 +108,19 @@ const EditEventPage = () => {
                             value={data.name}
                             autoComplete="off"
                             isFocused={true}
-                            onChange={(e) => {
-                                setData("name", e.target.value);
-                            }}
+                            onChange={(e) => setData("name", e.target.value)}
                         />
-
                         <Instruction>
                             This is the name that will be displayed on your Fire
                             page.
                         </Instruction>
-
                         <InputError message={errors.name} />
                         <FireNamingGuidelines />
                     </div>
                 )}
+
                 {!eventIsAFire(event.event_type_slug) && (
-                    <div className={`mt-4`}>
+                    <div className="mt-4">
                         <DatePickerInput
                             label="Start date"
                             placeholder="Select start date"
@@ -230,7 +137,6 @@ const EditEventPage = () => {
                     </div>
                 )}
 
-
                 {eventIsAFire(event.event_type_slug) && (
                     <div className="mt-4">
                         <InputLabel
@@ -243,13 +149,13 @@ const EditEventPage = () => {
                             name="frequency"
                             value={data.frequency || ""}
                             className="select-input"
-                            onChange={(e) => {
+                            onChange={(e) =>
                                 setData(
                                     "frequency",
                                     e.target
                                         .value as App.Enums.Event.FrequencyEnum
-                                );
-                            }}
+                                )
+                            }
                         >
                             <FrequencyOptions />
                         </select>
@@ -260,68 +166,27 @@ const EditEventPage = () => {
                     </div>
                 )}
 
-                <MapboxSearch className={"mt-4"} />
-                <div className="mt-4 w-full h-[300px] md:h-[600px]">
-                    <Map
-                        mapLib={mapboxgl}
-                        ref={mapRef}
-                        dragRotate={false}
-                        touchPitch={false}
-                        pitchWithRotate={false}
-                        maxPitch={0}
-                        minPitch={0}
-                        mapStyle="mapbox://styles/mapbox/navigation-day-v1"
-                        initialViewState={{
-                            zoom: 6,
-                        }}
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: "0.5rem",
-                        }}
-                        onClick={(event) => {
-                            handleMapClick(event);
-                        }}
-                        mapboxAccessToken={config("services.mapbox.token")}
-                        onZoomEnd={() => {
-                            handleUserLevelZoom(mapRef.current?.getZoom() || 6);
-                        }}
-                        attributionControl={false}
-                    >
-                        <GeolocateControl position="top-left" />
-                        <NavigationControl position="top-left" />
-                        <>
-                            {marker && (
-                                <Marker
-                                    longitude={marker.lng}
-                                    latitude={marker.lat}
-                                >
-                                    {eventIsAFire(event.event_type_slug) ? (
-                                        <FireMarker className={"w-10 h-10"} />
-                                    ) : (
-                                        <MapPinIcon
-                                            className={"w-10 h-10 text-p200"}
-                                        />
-                                    )}
-                                </Marker>
-                            )}
-                        </>
-                    </Map>
-                </div>
+                <MapboxSearch className="mt-4" />
+
+                <EventMap
+                    mapRef={mapRef}
+                    marker={marker}
+                    onMapClick={handleMapClick}
+                    onZoomEnd={() =>
+                        handleUserLevelZoom(mapRef.current?.getZoom() || 6)
+                    }
+                    eventTypeSlug={event.event_type_slug}
+                    className="mt-4"
+                />
 
                 {!eventIsAFire(event.event_type_slug) && (
-                    <div className={`mt-4`}>
-                        <label
-                            className={`flex items-center space-x-4 hover:cursor-pointer`}
-                        >
+                    <div className="mt-4">
+                        <label className="flex items-center space-x-4 hover:cursor-pointer">
                             <SwitchComponent
                                 checked={isPrivate}
-                                onChange={() => {
-                                    setIsPrivate(!isPrivate);
-                                    setData("is_private", !isPrivate);
-                                }}
+                                onChange={handlePrivacyToggle}
                             />
-                            <div className={`text-white text-sm mt-4`}>
+                            <div className="text-white text-sm mt-4">
                                 <div>I want this event to be private.</div>
                                 <div>
                                     The event will not be shown on map or
@@ -331,12 +196,13 @@ const EditEventPage = () => {
                         </label>
                     </div>
                 )}
-                <div className={`mt-4 space-x-4`}>
+
+                <div className="mt-4 space-x-4">
                     <PrimaryButton>
                         Update This {singular(eventTypeName)}
                     </PrimaryButton>
                     <Link
-                        className={"text-n40 inline-block text-center"}
+                        className="text-n40 inline-block text-center"
                         href={route("my.events.active")}
                     >
                         Cancel

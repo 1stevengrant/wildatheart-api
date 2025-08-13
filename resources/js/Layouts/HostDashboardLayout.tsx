@@ -168,7 +168,7 @@ export const HostDashboardLayout = ({
                                                                             }
                                                                             className={classNames(
                                                                                 "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                                                                                "hover:text-white hover:bg-white/100"
+                                                                                "hover:text-white hover:bg-n800"
                                                                             )}
                                                                         >
                                                                             <item.icon
@@ -190,8 +190,8 @@ export const HostDashboardLayout = ({
                                                                             }
                                                                             className={classNames(
                                                                                 item.current
-                                                                                    ? "bg-white/10 text-white"
-                                                                                    : "hover:text-white hover:bg-white/100",
+                                                                                    ? "bg-n800 text-white"
+                                                                                    : "hover:text-white hover:bg-n800",
                                                                                 "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                                                             )}
                                                                         >
@@ -228,7 +228,7 @@ export const HostDashboardLayout = ({
                 {/* Static sidebar for desktop */}
                 <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6 pb-4 border-r border-n700">
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-black px-6 pb-4 border-r border-n800">
                         <a href={wahWebsiteUrl}>
                             <Logo
                                 className={
@@ -250,8 +250,8 @@ export const HostDashboardLayout = ({
                                                         onClick={item.action}
                                                         className={classNames(
                                                             item.current
-                                                                ? " bg-white/10 text-white"
-                                                                : "hover:text-white hover:bg-white/10",
+                                                                ? " bg-n800 text-white"
+                                                                : "hover:text-white hover:bg-n800",
                                                             "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold w-full"
                                                         )}
                                                     >
@@ -272,8 +272,8 @@ export const HostDashboardLayout = ({
                                                         href={item.href}
                                                         className={classNames(
                                                             item.current
-                                                                ? "bg-white/10 text-white"
-                                                                : "hover:text-white hover:bg-white/10",
+                                                                ? "bg-n800 text-white"
+                                                                : "hover:text-white hover:bg-n800",
                                                             "group flex gap-x-3 rounded-md p-4 leading-6 font-semibold"
                                                         )}
                                                     >

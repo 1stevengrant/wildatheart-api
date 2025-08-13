@@ -73,7 +73,8 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::put('approved/{event}', ToggleEventApprovedAtController::class)->name('toggle-event-approved-at');
-        Route::get('contacts', MyContactsController::class)->name('my.contacts');
+        Route::get('contacts', [MyContactsController::class, 'index'])->name('my.contacts');
+        Route::delete('contacts/{attendee}', [MyContactsController::class, 'destroy'])->name('my.contacts.destroy');
         Route::get('profile', MyProfileController::class)->name('my.profile');
         Route::delete('destroy-photo', DestroyUserImageController::class)->name('user.profile-photo.destroy');
         Route::get('resources', ResourcesController::class)->name('resources');

@@ -1,5 +1,5 @@
-import TriggerAstroBuildFieldtype from "./Components/fieldtypes/TriggerAstroBuildFieldtype.vue";
 import ShowCdnUrl from "./Components/fieldtypes/ShowCdnUrl.vue";
+import TriggerAstroBuildFieldtype from "./Components/fieldtypes/TriggerAstroBuildFieldtype.vue";
 
 Statamic.booting(() => {
     Statamic.$components.register(
