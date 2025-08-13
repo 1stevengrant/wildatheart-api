@@ -146,7 +146,6 @@ export const FireInformation = ({ user }: any) => {
                         <EventDisplay
                             className="md:hidden mt-4"
                             event={event}
-                            startDate={data.start_date}
                             frequency={data.frequency}
                         />
 
@@ -195,7 +194,6 @@ export const FireInformation = ({ user }: any) => {
                             style={{ marginTop: startDatePosition }}
                             className="max-w-[350px] mx-auto hidden lg:flex"
                             event={event}
-                            startDate={data.start_date}
                             frequency={data.frequency}
                         />
                     </div>
