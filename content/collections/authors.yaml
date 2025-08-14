@@ -2,6 +2,7 @@ title: Contributors
 template: default
 layout: layout
 revisions: false
+route: 'contributors/{slug}'
 date: true
 sort_dir: desc
 date_behavior:
