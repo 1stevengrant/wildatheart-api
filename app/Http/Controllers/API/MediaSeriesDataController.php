@@ -56,7 +56,7 @@ class MediaSeriesDataController extends Controller
 
         $nextUrl = $relatedMediaItemsUrl;
         while ($nextUrl) {
-            $subsplashMediaItems = $subsplash->subsplashFetch($nextUrl . "&filter[status]=published");
+            $subsplashMediaItems = $subsplash->subsplashFetch($nextUrl . '&filter[status]=published');
             $allItems = array_merge($allItems, data_get($subsplashMediaItems, '_embedded.media-items', []));
             $nextUrl = data_get($subsplashMediaItems, '_links.next.href');
         }

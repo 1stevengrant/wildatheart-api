@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\BlogsController;
 use App\Http\Controllers\API\SearchController;
@@ -17,7 +18,6 @@ use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
-use App\Http\Controllers\SeoController;
 
 /*
 |--------------------------------------------------------------------------

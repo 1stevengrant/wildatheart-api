@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Cache;
 use Statamic\Entries\Entry;
+use Illuminate\Support\Facades\Cache;
 
 class SeoController extends Controller
 {

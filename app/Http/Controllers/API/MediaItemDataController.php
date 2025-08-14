@@ -125,7 +125,7 @@ class MediaItemDataController extends Controller
             $responseData['series']['uri'] = $seriesEntry->uri;
             $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
 
-            $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl . "&filter[status]=published");
+            $subsplashMediaItems = $subsplash->subsplashFetch($relatedMediaItemsUrl . '&filter[status]=published');
 
             $subsplashMediaItemMap = [];
 
