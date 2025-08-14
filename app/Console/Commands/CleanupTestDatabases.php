@@ -36,34 +36,37 @@ class CleanupTestDatabases extends Command
 
         // Get list of databases matching the pattern
         // Use a safer approach with SHOW DATABASES and filter in PHP
-        $allDatabases = DB::select("SHOW DATABASES");
-        $databases = array_filter($allDatabases, function($db) use ($baseDatabase) {
-            $dbName = array_values((array)$db)[0];
+        $allDatabases = DB::select('SHOW DATABASES');
+        $databases = array_filter($allDatabases, function ($db) use ($baseDatabase) {
+            $dbName = array_values((array) $db)[0];
+
             // Match pattern: baseDatabase_test_[number]
             return preg_match('/^' . preg_quote($baseDatabase, '/') . '_test_\d+$/', $dbName);
         });
 
         if (empty($databases)) {
             $this->info('No test databases found to clean up.');
+
             return Command::SUCCESS;
         }
 
         $this->info('Found ' . count($databases) . ' test database(s) to clean up:');
 
         foreach ($databases as $db) {
-            $dbName = array_values((array)$db)[0];
+            $dbName = array_values((array) $db)[0];
             $this->line('  - ' . $dbName);
         }
 
-        if (!$this->option('force')) {
-            if (!$this->confirm('Do you want to drop these databases?')) {
+        if (! $this->option('force')) {
+            if (! $this->confirm('Do you want to drop these databases?')) {
                 $this->info('Operation cancelled.');
+
                 return Command::SUCCESS;
             }
         }
 
         foreach ($databases as $db) {
-            $dbName = array_values((array)$db)[0];
+            $dbName = array_values((array) $db)[0];
             try {
                 Schema::dropDatabaseIfExists($dbName);
                 $this->info('Dropped: ' . $dbName);

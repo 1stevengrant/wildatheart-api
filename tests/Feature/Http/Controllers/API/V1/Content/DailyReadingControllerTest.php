@@ -7,7 +7,6 @@ use App\Services\TransistorService;
 /**
  * @covers \App\Http\Controllers\API\V1\Content\DailyReadingController
  */
-
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
     // Mock the TransistorService

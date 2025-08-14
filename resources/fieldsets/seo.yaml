@@ -17,3 +17,20 @@ fields:
       container: s3
       type: assets
       display: Image
+  -
+    handle: hide_from_search_engines
+    field:
+      type: toggle
+      display: 'Hide from search engines'
+      instructions: 'This will apply a noindex tag to the page and remove the page from the sitemap.'
+  -
+    handle: sitemap_priority
+    field:
+      default: '0.5'
+      type: float
+      display: 'Sitemap Priority'
+      instructions: 'Enter the priority for this content 0 to 1. Defaults to 0.5.'
+      validate:
+        - required
+        - 'lte:1'
+        - 'gte:0'
