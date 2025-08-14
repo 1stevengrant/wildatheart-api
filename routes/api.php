@@ -17,6 +17,7 @@ use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
+use App\Http\Controllers\SeoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::prefix('content')->group(function () {
         Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
         Route::prefix('v1')->name('v1.')->group(function () {
+            Route::get('/seo/sitemap', [SeoController::class, 'getSitemap'])->name('seo.sitemap');
             Route::prefix('search')->name('search.')->group(function () {
                 Route::get('/', [SearchController::class, 'index'])->name('index');
             });
