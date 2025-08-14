@@ -5,7 +5,7 @@
             "Bash(git commit:*)",
             "Bash(php artisan test:*)",
             "Bash(npm run build:*)",
-            "Bash(npx tsc:*)",
+            "Bash(npx tsc:*)"
         ],
         "deny": []
     }
