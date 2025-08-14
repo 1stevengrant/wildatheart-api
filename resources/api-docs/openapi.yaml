@@ -1,0 +1,1390 @@
+openapi: 3.0.3
+info:
+  title: Wild at Heart Local Event Platform API
+  version: 2.0.0
+  description: API for managing events and registrations
+
+servers:
+  - url: https://local.wildatheart.org/api/v2
+    description: Production server
+  - url: https://local-staging.wildatheart.org/api/v2
+    description: Staging server
+  - url: https://wahfires.test/api/v2
+    description: Local development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: https
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1961
+        uuid:
+          type: string
+          format: uuid
+          example: "00bfb468-6098-4ec9-b0cb-74ef2c43f063"
+        name:
+          type: string
+          nullable: true
+        given_name:
+          type: string
+          example: "James"
+        family_name:
+          type: string
+          example: "Mahoney"
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          nullable: true
+          example: "+1 (817) 800-9898"
+        country_code:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+        image:
+          type: string
+          nullable: true
+          description: "Relative path to user's uploaded image"
+        optimized_image:
+          type: string
+          nullable: true
+          description: "CDN/optimized version of user image"
+        email_verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_login_at:
+          type: string
+          format: date-time
+          nullable: true
+        profile_step:
+          type: integer
+          description: "Onboarding progress indicator"
+          example: 2
+        opted_into_marketing:
+          type: boolean
+          example: true
+        date_opted_into_marketing:
+          type: string
+          format: date-time
+          nullable: true
+        agreed_to_host_agreement_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: "When user accepted host terms"
+        super:
+          type: boolean
+          description: "Super admin flag"
+          example: false
+        avatar:
+          type: string
+          nullable: true
+          description: "Generated avatar if no image uploaded"
+        preferences:
+          type: object
+          nullable: true
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "996672cc-7221-426b-8eaf-d15ff0dfce00"
+        name:
+          type: string
+          example: "Westside"
+        description:
+          type: string
+          nullable: true
+        summary:
+          type: string
+          nullable: true
+        event_type_id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          description: "Host user ID"
+        frequency:
+          type: string
+          enum: [ once, daily, weekly, monthly, yearly ]
+          example: "monthly"
+        sex:
+          type: string
+          enum: [ men, women, mixed, other ]
+          example: "men"
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+          nullable: true
+        is_private:
+          type: boolean
+          example: false
+        phone:
+          type: string
+          nullable: true
+        # Location fields
+        street_address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        state_code:
+          type: string
+          maxLength: 2
+        zip:
+          type: string
+        country:
+          type: string
+        latitude:
+          type: number
+          format: float
+          example: 38.86
+        longitude:
+          type: number
+          format: float
+          example: -104.87
+        region:
+          type: string
+          nullable: true
+        district:
+          type: string
+          nullable: true
+        locality:
+          type: string
+          nullable: true
+        neighborhood:
+          type: string
+          nullable: true
+        place:
+          type: string
+          nullable: true
+        # Metrics
+        view_count:
+          type: integer
+          example: 145
+        attendee_count:
+          type: integer
+          example: 64
+        # Gift/material tracking
+        gift_requested:
+          type: boolean
+        gift_sent:
+          type: boolean
+        number_of_items_in_material_order:
+          type: integer
+          nullable: true
+        # Status fields
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        auto_unpublished:
+          type: boolean
+        auto_unpublished_at:
+          type: string
+          format: date-time
+          nullable: true
+        # Email tracking
+        welcome_sent:
+          type: boolean
+        welcome_sent_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_checkin_email_sent_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_checkin_reminder_sent_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_checkin_confirmed_at:
+          type: string
+          format: date-time
+          nullable: true
+        # Timestamps
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    EventType:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        allow_materials_order:
+          type: integer
+          example: 1
+        number_of_items_in_material_order_label:
+          type: string
+          example: "Expected number of attendees"
+        group_type:
+          type: string
+          example: "retreat"
+        name:
+          type: string
+          example: "Wild at Heart Retreat"
+        filter_name:
+          type: string
+          nullable: true
+        order:
+          type: integer
+          example: 2
+        free_gift_image:
+          type: string
+          nullable: true
+        zapier_webhook_url:
+          type: string
+          format: uri
+          nullable: true
+        card_teaser_text:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+        is_active:
+          type: integer
+          example: 1
+        sex:
+          type: string
+          enum: [men, women, mixed]
+          example: "men"
+        slug:
+          type: string
+          example: "wild-at-heart-retreat"
+        description:
+          type: string
+          nullable: true
+        event_guide_pages:
+          type: string
+          nullable: true
+          description: "JSON string containing event guide page configuration"
+        video_link:
+          type: string
+          format: uri
+          nullable: true
+        registration_welcome_video:
+          type: string
+          format: uri
+          nullable: true
+        registration_welcome_text:
+          type: string
+          nullable: true
+        registration_before_your_event_text:
+          type: string
+          nullable: true
+        event_schedule:
+          type: string
+          nullable: true
+          description: "JSON string containing event schedule"
+        event_faqs:
+          type: string
+          nullable: true
+          description: "JSON string containing FAQs"
+        image:
+          type: string
+          nullable: true
+          description: "Path to event type image"
+        hero_image:
+          type: string
+          nullable: true
+        hero_video:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://vimeo.com/1012088094"
+        photos:
+          type: string
+          nullable: true
+          description: "JSON string containing photo paths"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        summary:
+          type: string
+          nullable: true
+        key_details:
+          type: string
+          nullable: true
+          description: "JSON string containing key details"
+        action_buttons:
+          type: string
+          nullable: true
+          description: "JSON string containing action button configuration"
+        new_content:
+          type: string
+          nullable: true
+
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+  responses:
+    UnauthorizedError:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ForbiddenError:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Auth - General
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user
+      responses:
+        '200':
+          description: Current user details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    patch:
+      tags:
+        - Authentication
+      summary: Update current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                bio:
+                  type: string
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /auth/me/photo:
+    post:
+      tags:
+        - Authentication
+      summary: Upload profile photo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - photo
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Photo uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  photo_url:
+                    type: string
+                    format: uri
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /auth/me/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout current user
+      responses:
+        '204':
+          description: Logged out successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/me/registrations/{eventId}:
+    delete:
+      tags:
+        - Authentication
+      summary: Withdraw registration for an event
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Event ID to withdraw registration from
+      responses:
+        '204':
+          description: Registration withdrawn
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  # Auth - Host specific
+  /auth/me/events:
+    get:
+      tags:
+        - Host Management
+      summary: Get events hosted by current user
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, published, cancelled, completed]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: List of hosted events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /auth/me/events/{id}:
+    get:
+      tags:
+        - Host Management
+      summary: Get specific hosted event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    patch:
+      tags:
+        - Host Management
+      summary: Update hosted event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                summary:
+                  type: string
+                frequency:
+                  type: string
+                  enum: [once, daily, weekly, monthly, yearly]
+                sex:
+                  type: string
+                  enum: [men, women, mixed, other]
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+                is_private:
+                  type: boolean
+                phone:
+                  type: string
+                street_address:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                state_code:
+                  type: string
+                zip:
+                  type: string
+                country:
+                  type: string
+                latitude:
+                  type: number
+                  format: float
+                longitude:
+                  type: number
+                  format: float
+      responses:
+        '200':
+          description: Event updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    delete:
+      tags:
+        - Host Management
+      summary: Delete hosted event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Event deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /auth/me/events/{id}/contacts:
+    get:
+      tags:
+        - Host Management
+      summary: Get contacts/attendees for host's specific event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Event ID
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [registered, attended, cancelled]
+          description: Filter by registration status
+      responses:
+        '200':
+          description: List of event contacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        user:
+                          $ref: '#/components/schemas/User'
+                        registered_at:
+                          type: string
+                          format: date-time
+                        attended_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                        status:
+                          type: string
+                          enum: [registered, attended, cancelled]
+                        notes:
+                          type: string
+                          nullable: true
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total:
+                        type: integer
+                      total_registered:
+                        type: integer
+                      total_attended:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /auth/me/events/{id}/photos:
+    post:
+      tags:
+        - Host Management
+      summary: Upload photos to host's event
+      description: Allows authenticated hosts to upload one or more photos to their event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Event ID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - photos
+              properties:
+                photos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Array of photo files to upload (max 10 files, max 10MB each)
+                  maxItems: 10
+                captions:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional array of captions corresponding to each photo
+      responses:
+        '201':
+          description: Photos uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Successfully uploaded 3 photos"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        url:
+                          type: string
+                          format: uri
+                        thumbnail_url:
+                          type: string
+                          format: uri
+                        caption:
+                          type: string
+                          nullable: true
+                        uploaded_at:
+                          type: string
+                          format: date-time
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    get:
+      tags:
+        - Host Management
+      summary: Get photos for host's event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Event ID
+      responses:
+        '200':
+          description: List of event photos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        url:
+                          type: string
+                          format: uri
+                        thumbnail_url:
+                          type: string
+                          format: uri
+                        caption:
+                          type: string
+                          nullable: true
+                        uploaded_at:
+                          type: string
+                          format: date-time
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /auth/me/events/{id}/photos/{photoId}:
+    delete:
+      tags:
+        - Host Management
+      summary: Delete a photo from host's event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Event ID
+        - name: photoId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Photo ID to delete
+      responses:
+        '204':
+          description: Photo deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /auth/me/contacts:
+    get:
+      tags:
+        - Host Management
+      summary: Get contacts (people who registered for host's events)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: List of contacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /auth/me/contacts/{id}:
+    get:
+      tags:
+        - Host Management
+      summary: Get specific contact details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    patch:
+      tags:
+        - Host Management
+      summary: Update contact details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                given_name:
+                  type: string
+                family_name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                phone:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                postal_code:
+                  type: string
+                country_code:
+                  type: string
+                notes:
+                  type: string
+                  description: Additional notes about the contact
+      responses:
+        '200':
+          description: Contact updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    delete:
+      tags:
+        - Host Management
+      summary: Delete contact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Contact deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  # Events
+  /events/search:
+    get:
+      tags:
+        - Events
+      summary: Search events within map bounds
+      description: Search for approved, active, public events within a geographic bounding box with various filters
+      security: []
+      parameters:
+        - name: sw_latitude
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: -90
+            maximum: 90
+          description: Southwest corner latitude of bounding box
+        - name: sw_longitude
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: -180
+            maximum: 180
+          description: Southwest corner longitude of bounding box
+        - name: ne_latitude
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: -90
+            maximum: 90
+          description: Northeast corner latitude of bounding box
+        - name: ne_longitude
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: -180
+            maximum: 180
+          description: Northeast corner longitude of bounding box
+        - name: sex
+          in: query
+          schema:
+            type: string
+            enum: [men, women]
+          description: Filter by event gender focus
+        - name: type_group
+          in: query
+          schema:
+            type: string
+          description: Filter by event type group
+        - name: types
+          in: query
+          schema:
+            type: string
+            pattern: '^\d+(,\d+)*$'
+          description: Comma-separated list of event type IDs
+          example: "1,2,3"
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter events starting on or after this date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter events ending on or before this date
+      responses:
+        '200':
+          description: Search results (cached for 15 minutes)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /events:
+    get:
+      tags:
+        - Events
+      summary: List all events
+      security: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: location.city
+          in: query
+          schema:
+            type: string
+        - name: starts_after
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: event_type_id
+          in: query
+          schema:
+            type: string
+        - name: is_online
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total:
+                        type: integer
+
+    post:
+      tags:
+        - Events
+      summary: Create new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - starts_at
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                starts_at:
+                  type: string
+                  format: date-time
+                ends_at:
+                  type: string
+                  format: date-time
+                is_online:
+                  type: boolean
+                meeting_url:
+                  type: string
+                event_type_id:
+                  type: string
+      responses:
+        '201':
+          description: Event created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /events/{id}:
+    get:
+      tags:
+        - Events
+      summary: Get event details
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Event'
+                  meta:
+                    type: object
+                    properties:
+                      user_registered:
+                        type: boolean
+                      can_register:
+                        type: boolean
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /events/{id}/register:
+    post:
+      tags:
+        - Events
+      summary: Register interest in event
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  nullable: true
+      responses:
+        '201':
+          description: Registration created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Successfully registered for event"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '409':
+          description: Already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Resources
+  /resources/event-types:
+    get:
+      tags:
+        - Resources
+      summary: Get all active event types
+      description: Returns a list of active event types ordered by their display order. Results are cached for 24 hours.
+      security: []
+      responses:
+        '200':
+          description: List of event types
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventType'

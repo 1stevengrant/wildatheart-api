@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\APIDocsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DrupalUrlController;
@@ -52,4 +53,9 @@ Route::prefix('drupal')->name('drupal.')->group(function () {
 Route::name('upcoming.')->group(function () {
     Route::get('upcoming', UpcomingEventsController::class)->name('events');
     Route::get('fires', FiresPageController::class)->name('fires');
+});
+
+Route::middleware(['super_admin', 'auth'])->group(function () {
+    Route::get('/api/documentation', [APIDocsController::class, 'index'])->name('docs.index');
+    Route::get('/api/documentation/spec', [APIDocsController::class, 'spec'])->name('docs.spec');
 });

@@ -12,6 +12,7 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/cp.js",
                 "resources/css/cp.css",
+                "resources/api-docs/openapi.yaml",
             ],
             refresh: true,
             detectTls: true,
