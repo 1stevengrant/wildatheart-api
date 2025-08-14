@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands\Redirects;
 
+use App\DataTransferObjects\RedirectData;
+use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 use Exception;
 use App\Models\Redirect;
 use Illuminate\Console\Command;
@@ -36,7 +38,13 @@ class ImportDrupalRedirectsCommand extends Command
 
             $this->info("Found {$drupalRedirects->count()} redirects to import");
 
-            if ($drupalRedirects->isEmpty()) {
+            $existingRedirects = Redirect::all()->pluck('source')->toArray();
+            $redirectsToImport = $drupalRedirects->filter(function ($redirect) use ($existingRedirects) {
+                return ! in_array("/" . $redirect->source, $existingRedirects);
+            });
+            $this->info("Found {$redirectsToImport->count()} redirects to import that don't already exist");
+
+            if ($redirectsToImport->isEmpty()) {
                 $this->warn('No redirects found to import.');
 
                 return 0;
@@ -44,17 +52,17 @@ class ImportDrupalRedirectsCommand extends Command
 
             // Show preview if dry run
             if ($this->option('dry-run')) {
-                $this->showPreview($drupalRedirects);
+                // $this->info($drupalRedirects[0]);
+                // $this->showPreview($existingRedirects);
 
                 return 0;
             }
 
             // Import redirects
             $this->info('Importing redirects...');
-            $imported = $this->importRedirects($drupalRedirects);
+            $imported = $this->importRedirects($redirectsToImport);
 
             $this->info("✓ Successfully imported $imported redirects");
-
         } catch (Exception $e) {
             $this->error('Import failed: ' . $e->getMessage());
 
@@ -113,6 +121,7 @@ class ImportDrupalRedirectsCommand extends Command
         $bar = $this->output->createProgressBar($drupalRedirects->count());
         $bar->start();
 
+        $redirects = [];
         foreach ($drupalRedirects as $redirect) {
             try {
                 // Clean and validate the redirect data
@@ -124,21 +133,11 @@ class ImportDrupalRedirectsCommand extends Command
                     continue;
                 }
 
-                // Insert or update the redirect
-                Redirect::updateOrCreate(
-                    ['source' => $source],
-                    [
-                        'destination' => $destination,
-                        'status_code' => $statusCode,
-                        'count' => $redirect->count ?? 0,
-                        'created_by' => null,
-                        'system_origin' => 'drupal_redirect',
-                        'last_accessed_on' => $redirect->access ?? null,
-                    ]
-                );
+                $source = cleanPath($source);
+                $destination = cleanPath($destination);
+                $redirects[] = new RedirectData($source, $destination, $statusCode, $redirect->count ?? 0, 'drupal_redirect');
 
                 $imported++;
-
             } catch (Exception $e) {
                 $this->warn("Failed to import redirect: $redirect->source -> $redirect->redirect");
                 $this->warn("Error: {$e->getMessage()}");
@@ -146,6 +145,8 @@ class ImportDrupalRedirectsCommand extends Command
 
             $bar->advance();
         }
+
+        AddRedirectsInBulkFromArrayJob::dispatch($redirects);
 
         $bar->finish();
         $this->newLine();
