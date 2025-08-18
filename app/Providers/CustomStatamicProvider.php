@@ -94,6 +94,9 @@ class CustomStatamicProvider extends ServiceProvider
             // If there is no author, we will use the slug as is.
             return 'blogs/' . $entry->slug;
         });
+        Collection::computed('prayers', 'site_url', function ($entry, $value) {
+            return trim(config('app.frontend_url'), '/');
+        });
 
         Statamic::vite('app', [
             'resources/js/cp.js',

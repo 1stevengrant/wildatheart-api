@@ -13,11 +13,17 @@ tabs:
               validate:
                 - required
           -
+            import: blocks
+            prefix: before_content_
+          -
             handle: content
             field:
               remove_empty_nodes: false
               type: bard
               display: Content
+          -
+            import: blocks
+            prefix: after_content_
           -
             handle: summary
             field:

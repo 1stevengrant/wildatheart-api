@@ -11,7 +11,7 @@ date_behavior:
 preview_targets:
   -
     label: Entry
-    url: '{permalink}'
+    url: '{site_url}/prayer/preview'
     refresh: true
 structure:
   root: false
