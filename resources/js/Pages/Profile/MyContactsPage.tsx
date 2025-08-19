@@ -1,6 +1,7 @@
 import React from "react";
 
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
+import { Trash2 } from "lucide-react";
 
 import { FilterBar } from "@/Components/FilterBar";
 import Pagination from "@/Components/Pagination";
@@ -21,6 +22,19 @@ const MyContactsPage = () => {
     } = attendees;
 
     const pageTitle = `Event Contacts`;
+
+    const deleteContact = (attendeeId: string | number) => {
+        if (confirm("Are you sure you want to delete this contact?")) {
+            router.delete(
+                route("my.contacts.destroy", {
+                    attendee: attendeeId,
+                }),
+                {
+                    preserveScroll: true,
+                }
+            );
+        }
+    };
 
     return (
         <HostDashboardLayout pageTitle={pageTitle}>
@@ -46,7 +60,6 @@ const MyContactsPage = () => {
                     {
                         label: "Name",
                         name: "name",
-
                         renderCell: (row) => (
                             <>
                                 <>{row.fullname}</>
@@ -56,7 +69,6 @@ const MyContactsPage = () => {
                     {
                         label: "Email",
                         name: "email",
-
                         renderCell: (row) => (
                             <>
                                 <button>{row.email}</button>
@@ -66,7 +78,6 @@ const MyContactsPage = () => {
                     {
                         label: "Phone",
                         name: "phone",
-
                         renderCell: (row) => (
                             <>
                                 <>{row.phone}</>
@@ -76,16 +87,28 @@ const MyContactsPage = () => {
                     {
                         label: "Event",
                         name: "event_name",
-
                         renderCell: (row) => <>{row.event_name}</>,
                     },
                     {
                         label: "Event Type",
                         name: "event_type_name",
-
                         renderCell: (row) => (
                             <>
                                 <>{row.event_type_name}</>
+                            </>
+                        ),
+                    },
+                    {
+                        label: "Actions",
+                        name: "actions",
+                        renderCell: (row) => (
+                            <>
+                                <button
+                                    onClick={() => deleteContact(row.id)}
+                                    className="bg-red-600 hover:bg-red-500 transition-all ease-in-out duration-100 text-white rounded-md p-2"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
                             </>
                         ),
                     },

@@ -7,7 +7,6 @@ use Gate;
 use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Http\Request;
-use App\Support\EventDateHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FireEventRequest;
 use App\Http\Requests\UpdateEventRequest;
@@ -23,14 +22,6 @@ class UpdateEventController extends Controller
         try {
 
             $formRequest = $this->resolveFormRequest($event->eventType->group_type);
-
-            if ($event->eventType->group_type === EventType::TYPE_RETREAT) {
-
-                EventDateHelper::adjustEndDateForRetreat(
-                    request: $request,
-                    groupType: $event->eventType->group_type,
-                );
-            }
 
             $event->update($formRequest->validated());
 

@@ -153,6 +153,11 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
+                // Handle case where country doesn't exist
+                if (! $this->country) {
+                    return $this->city ?: '';
+                }
+
                 if (mb_strtolower($this->country) === self::DEFAULT_COUNTRY || mb_strtolower($this->country) === 'united states') {
                     if ($this->city && $this->region) {
                         return $this->city . ', ' . getStateAbbreviation($this->region);

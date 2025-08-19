@@ -36,6 +36,7 @@ class UpdateEventRequest extends FormRequest
     {
         return array_merge($this->getLocationRules(), [
             'start_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date'],
         ]);
     }
 }
