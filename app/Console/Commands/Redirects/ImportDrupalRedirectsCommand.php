@@ -36,26 +36,10 @@ class ImportDrupalRedirectsCommand extends Command
             $this->info('Fetching redirects from Drupal...');
             $drupalRedirects = $this->getDrupalRedirects();
 
-            // for some reason drupal allows duplicates so we need to take the latest one.
-            $groupedRedirects = $drupalRedirects->groupBy('source');
-            $duplicateSources = $groupedRedirects->filter(function ($aliases) {
-                return $aliases->count() > 1;
-            });
-
-            $uniqueRedirects = $drupalRedirects->filter(function ($redirect) use ($duplicateSources) {
-                return ! $duplicateSources->has($redirect->source);
-            });
-
-            foreach ($duplicateSources as $duplicateSource) {
-                $uniqueRedirects[] = $duplicateSource[0]->rid > $duplicateSource[1]->rid ? $duplicateSource[0] : $duplicateSource[1];
-            }
-
-
-
-            $this->info("Found {$uniqueRedirects->count()} redirects to import");
+            $this->info("Found {$drupalRedirects->count()} redirects to import");
 
             $existingRedirects = Redirect::all()->pluck('source')->toArray();
-            $redirectsToImport = $uniqueRedirects->filter(function ($redirect) use ($existingRedirects) {
+            $redirectsToImport = $drupalRedirects->filter(function ($redirect) use ($existingRedirects) {
                 return ! in_array("/" . $redirect->source, $existingRedirects);
             });
             $this->info("Found {$redirectsToImport->count()} redirects to import that don't already exist");
@@ -92,7 +76,7 @@ class ImportDrupalRedirectsCommand extends Command
     {
         return DB::connection(self::DRUPAL_CONNECTION)
             ->table('redirect')
-            ->select('rid','source', 'redirect', 'status_code', 'count', 'access')
+            ->select('source', 'redirect', 'status_code', 'count', 'access')
             ->where(function ($query) {
                 // Exclude source paths
                 foreach (self::EXCLUDED_SOURCE_PATHS as $path) {
