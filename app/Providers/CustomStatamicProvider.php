@@ -8,7 +8,9 @@ use Statamic\Facades\Collection;
 use Statamic\Events\AssetUploaded;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
+use Ghijk\WildAtHeart\Http\Controllers\Actions\TriggerAstroBuildController;
 use Illuminate\Support\Facades\Event as LaravelEvent;
+use Statamic\Events\EntrySaved;
 
 class CustomStatamicProvider extends ServiceProvider
 {
@@ -28,6 +30,14 @@ class CustomStatamicProvider extends ServiceProvider
         LaravelEvent::listen(function (AssetUploaded $event): void {
             if ($event->asset->container->handle === 's3') {
                 GenerateColorPalette::dispatch(asset: $event->asset);
+            }
+        });
+
+        LaravelEvent::listen(function (EntrySaved $event): void {
+
+            if ($event->entry->collection->handle === 'prayers') {
+
+                app(TriggerAstroBuildController::class)();
             }
         });
 
