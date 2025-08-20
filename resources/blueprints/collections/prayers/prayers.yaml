@@ -13,11 +13,17 @@ tabs:
               validate:
                 - required
           -
+            import: blocks
+            prefix: before_content_
+          -
             handle: content
             field:
               remove_empty_nodes: false
               type: bard
               display: Content
+          -
+            import: blocks
+            prefix: after_content_
           -
             handle: summary
             field:
@@ -58,13 +64,6 @@ tabs:
     sections:
       -
         fields:
-          -
-            handle: trigger_astro_build_field
-            field:
-              type: trigger_astro_build
-              display: 'Trigger Astro Build Field'
-              hide_display: true
-              instructions: 'This content type is static and needs to rebuild the Astro front end.'
           -
             handle: slug
             field:

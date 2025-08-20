@@ -12,6 +12,10 @@ class PrayersShowResponse extends EntryResponse
 {
     public string $content;
 
+    public array $before_content_blocks;
+
+    public array $after_content_blocks;
+
     public string $summary;
 
     public string $drupal_url;

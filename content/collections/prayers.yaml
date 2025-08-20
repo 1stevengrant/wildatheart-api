@@ -10,8 +10,12 @@ date_behavior:
   future: private
 preview_targets:
   -
-    label: Entry
-    url: '{permalink}'
-    refresh: true
+    label: Web
+    url: '{site_url}/prayer/preview'
+    refresh: false
+  -
+    label: App
+    url: '{site_url}/subsplash/prayers/preview'
+    refresh: false
 structure:
   root: false
