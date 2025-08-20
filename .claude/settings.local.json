@@ -11,7 +11,5 @@
         "defaultMode": "acceptEdits"
     },
     "enableAllProjectMcpServers": true,
-    "enabledMcpjsonServers": [
-        "laravel-boost"
-    ]
+    "enabledMcpjsonServers": ["laravel-boost"]
 }
