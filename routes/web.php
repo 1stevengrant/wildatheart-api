@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\APIDocsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\APIDocsController;
 use App\Http\Controllers\DrupalUrlController;
 use App\Http\Controllers\FiresPageController;
 use App\Http\Controllers\SupportRequestController;

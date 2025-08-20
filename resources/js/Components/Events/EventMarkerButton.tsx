@@ -14,6 +14,8 @@ import { currentEventState } from "@/store/eventsAtom";
 const generalEventClasses = `w-8 h-8  flex items-center justify-center rounded-full hover:bg-p200 hover:stroke-white shadow-xl hover:shadow-none transition duration-150 ease-in-out`;
 const activeEventClasses = "bg-p200 stroke-white";
 const inactiveEventClasses = "bg-white stroke-black";
+const featuredEventClasses = "ring-2 ring-p200 ring-offset-2";
+
 export const EventMarkerButton = ({ event }: { event: App.Data.EventData }) => {
     const { setPopupInfo } = usePopupInfo();
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
@@ -29,7 +31,7 @@ export const EventMarkerButton = ({ event }: { event: App.Data.EventData }) => {
                 currentEvent?.id === event.id
                     ? activeEventClasses
                     : inactiveEventClasses
-            }`}
+            } ${event.is_featured ? featuredEventClasses : ''}`}
         >
             {event.type_group === fireTypeGroup && <FiresIcon />}
             {event.type_group === retreatTypeGroup && <RetreatsIcon />}

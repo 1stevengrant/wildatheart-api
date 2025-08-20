@@ -316,4 +316,71 @@ class EventBuilder extends Builder
     {
         return $this->whereNotNull('last_checkin_reminder_sent_at');
     }
+
+    public function featured(): EventBuilder
+    {
+        return $this->where('is_featured', true);
+    }
+
+    public function alwaysShow(): EventBuilder
+    {
+        return $this->where('always_show', true);
+    }
+
+    public function featuredInRegion(array $countryCodes): EventBuilder
+    {
+        if (empty($countryCodes)) {
+            return $this->where('is_featured', true);
+        }
+
+        // Create an array of country variations to match against
+        // This handles both ISO codes and full country names
+        $countryVariations = [];
+        foreach ($countryCodes as $code) {
+            $countryVariations[] = $code; // ISO code
+
+            // Add common full names for key countries
+            switch ($code) {
+                case 'US':
+                    $countryVariations[] = 'United States';
+                    $countryVariations[] = 'USA';
+                    break;
+                case 'GB':
+                    $countryVariations[] = 'United Kingdom';
+                    $countryVariations[] = 'UK';
+                    break;
+                case 'NZ':
+                    $countryVariations[] = 'New Zealand';
+                    break;
+                case 'AU':
+                    $countryVariations[] = 'Australia';
+                    break;
+                case 'CA':
+                    $countryVariations[] = 'Canada';
+                    break;
+                case 'DE':
+                    $countryVariations[] = 'Germany';
+                    break;
+                case 'FR':
+                    $countryVariations[] = 'France';
+                    break;
+                case 'ES':
+                    $countryVariations[] = 'Spain';
+                    break;
+                case 'IT':
+                    $countryVariations[] = 'Italy';
+                    break;
+                case 'ZA':
+                    $countryVariations[] = 'South Africa';
+                    break;
+            }
+        }
+
+        return $this->where('is_featured', true)
+            ->where(function ($query) use ($countryVariations) {
+                foreach ($countryVariations as $country) {
+                    $query->orWhereRaw('LOWER(country) = ?', [mb_strtolower($country)]);
+                }
+            });
+    }
 }

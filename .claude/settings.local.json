@@ -1,15 +1,22 @@
 {
-    "permissions": {
-        "allow": [
-            "Bash(git add:*)",
-            "Bash(git commit:*)",
-            "Bash(php artisan test:*)",
-            "Bash(npm run build:*)",
-            "Bash(npx tsc:*)"
-        ],
-        "deny": [],
-        "defaultMode": "acceptEdits"
-    },
-    "enableAllProjectMcpServers": true,
-    "enabledMcpjsonServers": ["laravel-boost"]
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(php artisan test:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)",
+      "mcp__laravel-boost__database-schema",
+      "mcp__laravel-boost__database-query",
+      "Bash(php artisan make:migration:*)",
+      "Bash(php artisan:*)",
+      "mcp__laravel-boost__tinker"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost"
+  ]
 }

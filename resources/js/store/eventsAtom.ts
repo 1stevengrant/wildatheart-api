@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-const eventsListState = atom({
+const eventsListState = atom<App.Data.EventData[]>({
     key: "EventsList",
     default: [],
 });

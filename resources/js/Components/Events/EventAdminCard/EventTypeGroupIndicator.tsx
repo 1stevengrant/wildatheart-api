@@ -17,7 +17,7 @@ export const EventTypeGroupIndicator = ({
         <>
             <div className={`flex items-center justify-between space-x-4`}>
                 <div className={`${isActive ? "text-p200" : "text-n40"}`}>
-                    <span className={`text-sm`}>{event.card_title}</span>
+                    <span>{event.card_title}</span>
                 </div>
                 <EventTypeBadge className={`hidden md:block`}>
                     {event.badge_display}

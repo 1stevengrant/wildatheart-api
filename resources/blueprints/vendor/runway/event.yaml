@@ -111,27 +111,6 @@ tabs:
               display: Place
               width: 50
           -
-            handle: gift_sent
-            field:
-              type: toggle
-              display: 'Gift Sent'
-              width: 33
-              visibility: read_only
-          -
-            handle: gift_requested
-            field:
-              type: toggle
-              display: 'Gift Requested'
-              width: 33
-              visibility: read_only
-          -
-            handle: welcome_sent
-            field:
-              type: toggle
-              display: 'Welcome Sent'
-              visibility: read_only
-              width: 50
-          -
             handle: sex
             field:
               options:
@@ -143,25 +122,18 @@ tabs:
                   value: women
               type: radio
               display: Sex
-              width: 50
-          -
-            handle: last_checkin_email_sent_at
-            field:
-              type: date
-              display: 'Last Checkin Email Sent At'
-              width: 33
           -
             handle: start_date
             field:
               type: date
               display: 'Start Date'
-              width: 33
+              width: 50
           -
             handle: end_date
             field:
               type: date
               display: 'End Date'
-              width: 33
+              width: 50
               visibility: read_only
           -
             handle: description
@@ -173,10 +145,73 @@ tabs:
             field:
               type: markdown
               display: Summary
+  meta:
+    display: Meta
+    sections:
+      -
+        fields:
+          -
+            handle: gift_sent
+            field:
+              type: toggle
+              display: 'Gift Sent'
+              width: 33
+              visibility: read_only
+          -
+            handle: welcome_sent
+            field:
+              type: toggle
+              display: 'Welcome Sent'
+              visibility: read_only
+              width: 33
+          -
+            handle: gift_requested
+            field:
+              type: toggle
+              display: 'Gift Requested'
+              width: 33
+              visibility: read_only
+          -
+            handle: last_checkin_email_sent_at
+            field:
+              type: date
+              display: 'Last Checkin Email Sent At'
+              width: 50
           -
             handle: number_of_items_in_material_order
             field:
               input_type: number
               type: text
               display: 'Number Of Items In Material Order'
+              width: 50
+  featured_event:
+    display: 'Featured Event'
+    sections:
+      -
+        fields:
+          -
+            handle: is_featured
+            field:
+              type: toggle
+              display: 'Is Featured'
+              width: 50
+              instructions: 'Toggle to mark this event as featured'
+          -
+            handle: always_show
+            field:
+              type: toggle
+              display: 'Always Show'
+              width: 50
+              instructions: 'This event will always appear on the map regardless of viewport'
+          -
+            handle: custom_landing_url
+            field:
+              input_type: url
+              type: text
+              display: 'Custom Landing URL'
+              validate:
+                - active_url
+                - nullable
+              width: 50
+              instructions: "Does this event have its own special landing page that isn't the standard Local event type template?"
 title: Event

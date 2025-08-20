@@ -12,6 +12,7 @@ export const SearchSidebar = () => {
     const [events] = useRecoilState(eventsListState);
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
     const [showFilterPanel] = useRecoilState(showFilterPanelState);
+
     return (
         <aside className="relative flex flex-col rounded-b-2xl bg-black md:w-[557px]">
             {showFilterPanel ? <FiltersPanel /> : <QuickFilters />}
@@ -20,7 +21,7 @@ export const SearchSidebar = () => {
                     {events.length === 0 ? (
                         <NoSearchResults />
                     ) : (
-                        events.map((event: any) => (
+                        events.map((event: App.Data.EventData) => (
                             <EventResult
                                 event={event}
                                 key={event.id}

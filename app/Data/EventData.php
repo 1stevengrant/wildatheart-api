@@ -67,6 +67,8 @@ class EventData extends Data
         public ?string $neighborhood = null,
         public ?string $street_address = null,
         public ?string $zip = null,
+        public bool $is_featured = false,
+        public ?string $custom_landing_url = null,
     ) {}
 
     public static function fromModel(Event $event): self
@@ -117,6 +119,8 @@ class EventData extends Data
             neighborhood: $event->neighborhood,
             street_address: $event->street_address,
             zip: $event->zip,
+            is_featured: $event->isFeatured(),
+            custom_landing_url: $event->custom_landing_url,
         );
     }
 }

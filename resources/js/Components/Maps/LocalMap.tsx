@@ -11,6 +11,7 @@ import { useRecoilState } from "recoil";
 
 import { EventCountButton } from "@/Components/Buttons/EventCountButton";
 import { LocalMapMarkers } from "@/Components/Maps/LocalMapMarkers";
+import { FeaturedEventCard } from "@/Components/Maps/FeaturedEventCard";
 import { NoWebGLSupport } from "@/Components/Maps/NoWebGLSupport";
 import { IsLoading } from "@/Components/Ui/IsLoading";
 import { OutsideClickHandlerEvents } from "@/Components/Ui/OutsideClickHandlerEvents";
@@ -249,6 +250,7 @@ export const LocalMap = () => {
             onLoad={onMapLoad}
         >
             <LocalMapMarkers />
+            <FeaturedEventCard />
             <GeolocateControl
                 position="top-left"
                 onGeolocate={handleGeolocate}

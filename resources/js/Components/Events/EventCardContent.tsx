@@ -6,15 +6,19 @@ import { HostedBy } from "@/Components/Events/HostedBy";
 import { Image } from "@/Components/Image";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
+import { FeaturedBadge } from "@/Components/Events/FeaturedBadge";
 
 export const EventCardContent = ({ event }: { event: App.Data.EventData }) => {
     return (
         <>
             {event.event_type_image && (
-                <Image
-                    src={event.event_type_image}
-                    className={`rounded-md flex-grow-0`}
-                />
+                <div className="space-y-2">
+                    <Image
+                        src={event.event_type_image}
+                        className={`rounded-md flex-grow-0`}
+                    />
+                    <FeaturedBadge event={event} />
+                </div>
             )}
             <EventInfo>
                 <div className={`leading-4`}>
@@ -29,7 +33,7 @@ export const EventCardContent = ({ event }: { event: App.Data.EventData }) => {
                     </>
                     <div className="text-n40 leading-4">
                         {event.type_group === fireTypeGroup && (
-                            <div className={`text-sm capitalize`}>
+                            <div className={`capitalize`}>
                                 {event.display_name}
                             </div>
                         )}

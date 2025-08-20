@@ -36,6 +36,8 @@ class Event extends BaseModel
         return [
             'approved_at' => 'datetime',
             'deleted_at' => 'datetime',
+            'is_featured' => 'boolean',
+            'always_show' => 'boolean',
             'legacy_drupal_location' => 'array',
             'longitude' => 'float',
             'latitude' => 'float',
@@ -394,6 +396,16 @@ class Event extends BaseModel
     public function isExperience(): bool
     {
         return $this->eventType->group_type === EventType::TYPE_EXPERIENCE;
+    }
+
+    public function isFeatured(): bool
+    {
+        return (bool) $this->is_featured;
+    }
+
+    public function isAlwaysShow(): bool
+    {
+        return (bool) $this->always_show;
     }
 
     /*

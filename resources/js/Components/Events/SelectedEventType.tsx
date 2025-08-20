@@ -59,9 +59,9 @@ export const SelectedEventType = ({
                             ))}
                         </TagGroup>
                     )}
-                    <Markdown className={`mt-4`}>
-                        {eventType.card_teaser_text}
-                    </Markdown>
+                    <div className={`mt-4`}>
+                        <Markdown>{eventType.card_teaser_text}</Markdown>
+                    </div>
                 </div>
             </Transition.Child>
         </Transition.Root>

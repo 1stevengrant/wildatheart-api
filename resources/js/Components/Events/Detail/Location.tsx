@@ -14,7 +14,9 @@ export const Location = ({
     className = "",
 }: LocationProps) => {
     return (
-        <div className={`flex items-center space-x-1 ${className}`}>
+        <div
+            className={`flex leading-snug items-center space-x-1 ${className}`}
+        >
             <MapPinIcon className={`w-6 h-6`} />
             <h2 className="leading-tighter">
                 {location} {children}
