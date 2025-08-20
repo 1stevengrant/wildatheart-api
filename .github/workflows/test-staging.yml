@@ -35,7 +35,7 @@ jobs:
           MAX_ATTEMPTS=120  # 20 minutes max (120 * 10 seconds)
           ATTEMPT=0
 
-          while [ "$STATUS" != "finished"]; do
+          while [ "$STATUS" != "finished" ]; do
             if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
               echo "Error: Deployment timed out after 20 minutes"
               exit 1
