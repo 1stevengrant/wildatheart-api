@@ -3,13 +3,10 @@
 use function Pest\Laravel\getJson;
 
 use App\Services\TransistorService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * @covers \App\Http\Controllers\API\V1\Content\DailyReadingController
  */
-uses(RefreshDatabase::class);
-
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
     // Mock the TransistorService

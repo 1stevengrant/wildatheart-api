@@ -1,5 +1,6 @@
 declare namespace App.Data {
     export type AttendeeData = {
+        id: number;
         event_id: string;
         user_id: number | null;
         family_name: string;

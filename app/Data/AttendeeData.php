@@ -10,6 +10,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class AttendeeData extends Data
 {
     public function __construct(
+        public int $id,
         public string $event_id,
         public ?int $user_id,
         public string $family_name,
@@ -32,6 +33,7 @@ class AttendeeData extends Data
     public static function fromModel(Attendee $attendee): self
     {
         return new self(
+            id: $attendee->id,
             event_id: $attendee->event_id,
             user_id: $attendee->user_id,
             family_name: $attendee->family_name,

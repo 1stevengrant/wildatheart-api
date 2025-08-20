@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\DataTypeObjects\PlayableFile;
 use App\Services\EntryBuilderService;
 use App\DataTypeObjects\API\V1\Content\Prayers\PrayersShowResponse;
+use Facades\Statamic\CP\LivePreview;
+use Statamic\Facades\Token;
 
 class PrayersEntryController extends Controller
 {
@@ -30,11 +32,29 @@ class PrayersEntryController extends Controller
     public function show($slug)
     {
 
-        $prayer = Entry::query()
-            ->where('collection', 'prayers')
-            ->where('slug', $slug)
-            ->where('published', true)
-            ->first();
+        // Check for token and live-preview query parameters
+        $request = request();
+        $token = $request->query('token', false);
+        $livePreview = $request->query('live-preview', false);
+
+        // If token is present or live-preview is true, adjust the query to include unpublished and future items
+
+        $prayer = null;
+
+        if ($token && $livePreview) {
+            // Skip published and date checks for live preview or token access
+
+            $token = Token::find($token);
+            $prayer = LivePreview::item($token);
+        } else {
+
+
+            $prayer = Entry::query()
+                ->where('collection', 'prayers')
+                ->where('slug', $slug)
+                ->where('published', true)
+                ->first();
+        }
 
         if (! $prayer) {
             return response()->json(['error' => 'Prayer not found'], 404);

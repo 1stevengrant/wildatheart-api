@@ -1,20 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
-import { ArrowRightIcon } from "@heroicons/react/16/solid";
-import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/16/solid";
+import { Head, Link } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
-import mapboxgl from "mapbox-gl";
 import { singular } from "pluralize";
-import Map, {
-    GeolocateControl,
-    MapLayerMouseEvent,
-    Marker,
-    NavigationControl,
-} from "react-map-gl";
-import { useRecoilState } from "recoil";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
+import { EventMap } from "@/Components/EventMap";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import SelectInput from "@/Components/Forms/SelectInput";
@@ -27,241 +19,57 @@ import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
-import { commonMapProps } from "@/helpers/commonMapboxMapProps";
 import { LOCATION_TBC } from "@/helpers/locationTbc";
-import { lookupLocation } from "@/helpers/lookupLocation";
-import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { scrollToError } from "@/helpers/scrollToError";
-import { oneHour } from "@/helpers/timeConstants";
 import { useDates } from "@/Hooks/useDates";
-import { useMapData } from "@/Hooks/useMapData";
+import { useEventForm } from "@/Hooks/useEventForm";
+import { useEventLocation } from "@/Hooks/useEventLocation";
+import { useEventModal } from "@/Hooks/useEventModal";
+import { useEventState } from "@/Hooks/useEventState";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
-import { selectedPlaceState } from "@/store/mapAtom";
-
-interface PageProps {
-    eventType: App.Data.EventTypeData;
-    eventSteps: any;
-    materialOrderItems: { value: string; label: string }[];
-    [key: string]: any;
-}
 
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();
-    const { materialOrderItems } = usePage<PageProps>().props;
-
+    const { materialOrderItems, eventType } = page.props as any;
     const { user } = page.props.auth as any;
 
-    const [isPrivate, setIsPrivate] = useState(false);
-    const mapRef = useRef<any>(null);
-    const [selectedPlace] = useRecoilState(selectedPlaceState);
-    const [marker, setMarker] = useState<any>(null);
-    const { zoom, handleUserLevelZoom } = useMapData();
-
-    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-
-    const lookupCurrentLocation = () => {
-        if (navigator.geolocation) {
-            const locationData = JSON.parse(
-                localStorage.getItem("locationData") || "{}"
-            );
-
-            if (
-                !(
-                    objectIsEmpty(locationData) ||
-                    Date.now() - locationData.timestamp > oneHour
-                )
-            ) {
-                flyTo(
-                    [
-                        locationData.coords.longitude,
-                        locationData.coords.latitude,
-                    ],
-                    undefined,
-                    zoom
-                );
-                addEvent(
-                    locationData.coords.longitude,
-                    locationData.coords.latitude
-                );
-            } else {
-                navigator.geolocation.getCurrentPosition(
-                    getLocationSuccess,
-                    getLocationError
-                );
-            }
-        }
-    };
-
-    const getLocationSuccess = (position: GeolocationPosition) => {
-        localStorage.setItem(
-            "locationData",
-            JSON.stringify({
-                timestamp: Date.now(),
-                coords: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                },
-            })
-        );
-        flyTo(
-            [position.coords.longitude, position.coords.latitude],
-            undefined,
-            zoom
-        );
-
-        addEvent(position.coords.longitude, position.coords.latitude);
-    };
-
-    const getLocationError = (error: GeolocationPositionError) => {
-        console.log(error);
-        flyTo([0, 0], undefined, zoom);
-    };
-
-    const flyTo = (
-        coordinates: [number, number],
-        duration: number = 2000,
-        zoom: number = 6
-    ) => {
-        mapRef.current?.flyTo({
-            essential: false,
-            center: coordinates,
-            duration: duration,
-            zoom: zoom,
-        });
-    };
-
-    const [event, setEvent] = useState<any>({
-        name: user.given_name + "'s",
-        location: "Location TBC",
-        host: user.fullname,
-        host_photo: user.image,
-        country: null,
+    // Custom hooks
+    const { event, updateEventFromLocation } = useEventState({
+        user,
+        eventType,
     });
 
-    const { data, setData, post, processing, errors } =
-        useForm<App.Data.EventFormData>({
-            name: `${user.given_name}'s`,
-            state: "",
-            city: "",
-            zip: "",
-            country: "",
-            latitude: null,
-            longitude: null,
-            region: "",
-            district: "",
-            locality: "",
-            neighborhood: "",
-            street_address: "",
-            poi: "",
-            is_private: false,
-            start_date: null,
-            number_of_items_in_material_order: null,
-            end_date: null,
-            frequency: null,
+    const {
+        data,
+        processing,
+        errors,
+        post,
+        isPrivate,
+        handlePrivacyToggle,
+        updateLocationData,
+        setData,
+    } = useEventForm({ user, eventType });
+
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+        useEventLocation({
+            onLocationChange: (locationData) => {
+                updateLocationData(locationData);
+                updateEventFromLocation(locationData);
+            },
         });
 
-    useEffect(() => {
-        if (selectedPlace) {
-            mapRef.current?.flyTo({
-                essential: false,
-                center: selectedPlace.center,
-                duration: 2000,
-                zoom: 6,
-            });
-            const latitude = selectedPlace.center[1],
-                longitude = selectedPlace.center[0];
+    const {
+        confirmModalOpen,
+        setConfirmModalOpen,
+        openConfirmModal,
+        closeConfirmModal,
+    } = useEventModal();
 
-            addEvent(longitude, latitude);
-        }
-    }, [selectedPlace]);
-
-    useEffect(() => {
-        setTimeout(() => {
-            lookupCurrentLocation();
-        }, 50);
-    }, []);
-
-    const addEvent = async (lng: number, lat: number) => {
-        setMarker({ lat, lng });
-        const location = await lookupLocation(lng, lat);
-
-        const country = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("country")
-        )?.text;
-        const region = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("region")
-        )?.text;
-        const postcode = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("postcode")
-        )?.text;
-        const district = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("district")
-        )?.text;
-        const place = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("place")
-        )?.text;
-        const locality = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("locality")
-        )?.text;
-        const neighborhood = location.find(
-            (feature: { id: string | string[] }) =>
-                feature.id.includes("neighborhood")
-        )?.text;
-        const streetAddress = location.find(
-            (feature: { id: string | string[] }) =>
-                feature.id.includes("address")
-        )?.text;
-        const poi = location.find((feature: { id: string | string[] }) =>
-            feature.id.includes("poi")
-        )?.text;
-
-        setData(prevData => ({
-            ...prevData,
-            country: country,
-            region: region,
-            district: district,
-            locality: locality,
-            neighborhood: neighborhood,
-            street_address: streetAddress,
-            poi: poi,
-            latitude: lat,
-            longitude: lng,
-            city: place ??
-                locality ??
-                district ??
-                region ??
-                country ??
-                "Middle of Nowhere",
-            zip: postcode
-        }));
-
-        setEvent({
-            ...event,
-            location:
-                place ??
-                locality ??
-                district ??
-                region ??
-                country ??
-                "Middle of Nowhere",
-            country: country,
-            region: region,
-        });
-    };
-
-    const handleMapClick = (event: MapLayerMouseEvent) => {
-        const { lat, lng } = event.lngLat;
-        addEvent(lng, lat);
-    };
-
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        setConfirmModalOpen(true);
-    };
+    const { startDate, handleStartDateChange, maxDate } = useDates();
 
     const confirmSubmit = () => {
-        setConfirmModalOpen(false);
+        closeConfirmModal();
         post(
             route("host.eventType.create.store", { eventType: eventType.slug }),
             {
@@ -271,13 +79,9 @@ const CreateEventEventTypePage = () => {
         );
     };
 
-    const eventType = page.props.eventType as any;
-
-    const { startDate, handleStartDateChange, maxDate } = useDates();
-
     return (
         <>
-            <Head title={`Create Event`} />
+            <Head title="Create Event" />
             <SidebarLayout
                 footer={
                     <EmptyLayoutFooter>
@@ -288,12 +92,12 @@ const CreateEventEventTypePage = () => {
                             <ArrowLeftIcon className="h-4 w-4" />
                         </Link>
                         <PrimaryButton
-                            onClick={handleSubmit}
+                            onClick={openConfirmModal}
                             disabled={
                                 processing || event.location === LOCATION_TBC
                             }
                         >
-                            {processing ? <Spinner /> : null}
+                            {processing && <Spinner />}
                             {event.location === LOCATION_TBC
                                 ? "Pick a location to continue"
                                 : "Create Event & See Dashboard"}
@@ -311,43 +115,24 @@ const CreateEventEventTypePage = () => {
                             event on the directory map and reach out to you for
                             more info.
                         </p>
+
                         <form>
-                            <MapboxSearch className={"mt-4"} />
+                            <MapboxSearch className="mt-4" />
 
-                            <div
-                                className={`w-full h-[300px] md:h-[40vh] mt-4`}
-                            >
-                                <Map
-                                    mapLib={mapboxgl}
-                                    ref={mapRef}
-                                    {...commonMapProps}
-                                    initialViewState={{
-                                        zoom: 6,
-                                    }}
-                                    onClick={(event) => {
-                                        handleMapClick(event);
-                                    }}
-                                    onZoomEnd={() =>
-                                        handleUserLevelZoom(
-                                            mapRef.current?.getZoom() || 6
-                                        )
-                                    }
-                                >
-                                    <GeolocateControl position="top-left" />
-                                    <NavigationControl position="top-left" />
-                                    <>
-                                        {marker && (
-                                            <Marker
-                                                anchor={"bottom"}
-                                                longitude={marker.lng}
-                                                latitude={marker.lat}
-                                            />
-                                        )}
-                                    </>
-                                </Map>
-                            </div>
+                            <EventMap
+                                mapRef={mapRef}
+                                marker={marker}
+                                onMapClick={handleMapClick}
+                                onZoomEnd={() =>
+                                    handleUserLevelZoom(
+                                        mapRef.current?.getZoom() || 6
+                                    )
+                                }
+                                className="mt-4"
+                                height="h-[300px] md:h-[40vh]"
+                            />
 
-                            <div className={`mt-4`}>
+                            <div className="mt-4">
                                 <DatePickerInput
                                     label="Start date"
                                     placeholder="Select start date"
@@ -362,17 +147,12 @@ const CreateEventEventTypePage = () => {
                                 />
                                 <InputError message={errors.start_date} />
 
-                                <label
-                                    className={`flex items-center space-x-4 hover:cursor-pointer`}
-                                >
+                                <label className="flex items-center space-x-4 hover:cursor-pointer">
                                     <SwitchComponent
                                         checked={isPrivate}
-                                        onChange={() => {
-                                            setIsPrivate(!isPrivate);
-                                            setData("is_private", !isPrivate);
-                                        }}
+                                        onChange={handlePrivacyToggle}
                                     />
-                                    <div className={`text-white text-sm mt-4`}>
+                                    <div className="text-white text-sm mt-4">
                                         <div>
                                             I want this event to be private.
                                         </div>
@@ -382,8 +162,9 @@ const CreateEventEventTypePage = () => {
                                         </div>
                                     </div>
                                 </label>
+
                                 {Boolean(eventType.allow_materials_order) && (
-                                    <div className={`mt-4`}>
+                                    <div className="mt-4">
                                         <p>
                                             We'll send you free{" "}
                                             {singular(eventType.name)}{" "}
@@ -391,7 +172,6 @@ const CreateEventEventTypePage = () => {
                                             attendees. Just tell us how many you
                                             need.
                                         </p>
-
                                         <InputLabel
                                             htmlFor="number_of_items_in_material_order"
                                             value={
@@ -401,22 +181,14 @@ const CreateEventEventTypePage = () => {
                                             required
                                         />
                                         <SelectInput
-                                            id={
-                                                "number_of_items_in_material_order"
-                                            }
-                                            onChange={(
-                                                e: React.ChangeEvent<
-                                                    | HTMLInputElement
-                                                    | HTMLSelectElement
-                                                >
-                                            ) => {
-                                                const value = e.target.value;
+                                            id="number_of_items_in_material_order"
+                                            onChange={(e) =>
                                                 setData(
                                                     "number_of_items_in_material_order",
-                                                    value
-                                                );
-                                            }}
-                                            className={`text-white mt-2`}
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="text-white mt-2"
                                             options={materialOrderItems}
                                         />
                                         <InputError

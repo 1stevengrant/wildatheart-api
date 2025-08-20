@@ -6,15 +6,15 @@
 
 This addon does:
 
-- This
-- And this
-- And even this
+-   This
+-   And this
+-   And even this
 
 ## How to Install
 
 You can install this addon via Composer:
 
-``` bash
+```bash
 composer require ghijk/wild-at-heart
 ```
 

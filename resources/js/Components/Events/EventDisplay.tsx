@@ -10,19 +10,16 @@ import { EventTypeBadge } from "@/Components/Events/EventTypeBadge";
 import { HostedBy } from "@/Components/Events/HostedBy";
 import { Image } from "@/Components/Image";
 import { UserAvatar } from "@/Components/UserAvatar";
-import { formatDate } from "@/helpers/formatDate";
 
 export const EventDisplay = ({
     event,
     style = {},
     className = "",
-    startDate = "",
     frequency,
 }: {
     style?: React.CSSProperties;
     event: App.Data.EventData;
     className?: string;
-    startDate?: string | null | undefined;
     frequency?: string | null | undefined;
 }) => {
     useEffect(() => {}, [event]);
