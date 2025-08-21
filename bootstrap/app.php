@@ -20,6 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(HandleCors::class);
+
         $middleware->redirectGuestsTo(function () {
             session()->put('auth.intended_url', request()->url());
 
@@ -34,9 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);
 
         $middleware->throttleApi();
-        $middleware->api([
-            HandleCors::class,
-        ]);
+   
 
         $middleware->group('non-inertia', [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
