@@ -5,6 +5,7 @@ use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -33,6 +34,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);
 
         $middleware->throttleApi();
+        $middleware->api([
+            HandleCors::class,
+        ]);
 
         $middleware->group('non-inertia', [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
