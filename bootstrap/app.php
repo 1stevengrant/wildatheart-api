@@ -20,7 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(HandleCors::class);
+        $middleware->api([
+            HandleCors::class,
+        ]);
 
         $middleware->redirectGuestsTo(function () {
             session()->put('auth.intended_url', request()->url());
