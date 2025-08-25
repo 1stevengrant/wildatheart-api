@@ -15,7 +15,6 @@ class TriggerAstroBuildController extends Controller
                 return response()->json(['message' => 'Skipped Astro build in development environment']);
             }
 
-            dump('Triggering Astro build');
             $response = Http::post(config('cloudflare.astro_build_hook'));
 
             return response()->json($response->json());
