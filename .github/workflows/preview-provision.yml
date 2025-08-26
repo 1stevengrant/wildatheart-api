@@ -43,7 +43,7 @@ jobs:
           FORGE_ENV_KEYS: |
             REMOTE_DATABASE_EXCLUDE_DATA=activity_log,failed_jobs,issues,pulse_aggregates,pulse_entries,pulse_values
             LOCAL_MYSQL_PATH=/usr/bin/mysql
-            REMOTE_USE_SSH: true
+            REMOTE_USE_SSH=true
             REMOTE_DATABASE_USERNAME=forge
             REMOTE_DATABASE_HOST=10.0.0.4
             REMOTE_DATABASE_NAME=wildatheartlocalplatform_production
