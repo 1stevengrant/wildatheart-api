@@ -16,7 +16,7 @@ class TransistorService
      * @param  string  $url  The URL to fetch data from
      * @return array The data from the Transistor API
      */
-    public function transistorFetch($url)
+    public function transistorFetch($url, $retry = 0)
     {
         $TRANSISTOR_CACHE_DURATION = config('services.transistor.cache_duration');
         $TRANSISTOR_API_KEY = config('services.transistor.api_key');
@@ -43,6 +43,16 @@ class TransistorService
             Cache::put($cacheKey, $json, (int) $TRANSISTOR_CACHE_DURATION);
 
             return $json;
+        }
+        // Check for rate limiting (429 Too Many Requests)
+        if ($response->status() === 429) {
+            if ($retry > 3) {
+                throw new \Exception('Rate limit exceeded for Transistor API. Please try again later.');
+            }
+            // Sleep for 10 seconds
+            sleep(10);
+            // Retry the request
+            return $this->transistorFetch($url, $retry + 1);
         }
 
         if (isset($response->json()['errors'])) {
