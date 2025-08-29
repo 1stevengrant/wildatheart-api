@@ -1,0 +1,177 @@
+title: 'Desktop Nav'
+data:
+  desktop_nav:
+    -
+      id: mew4mwpj
+      type: main_nav_item
+      title: Media
+      enabled: true
+      dropdown_links:
+        -
+          id: mew4obvo
+          url: /podcasts
+          type: dropdown_link
+          title: Podcasts
+          enabled: true
+          icon: voice
+        -
+          id: mew4q0z9
+          url: '/events#video-series'
+          type: dropdown_link
+          title: 'Small Group Videos'
+          enabled: true
+          icon: videoBadge
+        -
+          id: mew4qgw8
+          url: /media
+          type: dropdown_link
+          title: 'Films & Documentaries'
+          enabled: true
+          icon: videoCameraPlay
+        -
+          id: mew4qpeu
+          url: /media
+          type: dropdown_link
+          title: 'Video & Audio Archive'
+          enabled: true
+          icon: videoPlaylist2
+        -
+          id: mew4qzim
+          url: /blogs
+          type: dropdown_link
+          title: 'Posts & Articles'
+          enabled: true
+          icon: document
+        -
+          id: mew4rajq
+          url: /apps
+          type: dropdown_link
+          title: Apps
+          enabled: true
+          icon: phoneTablet
+      bottom_link_url: /media
+      bottom_link_title: 'Explore All Media'
+      featured_media_item_url: /the-series
+      featured_media_item_image: files/media-series/wild-at-heart-the-series/pablo-the-series-864x864.jpg
+      featured_media_item_title: 'Wild at Heart: The Series'
+      featured_media_item_byline: 'Recommended for You'
+    -
+      id: mew5bbtm
+      type: main_nav_item
+      title: Events
+      enabled: true
+      dropdown_links:
+        -
+          id: mew5cy6h
+          url: '/events#for-men'
+          type: dropdown_link
+          title: Gatherings
+          enabled: true
+          icon: firewood
+        -
+          id: mew5dbmb
+          url: '/events#for-women'
+          type: dropdown_link
+          title: Courses
+          enabled: true
+          icon: videoSlides
+        -
+          id: mew5dqwd
+          url: '/events#retreats'
+          type: dropdown_link
+          title: "Men's Retreats"
+          enabled: true
+          icon: calendar
+        -
+          id: mew5dy7z
+          url: '/events#video-study-groups'
+          type: dropdown_link
+          title: "Women's Retreats"
+          enabled: true
+          icon: calendar
+        -
+          id: mew5edfh
+          url: '/events#courses'
+          type: dropdown_link
+          title: 'Online Events'
+          enabled: true
+          icon: worldNetwork
+      bottom_link_url: /events
+      bottom_link_title: 'Explore All Events'
+      featured_media_item_url: 'https://local.wildatheart.org'
+      featured_media_item_image: wp-app/uploads/2024/04/23221137/5501ee54aca5fd7c-1000x1000-1.png
+      featured_media_item_title: 'Search Your Region'
+      featured_media_item_byline: 'Find Local Events'
+    -
+      id: mew5f3me
+      type: main_nav_item
+      title: 'Daily Practices'
+      enabled: true
+      dropdown_links:
+        -
+          id: mew5fhea
+          url: /prayers
+          type: dropdown_link
+          title: Prayers
+          enabled: true
+          icon: book
+        -
+          id: mew5ft1u
+          url: /apps/one-minute-pause
+          type: dropdown_link
+          title: 'One Minute Pause App'
+          enabled: true
+          icon: pause
+        -
+          id: mew5g6ai
+          url: /media
+          type: dropdown_link
+          title: 'Daily Reading List'
+          enabled: true
+          icon: emailDocument2
+      bottom_link_url: /media
+      bottom_link_title: 'Explore Daily Practices'
+      featured_media_item_url: /the-series
+      featured_media_item_image: files/media-series/wild-at-heart-the-series/pablo-the-series-864x864.jpg
+      featured_media_item_title: 'Wild at Heart: The Series'
+      featured_media_item_byline: 'Recommended for You'
+    -
+      id: mew5hazk
+      type: main_nav_item
+      title: Books
+      enabled: true
+      dropdown_links:
+        -
+          id: mew5hjub
+          url: '/books#for-men'
+          type: dropdown_link
+          title: 'Books for Men'
+          enabled: true
+          icon: book
+        -
+          id: mew5hwaq
+          url: '/books#for-women'
+          type: dropdown_link
+          title: 'Books for Women'
+          enabled: true
+          icon: book
+        -
+          id: mew5i6v5
+          url: '/books#study-guides'
+          type: dropdown_link
+          title: 'Small Group Study Guides'
+          enabled: true
+          icon: bookSquare
+      bottom_link_url: /books
+      bottom_link_title: 'Explore All Books'
+      featured_media_item_url: /the-series
+      featured_media_item_image: files/media-series/wild-at-heart-the-series/pablo-the-series-864x864.jpg
+      featured_media_item_title: 'Wild at Heart: The Series'
+      featured_media_item_byline: 'Recommended for You'
+    -
+      id: mew5xk42
+      url: /give
+      type: single_link
+      title: Give
+      enabled: true
+      icon: heart

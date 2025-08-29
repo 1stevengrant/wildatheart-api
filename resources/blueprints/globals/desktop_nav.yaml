@@ -1,0 +1,113 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: desktop_nav
+            field:
+              type: replicator
+              display: 'Desktop Nav'
+              sets:
+                desktop_set_group:
+                  display: 'Desktop Set Group'
+                  sets:
+                    main_nav_item:
+                      display: 'Main Nav Item (with dropdown)'
+                      icon: hierarchy-vertical-nav-flow
+                      fields:
+                        -
+                          handle: title
+                          field:
+                            type: text
+                            display: Title
+                            validate:
+                              - required
+                        -
+                          handle: dropdown_links
+                          field:
+                            type: replicator
+                            display: 'Dropdown Links'
+                            sets:
+                              dropdown_set_group:
+                                display: 'Dropdown Set Group'
+                                sets:
+                                  dropdown_link:
+                                    display: 'Dropdown Link'
+                                    fields:
+                                      -
+                                        handle: title
+                                        field:
+                                          type: text
+                                          display: Title
+                                          validate:
+                                            - required
+                                      -
+                                        handle: url
+                                        field:
+                                          type: text
+                                          display: URL
+                                          validate:
+                                            - required
+                                      -
+                                        import: icon
+                        -
+                          handle: bottom_link_title
+                          field:
+                            type: text
+                            display: 'Bottom Link Title'
+                            validate:
+                              - required
+                        -
+                          handle: bottom_link_url
+                          field:
+                            type: text
+                            display: 'Bottom Link URL'
+                            validate:
+                              - required
+                        -
+                          handle: featured_media_item_byline
+                          field:
+                            type: text
+                            display: 'Featured Media Item Byline'
+                            validate:
+                              - required
+                        -
+                          handle: featured_media_item_title
+                          field:
+                            type: text
+                            display: 'Featured Media Item Title'
+                            validate:
+                              - required
+                        -
+                          handle: featured_media_item_url
+                          field:
+                            type: text
+                            display: 'Featured Media Item URL'
+                        -
+                          handle: featured_media_item_image
+                          field:
+                            max_files: 1
+                            container: s3
+                            type: assets
+                            display: 'Featured Media Item Image'
+                    single_link:
+                      display: 'Single Link'
+                      fields:
+                        -
+                          handle: title
+                          field:
+                            type: text
+                            display: Title
+                            validate:
+                              - required
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: URL
+                            validate:
+                              - required
+                        -
+                          import: icon

@@ -1,0 +1,79 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: main_nav_bar
+            field:
+              type: replicator
+              display: 'Main Nav Bar'
+              sets:
+                nav_group:
+                  display: 'Navigation Group'
+                  sets:
+                    standard_nav_link:
+                      display: 'Standard Nav Link'
+                      fields:
+                        -
+                          handle: title
+                          field:
+                            type: text
+                            display: Title
+                            validate:
+                              - required
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: URL
+                            validate:
+                              - required
+                        -
+                          handle: icon
+                          field:
+                            type: text
+                            display: Icon
+  more_drawer:
+    display: 'More Drawer'
+    sections:
+      -
+        fields:
+          -
+            handle: drawer_items
+            field:
+              type: replicator
+              display: 'Drawer Items'
+              sets:
+                drawer_group:
+                  display: 'Drawer Group'
+                  sets:
+                    standard_nav_link:
+                      display: 'Standard Nav Link'
+                      fields:
+                        -
+                          handle: title
+                          field:
+                            type: text
+                            display: Title
+                            validate:
+                              - required
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: URL
+                            validate:
+                              - required
+                        -
+                          handle: icon
+                          field:
+                            type: text
+                            display: Icon
+                        -
+                          handle: enabled
+                          field:
+                            type: toggle
+                            display: Enabled
+                            default: true
