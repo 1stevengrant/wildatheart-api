@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V2\Navs;
 
 use Illuminate\Http\Request;
+use App\Data\Navigation\DesktopNavResponseData;
 
 class DesktopNavController extends BaseNavController
 {
@@ -20,11 +21,6 @@ class DesktopNavController extends BaseNavController
     {
         $navItems = $data['desktop_nav'] ?? [];
 
-        // Filter to only enabled items and process dropdown links
-        return collect($navItems)
-            ->filter(fn ($item) => $item['enabled'] ?? false)
-            ->map(fn ($item) => $this->filterNestedDropdownLinks($item))
-            ->values()
-            ->all();
+        return DesktopNavResponseData::fromStatamicData($navItems)->toResponseArray();
     }
 }

@@ -148,6 +148,46 @@ declare namespace App.Data {
         postal_code: string;
     };
 }
+declare namespace App.Data.Navigation {
+    export type DesktopNavItemData = {
+        id: string;
+        title: string;
+        enabled: boolean;
+        type: string;
+        url: string | null;
+        icon: string | null;
+        dropdownLinks: any | null;
+        bottomLinkTitle: string | null;
+        bottomLinkUrl: string | null;
+        featuredMediaItemByline: string | null;
+        featuredMediaItemTitle: string | null;
+        featuredMediaItemUrl: string | null;
+        featuredMediaItemImage: string | null;
+    };
+    export type DesktopNavResponseData = {
+        items: any;
+    };
+    export type DropdownLinkData = {
+        id: string;
+        title: string;
+        url: string;
+        icon: string | null;
+        enabled: boolean;
+        type: string;
+    };
+    export type MobileNavResponseData = {
+        mainNavBar: any;
+        drawerItems: any;
+    };
+    export type NavItemData = {
+        id: string;
+        title: string;
+        url: string;
+        icon: string | null;
+        enabled: boolean;
+        type: string;
+    };
+}
 declare namespace App.DataTypeObjects {
     export type Attributes = {
         title: string;

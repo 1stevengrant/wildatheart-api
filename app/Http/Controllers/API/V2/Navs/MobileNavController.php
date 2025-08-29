@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V2\Navs;
 
 use Illuminate\Http\Request;
+use App\Data\Navigation\MobileNavResponseData;
 
 class MobileNavController extends BaseNavController
 {
@@ -18,14 +19,9 @@ class MobileNavController extends BaseNavController
 
     protected function processNavigationData(array $data): array
     {
-        // Get both navigation sections
         $mainNavBar = $data['main_nav_bar'] ?? [];
         $drawerItems = $data['drawer_items'] ?? [];
 
-        // Return both sections filtered by enabled status
-        return [
-            'main_nav_bar' => $this->filterEnabledItems($mainNavBar),
-            'drawer_items' => $this->filterEnabledItems($drawerItems),
-        ];
+        return MobileNavResponseData::fromStatamicData($mainNavBar, $drawerItems)->toArray();
     }
 }
