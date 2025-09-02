@@ -27,7 +27,7 @@ return [
         'navs' => true,
         'taxonomies' => false,
         'assets' => true,
-        'globals' => true,
+        'globals' => false,
         'forms' => false,
         'users' => false,
     ],

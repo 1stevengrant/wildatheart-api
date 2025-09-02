@@ -26,6 +26,11 @@ tabs:
         instructions: 'This will enable a featured item in the Local events platform'
         fields:
           -
+            handle: featured_content_enabled
+            field:
+              type: toggle
+              display: 'Featured Content Enabled'
+          -
             handle: featured_content_image
             field:
               max_files: 1

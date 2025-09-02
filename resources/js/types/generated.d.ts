@@ -118,6 +118,12 @@ declare namespace App.Data {
         action_buttons: Array<any> | null;
         new_content: Array<any> | null;
     };
+    export type FeaturedContentData = {
+        show_in_regions: Array<string>;
+        featured_content_url: string | null;
+        featured_content_text: string | null;
+        featured_content_image: string | null;
+    };
     export type HostData = {
         family_name: string | null;
         given_name: string | null;
@@ -442,6 +448,8 @@ declare namespace App.DataTypeObjects.API.V1.Content {
 declare namespace App.DataTypeObjects.API.V1.Content.Prayers {
     export type PrayersShowResponse = {
         content: string;
+        before_content_blocks: Array<any>;
+        after_content_blocks: Array<any>;
         summary: string;
         drupal_url: string;
         mp3: App.DataTypeObjects.PlayableFile | null;
