@@ -5,10 +5,12 @@ import { LngLatBounds } from "react-map-gl";
 import { useSetRecoilState } from "recoil";
 
 import { eventsListState } from "@/store/eventsAtom";
+import { featuredContentState } from "@/store/featuredContentAtom";
 
 export const useEvents = () => {
     const [showLoading, setShowLoading] = useState(false);
     const setEvents = useSetRecoilState(eventsListState);
+    const setFeaturedContent = useSetRecoilState(featuredContentState);
     const zoomAttemptsRef = useRef(0);
     const isZoomingRef = useRef(false);
     const pendingRequestRef = useRef(false);
@@ -104,9 +106,16 @@ export const useEvents = () => {
             });
 
             setShowLoading(false);
-            setEvents(response.data);
+            
+            // Handle new response structure with events and featuredContent
+            const responseData = response.data;
+            const events = responseData.events || responseData; // Fallback for backward compatibility
+            const featuredContent = responseData.featuredContent || null;
+            
+            setEvents(events);
+            setFeaturedContent(featuredContent);
 
-            const eventCount = response.data.length;
+            const eventCount = events.length;
             console.log(
                 `Found ${eventCount} events, attempt ${zoomAttemptsRef.current + 1} of ${MAX_ZOOM_ATTEMPTS}`
             );
