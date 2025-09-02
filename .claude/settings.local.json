@@ -6,7 +6,8 @@
       "Bash(php artisan test:*)",
       "Bash(npm run build:*)",
       "Bash(npx tsc:*)",
-      "Bash(./vendor/bin/pint:*)"
+      "Bash(./vendor/bin/pint:*)",
+      "Bash(php artisan typescript:transform:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
