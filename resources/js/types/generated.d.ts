@@ -120,6 +120,12 @@ key_details: Array<any> | null;
 action_buttons: Array<any> | null;
 new_content: Array<any> | null;
 };
+export type FeaturedContentData = {
+show_in_regions: Array<string>;
+featured_content_url: string | null;
+featured_content_text: string | null;
+featured_content_image: string | null;
+};
 export type HostData = {
 family_name: string | null;
 given_name: string | null;

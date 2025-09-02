@@ -18,3 +18,66 @@ tabs:
                 - link
               type: markdown
               display: 'Host Agreement Content'
+  featured_content:
+    display: 'Featured Content'
+    sections:
+      -
+        display: 'Featured Content'
+        instructions: 'This will enable a featured item in the Local events platform'
+        fields:
+          -
+            handle: featured_content_enabled
+            field:
+              type: toggle
+              display: 'Featured Content Enabled'
+          -
+            handle: featured_content_image
+            field:
+              max_files: 1
+              container: s3
+              type: assets
+              display: 'Featured Content Image'
+              validate:
+                - required
+                - image
+          -
+            handle: featured_content_text
+            field:
+              type: textarea
+              display: 'Featured Content Text'
+              validate:
+                - required
+                - 'max:255'
+          -
+            handle: featured_content_url
+            field:
+              input_type: url
+              type: text
+              display: 'Featured Content URL'
+              validate:
+                - sometimes
+                - url
+          -
+            handle: show_in_regions
+            field:
+              options:
+                -
+                  key: europe
+                  value: europe
+                -
+                  key: north_america
+                  value: north_america
+                -
+                  key: south_america
+                  value: south_america
+                -
+                  key: asia
+                  value: asia
+                -
+                  key: africa
+                  value: africa
+                -
+                  key: oceania
+                  value: oceania
+              type: checkboxes
+              display: 'Show In Regions'
