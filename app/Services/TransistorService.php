@@ -115,39 +115,35 @@ class TransistorService
 
     public function getAll($showId, $status = 'published')
     {
+        $pageSize = 1200;
 
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status ;
 
         $connector = new TransistorConnector;
         $request = new GetEpisodesRequest($showId);
         $request->query()->add('status', $status);
-
-        // Get all episodes and cache them
         $allEpisodes = Cache::rememberForever($url, function () use ($request, $connector) {
             $request->disableCaching();
             $paginator = $connector->paginate($request);
 
             return $paginator->collect()->toArray();
         });
-
-        // Get recent episodes and update the cache with them.
         $recentEpisodes = $connector->send($request);
+        // TODO: do a fetch for episodes that were modifed after the last cache.
 
         $allEpisodesCollection = collect($allEpisodes);
         $allEpisodes = Cache::rememberForever($url, function () use ($allEpisodesCollection, $recentEpisodes) {
             foreach ($recentEpisodes as $episode) {
                 $episodeExists = $allEpisodesCollection->contains('id', $episode['id']);
                 if (! $episodeExists) {
-                    $existingIndex = $allEpisodesCollection->search(fn ($item) => $item['id'] === $episode['id']);
-                    if ($existingIndex !== false) {
-                        $allEpisodesCollection->put($existingIndex, $episode);
-                    } else {
-                        $allEpisodesCollection->push($episode);
-                    }
+                    $allEpisodesCollection->push($episode);
                 }
             }
 
             return $allEpisodesCollection->toArray();
         });
+
+        return $allEpisodes;
+
     }
 }
