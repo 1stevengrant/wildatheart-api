@@ -22,12 +22,23 @@ export const EventResult = ({
             onMouseEnter={() => onMouseEnter?.(event)}
             onMouseLeave={() => onMouseLeave?.(null)}
         >
-            <Link
-                href={event.url}
-                className="clear-both flex items-stretch space-x-4"
-            >
-                <EventCardContent event={event} />
-            </Link>
+            {event.is_featured && event.custom_landing_url ? (
+                <a
+                    href={event.custom_landing_url}
+                    className="clear-both flex items-stretch space-x-4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <EventCardContent event={event} />
+                </a>
+            ) : (
+                <Link
+                    href={event.url}
+                    className="clear-both flex items-stretch space-x-4"
+                >
+                    <EventCardContent event={event} />
+                </Link>
+            )}
         </div>
     );
 };
