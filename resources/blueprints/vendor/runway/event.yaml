@@ -179,4 +179,25 @@ tabs:
               input_type: number
               type: text
               display: 'Number Of Items In Material Order'
+  featured_event:
+    display: 'Featured Event'
+    sections:
+      -
+        display: 'Featured Event Info'
+        fields:
+          -
+            handle: is_featured
+            field:
+              type: toggle
+              display: 'Is Featured'
+              instructions: 'Is this a featured event?'
+          -
+            handle: custom_landing_url
+            field:
+              input_type: url
+              type: text
+              display: 'Custom Landing URL'
+              validate:
+                - sometimes
+                - url
 title: Event
