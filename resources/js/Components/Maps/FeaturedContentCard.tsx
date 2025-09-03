@@ -70,6 +70,7 @@ export const FeaturedContentCard = ({
                 rel="noopener noreferrer"
                 className="flex gap-4 items-center group"
             >
+                {console.log(featuredContent)}
                 {featuredContent.featured_content_image && !imageError && (
                     <div className="flex-shrink-0">
                         <img
