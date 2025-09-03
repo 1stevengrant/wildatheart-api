@@ -2,23 +2,22 @@
 
 namespace App\Http\Integrations\Transistor;
 
-use Illuminate\Support\Facades\Cache;
-use Saloon\Http\Connector;
-use Saloon\Http\Auth\HeaderAuthenticator;
-use Saloon\Traits\Plugins\AcceptsJson;
-use Saloon\PaginationPlugin\PagedPaginator;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
+use Saloon\Http\Connector;
+use Saloon\RateLimitPlugin\Limit;
+use Illuminate\Support\Facades\Cache;
+use Saloon\Traits\Plugins\AcceptsJson;
+use Saloon\Http\Auth\HeaderAuthenticator;
+use Saloon\PaginationPlugin\PagedPaginator;
+use Saloon\RateLimitPlugin\Traits\HasRateLimits;
 use Saloon\PaginationPlugin\Contracts\HasPagination;
 use Saloon\RateLimitPlugin\Contracts\RateLimitStore;
-use Saloon\RateLimitPlugin\Limit;
 use Saloon\RateLimitPlugin\Stores\LaravelCacheStore;
-use Saloon\RateLimitPlugin\Traits\HasRateLimits;
 
 class TransistorConnector extends Connector implements HasPagination
 {
     use AcceptsJson, HasRateLimits;
-
 
     protected function resolveLimits(): array
     {
@@ -40,32 +39,32 @@ class TransistorConnector extends Connector implements HasPagination
         return config('services.transistor.api_url');
     }
 
-    public function paginate(Request $request): PagedPaginator 
+    public function paginate(Request $request): PagedPaginator
     {
         return new class(connector: $this, request: $request) extends PagedPaginator
         {
-          protected ?int $perPageLimit = 500;
-          
-          protected function isLastPage(Response $response): bool
-          {
-              return $response->json('meta.currentPage') === $response->json('meta.totalPages');
-          }
-          
-          protected function getPageItems(Response $response, Request $request): array
-          {
-              return $response->json('data');
-          }
+            protected ?int $perPageLimit = 500;
 
-          protected function applyPagination(Request $request): Request
-          {
-              $request->query()->add('pagination[page]', $this->currentPage);
-      
-              if (isset($this->perPageLimit)) {
-                  $request->query()->add('pagination[per]', $this->perPageLimit);
-              }
-      
-              return $request;
-          }
+            protected function isLastPage(Response $response): bool
+            {
+                return $response->json('meta.currentPage') === $response->json('meta.totalPages');
+            }
+
+            protected function getPageItems(Response $response, Request $request): array
+            {
+                return $response->json('data');
+            }
+
+            protected function applyPagination(Request $request): Request
+            {
+                $request->query()->add('pagination[page]', $this->currentPage);
+
+                if (isset($this->perPageLimit)) {
+                    $request->query()->add('pagination[per]', $this->perPageLimit);
+                }
+
+                return $request;
+            }
         };
     }
 

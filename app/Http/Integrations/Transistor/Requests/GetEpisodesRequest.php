@@ -2,16 +2,16 @@
 
 namespace App\Http\Integrations\Transistor\Requests;
 
-use Illuminate\Support\Facades\Cache;
-use Saloon\CachePlugin\Contracts\Cacheable;
-use Saloon\CachePlugin\Contracts\Driver;
-use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
-use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Saloon\CachePlugin\Contracts\Driver;
+use Saloon\CachePlugin\Traits\HasCaching;
+use Saloon\CachePlugin\Contracts\Cacheable;
+use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
 use Saloon\PaginationPlugin\Contracts\Paginatable;
 
-class GetEpisodesRequest extends Request implements Paginatable, Cacheable 
+class GetEpisodesRequest extends Request implements Cacheable, Paginatable
 {
     use HasCaching;
 
@@ -27,24 +27,24 @@ class GetEpisodesRequest extends Request implements Paginatable, Cacheable
         return new LaravelCacheDriver(Cache::store('redis'));
     }
 
-
     /**
      * The HTTP method of the request
      */
     protected Method $method = Method::GET;
 
-    protected  function defaultQuery(): array
+    protected function defaultQuery(): array
     {
-      return [
-        'show_id' => $this->show_id,
-        
-      ];
+        return [
+            'show_id' => $this->show_id,
+
+        ];
     }
+
     /**
      * The endpoint for the request
      */
     public function resolveEndpoint(): string
     {
-        return "/episodes";
+        return '/episodes';
     }
 }
