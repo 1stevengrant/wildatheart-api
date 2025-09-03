@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
+use App\Http\Integrations\Transistor\TransistorConnector;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
@@ -116,7 +118,33 @@ class TransistorService
 
         $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize;
 
-        $json = $this->transistorFetch($url);
+
+            $connector = new TransistorConnector();
+            $request = new GetEpisodesRequest($showId);
+            $request->query()->add('status', $status);
+        $allEpisodes = Cache::rememberForever($url, function () use ($request, $connector) {
+            $request->disableCaching();
+            $paginator = $connector->paginate($request);
+            return $paginator->collect()->toArray();
+        });
+        $recentEpisodes = $connector->send($request);
+
+        $allEpisodesCollection = collect($allEpisodes);
+        $allEpisodes = Cache::rememberForever($url, function () use ($request, $connector, $allEpisodesCollection, $recentEpisodes) {
+            foreach($recentEpisodes as $episode) {
+                $episodeExists = $allEpisodesCollection->contains('id', $episode['id']);
+                if (!$episodeExists) {
+                    $allEpisodesCollection->push($episode);
+                }
+            }
+            return $allEpisodesCollection->toArray();
+        });
+
+
+        
+
+        return $allEpisodes;
+
 
         if (! empty($json['errors'])) {
             return $json['errors'];
