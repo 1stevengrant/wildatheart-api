@@ -115,19 +115,22 @@ class TransistorService
 
     public function getAll($showId, $status = 'published')
     {
-        $pageSize = 1200;
 
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
 
         $connector = new TransistorConnector;
         $request = new GetEpisodesRequest($showId);
         $request->query()->add('status', $status);
+
+        // Get all episodes and cache them
         $allEpisodes = Cache::rememberForever($url, function () use ($request, $connector) {
             $request->disableCaching();
             $paginator = $connector->paginate($request);
 
             return $paginator->collect()->toArray();
         });
+
+        // Get recent episodes and update the cache with them.
         $recentEpisodes = $connector->send($request);
 
         $allEpisodesCollection = collect($allEpisodes);
@@ -135,36 +138,16 @@ class TransistorService
             foreach ($recentEpisodes as $episode) {
                 $episodeExists = $allEpisodesCollection->contains('id', $episode['id']);
                 if (! $episodeExists) {
-                    $allEpisodesCollection->push($episode);
+                    $existingIndex = $allEpisodesCollection->search(fn ($item) => $item['id'] === $episode['id']);
+                    if ($existingIndex !== false) {
+                        $allEpisodesCollection->put($existingIndex, $episode);
+                    } else {
+                        $allEpisodesCollection->push($episode);
+                    }
                 }
             }
 
             return $allEpisodesCollection->toArray();
         });
-
-        return $allEpisodes;
-
-        if (! empty($json['errors'])) {
-            return $json['errors'];
-        }
-
-        $data = $json['data'];
-
-        if (isset($json['meta']['currentPage']) && isset($json['meta']['totalPages'])) {
-            $currentPage = $json['meta']['currentPage'];
-
-            // Move through all pages of data and merge them into the $data array
-            while ($currentPage < $json['meta']['totalPages']) {
-                $currentPage += 1;
-
-                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize . '&pagination[page]=' . $currentPage;
-                $json = $this->transistorFetch($url);
-                if (! isset($json['errors'])) {
-                    $data = array_merge($data, $json['data']);
-                }
-            }
-        }
-
-        return $data;
     }
 }
