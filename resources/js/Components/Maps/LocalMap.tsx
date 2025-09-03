@@ -267,9 +267,12 @@ export const LocalMap = () => {
 
             <EventCountButton />
             <OutsideClickHandlerEvents />
-            
+
             {/* Mobile only - featured content at top of map */}
-            <FeaturedContentCard featuredContent={featuredContent} position="map-top" />
+            <FeaturedContentCard
+                featuredContent={featuredContent}
+                position="map-top"
+            />
         </Map>
     );
 };

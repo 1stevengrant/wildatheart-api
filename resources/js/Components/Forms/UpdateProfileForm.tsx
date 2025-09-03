@@ -30,7 +30,7 @@ export const UpdateProfileForm = ({
         phone: user.phone ?? "",
         email: user.email ?? "",
         image: null as File | null,
-        opted_into_marketing: Boolean(user.opted_into_marketing) ?? true,
+        opted_into_marketing: Boolean(user.opted_into_marketing),
     });
 
     const route = useRoute();
@@ -69,6 +69,7 @@ export const UpdateProfileForm = ({
     };
 
     const clearPhotoFileInput = () => {
+        // @ts-ignore
         if (photoRef.current?.value) {
             photoRef.current.value = "";
             form.setData("image", null);
@@ -300,7 +301,7 @@ export const UpdateProfileForm = ({
                             Saving Profile...
                         </>
                     ) : (
-                        buttonText ?? "Save"
+                        (buttonText ?? "Save")
                     )}
                 </PrimaryButton>
                 <Link

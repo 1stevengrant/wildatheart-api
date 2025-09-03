@@ -2,7 +2,7 @@ import { Link } from "@inertiajs/react";
 import classNames from "classnames";
 
 interface PaginationProps {
-    links: PaginationItem[];
+    links: PaginationItemProps[];
 }
 
 export default function Pagination({ links = [] }: PaginationProps) {
@@ -28,13 +28,13 @@ export default function Pagination({ links = [] }: PaginationProps) {
     );
 }
 
-interface PaginationItem {
+interface PaginationItemProps {
     url: null | string;
     label: string;
     active: boolean;
 }
 
-function PaginationItem({ active, label, url }: PaginationItem) {
+function PaginationItem({ active, label, url }: PaginationItemProps) {
     const className = classNames(
         [
             "mr-1 mb-1",
@@ -63,7 +63,7 @@ function PaginationItem({ active, label, url }: PaginationItem) {
     );
 }
 
-function PageInactive({ label }: Pick<PaginationItem, "label">) {
+function PageInactive({ label }: Pick<PaginationItemProps, "label">) {
     const className = classNames(
         "mr-1 mb-1 px-4 py-3 text-sm font-semibold border-2 rounded border-n400 text-n400 cursor-not-allowed"
     );
