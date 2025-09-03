@@ -22,9 +22,12 @@ export const SearchSidebar = () => {
                 <div className="flex-1 overflow-y-auto">
                     {/* Desktop only - featured content sticky at top */}
                     <div className="hidden md:block sticky top-0 z-10 px-4 bg-black">
-                        <FeaturedContentCard featuredContent={featuredContent} position="sidebar" />
+                        <FeaturedContentCard
+                            featuredContent={featuredContent}
+                            position="sidebar"
+                        />
                     </div>
-                    
+
                     <div className="px-4">
                         {events.length === 0 ? (
                             <NoSearchResults />

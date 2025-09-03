@@ -28,5 +28,7 @@ export const imageGenerator = (
     );
 
     const queryString = new URLSearchParams(stringParams).toString();
-    return queryString ? `${apiUrl}/${image}?${queryString}` : `${apiUrl}/${image}`;
+    return queryString
+        ? `${apiUrl}/${image}?${queryString}`
+        : `${apiUrl}/${image}`;
 };

@@ -6,7 +6,10 @@
       "Bash(php artisan test:*)",
       "Bash(npm run build:*)",
       "Bash(npx tsc:*)",
-      "Bash(php artisan typescript:transform:*)"
+      "Bash(php artisan typescript:transform:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run lint)",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

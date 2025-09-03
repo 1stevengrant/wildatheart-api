@@ -106,12 +106,12 @@ export const useEvents = () => {
             });
 
             setShowLoading(false);
-            
+
             // Handle new response structure with events and featuredContent
             const responseData = response.data;
             const events = responseData.events || responseData; // Fallback for backward compatibility
             const featuredContent = responseData.featuredContent || null;
-            
+
             setEvents(events);
             setFeaturedContent(featuredContent);
 
