@@ -51,6 +51,7 @@ class TransistorService
             }
             // Sleep for 10 seconds
             sleep(10);
+
             // Retry the request
             return $this->transistorFetch($url, $retry + 1);
         }

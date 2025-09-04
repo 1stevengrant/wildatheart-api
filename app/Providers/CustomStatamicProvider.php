@@ -4,13 +4,13 @@ namespace App\Providers;
 
 use Statamic\Statamic;
 use Statamic\Facades\Entry;
+use Statamic\Events\EntrySaved;
 use Statamic\Facades\Collection;
 use Statamic\Events\AssetUploaded;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
-use Ghijk\WildAtHeart\Http\Controllers\Actions\TriggerAstroBuildController;
 use Illuminate\Support\Facades\Event as LaravelEvent;
-use Statamic\Events\EntrySaved;
+use Ghijk\WildAtHeart\Http\Controllers\Actions\TriggerAstroBuildController;
 
 class CustomStatamicProvider extends ServiceProvider
 {
