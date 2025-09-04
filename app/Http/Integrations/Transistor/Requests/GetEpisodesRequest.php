@@ -19,7 +19,7 @@ class GetEpisodesRequest extends Request implements Cacheable, Paginatable
 
     public function cacheExpiryInSeconds(): int
     {
-        return 3600; // One Hour
+        return 300; // 5 minutes
     }
 
     public function resolveCacheDriver(): Driver
