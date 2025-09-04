@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\V2\Navs\DesktopNavController;
-use App\Http\Controllers\API\V2\Navs\MobileNavController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\AllEventsController;
@@ -13,6 +11,8 @@ use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
+use App\Http\Controllers\API\V2\Navs\MobileNavController;
+use App\Http\Controllers\API\V2\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
