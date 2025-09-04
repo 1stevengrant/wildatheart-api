@@ -16,11 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
             Route::middleware('non-inertia')
                 ->group(base_path('routes/non_inertia.php'));
-
-            Route::middleware('api')
-                ->prefix('api/v2')
-                ->name('api.v2.')
-                ->group(base_path('routes/api_v2.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware) {

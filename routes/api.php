@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\API\V2\Navs\DesktopNavController;
+use App\Http\Controllers\API\V2\Navs\MobileNavController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\AllEventsController;
@@ -32,8 +34,13 @@ use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('stats', StatsController::class)->name('stats');
+
     Route::prefix('webhooks')->name('webhooks.')->group(function () {
         Route::post('refresh-daily-readings', [DailyReadingController::class, 'refreshDailyReadings'])->name('refreshDailyReadings');
+
+    Route::prefix('navs')->name('navs.')->group(function () {
+        Route::get('desktop', DesktopNavController::class)->name('desktop');
+        Route::get('mobile', MobileNavController::class)->name('mobile');
     });
 });
 
