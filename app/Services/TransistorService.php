@@ -4,66 +4,11 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Integrations\Transistor\TransistorConnector;
+use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
 
 class TransistorService
 {
-    /**
-     * Fetch data from the Transistor API
-     *
-     * Transistor API is rate limited to 10 requests every 10 seconds, so this method caches the results of the API call.
-     * Transistor API is paginated, so this method fetches all pages of data and merges them into a single array.
-     *
-     * @param  string  $url  The URL to fetch data from
-     * @return array The data from the Transistor API
-     */
-    public function transistorFetch($url, $retry = 0)
-    {
-        $TRANSISTOR_CACHE_DURATION = config('services.transistor.cache_duration');
-        $TRANSISTOR_API_KEY = config('services.transistor.api_key');
-
-        $cacheKey = md5($url);
-
-        if (Cache::has($cacheKey)) {
-            $value = Cache::get($cacheKey);
-
-            return $value;
-        }
-
-        $response = Http::withHeaders([
-            'x-api-key' => $TRANSISTOR_API_KEY,
-        ])->get($url);
-
-        if ($response->successful()) {
-            $json = $response->json();
-
-            if (! empty($json['errors'])) {
-                return $json;
-            }
-
-            Cache::put($cacheKey, $json, (int) $TRANSISTOR_CACHE_DURATION);
-
-            return $json;
-        }
-        // Check for rate limiting (429 Too Many Requests)
-        if ($response->status() === 429) {
-            if ($retry > 3) {
-                throw new \Exception('Rate limit exceeded for Transistor API. Please try again later.');
-            }
-            // Sleep for 10 seconds
-            sleep(10);
-
-            // Retry the request
-            return $this->transistorFetch($url, $retry + 1);
-        }
-
-        if (isset($response->json()['errors'])) {
-            return $response->json();
-        }
-
-        // Handle error appropriately
-        throw new \Exception('Failed to fetch data from Transistor API');
-    }
-
     public function updateEpisode($episodeId, $data)
     {
         $TRANSISTOR_API_KEY = config('services.transistor.api_key');
@@ -101,8 +46,12 @@ class TransistorService
      */
     public function getRecent($showId, $count = 1)
     {
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
-        $json = $this->transistorFetch($url);
+
+        $connector = new TransistorConnector;
+        $request = new GetEpisodesRequest($showId);
+        $request->query()->add('status', 'published');
+        $request->query()->add('pagination[per]', $count);
+        $json = $connector->send($request)->json();
 
         if (isset($json['errors']) || ! isset($json['data'])) {
             return $json;
@@ -111,35 +60,57 @@ class TransistorService
         return $json['data'];
     }
 
+    /**
+     * Get all episodes from the Transistor API
+     *
+     * @param  string  $showId  The ID of the show to fetch episodes from
+     * @param  string  $status  The status of the episodes to get.
+     * @return array All episodes from the Transistor API
+     */
     public function getAll($showId, $status = 'published')
     {
-        $pageSize = 1200;
 
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
 
-        $json = $this->transistorFetch($url);
+        $connector = new TransistorConnector;
+        $request = new GetEpisodesRequest($showId);
+        $request->query()->add('status', $status);
+        $justUpdated = false;
 
-        if (! empty($json['errors'])) {
-            return $json['errors'];
-        }
+        $allEpisodes = Cache::rememberForever($url, function () use ($url, $request, $connector) {
+            Cache::set($url . '_last_updated', now());
+            $justUpdated = true;
+            $request->disableCaching();
+            $paginator = $connector->paginate($request);
 
-        $data = $json['data'];
+            return $paginator->collect()->toArray();
+        });
 
-        if (isset($json['meta']['currentPage']) && isset($json['meta']['totalPages'])) {
-            $currentPage = $json['meta']['currentPage'];
+        $lastUpdated = Cache::get($url . '_last_updated');
 
-            // Move through all pages of data and merge them into the $data array
-            while ($currentPage < $json['meta']['totalPages']) {
-                $currentPage += 1;
+        $recentEpisodes = $connector->send($request)->json();
+        $updatedRecently = collect($recentEpisodes['data'])->filter(function ($episode) use ($lastUpdated) {
+            return $lastUpdated->lt(data_get($episode, 'attributes.updated_at'));
+        });
 
-                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize . '&pagination[page]=' . $currentPage;
-                $json = $this->transistorFetch($url);
-                if (! isset($json['errors'])) {
-                    $data = array_merge($data, $json['data']);
+        // Only update episodes that have changed since the last time we got all of them.
+        if (count($updatedRecently) > 0 && ! $justUpdated) {
+            $allEpisodesCollection = collect($allEpisodes);
+            foreach ($updatedRecently as $episode) {
+                $index = $allEpisodesCollection->search(fn ($item) => $item['id'] === $episode['id']);
+                if ((bool) $index) {
+                    $allEpisodesCollection->put($index, $episode);
+                } else {
+                    $allEpisodesCollection->push($episode);
                 }
+
+                $allEpisodes = $allEpisodesCollection->toArray();
+
+                Cache::set($url . '_last_updated', now());
+                Cache::set($url, $allEpisodes);
             }
         }
 
-        return $data;
+        return $allEpisodes;
     }
 }
