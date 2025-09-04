@@ -22,6 +22,6 @@ class MobileNavController extends BaseNavController
         $mainNavBar = $data['main_nav_bar'] ?? [];
         $drawerItems = $data['drawer_items'] ?? [];
 
-        return MobileNavResponseData::fromStatamicData($mainNavBar, $drawerItems)->toArray();
+        return MobileNavResponseData::fromStatamicData($mainNavBar, $drawerItems)->toResponseArray();
     }
 }

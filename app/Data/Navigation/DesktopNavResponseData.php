@@ -3,19 +3,14 @@
 namespace App\Data\Navigation;
 
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
-use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class DesktopNavResponseData extends Data
 {
-    /**
-     * @param  DesktopNavItemData[]  $items
-     */
     public function __construct(
-        #[DataCollectionOf(DesktopNavItemData::class)]
-        public DataCollection $items,
+        /** @var \App\Data\Navigation\DesktopNavItemData[] */
+        public array $items,
     ) {}
 
     /**
@@ -23,15 +18,13 @@ class DesktopNavResponseData extends Data
      */
     public static function fromStatamicData(array $items): self
     {
-        $collection = DesktopNavItemData::collection(
-            collect($items)
-                ->filter(fn ($item) => $item['enabled'] ?? false)
-                ->map(fn ($item) => DesktopNavItemData::fromStatamic($item)->withEnabledDropdownLinks())
-                ->values()
-                ->toArray()
-        );
+        $itemsData = collect($items)
+            ->filter(fn ($item) => $item['enabled'] ?? false)
+            ->map(fn ($item) => DesktopNavItemData::fromStatamic($item)->withEnabledDropdownLinks())
+            ->values()
+            ->toArray();
 
-        return new self(items: $collection);
+        return new self(items: $itemsData);
     }
 
     /**
@@ -39,6 +32,9 @@ class DesktopNavResponseData extends Data
      */
     public function toResponseArray(): array
     {
-        return $this->items->toArray();
+        return array_map(
+            fn ($item) => $item instanceof DesktopNavItemData ? $item->toArray() : $item, 
+            $this->items
+        );
     }
 }

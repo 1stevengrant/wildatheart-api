@@ -3,16 +3,11 @@
 namespace App\Data\Navigation;
 
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
-use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class DesktopNavItemData extends Data
 {
-    /**
-     * @param  DropdownLinkData[]  $dropdownLinks
-     */
     public function __construct(
         public string $id,
         public string $title,
@@ -20,8 +15,8 @@ class DesktopNavItemData extends Data
         public string $type = 'main_nav_item',
         public ?string $url = null,
         public ?string $icon = null,
-        #[DataCollectionOf(DropdownLinkData::class)]
-        public ?DataCollection $dropdownLinks = null,
+        /** @var \App\Data\Navigation\DropdownLinkData[]|null */
+        public ?array $dropdownLinks = null,
         public ?string $bottomLinkTitle = null,
         public ?string $bottomLinkUrl = null,
         public ?string $featuredMediaItemByline = null,
@@ -37,11 +32,9 @@ class DesktopNavItemData extends Data
     {
         $dropdownLinks = null;
         if (isset($data['dropdown_links']) && is_array($data['dropdown_links'])) {
-            $dropdownLinks = DropdownLinkData::collection(
-                array_map(
-                    fn ($link) => DropdownLinkData::fromStatamic($link),
-                    $data['dropdown_links']
-                )
+            $dropdownLinks = array_map(
+                fn ($link) => DropdownLinkData::fromStatamic($link),
+                $data['dropdown_links']
             );
         }
 
@@ -71,8 +64,22 @@ class DesktopNavItemData extends Data
             return $this;
         }
 
-        $filtered = $this->dropdownLinks->filter(fn ($link) => $link->enabled);
+        $filtered = array_filter($this->dropdownLinks, fn ($link) => $link->enabled);
 
-        return $this->clone()->with(dropdownLinks: $filtered);
+        return new self(
+            id: $this->id,
+            title: $this->title,
+            enabled: $this->enabled,
+            type: $this->type,
+            url: $this->url,
+            icon: $this->icon,
+            dropdownLinks: $filtered,
+            bottomLinkTitle: $this->bottomLinkTitle,
+            bottomLinkUrl: $this->bottomLinkUrl,
+            featuredMediaItemByline: $this->featuredMediaItemByline,
+            featuredMediaItemTitle: $this->featuredMediaItemTitle,
+            featuredMediaItemUrl: $this->featuredMediaItemUrl,
+            featuredMediaItemImage: $this->featuredMediaItemImage,
+        );
     }
 }

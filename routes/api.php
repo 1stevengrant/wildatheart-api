@@ -37,6 +37,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::prefix('webhooks')->name('webhooks.')->group(function () {
         Route::post('refresh-daily-readings', [DailyReadingController::class, 'refreshDailyReadings'])->name('refreshDailyReadings');
+    });
 
     Route::prefix('navs')->name('navs.')->group(function () {
         Route::get('desktop', DesktopNavController::class)->name('desktop');

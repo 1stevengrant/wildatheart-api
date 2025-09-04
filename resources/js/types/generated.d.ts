@@ -156,7 +156,7 @@ declare namespace App.Data.Navigation {
         type: string;
         url: string | null;
         icon: string | null;
-        dropdownLinks: any | null;
+        dropdownLinks: Array<App.Data.Navigation.DropdownLinkData> | null;
         bottomLinkTitle: string | null;
         bottomLinkUrl: string | null;
         featuredMediaItemByline: string | null;
@@ -165,7 +165,7 @@ declare namespace App.Data.Navigation {
         featuredMediaItemImage: string | null;
     };
     export type DesktopNavResponseData = {
-        items: any;
+        items: Array<App.Data.Navigation.DesktopNavItemData>;
     };
     export type DropdownLinkData = {
         id: string;
@@ -176,8 +176,8 @@ declare namespace App.Data.Navigation {
         type: string;
     };
     export type MobileNavResponseData = {
-        mainNavBar: any;
-        drawerItems: any;
+        mainNavBar: Array<App.Data.Navigation.NavItemData>;
+        drawerItems: Array<App.Data.Navigation.NavItemData>;
     };
     export type NavItemData = {
         id: string;
