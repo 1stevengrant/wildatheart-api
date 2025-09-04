@@ -43,17 +43,36 @@ class MobileNavResponseData extends Data
     }
 
     /**
+     * Create empty response with fallback data
+     */
+    public static function emptyResponse(): self
+    {
+        return new self(
+            mainNavBar: [],
+            drawerItems: [],
+        );
+    }
+
+    /**
+     * Check if response has any navigation items
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->mainNavBar) && empty($this->drawerItems);
+    }
+
+    /**
      * Convert to array for JSON response while maintaining typed structure
      */
     public function toResponseArray(): array
     {
         return [
             'main_nav_bar' => array_map(
-                fn ($item) => $item instanceof NavItemData ? $item->toArray() : $item, 
+                fn ($item) => $item instanceof NavItemData ? $item->toArray() : $item,
                 $this->mainNavBar
             ),
             'drawer_items' => array_map(
-                fn ($item) => $item instanceof NavItemData ? $item->toArray() : $item, 
+                fn ($item) => $item instanceof NavItemData ? $item->toArray() : $item,
                 $this->drawerItems
             ),
         ];

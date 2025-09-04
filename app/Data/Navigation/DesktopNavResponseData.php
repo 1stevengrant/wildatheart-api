@@ -33,7 +33,7 @@ class DesktopNavResponseData extends Data
     public function toResponseArray(): array
     {
         return array_map(
-            fn ($item) => $item instanceof DesktopNavItemData ? $item->toArray() : $item, 
+            fn ($item) => $item instanceof DesktopNavItemData ? $item->toArray() : $item,
             $this->items
         );
     }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\API\V1\Navs;
 
+use Exception;
 use Statamic\Facades\GlobalSet;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 abstract class BaseNavController extends Controller
 {
@@ -18,6 +21,14 @@ abstract class BaseNavController extends Controller
     abstract protected function processNavigationData(array $data): array;
 
     /**
+     * Get additional cache tags for more granular cache invalidation
+     */
+    protected function getCacheTags(): array
+    {
+        return ['navigation', $this->getGlobalSetHandle()];
+    }
+
+    /**
      * Get the error message when global set is not found
      */
     protected function getNotFoundMessage(): string
@@ -26,32 +37,78 @@ abstract class BaseNavController extends Controller
     }
 
     /**
-     * Fetch and process navigation data
+     * Fetch and process navigation data with caching
      */
     protected function getNavigationData()
     {
-        $globalSet = GlobalSet::findByHandle($this->getGlobalSetHandle());
+        $cacheKey = "navigation.{$this->getGlobalSetHandle()}";
 
-        if (! $globalSet) {
-            return response()->json([
-                'error' => $this->getNotFoundMessage(),
-            ], 404);
+        try {
+            return Cache::remember($cacheKey, now()->addMinutes($this->getCacheDuration()), function () {
+                $globalSet = GlobalSet::findByHandle($this->getGlobalSetHandle());
+
+                if (! $globalSet) {
+                    Log::warning("Navigation global set not found: {$this->getGlobalSetHandle()}");
+
+                    return $this->errorResponse($this->getNotFoundMessage(), 404);
+                }
+
+                // Get the variables (actual content) for the default site
+                $variables = $globalSet->inDefaultSite();
+
+                if (! $variables) {
+                    Log::warning("Navigation variables not found for: {$this->getGlobalSetHandle()}");
+
+                    return $this->errorResponse('No navigation data found for default site', 404);
+                }
+
+                // Get the navigation data
+                $data = $variables->data()->all();
+
+                if (empty($data)) {
+                    Log::warning("Empty navigation data for: {$this->getGlobalSetHandle()}");
+
+                    return $this->errorResponse('Navigation data is empty', 404);
+                }
+
+                // Process the data
+                $processedData = $this->processNavigationData($data);
+
+                // Return as resource with proper headers
+                return response()->json($processedData, 200, [
+                    'Content-Type' => 'application/json',
+                    'Cache-Control' => 'public, max-age=' . ($this->getCacheDuration() * 60),
+                    'X-Navigation-Type' => $this->getGlobalSetHandle(),
+                ]);
+            });
+        } catch (Exception $e) {
+            Log::error("Navigation API error: {$e->getMessage()}", [
+                'handle' => $this->getGlobalSetHandle(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return $this->errorResponse('Internal server error', 500);
         }
+    }
 
-        // Get the variables (actual content) for the default site
-        $variables = $globalSet->inDefaultSite();
+    /**
+     * Return consistent error response format
+     */
+    private function errorResponse(string $message, int $code): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'error' => $message,
+            'code' => $code,
+            'navigation_type' => $this->getGlobalSetHandle(),
+        ], $code);
+    }
 
-        if (! $variables) {
-            return response()->json([
-                'error' => 'No navigation data found for default site',
-            ], 404);
-        }
-
-        // Get the navigation data
-        $data = $variables->data()->all();
-
-        // Process and return the data
-        return response()->json($this->processNavigationData($data));
+    /**
+     * Get cache duration in minutes (can be overridden by child classes)
+     */
+    protected function getCacheDuration(): int
+    {
+        return 60; // 1 hour default
     }
 
     /**
