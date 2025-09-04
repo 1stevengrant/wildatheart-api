@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\V2\Navs;
+namespace App\Http\Controllers\API\V1\Navs;
 
 use Statamic\Facades\GlobalSet;
 use App\Http\Controllers\Controller;

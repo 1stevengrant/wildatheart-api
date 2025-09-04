@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\V2\Navs;
+namespace App\Http\Controllers\API\V1\Navs;
 
 use Illuminate\Http\Request;
 use App\Data\Navigation\DesktopNavResponseData;
