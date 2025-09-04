@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands\Redirects;
 
-use App\DataTransferObjects\RedirectData;
-use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 use Exception;
 use App\Models\Redirect;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\DataTransferObjects\RedirectData;
+use App\Jobs\Admin\AddRedirectsInBulkFromArrayJob;
 
 class ImportDrupalRedirectsCommand extends Command
 {
@@ -40,7 +40,7 @@ class ImportDrupalRedirectsCommand extends Command
 
             $existingRedirects = Redirect::all()->pluck('source')->toArray();
             $redirectsToImport = $drupalRedirects->filter(function ($redirect) use ($existingRedirects) {
-                return ! in_array("/" . $redirect->source, $existingRedirects);
+                return ! in_array('/' . $redirect->source, $existingRedirects);
             });
             $this->info("Found {$redirectsToImport->count()} redirects to import that don't already exist");
 
