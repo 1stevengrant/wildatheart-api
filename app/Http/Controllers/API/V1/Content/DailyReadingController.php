@@ -110,7 +110,7 @@ class DailyReadingController extends Controller
 
     public function refreshDailyReadings()
     {
-        RefreshDailyReadingsJob::dispatch();
+        RefreshDailyReadingsJob::dispatch(true);
 
         return response()->json(['message' => 'Daily readings refreshed']);
     }
