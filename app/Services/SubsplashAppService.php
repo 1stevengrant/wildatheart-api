@@ -4,9 +4,7 @@ namespace App\Services;
 
 use Statamic\Entries\Entry;
 use Illuminate\Http\Request;
-use App\Http\Integrations\Transistor\TransistorConnector;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
-use App\Http\Integrations\Transistor\Requests\GetEpisodeRequest;
 
 /**
  * This provides data in the required format for the app to render.
@@ -200,12 +198,7 @@ class SubsplashAppService
     public function getDailyReading($id)
     {
 
-        $url = config('services.transistor.api_url') . 'episodes/' . $id;
-
-        $connector = new TransistorConnector;
-        $request = new GetEpisodeRequest($id);
-        $reading = $connector->send($request)->json();
-        $reading = data_get($reading, 'data');
+        $reading = $this->transistor->getEpisode($id, 'wildatheart-daily');
 
         return [
             'items' => [
@@ -224,7 +217,7 @@ class SubsplashAppService
                     'actions' => [
                         [
                             'handler' => 'mediaDetail',
-                            'url' => route('content.v1.subsplash.dailyReadingsListen', ['id' => data_get($reading, 'data.id')]),
+                            'url' => route('content.v1.subsplash.dailyReadingsListen', ['id' => data_get($reading, 'id')]),
                         ],
                     ],
                 ],
@@ -285,10 +278,7 @@ class SubsplashAppService
 
         if ($id) {
             // Get a specific daily reading
-            $connector = new TransistorConnector;
-            $request = new GetEpisodeRequest($id);
-            $response = $connector->send($request)->json();
-            $reading = data_get($response, 'data');
+            $reading = $this->transistor->getEpisode($id, 'wildatheart-daily');
         } else {
             // Get the most recent daily reading
             $dailyReadingController = app(DailyReadingController::class);

@@ -32,6 +32,9 @@ use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('stats', StatsController::class)->name('stats');
+    Route::prefix('webhooks')->name('webhooks.')->group(function () {
+        Route::post('refresh-daily-readings', [DailyReadingController::class, 'refreshDailyReadings'])->name('refreshDailyReadings');
+    });
 });
 
 Route::prefix('content')->group(function () {
