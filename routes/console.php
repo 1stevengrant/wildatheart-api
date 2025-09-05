@@ -3,7 +3,7 @@
 use App\Enums\ReportName;
 use Illuminate\Support\Facades\Schedule;
 use App\Jobs\Admin\GenerateAndEmailReport;
-use App\Jobs\Transistor\RefreshEpisodeListJob;
+use App\Jobs\Transistor\RefreshDailyReadingsJob;
 
 Schedule::command(\App\Console\Commands\Fire\SendFiresCheckinsEmailCommand::class)->daily();
 Schedule::command('app:get-latest-subsplash-media')->everyFifteenMinutes();
@@ -15,4 +15,4 @@ Schedule::job(new GenerateAndEmailReport(
     'Becoming A King Retreat Hosts'
 ))->monthly();
 
-Schedule::job(new RefreshEpisodeListJob)->everyThirtyMinutes();
+Schedule::job(new RefreshDailyReadingsJob)->everyThirtyMinutes();

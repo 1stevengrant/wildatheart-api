@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\TransistorService;
 use App\Http\Controllers\Controller;
-use App\Jobs\Transistor\RefreshEpisodeListJob;
+use App\Jobs\Transistor\RefreshDailyReadingsJob;
 use App\DataTypeObjects\TransistorPodcastEpisode;
 use App\DataTypeObjects\API\V1\Content\DailyReadingResponse;
 
@@ -110,7 +110,7 @@ class DailyReadingController extends Controller
 
     public function refreshDailyReadings()
     {
-        RefreshEpisodeListJob::dispatch();
+        RefreshDailyReadingsJob::dispatch();
 
         return response()->json(['message' => 'Daily readings refreshed']);
     }

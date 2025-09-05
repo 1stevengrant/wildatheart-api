@@ -80,7 +80,9 @@ class TransistorService
         if (Cache::has($url)) {
             return Cache::get($url);
         }
+        $this->refreshEpisodeList($showId, $status);
 
+        return Cache::get($url);
     }
 
     /**
