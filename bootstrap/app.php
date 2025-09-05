@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             'webhooks/sendgrid',
+            'api/v1/webhooks/*',
         ]);
 
         $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);

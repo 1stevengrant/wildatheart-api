@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\TransistorService;
 use App\Http\Controllers\Controller;
+use App\Jobs\Transistor\RefreshDailyReadingsJob;
 use App\DataTypeObjects\TransistorPodcastEpisode;
 use App\DataTypeObjects\API\V1\Content\DailyReadingResponse;
 
@@ -36,8 +37,8 @@ class DailyReadingController extends Controller
                 $dailyReading = DailyReadingResponse::from([
                     'transistor_episode' => TransistorPodcastEpisode::from($item),
                     'previous_episode_slug' => null,
-
                 ]);
+
                 if (isset($item['attributes']['title'])) {
                     $title = $item['attributes']['title'];
                     $dailyReading->current_episode_slug = Str::slug($title, '-');
@@ -105,5 +106,12 @@ class DailyReadingController extends Controller
 
         // If no matching slug is found, return a 404 response
         return response()->json(['error' => 'Daily reading not found'], 404);
+    }
+
+    public function refreshDailyReadings()
+    {
+        RefreshDailyReadingsJob::dispatch();
+
+        return response()->json(['message' => 'Daily readings refreshed']);
     }
 }

@@ -46,18 +46,23 @@ class TransistorService
      */
     public function getRecent($showId, $count = 1)
     {
+        return collect($this->getAll($showId, 'published'))->take($count)->toArray();
+    }
 
-        $connector = new TransistorConnector;
-        $request = new GetEpisodesRequest($showId);
-        $request->query()->add('status', 'published');
-        $request->query()->add('pagination[per]', $count);
-        $json = $connector->send($request)->json();
+    public function getEpisode($id, $showId)
+    {
+        $url = config('services.transistor.api_url') . 'episodes/' . $id;
 
-        if (isset($json['errors']) || ! isset($json['data'])) {
-            return $json;
+        if (Cache::has($url)) {
+            return Cache::get($url);
         }
 
-        return $json['data'];
+        $allEpisodes = $this->getAll($showId);
+        $episode = Cache::remember($url, 60, function () use ($allEpisodes, $id) {
+            return collect($allEpisodes)->firstWhere('id', $id);
+        });
+
+        return $episode;
     }
 
     /**
@@ -72,45 +77,27 @@ class TransistorService
 
         $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
 
+        if (Cache::has($url)) {
+            return Cache::get($url);
+        }
+        $this->refreshEpisodeList($showId, $status);
+
+        return Cache::get($url);
+    }
+
+    /**
+     * Refresh the episode list from the Transistor API
+     */
+    public function refreshEpisodeList($showId, $status = 'published')
+    {
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
+
         $connector = new TransistorConnector;
         $request = new GetEpisodesRequest($showId);
         $request->query()->add('status', $status);
-        $justUpdated = false;
-
-        $allEpisodes = Cache::rememberForever($url, function () use ($url, $request, $connector) {
-            Cache::set($url . '_last_updated', now());
-            $justUpdated = true;
-            $request->disableCaching();
-            $paginator = $connector->paginate($request);
-
-            return $paginator->collect()->toArray();
-        });
-
-        $lastUpdated = Cache::get($url . '_last_updated');
-
-        $recentEpisodes = $connector->send($request)->json();
-        $updatedRecently = collect($recentEpisodes['data'])->filter(function ($episode) use ($lastUpdated) {
-            return $lastUpdated->lt(data_get($episode, 'attributes.updated_at'));
-        });
-
-        // Only update episodes that have changed since the last time we got all of them.
-        if (count($updatedRecently) > 0 && ! $justUpdated) {
-            $allEpisodesCollection = collect($allEpisodes);
-            foreach ($updatedRecently as $episode) {
-                $index = $allEpisodesCollection->search(fn ($item) => $item['id'] === $episode['id']);
-                if ((bool) $index) {
-                    $allEpisodesCollection->put($index, $episode);
-                } else {
-                    $allEpisodesCollection->push($episode);
-                }
-
-                $allEpisodes = $allEpisodesCollection->toArray();
-
-                Cache::set($url . '_last_updated', now());
-                Cache::set($url, $allEpisodes);
-            }
-        }
-
-        return $allEpisodes;
+        $request->disableCaching();
+        $paginator = $connector->paginate($request);
+        $episodes = $paginator->collect()->toArray();
+        Cache::forever($url, $episodes);
     }
 }
