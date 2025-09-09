@@ -57,8 +57,6 @@ tabs:
               type: toggle
               display: 'Hide Navigation'
           -
-            import: images
-          -
             handle: content_type
             field:
               type: terms

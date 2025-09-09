@@ -1,6 +1,40 @@
 title: SEO
 fields:
   -
+    handle: images
+    field:
+      type: group
+      display: Images
+      instructions: 'Images you want to use for previews.'
+      fields:
+        -
+          handle: wide
+          field:
+            max_files: 1
+            container: s3
+            folder: files
+            type: assets
+            display: 'Featured Image (3:2)'
+            width: 33
+        -
+          handle: square
+          field:
+            max_files: 1
+            container: s3
+            folder: files
+            type: assets
+            display: 'Square (1:1)'
+            width: 33
+        -
+          handle: vertical
+          field:
+            max_files: 1
+            container: s3
+            folder: files
+            type: assets
+            display: Vertical
+            width: 33
+  -
     handle: seo_title
     field:
       type: text

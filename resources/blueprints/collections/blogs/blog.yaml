@@ -70,6 +70,4 @@ tabs:
               default: now
               validate:
                 - required
-          -
-            import: images
 title: Blog

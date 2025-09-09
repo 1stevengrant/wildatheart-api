@@ -17,6 +17,11 @@ tabs:
               type: entries
               display: 'Related Content'
               max_items: 1
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:
@@ -41,8 +46,3 @@ tabs:
               default: now
               validate:
                 - required
-      -
-        display: Images
-        fields:
-          -
-            import: images

@@ -53,6 +53,11 @@ tabs:
               display: 'Publication Date'
           -
             import: blocks
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:
