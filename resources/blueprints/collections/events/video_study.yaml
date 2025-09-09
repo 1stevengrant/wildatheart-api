@@ -46,8 +46,3 @@ tabs:
               default: now
               validate:
                 - required
-      -
-        display: Images
-        fields:
-          -
-            import: images

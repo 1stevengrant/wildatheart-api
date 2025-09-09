@@ -92,11 +92,6 @@ tabs:
               type: toggle
               display: 'Show in Collections?'
               instructions: 'Toggle this on if you would like this event to be surfaced in collections such as the events page.'
-      -
-        display: Images
-        fields:
-          -
-            import: images
   hero:
     display: Hero
     sections:

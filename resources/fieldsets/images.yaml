@@ -23,14 +23,6 @@ fields:
             type: assets
             display: Wide
         -
-          handle: banner
-          field:
-            max_files: 1
-            container: s3
-            folder: files
-            type: assets
-            display: Banner
-        -
           handle: vertical
           field:
             max_files: 1

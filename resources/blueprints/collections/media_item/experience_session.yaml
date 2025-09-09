@@ -98,11 +98,6 @@ tabs:
               validate:
                 - required
               time_enabled: true
-      -
-        display: Images
-        fields:
-          -
-            import: images
           -
             handle: slug
             field:
