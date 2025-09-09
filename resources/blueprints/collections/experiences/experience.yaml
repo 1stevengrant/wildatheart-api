@@ -59,6 +59,11 @@ tabs:
                 - media_item
               type: entries
               display: Sessions
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   hero:
     display: Hero
     sections:

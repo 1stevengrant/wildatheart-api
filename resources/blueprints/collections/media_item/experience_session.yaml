@@ -79,6 +79,11 @@ tabs:
               remove_empty_nodes: false
               type: bard
               display: 'Description - Legacy'
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:

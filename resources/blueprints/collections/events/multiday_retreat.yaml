@@ -54,6 +54,11 @@ tabs:
         fields:
           -
             import: vertical_videos_block
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:
