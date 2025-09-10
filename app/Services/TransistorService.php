@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Integrations\Transistor\TransistorConnector;
 use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
+use Illuminate\Support\Facades\Log;
 
 class TransistorService
 {
@@ -90,12 +91,12 @@ class TransistorService
      */
     public function refreshEpisodeList($showId, $status = 'published')
     {
+        Log::info('Refreshing episode list for showId: ' . $showId . ' and status: ' . $status);
         $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
 
         $connector = new TransistorConnector;
         $request = new GetEpisodesRequest($showId);
         $request->query()->add('status', $status);
-        $request->disableCaching();
         $paginator = $connector->paginate($request);
         $episodes = $paginator->collect()->toArray();
         Cache::forever($url, $episodes);
