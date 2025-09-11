@@ -52,6 +52,11 @@ tabs:
                       - topics
                     type: terms
                     display: Topics
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:

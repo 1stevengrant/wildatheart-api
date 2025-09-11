@@ -79,6 +79,11 @@ tabs:
               remove_empty_nodes: false
               type: bard
               display: 'Description - Legacy'
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:
@@ -93,11 +98,6 @@ tabs:
               validate:
                 - required
               time_enabled: true
-      -
-        display: Images
-        fields:
-          -
-            import: images
           -
             handle: slug
             field:

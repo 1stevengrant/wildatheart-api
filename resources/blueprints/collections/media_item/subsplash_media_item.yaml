@@ -71,6 +71,11 @@ tabs:
                 - media_series
               type: link
               display: Series
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:
@@ -116,5 +121,3 @@ tabs:
               display: 'Media Type'
               mode: select
               max_items: 1
-          -
-            import: images

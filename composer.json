@@ -31,7 +31,6 @@
         "lorisleiva/laravel-actions": "^2.8",
         "ndx/statamic-bard-color-picker": "^2.0",
         "repat/laravel-validator-emojis": "^0.3.0",
-        "saloonphp/cache-plugin": "^3.0",
         "saloonphp/laravel-plugin": "^3.0",
         "saloonphp/pagination-plugin": "^2.2",
         "saloonphp/rate-limit-plugin": "^2.1",

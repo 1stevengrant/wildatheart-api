@@ -55,8 +55,6 @@ tabs:
               listable: false
               localizable: true
           -
-            import: images
-          -
             handle: hide_navigation
             field:
               type: toggle

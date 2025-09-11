@@ -67,6 +67,11 @@ tabs:
                   field:
                     type: link
                     display: Link
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:

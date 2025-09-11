@@ -79,4 +79,18 @@ tabs:
               type: toggle
               display: 'Make Scheduled Page Public'
           -
-            import: images
+            handle: content_type
+            field:
+              type: terms
+              taxonomies:
+                - content_type
+              display: 'Content Type'
+              mode: select
+          -
+            handle: topics
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: Topics
+              mode: select
