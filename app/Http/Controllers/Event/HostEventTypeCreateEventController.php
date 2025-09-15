@@ -19,6 +19,15 @@ class HostEventTypeCreateEventController extends Controller
 
     public function index(EventType $eventType)
     {
+        // Redirect Fire events to the simple flow
+        if ($eventType->name === EventType::FIRES) {
+            return to_route('host.fire');
+        }
+
+        if ($eventType->name === EventType::CAPTIVATING_FIRE) {
+            return to_route('host.captivating-fire');
+        }
+
         $this->eventCreationStepHandlerService->markStepComplete('mailing_address');
 
         return inertia('Event/CreateEventEventTypePage', [
@@ -30,6 +39,15 @@ class HostEventTypeCreateEventController extends Controller
 
     public function store(EventRequest $request, EventType $eventType)
     {
+        // Redirect Fire events to the simple flow
+        if ($eventType->name === EventType::FIRES) {
+            return to_route('host.fire');
+        }
+
+        if ($eventType->name === EventType::CAPTIVATING_FIRE) {
+            return to_route('host.captivating-fire');
+        }
+
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,
             groupType: $eventType->group_type,
