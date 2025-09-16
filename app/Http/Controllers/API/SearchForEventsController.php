@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Event;
 use App\Data\EventData;
 use App\Data\FeaturedContentData;
+use App\Data\FeaturedContentItemData;
 use App\Services\GeographyService;
 use App\Services\EventCacheService;
 use App\Http\Controllers\Controller;
@@ -47,17 +48,15 @@ class SearchForEventsController extends Controller
 
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
-        // Get featured content if enabled
+        // Get featured content
         $featuredContent = null;
         $globalSet = \Statamic\Facades\GlobalSet::findByHandle('local_platform');
         if ($globalSet) {
             $data = $globalSet->inDefaultSite()->data();
+            $featuredContentData = FeaturedContentData::fromStatamicData($data);
 
-            // Check if featured content is enabled
-            if ($data->get('featured_content_enabled')) {
-                $showInRegions = $data->get('show_in_regions', []);
-
-                // Check if current viewport contains any of the regions
+            if ($featuredContentData && $featuredContentData->items->count() > 0) {
+                // Get visible regions for the current viewport
                 $visibleRegions = $this->geographyService->getVisibleRegions(
                     $validatedData['sw_latitude'],
                     $validatedData['sw_longitude'],
@@ -65,9 +64,21 @@ class SearchForEventsController extends Controller
                     $validatedData['ne_longitude']
                 );
 
-                // Show featured content if no regions specified or if regions match
-                if (empty($showInRegions) || array_intersect($showInRegions, $visibleRegions)) {
-                    $featuredContent = FeaturedContentData::fromStatamicData($data);
+                // Filter items by regions that are visible in the current viewport
+                $filteredItems = $featuredContentData->items->filter(function ($item) use ($visibleRegions) {
+                    // If no regions specified for the item, show it everywhere
+                    if (empty($item->show_in_regions)) {
+                        return true;
+                    }
+                    // Check if any of the item's regions are visible
+                    return !empty(array_intersect($item->show_in_regions, $visibleRegions));
+                });
+
+                // Only return featured content if there are items to show
+                if ($filteredItems->count() > 0) {
+                    $featuredContent = new FeaturedContentData(
+                        items: $filteredItems
+                    );
                 }
             }
         }

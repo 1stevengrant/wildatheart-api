@@ -121,10 +121,17 @@ declare namespace App.Data {
         new_content: Array<any> | null;
     };
     export type FeaturedContentData = {
+        items: { [key: number]: App.Data.FeaturedContentItemData };
+    };
+    export type FeaturedContentItemData = {
+        id: string | null;
+        item_text: string | null;
+        item_url: string | null;
+        item_image: string | null;
         show_in_regions: Array<string>;
-        featured_content_url: string | null;
-        featured_content_text: string | null;
-        featured_content_image: string | null;
+        relates_to_event_id: string | null;
+        event_latitude: number | null;
+        event_longitude: number | null;
     };
     export type HostData = {
         family_name: string | null;

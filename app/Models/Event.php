@@ -29,7 +29,7 @@ class Event extends BaseModel
     |--------------------------------------------------------------------------
     */
 
-    protected $with = ['eventType'];
+    protected $with = ['eventType', 'user'];
 
     protected function casts(): array
     {
@@ -195,8 +195,8 @@ class Event extends BaseModel
     protected function email(): Attribute
     {
         return Attribute::make(
-            get: function (): string {
-                return $this->user->email;
+            get: function (): ?string {
+                return $this->user?->email;
             }
         );
     }
@@ -222,8 +222,8 @@ class Event extends BaseModel
     protected function hostName(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                return ucwords($this->user->fullname);
+            get: function (): ?string {
+                return $this->user ? ucwords($this->user->fullname) : null;
             }
         );
     }

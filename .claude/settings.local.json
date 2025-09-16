@@ -12,7 +12,8 @@
       "Bash(npm run lint)",
       "Bash(npx eslint:*)",
       "Bash(php artisan:*)",
-      "mcp__laravel-boost__read-log-entries"
+      "mcp__laravel-boost__read-log-entries",
+      "mcp__laravel-boost__tinker"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

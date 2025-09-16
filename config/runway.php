@@ -29,6 +29,7 @@ return [
             'name' => 'Local Platform Events',
             'cp_icon' => 'calendar',
             'title_field' => 'id',
+            'with' => ['user', 'eventType'],
         ],
 
         \App\Models\User::class => [

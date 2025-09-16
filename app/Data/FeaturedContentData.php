@@ -2,27 +2,57 @@
 
 namespace App\Data;
 
+use App\Models\Event;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class FeaturedContentData extends Data
 {
     public function __construct(
-        /** @var array<string> */
-        public array $show_in_regions,
-        public ?string $featured_content_url,
-        public ?string $featured_content_text,
-        public ?string $featured_content_image,
+        /** @var DataCollection<int, FeaturedContentItemData> */
+        public DataCollection $items,
     ) {}
 
-    public static function fromStatamicData($data): self
+    public static function fromStatamicData($data): ?self
     {
+        $featuredItems = $data->get('featured_content_items', []);
+
+        if (empty($featuredItems)) {
+            return null;
+        }
+
+        $items = collect($featuredItems)
+            ->filter(fn($item) => $item['enabled'] ?? false)
+            ->map(function ($item) {
+                $event = null;
+                $latitude = null;
+                $longitude = null;
+
+                if (!empty($item['relates_to'])) {
+                    $event = Event::find($item['relates_to']);
+                    if ($event) {
+                        $latitude = $event->latitude;
+                        $longitude = $event->longitude;
+                    }
+                }
+
+                return new FeaturedContentItemData(
+                    id: $item['id'] ?? null,
+                    item_text: $item['item_text'] ?? null,
+                    item_url: $item['item_url'] ?? null,
+                    item_image: $item['item_image'] ?? null,
+                    show_in_regions: $item['show_in_regions'] ?? [],
+                    relates_to_event_id: $item['relates_to'] ?? null,
+                    event_latitude: $latitude,
+                    event_longitude: $longitude,
+                );
+            })
+            ->values();
+
         return new self(
-            show_in_regions: $data->get('show_in_regions', []),
-            featured_content_url: $data->get('featured_content_url'),
-            featured_content_text: $data->get('featured_content_text'),
-            featured_content_image: $data->get('featured_content_image'),
+            items: FeaturedContentItemData::collection($items),
         );
     }
 }
