@@ -1,80 +1,32 @@
-import { useState, useCallback, useEffect } from "react";
-
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 
 import { imageGenerator } from "@/helpers/user";
 
 interface FeaturedContentCardProps {
-    featuredContent: App.Data.FeaturedContentData | null;
-    position?: "map-top" | "map-bottom" | "sidebar";
+    item: App.Data.FeaturedContentItemData;
 }
 
-export const FeaturedContentCard = ({
-    featuredContent,
-    position = "map-bottom",
-}: FeaturedContentCardProps) => {
-    const [dismissed, setDismissed] = useState(false);
+export const FeaturedContentCard = ({ item }: FeaturedContentCardProps) => {
     const [imageError, setImageError] = useState(false);
 
-    // Check if this content was already dismissed in this session
-    useEffect(() => {
-        if (featuredContent?.featured_content_url) {
-            const dismissedKey = `featured_content_dismissed_${featuredContent.featured_content_url}`;
-            const wasDismissed = sessionStorage.getItem(dismissedKey);
-            setDismissed(!!wasDismissed);
-        }
-    }, [featuredContent]);
-
-    const handleDismiss = useCallback(() => {
-        setDismissed(true);
-
-        // Store dismissal in session storage
-        if (featuredContent?.featured_content_url) {
-            const dismissedKey = `featured_content_dismissed_${featuredContent.featured_content_url}`;
-            sessionStorage.setItem(dismissedKey, "true");
-        }
-    }, [featuredContent]);
-
-    // Don't render if no content, dismissed, or missing required fields
-    if (
-        !featuredContent ||
-        dismissed ||
-        !featuredContent.featured_content_text ||
-        !featuredContent.featured_content_url
-    ) {
+    // Don't render if missing required fields
+    if (!item.item_text || !item.item_url) {
         return null;
     }
 
-    // Position classes based on where it's rendered
-    const positionClasses = {
-        "map-top": "absolute top-4 left-4 right-4 md:hidden z-10", // Mobile only, at top
-        "map-bottom": "absolute bottom-4 left-4 right-4 md:hidden z-10", // Mobile only, at bottom
-        sidebar: "relative mb-4", // In sidebar for desktop
-    };
-
     return (
-        <div
-            className={`${positionClasses[position]} bg-gradient-to-r from-p400 to-black rounded-lg shadow-lg p-4 max-w-sm md:max-w-none`}
-        >
-            <button
-                onClick={handleDismiss}
-                className="absolute top-2 right-2 text-white/60 hover:text-white transition-colors"
-                aria-label="Dismiss"
-            >
-                <XMarkIcon className="h-5 w-5" />
-            </button>
-
+        <div className="bg-gradient-to-r from-p400 to-black rounded-lg shadow-lg p-4 mb-4">
             <a
-                href={featuredContent.featured_content_url}
+                href={item.item_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex gap-4 items-center group"
             >
-                {featuredContent.featured_content_image && !imageError && (
+                {item.item_image && !imageError && (
                     <div className="flex-shrink-0">
                         <img
                             src={imageGenerator(
-                                featuredContent.featured_content_image,
+                                item.item_image,
                                 {},
                                 "https://b-cdn.wildatheart.org"
                             )}
@@ -85,8 +37,8 @@ export const FeaturedContentCard = ({
                     </div>
                 )}
                 <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white/90 group-hover:text-white transition-colors pr-6">
-                        {featuredContent.featured_content_text}
+                    <p className="text-sm text-white/90 group-hover:text-white transition-colors">
+                        {item.item_text}
                     </p>
                     <span className="text-xs text-p100 group-hover:text-p75 mt-1 inline-block">
                         Learn more →

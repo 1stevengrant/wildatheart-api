@@ -13,7 +13,10 @@
       "Bash(npx eslint:*)",
       "Bash(php artisan:*)",
       "mcp__laravel-boost__read-log-entries",
-      "mcp__laravel-boost__tinker"
+      "mcp__laravel-boost__tinker",
+      "Bash(npm install)",
+      "Bash(npm run dev:*)",
+      "mcp__laravel-boost__database-query"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

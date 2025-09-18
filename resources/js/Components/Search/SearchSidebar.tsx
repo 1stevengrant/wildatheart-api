@@ -19,20 +19,22 @@ export const SearchSidebar = () => {
         <aside className="relative flex flex-col rounded-b-2xl bg-black md:w-[557px]">
             {showFilterPanel ? <FiltersPanel /> : <QuickFilters />}
             {!showFilterPanel && (
-                <div className="flex-1 overflow-y-auto">
-                    {/* Desktop only - featured content sticky at top */}
-                    <div className="hidden md:block sticky top-0 z-10 px-4 bg-black">
-                        <FeaturedContentCard
-                            featuredContent={featuredContent}
-                            position="sidebar"
-                        />
-                    </div>
+                <div className="flex-1 overflow-y-auto px-4">
+                    {events.length === 0 && !featuredContent ? (
+                        <NoSearchResults />
+                    ) : (
+                        <>
+                            {/* Featured content items displayed first */}
+                            {featuredContent?.items &&
+                                Object.values(featuredContent.items).map((item) => (
+                                    <FeaturedContentCard
+                                        key={item.id || item.item_url}
+                                        item={item}
+                                    />
+                                ))}
 
-                    <div className="px-4">
-                        {events.length === 0 ? (
-                            <NoSearchResults />
-                        ) : (
-                            events.map((event: any) => (
+                            {/* Regular events */}
+                            {events.map((event: any) => (
                                 <EventResult
                                     event={event}
                                     key={event.id}
@@ -40,9 +42,9 @@ export const SearchSidebar = () => {
                                     onMouseEnter={() => setCurrentEvent(event)}
                                     onMouseLeave={() => setCurrentEvent(null)}
                                 />
-                            ))
-                        )}
-                    </div>
+                            ))}
+                        </>
+                    )}
                 </div>
             )}
         </aside>
