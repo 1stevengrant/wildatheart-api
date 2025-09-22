@@ -69,6 +69,11 @@ tabs:
             field:
               type: link
               display: 'RSS Feed URL'
+      -
+        display: SEO
+        fields:
+          -
+            import: seo
   sidebar:
     display: Sidebar
     sections:

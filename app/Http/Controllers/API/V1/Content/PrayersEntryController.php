@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\API\V1\Content;
 
 use Statamic\Entries\Entry;
+use Statamic\Facades\Token;
 use App\DataTypeObjects\File;
 use App\Services\BunnyCDNService;
 use App\Http\Controllers\Controller;
+use Facades\Statamic\CP\LivePreview;
 use App\DataTypeObjects\PlayableFile;
 use App\Services\EntryBuilderService;
 use App\DataTypeObjects\API\V1\Content\Prayers\PrayersShowResponse;
-use Facades\Statamic\CP\LivePreview;
-use Statamic\Facades\Token;
 
 class PrayersEntryController extends Controller
 {
@@ -47,7 +47,6 @@ class PrayersEntryController extends Controller
             $token = Token::find($token);
             $prayer = LivePreview::item($token);
         } else {
-
 
             $prayer = Entry::query()
                 ->where('collection', 'prayers')

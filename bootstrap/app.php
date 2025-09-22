@@ -5,7 +5,6 @@ use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -29,12 +28,12 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             'webhooks/sendgrid',
+            'api/v1/webhooks/*',
         ]);
 
         $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);
 
         $middleware->throttleApi();
-   
 
         $middleware->group('non-inertia', [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,

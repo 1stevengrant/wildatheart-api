@@ -275,10 +275,15 @@ test('a captivating retreat end date is 4 days after the start date', function (
     expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
-test('a fire should not have an end date is', function () {
+test('a fire should not have an end date', function () {
+    // This test is now covered by the Fire controller tests
+    // Fires use the simple flow and do not go through this controller
+    // Testing that fires redirect to the simple flow is covered in other tests
     $this->actingAs($this->user);
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::FIRES))->first();
-    $this->post(route('host.eventType.create.store', $eventType), [
+
+    // Verify that fires redirect to the simple flow
+    $response = $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
         'zip' => '12345',
@@ -296,15 +301,16 @@ test('a fire should not have an end date is', function () {
         'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
 
-    $event = $this->user->events()->first();
-    expect($event->end_date)->toBeNull();
+    $response->assertRedirect(route('host.fire'));
+    expect($this->user->events()->count())->toBe(0);
 });
 
 test('an event that has no items in a material order, does not get passed to Zapier', function () {
     Queue::fake();
 
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::FIRES))->first();
+    // Use a different event type since Fires now redirect to simple flow
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -348,4 +354,90 @@ test('an event that has items in a material order, does get passed to Zapier', f
         'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
     \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\PostToZapier::class);
+});
+
+test('fires event type redirects from complex flow to simple flow on index', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug('fires')->first();
+
+    $response = $this->get(route('host.eventType.create', $eventType));
+
+    $response->assertRedirect(route('host.fire'));
+});
+
+test('captivating fires event type redirects from complex flow to simple flow on index', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug('captivating-fires')->first();
+
+    $response = $this->get(route('host.eventType.create', $eventType));
+
+    $response->assertRedirect(route('host.captivating-fire'));
+});
+
+test('fires event type redirects from complex flow to simple flow on store', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug('fires')->first();
+
+    $response = $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Fire',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '2 x 10-pack',
+    ]);
+
+    $response->assertRedirect(route('host.fire'));
+    // Ensure the event was NOT created through the complex flow
+    expect($this->user->events()->count())->toBe(0);
+});
+
+test('captivating fires event type redirects from complex flow to simple flow on store', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug('captivating-fires')->first();
+
+    $response = $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Captivating Fire',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '2 x 10-pack',
+    ]);
+
+    $response->assertRedirect(route('host.captivating-fire'));
+    // Ensure the event was NOT created through the complex flow
+    expect($this->user->events()->count())->toBe(0);
+});
+
+test('other event types do not redirect and use complex flow normally', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+
+    $response = $this->get(route('host.eventType.create', $eventType));
+
+    $response->assertStatus(200);
+    $response->assertInertia(fn ($page) => $page
+        ->component('Event/CreateEventEventTypePage')
+        ->has('eventType')
+        ->has('materialOrderItems')
+    );
 });

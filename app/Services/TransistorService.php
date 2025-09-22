@@ -4,65 +4,12 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Integrations\Transistor\TransistorConnector;
+use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
+use Illuminate\Support\Facades\Log;
 
 class TransistorService
 {
-    /**
-     * Fetch data from the Transistor API
-     *
-     * Transistor API is rate limited to 10 requests every 10 seconds, so this method caches the results of the API call.
-     * Transistor API is paginated, so this method fetches all pages of data and merges them into a single array.
-     *
-     * @param  string  $url  The URL to fetch data from
-     * @return array The data from the Transistor API
-     */
-    public function transistorFetch($url, $retry = 0)
-    {
-        $TRANSISTOR_CACHE_DURATION = config('services.transistor.cache_duration');
-        $TRANSISTOR_API_KEY = config('services.transistor.api_key');
-
-        $cacheKey = md5($url);
-
-        if (Cache::has($cacheKey)) {
-            $value = Cache::get($cacheKey);
-
-            return $value;
-        }
-
-        $response = Http::withHeaders([
-            'x-api-key' => $TRANSISTOR_API_KEY,
-        ])->get($url);
-
-        if ($response->successful()) {
-            $json = $response->json();
-
-            if (! empty($json['errors'])) {
-                return $json;
-            }
-
-            Cache::put($cacheKey, $json, (int) $TRANSISTOR_CACHE_DURATION);
-
-            return $json;
-        }
-        // Check for rate limiting (429 Too Many Requests)
-        if ($response->status() === 429) {
-            if ($retry > 3) {
-                throw new \Exception('Rate limit exceeded for Transistor API. Please try again later.');
-            }
-            // Sleep for 10 seconds
-            sleep(10);
-            // Retry the request
-            return $this->transistorFetch($url, $retry + 1);
-        }
-
-        if (isset($response->json()['errors'])) {
-            return $response->json();
-        }
-
-        // Handle error appropriately
-        throw new \Exception('Failed to fetch data from Transistor API');
-    }
-
     public function updateEpisode($episodeId, $data)
     {
         $TRANSISTOR_API_KEY = config('services.transistor.api_key');
@@ -100,45 +47,58 @@ class TransistorService
      */
     public function getRecent($showId, $count = 1)
     {
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published&pagination[per]=' . $count;
-        $json = $this->transistorFetch($url);
-
-        if (isset($json['errors']) || ! isset($json['data'])) {
-            return $json;
-        }
-
-        return $json['data'];
+        return collect($this->getAll($showId, 'published'))->take($count)->toArray();
     }
 
+    public function getEpisode($id, $showId)
+    {
+        $url = config('services.transistor.api_url') . 'episodes/' . $id;
+
+        if (Cache::has($url)) {
+            return Cache::get($url);
+        }
+
+        $allEpisodes = $this->getAll($showId);
+        $episode = Cache::remember($url, 60, function () use ($allEpisodes, $id) {
+            return collect($allEpisodes)->firstWhere('id', $id);
+        });
+
+        return $episode;
+    }
+
+    /**
+     * Get all episodes from the Transistor API
+     *
+     * @param  string  $showId  The ID of the show to fetch episodes from
+     * @param  string  $status  The status of the episodes to get.
+     * @return array All episodes from the Transistor API
+     */
     public function getAll($showId, $status = 'published')
     {
-        $pageSize = 1200;
 
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize;
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
 
-        $json = $this->transistorFetch($url);
-
-        if (! empty($json['errors'])) {
-            return $json['errors'];
+        if (Cache::has($url)) {
+            return Cache::get($url);
         }
+        $this->refreshEpisodeList($showId, $status);
 
-        $data = $json['data'];
+        return Cache::get($url);
+    }
 
-        if (isset($json['meta']['currentPage']) && isset($json['meta']['totalPages'])) {
-            $currentPage = $json['meta']['currentPage'];
+    /**
+     * Refresh the episode list from the Transistor API
+     */
+    public function refreshEpisodeList($showId, $status = 'published')
+    {
+        Log::info('Refreshing episode list for showId: ' . $showId . ' and status: ' . $status);
+        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
 
-            // Move through all pages of data and merge them into the $data array
-            while ($currentPage < $json['meta']['totalPages']) {
-                $currentPage += 1;
-
-                $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status . '&pagination[per]=' . $pageSize . '&pagination[page]=' . $currentPage;
-                $json = $this->transistorFetch($url);
-                if (! isset($json['errors'])) {
-                    $data = array_merge($data, $json['data']);
-                }
-            }
-        }
-
-        return $data;
+        $connector = new TransistorConnector;
+        $request = new GetEpisodesRequest($showId);
+        $request->query()->add('status', $status);
+        $paginator = $connector->paginate($request);
+        $episodes = $paginator->collect()->toArray();
+        Cache::forever($url, $episodes);
     }
 }
