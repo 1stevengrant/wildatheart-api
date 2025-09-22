@@ -4,6 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Event;
 use App\Data\EventData;
+use App\Data\FeaturedContentData;
+use App\Services\GeographyService;
+use App\Services\EventCacheService;
 use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
 use App\Http\Requests\API\SearchForEventsRequest;
@@ -11,14 +14,16 @@ use App\Http\Requests\API\SearchForEventsRequest;
 class SearchForEventsController extends Controller
 {
     public function __construct(
-        private readonly EventOffsettingService $eventOffsettingService
+        private readonly EventOffsettingService $eventOffsettingService,
+        private readonly EventCacheService $eventCacheService,
+        private readonly GeographyService $geographyService
     ) {}
 
     public function __invoke(SearchForEventsRequest $request)
     {
         $validatedData = $request->validated();
 
-        $cacheKey = $this->generateCacheKey($validatedData);
+        $cacheKey = $this->eventCacheService->generateSearchCacheKey($validatedData);
 
         $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData) {
             return Event::query()
@@ -42,12 +47,35 @@ class SearchForEventsController extends Controller
 
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
-        return response()->json(EventData::collection($offsetEvents));
+        // Get featured content if enabled
+        $featuredContent = null;
+        $globalSet = \Statamic\Facades\GlobalSet::findByHandle('local_platform');
+        if ($globalSet) {
+            $data = $globalSet->inDefaultSite()->data();
 
-    }
+            // Check if featured content is enabled
+            if ($data->get('featured_content_enabled')) {
+                $showInRegions = $data->get('show_in_regions', []);
 
-    private function generateCacheKey(array $validatedData): string
-    {
-        return 'events_search_' . md5(json_encode($validatedData));
+                // Check if current viewport contains any of the regions
+                $visibleRegions = $this->geographyService->getVisibleRegions(
+                    $validatedData['sw_latitude'],
+                    $validatedData['sw_longitude'],
+                    $validatedData['ne_latitude'],
+                    $validatedData['ne_longitude']
+                );
+
+                // Show featured content if no regions specified or if regions match
+                if (empty($showInRegions) || array_intersect($showInRegions, $visibleRegions)) {
+                    $featuredContent = FeaturedContentData::fromStatamicData($data);
+                }
+            }
+        }
+
+        return response()->json([
+            'events' => EventData::collection($offsetEvents),
+            'featuredContent' => $featuredContent,
+        ]);
+
     }
 }
