@@ -4,6 +4,7 @@ tabs:
     display: Main
     sections:
       -
+        display: 'Basic Info'
         fields:
           -
             handle: title
@@ -13,10 +14,48 @@ tabs:
               validate:
                 - required
           -
-            handle: subsplash_media_item_id
+            handle: subtitle
             field:
               type: text
-              display: 'Subsplash Media Item ID'
+              display: Subtitle
+              width: 50
+          -
+            handle: description
+            field:
+              type: bard
+              display: Description
+              remove_empty_nodes: false
+      -
+        display: Tags
+        fields:
+          -
+            handle: speaker
+            field:
+              type: text
+              display: Speaker
+          -
+            handle: topics
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: Topics
+              mode: select
+      -
+        display: Video
+        fields:
+          -
+            handle: video_iframe_url
+            field:
+              type: link
+              display: 'Video IFrame URL'
+              width: 50
+          -
+            handle: video_direct_url
+            field:
+              type: link
+              display: 'Video Direct URL'
+              width: 50
           -
             handle: vimeo_id
             field:
@@ -29,12 +68,31 @@ tabs:
               type: toggle
               display: 'Vertical Video?'
               instructions: 'Modifies layout slightly for vertical videos.'
+      -
+        display: Audio
+        fields:
           -
-            handle: drupal_url
+            handle: audio_iframe_url
+            field:
+              type: link
+              display: 'Audio IFrame URL'
+              width: 50
+          -
+            handle: audio_direct_url
+            field:
+              type: link
+              display: 'Audio Direct URL'
+              width: 50
+      -
+        display: Document
+        fields:
+          -
+            handle: document_title
             field:
               type: text
-              display: 'Drupal URL'
+              display: 'Document Title'
           -
+<<<<<<< Updated upstream
             handle: override_subsplash_content
             field:
               type: toggle
@@ -71,11 +129,197 @@ tabs:
                 - media_series
               type: link
               display: Series
+=======
+            handle: document_direct_url
+            field:
+              type: link
+              display: 'Document Direct URL'
+>>>>>>> Stashed changes
       -
         display: SEO
         fields:
           -
             import: seo
+  subsplash_import:
+    display: 'Subsplash Import'
+    sections:
+      -
+        display: 'Import Details'
+        fields:
+          -
+            handle: subsplash_media_item_id
+            field:
+              type: text
+              display: 'Subsplash Media Item ID'
+              width: 50
+              instructions: 'Enter the ID for the media item you want to sync from.'
+          -
+            handle: override_subsplash_content
+            field:
+              type: toggle
+              display: 'Override Subsplash Content'
+              width: 50
+          -
+            handle: last_imported
+            field:
+              time_enabled: true
+              type: date
+              display: 'Last Imported'
+              width: 50
+              visibility: read_only
+          -
+            handle: last_updated
+            field:
+              time_enabled: true
+              type: date
+              display: 'Last Updated (Subsplash)'
+              width: 50
+              visibility: read_only
+      -
+        display: 'Basic Info'
+        fields:
+          -
+            handle: title_subsplash
+            field:
+              type: text
+              display: 'Title (Subsplash)'
+              visibility: read_only
+          -
+            handle: subtitle_subsplash
+            field:
+              type: text
+              display: 'Subtitle (Subsplash)'
+              width: 50
+              visibility: read_only
+          -
+            handle: date_subsplash
+            field:
+              type: date
+              display: 'Date (Subsplash)'
+              width: 50
+              visibility: read_only
+          -
+            handle: description_subsplash
+            field:
+              type: bard
+              display: 'Description (Subsplash)'
+              remove_empty_nodes: false
+              visibility: read_only
+          -
+            handle: images_subsplash
+            field:
+              collapse: true
+              type: replicator
+              display: 'Images (Subsplash)'
+              sets:
+                new_set_group:
+                  display: 'New Set Group'
+                  sets:
+                    new_image:
+                      display: 'New Image'
+                      fields:
+                        -
+                          handle: image_id_subsplash
+                          field:
+                            type: text
+                            display: 'Image ID (Subsplash)'
+                        -
+                          handle: image_type_subsplash
+                          field:
+                            type: text
+                            display: 'Image Type (Subsplash)'
+                        -
+                          handle: image_source_url_subsplash
+                          field:
+                            type: link
+                            display: 'Image Source URL (Subsplash)'
+                        -
+                          handle: image_dynamic_url_subsplash
+                          field:
+                            type: text
+                            display: 'Image Dynamic Url (Subsplash)'
+      -
+        display: Tags
+        fields:
+          -
+            handle: speaker_subsplash
+            field:
+              type: text
+              display: 'Speaker (Subsplash)'
+              visibility: read_only
+          -
+            handle: topics_subsplash
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: 'Topics (Subsplash)'
+              mode: select
+              visibility: read_only
+      -
+        display: Video
+        fields:
+          -
+            handle: video_iframe_url_subsplash
+            field:
+              type: link
+              display: 'Video IFrame URL (Subsplash)'
+              width: 50
+              visibility: read_only
+          -
+            handle: video_direct_url_subsplash
+            field:
+              type: link
+              display: 'Video Direct URL (Subsplash)'
+              width: 50
+      -
+        display: Audio
+        fields:
+          -
+            handle: audio_iframe_url_subsplash
+            field:
+              type: link
+              display: 'Audio IFrame URL (Subsplash)'
+              width: 50
+          -
+            handle: audio_direct_url_subsplash
+            field:
+              type: link
+              display: 'Audio Direct URL (Subsplash)'
+              width: 50
+              visibility: read_only
+      -
+        display: Document
+        fields:
+          -
+            handle: document_title_subsplash
+            field:
+              type: text
+              display: 'Document Title (Subsplash)'
+              visibility: read_only
+          -
+            handle: document_direct_url_subsplash
+            field:
+              type: link
+              display: 'Document Direct URL (Subsplash)'
+              visibility: read_only
+      -
+        display: Meta
+        fields:
+          -
+            handle: duration_subsplash
+            field:
+              type: text
+              display: 'Duration (Subsplash)'
+              visibility: read_only
+  custom_layout:
+    display: 'Custom Layout'
+    sections:
+      -
+        display: 'Page Design'
+        fields:
+          -
+            import: blocks
   sidebar:
     display: Sidebar
     sections:
@@ -97,20 +341,19 @@ tabs:
                 - required
               time_enabled: true
           -
+            handle: series
+            field:
+              collections:
+                - media_series
+              type: link
+              display: Series
+          -
             handle: content_type
             field:
               type: terms
               taxonomies:
                 - content_type
               display: 'Content Type'
-              mode: select
-          -
-            handle: topics
-            field:
-              type: terms
-              taxonomies:
-                - topics
-              display: Topics
               mode: select
           -
             handle: media_type

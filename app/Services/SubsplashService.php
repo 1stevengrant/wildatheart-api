@@ -150,6 +150,50 @@ class SubsplashService
     {
         $mediaItemID = data_get($mediaItem, 'id');
         $mediaItemTitle = data_get($mediaItem, 'title');
+        $mediaItemSummary = data_get($mediaItem, 'summary');
+        $mediaItemDescription = data_get($mediaItem, 'description');
+        $mediaItemSubtitle = data_get($mediaItem, 'subtitle');
+        $mediaItemSpeaker = data_get($mediaItem, 'speaker');
+        $mediaItemDurationMilliseconds = data_get($mediaItem, '_embedded.video.duration');
+        $mediaItemDuration = $mediaItemDurationMilliseconds ? gmdate('H:i:s', $mediaItemDurationMilliseconds / 1000) : null;
+        $shortCode = data_get($mediaItem, 'short_code');
+        $iFrameUrl = "https://subsplash.com/+f83c/embed/mi/+{$shortCode}?audio&video&logoWatermark";
+
+        $audioDownloadUrl = data_get($mediaItem, '_embedded.audio._embedded.audio-outputs.0._links.download.href');
+        $audioFileName = data_get($mediaItem, '_embedded.audio.title', 'audio.mp3');
+
+        if ($audioDownloadUrl) {
+            $audioDownloadUrl = str_replace('{filename}.mp3', $audioFileName, $audioDownloadUrl);
+        }
+
+
+        $videoDownloadUrl = data_get($mediaItem, '_embedded.video._embedded.video-outputs.0._links.related.href');
+        $videoFileName = data_get($mediaItem, '_embedded.video.title', 'video.mp4');
+
+        if ($videoDownloadUrl) {
+            $videoDownloadUrl = str_replace('{filename}.mp4', $videoFileName, $videoDownloadUrl);
+        }
+
+        $images = data_get($mediaItem, '_embedded.images');
+        $wideImageUrl = data_get(collect($images)->where('type', 'wide')->first(), "_links.dynamic.href");
+        $squareImageUrl = data_get(collect($images)->where('type', 'square')->first(), "_links.dynamic.href");
+        $bannerImageUrl = data_get(collect($images)->where('type', 'banner')->first(), "_links.dynamic.href");
+
+
+        if ($wideImageUrl) {
+            $wideImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '800', '450'], $wideImageUrl);
+        }
+        if ($squareImageUrl) {
+            $squareImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '800', '800'], $squareImageUrl);
+        }
+        if ($bannerImageUrl) {
+            $bannerImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '1920', '692'], $bannerImageUrl);
+        }
+
+        if (!$mediaItemDuration) {
+            $mediaItemDuration = data_get($mediaItem, '_embedded.audio._embedded.audio-outputs.0.duration', 0);
+        }
+
         $mediaItemDate = Carbon::parse(data_get($mediaItem, 'date'));
         $mediaItemDateOnly = $mediaItemDate->format('Y-m-d');
         $mediaItemSeriesID = data_get($mediaItem, '_embedded.media-series.id');
@@ -192,9 +236,73 @@ class SubsplashService
             $entryCreated = true;
         }
 
+        $subsplashData = [];
+        $subsplashData['speaker'] = $mediaItemSpeaker;
+        $subsplashData['duration'] = $mediaItemDuration;
+        $subsplashData['wide_image_url'] = $wideImageUrl;
+        $subsplashData['square_image_url'] = $squareImageUrl;
+        $subsplashData['banner_image_url'] = $bannerImageUrl;
         $data = $entry->data();
+        $data['last_imported'] = Carbon::now();
+        $data['last_updated'] = Carbon::parse(data_get($mediaItem, 'updated_at'));
+        $data['title_subsplash'] = $mediaItemTitle;
+        $data['subtitle_subsplash'] = $mediaItemSubtitle;
+        $data['description_subsplash'] = $mediaItemSummary;
+        $data['date_subsplash'] = $mediaItemDateOnly;
+        $data['speaker_subsplash'] = $mediaItemSpeaker;
+        $data['video_iframe_url_subsplash'] = $iFrameUrl;
+        $data['video_direct_url_subsplash'] = $videoDownloadUrl;
+        $data['audio_iframe_url_subsplash'] = $iFrameUrl;
+        $data['audio_direct_url_subsplash'] = $audioDownloadUrl;
+        $data['duration_subsplash'] = $mediaItemDuration;
+        $data['images_subsplash'] = collect($images)->map(function ($image) {
+            // Import image to our library if not already imported
+            $sourceUrl = $image['_links']['related']['href'] ?? null;
+            $imageAssetId = null;
+
+            if ($sourceUrl) {
+                $statamicAsset = $this->saveImageAsAsset($image);
+            }
+
+            return [
+                "id" => $image['id'],
+                "type" => "new_image",
+                "enabled" => true,
+                "image_id_subsplash" => $image['id'],
+                "image_type_subsplash" => $image['type'],
+                "image_source_url_subsplash" => $image['_links']['related']['href'],
+                "image_dynamic_url_subsplash" => $image['_links']['dynamic']['href'],
+                "statamic_asset_path" => $statamicAsset->path(),
+            ];
+        })->toArray();
+
+
+        // $data['topics_subsplash'] = $mediaItemTopics;
+        // $data['video_iframe_url_subsplash'] = $mediaItemVideoIframeUrl;
+        // $data['video_direct_url_subsplash'] = $mediaItemVideoDirectUrl;
+        // $data['audio_iframe_url_subsplash'] = $mediaItemAudioIframeUrl;
         $data['title'] = $mediaItemTitle;
+        $data['speaker'] = $mediaItemSpeaker;
+        $data['subtitle'] = $mediaItemSubtitle;
         $data['subsplash_media_item_id'] = $mediaItemID;
+        $data['description'] = $mediaItemSummary;
+        $data['visible_date'] = $mediaItemDateOnly;
+        $data['video_iframe_url'] = $iFrameUrl;
+        $data['audio_direct_url'] = $audioDownloadUrl;
+        $data['audio_iframe_url'] = $iFrameUrl;
+        $data['video_direct_url'] = $videoDownloadUrl;
+
+        $images = [];
+        foreach ($data['images_subsplash'] as $image) {
+            $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
+        }
+        $data['images'] = $images;
+
+
+
+        if (!isset($data['subsplash_data'])) {
+            $data['subsplash_data'] = $subsplashData;
+        }
 
         // If there is an associated series, associate it to the entry.
         if ($mediaItemSeriesID) {
@@ -288,6 +396,54 @@ class SubsplashService
         }
 
         return $entry;
+    }
+
+    public function saveImageAsAsset($image)
+    {
+        // Check if we already have this image imported by looking for existing asset
+        $existingAsset = \Statamic\Assets\Asset::query()
+            ->where('subsplash_image_id', $image['id'])
+            ->first();
+        $sourceUrl = $image['_links']['related']['href'];
+
+        if (!$existingAsset) {
+            try {
+                // Download and import the image
+                $imageContent = file_get_contents($sourceUrl);
+
+                if ($imageContent !== false) {
+                    $filename = 'subsplash_' . $image['id'] . '_' . time() . '.jpg';
+                    $path = 'subsplash-imports/' . $filename;
+
+                    $container = \Statamic\Facades\AssetContainer::all()->where('handle', 's3')->first();
+
+
+                    if ($container) {
+                        // Save the file to the container
+                        $container->disk()->put($path, $imageContent);
+
+                        // Create the asset entry
+                        $asset = $container->makeAsset($path);
+                        $asset->data([
+                            'subsplash_image_id' => $image['id'],
+                            'subsplash_image_type' => $image['type'],
+                            'imported_at' => now(),
+                        ]);
+                        $asset->save();
+
+                        $existingAsset = $asset;
+                    }
+                }
+            } catch (\Exception $e) {
+                // Log error but continue processing
+                \Illuminate\Support\Facades\Log::warning('Failed to import Subsplash image: ' . $e->getMessage(), [
+                    'image_id' => $image['id'],
+                    'source_url' => $sourceUrl
+                ]);
+            }
+        }
+
+        return $existingAsset;
     }
 
     /**
