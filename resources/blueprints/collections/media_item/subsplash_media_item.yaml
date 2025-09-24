@@ -1,8 +1,21 @@
-title: "Subsplash Media Item"
+title: "Subsplash Media Ite"
 tabs:
   main:
     display: Main
     sections:
+      - display: ""
+        fields:
+          - handle: data_is_imported_from_subsplash
+            field:
+              type: section
+              instructions: 'To change the content on this item, toggle "Overide Subsplash Content" on.'
+              unless:
+                override_subsplash_content: "equals true"
+          - handle: override_subsplash_content
+            field:
+              type: toggle
+              display: "Override Subsplash Content"
+              width: 50
       - display: "Basic Info"
         fields:
           - handle: title
@@ -11,22 +24,30 @@ tabs:
               required: true
               validate:
                 - required
+              if:
+                override_subsplash_content: "equals true"
           - handle: subtitle
             field:
               type: text
               display: Subtitle
               width: 50
+              if:
+                override_subsplash_content: "equals true"
           - handle: description
             field:
               type: bard
               display: Description
               remove_empty_nodes: false
+              if:
+                override_subsplash_content: "equals true"
       - display: Tags
         fields:
           - handle: speaker
             field:
               type: text
               display: Speaker
+              if:
+                override_subsplash_content: "equals true"
           - handle: topics
             field:
               type: terms
@@ -34,6 +55,8 @@ tabs:
                 - topics
               display: Topics
               mode: select
+              if:
+                override_subsplash_content: "equals true"
       - display: Video
         fields:
           - handle: video_iframe_url
@@ -41,11 +64,15 @@ tabs:
               type: link
               display: "Video IFrame URL"
               width: 50
+              if:
+                override_subsplash_content: "equals true"
           - handle: video_direct_url
             field:
               type: link
               display: "Video Direct URL"
               width: 50
+              if:
+                override_subsplash_content: "equals true"
           - handle: vimeo_id
             field:
               type: text
@@ -56,6 +83,8 @@ tabs:
               type: toggle
               display: "Vertical Video?"
               instructions: "Modifies layout slightly for vertical videos."
+              if:
+                override_subsplash_content: "equals true"
       - display: Audio
         fields:
           - handle: audio_iframe_url
@@ -63,21 +92,29 @@ tabs:
               type: link
               display: "Audio IFrame URL"
               width: 50
+              if:
+                override_subsplash_content: "equals true"
           - handle: audio_direct_url
             field:
               type: link
               display: "Audio Direct URL"
               width: 50
+              if:
+                override_subsplash_content: "equals true"
       - display: Document
         fields:
           - handle: document_title
             field:
               type: text
               display: "Document Title"
+              if:
+                override_subsplash_content: "equals true"
           - handle: document_direct_url
             field:
               type: link
               display: "Document Direct URL"
+              if:
+                override_subsplash_content: "equals true"
       - display: SEO
         fields:
           - import: seo
@@ -92,11 +129,6 @@ tabs:
               display: "Subsplash Media Item ID"
               width: 50
               instructions: "Enter the ID for the media item you want to sync from."
-          - handle: override_subsplash_content
-            field:
-              type: toggle
-              display: "Override Subsplash Content"
-              width: 50
           - handle: last_imported
             field:
               time_enabled: true
