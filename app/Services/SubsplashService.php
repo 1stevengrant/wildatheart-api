@@ -205,11 +205,6 @@ class SubsplashService
             ->orWhere('data->subsplash_media_item_id', $mediaItemID)
             ->first();
 
-        // If the entry exists and the override subsplash content toggle is set, don't update it.
-        if ($entry && $entry->data()->get('override_subsplash_content')) {
-            return $entry;
-        }
-
         // Check if custom media item is already associated to this id.
         $customItem = Entry::query()
             ->where('collection', 'media_item')
@@ -242,6 +237,7 @@ class SubsplashService
         $subsplashData['wide_image_url'] = $wideImageUrl;
         $subsplashData['square_image_url'] = $squareImageUrl;
         $subsplashData['banner_image_url'] = $bannerImageUrl;
+
         $data = $entry->data();
         $data['last_imported'] = Carbon::now();
         $data['last_updated'] = Carbon::parse(data_get($mediaItem, 'updated_at'));
@@ -281,22 +277,26 @@ class SubsplashService
         // $data['video_iframe_url_subsplash'] = $mediaItemVideoIframeUrl;
         // $data['video_direct_url_subsplash'] = $mediaItemVideoDirectUrl;
         // $data['audio_iframe_url_subsplash'] = $mediaItemAudioIframeUrl;
-        $data['title'] = $mediaItemTitle;
-        $data['speaker'] = $mediaItemSpeaker;
-        $data['subtitle'] = $mediaItemSubtitle;
-        $data['subsplash_media_item_id'] = $mediaItemID;
-        $data['description'] = $mediaItemSummary;
-        $data['visible_date'] = $mediaItemDateOnly;
-        $data['video_iframe_url'] = $iFrameUrl;
-        $data['audio_direct_url'] = $audioDownloadUrl;
-        $data['audio_iframe_url'] = $iFrameUrl;
-        $data['video_direct_url'] = $videoDownloadUrl;
 
-        $images = [];
-        foreach ($data['images_subsplash'] as $image) {
-            $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
+        // if the entry exists and the override subsplash content toggle is set, don't update it.
+        if ($entry && !$entry->data()->get('override_subsplash_content')) {
+            $data['title'] = $mediaItemTitle;
+            $data['speaker'] = $mediaItemSpeaker;
+            $data['subtitle'] = $mediaItemSubtitle;
+            $data['subsplash_media_item_id'] = $mediaItemID;
+            $data['description'] = $mediaItemSummary;
+            $data['visible_date'] = $mediaItemDateOnly;
+            $data['video_iframe_url'] = $iFrameUrl;
+            $data['audio_direct_url'] = $audioDownloadUrl;
+            $data['audio_iframe_url'] = $iFrameUrl;
+            $data['video_direct_url'] = $videoDownloadUrl;
+            $images = [];
+            foreach ($data['images_subsplash'] as $image) {
+                $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
+            }
+            $data['images'] = $images;
         }
-        $data['images'] = $images;
+
 
 
 
