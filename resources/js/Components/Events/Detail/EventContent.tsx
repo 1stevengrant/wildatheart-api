@@ -9,9 +9,9 @@ export const EventContent = ({ event }: { event: App.Data.EventData }) => {
         <>
             <KeyDetails event={event} />
 
-            <Markdown className={proseClasses}>
-                {event.event_type_data.description}
-            </Markdown>
+            <div className={proseClasses}>
+                <Markdown>{event.event_type_data.description}</Markdown>
+            </div>
 
             {event.event_type_data.photos &&
                 event.event_type_data.photos.length > 0 && (

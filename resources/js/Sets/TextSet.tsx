@@ -10,6 +10,8 @@ export const TextSet = ({
     className?: string;
 }) => {
     return (
-        <Markdown className={`${className} ${proseClasses}`}>{text}</Markdown>
+        <div className={`${className} ${proseClasses}`}>
+            <Markdown>{text}</Markdown>
+        </div>
     );
 };

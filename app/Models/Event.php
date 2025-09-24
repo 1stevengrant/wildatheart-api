@@ -53,6 +53,8 @@ class Event extends BaseModel
             'last_checkin_reminder_sent_at' => 'datetime',
             'last_checkin_confirmed_at' => 'datetime',
             'auto_unpublished' => 'boolean',
+            'is_featured' => 'boolean',
+            'custom_landing_url' => 'string',
         ];
     }
 

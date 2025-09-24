@@ -4,12 +4,13 @@ import { router } from "@inertiajs/react";
 import mapboxgl from "mapbox-gl";
 import Map, {
     GeolocateControl,
-    LngLatBounds,
     NavigationControl,
+    LngLatBounds,
 } from "react-map-gl";
 import { useRecoilState } from "recoil";
 
 import { EventCountButton } from "@/Components/Buttons/EventCountButton";
+import { FeaturedContentCard } from "@/Components/Maps/FeaturedContentCard";
 import { LocalMapMarkers } from "@/Components/Maps/LocalMapMarkers";
 import { NoWebGLSupport } from "@/Components/Maps/NoWebGLSupport";
 import { IsLoading } from "@/Components/Ui/IsLoading";
@@ -29,6 +30,7 @@ import {
     setUserZoom,
 } from "@/lib/localStorage";
 import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
+import { featuredContentState } from "@/store/featuredContentAtom";
 
 export const LocalMap = () => {
     const { getEvents, showLoading, setZoomingComplete } = useEvents();
@@ -38,6 +40,7 @@ export const LocalMap = () => {
     const [zoom, setZoom] = useState<number | null>(null);
 
     const [bounds, setBounds] = useState<LngLatBounds | null>(null);
+    const [featuredContent] = useRecoilState(featuredContentState);
     const { currentSex } = useSex();
     const { typeGroup } = useTypeGroup();
     const { types, setTypesTo } = useTypes();
@@ -264,6 +267,12 @@ export const LocalMap = () => {
 
             <EventCountButton />
             <OutsideClickHandlerEvents />
+
+            {/* Mobile only - featured content at top of map */}
+            <FeaturedContentCard
+                featuredContent={featuredContent}
+                position="map-top"
+            />
         </Map>
     );
 };
