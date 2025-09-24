@@ -1,338 +1,245 @@
-title: 'Subsplash Media Item'
+title: "Subsplash Media Item"
 tabs:
   main:
     display: Main
     sections:
-      -
-        display: 'Basic Info'
+      - display: "Basic Info"
         fields:
-          -
-            handle: title
+          - handle: title
             field:
               type: text
               required: true
               validate:
                 - required
-          -
-            handle: subtitle
+          - handle: subtitle
             field:
               type: text
               display: Subtitle
               width: 50
-          -
-            handle: description
+          - handle: description
             field:
               type: bard
               display: Description
               remove_empty_nodes: false
-      -
-        display: Tags
+      - display: Tags
         fields:
-          -
-            handle: speaker
+          - handle: speaker
             field:
               type: text
               display: Speaker
-          -
-            handle: topics
+          - handle: topics
             field:
               type: terms
               taxonomies:
                 - topics
               display: Topics
               mode: select
-      -
-        display: Video
+      - display: Video
         fields:
-          -
-            handle: video_iframe_url
+          - handle: video_iframe_url
             field:
               type: link
-              display: 'Video IFrame URL'
+              display: "Video IFrame URL"
               width: 50
-          -
-            handle: video_direct_url
+          - handle: video_direct_url
             field:
               type: link
-              display: 'Video Direct URL'
+              display: "Video Direct URL"
               width: 50
-          -
-            handle: vimeo_id
+          - handle: vimeo_id
             field:
               type: text
-              display: 'Vimeo ID'
-              instructions: 'If a Vimeo ID is provided, it will override the Subsplash player.'
-          -
-            handle: is_vertical_video
+              display: "Vimeo ID"
+              instructions: "If a Vimeo ID is provided, it will override the Subsplash player."
+          - handle: is_vertical_video
             field:
               type: toggle
-              display: 'Vertical Video?'
-              instructions: 'Modifies layout slightly for vertical videos.'
-      -
-        display: Audio
+              display: "Vertical Video?"
+              instructions: "Modifies layout slightly for vertical videos."
+      - display: Audio
         fields:
-          -
-            handle: audio_iframe_url
+          - handle: audio_iframe_url
             field:
               type: link
-              display: 'Audio IFrame URL'
+              display: "Audio IFrame URL"
               width: 50
-          -
-            handle: audio_direct_url
+          - handle: audio_direct_url
             field:
               type: link
-              display: 'Audio Direct URL'
+              display: "Audio Direct URL"
               width: 50
-      -
-        display: Document
+      - display: Document
         fields:
-          -
-            handle: document_title
+          - handle: document_title
             field:
               type: text
-              display: 'Document Title'
-          -
-<<<<<<< Updated upstream
-            handle: override_subsplash_content
-            field:
-              type: toggle
-              display: 'Override Subsplash Content'
-          -
-            handle: group_field
-            field:
-              type: group
-              display: 'Override Subsplash Content'
-              if:
-                override_subsplash_content: 'equals true'
-              fields:
-                -
-                  handle: subtitle
-                  field:
-                    type: text
-                    display: Subtitle
-                -
-                  handle: description
-                  field:
-                    type: bard
-                    display: Description
-                -
-                  handle: topics
-                  field:
-                    taxonomies:
-                      - topics
-                    type: terms
-                    display: Topics
-          -
-            handle: series
-            field:
-              collections:
-                - media_series
-              type: link
-              display: Series
-=======
-            handle: document_direct_url
+              display: "Document Title"
+          - handle: document_direct_url
             field:
               type: link
-              display: 'Document Direct URL'
->>>>>>> Stashed changes
-      -
-        display: SEO
+              display: "Document Direct URL"
+      - display: SEO
         fields:
-          -
-            import: seo
+          - import: seo
   subsplash_import:
-    display: 'Subsplash Import'
+    display: "Subsplash Import"
     sections:
-      -
-        display: 'Import Details'
+      - display: "Import Details"
         fields:
-          -
-            handle: subsplash_media_item_id
+          - handle: subsplash_media_item_id
             field:
               type: text
-              display: 'Subsplash Media Item ID'
+              display: "Subsplash Media Item ID"
               width: 50
-              instructions: 'Enter the ID for the media item you want to sync from.'
-          -
-            handle: override_subsplash_content
+              instructions: "Enter the ID for the media item you want to sync from."
+          - handle: override_subsplash_content
             field:
               type: toggle
-              display: 'Override Subsplash Content'
+              display: "Override Subsplash Content"
               width: 50
-          -
-            handle: last_imported
+          - handle: last_imported
             field:
               time_enabled: true
               type: date
-              display: 'Last Imported'
+              display: "Last Imported"
               width: 50
               visibility: read_only
-          -
-            handle: last_updated
+          - handle: last_updated
             field:
               time_enabled: true
               type: date
-              display: 'Last Updated (Subsplash)'
+              display: "Last Updated (Subsplash)"
               width: 50
               visibility: read_only
-      -
-        display: 'Basic Info'
+      - display: "Basic Info"
         fields:
-          -
-            handle: title_subsplash
+          - handle: title_subsplash
             field:
               type: text
-              display: 'Title (Subsplash)'
+              display: "Title (Subsplash)"
               visibility: read_only
-          -
-            handle: subtitle_subsplash
+          - handle: subtitle_subsplash
             field:
               type: text
-              display: 'Subtitle (Subsplash)'
+              display: "Subtitle (Subsplash)"
               width: 50
               visibility: read_only
-          -
-            handle: date_subsplash
+          - handle: date_subsplash
             field:
               type: date
-              display: 'Date (Subsplash)'
+              display: "Date (Subsplash)"
               width: 50
               visibility: read_only
-          -
-            handle: description_subsplash
+          - handle: description_subsplash
             field:
               type: bard
-              display: 'Description (Subsplash)'
+              display: "Description (Subsplash)"
               remove_empty_nodes: false
               visibility: read_only
-          -
-            handle: images_subsplash
+          - handle: images_subsplash
             field:
               collapse: true
               type: replicator
-              display: 'Images (Subsplash)'
+              display: "Images (Subsplash)"
               sets:
                 new_set_group:
-                  display: 'New Set Group'
+                  display: "New Set Group"
                   sets:
                     new_image:
-                      display: 'New Image'
+                      display: "New Image"
                       fields:
-                        -
-                          handle: image_id_subsplash
+                        - handle: image_id_subsplash
                           field:
                             type: text
-                            display: 'Image ID (Subsplash)'
-                        -
-                          handle: image_type_subsplash
+                            display: "Image ID (Subsplash)"
+                        - handle: image_type_subsplash
                           field:
                             type: text
-                            display: 'Image Type (Subsplash)'
-                        -
-                          handle: image_source_url_subsplash
+                            display: "Image Type (Subsplash)"
+                        - handle: image_source_url_subsplash
                           field:
                             type: link
-                            display: 'Image Source URL (Subsplash)'
-                        -
-                          handle: image_dynamic_url_subsplash
+                            display: "Image Source URL (Subsplash)"
+                        - handle: image_dynamic_url_subsplash
                           field:
                             type: text
-                            display: 'Image Dynamic Url (Subsplash)'
-      -
-        display: Tags
+                            display: "Image Dynamic Url (Subsplash)"
+      - display: Tags
         fields:
-          -
-            handle: speaker_subsplash
+          - handle: speaker_subsplash
             field:
               type: text
-              display: 'Speaker (Subsplash)'
+              display: "Speaker (Subsplash)"
               visibility: read_only
-          -
-            handle: topics_subsplash
+          - handle: topics_subsplash
             field:
               type: terms
               taxonomies:
                 - topics
-              display: 'Topics (Subsplash)'
+              display: "Topics (Subsplash)"
               mode: select
               visibility: read_only
-      -
-        display: Video
+      - display: Video
         fields:
-          -
-            handle: video_iframe_url_subsplash
+          - handle: video_iframe_url_subsplash
             field:
               type: link
-              display: 'Video IFrame URL (Subsplash)'
+              display: "Video IFrame URL (Subsplash)"
               width: 50
               visibility: read_only
-          -
-            handle: video_direct_url_subsplash
+          - handle: video_direct_url_subsplash
             field:
               type: link
-              display: 'Video Direct URL (Subsplash)'
+              display: "Video Direct URL (Subsplash)"
               width: 50
-      -
-        display: Audio
+      - display: Audio
         fields:
-          -
-            handle: audio_iframe_url_subsplash
+          - handle: audio_iframe_url_subsplash
             field:
               type: link
-              display: 'Audio IFrame URL (Subsplash)'
+              display: "Audio IFrame URL (Subsplash)"
               width: 50
-          -
-            handle: audio_direct_url_subsplash
+          - handle: audio_direct_url_subsplash
             field:
               type: link
-              display: 'Audio Direct URL (Subsplash)'
+              display: "Audio Direct URL (Subsplash)"
               width: 50
               visibility: read_only
-      -
-        display: Document
+      - display: Document
         fields:
-          -
-            handle: document_title_subsplash
+          - handle: document_title_subsplash
             field:
               type: text
-              display: 'Document Title (Subsplash)'
+              display: "Document Title (Subsplash)"
               visibility: read_only
-          -
-            handle: document_direct_url_subsplash
+          - handle: document_direct_url_subsplash
             field:
               type: link
-              display: 'Document Direct URL (Subsplash)'
+              display: "Document Direct URL (Subsplash)"
               visibility: read_only
-      -
-        display: Meta
+      - display: Meta
         fields:
-          -
-            handle: duration_subsplash
+          - handle: duration_subsplash
             field:
               type: text
-              display: 'Duration (Subsplash)'
+              display: "Duration (Subsplash)"
               visibility: read_only
   custom_layout:
-    display: 'Custom Layout'
+    display: "Custom Layout"
     sections:
-      -
-        display: 'Page Design'
+      - display: "Page Design"
         fields:
-          -
-            import: blocks
+          - import: blocks
   sidebar:
     display: Sidebar
     sections:
-      -
-        fields:
-          -
-            handle: slug
+      - fields:
+          - handle: slug
             field:
               type: slug
               localizable: true
-              validate: 'max:200'
-          -
-            handle: date
+              validate: "max:200"
+          - handle: date
             field:
               type: date
               required: true
@@ -340,27 +247,24 @@ tabs:
               validate:
                 - required
               time_enabled: true
-          -
-            handle: series
+          - handle: series
             field:
               collections:
                 - media_series
               type: link
               display: Series
-          -
-            handle: content_type
+          - handle: content_type
             field:
               type: terms
               taxonomies:
                 - content_type
-              display: 'Content Type'
+              display: "Content Type"
               mode: select
-          -
-            handle: media_type
+          - handle: media_type
             field:
               type: terms
               taxonomies:
                 - media_type
-              display: 'Media Type'
+              display: "Media Type"
               mode: select
               max_items: 1
