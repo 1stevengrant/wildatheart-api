@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use Statamic\Facades\Term;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
@@ -166,7 +167,6 @@ class SubsplashService
             $audioDownloadUrl = str_replace('{filename}.mp3', $audioFileName, $audioDownloadUrl);
         }
 
-
         $videoDownloadUrl = data_get($mediaItem, '_embedded.video._embedded.video-outputs.0._links.related.href');
         $videoFileName = data_get($mediaItem, '_embedded.video.title', 'video.mp4');
 
@@ -175,10 +175,9 @@ class SubsplashService
         }
 
         $images = data_get($mediaItem, '_embedded.images');
-        $wideImageUrl = data_get(collect($images)->where('type', 'wide')->first(), "_links.dynamic.href");
-        $squareImageUrl = data_get(collect($images)->where('type', 'square')->first(), "_links.dynamic.href");
-        $bannerImageUrl = data_get(collect($images)->where('type', 'banner')->first(), "_links.dynamic.href");
-
+        $wideImageUrl = data_get(collect($images)->where('type', 'wide')->first(), '_links.dynamic.href');
+        $squareImageUrl = data_get(collect($images)->where('type', 'square')->first(), '_links.dynamic.href');
+        $bannerImageUrl = data_get(collect($images)->where('type', 'banner')->first(), '_links.dynamic.href');
 
         if ($wideImageUrl) {
             $wideImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '800', '450'], $wideImageUrl);
@@ -190,13 +189,14 @@ class SubsplashService
             $bannerImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '1920', '692'], $bannerImageUrl);
         }
 
-        if (!$mediaItemDuration) {
+        if (! $mediaItemDuration) {
             $mediaItemDuration = data_get($mediaItem, '_embedded.audio._embedded.audio-outputs.0.duration', 0);
         }
 
         $mediaItemDate = Carbon::parse(data_get($mediaItem, 'date'));
         $mediaItemDateOnly = $mediaItemDate->format('Y-m-d');
         $mediaItemSeriesID = data_get($mediaItem, '_embedded.media-series.id');
+        $mediaItemTags = data_get($mediaItem, 'tags', []);
 
         // Check if the entry already exists
         $entry = Entry::query()
@@ -261,17 +261,20 @@ class SubsplashService
             }
 
             return [
-                "id" => $image['id'],
-                "type" => "new_image",
-                "enabled" => true,
-                "image_id_subsplash" => $image['id'],
-                "image_type_subsplash" => $image['type'],
-                "image_source_url_subsplash" => $image['_links']['related']['href'],
-                "image_dynamic_url_subsplash" => $image['_links']['dynamic']['href'],
-                "statamic_asset_path" => $statamicAsset->path(),
+                'id' => $image['id'],
+                'type' => 'new_image',
+                'enabled' => true,
+                'image_id_subsplash' => $image['id'],
+                'image_type_subsplash' => $image['type'],
+                'image_source_url_subsplash' => $image['_links']['related']['href'],
+                'image_dynamic_url_subsplash' => $image['_links']['dynamic']['href'],
+                'statamic_asset_path' => $statamicAsset->path(),
             ];
         })->toArray();
 
+        // Process topics from tags
+        $topicIds = $this->processTopicsFromTags($mediaItemTags);
+        $data['topics_subsplash'] = $topicIds;
 
         // $data['topics_subsplash'] = $mediaItemTopics;
         // $data['video_iframe_url_subsplash'] = $mediaItemVideoIframeUrl;
@@ -279,7 +282,7 @@ class SubsplashService
         // $data['audio_iframe_url_subsplash'] = $mediaItemAudioIframeUrl;
 
         // if the entry exists and the override subsplash content toggle is set, don't update it.
-        if ($entry && !$entry->data()->get('override_subsplash_content')) {
+        if ($entry && ! $entry->data()->get('override_subsplash_content')) {
             $data['title'] = $mediaItemTitle;
             $data['speaker'] = $mediaItemSpeaker;
             $data['subtitle'] = $mediaItemSubtitle;
@@ -290,6 +293,7 @@ class SubsplashService
             $data['audio_direct_url'] = $audioDownloadUrl;
             $data['audio_iframe_url'] = $iFrameUrl;
             $data['video_direct_url'] = $videoDownloadUrl;
+            $data['topics'] = $topicIds; // Update the main topics field with processed topics
             $images = [];
             foreach ($data['images_subsplash'] as $image) {
                 $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
@@ -297,10 +301,7 @@ class SubsplashService
             $data['images'] = $images;
         }
 
-
-
-
-        if (!isset($data['subsplash_data'])) {
+        if (! isset($data['subsplash_data'])) {
             $data['subsplash_data'] = $subsplashData;
         }
 
@@ -406,7 +407,7 @@ class SubsplashService
             ->first();
         $sourceUrl = $image['_links']['related']['href'];
 
-        if (!$existingAsset) {
+        if (! $existingAsset) {
             try {
                 // Download and import the image
                 $imageContent = file_get_contents($sourceUrl);
@@ -416,7 +417,6 @@ class SubsplashService
                     $path = 'subsplash-imports/' . $filename;
 
                     $container = \Statamic\Facades\AssetContainer::all()->where('handle', 's3')->first();
-
 
                     if ($container) {
                         // Save the file to the container
@@ -438,7 +438,7 @@ class SubsplashService
                 // Log error but continue processing
                 \Illuminate\Support\Facades\Log::warning('Failed to import Subsplash image: ' . $e->getMessage(), [
                     'image_id' => $image['id'],
-                    'source_url' => $sourceUrl
+                    'source_url' => $sourceUrl,
                 ]);
             }
         }
@@ -518,5 +518,75 @@ class SubsplashService
                     ->where('subsplash_series_id', $seriesId);
             })
             ->first();
+    }
+
+    /**
+     * Extract topics from Subsplash tags array and create/find topic taxonomy entries
+     *
+     * @param  array  $tags  The tags array from Subsplash MediaItem
+     * @return array Array of topic taxonomy term IDs
+     */
+    public function processTopicsFromTags(array $tags): array
+    {
+        $topicIds = [];
+
+        foreach ($tags as $tag) {
+            // Only process tags that start with "topic:"
+            if (str_starts_with($tag, 'topic:')) {
+                $topicName = mb_trim(mb_substr($tag, 6)); // Remove "topic:" prefix
+
+                if (! empty($topicName)) {
+                    $topicTerm = $this->createOrFindTopic($topicName);
+                    if ($topicTerm) {
+                        $topicIds[] = $topicTerm->id();
+                    }
+                }
+            }
+        }
+
+        return $topicIds;
+    }
+
+    /**
+     * Create or find a topic taxonomy term
+     *
+     * @param  string  $topicName  The name of the topic
+     * @return mixed The topic term or null if creation failed
+     */
+    private function createOrFindTopic(string $topicName)
+    {
+        // Generate a slug from the topic name
+        $slug = Str::slug($topicName);
+
+        // Check if topic already exists
+        $existingTerm = Term::query()
+            ->where('taxonomy', 'topics')
+            ->where('slug', $slug)
+            ->first();
+
+        if ($existingTerm) {
+            return $existingTerm;
+        }
+
+        // Create new topic term
+        try {
+            $term = Term::make()
+                ->taxonomy('topics')
+                ->slug($slug)
+                ->data([
+                    'title' => $topicName,
+                ]);
+
+            $term->save();
+
+            return $term;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Failed to create topic term: ' . $e->getMessage(), [
+                'topic_name' => $topicName,
+                'slug' => $slug,
+            ]);
+
+            return null;
+        }
     }
 }
