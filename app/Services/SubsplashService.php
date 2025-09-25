@@ -147,7 +147,7 @@ class SubsplashService
         return $mediaItems;
     }
 
-    public function saveMediaItemAsEntry($mediaItem, $updateSlug = false)
+    public function saveMediaItemAsEntry($mediaItem, $updateSlug = false, $callback = null)
     {
         $mediaItemID = data_get($mediaItem, 'id');
         $mediaItemTitle = data_get($mediaItem, 'title');
@@ -229,6 +229,22 @@ class SubsplashService
                 ->slug($mediaItemTitle);
 
             $entryCreated = true;
+        }
+
+        // Check if we need to skip import due to unchanged data
+        if ($entry && ! $entryCreated) {
+            $currentLastUpdated = Carbon::parse(data_get($mediaItem, 'last_imported'));
+            $lastUpdated = $entry->data()->get('last_updated');
+
+            // If last_updated from Subsplash is not more recent than our last_updated, skip import
+            if ($lastUpdated && $currentLastUpdated->lte($lastUpdated)) {
+                // Call callback to notify that this item was skipped
+                if ($callback && is_callable($callback)) {
+                    $callback('skipped', $mediaItemTitle, $currentLastUpdated, $lastUpdated);
+                }
+
+                return $entry;
+            }
         }
 
         $subsplashData = [];

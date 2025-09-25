@@ -31,6 +31,7 @@ class GetLatestSubsplashMedia extends Command
             if ($mediaItemId = $this->option('id')) {
                 $this->info("Processing single media item: {$mediaItemId}");
                 $this->processSingleMediaItem($mediaItemId);
+
                 return;
             }
 
@@ -85,7 +86,14 @@ class GetLatestSubsplashMedia extends Command
             // Optional: Display current item in progress bar
             $bar->setMessage("Processing: {$item['title']}");
 
-            $this->subsplash->saveMediaItemAsEntry($item);
+            $this->subsplash->saveMediaItemAsEntry($item, false, function ($status, $title, $currentUpdated, $lastUpdated) {
+                if ($status === 'skipped') {
+                    $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
+                        ? $lastUpdated->format('Y-m-d H:i:s')
+                        : $lastUpdated;
+                    $this->line("<comment>Skipped: {$title} (no changes since {$lastUpdatedFormatted})</comment>");
+                }
+            });
             $bar->advance();
         }
 
@@ -109,11 +117,13 @@ class GetLatestSubsplashMedia extends Command
                 foreach ($mediaItem['errors'] as $error) {
                     $this->error($error);
                 }
+
                 return;
             }
 
-            if (!isset($mediaItem['id'])) {
+            if (! isset($mediaItem['id'])) {
                 $this->error("Media item with ID {$mediaItemId} not found.");
+
                 return;
             }
 
@@ -126,10 +136,17 @@ class GetLatestSubsplashMedia extends Command
             $bar->start();
 
             // Save the media item as an entry
-            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem);
+            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem, false, function ($status, $title, $currentUpdated, $lastUpdated) use ($isSkipped) {
+                if ($status === 'skipped') {
+                    $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
+                        ? $lastUpdated->format('Y-m-d H:i:s')
+                        : $lastUpdated;
+                    $this->info("<comment>Skipped: {$title} (no changes since {$lastUpdatedFormatted})</comment>");
+                }
+            });
             $bar->advance();
 
-            $bar->setMessage('Processing complete.');
+            // $bar->setMessage('Processing complete.');
             $bar->finish();
             $this->output->newLine(2);
 
