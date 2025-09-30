@@ -25,7 +25,12 @@ class SubsplashAppService
     public function getPrayerList()
     {
         // Get prayers from your database, ordered by your custom order field
-        $prayers = Entry::query()->where('collection', 'prayers')->orderBy('order', 'asc')->get()->toArray();
+        $prayers = Entry::query()
+                        ->where('collection', 'prayers')
+                        ->where('published', true)
+                        ->orderBy('order', 'asc')
+                        ->get()
+                        ->toArray();
 
         $items = [];
         foreach ($prayers as $prayer) {
