@@ -7,9 +7,7 @@ use Saloon\Http\Request;
 
 class GetEpisodeRequest extends Request
 {
-
     public function __construct(protected ?string $episode_id = null) {}
-
 
     /**
      * The HTTP method of the request

@@ -8,7 +8,6 @@ use Saloon\PaginationPlugin\Contracts\Paginatable;
 
 class GetEpisodesRequest extends Request implements Paginatable
 {
-
     public function __construct(protected string $show_id) {}
 
     /**
