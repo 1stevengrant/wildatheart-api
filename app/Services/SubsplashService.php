@@ -209,6 +209,7 @@ class SubsplashService
         $customItem = Entry::query()
             ->where('collection', 'media_item')
             ->where('blueprint', 'custom_media_item')
+            ->orWhere('blueprint', 'experience_session')
             ->where('data->subsplash_media_item_id', $mediaItemID)
             ->first();
 
@@ -247,13 +248,6 @@ class SubsplashService
             }
         }
 
-        $subsplashData = [];
-        $subsplashData['speaker'] = $mediaItemSpeaker;
-        $subsplashData['duration'] = $mediaItemDuration;
-        $subsplashData['wide_image_url'] = $wideImageUrl;
-        $subsplashData['square_image_url'] = $squareImageUrl;
-        $subsplashData['banner_image_url'] = $bannerImageUrl;
-
         $data = $entry->data();
         $data['last_imported'] = Carbon::now();
         $data['last_updated'] = Carbon::parse(data_get($mediaItem, 'updated_at'));
@@ -267,35 +261,36 @@ class SubsplashService
         $data['audio_iframe_url_subsplash'] = $iFrameUrl;
         $data['audio_direct_url_subsplash'] = $audioDownloadUrl;
         $data['duration_subsplash'] = $mediaItemDuration;
-        $data['images_subsplash'] = collect($images)->map(function ($image) {
+        $data['images_subsplash'] = collect($images)->filter(function () {
+            return isset($image['_links']['related']['href']);
+        })->map(function ($image) {
             // Import image to our library if not already imported
-            $sourceUrl = $image['_links']['related']['href'] ?? null;
-            $imageAssetId = null;
+            $sourceUrl = data_get($image, '_links.related.href');
 
             if ($sourceUrl) {
                 $statamicAsset = $this->saveImageAsAsset($image);
             }
 
-            return [
-                'id' => $image['id'],
+            $imageData = [
+                'id' => data_get($image, 'id'),
                 'type' => 'new_image',
                 'enabled' => true,
-                'image_id_subsplash' => $image['id'],
-                'image_type_subsplash' => $image['type'],
-                'image_source_url_subsplash' => $image['_links']['related']['href'],
-                'image_dynamic_url_subsplash' => $image['_links']['dynamic']['href'],
-                'statamic_asset_path' => $statamicAsset->path(),
+                'image_id_subsplash' => data_get($image, 'id'),
+                'image_type_subsplash' => data_get($image, 'type'),
+                'image_source_url_subsplash' => data_get($image, '_links.related.href'),
+                'image_dynamic_url_subsplash' => data_get($image, '_links.dynamic.href'),
             ];
+
+            if (isset($statamicAsset)) {
+                $imageData['statamic_asset_path'] = $statamicAsset->path();
+            }
+
+            return $imageData;
         })->toArray();
 
         // Process topics from tags
         $topicIds = $this->processTopicsFromTags($mediaItemTags);
         $data['topics_subsplash'] = $topicIds;
-
-        // $data['topics_subsplash'] = $mediaItemTopics;
-        // $data['video_iframe_url_subsplash'] = $mediaItemVideoIframeUrl;
-        // $data['video_direct_url_subsplash'] = $mediaItemVideoDirectUrl;
-        // $data['audio_iframe_url_subsplash'] = $mediaItemAudioIframeUrl;
 
         // if the entry exists and the override subsplash content toggle is set, don't update it.
         if ($entry && ! $entry->data()->get('override_subsplash_content')) {
@@ -312,13 +307,13 @@ class SubsplashService
             $data['topics'] = $topicIds; // Update the main topics field with processed topics
             $images = [];
             foreach ($data['images_subsplash'] as $image) {
+                if (!isset($image['statamic_asset_path'])) {
+                    dump($image);
+                    continue;
+                }
                 $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
             }
             $data['images'] = $images;
-        }
-
-        if (! isset($data['subsplash_data'])) {
-            $data['subsplash_data'] = $subsplashData;
         }
 
         // If there is an associated series, associate it to the entry.
