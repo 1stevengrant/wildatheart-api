@@ -39,7 +39,7 @@ abstract class BaseNavController extends Controller
     /**
      * Fetch and process navigation data with caching
      */
-    protected function getNavigationData()
+    public function getNavigationData()
     {
         $cacheKey = "navigation.{$this->getGlobalSetHandle()}";
 
