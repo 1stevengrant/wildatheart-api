@@ -183,6 +183,37 @@ class Event extends BaseModel
         );
     }
 
+    protected function formattedDates(): Attribute
+    {
+        return Attribute::make(
+            get: function (): string {
+                if (! $this->start_date) {
+                    return '';
+                }
+
+                $startDate = $this->start_date instanceof Carbon
+                    ? $this->start_date
+                    : Carbon::parse($this->start_date);
+
+                $startFormatted = $startDate->format('D, M j');
+
+                if ($this->end_date) {
+                    $endDate = $this->end_date instanceof Carbon
+                        ? $this->end_date
+                        : Carbon::parse($this->end_date);
+
+                    if (! $startDate->isSameDay($endDate)) {
+                        $endFormatted = $endDate->format('D, M j');
+
+                        return "{$startFormatted} - {$endFormatted}";
+                    }
+                }
+
+                return $startFormatted;
+            }
+        );
+    }
+
     protected function city(): Attribute
     {
         return Attribute::make(
