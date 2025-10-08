@@ -443,4 +443,15 @@ tabs:
                                                               folder: event_types
                                                               type: assets
                                                               display: Image
+  v1_api:
+    display: 'V1 API'
+    sections:
+      -
+        display: 'New Section'
+        fields:
+          -
+            handle: card_description
+            field:
+              type: text
+              display: 'Card Description'
 title: 'Event Type'

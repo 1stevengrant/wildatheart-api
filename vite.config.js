@@ -32,6 +32,16 @@ export default defineConfig({
                 run: ["php", "artisan", "typescript:transform"],
                 pattern: ["app/**/*Data.php"],
             },
+            {
+                name: "sync types to astro",
+                run: [
+                    "cp",
+                    "resources/js/types/generated.d.ts",
+                    "../wahastro/src/types/laravel.d.ts",
+                ],
+                pattern: ["app/**/*Data.php"],
+                delay: 500,
+            },
         ]),
     ],
     esbuild: {
