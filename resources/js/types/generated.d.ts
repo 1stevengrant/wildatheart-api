@@ -188,6 +188,32 @@ enabled: boolean;
 type: string;
 };
 }
+declare namespace App.Data.V1 {
+export type EventCollectionData = {
+id: string;
+location: string;
+dates: string;
+sex: string;
+eventType: string;
+eventTypeImage: string;
+cardDescription: string;
+hostName: string;
+hostAvatar: string | null;
+};
+export type EventData = {
+id: string;
+location: string;
+dates: string;
+sex: string;
+eventType: string;
+eventGroupType: string;
+eventTypeImage: string;
+eventTypeDescription: string;
+eventTypePhotos: Array<any>;
+hostName: string;
+hostAvatar: string | null;
+};
+}
 declare namespace App.DataTypeObjects {
 export type Attributes = {
 title: string;
