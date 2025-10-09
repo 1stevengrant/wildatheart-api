@@ -136,7 +136,7 @@ class GetLatestSubsplashMedia extends Command
             $bar->start();
 
             // Save the media item as an entry
-            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem, false, function ($status, $title, $currentUpdated, $lastUpdated) use ($isSkipped) {
+            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem, false, function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
                     $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
                         ? $lastUpdated->format('Y-m-d H:i:s')

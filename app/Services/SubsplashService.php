@@ -208,11 +208,9 @@ class SubsplashService
         // Check if custom media item is already associated to this id.
         $customItem = Entry::query()
             ->where('collection', 'media_item')
-            ->where('blueprint', 'custom_media_item')
-            ->orWhere('blueprint', 'experience_session')
             ->where('data->subsplash_media_item_id', $mediaItemID)
+            ->whereIn('blueprint', ['custom_media_item', 'experience_session'])
             ->first();
-
         // If this is a custom item, return it.
         if ((bool) $customItem) {
             return $customItem;
@@ -234,14 +232,17 @@ class SubsplashService
 
         // Check if we need to skip import due to unchanged data
         if ($entry && ! $entryCreated) {
-            $currentLastUpdated = Carbon::parse(data_get($mediaItem, 'last_imported'));
-            $lastUpdated = $entry->data()->get('last_updated');
+
+            $lastUpdatedDateString = data_get($mediaItem, 'updated_at');
+            $lastImportedDateString = $entry->data()->get('last_imported');
+            $lastUpdated = Carbon::parse(data_get($mediaItem, 'updated_at'));
+            $lastImported = Carbon::parse($entry->data()->get('last_imported'));
 
             // If last_updated from Subsplash is not more recent than our last_updated, skip import
-            if ($lastUpdated && $currentLastUpdated->lte($lastUpdated)) {
+            if ($lastUpdatedDateString && $lastImportedDateString && $lastImported->gte($lastUpdated)) {
                 // Call callback to notify that this item was skipped
                 if ($callback && is_callable($callback)) {
-                    $callback('skipped', $mediaItemTitle, $currentLastUpdated, $lastUpdated);
+                    $callback('skipped', $mediaItemTitle, $lastImported, $lastUpdated);
                 }
 
                 return $entry;
@@ -261,9 +262,10 @@ class SubsplashService
         $data['audio_iframe_url_subsplash'] = $iFrameUrl;
         $data['audio_direct_url_subsplash'] = $audioDownloadUrl;
         $data['duration_subsplash'] = $mediaItemDuration;
-        $data['images_subsplash'] = collect($images)->filter(function () {
+        $data['images_subsplash'] = collect($images)->filter(function ($image) {
             return isset($image['_links']['related']['href']);
         })->map(function ($image) {
+
             // Import image to our library if not already imported
             $sourceUrl = data_get($image, '_links.related.href');
 
@@ -307,8 +309,9 @@ class SubsplashService
             $data['topics'] = $topicIds; // Update the main topics field with processed topics
             $images = [];
             foreach ($data['images_subsplash'] as $image) {
-                if (!isset($image['statamic_asset_path'])) {
+                if (! isset($image['statamic_asset_path'])) {
                     dump($image);
+
                     continue;
                 }
                 $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
@@ -412,9 +415,12 @@ class SubsplashService
 
     public function saveImageAsAsset($image)
     {
-        // Check if we already have this image imported by looking for existing asset
+        // Check if we already have this image imported by looking for existing asset by filename
+        $filename = 'subsplash_' . $image['id'] . '.jpg';
+        $path = 'subsplash-imports/' . $filename;
+
         $existingAsset = \Statamic\Assets\Asset::query()
-            ->where('subsplash_image_id', $image['id'])
+            ->where('path', $path)
             ->first();
         $sourceUrl = $image['_links']['related']['href'];
 
@@ -424,9 +430,6 @@ class SubsplashService
                 $imageContent = file_get_contents($sourceUrl);
 
                 if ($imageContent !== false) {
-                    $filename = 'subsplash_' . $image['id'] . '_' . time() . '.jpg';
-                    $path = 'subsplash-imports/' . $filename;
-
                     $container = \Statamic\Facades\AssetContainer::all()->where('handle', 's3')->first();
 
                     if ($container) {
