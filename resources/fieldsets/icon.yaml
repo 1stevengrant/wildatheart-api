@@ -4,28 +4,53 @@ fields:
     handle: icon
     field:
       options:
-        playOutline: 'Play Outline'
+        airplay: airplay
+        arrow-right: arrow-right
+        book: book
+        books: books
+        bookSquare: bookSquare
+        calendar: calendar
+        chevron-left: chevron-left
+        chevron-right: chevron-right
+        document: document
+        download: download
+        emailDocument2: emailDocument2
+        facebook: facebook
+        firewood: firewood
+        hamburger: hamburger
+        heart: heart
+        instagram: instagram
+        iphone: iphone
         location: location
         locationOutline: locationOutline
-        youtube: youtube
-        search: search
         menu: menu
-        instagram: instagram
-        facebook: facebook
-        arrow-right: arrow-right
-        wildatheart: wildatheart
-        sun: sun
-        tree: tree
-        wildatheart_no_slogan: wildatheart_no_slogan
-        chevron-right: chevron-right
-        chevron-left: chevron-left
-        wave: wave
-        play: play
-        hamburger: hamburger
-        download: download
-        share: share
-        iphone: iphone
         molecule: molecule
+        pause: pause
+        pauseOutline: pauseOutline
+        phoneTablet: phoneTablet
+        play: play
+        playArrow: playArrow
+        playOutline: 'Play Outline'
+        search: search
+        settings: settings
+        share: share
+        spinner: spinner
+        sun: sun
+        sunOutline: sunOutline
+        tree: tree
+        triangle-right: triangle-right
+        user: user
+        videoBadge: videoBadge
+        videoCameraPlay: videoCameraPlay
+        videoPlaylist2: videoPlaylist2
+        videoSlides: videoSlides
+        voice: voice
+        wave: wave
+        wildatheart: wildatheart
+        wildatheart_no_slogan: wildatheart_no_slogan
+        worldNetwork: worldNetwork
+        xTwitter: xTwitter
+        youtube: youtube
       type: select
       display: Icon
       clearable: true

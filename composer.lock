@@ -9390,16 +9390,16 @@
         },
         {
             "name": "statamic/eloquent-driver",
-            "version": "4.x-dev",
+            "version": "v4.32.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/wild-at-heart/eloquent-driver.git",
-                "reference": "a169cea3ea221e6bf7999472b71be8cc842996b9"
+                "url": "https://github.com/statamic/eloquent-driver.git",
+                "reference": "e419795cae14fcdb3e13061f51c754791d6de48b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wild-at-heart/eloquent-driver/zipball/a169cea3ea221e6bf7999472b71be8cc842996b9",
-                "reference": "a169cea3ea221e6bf7999472b71be8cc842996b9",
+                "url": "https://api.github.com/repos/statamic/eloquent-driver/zipball/e419795cae14fcdb3e13061f51c754791d6de48b",
+                "reference": "e419795cae14fcdb3e13061f51c754791d6de48b",
                 "shasum": ""
             },
             "require": {

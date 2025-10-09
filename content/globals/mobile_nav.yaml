@@ -1,0 +1,81 @@
+title: 'Mobile Nav'
+data:
+  main_nav_bar:
+    -
+      id: mew8vgdb
+      url: /media
+      icon: playOutline
+      type: standard_nav_link
+      title: Media
+      enabled: true
+    -
+      id: mew8vvv7
+      url: /events
+      icon: locationOutline
+      type: standard_nav_link
+      title: Events
+      enabled: true
+    -
+      id: mew8w17q
+      url: /give
+      icon: heart
+      type: standard_nav_link
+      title: Give
+      enabled: true
+    -
+      id: mew8wlyl
+      url: /books
+      icon: books
+      type: standard_nav_link
+      title: Books
+      enabled: true
+  drawer_items:
+    -
+      id: mew8ykml
+      url: /daily-reading
+      icon: book
+      type: standard_nav_link
+      title: Daily Readings
+      enabled: true
+    -
+      id: mew8yz7m
+      url: /events
+      icon: locationOutline
+      type: standard_nav_link
+      title: Events
+      enabled: true
+    -
+      id: mew8z7d0
+      url: '/events#video-study-groups'
+      icon: videoPlaylist2
+      type: standard_nav_link
+      title: Courses
+      enabled: true
+    -
+      id: mew90lz4
+      url: /prayers
+      icon: book
+      type: standard_nav_link
+      title: Prayers
+      enabled: true
+    -
+      id: mew90z40
+      url: /apps
+      icon: phoneTablet
+      type: standard_nav_link
+      title: Apps
+      enabled: true
+    -
+      id: mew918s2
+      url: /blogs
+      icon: document
+      type: standard_nav_link
+      title: Articles
+      enabled: true
+    -
+      id: mew91f1i
+      url: /podcasts
+      icon: voice
+      type: standard_nav_link
+      title: Podcasts
+      enabled: true
