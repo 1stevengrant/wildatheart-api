@@ -1270,7 +1270,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-fix/update-composer",
+            "version": "dev-staging",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",
@@ -9390,16 +9390,16 @@
         },
         {
             "name": "statamic/eloquent-driver",
-            "version": "v4.32.0",
+            "version": "4.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/statamic/eloquent-driver.git",
-                "reference": "e419795cae14fcdb3e13061f51c754791d6de48b"
+                "url": "git@github.com:wild-at-heart/eloquent-driver.git",
+                "reference": "33d497ac33cbcf495136cec9cb4cfb9615393e09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/statamic/eloquent-driver/zipball/e419795cae14fcdb3e13061f51c754791d6de48b",
-                "reference": "e419795cae14fcdb3e13061f51c754791d6de48b",
+                "url": "https://api.github.com/repos/wild-at-heart/eloquent-driver/zipball/33d497ac33cbcf495136cec9cb4cfb9615393e09",
+                "reference": "33d497ac33cbcf495136cec9cb4cfb9615393e09",
                 "shasum": ""
             },
             "require": {
@@ -9445,10 +9445,7 @@
                 "MIT"
             ],
             "description": "Allows you to store Statamic data in a database.",
-            "support": {
-                "source": "https://github.com/wild-at-heart/eloquent-driver/tree/4.x"
-            },
-            "time": "2025-10-09T16:08:24+00:00"
+            "time": "2025-10-09T21:20:56+00:00"
         },
         {
             "name": "statamic/stringy",

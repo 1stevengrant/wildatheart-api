@@ -18,7 +18,9 @@
       "Bash(php artisan view:clear:*)",
       "mcp__laravel-boost__get-absolute-url",
       "Bash(cat:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(composer install:*)",
+      "Bash(composer update:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
