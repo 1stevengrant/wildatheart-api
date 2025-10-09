@@ -1270,7 +1270,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-fix/sync-removed-directories",
+            "version": "dev-fix/update-composer",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",
@@ -9394,12 +9394,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wild-at-heart/eloquent-driver.git",
-                "reference": "53252c3cbd6c9aa45a60d7345945e5ec7e2923bf"
+                "reference": "a169cea3ea221e6bf7999472b71be8cc842996b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wild-at-heart/eloquent-driver/zipball/53252c3cbd6c9aa45a60d7345945e5ec7e2923bf",
-                "reference": "53252c3cbd6c9aa45a60d7345945e5ec7e2923bf",
+                "url": "https://api.github.com/repos/wild-at-heart/eloquent-driver/zipball/a169cea3ea221e6bf7999472b71be8cc842996b9",
+                "reference": "a169cea3ea221e6bf7999472b71be8cc842996b9",
                 "shasum": ""
             },
             "require": {
@@ -9448,7 +9448,7 @@
             "support": {
                 "source": "https://github.com/wild-at-heart/eloquent-driver/tree/4.x"
             },
-            "time": "2025-10-09T03:32:47+00:00"
+            "time": "2025-10-09T16:08:24+00:00"
         },
         {
             "name": "statamic/stringy",
