@@ -398,7 +398,7 @@ class Event extends BaseModel
         );
     }
 
-    protected function cardDescription(): Attribute
+    protected function eventTypeCardDescription(): Attribute
     {
         return Attribute::make(
             get: fn () => match ($this->eventType->name) {
