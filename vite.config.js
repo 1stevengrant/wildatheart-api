@@ -39,7 +39,10 @@ export default defineConfig({
                     "resources/js/types/generated.d.ts",
                     "../wahastro/src/types/laravel.d.ts",
                 ],
-                pattern: ["app/**/*Data.php"],
+                pattern: [
+                    "app/**/*Data.php",
+                    "resources/js/types/generated.d.ts",
+                ],
                 delay: 500,
             },
         ]),

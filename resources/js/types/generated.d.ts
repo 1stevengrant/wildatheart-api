@@ -196,9 +196,11 @@ dates: string;
 sex: string;
 eventType: string;
 eventTypeImage: string;
-cardDescription: string;
+eventTypeCardDescription: string;
 hostName: string;
 hostAvatar: string | null;
+longitude: number | null;
+latitude: number | null;
 };
 export type EventData = {
 id: string;

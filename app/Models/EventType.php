@@ -150,21 +150,4 @@ class EventType extends BaseModel
             }
         );
     }
-
-    protected function cardDescription(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => match ($this->name) {
-                self::FIRES, self::CAPTIVATING_FIRE => $this->name . ' Fire',
-                self::WAH_EXPERIENCE => 'Restoring the heart of a man',
-                self::WAH_RETREAT => 'Recover your wild heart',
-                self::SURVIVAL_SCHOOL => 'Survival School',
-                self::BECOMING_A_KING_EXPERIENCE => 'Becoming A King',
-                self::BECOMING_A_KING => 'Becoming A King Retreat',
-                self::CAPTIVATING_EXPERIENCE => 'Captivating Experience',
-                self::CAPTIVATING_CORE_RETREAT => 'Captivating Retreat',
-                default => $this->card_description ?? '',
-            }
-        );
-    }
 }
