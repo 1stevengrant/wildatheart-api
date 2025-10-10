@@ -401,7 +401,7 @@ class Event extends BaseModel
     protected function cardDescription(): Attribute
     {
         return Attribute::make(
-            get: fn() => match($this->eventType->name) {
+            get: fn () => match ($this->eventType->name) {
                 EventType::FIRES, EventType::CAPTIVATING_FIRE => $this->name . ' Fire',
                 EventType::WAH_EXPERIENCE => 'Restoring the heart of a man',
                 EventType::WAH_RETREAT => 'Recover your wild heart',
