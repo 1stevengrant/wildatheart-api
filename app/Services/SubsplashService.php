@@ -7,6 +7,8 @@ use Statamic\Facades\Term;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
+use Illuminate\Support\Collection;
+use App\Data\SubsplashMediaItemData;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
@@ -149,206 +151,209 @@ class SubsplashService
 
     public function saveMediaItemAsEntry($mediaItem, $updateSlug = false, $callback = null)
     {
-        $mediaItemID = data_get($mediaItem, 'id');
-        $mediaItemTitle = data_get($mediaItem, 'title');
-        $mediaItemSummary = data_get($mediaItem, 'summary');
-        $mediaItemDescription = data_get($mediaItem, 'description');
-        $mediaItemSubtitle = data_get($mediaItem, 'subtitle');
-        $mediaItemSpeaker = data_get($mediaItem, 'speaker');
-        $mediaItemDurationMilliseconds = data_get($mediaItem, '_embedded.video.duration');
-        $mediaItemDuration = $mediaItemDurationMilliseconds ? gmdate('H:i:s', $mediaItemDurationMilliseconds / 1000) : null;
-        $shortCode = data_get($mediaItem, 'short_code');
-        $iFrameUrl = "https://subsplash.com/+f83c/embed/mi/+{$shortCode}?audio&video&logoWatermark";
+        $mediaData = SubsplashMediaItemData::fromSubsplashResponse($mediaItem);
 
-        $audioDownloadUrl = data_get($mediaItem, '_embedded.audio._embedded.audio-outputs.0._links.download.href');
-        $audioFileName = data_get($mediaItem, '_embedded.audio.title', 'audio.mp3');
-
-        if ($audioDownloadUrl) {
-            $audioDownloadUrl = str_replace('{filename}.mp3', $audioFileName, $audioDownloadUrl);
-        }
-
-        $videoDownloadUrl = data_get($mediaItem, '_embedded.video._embedded.video-outputs.0._links.related.href');
-        $videoFileName = data_get($mediaItem, '_embedded.video.title', 'video.mp4');
-
-        if ($videoDownloadUrl) {
-            $videoDownloadUrl = str_replace('{filename}.mp4', $videoFileName, $videoDownloadUrl);
-        }
-
-        $images = data_get($mediaItem, '_embedded.images');
-        $wideImageUrl = data_get(collect($images)->where('type', 'wide')->first(), '_links.dynamic.href');
-        $squareImageUrl = data_get(collect($images)->where('type', 'square')->first(), '_links.dynamic.href');
-        $bannerImageUrl = data_get(collect($images)->where('type', 'banner')->first(), '_links.dynamic.href');
-
-        if ($wideImageUrl) {
-            $wideImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '800', '450'], $wideImageUrl);
-        }
-        if ($squareImageUrl) {
-            $squareImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '800', '800'], $squareImageUrl);
-        }
-        if ($bannerImageUrl) {
-            $bannerImageUrl = str_replace(['{name}', '{ext}', '{width}', '{height}'], ['image', 'jpg', '1920', '692'], $bannerImageUrl);
-        }
-
-        if (! $mediaItemDuration) {
-            $mediaItemDuration = data_get($mediaItem, '_embedded.audio._embedded.audio-outputs.0.duration', 0);
-        }
-
-        $mediaItemDate = Carbon::parse(data_get($mediaItem, 'date'));
-        $mediaItemDateOnly = $mediaItemDate->format('Y-m-d');
-        $mediaItemSeriesID = data_get($mediaItem, '_embedded.media-series.id');
-        $mediaItemTags = data_get($mediaItem, 'tags', []);
-
-        // Check if the entry already exists
-        $entry = Entry::query()
-            ->where('collection', 'media_item')
-            ->where('id', $mediaItemID)
-            ->orWhere('data->subsplash_media_item_id', $mediaItemID)
-            ->first();
-
-        // Check if custom media item is already associated to this id.
-        $customItem = Entry::query()
-            ->where('collection', 'media_item')
-            ->where('data->subsplash_media_item_id', $mediaItemID)
-            ->whereIn('blueprint', ['custom_media_item', 'experience_session'])
-            ->first();
-        // If this is a custom item, return it.
-        if ((bool) $customItem) {
+        if ($customItem = $this->findCustomMediaItem($mediaData->id)) {
             return $customItem;
         }
 
-        // If the entry does not exist, create it
+        [$entry, $entryCreated] = $this->findOrCreateMediaItemEntry($mediaData);
+
+        if (! $entryCreated && $this->shouldSkipImport($entry, $mediaData, $callback)) {
+            return $entry;
+        }
+
+        $data = $entry->data();
+        $this->populateSubsplashFields($data, $mediaData);
+        $topicIds = $this->processTopicsFromTags($mediaData->tags);
+        $data['topics_subsplash'] = $topicIds;
+
+        if (! $entry->data()->get('override_subsplash_content')) {
+            $this->updateNonOverrideFields($data, $mediaData, $topicIds);
+        }
+
+        $this->handleSeriesAssociation($data, $mediaData);
+
+        if ($entryCreated || $updateSlug) {
+            $entry->slug($this->generateUniqueSlug($entry->id, $mediaData->title, $mediaData->dateOnly, $mediaData->seriesId));
+        }
+
+        $entry->data($data)->save();
+
+        return $entry;
+    }
+
+    /**
+     * Find a custom media item by Subsplash media item ID
+     */
+    private function findCustomMediaItem(string $mediaItemId): ?Entry
+    {
+        return Entry::query()
+            ->where('collection', 'media_item')
+            ->where('data->subsplash_media_item_id', $mediaItemId)
+            ->whereIn('blueprint', ['custom_media_item', 'experience_session'])
+            ->first();
+    }
+
+    /**
+     * Find or create a media item entry
+     */
+    private function findOrCreateMediaItemEntry(SubsplashMediaItemData $mediaData): array
+    {
+        $entry = Entry::query()
+            ->where('collection', 'media_item')
+            ->where('id', $mediaData->id)
+            ->orWhere('data->subsplash_media_item_id', $mediaData->id)
+            ->first();
+
         $entryCreated = false;
+
         if (! $entry) {
             $entry = Entry::make()
                 ->published(true)
                 ->blueprint('subsplash_media_item')
                 ->collection('media_item')
-                ->id(data_get($mediaItem, 'id'))
-                ->date($mediaItemDate)
-                ->slug($mediaItemTitle);
+                ->id($mediaData->id)
+                ->date($mediaData->date)
+                ->slug($mediaData->title);
 
             $entryCreated = true;
         }
 
-        // Check if we need to skip import due to unchanged data
-        if ($entry && ! $entryCreated) {
+        return [$entry, $entryCreated];
+    }
 
-            $lastUpdatedDateString = data_get($mediaItem, 'updated_at');
-            $lastImportedDateString = $entry->data()->get('last_imported');
-            $lastUpdated = Carbon::parse(data_get($mediaItem, 'updated_at'));
-            $lastImported = Carbon::parse($entry->data()->get('last_imported'));
+    /**
+     * Determine if import should be skipped due to unchanged data
+     */
+    private function shouldSkipImport(Entry $entry, SubsplashMediaItemData $mediaData, ?callable $callback): bool
+    {
+        $lastImportedDateString = $entry->data()->get('last_imported');
 
-            // If last_updated from Subsplash is not more recent than our last_updated, skip import
-            if ($lastUpdatedDateString && $lastImportedDateString && $lastImported->gte($lastUpdated)) {
-                // Call callback to notify that this item was skipped
-                if ($callback && is_callable($callback)) {
-                    $callback('skipped', $mediaItemTitle, $lastImported, $lastUpdated);
-                }
-
-                return $entry;
-            }
+        if (! $lastImportedDateString || ! $mediaData->updatedAt) {
+            return false;
         }
 
-        $data = $entry->data();
+        $lastImported = Carbon::parse($lastImportedDateString);
+
+        // If last_updated from Subsplash is not more recent than our last_updated, skip import
+        if ($lastImported->gte($mediaData->updatedAt)) {
+            if ($callback && is_callable($callback)) {
+                $callback('skipped', $mediaData->title, $lastImported, $mediaData->updatedAt);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Populate Subsplash-specific fields in the entry data
+     */
+    private function populateSubsplashFields(Collection $data, SubsplashMediaItemData $mediaData): void
+    {
         $data['last_imported'] = Carbon::now();
-        $data['last_updated'] = Carbon::parse(data_get($mediaItem, 'updated_at'));
-        $data['title_subsplash'] = $mediaItemTitle;
-        $data['subtitle_subsplash'] = $mediaItemSubtitle;
-        $data['description_subsplash'] = $mediaItemSummary;
-        $data['date_subsplash'] = $mediaItemDateOnly;
-        $data['speaker_subsplash'] = $mediaItemSpeaker;
-        $data['video_iframe_url_subsplash'] = $iFrameUrl;
-        $data['video_direct_url_subsplash'] = $videoDownloadUrl;
-        $data['audio_iframe_url_subsplash'] = $iFrameUrl;
-        $data['audio_direct_url_subsplash'] = $audioDownloadUrl;
-        $data['duration_subsplash'] = $mediaItemDuration;
-        $data['images_subsplash'] = collect($images)->filter(function ($image) {
-            return isset($image['_links']['related']['href']);
-        })->map(function ($image) {
+        $data['last_updated'] = $mediaData->updatedAt;
+        $data['title_subsplash'] = $mediaData->title;
+        $data['subtitle_subsplash'] = $mediaData->subtitle;
+        $data['description_subsplash'] = $mediaData->summary;
+        $data['date_subsplash'] = $mediaData->dateOnly;
+        $data['speaker_subsplash'] = $mediaData->speaker;
+        $data['video_iframe_url_subsplash'] = $mediaData->iframeUrl();
+        $data['video_direct_url_subsplash'] = $mediaData->videoDownloadUrl;
+        $data['audio_iframe_url_subsplash'] = $mediaData->iframeUrl();
+        $data['audio_direct_url_subsplash'] = $mediaData->audioDownloadUrl;
+        $data['duration_subsplash'] = $mediaData->duration;
+        $data['images_subsplash'] = $this->processSubsplashImages($mediaData->images);
+    }
 
-            // Import image to our library if not already imported
-            $sourceUrl = data_get($image, '_links.related.href');
+    /**
+     * Process Subsplash images and import them as assets
+     */
+    private function processSubsplashImages(array $images): array
+    {
+        return collect($images)
+            ->filter(fn($image) => isset($image['_links']['related']['href']))
+            ->map(function ($image) {
+                $sourceUrl = data_get($image, '_links.related.href');
+                $statamicAsset = null;
 
-            if ($sourceUrl) {
-                $statamicAsset = $this->saveImageAsAsset($image);
-            }
-
-            $imageData = [
-                'id' => data_get($image, 'id'),
-                'type' => 'new_image',
-                'enabled' => true,
-                'image_id_subsplash' => data_get($image, 'id'),
-                'image_type_subsplash' => data_get($image, 'type'),
-                'image_source_url_subsplash' => data_get($image, '_links.related.href'),
-                'image_dynamic_url_subsplash' => data_get($image, '_links.dynamic.href'),
-            ];
-
-            if (isset($statamicAsset)) {
-                $imageData['statamic_asset_path'] = $statamicAsset->path();
-            }
-
-            return $imageData;
-        })->toArray();
-
-        // Process topics from tags
-        $topicIds = $this->processTopicsFromTags($mediaItemTags);
-        $data['topics_subsplash'] = $topicIds;
-
-        // if the entry exists and the override subsplash content toggle is set, don't update it.
-        if ($entry && ! $entry->data()->get('override_subsplash_content')) {
-            $data['title'] = $mediaItemTitle;
-            $data['speaker'] = $mediaItemSpeaker;
-            $data['subtitle'] = $mediaItemSubtitle;
-            $data['subsplash_media_item_id'] = $mediaItemID;
-            $data['description'] = $mediaItemSummary;
-            $data['visible_date'] = $mediaItemDateOnly;
-            $data['video_iframe_url'] = $iFrameUrl;
-            $data['audio_direct_url'] = $audioDownloadUrl;
-            $data['audio_iframe_url'] = $iFrameUrl;
-            $data['video_direct_url'] = $videoDownloadUrl;
-            $data['topics'] = $topicIds; // Update the main topics field with processed topics
-            $images = [];
-            foreach ($data['images_subsplash'] as $image) {
-                if (! isset($image['statamic_asset_path'])) {
-                    dump($image);
-
-                    continue;
+                if ($sourceUrl) {
+                    $statamicAsset = $this->saveImageAsAsset($image);
                 }
-                $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
+
+                $imageData = [
+                    'id' => data_get($image, 'id'),
+                    'type' => 'new_image',
+                    'enabled' => true,
+                    'image_id_subsplash' => data_get($image, 'id'),
+                    'image_type_subsplash' => data_get($image, 'type'),
+                    'image_source_url_subsplash' => data_get($image, '_links.related.href'),
+                    'image_dynamic_url_subsplash' => data_get($image, '_links.dynamic.href'),
+                ];
+
+                if ($statamicAsset) {
+                    $imageData['statamic_asset_path'] = $statamicAsset->path();
+                }
+
+                return $imageData;
+            })
+            ->toArray();
+    }
+
+    /**
+     * Update fields that should not be overridden by Subsplash content
+     */
+    private function updateNonOverrideFields(Collection $data, SubsplashMediaItemData $mediaData, array $topicIds): void
+    {
+        $data['title'] = $mediaData->title;
+        $data['speaker'] = $mediaData->speaker;
+        $data['subtitle'] = $mediaData->subtitle;
+        $data['subsplash_media_item_id'] = $mediaData->id;
+        $data['description'] = $mediaData->summary;
+        $data['visible_date'] = $mediaData->dateOnly;
+        $data['video_iframe_url'] = $mediaData->iframeUrl();
+        $data['audio_direct_url'] = $mediaData->audioDownloadUrl;
+        $data['audio_iframe_url'] = $mediaData->iframeUrl();
+        $data['video_direct_url'] = $mediaData->videoDownloadUrl;
+        $data['topics'] = $topicIds;
+
+        // Map images from subsplash data to main images field
+        $images = [];
+        foreach ($data['images_subsplash'] as $image) {
+            if (! isset($image['statamic_asset_path'])) {
+                dump($image);
+
+                continue;
             }
-            $data['images'] = $images;
+            $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];
+        }
+        $data['images'] = $images;
+    }
+
+    /**
+     * Handle series association for the media item
+     */
+    private function handleSeriesAssociation(Collection $data, SubsplashMediaItemData $mediaData): void
+    {
+        if (! $mediaData->seriesId) {
+            return;
         }
 
-        // If there is an associated series, associate it to the entry.
-        if ($mediaItemSeriesID) {
-
-            // Use the series ID to see if this item is a podcast.
-            if ($this->isPodcast($mediaItemSeriesID)) {
-                $data['media_type'] = ['podcast-episode'];
-            }
-
-            $mediaSeries = $this->getSeriesInStatamic($mediaItemSeriesID);
-
-            if (! $mediaSeries) {
-                $mediaSeries = $this->getMediaSeries($mediaItemSeriesID);
-                $this->saveMediaSeriesAsEntry($mediaSeries);
-            }
-
-            $data['series'] = "entry::$mediaItemSeriesID";
+        // Use the series ID to see if this item is a podcast
+        if ($this->isPodcast($mediaData->seriesId)) {
+            $data['media_type'] = ['podcast-episode'];
         }
 
-        // Update to uniqe slug if entry is just now being created
-        // or if $updateSlug is true.
-        if ($entryCreated || $updateSlug) {
-            $uniqueSlug = $this->generateUniqueSlug($entry->id, $mediaItemTitle, $mediaItemDateOnly, $mediaItemSeriesID);
-            $entry->slug($uniqueSlug);
+        $mediaSeries = $this->getSeriesInStatamic($mediaData->seriesId);
+
+        if (! $mediaSeries) {
+            $mediaSeries = $this->getMediaSeries($mediaData->seriesId);
+            $this->saveMediaSeriesAsEntry($mediaSeries);
         }
 
-        $entry
-            ->data($data)
-            ->save();
-
-        return $entry;
+        $data['series'] = "entry::{$mediaData->seriesId}";
     }
 
     public function saveMediaSeriesAsEntry($mediaSeries)
