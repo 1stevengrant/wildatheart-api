@@ -18,7 +18,7 @@ class EventData extends Data
         public string $eventGroupType,
         public string $eventTypeImage,
         public string $eventTypeDescription,
-        public array $eventTypePhotos = [],
+        public array $eventTypePhotos,
         public string $hostName,
         public ?string $hostAvatar,
     ) {}

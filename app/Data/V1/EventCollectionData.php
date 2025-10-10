@@ -10,20 +10,18 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class EventCollectionData extends Data
 {
     public function __construct(
-        public string  $id,
-        public string  $location,
-        public string  $dates,
-        public string  $sex,
-        public string  $eventType,
-        public string  $eventTypeImage,
-        public string  $cardDescription,
-        public string  $hostName,
+        public string $id,
+        public string $location,
+        public string $dates,
+        public string $sex,
+        public string $eventType,
+        public string $eventTypeImage,
+        public string $cardDescription,
+        public string $hostName,
         public ?string $hostAvatar,
         public ?float $longitude,
         public ?float $latitude,
-    )
-    {
-    }
+    ) {}
 
     public static function fromEvent(Event $event): self
     {
