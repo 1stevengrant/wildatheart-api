@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Integrations\Transistor\TransistorConnector;
 use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
-use Illuminate\Support\Facades\Log;
 
 class TransistorService
 {

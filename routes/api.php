@@ -11,6 +11,9 @@ use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
+use App\Http\Controllers\API\V1\Navs\AllNavsController;
+use App\Http\Controllers\API\V1\Navs\MobileNavController;
+use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
@@ -32,8 +35,15 @@ use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('stats', StatsController::class)->name('stats');
+
     Route::prefix('webhooks')->name('webhooks.')->group(function () {
         Route::post('refresh-daily-readings', [DailyReadingController::class, 'refreshDailyReadings'])->name('refreshDailyReadings');
+    });
+
+    Route::prefix('navs')->name('navs.')->group(function () {
+        Route::get('all', AllNavsController::class)->name('all');
+        Route::get('desktop', DesktopNavController::class)->name('desktop');
+        Route::get('mobile', MobileNavController::class)->name('mobile');
     });
 });
 
