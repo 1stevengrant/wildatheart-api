@@ -19,6 +19,8 @@ class EventCollectionData extends Data
         public string  $cardDescription,
         public string  $hostName,
         public ?string $hostAvatar,
+        public ?float $longitude,
+        public ?float $latitude,
     )
     {
     }
@@ -35,6 +37,8 @@ class EventCollectionData extends Data
             cardDescription: $event->cardDescription,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
+            longitude: $event->longitude,
+            latitude: $event->latitude,
         );
     }
 }
