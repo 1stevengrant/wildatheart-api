@@ -10,7 +10,17 @@
       "Bash(npm install:*)",
       "Bash(npm run lint)",
       "Bash(npx eslint:*)",
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "mcp__laravel-boost__tinker",
+      "Bash(php artisan statamic:stache:clear:*)",
+      "Bash(php artisan:*)",
+      "Bash(php artisan config:clear:*)",
+      "Bash(php artisan view:clear:*)",
+      "mcp__laravel-boost__get-absolute-url",
+      "Bash(cat:*)",
+      "Bash(curl:*)",
+      "Bash(composer install:*)",
+      "Bash(composer update:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

@@ -47,7 +47,7 @@
         "squirephp/countries-en": "^3.5",
         "statamic-rad-pack/runway": "^8.3",
         "statamic/cms": "^5.6",
-        "statamic/eloquent-driver": "^4.17",
+        "statamic/eloquent-driver": "4.x-dev",
         "stevebauman/purify": "^6.2",
         "symfony/http-client": "^7.0",
         "symfony/postmark-mailer": "^7.0",
@@ -142,6 +142,10 @@
         {
             "type": "path",
             "url": "addons/ghijk/wild-at-heart"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/wild-at-heart/eloquent-driver"
         }
     ]
 }
