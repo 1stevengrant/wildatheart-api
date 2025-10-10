@@ -1,94 +1,277 @@
-title: 'Subsplash Media Item'
+title: "Subsplash Media Ite"
 tabs:
   main:
     display: Main
     sections:
-      -
+      - display: ""
         fields:
-          -
-            handle: title
+          - handle: data_is_imported_from_subsplash
+            field:
+              type: section
+              instructions: 'To change the content on this item, toggle "Overide Subsplash Content" on.'
+              unless:
+                override_subsplash_content: "equals true"
+          - handle: override_subsplash_content
+            field:
+              type: toggle
+              display: "Override Subsplash Content"
+              width: 50
+      - display: "Basic Info"
+        fields:
+          - handle: title
             field:
               type: text
               required: true
               validate:
                 - required
-          -
-            handle: subsplash_media_item_id
-            field:
-              type: text
-              display: 'Subsplash Media Item ID'
-          -
-            handle: vimeo_id
-            field:
-              type: text
-              display: 'Vimeo ID'
-              instructions: 'If a Vimeo ID is provided, it will override the Subsplash player.'
-          -
-            handle: is_vertical_video
-            field:
-              type: toggle
-              display: 'Vertical Video?'
-              instructions: 'Modifies layout slightly for vertical videos.'
-          -
-            handle: drupal_url
-            field:
-              type: text
-              display: 'Drupal URL'
-          -
-            handle: override_subsplash_content
-            field:
-              type: toggle
-              display: 'Override Subsplash Content'
-          -
-            handle: group_field
-            field:
-              type: group
-              display: 'Override Subsplash Content'
               if:
-                override_subsplash_content: 'equals true'
-              fields:
-                -
-                  handle: subtitle
-                  field:
-                    type: text
-                    display: Subtitle
-                -
-                  handle: description
-                  field:
-                    type: bard
-                    display: Description
-                -
-                  handle: topics
-                  field:
-                    taxonomies:
-                      - topics
-                    type: terms
-                    display: Topics
-          -
-            handle: series
+                override_subsplash_content: "equals true"
+          - handle: subtitle
             field:
-              collections:
-                - media_series
-              type: link
-              display: Series
-      -
-        display: SEO
+              type: text
+              display: Subtitle
+              width: 50
+              if:
+                override_subsplash_content: "equals true"
+          - handle: description
+            field:
+              type: bard
+              display: Description
+              remove_empty_nodes: false
+              if:
+                override_subsplash_content: "equals true"
+      - display: Tags
         fields:
-          -
-            import: seo
+          - handle: speaker
+            field:
+              type: text
+              display: Speaker
+              if:
+                override_subsplash_content: "equals true"
+          - handle: topics
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: Topics
+              mode: select
+              if:
+                override_subsplash_content: "equals true"
+      - display: Video
+        fields:
+          - handle: video_iframe_url
+            field:
+              type: link
+              display: "Video IFrame URL"
+              width: 50
+              if:
+                override_subsplash_content: "equals true"
+          - handle: video_direct_url
+            field:
+              type: link
+              display: "Video Direct URL"
+              width: 50
+              if:
+                override_subsplash_content: "equals true"
+          - handle: vimeo_id
+            field:
+              type: text
+              display: "Vimeo ID"
+              instructions: "If a Vimeo ID is provided, it will override the Subsplash player."
+          - handle: is_vertical_video
+            field:
+              type: toggle
+              display: "Vertical Video?"
+              instructions: "Modifies layout slightly for vertical videos."
+              if:
+                override_subsplash_content: "equals true"
+      - display: Audio
+        fields:
+          - handle: audio_iframe_url
+            field:
+              type: link
+              display: "Audio IFrame URL"
+              width: 50
+              if:
+                override_subsplash_content: "equals true"
+          - handle: audio_direct_url
+            field:
+              type: link
+              display: "Audio Direct URL"
+              width: 50
+              if:
+                override_subsplash_content: "equals true"
+      - display: Document
+        fields:
+          - handle: document_title
+            field:
+              type: text
+              display: "Document Title"
+              if:
+                override_subsplash_content: "equals true"
+          - handle: document_direct_url
+            field:
+              type: link
+              display: "Document Direct URL"
+              if:
+                override_subsplash_content: "equals true"
+      - display: SEO
+        fields:
+          - import: seo
+  subsplash_import:
+    display: "Subsplash Import"
+    sections:
+      - display: "Import Details"
+        fields:
+          - handle: subsplash_media_item_id
+            field:
+              type: text
+              display: "Subsplash Media Item ID"
+              width: 50
+              instructions: "Enter the ID for the media item you want to sync from."
+          - handle: last_imported
+            field:
+              time_enabled: true
+              type: date
+              display: "Last Imported"
+              width: 50
+              visibility: read_only
+          - handle: last_updated
+            field:
+              time_enabled: true
+              type: date
+              display: "Last Updated (Subsplash)"
+              width: 50
+              visibility: read_only
+      - display: "Basic Info"
+        fields:
+          - handle: title_subsplash
+            field:
+              type: text
+              display: "Title (Subsplash)"
+              visibility: read_only
+          - handle: subtitle_subsplash
+            field:
+              type: text
+              display: "Subtitle (Subsplash)"
+              width: 50
+              visibility: read_only
+          - handle: date_subsplash
+            field:
+              type: date
+              display: "Date (Subsplash)"
+              width: 50
+              visibility: read_only
+          - handle: description_subsplash
+            field:
+              type: bard
+              display: "Description (Subsplash)"
+              remove_empty_nodes: false
+              visibility: read_only
+          - handle: images_subsplash
+            field:
+              collapse: true
+              type: replicator
+              display: "Images (Subsplash)"
+              sets:
+                new_set_group:
+                  display: "New Set Group"
+                  sets:
+                    new_image:
+                      display: "New Image"
+                      fields:
+                        - handle: image_id_subsplash
+                          field:
+                            type: text
+                            display: "Image ID (Subsplash)"
+                        - handle: image_type_subsplash
+                          field:
+                            type: text
+                            display: "Image Type (Subsplash)"
+                        - handle: image_source_url_subsplash
+                          field:
+                            type: link
+                            display: "Image Source URL (Subsplash)"
+                        - handle: image_dynamic_url_subsplash
+                          field:
+                            type: text
+                            display: "Image Dynamic Url (Subsplash)"
+      - display: Tags
+        fields:
+          - handle: speaker_subsplash
+            field:
+              type: text
+              display: "Speaker (Subsplash)"
+              visibility: read_only
+          - handle: topics_subsplash
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: "Topics (Subsplash)"
+              mode: select
+              visibility: read_only
+      - display: Video
+        fields:
+          - handle: video_iframe_url_subsplash
+            field:
+              type: link
+              display: "Video IFrame URL (Subsplash)"
+              width: 50
+              visibility: read_only
+          - handle: video_direct_url_subsplash
+            field:
+              type: link
+              display: "Video Direct URL (Subsplash)"
+              width: 50
+      - display: Audio
+        fields:
+          - handle: audio_iframe_url_subsplash
+            field:
+              type: link
+              display: "Audio IFrame URL (Subsplash)"
+              width: 50
+          - handle: audio_direct_url_subsplash
+            field:
+              type: link
+              display: "Audio Direct URL (Subsplash)"
+              width: 50
+              visibility: read_only
+      - display: Document
+        fields:
+          - handle: document_title_subsplash
+            field:
+              type: text
+              display: "Document Title (Subsplash)"
+              visibility: read_only
+          - handle: document_direct_url_subsplash
+            field:
+              type: link
+              display: "Document Direct URL (Subsplash)"
+              visibility: read_only
+      - display: Meta
+        fields:
+          - handle: duration_subsplash
+            field:
+              type: text
+              display: "Duration (Subsplash)"
+              visibility: read_only
+  custom_layout:
+    display: "Custom Layout"
+    sections:
+      - display: "Page Design"
+        fields:
+          - import: blocks
   sidebar:
     display: Sidebar
     sections:
-      -
-        fields:
-          -
-            handle: slug
+      - fields:
+          - handle: slug
             field:
               type: slug
               localizable: true
-              validate: 'max:200'
-          -
-            handle: date
+              validate: "max:200"
+          - handle: date
             field:
               type: date
               required: true
@@ -96,28 +279,24 @@ tabs:
               validate:
                 - required
               time_enabled: true
-          -
-            handle: content_type
+          - handle: series
+            field:
+              collections:
+                - media_series
+              type: link
+              display: Series
+          - handle: content_type
             field:
               type: terms
               taxonomies:
                 - content_type
-              display: 'Content Type'
+              display: "Content Type"
               mode: select
-          -
-            handle: topics
-            field:
-              type: terms
-              taxonomies:
-                - topics
-              display: Topics
-              mode: select
-          -
-            handle: media_type
+          - handle: media_type
             field:
               type: terms
               taxonomies:
                 - media_type
-              display: 'Media Type'
+              display: "Media Type"
               mode: select
               max_items: 1
