@@ -198,7 +198,7 @@ const ConnectWithHostPage = () => {
                                     />
                                     <CountryDropdown
                                         value={form.data.country}
-                                        classes={selectClasses}
+                                        className={selectClasses}
                                         onChange={(val) =>
                                             form.setData("country", val)
                                         }
@@ -213,7 +213,7 @@ const ConnectWithHostPage = () => {
                                         required
                                     />
                                     <RegionDropdown
-                                        classes={selectClasses}
+                                        className={selectClasses}
                                         country={form.data.country}
                                         value={form.data.state}
                                         onChange={(val) =>
