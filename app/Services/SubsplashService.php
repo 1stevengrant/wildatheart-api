@@ -149,7 +149,7 @@ class SubsplashService
         return $mediaItems;
     }
 
-    public function saveMediaItemAsEntry($mediaItem, $updateSlug = false, $callback = null)
+    public function saveMediaItemAsEntry($mediaItem, $updateSlug = false, $force = false, $callback = null)
     {
         $mediaData = SubsplashMediaItemData::fromSubsplashResponse($mediaItem);
 
@@ -159,7 +159,7 @@ class SubsplashService
 
         [$entry, $entryCreated] = $this->findOrCreateMediaItemEntry($mediaData);
 
-        if (! $entryCreated && $this->shouldSkipImport($entry, $mediaData, $callback)) {
+        if (! $entryCreated && ! $force && $this->shouldSkipImport($entry, $mediaData, $callback)) {
             return $entry;
         }
 

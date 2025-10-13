@@ -16,6 +16,7 @@ class GetLatestSubsplashMedia extends Command
     protected function configure()
     {
         $this->addOption('full', null, null, 'Perform a full import of all media items');
+        $this->addOption('force', null, null, 'Force retrieval regardless of when the most recent change was');
     }
 
     public function __construct(private SubsplashService $subsplash)
@@ -86,7 +87,9 @@ class GetLatestSubsplashMedia extends Command
             // Optional: Display current item in progress bar
             $bar->setMessage("Processing: {$item['title']}");
 
-            $this->subsplash->saveMediaItemAsEntry($item, false, function ($status, $title, $currentUpdated, $lastUpdated) {
+            $item = $this->subsplash->getMediaItem($item['id']);
+
+            $this->subsplash->saveMediaItemAsEntry($item, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
                     $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
                         ? $lastUpdated->format('Y-m-d H:i:s')
@@ -136,7 +139,7 @@ class GetLatestSubsplashMedia extends Command
             $bar->start();
 
             // Save the media item as an entry
-            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem, false, function ($status, $title, $currentUpdated, $lastUpdated) {
+            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
                     $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
                         ? $lastUpdated->format('Y-m-d H:i:s')
