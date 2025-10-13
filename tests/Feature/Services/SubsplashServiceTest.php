@@ -98,11 +98,43 @@ describe('saveMediaItemAsEntry', function () {
       $callbackAction = $action;
     };
 
-    $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, $callback);
+    $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, false, $callback);
 
     expect($callbackCalled)->toBeTrue()
       ->and($callbackAction)->toBe('skipped')
       ->and($entry->id())->toBe('test-media-item-123');
+  });
+
+  it('forces import when force flag is true even when data has not changed', function () {
+    $mediaItem = createMediaItemData();
+    $mediaItem['updated_at'] = '2024-01-01T10:00:00Z';
+
+    $oldLastImported = Carbon::parse('2024-01-02')->toIso8601String();
+    $existingEntry = Entry::make()
+      ->collection('media_item')
+      ->blueprint('subsplash_media_item')
+      ->id('test-media-item-123')
+      ->slug('test-media-item')
+      ->published(true)
+      ->data([
+        'title' => 'Test Media Item',
+        'subsplash_media_item_id' => 'test-media-item-123',
+        'last_imported' => $oldLastImported, // After updated_at
+        'last_updated' => Carbon::parse('2024-01-01T10:00:00Z')->toIso8601String(),
+      ])
+      ->save();
+
+    $callbackCalled = false;
+    $callback = function ($action) use (&$callbackCalled) {
+      $callbackCalled = true;
+    };
+
+    $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, true, $callback);
+
+    // Callback should NOT be called since we're forcing the import
+    expect($callbackCalled)->toBeFalse()
+      ->and($entry->id())->toBe('test-media-item-123')
+      ->and($entry->data()->get('last_imported'))->not->toBe($oldLastImported); // Should have a new last_imported timestamp
   });
 
   it('returns custom media item without updating if it exists', function () {
@@ -298,7 +330,7 @@ describe('saveMediaItemAsEntry', function () {
       $callbackCalls[] = $args;
     };
 
-    $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, $callback);
+    $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, false, $callback);
 
     expect($callbackCalls)->toHaveCount(1)
       ->and($callbackCalls[0][0])->toBe('skipped')
