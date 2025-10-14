@@ -142,6 +142,10 @@
         {
             "type": "path",
             "url": "addons/ghijk/wild-at-heart"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/wild-at-heart/eloquent-driver"
         }
     ]
 }

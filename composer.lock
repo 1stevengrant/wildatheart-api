@@ -9413,16 +9413,17 @@
                 "phpunit/phpunit": "^10.5.35 || ^11.0",
                 "spatie/laravel-ray": "^1.40"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
+                "statamic": {
+                    "name": "Eloquent Driver",
+                    "description": "Allows you to store Statamic data in a database."
+                },
                 "laravel": {
                     "providers": [
                         "Statamic\\Eloquent\\ServiceProvider"
                     ]
-                },
-                "statamic": {
-                    "name": "Eloquent Driver",
-                    "description": "Allows you to store Statamic data in a database."
                 }
             },
             "autoload": {
@@ -9430,7 +9431,16 @@
                     "Statamic\\Eloquent\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -17385,7 +17395,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ghijk/wild-at-heart": 20
+        "ghijk/wild-at-heart": 20,
+        "statamic/eloquent-driver": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
