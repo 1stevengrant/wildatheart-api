@@ -3,9 +3,9 @@
 namespace App\Jobs\Transistor;
 
 use App\Services\TransistorService;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Jobs\Cloudflare\TriggerAstroBuildJob;
 
 class RefreshDailyReadingsJob implements ShouldQueue
 {
@@ -27,7 +27,8 @@ class RefreshDailyReadingsJob implements ShouldQueue
         $transistorService->refreshEpisodeList('wildatheart-daily', 'draft');
 
         if ($this->rebuildAstro) {
-            Http::post('https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/60bfbe99-ab1b-44e2-8856-d5eeb228bb9a');
+            // Dispatch the Cloudflare webhook after 1 hour
+            TriggerAstroBuildJob::dispatch()->delay(now()->addHour());
         }
     }
 }
