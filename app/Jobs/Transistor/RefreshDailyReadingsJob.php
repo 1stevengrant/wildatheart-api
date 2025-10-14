@@ -17,10 +17,6 @@ class RefreshDailyReadingsJob implements ShouldQueue
 
     public function handle(TransistorService $transistorService): void
     {
-        if ($this->rebuildAstro) {
-            // Wait a minute to ensure Transistors cache is updated.
-            sleep(60);
-        }
 
         $transistorService->refreshEpisodeList('wildatheart-daily', 'published');
         $transistorService->refreshEpisodeList('wildatheart-daily', 'scheduled');
