@@ -16,15 +16,6 @@ class RefreshDailyReadingsJob implements ShouldQueue
         public bool $rebuildAstro = false,
     ) {}
 
-    public function middleware(): array
-    {
-        return [
-            (new WithoutOverlapping)
-                ->releaseAfter(60) // Release lock after 60 seconds if job fails
-                ->expireAfter(180) // Maximum time job can hold the lock (3 minutes)
-        ];
-    }
-
     public function handle(TransistorService $transistorService): void
     {
 
