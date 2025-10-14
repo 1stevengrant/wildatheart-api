@@ -182,7 +182,7 @@ const SendGiftPage = () => {
                                     <CountryDropdown
                                         priorityOptions={priorityCountries}
                                         value={data.country}
-                                        classes={selectClasses}
+                                        className={selectClasses}
                                         onChange={(val) => {
                                             setData("country", val);
                                         }}
@@ -214,7 +214,7 @@ const SendGiftPage = () => {
                                             required
                                         />
                                         <RegionDropdown
-                                            classes={selectClasses}
+                                            className={selectClasses}
                                             country={data.country}
                                             value={data.state}
                                             onChange={(val) =>
