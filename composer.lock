@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "92795d5d4eb0bdb79817d568b7900334",
+    "content-hash": "f851cdd2ef13a9fa2d88df5fb6c280ae",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -295,16 +295,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.356.35",
+            "version": "3.356.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "09f1e434cbeed5b916f572369b9f09389b13a5c0"
+                "reference": "b53c1e580b025da5e068106330125894a347cc75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/09f1e434cbeed5b916f572369b9f09389b13a5c0",
-                "reference": "09f1e434cbeed5b916f572369b9f09389b13a5c0",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b53c1e580b025da5e068106330125894a347cc75",
+                "reference": "b53c1e580b025da5e068106330125894a347cc75",
                 "shasum": ""
             },
             "require": {
@@ -386,9 +386,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.35"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.38"
             },
-            "time": "2025-10-08T18:06:42+00:00"
+            "time": "2025-10-13T18:05:18+00:00"
         },
         {
             "name": "brick/math",
@@ -1270,7 +1270,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-staging",
+            "version": "dev-chore/update-eloquent-driver",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",
@@ -1989,16 +1989,16 @@
         },
         {
             "name": "james-heinrich/getid3",
-            "version": "v1.9.23",
+            "version": "v1.9.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "06c7482532ff2b3f9111b011d880ca6699c8542b"
+                "reference": "1e11b9b6eb468b522fe604a42a9fdc8ee759bf8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/06c7482532ff2b3f9111b011d880ca6699c8542b",
-                "reference": "06c7482532ff2b3f9111b011d880ca6699c8542b",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/1e11b9b6eb468b522fe604a42a9fdc8ee759bf8a",
+                "reference": "1e11b9b6eb468b522fe604a42a9fdc8ee759bf8a",
                 "shasum": ""
             },
             "require": {
@@ -2050,9 +2050,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
-                "source": "https://github.com/JamesHeinrich/getID3/tree/v1.9.23"
+                "source": "https://github.com/JamesHeinrich/getID3/tree/v1.9.24"
             },
-            "time": "2023-10-19T13:18:49+00:00"
+            "time": "2025-10-09T17:48:17+00:00"
         },
         {
             "name": "jean85/pretty-package-versions",
@@ -2449,16 +2449,16 @@
         },
         {
             "name": "laravel/horizon",
-            "version": "v5.35.2",
+            "version": "v5.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/horizon.git",
-                "reference": "11f9a980d84de56402dec19cf1e78050b211fcef"
+                "reference": "eccc804c9da78064c97a8f506bb148f05c816409"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/11f9a980d84de56402dec19cf1e78050b211fcef",
-                "reference": "11f9a980d84de56402dec19cf1e78050b211fcef",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/eccc804c9da78064c97a8f506bb148f05c816409",
+                "reference": "eccc804c9da78064c97a8f506bb148f05c816409",
                 "shasum": ""
             },
             "require": {
@@ -2523,22 +2523,22 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/horizon/issues",
-                "source": "https://github.com/laravel/horizon/tree/v5.35.2"
+                "source": "https://github.com/laravel/horizon/tree/v5.36.0"
             },
-            "time": "2025-10-08T12:50:15+00:00"
+            "time": "2025-10-10T13:44:39+00:00"
         },
         {
             "name": "laravel/nightwatch",
-            "version": "v1.14.1",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/nightwatch.git",
-                "reference": "2c8c169aef8bd0ec003a4060359da235af018be9"
+                "reference": "266b424ebdd663fabb56ace6005a6894170f41dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/nightwatch/zipball/2c8c169aef8bd0ec003a4060359da235af018be9",
-                "reference": "2c8c169aef8bd0ec003a4060359da235af018be9",
+                "url": "https://api.github.com/repos/laravel/nightwatch/zipball/266b424ebdd663fabb56ace6005a6894170f41dc",
+                "reference": "266b424ebdd663fabb56ace6005a6894170f41dc",
                 "shasum": ""
             },
             "require": {
@@ -2613,7 +2613,7 @@
                 "issues": "https://github.com/laravel/nightwatch/issues",
                 "source": "https://github.com/laravel/nightwatch"
             },
-            "time": "2025-10-07T00:17:44+00:00"
+            "time": "2025-10-10T02:41:23+00:00"
         },
         {
             "name": "laravel/pail",
@@ -2842,16 +2842,16 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v2.0.5",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "3832547db6e0e2f8bb03d4093857b378c66eceed"
+                "reference": "038ce42edee619599a1debb7e81d7b3759492819"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/3832547db6e0e2f8bb03d4093857b378c66eceed",
-                "reference": "3832547db6e0e2f8bb03d4093857b378c66eceed",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/038ce42edee619599a1debb7e81d7b3759492819",
+                "reference": "038ce42edee619599a1debb7e81d7b3759492819",
                 "shasum": ""
             },
             "require": {
@@ -2899,7 +2899,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2025-09-22T17:29:40+00:00"
+            "time": "2025-10-09T13:42:30+00:00"
         },
         {
             "name": "laravel/slack-notification-channel",
@@ -8340,16 +8340,16 @@
         },
         {
             "name": "spatie/laravel-ray",
-            "version": "1.40.2",
+            "version": "1.40.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-ray.git",
-                "reference": "1d1b31eb83cb38b41975c37363c7461de6d86b25"
+                "reference": "cd487424e6727984a87f3044abdaee3490856822"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-ray/zipball/1d1b31eb83cb38b41975c37363c7461de6d86b25",
-                "reference": "1d1b31eb83cb38b41975c37363c7461de6d86b25",
+                "url": "https://api.github.com/repos/spatie/laravel-ray/zipball/cd487424e6727984a87f3044abdaee3490856822",
+                "reference": "cd487424e6727984a87f3044abdaee3490856822",
                 "shasum": ""
             },
             "require": {
@@ -8412,7 +8412,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-ray/issues",
-                "source": "https://github.com/spatie/laravel-ray/tree/1.40.2"
+                "source": "https://github.com/spatie/laravel-ray/tree/1.40.3"
             },
             "funding": [
                 {
@@ -8424,7 +8424,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2025-03-27T08:26:55+00:00"
+            "time": "2025-10-13T10:52:45+00:00"
         },
         {
             "name": "spatie/laravel-slack-alerts",
@@ -9390,16 +9390,16 @@
         },
         {
             "name": "statamic/eloquent-driver",
-            "version": "4.x-dev",
+            "version": "v4.33.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:wild-at-heart/eloquent-driver.git",
-                "reference": "33d497ac33cbcf495136cec9cb4cfb9615393e09"
+                "url": "https://github.com/statamic/eloquent-driver.git",
+                "reference": "d03371d6a546d612e81acc3ae10e7917b549e55e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wild-at-heart/eloquent-driver/zipball/33d497ac33cbcf495136cec9cb4cfb9615393e09",
-                "reference": "33d497ac33cbcf495136cec9cb4cfb9615393e09",
+                "url": "https://api.github.com/repos/statamic/eloquent-driver/zipball/d03371d6a546d612e81acc3ae10e7917b549e55e",
+                "reference": "d03371d6a546d612e81acc3ae10e7917b549e55e",
                 "shasum": ""
             },
             "require": {
@@ -9445,7 +9445,11 @@
                 "MIT"
             ],
             "description": "Allows you to store Statamic data in a database.",
-            "time": "2025-10-09T21:20:56+00:00"
+            "support": {
+                "issues": "https://github.com/statamic/eloquent-driver/issues",
+                "source": "https://github.com/statamic/eloquent-driver/tree/v4.33.0"
+            },
+            "time": "2025-10-14T05:56:38+00:00"
         },
         {
             "name": "statamic/stringy",
@@ -14463,7 +14467,7 @@
         },
         {
             "name": "illuminate/json-schema",
-            "version": "v12.33.0",
+            "version": "v12.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/json-schema.git",
@@ -14509,16 +14513,16 @@
         },
         {
             "name": "laravel/boost",
-            "version": "v1.3.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/boost.git",
-                "reference": "ef8800843efc581965c38393adb63ba336dc3979"
+                "reference": "8d2dedf7779c2e175a02a176dec38e6f9b35352b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/boost/zipball/ef8800843efc581965c38393adb63ba336dc3979",
-                "reference": "ef8800843efc581965c38393adb63ba336dc3979",
+                "url": "https://api.github.com/repos/laravel/boost/zipball/8d2dedf7779c2e175a02a176dec38e6f9b35352b",
+                "reference": "8d2dedf7779c2e175a02a176dec38e6f9b35352b",
                 "shasum": ""
             },
             "require": {
@@ -14527,7 +14531,7 @@
                 "illuminate/contracts": "^10.49.0|^11.45.3|^12.28.1",
                 "illuminate/routing": "^10.49.0|^11.45.3|^12.28.1",
                 "illuminate/support": "^10.49.0|^11.45.3|^12.28.1",
-                "laravel/mcp": "^0.2.0",
+                "laravel/mcp": "^0.2.0|^0.3.0",
                 "laravel/prompts": "0.1.25|^0.3.6",
                 "laravel/roster": "^0.2.8",
                 "php": "^8.1"
@@ -14571,20 +14575,20 @@
                 "issues": "https://github.com/laravel/boost/issues",
                 "source": "https://github.com/laravel/boost"
             },
-            "time": "2025-09-30T09:34:43+00:00"
+            "time": "2025-10-14T01:13:19+00:00"
         },
         {
             "name": "laravel/mcp",
-            "version": "v0.2.1",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/mcp.git",
-                "reference": "0ecf0c04b20e5946ae080e8d67984d5c555174b0"
+                "reference": "4e1389eedb4741a624e26cc3660b31bae04c4342"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/mcp/zipball/0ecf0c04b20e5946ae080e8d67984d5c555174b0",
-                "reference": "0ecf0c04b20e5946ae080e8d67984d5c555174b0",
+                "url": "https://api.github.com/repos/laravel/mcp/zipball/4e1389eedb4741a624e26cc3660b31bae04c4342",
+                "reference": "4e1389eedb4741a624e26cc3660b31bae04c4342",
                 "shasum": ""
             },
             "require": {
@@ -14644,7 +14648,7 @@
                 "issues": "https://github.com/laravel/mcp/issues",
                 "source": "https://github.com/laravel/mcp"
             },
-            "time": "2025-09-24T15:48:16+00:00"
+            "time": "2025-10-07T14:28:56+00:00"
         },
         {
             "name": "laravel/pint",

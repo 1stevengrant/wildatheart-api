@@ -7,7 +7,7 @@ use App\Services\SubsplashService;
 
 class GetLatestSubsplashMedia extends Command
 {
-    protected $signature = 'app:get-latest-subsplash-media';
+    protected $signature = 'app:get-latest-subsplash-media {--id= : Process a specific media item by ID}';
 
     protected $description = 'Imports latest Subplash items.';
 
@@ -16,6 +16,7 @@ class GetLatestSubsplashMedia extends Command
     protected function configure()
     {
         $this->addOption('full', null, null, 'Perform a full import of all media items');
+        $this->addOption('force', null, null, 'Force retrieval regardless of when the most recent change was');
     }
 
     public function __construct(private SubsplashService $subsplash)
@@ -27,6 +28,13 @@ class GetLatestSubsplashMedia extends Command
     {
         $this->info('Fetching items from Subsplash...');
         try {
+            // Check if a specific ID was provided
+            if ($mediaItemId = $this->option('id')) {
+                $this->info("Processing single media item: {$mediaItemId}");
+                $this->processSingleMediaItem($mediaItemId);
+
+                return;
+            }
 
             $totalMediaItems = 0;
             $itemsPerPage = 500;
@@ -79,7 +87,16 @@ class GetLatestSubsplashMedia extends Command
             // Optional: Display current item in progress bar
             $bar->setMessage("Processing: {$item['title']}");
 
-            $this->subsplash->saveMediaItemAsEntry($item);
+            $item = $this->subsplash->getMediaItem($item['id']);
+
+            $this->subsplash->saveMediaItemAsEntry($item, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
+                if ($status === 'skipped') {
+                    $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
+                        ? $lastUpdated->format('Y-m-d H:i:s')
+                        : $lastUpdated;
+                    $this->line("<comment>Skipped: {$title} (no changes since {$lastUpdatedFormatted})</comment>");
+                }
+            });
             $bar->advance();
         }
 
@@ -88,5 +105,59 @@ class GetLatestSubsplashMedia extends Command
         $this->output->newLine(2); // Add some space after the progress bar
 
         return $totalMediaItems;
+    }
+
+    private function processSingleMediaItem(string $mediaItemId): void
+    {
+        try {
+            $this->info("Fetching media item with ID: {$mediaItemId}");
+
+            // Fetch the specific media item from Subsplash
+            $mediaItem = $this->subsplash->getMediaItem($mediaItemId);
+
+            if (isset($mediaItem['errors'])) {
+                $this->error('Error fetching media item:');
+                foreach ($mediaItem['errors'] as $error) {
+                    $this->error($error);
+                }
+
+                return;
+            }
+
+            if (! isset($mediaItem['id'])) {
+                $this->error("Media item with ID {$mediaItemId} not found.");
+
+                return;
+            }
+
+            $this->info("Processing media item: {$mediaItem['title']}");
+
+            // Create a progress bar for the single item
+            $bar = $this->output->createProgressBar(1);
+            $bar->setFormat("%message%\n %current%/%max% [%bar%] %percent:3s%%");
+            $bar->setMessage("Processing: {$mediaItem['title']}");
+            $bar->start();
+
+            // Save the media item as an entry
+            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
+                if ($status === 'skipped') {
+                    $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
+                        ? $lastUpdated->format('Y-m-d H:i:s')
+                        : $lastUpdated;
+                    $this->info("<comment>Skipped: {$title} (no changes since {$lastUpdatedFormatted})</comment>");
+                }
+            });
+            $bar->advance();
+
+            // $bar->setMessage('Processing complete.');
+            $bar->finish();
+            $this->output->newLine(2);
+
+            $this->info("Successfully processed media item: {$mediaItem['title']}");
+            $this->info("Entry ID: {$entry->id()}");
+        } catch (\Exception $e) {
+            $this->error("Error processing media item {$mediaItemId}:");
+            $this->error($e->getMessage());
+        }
     }
 }
