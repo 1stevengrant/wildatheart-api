@@ -8,6 +8,7 @@ use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\V1\EventController;
 use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\API\SubsplashController;
+use App\Http\Controllers\API\V1\EventTypeController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
@@ -50,6 +51,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::prefix('events')->name('events.')->group(function () {
         Route::get('', [EventController::class, 'index'])->name('events.index');
         Route::get('search', \App\Http\Controllers\API\V1\SearchForEventsController::class)->name('api.events.search');
+        Route::get('types', EventTypeController::class)->name('types');
         Route::get('{event}', [EventController::class, 'show'])->name('events.show');
     });
 
