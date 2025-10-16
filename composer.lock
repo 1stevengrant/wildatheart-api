@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f851cdd2ef13a9fa2d88df5fb6c280ae",
+    "content-hash": "c041ea87c4918a0224946c79c97f4a90",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -1074,6 +1074,56 @@
             "time": "2025-03-06T22:45:56+00:00"
         },
         {
+            "name": "eminos/statamic-tabs",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eminos/statamic-tabs.git",
+                "reference": "5148de8420b45b7731b50889792e016f948216e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eminos/statamic-tabs/zipball/5148de8420b45b7731b50889792e016f948216e2",
+                "reference": "5148de8420b45b7731b50889792e016f948216e2",
+                "shasum": ""
+            },
+            "require": {
+                "statamic/cms": "^3.0||^4.0||^5.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^11.0",
+                "php": "^8.1",
+                "statamic/cms": "^5.0"
+            },
+            "type": "statamic-addon",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Eminos\\StatamicTabs\\ServiceProvider"
+                    ]
+                },
+                "statamic": {
+                    "name": "Statamic Tabs",
+                    "description": "A Statamic addon to be able to group fields into tabs."
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Eminos\\StatamicTabs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Statamic addon to be able to group fields into tabs.",
+            "support": {
+                "issues": "https://github.com/eminos/statamic-tabs/issues",
+                "source": "https://github.com/eminos/statamic-tabs/tree/v1.2.0"
+            },
+            "time": "2024-05-09T16:30:23+00:00"
+        },
+        {
             "name": "ezyang/htmlpurifier",
             "version": "v4.18.0",
             "source": {
@@ -1270,7 +1320,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-chore/update-eloquent-driver",
+            "version": "dev-feature/WAH-1525",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",
@@ -17395,8 +17445,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ghijk/wild-at-heart": 20,
-        "statamic/eloquent-driver": 20
+        "ghijk/wild-at-heart": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
