@@ -1,0 +1,13 @@
+title: 'Image Slider Block'
+fields:
+  -
+    handle: title
+    field:
+      type: text
+      display: Title
+  -
+    handle: images
+    field:
+      container: s3
+      type: assets
+      display: Images
