@@ -1,6 +1,11 @@
 title: 'Testimonials Block'
 fields:
   -
+    handle: title
+    field:
+      type: text
+      display: Title
+  -
     handle: testimonials
     field:
       type: replicator
@@ -23,3 +28,23 @@ fields:
                     placeholder: 'A. York, New Hampshire, USA'
                     type: text
                     display: Name
+  -
+    handle: display_count
+    field:
+      options:
+        -
+          key: one
+          value: 'Show one at a time'
+        -
+          key: two
+          value: 'Show two at a time'
+        -
+          key: three
+          value: 'Show three at a time'
+        -
+          key: four
+          value: 'Show four at a time'
+      default: one
+      type: select
+      display: 'Display Count'
+      instructions: 'How many you want to show in the slider at a time.'

@@ -126,3 +126,8 @@ fields:
               icon: text-formatting-quotation
               fields:
                 - import: testimonials_block
+            image_slider_block:
+              display: "Image Slider Block"
+              icon: media-image-picture-orientation
+              fields:
+                - import: image_slider_block

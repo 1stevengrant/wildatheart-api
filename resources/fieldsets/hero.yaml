@@ -98,6 +98,10 @@ fields:
               icon: text-formatting-all-caps
               fields:
                 - import: styled_text_block
+            columns:
+              display: Columns
+              fields:
+                - import: columns_block
   - handle: hero_variant
     field:
       options:
@@ -181,6 +185,15 @@ fields:
         - image
       folder: wp-app/uploads
   - import: buttons
+  - handle: width
+    field:
+      options:
+        full: Full
+        half: Half
+        container: Container
+      type: select
+      display: Width
+      default: half
   - handle: height
     field:
       options:
