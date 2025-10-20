@@ -1,6 +1,7 @@
 title: Hero
 fields:
-  - handle: blocks
+  -
+    handle: blocks
     field:
       remove_empty_nodes: false
       type: bard
@@ -38,71 +39,81 @@ fields:
         - hero-2
       sets:
         hero_title:
-          display: "Hero Title"
+          display: 'Hero Title'
           sets:
             hero_title:
-              display: "Hero Title"
+              display: 'Hero Title'
               fields:
-                - handle: hero_title
+                -
+                  handle: hero_title
                   field: hero.hero_title
                   config:
                     sets:
                       new_set_group:
-                        display: "New Set Group"
+                        display: 'New Set Group'
                         instructions: null
                         icon: null
                         sets:
                           text_line:
-                            display: "Text Line"
+                            display: 'Text Line'
                             instructions: null
                             icon: null
                             fields:
-                              - handle: text
+                              -
+                                handle: text
                                 field:
                                   type: text
                                   display: Text
-                              - handle: text_style
+                              -
+                                handle: text_style
                                 field:
                                   options:
-                                    solid: "Hero 1 Solid"
-                                    hollow: "Hero 1 Hollow"
-                                    hollow-italic: "Hero 1 Hollow Italic"
-                                    hero2: "Hero 2"
+                                    solid: 'Hero 1 Solid'
+                                    hollow: 'Hero 1 Hollow'
+                                    hollow-italic: 'Hero 1 Hollow Italic'
+                                    hero2: 'Hero 2'
                                     leader: Leader
-                                    body-large: "Body Large"
+                                    body-large: 'Body Large'
                                   type: select
-                                  display: "Text Style"
+                                  display: 'Text Style'
             image_title:
-              display: "Image Title"
+              display: 'Image Title'
               fields:
-                - handle: assets_field
+                -
+                  handle: assets_field
                   field:
                     max_files: 1
                     container: s3
                     type: assets
-                    display: "Assets Field"
+                    display: 'Assets Field'
             countdown:
               display: Countdown
               fields:
-                - import: countdown
+                -
+                  import: countdown
             buttons:
               display: Buttons
               fields:
-                - import: buttons
+                -
+                  import: buttons
             actions:
               display: Actions
               fields:
-                - import: actions
+                -
+                  import: actions
             styled_text:
-              display: "Styled Text (DEPRECATED)"
+              display: 'Styled Text (DEPRECATED)'
               icon: text-formatting-all-caps
               fields:
-                - import: styled_text_block
+                -
+                  import: styled_text_block
             columns:
               display: Columns
               fields:
-                - import: columns_block
-  - handle: hero_variant
+                -
+                  import: columns_block
+  -
+    handle: hero_variant
     field:
       options:
         center: Center-aligned
@@ -110,105 +121,131 @@ fields:
       max_items: 3
       default: center
       type: select
-      display: "Hero Variant"
-  - handle: leader_text
+      display: 'Hero Variant'
+  -
+    handle: leader_text
     field:
       type: text
-      display: "Leader Text"
-  - handle: hero_logo
+      display: 'Leader Text'
+  -
+    handle: hero_logo
     field:
       max_files: 1
       container: s3
       type: assets
-      display: "Hero Logo"
-  - handle: hero_title
+      display: 'Hero Logo'
+  -
+    handle: hero_title
     field:
       type: replicator
-      display: "Hero Title"
+      display: 'Hero Title'
       sets:
         new_set_group:
-          display: "New Set Group"
+          display: 'New Set Group'
           sets:
             text_line:
-              display: "Text Line"
+              display: 'Text Line'
               fields:
-                - handle: text
+                -
+                  handle: text
                   field:
                     type: text
                     display: Text
-                - handle: text_style
+                -
+                  handle: text_style
                   field:
                     options:
                       solid: Solid
                       hollow: Hollow
                     type: select
-                    display: "Text Style"
-  - handle: hero_subtitle
+                    display: 'Text Style'
+  -
+    handle: hero_subtitle
     field:
       save_html: true
       antlers: true
       type: bard
-      display: "Hero Subtitle"
+      display: 'Hero Subtitle'
       remove_empty_nodes: false
       sets:
         new_set_group:
-          display: "New Set Group"
+          display: 'New Set Group'
           sets:
             countdown:
               display: Countdown
               fields:
-                - import: countdown
-  - handle: background_video_url
+                -
+                  import: countdown
+  -
+    handle: background_video_url
     field:
       type: link
-      display: "Background Video Url"
-  - handle: background_video_fallback_image
+      display: 'Background Video Url'
+  -
+    handle: background_video_fallback_image
     field:
       max_files: 1
       container: s3
       type: assets
-      display: "Background Image"
+      display: 'Background Image'
       validate:
         - image
       folder: wp-app/uploads
-  - handle: featured_video_url
+  -
+    handle: featured_video_url
     field:
       type: link
-      display: "Featured Video Url"
-  - handle: featured_video_fallback_image
+      display: 'Featured Video Url'
+  -
+    handle: featured_video_fallback_image
     field:
       max_files: 1
       container: s3
       type: assets
-      display: "Featured Video Fallback Image"
+      display: 'Featured Video Fallback Image'
       validate:
         - image
       folder: wp-app/uploads
-  - import: buttons
-  - handle: width
+  -
+    import: buttons
+  -
+    handle: width
     field:
       options:
-        full: Full
-        half: Half
-        container: Container
+        -
+          key: full
+          value: Full
+        -
+          key: half
+          value: Half
+        -
+          key: container
+          value: Container
       type: select
       display: Width
-      default: half
-  - handle: height
+      default: full
+  -
+    handle: height
     field:
       options:
-        - key: 50
+        -
+          key: 50
           value: 50%
-        - key: 66
+        -
+          key: 66
           value: 66%
-        - key: 75
+        -
+          key: 75
           value: 75%
-        - key: 80
+        -
+          key: 80
           value: 80%
-        - key: 90
+        -
+          key: 90
           value: 90%
-        - key: full
-          value: "Full Screen"
+        -
+          key: full
+          value: 'Full Screen'
       type: select
       display: Height
       default: full
