@@ -5,6 +5,7 @@ namespace App\Services;
 use Statamic\Entries\Entry;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
+use Illuminate\Support\Str;
 
 /**
  * This provides data in the required format for the app to render.
@@ -24,11 +25,11 @@ class SubsplashAppService
     {
         // Get prayers from your database, ordered by your custom order field
         $prayers = Entry::query()
-                        ->where('collection', 'prayers')
-                        ->where('published', true)
-                        ->orderBy('order', 'asc')
-                        ->get()
-                        ->toArray();
+            ->where('collection', 'prayers')
+            ->where('published', true)
+            ->orderBy('order', 'asc')
+            ->get()
+            ->toArray();
 
         $items = [];
         foreach ($prayers as $prayer) {
@@ -88,15 +89,15 @@ class SubsplashAppService
 
         if ($mp3) {
             $items[] =
-              [
-                  'title' => 'Listen & Share',
-                  'actions' => [
-                      [
-                          'handler' => 'detail',
-                          'url' => route('content.v1.subsplash.listenPrayer', ['id' => $prayer['id']]),
-                      ],
-                  ],
-              ];
+                [
+                    'title' => 'Listen & Share',
+                    'actions' => [
+                        [
+                            'handler' => 'detail',
+                            'url' => route('content.v1.subsplash.listenPrayer', ['id' => $prayer['id']]),
+                        ],
+                    ],
+                ];
         }
 
         return [
@@ -213,7 +214,7 @@ class SubsplashAppService
                         [
                             'handler' => 'browser',
                             'style' => 'internal',
-                            'contentUrl' => config('app.frontend_url') . 'subsplash/daily-readings/' . data_get($reading, 'attributes.slug'),
+                            'contentUrl' => config('app.frontend_url') . 'subsplash/daily-readings/' . Str::slug(data_get($reading, 'attributes.title')),
                         ],
                     ],
                 ],
