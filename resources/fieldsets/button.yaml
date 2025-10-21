@@ -6,6 +6,14 @@ fields:
       type: text
       display: Text
   -
+    handle: image
+    field:
+      container: s3
+      type: assets
+      display: Image
+      instructions: 'Select an image to use instead of text.'
+      max_files: 1
+  -
     handle: href
     field:
       type: link

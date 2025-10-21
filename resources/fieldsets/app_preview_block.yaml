@@ -1,0 +1,16 @@
+title: 'App Preview Block'
+fields:
+  -
+    handle: screenshot
+    field:
+      container: s3
+      type: assets
+      display: Screenshot
+      validate:
+        - required
+      max_files: 1
+  -
+    handle: screen_capture_url
+    field:
+      type: text
+      display: 'Screen Capture URL'

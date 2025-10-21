@@ -69,6 +69,10 @@ fields:
                             display: "Button Cloud"
                             fields:
                               - import: button_cloud
+                          app_preview_block:
+                            display: "App Preview Block"
+                            fields:
+                              - import: app_preview_block
                 - handle: column_width
                   field:
                     type: width
