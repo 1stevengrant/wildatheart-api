@@ -20,7 +20,8 @@
       "Bash(cat:*)",
       "Bash(curl:*)",
       "Bash(composer install:*)",
-      "Bash(composer update:*)"
+      "Bash(composer update:*)",
+      "mcp__laravel-boost__browser-logs"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

@@ -111,6 +111,7 @@ class DailyReadingController extends Controller
     public function refreshDailyReadings()
     {
         RefreshDailyReadingsJob::dispatch(true)->delay(now()->addMinute());
+
         return response()->json(['message' => 'Daily readings refreshed']);
     }
 }

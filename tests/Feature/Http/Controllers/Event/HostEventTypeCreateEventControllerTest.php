@@ -249,7 +249,7 @@ test('a becoming a king retreat end date is 4 days after the start date', functi
     expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
-test('a captivating retreat end date is 4 days after the start date', function () {
+test('a captivating retreat end date is 4 days after the start date when day_count is 4', function () {
     $this->actingAs($this->user);
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::CAPTIVATING_CORE_RETREAT))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
@@ -268,11 +268,62 @@ test('a captivating retreat end date is 4 days after the start date', function (
         'state' => 'MT',
         'start_date' => $this->startDate,
         'number_of_items_in_material_order' => '1 x 10-pack',
+        'day_count' => 4,
     ]);
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
     expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+});
+
+test('a captivating retreat end date is same as start date when day_count is 1', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::CAPTIVATING_CORE_RETREAT))->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '1 x 10-pack',
+        'day_count' => 1,
+    ]);
+
+    $event = $this->user->events()->first();
+    expect($event->end_date)->toBe($this->startDate);
+});
+
+test('a captivating retreat requires day_count', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::CAPTIVATING_CORE_RETREAT))->first();
+    $response = $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '1 x 10-pack',
+    ]);
+
+    expect(session('errors')->has('day_count'))->toBeTrue();
 });
 
 test('a fire should not have an end date', function () {

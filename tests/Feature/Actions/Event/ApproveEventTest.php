@@ -7,7 +7,7 @@ beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
     \App\Models\User::factory()->create();
 });
-it('it approves an event', function () {
+it(' approves an event', function () {
     $event = Event::factory()->fires()->create([
         'approved_at' => null,
     ]);

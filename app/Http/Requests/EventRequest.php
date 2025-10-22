@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Event;
+use App\Models\EventType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EventRequest extends FormRequest
@@ -34,6 +35,24 @@ class EventRequest extends FormRequest
             ? ['required', 'string', 'in:' . implode(',', $validValues)]
             : ['nullable', 'string', 'in:' . implode(',', $validValues)];
 
+        $eventType = $this->route('eventType');
+        $rules['day_count'] = $eventType?->name === EventType::CAPTIVATING_CORE_RETREAT
+            ? ['required', 'integer', 'in:1,4']
+            : ['nullable', 'integer', 'in:1,4'];
+
         return $rules;
+    }
+
+    /**
+     * Get custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'day_count.required' => 'We need to know how many days your retreat will run for.',
+            'day_count.in' => 'We need to know how many days your retreat will run for.',
+        ];
     }
 }

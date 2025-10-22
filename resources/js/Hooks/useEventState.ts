@@ -23,6 +23,7 @@ export const useEventState = ({
         frequency: initialEvent?.frequency || "monthly",
         start_date: initialEvent?.start_date || null,
         ...initialEvent,
+        day_count: initialEvent?.day_count || null,
     });
 
     const updateEvent = (updates: Partial<typeof event>) => {

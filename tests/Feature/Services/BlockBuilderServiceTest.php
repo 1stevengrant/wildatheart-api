@@ -21,7 +21,7 @@ beforeEach(function () {
     $this->service = new BlockBuilderService($previewBuilderService);
 });
 
-it('it builds a content_in_taxonomy slide', function () {
+it('builds a content_in_taxonomy slide', function () {
 
     $mediaItem = Entry::make()
         ->collection('media_item')
@@ -66,7 +66,7 @@ it('it builds a content_in_taxonomy slide', function () {
         ->and($result[0]['slides'][0]->title)->toBe('test item');
 });
 
-it('it only returns slides that have the appropriate taxonomy', function () {
+it('only returns slides that have the appropriate taxonomy', function () {
 
     $mediaItem = Entry::make()
         ->collection('media_item')

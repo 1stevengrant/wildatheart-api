@@ -28,6 +28,7 @@ import { useEventModal } from "@/Hooks/useEventModal";
 import { useEventState } from "@/Hooks/useEventState";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
+import { EventTypeCaptivatingRetreat } from "@/helpers/eventNames";
 
 const CreateEventEventTypePage = () => {
     const page = useTypedPage();
@@ -117,6 +118,34 @@ const CreateEventEventTypePage = () => {
                         </p>
 
                         <form>
+                            {eventType.slug === EventTypeCaptivatingRetreat && (
+                                <div>
+                                    <InputLabel
+                                        htmlFor="day_count"
+                                        value="How many days will the retreat run for?"
+                                        required
+                                    />
+                                    <div className="flex items-center gap-2 mt-2">
+                                        {[1, 4].map((days) => (
+                                            <button
+                                                type="button"
+                                                key={days}
+                                                className={`transition-all duration-300 ease-in-out flex-1 py-2 font-semibold border rounded-lg ${
+                                                    data.day_count === days
+                                                        ? "bg-p200 border-p200 text-white"
+                                                        : "bg-n800 text-white hover:border-p200 hover:text-p200"
+                                                }`}
+                                                onClick={() =>
+                                                    setData("day_count", days)
+                                                }
+                                            >
+                                                {days} Day
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <InputError message={errors.day_count} />
+                                </div>
+                            )}
                             <MapboxSearch className="mt-4" />
 
                             <EventMap
@@ -131,6 +160,60 @@ const CreateEventEventTypePage = () => {
                                 className="mt-4"
                                 height="h-[300px] md:h-[40vh]"
                             />
+
+                            <div className="mt-4">
+                                <label className="flex items-center space-x-4 hover:cursor-pointer">
+                                    <SwitchComponent
+                                        checked={isPrivate}
+                                        onChange={handlePrivacyToggle}
+                                    />
+                                    <div className="text-white text-sm mt-4">
+                                        <div>
+                                            I want this event to be private.
+                                        </div>
+                                        <div>
+                                            The event will not be shown on map
+                                            or directory.
+                                        </div>
+                                    </div>
+                                </label>
+
+                                {Boolean(eventType.allow_materials_order) && (
+                                    <div className="mt-4">
+                                        <p>
+                                            We'll send you free{" "}
+                                            {singular(eventType.name)}{" "}
+                                            note-taking guides for your
+                                            attendees. Just tell us how many you
+                                            need.
+                                        </p>
+                                        <InputLabel
+                                            htmlFor="number_of_items_in_material_order"
+                                            value={
+                                                eventType.number_of_items_in_material_order_label ??
+                                                "Number of items in material order"
+                                            }
+                                            required
+                                        />
+                                        <SelectInput
+                                            id="number_of_items_in_material_order"
+                                            onChange={(e) =>
+                                                setData(
+                                                    "number_of_items_in_material_order",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="text-white mt-2"
+                                            options={materialOrderItems}
+                                        />
+                                        <InputError
+                                            message={
+                                                errors.number_of_items_in_material_order
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            </div>
 
                             <div className="mt-4">
                                 <DatePickerInput

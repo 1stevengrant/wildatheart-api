@@ -282,6 +282,12 @@ class Event extends BaseModel
                 ];
 
                 $format = $titleFormats[$this->eventType->group_type] ?? $titleFormats['default'];
+
+                // For retreats with day_count, use specific day count
+                if ($this->eventType->group_type === EventType::TYPE_RETREAT && ! is_null($this->day_count) && $this->day_count > 0) {
+                    $format = "$this->day_count-Day Retreat for";
+                }
+
                 $genderValue = ucfirst($this->sex->value);
 
                 return "$format $genderValue";
@@ -318,6 +324,13 @@ class Event extends BaseModel
                     if ($this->start_date && $this->end_date) {
                         $startDate = Carbon::parse($this->start_date);
                         $endDate = Carbon::parse($this->end_date);
+
+                        // If same day (1-day retreat), show single date
+                        if ($startDate->isSameDay($endDate)) {
+                            $format = $startDate->year !== $currentYear ? 'M jS Y' : 'M jS';
+
+                            return $startDate->format($format);
+                        }
 
                         // If same month and year, show condensed format
                         if ($startDate->month === $endDate->month && $startDate->year === $endDate->year) {

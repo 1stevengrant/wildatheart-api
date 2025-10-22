@@ -6,7 +6,6 @@ use App\Services\TransistorService;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Jobs\Cloudflare\TriggerAstroBuildJob;
-use Illuminate\Queue\Middleware\WithoutOverlapping;
 
 class RefreshDailyReadingsJob implements ShouldQueue
 {

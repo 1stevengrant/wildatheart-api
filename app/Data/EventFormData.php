@@ -31,5 +31,6 @@ class EventFormData extends Data
         public ?string $number_of_items_in_material_order,
         #[WithCast(EnumCast::class)]
         public ?FrequencyEnum $frequency,
+        public ?int $day_count = null,
     ) {}
 }
