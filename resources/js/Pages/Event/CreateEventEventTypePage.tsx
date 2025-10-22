@@ -162,60 +162,6 @@ const CreateEventEventTypePage = () => {
                             />
 
                             <div className="mt-4">
-                                <label className="flex items-center space-x-4 hover:cursor-pointer">
-                                    <SwitchComponent
-                                        checked={isPrivate}
-                                        onChange={handlePrivacyToggle}
-                                    />
-                                    <div className="text-white text-sm mt-4">
-                                        <div>
-                                            I want this event to be private.
-                                        </div>
-                                        <div>
-                                            The event will not be shown on map
-                                            or directory.
-                                        </div>
-                                    </div>
-                                </label>
-
-                                {Boolean(eventType.allow_materials_order) && (
-                                    <div className="mt-4">
-                                        <p>
-                                            We'll send you free{" "}
-                                            {singular(eventType.name)}{" "}
-                                            note-taking guides for your
-                                            attendees. Just tell us how many you
-                                            need.
-                                        </p>
-                                        <InputLabel
-                                            htmlFor="number_of_items_in_material_order"
-                                            value={
-                                                eventType.number_of_items_in_material_order_label ??
-                                                "Number of items in material order"
-                                            }
-                                            required
-                                        />
-                                        <SelectInput
-                                            id="number_of_items_in_material_order"
-                                            onChange={(e) =>
-                                                setData(
-                                                    "number_of_items_in_material_order",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="text-white mt-2"
-                                            options={materialOrderItems}
-                                        />
-                                        <InputError
-                                            message={
-                                                errors.number_of_items_in_material_order
-                                            }
-                                        />
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="mt-4">
                                 <DatePickerInput
                                     label="Start date"
                                     placeholder="Select start date"
@@ -229,7 +175,9 @@ const CreateEventEventTypePage = () => {
                                     }
                                 />
                                 <InputError message={errors.start_date} />
+                            </div>
 
+                            <div className="mt-4">
                                 <label className="flex items-center space-x-4 hover:cursor-pointer">
                                     <SwitchComponent
                                         checked={isPrivate}
@@ -248,7 +196,7 @@ const CreateEventEventTypePage = () => {
 
                                 {Boolean(eventType.allow_materials_order) && (
                                     <div className="mt-4">
-                                        <p>
+                                        <p className="leading-snug">
                                             We'll send you free{" "}
                                             {singular(eventType.name)}{" "}
                                             note-taking guides for your
