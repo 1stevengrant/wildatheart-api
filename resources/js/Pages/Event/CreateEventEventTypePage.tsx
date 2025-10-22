@@ -122,10 +122,10 @@ const CreateEventEventTypePage = () => {
                                 <div>
                                     <InputLabel
                                         htmlFor="day_count"
-                                        value="How many days will the retreat run for?"
+                                        value="Would you like to run a single day or multi-day retreat?"
                                         required
                                     />
-                                    <div className="flex items-center gap-2 mt-2">
+                                    <div className="flex items-center gap-4 mt-2">
                                         {[1, 4].map((days) => (
                                             <button
                                                 type="button"
