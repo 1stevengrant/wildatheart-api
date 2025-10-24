@@ -2,8 +2,9 @@ import react from '@vitejs/plugin-react';
 import laravel from 'laravel-vite-plugin';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import vue2 from '@vitejs/plugin-vue2';
 import { run } from "vite-plugin-run";
+
 
 export default defineConfig({
     plugins: [
@@ -16,7 +17,14 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        vue(),
+        vue2({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
         react(),
         run([
             {
