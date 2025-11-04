@@ -197,6 +197,7 @@ declare namespace App.Data.V1 {
         eventType: string;
         eventTypeImage: string;
         eventTypeCardDescription: string;
+        eventGroupType: string;
         hostName: string;
         hostAvatar: string | null;
         longitude: number | null;
