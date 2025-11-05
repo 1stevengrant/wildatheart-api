@@ -11,11 +11,11 @@ class MobileNavResponseData extends Data
 {
     public function __construct(
         #[MapOutputName('main_nav_bar')]
-        /** @var \App\Data\Navigation\NavItemData[] */
+        /** @var NavItemData[] */
         public array $mainNavBar,
 
         #[MapOutputName('drawer_items')]
-        /** @var \App\Data\Navigation\NavItemData[] */
+        /** @var NavItemData[] */
         public array $drawerItems,
     ) {}
 
@@ -39,17 +39,6 @@ class MobileNavResponseData extends Data
         return new self(
             mainNavBar: $mainNavBarData,
             drawerItems: $drawerItemsData,
-        );
-    }
-
-    /**
-     * Create empty response with fallback data
-     */
-    public static function emptyResponse(): self
-    {
-        return new self(
-            mainNavBar: [],
-            drawerItems: [],
         );
     }
 
