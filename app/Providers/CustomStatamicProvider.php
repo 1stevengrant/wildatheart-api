@@ -105,7 +105,11 @@ class CustomStatamicProvider extends ServiceProvider
             return 'blogs/' . $entry->slug;
         });
         Collection::computed('prayers', 'site_url', function ($entry, $value) {
-            return trim(config('app.frontend_url'), '/');
+            return mb_trim(config('app.frontend_url'), '/');
+        });
+
+        Collection::computed('events', 'site_url', function ($entry, $value) {
+            return mb_trim(config('app.frontend_url'), '/');
         });
 
         Statamic::vite('app', [
