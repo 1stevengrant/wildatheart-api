@@ -4,11 +4,8 @@ namespace App\Http\Controllers\API\V1\Content;
 
 use Statamic\Entries\Entry;
 use Statamic\Facades\Token;
-use App\DataTypeObjects\File;
-use App\Services\BunnyCDNService;
 use App\Http\Controllers\Controller;
 use Facades\Statamic\CP\LivePreview;
-use App\DataTypeObjects\PlayableFile;
 use App\Services\EntryBuilderService;
 use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
 
@@ -25,7 +22,6 @@ class EventsEntryController extends Controller
         $eventsResponse = $events->map(function ($event) {
             return $this->buildEventResponse($event);
         });
-
 
         return EventsShowResponse::collection($eventsResponse);
     }
@@ -78,7 +74,6 @@ class EventsEntryController extends Controller
         if (isset($response['featured_video_url']) && $response['featured_video_url']) {
             $response['featured_video_url'] = $response['featured_video_url']['url'];
         }
-
 
         return $response;
     }

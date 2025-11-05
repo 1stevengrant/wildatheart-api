@@ -274,7 +274,7 @@ class SubsplashService
     private function processSubsplashImages(array $images): array
     {
         return collect($images)
-            ->filter(fn($image) => isset($image['_links']['related']['href']))
+            ->filter(fn ($image) => isset($image['_links']['related']['href']))
             ->map(function ($image) {
                 $sourceUrl = data_get($image, '_links.related.href');
                 $statamicAsset = null;

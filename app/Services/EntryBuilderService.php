@@ -50,7 +50,7 @@ class EntryBuilderService
     {
         // If already an array, recursively process its items
         if (is_array($data)) {
-            return array_map(fn($item) => $this->ensureArrays($item), $data);
+            return array_map(fn ($item) => $this->ensureArrays($item), $data);
         }
 
         // If it's a Statamic Value object, convert it using jsonSerialize
