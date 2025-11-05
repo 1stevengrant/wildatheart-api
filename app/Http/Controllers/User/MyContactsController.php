@@ -30,7 +30,7 @@ class MyContactsController extends Controller
     {
         $attendee = auth()->user()->attendees()->findOrFail($attendeeId);
 
-        if ($attendee->user_id !== auth()->id()) {
+        if ($attendee->event->user_id !== auth()->id()) {
             return to_route('my.contacts')->with([
                 'notifications' => [
                     'message' => 'You do not have permission to remove this contact.',

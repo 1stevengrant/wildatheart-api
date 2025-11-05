@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
-use Illuminate\Support\Str;
 
 /**
  * This provides data in the required format for the app to render.
