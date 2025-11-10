@@ -31,6 +31,7 @@ const MyContactsPage = () => {
                 }),
                 {
                     preserveScroll: true,
+                    preserveState: false,
                 }
             );
         }
