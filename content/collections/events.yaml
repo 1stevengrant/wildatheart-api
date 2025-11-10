@@ -13,3 +13,7 @@ preview_targets:
     label: Entry
     url: '{site_url}/events/preview'
     refresh: false
+  -
+    label: 'Final Details'
+    url: '{site_url}/events/{slug}/final-details'
+    refresh: false

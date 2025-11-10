@@ -298,6 +298,8 @@ declare namespace App.DataTypeObjects.API.V1.Content {
 declare namespace App.DataTypeObjects.API.V1.Content.Events {
     export type EventsShowResponse = {
         blocks: Array<any> | null;
+        description: string | null;
+        buttons: Array<any> | null;
         event_logo: Array<any> | null;
         event_type: Array<any> | null;
         featured_image: Array<any> | null;
@@ -327,6 +329,7 @@ declare namespace App.DataTypeObjects.API.V1.Content.Events {
         testimonials: Array<any> | null;
         wide: string | null;
         width: Array<any> | null;
+        final_details_blocks: Array<any> | null;
         id: string;
         title: string;
         private: boolean;

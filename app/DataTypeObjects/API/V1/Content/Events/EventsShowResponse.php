@@ -71,4 +71,6 @@ class EventsShowResponse extends EntryResponse
     public ?string $wide;
 
     public ?array $width;
+
+    public ?array $final_details_blocks;
 }

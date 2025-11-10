@@ -49,6 +49,10 @@ class EventsEntryController extends Controller
                 ->where('collection', 'events')
                 ->where('slug', $slug)
                 ->where('published', true)
+                ->where(function ($query) {
+                    $query->where('date', '<=', now())
+                        ->orWhere('data->show_in_collections', true);
+                })
                 ->with('event_type')
                 ->first();
         }
