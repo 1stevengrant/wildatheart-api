@@ -330,6 +330,7 @@ declare namespace App.DataTypeObjects.API.V1.Content.Events {
         wide: string | null;
         width: Array<any> | null;
         final_details_blocks: Array<any> | null;
+        vertical_videos_block: Array<any> | null;
         id: string;
         title: string;
         private: boolean;

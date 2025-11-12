@@ -73,4 +73,6 @@ class EventsShowResponse extends EntryResponse
     public ?array $width;
 
     public ?array $final_details_blocks;
+
+    public ?array $vertical_videos_block;
 }
