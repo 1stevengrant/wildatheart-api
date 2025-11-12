@@ -108,6 +108,10 @@ class CustomStatamicProvider extends ServiceProvider
             return mb_trim(config('app.frontend_url'), '/');
         });
 
+        Collection::computed('events', 'site_url', function ($entry, $value) {
+            return mb_trim(config('app.frontend_url'), '/');
+        });
+
         Statamic::vite('app', [
             'resources/js/cp.js',
             'resources/css/cp.css',
