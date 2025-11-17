@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee;
 
+use App\Data\AttendeeData;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 
@@ -17,19 +18,28 @@ class ExportContacts extends Controller
         ];
 
         $handle = fopen('php://output', 'w');
-        fputcsv($handle, ['Name', 'Email', 'Phone']);
+        fputcsv($handle, ['Name', 'Email', 'Phone', 'Event', 'Event Type', 'First contacted']);
 
         if ($eventId) {
             $event = \App\Models\Event::find($eventId);
-            $contacts = $event->attendees;
+            $contacts = $event->attendees()->with(['event.eventType'])->get();
         }
 
         if (! $eventId) {
-            $contacts = auth()->user()->contacts;
+            $contacts = auth()->user()->contacts()->with(['event.eventType'])->get();
         }
 
         foreach ($contacts as $contact) {
-            fputcsv($handle, [$contact->fullname, $contact->email, $contact->phone]);
+            $contactData = AttendeeData::fromModel($contact);
+
+            fputcsv($handle, [
+                $contactData->fullname,
+                $contactData->email,
+                $contactData->phone,
+                $contactData->event_name,
+                $contactData->event_type_name,
+                $contactData->created_at,
+            ]);
         }
 
         fclose($handle);

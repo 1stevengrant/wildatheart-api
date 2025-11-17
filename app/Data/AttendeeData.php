@@ -46,7 +46,7 @@ class AttendeeData extends Data
             state: $attendee->state,
             marketing_updates: $attendee->marketing_updates,
             contacted_on: $attendee->contacted_on,
-            created_at: $attendee->created_at,
+            created_at: $attendee->created_at->format('M. j, Y'),
             updated_at: $attendee->updated_at,
             event_type_name: $attendee->event->eventType?->name,
             event_name: $attendee->event->display_name,
