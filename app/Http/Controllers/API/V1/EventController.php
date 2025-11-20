@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Models\Event;
 use App\Data\V1\EventData;
+use Statamic\Facades\Entry;
 use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
-use Statamic\Facades\Entry;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
 
 class EventController extends Controller

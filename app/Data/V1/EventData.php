@@ -9,7 +9,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class EventData extends Data
 {
-
     public function __construct(
         public string $id,
         public string $location,
