@@ -1,3 +1,234 @@
+declare namespace App.Data {
+    export type AttendeeData = {
+        id: number;
+        event_id: string;
+        user_id: number | null;
+        family_name: string;
+        given_name: string;
+        email: string;
+        country: string;
+        country_code: string;
+        phone: string;
+        city: string;
+        state: string;
+        marketing_updates: boolean;
+        contacted_on: string | null;
+        created_at: string;
+        updated_at: string;
+        event_type_name: string | null;
+        event_name: string | null;
+        fullname: string;
+    };
+    export type EventData = {
+        id: string;
+        name: string | null;
+        longitude: number;
+        latitude: number;
+        badge_display: string;
+        display_longitude: number;
+        display_latitude: number;
+        display_name: string | null;
+        start_date: any | null;
+        startDate: any | null;
+        end_date: any | null;
+        endDate: any | null;
+        event_type_id: number | null;
+        event_type_name: string | null;
+        event_type: App.Data.EventTypeData;
+        event_type_image: string;
+        type_group: string | null;
+        location: string;
+        city: string | null;
+        state: string | null;
+        country: string | null;
+        host: string;
+        host_name: string;
+        host_friendly_name: string | null;
+        host_id: number | null;
+        host_photo: string;
+        sex: any;
+        url: string;
+        group_size: number;
+        frequency: any | null;
+        hero_image: string | null;
+        hero_video: string | null;
+        is_private: boolean;
+        gift_requested: boolean;
+        approved_at: any | null;
+        host_object: App.Data.HostData;
+        event_type_data: App.Data.EventTypeData;
+        card_title: string;
+        event_type_slug: string;
+        region: string | null;
+        district: string | null;
+        locality: string | null;
+        neighborhood: string | null;
+        street_address: string | null;
+        zip: string | null;
+        is_featured: boolean | null;
+        custom_landing_url: string | null;
+    };
+    export type EventFormData = {
+        name: string;
+        state: string | null;
+        city: string | null;
+        zip: string | null;
+        country: string | null;
+        latitude: number | null;
+        longitude: number | null;
+        region: string | null;
+        district: string | null;
+        locality: string | null;
+        neighborhood: string | null;
+        street_address: string | null;
+        poi: string | null;
+        is_private: boolean | null;
+        start_date: string | null;
+        end_date: string | null;
+        number_of_items_in_material_order: string | null;
+        frequency: any | null;
+    };
+    export type EventTypeData = {
+        id: number;
+        allow_materials_order: boolean;
+        number_of_items_in_material_order_label: string | null;
+        group_type: string;
+        name: string;
+        filter_name: string | null;
+        order: number;
+        free_gift_image: string | null;
+        zapier_webhook_url: string | null;
+        card_teaser_text: string | null;
+        tags: string | null;
+        is_active: boolean;
+        sex: any;
+        slug: string;
+        description: string | null;
+        event_guide_pages: Array<any> | null;
+        video_link: string | null;
+        registration_welcome_video: string | null;
+        registration_welcome_text: string | null;
+        registration_before_your_event_text: string | null;
+        event_schedule: Array<any> | null;
+        event_faqs: Array<any> | null;
+        image: string;
+        hero_image: string | null;
+        hero_video: string | null;
+        photos: Array<any> | null;
+        summary: string | null;
+        key_details: Array<any> | null;
+        action_buttons: Array<any> | null;
+        new_content: Array<any> | null;
+    };
+    export type FeaturedContentData = {
+        show_in_regions: Array<string>;
+        featured_content_url: string | null;
+        featured_content_text: string | null;
+        featured_content_image: string | null;
+    };
+    export type HostData = {
+        family_name: string | null;
+        given_name: string | null;
+        md5email: string | null;
+        fullname: string | null;
+        photo: string | null;
+    };
+    export type UserData = {
+        id: number;
+        given_name: string;
+        family_name: string;
+        fullname: string;
+        email: string;
+        opted_into_marketing: boolean;
+        image: string;
+        profile_step: number;
+        phone: string;
+        city: string;
+        state: string;
+        postal_code: string;
+    };
+}
+declare namespace App.Data.Navigation {
+    export type DesktopNavItemData = {
+        id: string;
+        title: string;
+        enabled: boolean;
+        type: string;
+        url: string | null;
+        icon: string | null;
+        dropdownLinks: Array<App.Data.Navigation.DropdownLinkData> | null;
+        bottomLinkTitle: string | null;
+        bottomLinkUrl: string | null;
+        featuredMediaItemByline: string | null;
+        featuredMediaItemTitle: string | null;
+        featuredMediaItemUrl: string | null;
+        featuredMediaItemImage: string | null;
+    };
+    export type DesktopNavResponseData = {
+        items: Array<App.Data.Navigation.DesktopNavItemData>;
+    };
+    export type DropdownLinkData = {
+        id: string;
+        title: string;
+        url: string;
+        icon: string | null;
+        enabled: boolean;
+        type: string;
+    };
+    export type MobileNavResponseData = {
+        mainNavBar: Array<App.Data.Navigation.NavItemData>;
+        drawerItems: Array<App.Data.Navigation.NavItemData>;
+    };
+    export type NavItemData = {
+        id: string;
+        title: string;
+        url: string;
+        icon: string | null;
+        enabled: boolean;
+        type: string;
+    };
+}
+declare namespace App.Data.V1 {
+    export type EventCollectionData = {
+        id: string;
+        location: string;
+        dates: string;
+        sex: string;
+        eventType: string;
+        eventTypeImage: string;
+        eventTypeCardDescription: string;
+        eventGroupType: string;
+        hostName: string;
+        hostAvatar: string | null;
+        longitude: number | null;
+        latitude: number | null;
+    };
+    export type EventData = {
+        id: string;
+        location: string;
+        dates: string;
+        sex: string;
+        eventType: string;
+        eventGroupType: string;
+        eventTypeImage: string;
+        eventTypeDescription: string;
+        eventTypePhotos: Array<any>;
+        scheduledFor: string | null;
+        hostName: string;
+        hostAvatar: string | null;
+        landingPage: Array<any> | null;
+    };
+    export type EventTypeData = {
+        id: number;
+        name: string;
+        camel_case_name: string;
+        sex: string;
+        image: string;
+        group_type: string;
+        listings_count: number;
+        countries_count: number;
+    };
+}
 declare namespace App.DataTypeObjects {
     export type Attributes = {
         title: string;
@@ -331,6 +562,7 @@ declare namespace App.DataTypeObjects.API.V1.Content.Events {
         width: Array<any> | null;
         final_details_blocks: Array<any> | null;
         vertical_videos_block: Array<any> | null;
+        icons: Array<any> | null;
         id: string;
         title: string;
         private: boolean;
