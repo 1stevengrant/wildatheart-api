@@ -31,6 +31,7 @@ const MyContactsPage = () => {
                 }),
                 {
                     preserveScroll: true,
+                    preserveState: false,
                 }
             );
         }
@@ -95,6 +96,15 @@ const MyContactsPage = () => {
                         renderCell: (row) => (
                             <>
                                 <>{row.event_type_name}</>
+                            </>
+                        ),
+                    },
+                    {
+                        label: "First contacted",
+                        name: "created_at",
+                        renderCell: (row) => (
+                            <>
+                                <>{row.created_at}</>
                             </>
                         ),
                     },

@@ -18,6 +18,7 @@ use App\Http\Controllers\API\V1\Navs\MobileNavController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
+use App\Http\Controllers\API\V1\Content\EventsEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\Content\SubsplashAppController;
@@ -88,6 +89,10 @@ Route::prefix('content')->group(function () {
             Route::prefix('prayers')->name('prayers.')->group(function () {
                 Route::get('/', [PrayersEntryController::class, 'index'])->name('index');
                 Route::get('/{slug}', [PrayersEntryController::class, 'show'])->name('show');
+            });
+            Route::prefix('events')->name('events.')->group(function () {
+                Route::get('/', [EventsEntryController::class, 'index'])->name('index');
+                Route::get('/{slug}', [EventsEntryController::class, 'show'])->name('show');
             });
             Route::get('/alerts', [AlertEntryController::class, 'index'])->name('alerts.index');
             Route::prefix('subsplash')->name('subsplash.')->group(function () {
