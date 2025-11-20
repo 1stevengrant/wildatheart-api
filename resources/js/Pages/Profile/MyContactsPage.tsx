@@ -100,6 +100,15 @@ const MyContactsPage = () => {
                         ),
                     },
                     {
+                        label: "First contacted",
+                        name: "created_at",
+                        renderCell: (row) => (
+                            <>
+                                <>{row.created_at}</>
+                            </>
+                        ),
+                    },
+                    {
                         label: "Actions",
                         name: "actions",
                         renderCell: (row) => (
