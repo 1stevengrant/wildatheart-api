@@ -7,6 +7,7 @@ use App\Http\Controllers\DrupalUrlController;
 use App\Http\Controllers\FiresPageController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\UpcomingEventsController;
+use App\Http\Controllers\User\UpdateNamesController;
 use App\Http\Controllers\CreateSupportTicketController;
 use App\Http\Controllers\Event\ViewEventListingController;
 use App\Http\Controllers\Attendee\ConnectWithHostController;
@@ -41,6 +42,16 @@ Route::prefix('fire/{event}')
         Route::get('extinguish', [HandleMonthlyHostFireEmailController::class, 'show'])->name('extinguish');
         Route::post('extinguish', [HandleMonthlyHostFireEmailController::class, 'destroy'])->name('extinguish.destroy');
         Route::get('burn', [HandleMonthlyHostFireEmailController::class, 'update'])->name('burn');
+    });
+
+Route::prefix('profile')
+    ->name('profile.')
+    ->group(function () {
+        Route::get('update-names/{user:uuid}', [UpdateNamesController::class, 'show'])
+            ->middleware(['signed'])
+            ->name('update.names');
+        Route::put('update-names/{user:uuid}', [UpdateNamesController::class, 'update'])
+            ->name('update.names.submit');
     });
 
 Route::prefix('drupal')->name('drupal.')->group(function () {

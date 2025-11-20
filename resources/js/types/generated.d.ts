@@ -476,6 +476,54 @@ blueprint: App.DataTypeObjects.Blueprint;
 locale: string;
 };
 }
+declare namespace App.DataTypeObjects.API.V1.Content.Events {
+export type EventsShowResponse = {
+blocks: Array<any> | null;
+description: string | null;
+buttons: Array<any> | null;
+event_logo: Array<any> | null;
+event_type: Array<any> | null;
+featured_image: Array<any> | null;
+featured_video_fallback_image: Array<any> | null;
+featured_video_url: string | null;
+topics: Array<any> | null;
+background_video_url: string | null;
+background_video_fallback_image: Array<any> | null;
+height: Array<any> | null;
+hero_logo: Array<any> | null;
+hero_subtitle: Array<any> | null;
+hero_title: Array<any> | null;
+hero_variant: Array<any> | null;
+hide_from_search_engines: boolean;
+images: Array<any>;
+is_local_event: boolean | null;
+leader_text: string | null;
+position: Array<any> | null;
+related_event_type: Array<any> | null;
+seo_description: string | null;
+seo_image: Array<any> | null;
+seo_title: string | null;
+show_in_collections: boolean | null;
+site_url: string | null;
+sitemap_priority: string | null;
+subtitle: string | null;
+testimonials: Array<any> | null;
+wide: string | null;
+width: Array<any> | null;
+final_details_blocks: Array<any> | null;
+vertical_videos_block: Array<any> | null;
+id: string;
+title: string;
+private: boolean;
+published: boolean;
+status: string;
+slug: string;
+uri: string | null;
+url: string | null;
+blueprint: App.DataTypeObjects.Blueprint;
+locale: string;
+};
+}
 declare namespace App.DataTypeObjects.API.V1.Content.Prayers {
 export type PrayersShowResponse = {
 content: string;
