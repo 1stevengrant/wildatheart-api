@@ -19,8 +19,10 @@ class EventData extends Data
         public string $eventTypeImage,
         public string $eventTypeDescription,
         public array $eventTypePhotos,
+        public ?string $scheduledFor,
         public string $hostName,
         public ?string $hostAvatar,
+        public ?array $landingPage
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -35,8 +37,10 @@ class EventData extends Data
             eventTypeImage: $event->eventType->image,
             eventTypeDescription: $event->eventType->description,
             eventTypePhotos: $event->eventType->photos ?? [],
+            scheduledFor: $event->badgeDisplay,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
+            landingPage: null,
         );
     }
 }

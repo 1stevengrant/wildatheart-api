@@ -14,6 +14,7 @@ fields:
         chevron-right: chevron-right
         document: document
         download: download
+        editProfile: editProfile
         emailDocument2: emailDocument2
         facebook: facebook
         firewood: firewood
@@ -38,10 +39,12 @@ fields:
         sun: sun
         sunOutline: sunOutline
         tree: tree
+        treeRound: treeRound
         triangle-right: triangle-right
         user: user
         videoBadge: videoBadge
         videoCameraPlay: videoCameraPlay
+        videoLine: videoLine
         videoPlaylist2: videoPlaylist2
         videoSlides: videoSlides
         voice: voice
@@ -51,6 +54,7 @@ fields:
         worldNetwork: worldNetwork
         xTwitter: xTwitter
         youtube: youtube
+        zoom: zoom
       type: select
       display: Icon
       clearable: true

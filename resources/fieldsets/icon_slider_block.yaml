@@ -1,0 +1,26 @@
+title: 'Icon Slider Block'
+fields:
+  -
+    handle: icons
+    field:
+      type: replicator
+      display: Icons
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            icon:
+              display: Icon
+              fields:
+                -
+                  import: icon
+                -
+                  handle: title
+                  field:
+                    type: text
+                    display: Title
+                -
+                  handle: subtitle
+                  field:
+                    type: text
+                    display: Subtitle

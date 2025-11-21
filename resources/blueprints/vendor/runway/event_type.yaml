@@ -110,6 +110,14 @@ tabs:
               type: assets
               display: 'Free Gift Image'
               instructions: 'Upload or choose the image for the free gift'
+          -
+            handle: related_landing_page_id
+            field:
+              max_items: 1
+              collections:
+                - events
+              type: entries
+              display: 'Related Landing Page'
   media:
     display: Media
     sections:
