@@ -9,7 +9,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class DesktopNavResponseData extends Data
 {
     public function __construct(
-        /** @var \App\Data\Navigation\DesktopNavItemData[] */
+        /** @var DesktopNavItemData[] */
         public array $items,
     ) {}
 

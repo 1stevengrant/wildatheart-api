@@ -21,7 +21,9 @@
       "Bash(curl:*)",
       "Bash(composer install:*)",
       "Bash(composer update:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(./vendor/bin/pint:*)",
+      "Bash(php -l:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

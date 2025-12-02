@@ -19,6 +19,7 @@ class GenerateTypeScript extends Command
         $config = TypeScriptTransformerConfig::create()
             // path where your PHP classes are
             ->autoDiscoverTypes(base_path('app/DataTypeObjects'))
+            ->autoDiscoverTypes(base_path('app/Data'))
             // list of transformers
             ->transformers([DtoTransformer::class])
             // file where TypeScript type definitions will be written
