@@ -45,6 +45,7 @@ class ExperienceDataController extends Controller
         $experienceResponse->featured_video_url = data_get($experienceData, 'featured_video_url.url');
         $experienceResponse->featured_video_fallback_image = data_get($experienceData, 'featured_video_fallback_image');
         $experienceResponse->experience_logo = data_get($experienceData, 'experience_logo');
+        $experienceResponse->related_event_type = collect(data_get($experienceData, 'related_event_type'))->first();
 
         $sessions = [];
         $subsplash = new SubsplashService;
