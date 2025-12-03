@@ -54,7 +54,7 @@ class ExperienceResponse extends EntryResponse
 
     public ?string $background_video_url = null;
 
-    public ?string $featured_video_fallback_image = null;
+    public ?array $featured_video_fallback_image = null;
 
     public ?array $background_video_fallback_image = null;
 

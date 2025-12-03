@@ -70,7 +70,8 @@ class EventsEntryController extends Controller
     {
         $entryBuilder = new EntryBuilderService;
 
-        $response = $entryBuilder->buildResponseFromEntry($event);
+        $response = $entryBuilder->buildResponseFromEntry($event->blueprint->handle === 'video_study' ? $event->related_content : $event);
+
         if (isset($response['background_video_url'])) {
             $response['background_video_url'] = $response['background_video_url']['url'];
         }
