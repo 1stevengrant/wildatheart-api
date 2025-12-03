@@ -12,6 +12,8 @@ class EventData extends Data
     public function __construct(
         public string $id,
         public string $location,
+        public string $latitude,
+        public string $longitude,
         public string $dates,
         public string $sex,
         public string $eventType,
@@ -30,6 +32,8 @@ class EventData extends Data
         return new self(
             id: $event->id,
             location: $event->location,
+            latitude: $event->latitude,
+            longitude: $event->longitude,
             dates: $event->formatted_dates,
             sex: $event->sex->value,
             eventType: $event->eventType->name,
