@@ -150,4 +150,11 @@ class EventType extends BaseModel
             }
         );
     }
+
+    protected function camelCaseName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => Str::camel($this->name)
+        );
+    }
 }

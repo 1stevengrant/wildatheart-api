@@ -45,6 +45,11 @@ tabs:
               if:
                 is_local_event: 'equals true'
       -
+        display: Icons
+        fields:
+          -
+            import: icon_slider_block
+      -
         display: Testimonials
         fields:
           -
@@ -103,4 +108,4 @@ tabs:
           -
             import: blocks
             prefix: final_details_
-title: 'Multi-day Retreat'
+title: 'Event Landing Page'

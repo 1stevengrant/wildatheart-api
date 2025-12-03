@@ -15,7 +15,7 @@ class DesktopNavItemData extends Data
         public string $type = 'main_nav_item',
         public ?string $url = null,
         public ?string $icon = null,
-        /** @var \App\Data\Navigation\DropdownLinkData[]|null */
+        /** @var DropdownLinkData[]|null */
         public ?array $dropdownLinks = null,
         public ?string $bottomLinkTitle = null,
         public ?string $bottomLinkUrl = null,
