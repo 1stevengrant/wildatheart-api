@@ -23,7 +23,11 @@
       "Bash(composer update:*)",
       "Bash(find:*)",
       "Bash(./vendor/bin/pint:*)",
-      "Bash(php -l:*)"
+      "Bash(php -l:*)",
+      "Bash(composer dump-autoload:*)",
+      "Bash(composer remove:*)",
+      "Bash(./vendor/bin/pest:*)",
+      "Bash(composer require:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

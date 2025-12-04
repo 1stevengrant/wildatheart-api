@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Event;
-use App\Data\EventData;
+use App\Data\EventMapData;
 use App\Data\FeaturedContentData;
 use App\Services\GeographyService;
 use App\Services\EventCacheService;
@@ -73,7 +73,7 @@ class SearchForEventsController extends Controller
         }
 
         return response()->json([
-            'events' => EventData::collection($offsetEvents),
+            'events' => EventMapData::collection($offsetEvents),
             'featuredContent' => $featuredContent,
         ]);
 

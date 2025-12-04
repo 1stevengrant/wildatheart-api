@@ -13,7 +13,7 @@ export const LocalMapMarkers = () => {
     return (
         <>
             {events.length > 0 &&
-                events.map((event: App.Data.EventData) => (
+                events.map((event: App.Data.EventMapData) => (
                     <Marker
                         key={event.id}
                         longitude={event.display_longitude}

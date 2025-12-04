@@ -16,7 +16,7 @@ export const MobileEventList = ({ ...props }) => {
             </div>
             <div className={`overflow-y-scroll flex-1`}>
                 <ul className={`flex flex-col space-y-4`}>
-                    {events.map((event: App.Data.EventData) => {
+                    {events.map((event: App.Data.EventMapData) => {
                         return (
                             <MobileEventListCard event={event} key={event.id} />
                         );

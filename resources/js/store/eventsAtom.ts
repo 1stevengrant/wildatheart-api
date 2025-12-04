@@ -15,7 +15,7 @@ const selectedEventTypeState = atom({
     default: null as App.Data.EventTypeData | null,
 });
 
-const currentEventState = atom<App.Data.EventData | null | undefined>({
+const currentEventState = atom<App.Data.EventMapData | null | undefined>({
     key: "currentEvent",
     default: undefined,
 });

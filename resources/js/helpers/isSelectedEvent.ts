@@ -1,6 +1,6 @@
 export const isSelectedEvent = (
-    event: App.Data.EventData,
-    currentEvent: App.Data.EventData | undefined | null,
+    event: App.Data.EventMapData,
+    currentEvent: App.Data.EventMapData | undefined | null,
     borderColor?: string
 ) => {
     return event.id === currentEvent?.id

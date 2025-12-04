@@ -7,7 +7,7 @@ import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 export const MobileEventListCard = ({
     event,
 }: {
-    event: App.Data.EventData;
+    event: App.Data.EventMapData;
 }) => {
     return (
         <li className={`border border-n400 rounded-lg p-4`}>

@@ -7,7 +7,7 @@ import { Image } from "@/Components/Image";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 
-export const EventCardContent = ({ event }: { event: App.Data.EventData }) => {
+export const EventCardContent = ({ event }: { event: App.Data.EventMapData }) => {
     return (
         <>
             {event.event_type_image && (

@@ -6,7 +6,7 @@ import { currentEventState } from "@/store/eventsAtom";
 export const EventTypeGroupIndicator = ({
     event,
 }: {
-    event: App.Data.EventData;
+    event: App.Data.EventMapData;
 }) => {
     const [currentEvent] = useRecoilState(currentEventState);
     const isActive = event.id === currentEvent?.id;

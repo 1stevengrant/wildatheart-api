@@ -10,7 +10,7 @@ export const EventCard = ({
     className = "",
     attrs,
 }: {
-    event: App.Data.EventData;
+    event: App.Data.EventMapData;
     className?: string;
     attrs?: any;
 }) => {

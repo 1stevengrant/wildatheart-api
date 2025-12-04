@@ -88,6 +88,21 @@ end_date: string | null;
 number_of_items_in_material_order: string | null;
 frequency: App.Enums.Event.FrequencyEnum | null;
 };
+export type EventMapData = {
+id: string;
+display_longitude: number;
+display_latitude: number;
+badge_display: string;
+type_group: string | null;
+card_title: string;
+url: string;
+location: string;
+name: string | null;
+display_name: string | null;
+host_name: string;
+host_photo: string;
+event_type_image: string;
+};
 export type EventTypeData = {
 id: number;
 allow_materials_order: boolean;
@@ -189,43 +204,47 @@ type: string;
 };
 }
 declare namespace App.Data.V1 {
-    export type EventCollectionData = {
-        id: string;
-        location: string;
-        dates: string;
-        sex: string;
-        eventType: string;
-        eventTypeImage: string;
-        eventTypeCardDescription: string;
-        eventGroupType: string;
-        hostName: string;
-        hostAvatar: string | null;
-        longitude: number | null;
-        latitude: number | null;
-    };
-    export type EventData = {
-        id: string;
-        location: string;
-        dates: string;
-        sex: string;
-        eventType: string;
-        eventGroupType: string;
-        eventTypeImage: string;
-        eventTypeDescription: string;
-        eventTypePhotos: Array<any>;
-        hostName: string;
-        hostAvatar: string | null;
-    };
-    export type EventTypeData = {
-        id: number;
-        name: string;
-        camel_case_name: string;
-        sex: string;
-        image: string;
-        group_type: string;
-        listings_count: number;
-        countries_count: number;
-    };
+export type EventCollectionData = {
+id: string;
+location: string;
+dates: string;
+sex: string;
+eventType: string;
+eventTypeImage: string;
+eventTypeCardDescription: string;
+eventGroupType: string;
+hostName: string;
+hostAvatar: string | null;
+longitude: number | null;
+latitude: number | null;
+};
+export type EventData = {
+id: string;
+location: string;
+latitude: string;
+longitude: string;
+dates: string;
+sex: string;
+eventType: string;
+eventGroupType: string;
+eventTypeImage: string;
+eventTypeDescription: string;
+eventTypePhotos: Array<any>;
+scheduledFor: string | null;
+hostName: string;
+hostAvatar: string | null;
+landingPage: Array<any> | null;
+};
+export type EventTypeData = {
+id: number;
+name: string;
+camel_case_name: string;
+sex: string;
+image: string;
+group_type: string;
+listings_count: number;
+countries_count: number;
+};
 }
 declare namespace App.DataTypeObjects {
 export type Attributes = {
@@ -500,9 +519,58 @@ featured_video_url: string | null;
 related_event_type: string | null;
 subsplash_series_id: string | null;
 background_video_url: string | null;
-featured_video_fallback_image: string | null;
+featured_video_fallback_image: Array<any> | null;
 background_video_fallback_image: Array<any> | null;
 sessionData: Array<any> | null;
+id: string;
+title: string;
+private: boolean;
+published: boolean;
+status: string;
+slug: string;
+uri: string | null;
+url: string | null;
+blueprint: App.DataTypeObjects.Blueprint;
+locale: string;
+};
+}
+declare namespace App.DataTypeObjects.API.V1.Content.Events {
+export type EventsShowResponse = {
+blocks: Array<any> | null;
+description: string | null;
+buttons: Array<any> | null;
+event_logo: Array<any> | null;
+event_type: Array<any> | null;
+featured_image: Array<any> | null;
+featured_video_fallback_image: Array<any> | null;
+featured_video_url: string | null;
+topics: Array<any> | null;
+background_video_url: string | null;
+background_video_fallback_image: Array<any> | null;
+height: Array<any> | null;
+hero_logo: Array<any> | null;
+hero_subtitle: Array<any> | null;
+hero_title: Array<any> | null;
+hero_variant: Array<any> | null;
+hide_from_search_engines: boolean;
+images: Array<any>;
+is_local_event: boolean | null;
+leader_text: string | null;
+position: Array<any> | null;
+related_event_type: Array<any> | null;
+seo_description: string | null;
+seo_image: Array<any> | null;
+seo_title: string | null;
+show_in_collections: boolean | null;
+site_url: string | null;
+sitemap_priority: string | null;
+subtitle: string | null;
+testimonials: Array<any> | null;
+wide: string | null;
+width: Array<any> | null;
+final_details_blocks: Array<any> | null;
+vertical_videos_block: Array<any> | null;
+icons: Array<any> | null;
 id: string;
 title: string;
 private: boolean;
