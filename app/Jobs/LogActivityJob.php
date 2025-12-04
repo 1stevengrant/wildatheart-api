@@ -23,7 +23,9 @@ class LogActivityJob implements ShouldQueue
         public array $properties = [],
         public ?Model $causedBy = null,
         public ?Model $performedOn = null,
-        public ?Closure $tap = null
+        public ?Closure $tap = null,
+        public ?string $statamicEntryId = null,
+        public ?string $statamicGlobalHandle = null
     ) {}
 
     /**
@@ -42,6 +44,14 @@ class LogActivityJob implements ShouldQueue
 
         if ($this->tap) {
             $activity->tap($this->tap);
+        }
+
+        if ($this->statamicEntryId) {
+            $activity->tap(fn ($a) => $a->statamic_entry_id = $this->statamicEntryId);
+        }
+
+        if ($this->statamicGlobalHandle) {
+            $activity->tap(fn ($a) => $a->statamic_global_handle = $this->statamicGlobalHandle);
         }
 
         $activity->log($this->description);
