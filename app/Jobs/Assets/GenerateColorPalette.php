@@ -26,13 +26,27 @@ class GenerateColorPalette implements ShouldQueue
      */
     public function handle(): void
     {
+        try {
+            $palette = $this->getPalette();
 
-        $palette = ColorThief::getPalette(
+            $this->asset->set('color_palette', $palette)->save();
+        } catch (\RuntimeException $e) {
+            if (str_contains($e->getMessage(), 'blank or transparent')) {
+                $this->asset->set('color_palette', null)->save();
+
+                return;
+            }
+
+            throw $e;
+        }
+    }
+
+    protected function getPalette(): array
+    {
+        return ColorThief::getPalette(
             bunnyImage($this->asset->path, cdn: 's3_cdn_url'),
             colorCount: $this->colorCount,
             outputFormat: $this->outputFormat
         );
-
-        $this->asset->set('color_palette', $palette)->save();
     }
 }
