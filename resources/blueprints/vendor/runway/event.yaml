@@ -200,4 +200,15 @@ tabs:
               validate:
                 - sometimes
                 - url
+  managers:
+    display: Managers
+    sections:
+      -
+        fields:
+          -
+            handle: managers
+            field:
+              resource: user
+              type: has_many
+              display: Managers
 title: Event

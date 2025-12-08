@@ -37,7 +37,7 @@ class AutoUnpublishUnconfirmedFiresJob implements ShouldQueue
             ->allFires()
             ->lastCheckinReminderSent()
             ->where('last_checkin_reminder_sent_at', '<=', $threeDaysAfterReminder)
-            ->hasNotConfirmedCheckin()
+            ->lastCheckinNotConfirmed()
             ->published()
             ->notAutoUnpublished()
             ->each(function (Event $event) {

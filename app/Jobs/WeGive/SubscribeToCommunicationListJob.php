@@ -29,6 +29,23 @@ class SubscribeToCommunicationListJob implements ShouldQueue
      */
     public function handle(WeGiveConnector $weGiveConnector): void
     {
+        // Refresh the model to get the latest data from the database
+        $this->listMember->refresh();
+
+        // Skip if required fields are missing
+        if (empty($this->listMember->given_name) || empty($this->listMember->family_name)) {
+            LogActivityJob::dispatch(
+                logName: WeGiveConnector::ERROR_LOG_NAME,
+                description: 'Skipped subscribing user to WeGive communication list - missing name',
+                properties: [
+                    'user_id' => $this->listMember->id,
+                    'list_id' => $this->listId,
+                ]
+            );
+
+            return;
+        }
+
         $subscribeToListRequest = new SubscribeToCommunicationListRequest(
             communicationListId: $this->listId,
             email: $this->listMember->email,

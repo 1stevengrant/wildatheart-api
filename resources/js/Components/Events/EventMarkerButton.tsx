@@ -14,7 +14,11 @@ import { currentEventState } from "@/store/eventsAtom";
 const generalEventClasses = `w-8 h-8  flex items-center justify-center rounded-full hover:bg-p200 hover:stroke-white shadow-xl hover:shadow-none transition duration-150 ease-in-out`;
 const activeEventClasses = "bg-p200 stroke-white";
 const inactiveEventClasses = "bg-white stroke-black";
-export const EventMarkerButton = ({ event }: { event: App.Data.EventMapData }) => {
+export const EventMarkerButton = ({
+    event,
+}: {
+    event: App.Data.EventMapData;
+}) => {
     const { setPopupInfo } = usePopupInfo();
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
 

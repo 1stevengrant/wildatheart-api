@@ -61,8 +61,15 @@ class HandleMonthlyHostFireEmailController extends Controller
             performedOn: $event,
         );
 
+        // Send to primary host
         Mail::to($event->user->email)
             ->send(new ConfirmFireUnpublishedMailable($event));
+
+        // Send to all hosts
+        foreach ($event->managers as $manager) {
+            Mail::to($manager->email)
+                ->send(new ConfirmFireUnpublishedMailable($event));
+        }
 
         return to_route('home')
             ->with(['notifications' => [

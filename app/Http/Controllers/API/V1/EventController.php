@@ -16,9 +16,9 @@ class EventController extends Controller
         return cache()->remember('events_collection', now()->addHour(), function () {
             return EventCollectionData::collection(
                 Event::query()
-                    ->approved()
+                    ->published()
                     ->active()
-                    ->notPrivate()
+                    ->public()
                     ->with(['eventType', 'user'])
                     ->orderBy('start_date')
                     ->get()

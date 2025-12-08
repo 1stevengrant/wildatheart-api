@@ -11,9 +11,16 @@ class MyInactiveEventsController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $events = auth()->user()
-            ->events()->inactive()
-            ->with(['user', 'eventType'])
+        $events = \App\Models\Event::query()
+            ->controllableByUser(auth()->user())
+            ->where(function ($query) {
+                $query->unpublished()
+                    ->orWhere(function ($q) {
+                        $q->published()->whereNot(fn ($sub) => $sub->active());
+                    });
+            })
+
+            ->with(['user', 'eventType', 'managers'])
             ->paginate()
             ->through(fn ($event) => EventData::fromModel($event));
 

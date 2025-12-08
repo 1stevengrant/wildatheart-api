@@ -4,6 +4,7 @@ import {
     ClipboardDocumentCheckIcon,
     EllipsisHorizontalIcon,
     PencilIcon,
+    UserIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -103,6 +104,16 @@ export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
 
                         <span className={eventAdminActionButtonTextClass}>
                             Edit Event
+                        </span>
+                    </Link>
+                    <Link
+                        href={`${route("my.events.edit", event)}#hosts`}
+                        className={eventAdminActionButtonClass}
+                    >
+                        <UserIcon className={defaultIconSize} />
+
+                        <span className={eventAdminActionButtonTextClass}>
+                            Add Host
                         </span>
                     </Link>
                     <button

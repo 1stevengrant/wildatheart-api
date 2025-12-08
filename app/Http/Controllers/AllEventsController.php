@@ -19,10 +19,10 @@ class AllEventsController extends Controller
         $startEventsTime = microtime(true);
         $events = cache()->remember('all_events', now()->addMinutes(15), function () {
             return Event::query()
-                ->approved()
+                ->published()
                 ->active()
-                ->notPrivate()
-                ->with(['eventType', 'user'])
+                ->public()
+                ->with(['eventType', 'user', 'managers'])
                 ->orderBy('start_date')
                 ->get();
         });

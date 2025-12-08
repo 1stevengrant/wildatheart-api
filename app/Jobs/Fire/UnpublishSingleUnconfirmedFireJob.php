@@ -38,6 +38,12 @@ class UnpublishSingleUnconfirmedFireJob implements ShouldQueue
             'auto_unpublished_at' => now(),
         ]);
 
+        // Send to primary host
         Mail::to($this->event->user->email)->send(new EventAutoUnpublishedMail($this->event));
+
+        // Send to all hosts
+        foreach ($this->event->managers as $manager) {
+            Mail::to($manager->email)->send(new EventAutoUnpublishedMail($this->event));
+        }
     }
 }

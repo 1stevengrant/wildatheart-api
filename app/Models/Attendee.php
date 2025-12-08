@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Builders\AttendeeBuilder;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,11 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 class Attendee extends BaseModel
 {
     use HasFactory, HasRunwayResource, LogsActivity, SoftDeletes;
+
+    public function newEloquentBuilder($query): AttendeeBuilder
+    {
+        return new AttendeeBuilder($query);
+    }
 
     public function getFullnameAttribute(): string
     {
@@ -74,11 +80,6 @@ class Attendee extends BaseModel
     public function hasBeenContacted(): bool
     {
         return $this->contacted_on !== null;
-    }
-
-    public function scopeOrderByName($query): void
-    {
-        $query->orderBy('family_name')->orderBy('given_name');
     }
 
     public function scopeWhereEventId($query, $eventId)

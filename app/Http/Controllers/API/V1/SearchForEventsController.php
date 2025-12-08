@@ -27,9 +27,9 @@ class SearchForEventsController extends Controller
 
         $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData) {
             return Event::query()
-                ->approved()
+                ->published()
                 ->active()
-                ->notPrivate()
+                ->public()
                 ->filterBySex($validatedData['sex'])
                 ->filterByTypeGroup($validatedData['type_group'])
                 ->filterByEventTypes($validatedData['types'])

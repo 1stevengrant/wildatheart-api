@@ -7,6 +7,7 @@ import { singular } from "pluralize";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { EventMap } from "@/Components/EventMap";
+import { EventHosts } from "@/Components/Events/EventHosts";
 import { FireNamingGuidelines } from "@/Components/Events/FireNamingGuidelines";
 import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
@@ -32,6 +33,10 @@ const EditEventPage = () => {
 
     const user = page.props.auth.user!;
     const event = page.props.event as App.Data.EventData;
+    const managers = page.props.managers as App.Data.EventManagerData[];
+    const pendingTransfer = page.props
+        .pendingTransfer as App.Data.EventOwnershipTransferData | null;
+    const isOwner = page.props.isOwner as boolean;
     const eventTypeName = event.event_type_data.name;
     const pageTitle = `Editing ${event.name}`;
 
@@ -80,6 +85,17 @@ const EditEventPage = () => {
             setStartDate(dayjs(event.start_date?.split("T")[0]).toDate());
         }
     }, [event.start_date, setStartDate]);
+
+    useEffect(() => {
+        // Handle hash-based scrolling for Inertia navigation
+        const hash = window.location.hash;
+        if (hash) {
+            const element = document.querySelector(hash);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -209,6 +225,15 @@ const EditEventPage = () => {
                     </Link>
                 </div>
             </form>
+
+            <div className="mt-8">
+                <EventHosts
+                    eventId={event.id}
+                    managers={managers}
+                    pendingTransfer={pendingTransfer}
+                    isOwner={isOwner}
+                />
+            </div>
         </HostDashboardLayout>
     );
 };

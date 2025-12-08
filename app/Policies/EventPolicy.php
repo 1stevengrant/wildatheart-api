@@ -9,15 +9,8 @@ class EventPolicy
 {
     public function update(User $user, Event $event): bool
     {
-        if ($user->id === $event->user_id) {
-            return true;
-        }
-
-        if ($user->hasRole(User::ROLE_ADMIN)) {
-            return true;
-        }
-
-        return false;
+        return $event->isOwnedOrManagedBy($user)
+            || $user->hasRole(User::ROLE_ADMIN);
     }
 
     public function viewAny(User $user): bool
@@ -27,15 +20,8 @@ class EventPolicy
 
     public function view(User $user, Event $event): bool
     {
-        if ($user->id === $event->user_id) {
-            return true;
-        }
-
-        if ($user->hasRole(User::ROLE_ADMIN)) {
-            return true;
-        }
-
-        return false;
+        return $event->isOwnedOrManagedBy($user)
+            || $user->hasRole(User::ROLE_ADMIN);
     }
 
     public function create(User $user): bool
@@ -45,14 +31,13 @@ class EventPolicy
 
     public function delete(User $user, Event $event): bool
     {
-        if ($user->id === $event->user_id) {
-            return true;
-        }
+        return $user->id === $event->user_id
+            || $user->hasRole(User::ROLE_ADMIN);
+    }
 
-        if ($user->hasRole(User::ROLE_ADMIN)) {
-            return true;
-        }
-
-        return false;
+    public function manage(User $user, Event $event): bool
+    {
+        return $event->isOwnedOrManagedBy($user)
+            || $user->hasRole(User::ROLE_ADMIN);
     }
 }

@@ -52,10 +52,79 @@ class CallbackController extends Controller
             );
 
             $intendedUrl = Session::get('auth.intended_url');
+            $activatedInvitations = Session::get('activated_invitations', []);
+            $activatedOwnershipTransfers = Session::get('activated_ownership_transfers', []);
 
-            return redirect()->to($intendedUrl)->with([
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'Checking host invitation and ownership transfers',
+                properties: [
+                    'intendedUrl' => $intendedUrl,
+                    'activatedInvitations' => $activatedInvitations,
+                    'activatedOwnershipTransfers' => $activatedOwnershipTransfers,
+                ],
+            );
+
+            // Check if any ownership transfers or host invitations were activated
+            $message = 'You are now logged in!';
+
+            // Ownership transfers take priority in the message
+            if (! empty($activatedOwnershipTransfers)) {
+                $firstTransfer = $activatedOwnershipTransfers[0];
+                $eventName = $firstTransfer['event_name'];
+
+                if (count($activatedOwnershipTransfers) === 1) {
+                    $message = "You are now the owner of {$eventName}!";
+                } else {
+                    $message = "You are now the owner of {$eventName} and " . (count($activatedOwnershipTransfers) - 1) . ' other event(s)!';
+                }
+
+                LogActivityJob::dispatch(
+                    logName: 'auth',
+                    description: 'Ownership transfers activated',
+                    properties: [
+                        'count' => count($activatedOwnershipTransfers),
+                        'message' => $message,
+                    ],
+                );
+
+                // Clear the activated transfers from session
+                Session::forget('activated_ownership_transfers');
+            } elseif (! empty($activatedInvitations)) {
+                // Get the first activated invitation for the message
+                $firstInvitation = $activatedInvitations[0];
+                $eventName = $firstInvitation['event_name'];
+
+                if (count($activatedInvitations) === 1) {
+                    $message = "You are now a host for {$eventName}!";
+                } else {
+                    $message = "You are now a host for {$eventName} and " . (count($activatedInvitations) - 1) . ' other event(s)!';
+                }
+
+                LogActivityJob::dispatch(
+                    logName: 'auth',
+                    description: 'Host invitations activated',
+                    properties: [
+                        'count' => count($activatedInvitations),
+                        'message' => $message,
+                    ],
+                );
+
+                // Clear the activated invitations from session
+                Session::forget('activated_invitations');
+            }
+
+            // Clear the intended URL session data
+            Session::forget('auth.intended_url');
+            Session::forget('auth.invitation_id');
+            Session::forget('auth.ownership_transfer_id');
+
+            // Fallback to home if no intended URL
+            $redirectUrl = $intendedUrl ?: route('home');
+
+            return redirect($redirectUrl)->with([
                 'notifications' => [
-                    'message' => 'You are now logged in!',
+                    'message' => $message,
                     'type' => 'success',
                 ],
             ]);

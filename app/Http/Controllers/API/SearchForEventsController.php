@@ -27,9 +27,9 @@ class SearchForEventsController extends Controller
 
         $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData) {
             return Event::query()
-                ->approved()
+                ->published()
                 ->active()
-                ->notPrivate()
+                ->public()
                 ->filterBySex($validatedData['sex'])
                 ->filterByTypeGroup($validatedData['type_group'])
                 ->filterByEventTypes($validatedData['types'])
@@ -40,7 +40,7 @@ class SearchForEventsController extends Controller
                     $validatedData['ne_latitude'],
                     $validatedData['ne_longitude']
                 )
-                ->with(['eventType', 'user'])
+                ->with(['eventType', 'user', 'managers'])
                 ->orderBy('start_date')
                 ->get();
         });

@@ -11,8 +11,6 @@ class ToggleEventApprovedAtRequest extends FormRequest
      */
     public function authorize(): bool
     {
-
-        return $this->user()->id === $this->event->user_id;
-
+        return $this->event->isOwnedOrManagedBy($this->user());
     }
 }

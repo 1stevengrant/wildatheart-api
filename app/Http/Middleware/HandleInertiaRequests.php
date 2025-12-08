@@ -58,6 +58,7 @@ class HandleInertiaRequests extends Middleware
             'profile_step'
         ), [
             'image' => $user->profilePhoto(),
+            'has_complete_profile' => $user->hasCompleteProfile(),
         ]);
     }
 }

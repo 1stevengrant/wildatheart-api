@@ -11,7 +11,11 @@ use App\Http\Controllers\CreateSupportTicketController;
 use App\Http\Controllers\Event\ViewEventListingController;
 use App\Http\Controllers\Attendee\ConnectWithHostController;
 use App\Http\Controllers\Webhooks\SendGridWebhookController;
+use App\Http\Controllers\Event\AcceptHostInvitationController;
 use App\Http\Controllers\HandleMonthlyHostFireEmailController;
+use App\Http\Controllers\Event\ConfirmHostInvitationController;
+use App\Http\Controllers\Event\AcceptOwnershipTransferController;
+use App\Http\Controllers\Event\ConfirmOwnershipTransferController;
 
 Route::get('/', HomeController::class)->name('home');
 
@@ -24,6 +28,18 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 
 Route::get('attend/{event}', ViewEventListingController::class)->name('view.event');
+
+Route::middleware(['auth', 'agreed_to_host_agreement'])->group(function () {
+    Route::get('accept-host-invitation/{invitation}', AcceptHostInvitationController::class)
+        ->name('accept.host.invitation');
+    Route::post('accept-host-invitation/{invitation}', ConfirmHostInvitationController::class)
+        ->name('accept.host.invitation.confirm');
+
+    Route::get('accept-ownership-transfer/{transfer}', AcceptOwnershipTransferController::class)
+        ->name('accept.ownership.transfer');
+    Route::post('accept-ownership-transfer/{transfer}', ConfirmOwnershipTransferController::class)
+        ->name('accept.ownership.transfer.confirm');
+});
 
 Route::prefix('connect')->name('connect.')->group(function () {
     Route::get('{event}', [ConnectWithHostController::class, 'index'])->name('index');

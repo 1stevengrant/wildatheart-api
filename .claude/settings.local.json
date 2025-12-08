@@ -27,7 +27,14 @@
       "Bash(composer dump-autoload:*)",
       "Bash(composer remove:*)",
       "Bash(./vendor/bin/pest:*)",
-      "Bash(composer require:*)"
+      "Bash(composer require:*)",
+      "Bash(mysql:*)",
+      "Bash(git rebase:*)",
+      "mcp__laravel-boost__browser-logs",
+      "mcp__laravel-boost__last-error",
+      "mcp__laravel-boost__get-config",
+      "mcp__laravel-boost__database-query"
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

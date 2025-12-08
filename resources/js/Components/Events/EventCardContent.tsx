@@ -7,7 +7,11 @@ import { Image } from "@/Components/Image";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 
-export const EventCardContent = ({ event }: { event: App.Data.EventMapData }) => {
+export const EventCardContent = ({
+    event,
+}: {
+    event: App.Data.EventMapData;
+}) => {
     return (
         <>
             {event.event_type_image && (
@@ -34,6 +38,12 @@ export const EventCardContent = ({ event }: { event: App.Data.EventMapData }) =>
                             </div>
                         )}
                         <HostedBy host={event.host_name} />
+                        {event.managers_count > 0 && (
+                            <div className="text-xs text-n60 mt-0.5">
+                                + {event.managers_count} host
+                                {event.managers_count > 1 ? "s" : ""}
+                            </div>
+                        )}
                     </div>
                 </EventHostInfo>
             </EventInfo>

@@ -16,9 +16,12 @@ class ViewEventListingController extends Controller
 
     public function __invoke(Request $request, Event $event)
     {
-        if (! $event->isApproved() && $event->user_id !== auth()->id()) {
+        if (! $event->isApproved() && ! $event->isOwnedOrManagedBy(auth()->user())) {
             return to_route('login');
         }
+
+        // Eager load managers relationship
+        $event->load('managers');
 
         IncreaseEventCountsJob::dispatch(event: $event, countType: Event::COUNT_TYPE_VIEW);
 

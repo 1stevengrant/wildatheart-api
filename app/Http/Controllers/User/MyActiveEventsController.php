@@ -10,9 +10,11 @@ class MyActiveEventsController extends Controller
 {
     public function __invoke()
     {
-        $activeEvents = auth()->user()
-            ->events()->active()
-            ->with(['user', 'eventType'])
+        $activeEvents = \App\Models\Event::query()
+            ->controllableByUser(auth()->user())
+            ->published()
+            ->active()
+            ->with(['user', 'eventType', 'managers'])
             ->paginate()
             ->through(fn ($event) => EventData::fromModel($event));
 

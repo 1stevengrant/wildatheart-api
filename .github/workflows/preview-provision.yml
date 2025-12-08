@@ -43,6 +43,7 @@ jobs:
           FORGE_ENV_KEYS: |
             REMOTE_DATABASE_EXCLUDE_DATA=activity_log,failed_jobs,issues,pulse_aggregates,pulse_entries,pulse_values
             LOCAL_MYSQL_PATH=/usr/bin/mysql
+            REMOTE_SSH_USERNAME=forge
             REMOTE_USE_SSH=true
             REMOTE_DATABASE_USERNAME=forge
             REMOTE_DATABASE_HOST=10.0.0.4
@@ -55,5 +56,6 @@ jobs:
             AUTH0_MANAGEMENT_AUDIENCE=https://ransomed-heart.auth0.com/api/v2/
             AUTH0_MANAGEMENT_OAUTH_TOKEN_ENDPOINT=https://ransomed-heart.auth0.com/oauth/token
             ${{ secrets.LARAVEL_ENV_KEYS }}
+            MAIL_MAILER=database
           FORGE_NGINX_TEMPLATE: 14550
         run: harbor provision

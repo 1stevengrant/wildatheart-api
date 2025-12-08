@@ -12,6 +12,9 @@ class UserObserver
         FindOrCreateDonorJob::dispatch(
             donorModel: $user,
         );
+
+        // Note: Users must now explicitly accept host invitations and ownership transfers
+        // No automatic activation occurs when an account is created
     }
 
     /**

@@ -297,7 +297,7 @@ it('does not get private events', function () {
     expect($events->count())->toBe(0);
 });
 
-it('gets approved events only', function () {
+it('gets published events only', function () {
     $event1 = Event::factory()->fires()->create([
         'approved_at' => now(),
     ]);
@@ -307,7 +307,7 @@ it('gets approved events only', function () {
     ]);
 
     $events = Event::query()
-        ->approved()
+        ->published()
         ->get();
 
     expect($events->count())->toBe(1);

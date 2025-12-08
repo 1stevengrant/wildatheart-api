@@ -2,6 +2,7 @@
 
 namespace App\Builders;
 
+use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Database\Eloquent\Builder;
@@ -176,6 +177,14 @@ class EventBuilder extends Builder
         return $this->where('user_id', $userId);
     }
 
+    public function controllableByUser(User $user): EventBuilder
+    {
+        return $this->where(function ($query) use ($user) {
+            $query->where('user_id', $user->id)
+                ->orWhereHas('managers', fn ($q) => $q->where('user_id', $user->id));
+        });
+    }
+
     public function withinBoundingBox(
         float $swLatitude,
         float $swLongitude,
@@ -195,16 +204,6 @@ class EventBuilder extends Builder
 
         return $this->whereBetween('latitude', [$swLatitude, $neLatitude])
             ->whereBetween('longitude', [$swLongitude, $neLongitude]);
-    }
-
-    public function notPrivate(): EventBuilder
-    {
-        return $this->where('is_private', false);
-    }
-
-    public function approved(): EventBuilder
-    {
-        return $this->whereNotNull('approved_at');
     }
 
     public function betweenDates(?string $startDate = null, ?string $endDate = null): EventBuilder
@@ -290,11 +289,6 @@ class EventBuilder extends Builder
         return $this->where(function ($query) use ($city) {
             $query->where('city', 'like', "%$city%");
         });
-    }
-
-    public function hasNotConfirmedCheckin(): EventBuilder
-    {
-        return $this->whereNull('last_checkin_confirmed_at');
     }
 
     public function notAutoUnpublished(): EventBuilder

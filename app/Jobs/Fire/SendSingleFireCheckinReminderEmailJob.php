@@ -31,8 +31,15 @@ class SendSingleFireCheckinReminderEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
+        // Send to primary host
         Mail::to($this->event->user->email)
             ->send(new \App\Mail\Fire\SevenDayFollowupMailable($this->event));
+
+        // Send to all hosts
+        foreach ($this->event->managers as $manager) {
+            Mail::to($manager->email)
+                ->send(new \App\Mail\Fire\SevenDayFollowupMailable($this->event));
+        }
 
         $this->event->update(['last_checkin_reminder_sent_at' => now()]);
     }

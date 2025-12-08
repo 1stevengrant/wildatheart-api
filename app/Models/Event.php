@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Enums\EventSexEnum;
+use Illuminate\Support\Str;
 use App\Builders\EventBuilder;
 use App\Enums\Event\FrequencyEnum;
 use Spatie\Activitylog\LogOptions;
@@ -17,6 +18,7 @@ use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[ObservedBy(\App\Observers\EventObserver::class)]
 class Event extends BaseModel
@@ -143,6 +145,38 @@ class Event extends BaseModel
     public function eventType(): BelongsTo
     {
         return $this->belongsTo(EventType::class);
+    }
+
+    public function eventTypeSingular(): string
+    {
+        return Str::singular($this->eventType->name);
+    }
+
+    public function managers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function managerInvitations(): HasMany
+    {
+        return $this->hasMany(\App\Models\EventManagerInvitation::class);
+    }
+
+    public function pendingManagerInvitations(): HasMany
+    {
+        return $this->hasMany(\App\Models\EventManagerInvitation::class)
+            ->whereNull('accepted_at');
+    }
+
+    public function ownershipTransfer(): HasOne
+    {
+        return $this->hasOne(\App\Models\EventOwnershipTransfer::class);
+    }
+
+    public function pendingOwnershipTransfer(): HasOne
+    {
+        return $this->hasOne(\App\Models\EventOwnershipTransfer::class)
+            ->whereNull('accepted_at');
     }
 
     /*
@@ -424,6 +458,12 @@ class Event extends BaseModel
     public function isApproved(): bool
     {
         return (bool) $this->approved_at;
+    }
+
+    public function isOwnedOrManagedBy(User $user): bool
+    {
+        return $this->user_id === $user->id
+            || $this->managers()->where('user_id', $user->id)->exists();
     }
 
     public function hasRequestedGift(): bool

@@ -12,32 +12,32 @@ class MyContactsController extends Controller
 {
     public function index(Request $request): Response
     {
-        $paginatedAttendees = auth()->user()->attendees()
+        $user = auth()->user();
+
+        $paginatedAttendees = \App\Models\Attendee::query()
+            ->controllableByUser($user)
             ->with(['event.eventType'])
             ->orderByName()
             ->filter(Request::only('event_id'))
             ->paginate(10)
             ->appends(Request::all());
 
+        $myEvents = \App\Models\Event::query()
+            ->controllableByUser($user)
+            ->get();
+
         return inertia('Profile/MyContactsPage', [
             'filters' => Request::all('event_id'),
-            'myEvents' => auth()->user()->events()->get(),
+            'myEvents' => $myEvents,
             'attendees' => $this->transformPaginatedData($paginatedAttendees, AttendeeData::class),
         ]);
     }
 
     public function destroy(int $attendeeId): RedirectResponse
     {
-        $attendee = auth()->user()->attendees()->findOrFail($attendeeId);
-
-        if ($attendee->event->user_id !== auth()->id()) {
-            return to_route('my.contacts')->with([
-                'notifications' => [
-                    'message' => 'You do not have permission to remove this contact.',
-                    'type' => 'error',
-                ],
-            ]);
-        }
+        $attendee = \App\Models\Attendee::query()
+            ->controllableByUser(auth()->user())
+            ->findOrFail($attendeeId);
 
         $attendee->delete();
 

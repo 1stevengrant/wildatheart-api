@@ -13,7 +13,7 @@ class UpcomingEventsController extends Controller
     {
         $upcomingEvents = cache()->remember('public_upcoming_events', now()->addHour(), function () {
             return Event::query()
-                ->with(['user'])
+                ->with(['user', 'eventType', 'managers'])
                 ->upcoming()
                 ->public()
                 ->published()

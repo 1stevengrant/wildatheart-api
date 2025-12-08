@@ -67,6 +67,7 @@ street_address: string | null;
 zip: string | null;
 is_featured: boolean | null;
 custom_landing_url: string | null;
+managers: { [key: number]: App.Data.EventManagerData };
 };
 export type EventFormData = {
 name: string;
@@ -88,20 +89,45 @@ end_date: string | null;
 number_of_items_in_material_order: string | null;
 frequency: App.Enums.Event.FrequencyEnum | null;
 };
+export type EventManagerData = {
+id: string;
+fullname: string;
+email: string;
+image: string;
+is_pending: boolean;
+invitation_id: string | null;
+is_owner: boolean;
+};
+export type EventManagerInvitationWithEventData = {
+id: string;
+event: App.Data.EventData;
+invited_by_name: string;
+};
 export type EventMapData = {
 id: string;
 display_longitude: number;
 display_latitude: number;
-badge_display: string;
-type_group: string | null;
-card_title: string;
+type_group: string;
 url: string;
+event_type_image: string;
 location: string;
-name: string | null;
+host_photo: string;
 display_name: string | null;
 host_name: string;
-host_photo: string;
-event_type_image: string;
+managers_count: number;
+card_title: string;
+badge_display: string;
+};
+export type EventOwnershipTransferData = {
+id: string;
+email: string;
+transferred_by_name: string;
+is_pending: boolean;
+};
+export type EventOwnershipTransferWithEventData = {
+id: string;
+event: App.Data.EventData;
+transferred_by_name: string;
 };
 export type EventTypeData = {
 id: number;

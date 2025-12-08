@@ -10,6 +10,7 @@ use App\Http\Controllers\User\MyContactsController;
 use App\Http\Controllers\User\HostProfileController;
 use App\Http\Controllers\Event\DeleteEventController;
 use App\Http\Controllers\Event\UpdateEventController;
+use App\Http\Controllers\Event\EventManagerController;
 use App\Http\Controllers\Event\StandardFireController;
 use App\Http\Controllers\Event\HostEventTypeController;
 use App\Http\Controllers\User\MyActiveEventsController;
@@ -70,6 +71,18 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('{event}', DeleteEventController::class)->name('delete.event');
             Route::put('{event}', UpdateEventController::class)->name('update.event');
             Route::get('{event}', EditEventController::class)->name('my.events.edit');
+
+            Route::prefix('{event}/managers')->name('events.managers.')->group(function () {
+                Route::get('/', [EventManagerController::class, 'index'])->name('index');
+                Route::post('/', [EventManagerController::class, 'store'])->name('store');
+                Route::delete('{manager}', [EventManagerController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('{event}/ownership-transfer')->name('events.ownership.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Event\EventOwnershipTransferController::class, 'show'])->name('show');
+                Route::post('/', [\App\Http\Controllers\Event\EventOwnershipTransferController::class, 'store'])->name('store');
+                Route::delete('/', [\App\Http\Controllers\Event\EventOwnershipTransferController::class, 'destroy'])->name('destroy');
+            });
         });
 
         Route::put('approved/{event}', ToggleEventApprovedAtController::class)->name('toggle-event-approved-at');

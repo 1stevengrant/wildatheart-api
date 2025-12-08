@@ -13,9 +13,11 @@ use Illuminate\Auth\Events\Login;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntryDeleted;
 use App\Observers\AttendeeObserver;
+use Statamic\Events\GlobalVariablesSaved;
 use App\Listeners\LogStatamicEntryChanges;
 use App\Listeners\UpdateLastLoginDateTime;
 use App\Listeners\SaveSubsplashItemEntryWithId;
+use App\Listeners\ClearNavigationCacheOnGlobalSavedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -40,6 +42,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         EntryDeleted::class => [
             LogStatamicEntryChanges::class,
+        ],
+        GlobalVariablesSaved::class => [
+            ClearNavigationCacheOnGlobalSavedListener::class,
         ],
     ];
 

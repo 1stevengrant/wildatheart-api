@@ -19,6 +19,7 @@ class UpdateUserProfileController extends Controller
         }
 
         $previousOptIn = $user->opted_into_marketing;
+        $previousProfileStep = $user->profile_step;
         $newOptIn = $request->boolean('opted_into_marketing');
 
         $updateData = [
@@ -29,12 +30,8 @@ class UpdateUserProfileController extends Controller
             'opted_into_marketing' => $newOptIn,
         ];
 
-        if ($user->profile_step < User::PROFILE_COMPLETE && $newOptIn) {
+        if ($previousProfileStep < User::PROFILE_COMPLETE && $newOptIn) {
             $updateData['date_opted_into_marketing'] = now();
-            SubscribeToCommunicationListJob::dispatch(
-                listId: config('services.wegive.marketing_list_id'),
-                listMember: $user
-            );
         }
 
         if ($previousOptIn !== $newOptIn) {
@@ -42,21 +39,32 @@ class UpdateUserProfileController extends Controller
 
             if ($newOptIn) {
                 $updateData['date_opted_into_marketing'] = now();
-                SubscribeToCommunicationListJob::dispatch(
-                    listId: config('services.wegive.marketing_list_id'),
-                    listMember: $user
-                );
-            } else {
-
-                UnsubscribeFromCommunicationListJob::dispatch(
-                    donorIds: [$user->wegive_donor_id],
-                    user: $user,
-                    listId: config('services.wegive.marketing_list_id')
-                );
             }
         }
 
         $user->update($updateData);
+
+        // Dispatch jobs after update so user has the updated values
+        // Use afterCommit to ensure the database transaction is complete before the job runs
+        if ($previousProfileStep < User::PROFILE_COMPLETE && $newOptIn) {
+            SubscribeToCommunicationListJob::dispatch(
+                listId: config('services.wegive.marketing_list_id'),
+                listMember: $user
+            )->afterCommit();
+        } elseif ($previousOptIn !== $newOptIn) {
+            if ($newOptIn) {
+                SubscribeToCommunicationListJob::dispatch(
+                    listId: config('services.wegive.marketing_list_id'),
+                    listMember: $user
+                )->afterCommit();
+            } else {
+                UnsubscribeFromCommunicationListJob::dispatch(
+                    donorIds: [$user->wegive_donor_id],
+                    user: $user,
+                    listId: config('services.wegive.marketing_list_id')
+                )->afterCommit();
+            }
+        }
 
         return redirect()->back()->with([
             'notifications' => [

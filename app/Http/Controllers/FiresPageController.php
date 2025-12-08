@@ -15,6 +15,7 @@ class FiresPageController extends Controller
                 ->fires()
                 ->public()
                 ->published()
+                ->with(['user', 'eventType', 'managers'])
                 ->get();
         });
 
