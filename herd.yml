@@ -1,0 +1,14 @@
+name: wahfires
+php: '8.4'
+secured: true
+aliases:
+    - wahlocal
+services:
+    mysql:
+        version: 8.4.6
+        port: '${DB_PORT}'
+    redis:
+        version: 7.4.5
+        port: '${REDIS_PORT}'
+integrations:
+    forge: {  }
