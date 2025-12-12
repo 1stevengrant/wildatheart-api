@@ -1362,7 +1362,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-main",
+            "version": "dev-feature/WAH-1549",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",

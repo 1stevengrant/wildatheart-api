@@ -3,8 +3,21 @@
 use Sentry\Laravel\Integration;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\SuperAdminMiddleware;
+use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\AuthenticateMiddleware;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Spatie\Permission\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use App\Http\Middleware\HasAgreedToHostAgreementMiddleware;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -31,25 +44,26 @@ return Application::configure(basePath: dirname(__DIR__))
             'api/v1/webhooks/*',
         ]);
 
-        $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);
+        $middleware->web(HandleInertiaRequests::class);
 
         $middleware->throttleApi();
 
         $middleware->group('non-inertia', [
-            \Illuminate\Cookie\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            ShareErrorsFromSession::class,
+            ValidateCsrfToken::class,
+            SubstituteBindings::class,
         ]);
 
         $middleware->alias([
-            'agreed_to_host_agreement' => \App\Http\Middleware\HasAgreedToHostAgreementMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-            'super_admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+            'auth' => AuthenticateMiddleware::class,
+            'agreed_to_host_agreement' => HasAgreedToHostAgreementMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role' => RoleMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'super_admin' => SuperAdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -174,6 +174,16 @@ md5email: string | null;
 fullname: string | null;
 photo: string | null;
 };
+export type ProfileMenuData = {
+urlToProfile: string;
+primaryItems: { [key: number]: App.Data.ProfileMenuItemData };
+secondaryItems: { [key: number]: App.Data.ProfileMenuItemData };
+};
+export type ProfileMenuItemData = {
+label: string;
+href: string;
+iconName: string | null;
+};
 export type UserData = {
 id: number;
 given_name: string;

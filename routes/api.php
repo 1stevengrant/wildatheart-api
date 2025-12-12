@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeoController;
+use App\Http\Controllers\MeNavController;
+use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\BlogsController;
 use App\Http\Controllers\API\SearchController;
@@ -110,3 +112,8 @@ Route::prefix('content')->group(function () {
 
 Route::get('events/search', SearchForEventsController::class)->name('api.events.search');
 Route::get('events/all', AllEventsController::class)->name('api.events.all');
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('auth/me', MeController::class)->name('auth.me');
+    Route::get('auth/me/nav', MeNavController::class)->name('auth.me.nav');
+});
