@@ -12,8 +12,8 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
-    // Create a minimal Auth0 instance for testing (won't actually validate tokens)
-    $this->app->singleton(Auth0::class, function () {
+    // Create a minimal Auth0 API instance for testing (won't actually validate tokens)
+    $this->app->singleton('auth0.api', function () {
         return new Auth0(new SdkConfiguration([
             'domain' => 'test.auth0.com',
             'clientId' => 'test-client-id',

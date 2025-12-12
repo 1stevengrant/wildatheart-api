@@ -26,8 +26,8 @@ class TestControllerWithResolvesAuthenticatedUser
 beforeEach(function () {
     $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
-    // Create a minimal Auth0 instance for testing
-    $this->app->singleton(Auth0::class, function () {
+    // Create a minimal Auth0 API instance for testing
+    $this->app->singleton('auth0.api', function () {
         return new Auth0(new SdkConfiguration([
             'domain' => 'test.auth0.com',
             'clientId' => 'test-client-id',

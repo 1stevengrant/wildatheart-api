@@ -24,14 +24,23 @@ class AuthServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->app->singleton(Auth0::class, function () {
+        // Note: Auth0::class for web (stateful) authentication is registered by Auth0ServiceProvider
+        // Here we only register the API instance for stateless token validation
+
+        // Register Auth0 for API (stateless) authentication - used by API guard
+        $this->app->singleton('auth0.api', function () {
             $config = config('auth0');
 
             if (empty($config['audience'])) {
                 throw new \RuntimeException('AUTH0_AUDIENCE environment variable is not set');
             }
 
-            return new Auth0(new SdkConfiguration([...$config, 'strategy' => 'api']));
+            return new Auth0(new SdkConfiguration([
+                'domain' => $config['domain'],
+                'clientId' => $config['client_id'],
+                'audience' => $config['audience'],
+                'strategy' => 'api',
+            ]));
         });
 
         parent::register();
@@ -44,7 +53,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         Auth::viaRequest('auth0', function (Request $request) {
             /** @var Auth0 $auth0 */
-            $auth0 = app(Auth0::class);
+            $auth0 = app('auth0.api');
 
             if (! $request->headers->has('authorization')) {
                 return null;
