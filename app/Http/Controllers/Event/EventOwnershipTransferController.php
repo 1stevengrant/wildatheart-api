@@ -20,7 +20,7 @@ class EventOwnershipTransferController extends Controller
     {
         $this->authorize('update', $event);
 
-        $pendingTransfer = $event->pendingOwnershipTransfer;
+        $pendingTransfer = $event->pendingOwnershipTransfer?->load('transferredByUser');
 
         return response()->json([
             'transfer' => $pendingTransfer ? EventOwnershipTransferData::fromModel($pendingTransfer) : null,
@@ -93,7 +93,7 @@ class EventOwnershipTransferController extends Controller
         $transfer = EventOwnershipTransfer::create([
             'event_id' => $event->id,
             'email' => $email,
-            'transferred_by_name' => auth()->user()->fullname,
+            'transferred_by_user_id' => auth()->id(),
         ]);
 
         // Send transfer notification email

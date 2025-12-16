@@ -51,7 +51,7 @@ class CapturedEmailsController extends Controller
 
         $routeName = config('email-preview.routes.name') . '.index';
 
-        return redirect()->route($routeName)->with('success', 'Email deleted successfully.');
+        return to_route($routeName)->with('success', 'Email deleted successfully.');
     }
 
     public function clear(): RedirectResponse
@@ -60,6 +60,6 @@ class CapturedEmailsController extends Controller
 
         $routeName = config('email-preview.routes.name') . '.index';
 
-        return redirect()->route($routeName)->with('success', 'All emails cleared successfully.');
+        return to_route($routeName)->with('success', 'All emails cleared successfully.');
     }
 }

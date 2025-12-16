@@ -12,7 +12,7 @@ class EventEditPageService
 {
     public function buildPageData(Event $event): array
     {
-        $event->load('user', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer');
+        $event->load('user', 'managers', 'pendingManagerInvitations.invitedByUser', 'pendingOwnershipTransfer.transferredByUser');
 
         return [
             'event' => EventData::fromModel($event),

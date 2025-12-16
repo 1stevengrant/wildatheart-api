@@ -17,7 +17,7 @@ class ConfirmHostInvitationController extends Controller
     {
         // Check if this invitation is for the logged-in user
         if (auth()->user()->email !== $invitation->email) {
-            return redirect()->route('home')->with([
+            return to_route('home')->with([
                 'notifications' => [
                     'message' => 'This invitation is for a different email address.',
                     'type' => 'error',
@@ -25,15 +25,15 @@ class ConfirmHostInvitationController extends Controller
             ]);
         }
 
+        $event = $invitation->event;
+
         // Activate the invitation
         if ($invitation->isPending()) {
-            $event = $invitation->event;
             $eventOwner = $event->user;
 
             $invitation->event->managers()->attach(auth()->id());
 
-            // Delete the invitation after successful acceptance
-            $invitation->delete();
+            $invitation->markAsAccepted();
 
             // Send notification to the new host
             Mail::to(auth()->user()->email)->send(new HostAddedMail($event, auth()->user(), $eventOwner));
@@ -42,10 +42,7 @@ class ConfirmHostInvitationController extends Controller
             Mail::to($eventOwner->email)->send(new HostAddedMail($event, auth()->user(), $eventOwner));
         }
 
-        // Redirect to the event (use stored $event since invitation is deleted)
-        $event = $event ?? $invitation->event;
-
-        return redirect()->route('my.events.edit', $event)->with([
+        return to_route('my.events.edit', $event)->with([
             'notifications' => [
                 'message' => "You are now a host for {$event->name}!",
                 'type' => 'success',

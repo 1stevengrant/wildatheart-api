@@ -21,7 +21,7 @@ class EventOwnershipTransferData extends Data
         return new self(
             id: $transfer->id,
             email: $transfer->email,
-            transferred_by_name: $transfer->transferred_by_name,
+            transferred_by_name: $transfer->transferredByUser->fullname,
             is_pending: $transfer->isPending(),
         );
     }

@@ -164,8 +164,8 @@ class Event extends BaseModel
 
     public function pendingManagerInvitations(): HasMany
     {
-        return $this->hasMany(\App\Models\EventManagerInvitation::class)
-            ->whereNull('accepted_at');
+        // Global scope on EventManagerInvitation already filters by pending status
+        return $this->hasMany(\App\Models\EventManagerInvitation::class);
     }
 
     public function ownershipTransfer(): HasOne
@@ -175,8 +175,8 @@ class Event extends BaseModel
 
     public function pendingOwnershipTransfer(): HasOne
     {
-        return $this->hasOne(\App\Models\EventOwnershipTransfer::class)
-            ->whereNull('accepted_at');
+        // Global scope on EventOwnershipTransfer already filters by pending status
+        return $this->hasOne(\App\Models\EventOwnershipTransfer::class);
     }
 
     /*

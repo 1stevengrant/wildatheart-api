@@ -78,7 +78,7 @@ class EventManagerController extends Controller
         $invitation = EventManagerInvitation::create([
             'event_id' => $event->id,
             'email' => $email,
-            'invited_by_name' => auth()->user()->fullname,
+            'invited_by_user_id' => auth()->id(),
         ]);
 
         // Send invitation email

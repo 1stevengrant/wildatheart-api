@@ -20,7 +20,7 @@ class EventManagerInvitationWithEventData extends Data
         return new self(
             id: $invitation->id,
             event: EventData::fromModel($invitation->event),
-            invited_by_name: $invitation->invited_by_name,
+            invited_by_name: $invitation->invitedByUser->fullname,
         );
     }
 }

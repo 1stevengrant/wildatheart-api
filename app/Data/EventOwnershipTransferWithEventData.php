@@ -20,7 +20,7 @@ class EventOwnershipTransferWithEventData extends Data
         return new self(
             id: $transfer->id,
             event: EventData::fromModel($transfer->event),
-            transferred_by_name: $transfer->transferred_by_name,
+            transferred_by_name: $transfer->transferredByUser->fullname,
         );
     }
 }

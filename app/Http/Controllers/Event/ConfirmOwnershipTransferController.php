@@ -16,7 +16,7 @@ class ConfirmOwnershipTransferController extends Controller
     {
         // Check if this transfer is for the logged-in user
         if (auth()->user()->email !== $transfer->email) {
-            return redirect()->route('home')->with([
+            return to_route('home')->with([
                 'notifications' => [
                     'message' => 'This ownership transfer is for a different email address.',
                     'type' => 'error',
@@ -33,7 +33,7 @@ class ConfirmOwnershipTransferController extends Controller
         }
 
         // Redirect to the event (use stored $event since transfer is deleted)
-        return redirect()->route('my.events.edit', $event)->with([
+        return to_route('my.events.edit', $event)->with([
             'notifications' => [
                 'message' => "You are now the owner of {$event->name}!",
                 'type' => 'success',

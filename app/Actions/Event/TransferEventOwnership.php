@@ -36,16 +36,12 @@ class TransferEventOwnership
         // Add old owner as host (they become a host after transferring ownership)
         $transfer->event->managers()->syncWithoutDetaching([$oldOwnerId]);
 
-        // Store event reference before deleting the transfer
         $event = $transfer->event;
 
-        // Delete transfer after successful completion
-        $transfer->delete();
+        $transfer->markAsAccepted();
 
-        // Send notification to the new owner
         Mail::to($newOwner->email)->send(new OwnershipTransferCompletedMail($event, $newOwner, $oldOwner, true));
 
-        // Send notification to the previous owner
         Mail::to($oldOwner->email)->send(new OwnershipTransferCompletedMail($event, $newOwner, $oldOwner, false));
     }
 }

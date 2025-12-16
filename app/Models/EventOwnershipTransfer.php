@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -13,7 +14,7 @@ class EventOwnershipTransfer extends Model
     protected $fillable = [
         'event_id',
         'email',
-        'transferred_by_name',
+        'transferred_by_user_id',
         'accepted_at',
     ];
 
@@ -21,14 +22,31 @@ class EventOwnershipTransfer extends Model
         'accepted_at' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('pending', function (Builder $builder) {
+            $builder->whereNull('accepted_at');
+        });
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
     }
 
+    public function transferredByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'transferred_by_user_id');
+    }
+
     public function isPending(): bool
     {
         return $this->accepted_at === null;
+    }
+
+    public function isAccepted(): bool
+    {
+        return $this->accepted_at !== null;
     }
 
     public function markAsAccepted(): void

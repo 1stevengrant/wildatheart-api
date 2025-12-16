@@ -14,9 +14,11 @@ class AcceptHostInvitationController extends Controller
      */
     public function __invoke(Request $request, EventManagerInvitation $invitation)
     {
+        $invitation->load('event', 'invitedByUser');
+
         // Check if this invitation is for the logged-in user
         if (auth()->user()->email !== $invitation->email) {
-            return redirect()->route('home')->with([
+            return to_route('home')->with([
                 'notifications' => [
                     'message' => 'This invitation is for a different email address.',
                     'type' => 'error',
@@ -26,7 +28,7 @@ class AcceptHostInvitationController extends Controller
 
         // Check if already accepted
         if (! $invitation->isPending()) {
-            return redirect()->route('my.events.edit', $invitation->event)->with([
+            return to_route('my.events.edit', $invitation->event)->with([
                 'notifications' => [
                     'message' => 'You are already a host for this event.',
                     'type' => 'info',
