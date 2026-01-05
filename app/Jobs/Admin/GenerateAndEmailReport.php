@@ -14,8 +14,11 @@ class GenerateAndEmailReport implements ShouldQueue
 {
     use Queueable;
 
+    /**
+     * @param  string|array<string>  $emails
+     */
     public function __construct(
-        private readonly string $email,
+        private readonly string|array $emails,
         private readonly ReportName $report,
         private readonly string $reportTitle,
         private readonly ReportFormat $format = ReportFormat::CSV,
@@ -45,7 +48,10 @@ class GenerateAndEmailReport implements ShouldQueue
 
         $date = now()->format('m/d/Y');
 
-        Mail::to($this->email)
+        // Normalize emails to array
+        $emails = is_array($this->emails) ? $this->emails : [$this->emails];
+
+        Mail::to($emails)
             ->cc('nic@wildatheart.org')
             ->send(new \App\Mail\ReportMailable($date, $filePath, $this->reportTitle));
 

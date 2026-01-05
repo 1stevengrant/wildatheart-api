@@ -261,3 +261,37 @@ it('handles special characters in CSV content', function () {
     Mail::assertSent(ReportMailable::class);
     Storage::disk('local')->assertMissing('tmp/report.csv');
 });
+
+it('sends email to multiple recipients', function () {
+    // Arrange
+    $emails = ['recipient1@example.com', 'recipient2@example.com', 'recipient3@example.com'];
+    $report = ReportName::BAKR_HOSTS;
+    $reportTitle = 'Multiple Recipients Test';
+    $csvContent = "Name,Email\nJohn Doe,john@example.com\nJane Smith,jane@example.com";
+
+    $this->reportService
+        ->shouldReceive('generate')
+        ->once()
+        ->with($report, ReportFormat::CSV)
+        ->andReturn($csvContent);
+
+    // Act
+    $job = new GenerateAndEmailReport($emails, $report, $reportTitle);
+    $job->handle($this->reportService);
+
+    // Assert
+    Mail::assertSent(ReportMailable::class, function ($mail) use ($emails, $reportTitle) {
+        // Check that all emails are in the "to" recipients
+        foreach ($emails as $email) {
+            if (! $mail->hasTo($email)) {
+                return false;
+            }
+        }
+
+        // Check CC is still present
+        return $mail->hasCc('nic@wildatheart.org') &&
+               str_contains($mail->envelope()->subject, $reportTitle);
+    });
+
+    Storage::disk('local')->assertMissing('tmp/report.csv');
+});
