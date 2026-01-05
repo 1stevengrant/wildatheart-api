@@ -53,7 +53,7 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     {
         $content = $this->emailTemplate->body;
         $eventName = $this->event->eventType->name;
-        $content = str_replace('[host_name]', $this->event->user->given_name, $content);
+        $content = str_replace('[host_name]', $this->getAllHostNames(), $content);
         $link = route('view.event', $this->event);
         if ($eventName === EventType::FIRES) {
             $eventName = '<a href="' . $link . '">' . $this->event->name . ' Fire</a>';
@@ -67,6 +67,29 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
         return new Content(
             markdown: 'emails.events.attendee-connected-to-host',
         );
+    }
+
+    private function getAllHostNames(): string
+    {
+        $hosts = collect([$this->event->user]);
+
+        if ($this->event->managers->isNotEmpty()) {
+            $hosts = $hosts->merge($this->event->managers);
+        }
+
+        $names = $hosts->map(fn ($host) => $host->given_name)->filter();
+
+        if ($names->count() <= 1) {
+            return $names->first() ?? '';
+        }
+
+        if ($names->count() === 2) {
+            return $names->implode(' and ');
+        }
+
+        $lastHost = $names->pop();
+
+        return $names->implode(', ') . ', and ' . $lastHost;
     }
 
     /**

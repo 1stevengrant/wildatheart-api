@@ -14,21 +14,17 @@ class AttendeeObserver
 {
     public function created(Attendee $attendee): void
     {
-        // Notify primary host
-        Mail::to($attendee->event->user->email)
-            ->send(new AttendeeRegistered(
-                event: $attendee->event,
-                attendee: $attendee
-            ));
+        // Notify primary host (CC managers)
+        $mail = Mail::to($attendee->event->user->email);
 
-        // Notify all event managers
-        foreach ($attendee->event->managers as $manager) {
-            Mail::to($manager->email)
-                ->send(new AttendeeRegistered(
-                    event: $attendee->event,
-                    attendee: $attendee
-                ));
+        if ($attendee->event->managers->isNotEmpty()) {
+            $mail->cc($attendee->event->managers->pluck('email')->toArray());
         }
+
+        $mail->send(new AttendeeRegistered(
+            event: $attendee->event,
+            attendee: $attendee
+        ));
 
         // Notify the attendee
         Mail::to($attendee->email)
