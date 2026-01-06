@@ -12,11 +12,12 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use App\Traits\InteractsWithEmailTemplates;
+use App\Traits\FormatsEventHostNames;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AttendeeConnectedToHost extends Mailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, FormatsEventHostNames, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 
@@ -53,7 +54,7 @@ class AttendeeConnectedToHost extends Mailable implements ShouldQueue
     {
         $content = $this->emailTemplate->body;
         $eventName = $this->event->eventType->name;
-        $content = str_replace('[host_name]', $this->event->user->given_name, $content);
+        $content = str_replace('[host_name]', $this->getAllHostNames(), $content);
         $link = route('view.event', $this->event);
         if ($eventName === EventType::FIRES) {
             $eventName = '<a href="' . $link . '">' . $this->event->name . ' Fire</a>';

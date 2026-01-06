@@ -12,11 +12,12 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use App\Traits\InteractsWithEmailTemplates;
+use App\Traits\FormatsEventHostNames;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AttendeeRegistered extends Mailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, FormatsEventHostNames, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 
@@ -53,7 +54,7 @@ class AttendeeRegistered extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
-        $content = str_replace('[host_name]', $this->event->user->given_name, $content);
+        $content = str_replace('[host_name]', $this->getAllHostNames(), $content);
         $content = str_replace('[attendee_fullname]', $this->attendee->given_name, $content);
         $content = str_replace('[attendee_name]', $this->attendee->given_name, $content);
         $content = str_replace('[attendee_email]', $this->attendee->email, $content);
