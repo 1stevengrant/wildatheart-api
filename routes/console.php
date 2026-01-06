@@ -10,7 +10,10 @@ Schedule::command('app:get-latest-subsplash-media')->everyFifteenMinutes()->envi
 Schedule::command('wegive:update-donor-ids')->daily();
 // Generate the monthly BAKR report and send to Morgan.
 Schedule::job(new GenerateAndEmailReport(
-    'morgan@becomegoodsoil.com',
+    [
+        'morgan@becomegoodsoil.com',
+        'andrew@becomegoodsoil.com'
+    ],
     ReportName::BAKR_HOSTS,
     'Becoming A King Retreat Hosts'
 ))->monthly();
