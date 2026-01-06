@@ -262,6 +262,34 @@ it('handles special characters in CSV content', function () {
     Storage::disk('local')->assertMissing('tmp/report.csv');
 });
 
+it('sends email to a single recipient as string (backward compatibility)', function () {
+    // Arrange
+    $email = 'recipient@example.com';
+    $report = ReportName::BAKR_HOSTS;
+    $reportTitle = 'Single String Recipient Test';
+    $csvContent = "Name,Email\nJohn Doe,john@example.com\nJane Smith,jane@example.com";
+
+    $this->reportService
+        ->shouldReceive('generate')
+        ->once()
+        ->with($report, ReportFormat::CSV)
+        ->andReturn($csvContent);
+
+    // Act - Pass a string email (not an array) to test backward compatibility
+    $job = new GenerateAndEmailReport($email, $report, $reportTitle);
+    $job->handle($this->reportService);
+
+    // Assert
+    Mail::assertSent(ReportMailable::class, function ($mail) use ($email, $reportTitle) {
+        // Check that the single email is in the "to" recipients
+        return $mail->hasTo($email) &&
+               $mail->hasCc('nic@wildatheart.org') &&
+               str_contains($mail->envelope()->subject, $reportTitle);
+    });
+
+    Storage::disk('local')->assertMissing('tmp/report.csv');
+});
+
 it('sends email to multiple recipients', function () {
     // Arrange
     $emails = ['recipient1@example.com', 'recipient2@example.com', 'recipient3@example.com'];
