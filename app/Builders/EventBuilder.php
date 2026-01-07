@@ -118,7 +118,7 @@ class EventBuilder extends Builder
         return $this->whereBetween('start_date', [now()->subYear(), now()]);
     }
 
-    public function updatedAgo(int $days): EventBuilder
+    public function inactiveForDays(int $days): EventBuilder
     {
         return $this->where(function ($query) use ($days) {
             $query->where('updated_at', '<', now()->subDays($days))

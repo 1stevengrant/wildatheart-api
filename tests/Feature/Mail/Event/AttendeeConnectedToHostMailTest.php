@@ -4,8 +4,8 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Attendee;
 use App\Models\EmailTemplate;
-use App\Mail\Event\AttendeeConnectedToHost;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Event\AttendeeConnectedToHost;
 
 beforeEach(function () {
     Mail::fake();

@@ -8,16 +8,16 @@ use App\Models\EventType;
 use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use App\Traits\FormatsEventHostNames;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use App\Traits\InteractsWithEmailTemplates;
-use App\Traits\FormatsEventHostNames;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AttendeeConnectedToHost extends Mailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, FormatsEventHostNames, Queueable, SerializesModels;
+    use FormatsEventHostNames, InteractsWithEmailTemplates, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 

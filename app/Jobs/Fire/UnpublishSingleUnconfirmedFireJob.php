@@ -10,8 +10,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class UnpublishSingleUnconfirmedFireJob implements ShouldQueue
+class UnpublishSingleUnconfirmedFireJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -19,12 +20,14 @@ class UnpublishSingleUnconfirmedFireJob implements ShouldQueue
 
     public int $retryAfter = 300;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(public Event $event)
     {
         //
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->event->id;
     }
 
     /**
@@ -32,18 +35,24 @@ class UnpublishSingleUnconfirmedFireJob implements ShouldQueue
      */
     public function handle(): void
     {
+        // Update state FIRST to prevent duplicate emails on retry
         $this->event->update([
             'approved_at' => null,
             'auto_unpublished' => true,
             'auto_unpublished_at' => now(),
         ]);
 
-        // Send to primary host
-        Mail::to($this->event->user->email)->send(new EventAutoUnpublishedMail($this->event));
+        activity('fire')
+            ->performedOn($this->event)
+            ->log('Auto-unpublished due to unconfirmed check-in');
 
-        // Send to all hosts
-        foreach ($this->event->managers as $manager) {
-            Mail::to($manager->email)->send(new EventAutoUnpublishedMail($this->event));
+        // Send to primary host with managers CC'd
+        $mail = Mail::to($this->event->user->email);
+
+        if ($this->event->managers->isNotEmpty()) {
+            $mail->cc($this->event->managers->pluck('email'));
         }
+
+        $mail->send(new EventAutoUnpublishedMail($this->event));
     }
 }

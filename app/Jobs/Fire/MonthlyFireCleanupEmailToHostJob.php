@@ -9,17 +9,24 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class MonthlyFireCleanupEmailToHostJob implements ShouldQueue
+class MonthlyFireCleanupEmailToHostJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
+    public int $tries = 5;
+
+    public int $retryAfter = 300;
+
     public function __construct(public Event $event)
     {
         //
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->event->id;
     }
 
     /**
@@ -27,23 +34,23 @@ class MonthlyFireCleanupEmailToHostJob implements ShouldQueue
      */
     public function handle(): void
     {
-        activity('fire')
-            ->performedOn($this->event)
-            ->log('Monthly email sent');
-
-        // Send to primary host
-        Mail::to($this->event->user)
-            ->send(new \App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable($this->event));
-
-        // Send to all hosts
-        foreach ($this->event->managers as $manager) {
-            Mail::to($manager)
-                ->send(new \App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable($this->event));
-        }
-
+        // Update timestamp FIRST to prevent duplicate emails on retry
         $this->event->update([
             'last_checkin_email_sent_at' => now(),
             'last_checkin_reminder_sent_at' => null,
         ]);
+
+        activity('fire')
+            ->performedOn($this->event)
+            ->log('Monthly email sent');
+
+        // Send to primary host with managers CC'd
+        $mail = Mail::to($this->event->user);
+
+        if ($this->event->managers->isNotEmpty()) {
+            $mail->cc($this->event->managers->pluck('email'));
+        }
+
+        $mail->send(new \App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable($this->event));
     }
 }

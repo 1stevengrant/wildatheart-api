@@ -9,8 +9,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendSingleFireCheckinReminderEmailJob implements ShouldQueue
+class SendSingleFireCheckinReminderEmailJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -18,12 +19,14 @@ class SendSingleFireCheckinReminderEmailJob implements ShouldQueue
 
     public int $retryAfter = 300;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(public Event $event)
     {
         //
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->event->id;
     }
 
     /**
@@ -31,16 +34,20 @@ class SendSingleFireCheckinReminderEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        // Send to primary host
-        Mail::to($this->event->user->email)
-            ->send(new \App\Mail\Fire\SevenDayFollowupMailable($this->event));
+        // Update timestamp FIRST to prevent duplicate emails on retry
+        $this->event->update(['last_checkin_reminder_sent_at' => now()]);
 
-        // Send to all hosts
-        foreach ($this->event->managers as $manager) {
-            Mail::to($manager->email)
-                ->send(new \App\Mail\Fire\SevenDayFollowupMailable($this->event));
+        activity('fire')
+            ->performedOn($this->event)
+            ->log('Check-in reminder email sent');
+
+        // Send to primary host with managers CC'd
+        $mail = Mail::to($this->event->user->email);
+
+        if ($this->event->managers->isNotEmpty()) {
+            $mail->cc($this->event->managers->pluck('email'));
         }
 
-        $this->event->update(['last_checkin_reminder_sent_at' => now()]);
+        $mail->send(new \App\Mail\Fire\SevenDayFollowupMailable($this->event));
     }
 }

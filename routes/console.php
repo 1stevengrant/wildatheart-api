@@ -12,7 +12,7 @@ Schedule::command('wegive:update-donor-ids')->daily();
 Schedule::job(new GenerateAndEmailReport(
     [
         'morgan@becomegoodsoil.com',
-        'andrew@becomegoodsoil.com'
+        'andrew@becomegoodsoil.com',
     ],
     ReportName::BAKR_HOSTS,
     'Becoming A King Retreat Hosts'

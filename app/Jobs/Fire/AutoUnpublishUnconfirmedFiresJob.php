@@ -8,8 +8,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class AutoUnpublishUnconfirmedFiresJob implements ShouldQueue
+class AutoUnpublishUnconfirmedFiresJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,17 +32,23 @@ class AutoUnpublishUnconfirmedFiresJob implements ShouldQueue
     public function handle(): void
     {
         $threeDaysAfterReminder = now()->subDays(3);
+        $ninetyDaysAgo = now()->subDays(90);
 
         Event::query()
-            ->with(['user'])
+            ->with(['user', 'managers'])
             ->allFires()
             ->lastCheckinReminderSent()
             ->where('last_checkin_reminder_sent_at', '<=', $threeDaysAfterReminder)
+            // Only unpublish if initial email was sent within last 90 days
+            // Events with email 90+ days ago will get a fresh initial email instead
+            ->where('last_checkin_email_sent_at', '>', $ninetyDaysAgo)
             ->lastCheckinNotConfirmed()
             ->published()
             ->notAutoUnpublished()
-            ->each(function (Event $event) {
-                UnpublishSingleUnconfirmedFireJob::dispatch($event);
+            ->chunkById(100, function ($events) {
+                foreach ($events as $event) {
+                    UnpublishSingleUnconfirmedFireJob::dispatch($event);
+                }
             });
     }
 }
