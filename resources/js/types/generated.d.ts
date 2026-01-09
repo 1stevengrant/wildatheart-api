@@ -174,6 +174,20 @@ md5email: string | null;
 fullname: string | null;
 photo: string | null;
 };
+export type InternalEventSearchData = {
+id: string;
+name: string | null;
+host_name: string | null;
+host_email: string | null;
+host_phone: string | null;
+city: string | null;
+state: string | null;
+event_type: string | null;
+frequency: string | null;
+attendee_count: number | null;
+start_date: string | null;
+distance: number;
+};
 export type UserData = {
 id: number;
 given_name: string;

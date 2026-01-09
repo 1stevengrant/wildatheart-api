@@ -310,4 +310,23 @@ class EventBuilder extends Builder
     {
         return $this->whereNotNull('last_checkin_reminder_sent_at');
     }
+
+    /**
+     * Filter events within a radius of a geographic point using Haversine formula.
+     * Adds a calculated 'distance' column (in miles) to the results.
+     */
+    public function withinRadius(float $lat, float $lng, float $radiusMiles): EventBuilder
+    {
+        $haversine = '(3959 * acos(
+            cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
+            sin(radians(?)) * sin(radians(latitude))
+        ))';
+
+        return $this->select('events.*')
+            ->selectRaw("{$haversine} AS distance", [$lat, $lng, $lat])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->havingRaw("{$haversine} <= ?", [$lat, $lng, $lat, $radiusMiles])
+            ->orderBy('distance');
+    }
 }

@@ -38,7 +38,16 @@
       "Bash(grep:*)",
       "mcp__laravel-boost__database-schema",
       "Bash(git checkout:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "WebFetch(domain:statamic.dev)",
+      "Bash(head:*)",
+      "Bash(xargs ls:*)",
+      "mcp__laravel-boost__search-docs",
+      "mcp__laravel-boost__application-info",
+      "Bash(ls:*)",
+      "Bash(php debug_transformer.php:*)",
+      "Bash(npm run lint:*)",
+      "mcp__laravel-boost__list-routes"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
