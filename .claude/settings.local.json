@@ -47,7 +47,10 @@
       "Bash(ls:*)",
       "Bash(php debug_transformer.php:*)",
       "Bash(npm run lint:*)",
-      "mcp__laravel-boost__list-routes"
+      "mcp__laravel-boost__list-routes",
+      "Bash(npm ls:*)",
+      "Bash(composer show:*)",
+      "WebFetch(domain:inertiajs.com)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
