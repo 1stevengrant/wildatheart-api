@@ -59,12 +59,6 @@ tabs:
               display: 'WeGive Donor ID'
               visibility: read_only
           -
-            handle: salesforce_contact_id
-            field:
-              type: text
-              display: 'Salesforce Contact ID'
-              visibility: read_only
-          -
             handle: phone
             field:
               input_type: tel

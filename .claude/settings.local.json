@@ -50,7 +50,11 @@
       "mcp__laravel-boost__list-routes",
       "Bash(npm ls:*)",
       "Bash(composer show:*)",
-      "WebFetch(domain:inertiajs.com)"
+      "WebFetch(domain:inertiajs.com)",
+      "Bash(gh pr create:*)",
+      "Bash(gh auth status:*)",
+      "Bash(git config:*)",
+      "Bash(git cat-file:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

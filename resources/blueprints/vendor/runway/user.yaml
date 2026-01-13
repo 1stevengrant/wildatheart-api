@@ -27,13 +27,7 @@ tabs:
               type: text
               display: Email
               validate: required
-              visibility: read_only
-          -
-            handle: salesforce_contact_id
-            field:
-              type: text
-              display: 'Salesforce Contact Id'
-              visibility: read_only
+              input_type: email
           -
             handle: phone
             field:
