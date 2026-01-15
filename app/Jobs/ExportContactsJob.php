@@ -27,12 +27,12 @@ class ExportContactsJob implements ShouldQueue
         Mail::to($this->user->email)->send(
             new ReportMailable(
                 date: now()->format('F j, Y'),
-                filePath: Storage::path($filePath),
+                filePath: Storage::disk('local')->path($filePath),
                 reportName: 'Contacts'
             )
         );
 
-        Storage::delete($filePath);
+        Storage::disk('local')->delete($filePath);
     }
 
     private function generateCsv(): string
@@ -61,7 +61,7 @@ class ExportContactsJob implements ShouldQueue
         $content = stream_get_contents($handle);
         fclose($handle);
 
-        Storage::put($fileName, $content);
+        Storage::disk('local')->put($fileName, $content);
 
         return $fileName;
     }
