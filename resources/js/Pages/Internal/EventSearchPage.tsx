@@ -181,7 +181,10 @@ const EventSearchPage = () => {
         setIncludeDeleted(false);
         setSearchError(null);
         setHasSearched(false);
-        router.get("/internal/event-search", {}, { preserveState: false });
+        router.visit("/internal/event-search", {
+            preserveState: false,
+            replace: true,
+        });
     };
 
     const showToast = (message: string, type: "success" | "error") => {
@@ -198,7 +201,7 @@ const EventSearchPage = () => {
                 radius: filters.lat && filters.lng ? radius : null,
                 active_only: activeOnly,
                 include_deleted: includeDeleted,
-                event_type_ids: filters.event_type_ids,
+                event_type_ids: selectedEventTypeIds,
                 fields: selectedFields,
             },
             {
@@ -405,36 +408,6 @@ const EventSearchPage = () => {
                                     />
                                 </div>
                             )}
-                        </div>
-
-                        {/* Filter Toggles */}
-                        <div className="mt-6 flex flex-wrap gap-6">
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={activeOnly}
-                                    onChange={(e) =>
-                                        setActiveOnly(e.target.checked)
-                                    }
-                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
-                                />
-                                <span className="text-sm font-medium text-gray-700">
-                                    Published only
-                                </span>
-                            </label>
-                            <label className="flex items-center space-x-3 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={includeDeleted}
-                                    onChange={(e) =>
-                                        setIncludeDeleted(e.target.checked)
-                                    }
-                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
-                                />
-                                <span className="text-sm font-medium text-gray-700">
-                                    Include deleted
-                                </span>
-                            </label>
                         </div>
 
                         {/* Filter Toggles */}

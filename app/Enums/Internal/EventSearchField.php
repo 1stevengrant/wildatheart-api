@@ -23,6 +23,7 @@ enum EventSearchField: string
     case HostAddressState = 'host_address_state';
     case HostZip = 'host_zip';
     case HostCountry = 'host_country';
+    case HostWeGiveId = 'host_wegive_id';
 
     public function label(): string
     {
@@ -44,6 +45,7 @@ enum EventSearchField: string
             self::HostAddressState => 'Host Address State',
             self::HostZip => 'Host Zip',
             self::HostCountry => 'Host Country',
+            self::HostWeGiveId => 'Host WeGive ID',
         };
     }
 
@@ -66,7 +68,8 @@ enum EventSearchField: string
             self::HostAddressCity,
             self::HostAddressState,
             self::HostZip,
-            self::HostCountry => false,
+            self::HostCountry,
+            self::HostWeGiveId => false,
         };
     }
 
@@ -90,6 +93,7 @@ enum EventSearchField: string
             self::HostAddressState => $event->user?->primaryAddress()?->state,
             self::HostZip => $event->user?->primaryAddress()?->zip,
             self::HostCountry => $event->user?->primaryAddress()?->country,
+            self::HostWeGiveId => $event->user?->wegive_donor_id,
         };
     }
 

@@ -39,9 +39,9 @@ class InternalEventSearchController extends Controller
         return inertia('Internal/EventSearchPage', [
             'results' => $results,
             'filters' => [
-                'lat' => $request->lat(),
-                'lng' => $request->lng(),
-                'radius' => $request->radius(),
+                'lat' => $request->hasSearchCoordinates() ? $request->lat() : null,
+                'lng' => $request->hasSearchCoordinates() ? $request->lng() : null,
+                'radius' => $request->hasSearchCoordinates() ? $request->radius() : null,
                 'event_type_ids' => $request->eventTypeIds(),
                 'fields' => $request->fields(),
                 'place_name' => $request->placeName(),

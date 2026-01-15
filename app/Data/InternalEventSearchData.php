@@ -29,6 +29,7 @@ class InternalEventSearchData extends Data
         public ?string $host_address_state,
         public ?string $host_zip,
         public ?string $host_country,
+        public ?string $host_wegive_id,
     ) {}
 
     public static function fromModel(Event $event, ?float $distance): self
@@ -57,6 +58,7 @@ class InternalEventSearchData extends Data
             host_address_state: $event->user?->primaryAddress()?->state,
             host_zip: $event->user?->primaryAddress()?->zip,
             host_country: $event->user?->primaryAddress()?->country,
+            host_wegive_id: $event->user?->wegive_donor_id,
         );
     }
 
