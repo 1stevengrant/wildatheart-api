@@ -23,6 +23,12 @@ class InternalEventSearchData extends Data
         public ?int $attendee_count,
         public ?string $start_date,
         public float $distance,
+        public string $status,
+        public ?string $host_street,
+        public ?string $host_address_city,
+        public ?string $host_address_state,
+        public ?string $host_zip,
+        public ?string $host_country,
     ) {}
 
     public static function fromModel(Event $event, float $distance): self
@@ -45,6 +51,25 @@ class InternalEventSearchData extends Data
             attendee_count: $event->attendee_count,
             start_date: $startDate?->format('Y-m-d'),
             distance: round($distance, 2),
+            status: self::getEventStatus($event),
+            host_street: $event->user?->primaryAddress()?->street_address,
+            host_address_city: $event->user?->primaryAddress()?->city,
+            host_address_state: $event->user?->primaryAddress()?->state,
+            host_zip: $event->user?->primaryAddress()?->zip,
+            host_country: $event->user?->primaryAddress()?->country,
         );
+    }
+
+    private static function getEventStatus(Event $event): string
+    {
+        if ($event->trashed()) {
+            return 'Deleted';
+        }
+
+        if (! $event->approved_at) {
+            return 'Unpublished';
+        }
+
+        return 'Published';
     }
 }

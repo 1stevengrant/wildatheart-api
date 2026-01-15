@@ -22,6 +22,12 @@ type EventSearchResult = {
     attendee_count: number | null;
     start_date: string | null;
     distance: number;
+    status: string;
+    host_street: string | null;
+    host_address_city: string | null;
+    host_address_state: string | null;
+    host_zip: string | null;
+    host_country: string | null;
 };
 
 type AvailableField = {
@@ -44,6 +50,8 @@ type PageProps = {
         event_type_ids: number[];
         fields: string[];
         place_name: string;
+        active_only: boolean;
+        include_deleted: boolean;
     };
     availableFields: AvailableField[];
     eventTypes: EventType[];
@@ -65,6 +73,10 @@ const EventSearchPage = () => {
         filters.fields.length > 0
             ? filters.fields
             : availableFields.filter((f) => f.default).map((f) => f.key)
+    );
+    const [activeOnly, setActiveOnly] = useState(filters.active_only ?? true);
+    const [includeDeleted, setIncludeDeleted] = useState(
+        filters.include_deleted ?? false
     );
 
     const {
@@ -126,6 +138,8 @@ const EventSearchPage = () => {
                 event_type_ids: selectedEventTypeIds,
                 fields: selectedFields,
                 place_name: placeName,
+                active_only: activeOnly,
+                include_deleted: includeDeleted,
             },
             { preserveState: true, preserveScroll: true }
         );
@@ -140,6 +154,8 @@ const EventSearchPage = () => {
         params.append("lat", filters.lat.toString());
         params.append("lng", filters.lng.toString());
         params.append("radius", radius.toString());
+        params.append("active_only", activeOnly.toString());
+        params.append("include_deleted", includeDeleted.toString());
         filters.event_type_ids.forEach((id) =>
             params.append("event_type_ids[]", id.toString())
         );
@@ -263,6 +279,36 @@ const EventSearchPage = () => {
                                     className="w-full rounded-lg border border-gray-300 bg-white text-gray-900 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                 />
                             </div>
+                        </div>
+
+                        {/* Filter Toggles */}
+                        <div className="mt-6 flex flex-wrap gap-6">
+                            <label className="flex items-center space-x-3 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={activeOnly}
+                                    onChange={(e) =>
+                                        setActiveOnly(e.target.checked)
+                                    }
+                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
+                                />
+                                <span className="text-sm font-medium text-gray-700">
+                                    Published only
+                                </span>
+                            </label>
+                            <label className="flex items-center space-x-3 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={includeDeleted}
+                                    onChange={(e) =>
+                                        setIncludeDeleted(e.target.checked)
+                                    }
+                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
+                                />
+                                <span className="text-sm font-medium text-gray-700">
+                                    Include deleted
+                                </span>
+                            </label>
                         </div>
 
                         {/* Event Type Selection */}

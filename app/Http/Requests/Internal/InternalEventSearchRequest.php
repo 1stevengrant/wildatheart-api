@@ -29,6 +29,8 @@ class InternalEventSearchRequest extends FormRequest
             'fields' => ['nullable', 'array'],
             'fields.*' => ['string', Rule::in($fieldValues)],
             'place_name' => ['nullable', 'string', 'max:255'],
+            'active_only' => ['nullable', 'in:0,1,true,false'],
+            'include_deleted' => ['nullable', 'in:0,1,true,false'],
         ];
     }
 
@@ -88,5 +90,15 @@ class InternalEventSearchRequest extends FormRequest
     public function placeName(): string
     {
         return $this->string('place_name', '')->toString();
+    }
+
+    public function activeOnly(): bool
+    {
+        return $this->boolean('active_only', true);
+    }
+
+    public function includeDeleted(): bool
+    {
+        return $this->boolean('include_deleted', false);
     }
 }

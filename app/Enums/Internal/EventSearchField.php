@@ -17,6 +17,12 @@ enum EventSearchField: string
     case AttendeeCount = 'attendee_count';
     case StartDate = 'start_date';
     case Distance = 'distance';
+    case Status = 'status';
+    case HostStreet = 'host_street';
+    case HostAddressCity = 'host_address_city';
+    case HostAddressState = 'host_address_state';
+    case HostZip = 'host_zip';
+    case HostCountry = 'host_country';
 
     public function label(): string
     {
@@ -32,6 +38,12 @@ enum EventSearchField: string
             self::AttendeeCount => 'Attendee Count',
             self::StartDate => 'Start Date',
             self::Distance => 'Distance (miles)',
+            self::Status => 'Status',
+            self::HostStreet => 'Host Street',
+            self::HostAddressCity => 'Host Address City',
+            self::HostAddressState => 'Host Address State',
+            self::HostZip => 'Host Zip',
+            self::HostCountry => 'Host Country',
         };
     }
 
@@ -48,7 +60,13 @@ enum EventSearchField: string
             self::HostPhone,
             self::Frequency,
             self::AttendeeCount,
-            self::StartDate => false,
+            self::StartDate,
+            self::Status,
+            self::HostStreet,
+            self::HostAddressCity,
+            self::HostAddressState,
+            self::HostZip,
+            self::HostCountry => false,
         };
     }
 
@@ -66,6 +84,12 @@ enum EventSearchField: string
             self::AttendeeCount => (string) $event->attendee_count,
             self::StartDate => $event->start_date?->format('Y-m-d'),
             self::Distance => isset($event->distance) ? (string) round($event->distance, 2) : null,
+            self::Status => self::getEventStatus($event),
+            self::HostStreet => $event->user?->primaryAddress()?->street_address,
+            self::HostAddressCity => $event->user?->primaryAddress()?->city,
+            self::HostAddressState => $event->user?->primaryAddress()?->state,
+            self::HostZip => $event->user?->primaryAddress()?->zip,
+            self::HostCountry => $event->user?->primaryAddress()?->country,
         };
     }
 
@@ -97,5 +121,18 @@ enum EventSearchField: string
             fn (self $field) => $field->value,
             array_filter(self::cases(), fn (self $field) => $field->isDefault())
         );
+    }
+
+    private static function getEventStatus(Event $event): string
+    {
+        if ($event->trashed()) {
+            return 'Deleted';
+        }
+
+        if (! $event->approved_at) {
+            return 'Unpublished';
+        }
+
+        return 'Published';
     }
 }

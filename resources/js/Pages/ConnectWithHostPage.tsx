@@ -264,7 +264,7 @@ const ConnectWithHostPage = () => {
                                 </div>
                                 <div className="col-span-2">
                                     <Instruction className={`mt-1`}>
-                                        By connection with {event.host} you are
+                                        By connecting with {event.host} you are
                                         expressing interest in their event and
                                         will not solicit or promote other events
                                         or offerings.

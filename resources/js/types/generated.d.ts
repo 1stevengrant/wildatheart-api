@@ -187,6 +187,12 @@ declare namespace App.Data {
         attendee_count: number | null;
         start_date: string | null;
         distance: number;
+        status: string;
+        host_street: string | null;
+        host_address_city: string | null;
+        host_address_state: string | null;
+        host_zip: string | null;
+        host_country: string | null;
     };
     export type UserData = {
         id: number;
@@ -733,5 +739,11 @@ declare namespace App.Enums.Internal {
         | "frequency"
         | "attendee_count"
         | "start_date"
-        | "distance";
+        | "distance"
+        | "status"
+        | "host_street"
+        | "host_address_city"
+        | "host_address_state"
+        | "host_zip"
+        | "host_country";
 }

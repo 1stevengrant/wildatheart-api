@@ -16,7 +16,9 @@ class InternalExportEventSearch extends Controller
             $request->lat(),
             $request->lng(),
             $request->radius(),
-            $request->eventTypeIds()
+            $request->eventTypeIds(),
+            $request->activeOnly(),
+            $request->includeDeleted()
         );
 
         $fields = $request->fields();
@@ -74,12 +76,19 @@ class InternalExportEventSearch extends Controller
         return $value;
     }
 
-    private function searchEvents(float $lat, float $lng, float $radius, array $eventTypeIds): \Illuminate\Support\Collection
+    private function searchEvents(float $lat, float $lng, float $radius, array $eventTypeIds, bool $activeOnly, bool $includeDeleted): \Illuminate\Support\Collection
     {
         $query = Event::query()
             ->withinRadius($lat, $lng, $radius)
-            ->with(['user', 'eventType'])
-            ->published();
+            ->with(['user', 'eventType']);
+
+        if ($activeOnly) {
+            $query->published();
+        }
+
+        if ($includeDeleted) {
+            $query->withTrashed();
+        }
 
         if (! empty($eventTypeIds)) {
             $query->whereIn('event_type_id', $eventTypeIds);

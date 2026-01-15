@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Mail\Fire\AnnualFireCheckinMailable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class AnnualFireCheckinEmailJob implements ShouldQueue, ShouldBeUnique
+class AnnualFireCheckinEmailJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

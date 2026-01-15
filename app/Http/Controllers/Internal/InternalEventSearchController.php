@@ -20,7 +20,9 @@ class InternalEventSearchController extends Controller
                 $request->lat(),
                 $request->lng(),
                 $request->radius(),
-                $request->eventTypeIds()
+                $request->eventTypeIds(),
+                $request->activeOnly(),
+                $request->includeDeleted()
             );
         }
 
@@ -33,18 +35,27 @@ class InternalEventSearchController extends Controller
                 'event_type_ids' => $request->eventTypeIds(),
                 'fields' => $request->fields(),
                 'place_name' => $request->placeName(),
+                'active_only' => $request->activeOnly(),
+                'include_deleted' => $request->includeDeleted(),
             ],
             'availableFields' => EventSearchField::toOptions(),
             'eventTypes' => EventType::query()->orderBy('name')->get(['id', 'name']),
         ]);
     }
 
-    private function searchEvents(float $lat, float $lng, float $radius, array $eventTypeIds): array
+    private function searchEvents(float $lat, float $lng, float $radius, array $eventTypeIds, bool $activeOnly, bool $includeDeleted): array
     {
         $query = Event::query()
             ->withinRadius($lat, $lng, $radius)
-            ->with(['user', 'eventType'])
-            ->published();
+            ->with(['user', 'eventType']);
+
+        if ($activeOnly) {
+            $query->published();
+        }
+
+        if ($includeDeleted) {
+            $query->withTrashed();
+        }
 
         if (! empty($eventTypeIds)) {
             $query->whereIn('event_type_id', $eventTypeIds);
