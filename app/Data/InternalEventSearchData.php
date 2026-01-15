@@ -22,7 +22,7 @@ class InternalEventSearchData extends Data
         public ?string $frequency,
         public ?int $attendee_count,
         public ?string $start_date,
-        public float $distance,
+        public ?float $distance,
         public string $status,
         public ?string $host_street,
         public ?string $host_address_city,
@@ -31,7 +31,7 @@ class InternalEventSearchData extends Data
         public ?string $host_country,
     ) {}
 
-    public static function fromModel(Event $event, float $distance): self
+    public static function fromModel(Event $event, ?float $distance): self
     {
         $startDate = $event->start_date;
         if ($startDate && ! $startDate instanceof Carbon) {
@@ -50,7 +50,7 @@ class InternalEventSearchData extends Data
             frequency: $event->frequency?->value,
             attendee_count: $event->attendee_count,
             start_date: $startDate?->format('Y-m-d'),
-            distance: round($distance, 2),
+            distance: $distance !== null ? round($distance, 2) : null,
             status: self::getEventStatus($event),
             host_street: $event->user?->primaryAddress()?->street_address,
             host_address_city: $event->user?->primaryAddress()?->city,

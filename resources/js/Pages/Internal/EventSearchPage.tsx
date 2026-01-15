@@ -4,10 +4,12 @@ import { Combobox } from "@headlessui/react";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { router, usePage } from "@inertiajs/react";
 
+import Pagination from "@/Components/Pagination";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { MapboxPlace } from "@/types/MapboxPlace";
+import { PaginatedData } from "@/types";
 
 type EventSearchResult = {
     id: string;
@@ -21,7 +23,7 @@ type EventSearchResult = {
     frequency: string | null;
     attendee_count: number | null;
     start_date: string | null;
-    distance: number;
+    distance: number | null;
     status: string;
     host_street: string | null;
     host_address_city: string | null;
@@ -42,7 +44,7 @@ type EventType = {
 };
 
 type PageProps = {
-    results: EventSearchResult[];
+    results: PaginatedData<EventSearchResult>;
     filters: {
         lat: number | null;
         lng: number | null;
@@ -78,6 +80,16 @@ const EventSearchPage = () => {
     const [includeDeleted, setIncludeDeleted] = useState(
         filters.include_deleted ?? false
     );
+
+    const [hasSearched, setHasSearched] = useState(
+        window.location.search.length > 1
+    );
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchError, setSearchError] = useState<string | null>(null);
+    const [toast, setToast] = useState<{
+        message: string;
+        type: "success" | "error";
+    } | null>(null);
 
     const {
         queryMapbox,
@@ -125,43 +137,87 @@ const EventSearchPage = () => {
     };
 
     const handleSearch = () => {
-        if (!selectedPlace) {
-            return;
-        }
-
+        setHasSearched(true);
+        setIsSearching(true);
+        setSearchError(null);
         router.get(
             "/internal/event-search",
             {
-                lat: selectedPlace.center[1],
-                lng: selectedPlace.center[0],
-                radius: radius,
+                lat: selectedPlace?.center[1] ?? null,
+                lng: selectedPlace?.center[0] ?? null,
+                radius: selectedPlace ? radius : null,
                 event_type_ids: selectedEventTypeIds,
                 fields: selectedFields,
                 place_name: placeName,
                 active_only: activeOnly,
                 include_deleted: includeDeleted,
             },
-            { preserveState: true, preserveScroll: true }
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onFinish: () => setIsSearching(false),
+                onError: (errors) => {
+                    const errorMessages = Object.values(errors).flat();
+                    setSearchError(
+                        errorMessages.length > 0
+                            ? errorMessages.join(", ")
+                            : "An error occurred while searching. Please try again."
+                    );
+                },
+            }
         );
     };
 
-    const handleExport = () => {
-        if (!filters.lat || !filters.lng) {
-            return;
-        }
-
-        const params = new URLSearchParams();
-        params.append("lat", filters.lat.toString());
-        params.append("lng", filters.lng.toString());
-        params.append("radius", radius.toString());
-        params.append("active_only", activeOnly.toString());
-        params.append("include_deleted", includeDeleted.toString());
-        filters.event_type_ids.forEach((id) =>
-            params.append("event_type_ids[]", id.toString())
+    const handleReset = () => {
+        setSelectedPlace(null);
+        setQuery("");
+        setPlaceName("");
+        setRadius(30);
+        setSelectedEventTypeIds([]);
+        setSelectedFields(
+            availableFields.filter((f) => f.default).map((f) => f.key)
         );
-        selectedFields.forEach((field) => params.append("fields[]", field));
+        setActiveOnly(true);
+        setIncludeDeleted(false);
+        setSearchError(null);
+        setHasSearched(false);
+        router.get("/internal/event-search", {}, { preserveState: false });
+    };
 
-        window.location.href = `/internal/event-search/export?${params.toString()}`;
+    const showToast = (message: string, type: "success" | "error") => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 5000);
+    };
+
+    const handleExport = () => {
+        router.get(
+            "/internal/event-search/export",
+            {
+                lat: filters.lat,
+                lng: filters.lng,
+                radius: filters.lat && filters.lng ? radius : null,
+                active_only: activeOnly,
+                include_deleted: includeDeleted,
+                event_type_ids: filters.event_type_ids,
+                fields: selectedFields,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    showToast(
+                        "Your export is being generated. You will receive an email shortly.",
+                        "success"
+                    );
+                },
+                onError: () => {
+                    showToast(
+                        "Failed to start export. Please try again.",
+                        "error"
+                    );
+                },
+            }
+        );
     };
 
     const getFieldValue = (
@@ -180,6 +236,70 @@ const EventSearchPage = () => {
 
     return (
         <EmptyLayout title="Event Search">
+            {/* Toast Notification */}
+            {toast && (
+                <div className="fixed top-4 right-4 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div
+                        className={`px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 ${
+                            toast.type === "success"
+                                ? "bg-green-600 text-white"
+                                : "bg-red-600 text-white"
+                        }`}
+                    >
+                        {toast.type === "success" ? (
+                            <svg
+                                className="h-5 w-5 flex-shrink-0"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+                        ) : (
+                            <svg
+                                className="h-5 w-5 flex-shrink-0"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        )}
+                        <span className="text-sm font-medium">
+                            {toast.message}
+                        </span>
+                        <button
+                            onClick={() => setToast(null)}
+                            className="ml-2 hover:opacity-80"
+                        >
+                            <svg
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className="p-4 max-w-7xl mx-auto">
                 <h1 className="text-2xl font-bold text-white mb-6">
                     Event Search
@@ -192,7 +312,10 @@ const EventSearchPage = () => {
                             {/* Location Search */}
                             <div className="relative z-20">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Location
+                                    Location{" "}
+                                    <span className="text-gray-400 font-normal">
+                                        (optional - leave empty for all)
+                                    </span>
                                 </label>
                                 <Combobox
                                     value={selectedPlace}
@@ -264,21 +387,54 @@ const EventSearchPage = () => {
                             </div>
 
                             {/* Radius Input */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Radius (miles)
-                                </label>
+                            {(selectedPlace ||
+                                (filters.lat && filters.lng)) && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Radius (miles)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={radius}
+                                        onChange={(e) =>
+                                            setRadius(Number(e.target.value))
+                                        }
+                                        min={1}
+                                        max={500}
+                                        className="w-full rounded-lg border border-gray-300 bg-white text-gray-900 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Filter Toggles */}
+                        <div className="mt-6 flex flex-wrap gap-6">
+                            <label className="flex items-center space-x-3 cursor-pointer">
                                 <input
-                                    type="number"
-                                    value={radius}
+                                    type="checkbox"
+                                    checked={activeOnly}
                                     onChange={(e) =>
-                                        setRadius(Number(e.target.value))
+                                        setActiveOnly(e.target.checked)
                                     }
-                                    min={1}
-                                    max={500}
-                                    className="w-full rounded-lg border border-gray-300 bg-white text-gray-900 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
                                 />
-                            </div>
+                                <span className="text-sm font-medium text-gray-700">
+                                    Published only
+                                </span>
+                            </label>
+                            <label className="flex items-center space-x-3 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={includeDeleted}
+                                    onChange={(e) =>
+                                        setIncludeDeleted(e.target.checked)
+                                    }
+                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"
+                                />
+                                <span className="text-sm font-medium text-gray-700">
+                                    Include deleted
+                                </span>
+                            </label>
                         </div>
 
                         {/* Filter Toggles */}
@@ -372,27 +528,64 @@ const EventSearchPage = () => {
                             </div>
                         </div>
 
-                        {/* Search Button */}
-                        <div className="mt-6">
+                        {/* Search Buttons */}
+                        <div className="mt-6 flex gap-3">
                             <button
                                 onClick={handleSearch}
-                                disabled={!selectedPlace}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                                disabled={isSearching}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                             >
-                                Search
+                                {isSearching && (
+                                    <svg
+                                        className="animate-spin h-4 w-4"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        />
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        />
+                                    </svg>
+                                )}
+                                {isSearching ? "Searching..." : "Search"}
                             </button>
+                            <button
+                                onClick={handleReset}
+                                disabled={isSearching}
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Reset
+                            </button>
+
+                            {searchError && (
+                                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                    <p className="text-sm text-red-600">
+                                        {searchError}
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
 
                 {/* Results */}
-                {results.length > 0 && (
+                {results.data.length > 0 && (
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 border-b border-gray-200">
                             <div className="flex justify-between items-center">
                                 <h2 className="text-lg font-semibold text-gray-700">
-                                    Results: {results.length} event
-                                    {results.length !== 1 ? "s" : ""} found
+                                    Results: {results.meta.total} event
+                                    {results.meta.total !== 1 ? "s" : ""} found
                                 </h2>
                                 <button
                                     onClick={handleExport}
@@ -422,7 +615,7 @@ const EventSearchPage = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {results.map((result) => (
+                                    {results.data.map((result) => (
                                         <tr
                                             key={result.id}
                                             className="hover:bg-gray-50"
@@ -446,14 +639,18 @@ const EventSearchPage = () => {
                     </div>
                 )}
 
+                {/* Pagination */}
+                {results.data.length > 0 && (
+                    <Pagination links={results.meta.links} />
+                )}
+
                 {/* Empty State */}
-                {filters.lat && filters.lng && results.length === 0 && (
+                {hasSearched && results.data.length === 0 && (
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-12 text-center text-gray-500">
                             <p className="text-lg">No events found</p>
                             <p className="text-sm mt-2">
-                                Try increasing the radius or searching a
-                                different location.
+                                Try adjusting your filters or search criteria.
                             </p>
                         </div>
                     </div>

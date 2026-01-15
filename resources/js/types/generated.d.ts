@@ -186,7 +186,7 @@ declare namespace App.Data {
         frequency: string | null;
         attendee_count: number | null;
         start_date: string | null;
-        distance: number;
+        distance: number | null;
         status: string;
         host_street: string | null;
         host_address_city: string | null;
