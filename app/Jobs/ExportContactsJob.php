@@ -37,6 +37,8 @@ class ExportContactsJob implements ShouldQueue
 
     private function generateCsv(): string
     {
+        Storage::disk('local')->makeDirectory('exports');
+
         $contacts = $this->getContacts();
         $fileName = 'exports/contacts-' . now()->timestamp . '.csv';
 

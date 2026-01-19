@@ -47,6 +47,8 @@ class ExportEventSearchJob implements ShouldQueue
 
     private function generateCsv(): string
     {
+        Storage::disk('local')->makeDirectory('exports');
+
         $events = $this->searchEvents();
         $fileName = 'exports/event-search-' . now()->timestamp . '.csv';
 
