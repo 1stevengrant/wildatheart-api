@@ -16,7 +16,7 @@ class ViewEventListingController extends Controller
 
     public function __invoke(Request $request, Event $event)
     {
-        if (! $event->isApproved() && ! $event->isOwnedOrManagedBy(auth()->user())) {
+        if (! $event->isApproved() && (! auth()->check() || ! $event->isOwnedOrManagedBy(auth()->user()))) {
             return to_route('login');
         }
 
