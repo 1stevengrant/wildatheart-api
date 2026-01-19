@@ -37,12 +37,12 @@ class ExportEventSearchJob implements ShouldQueue
         Mail::to($this->user->email)->send(
             new ReportMailable(
                 date: now()->format('F j, Y'),
-                filePath: Storage::path($filePath),
+                filePath: Storage::disk('local')->path($filePath),
                 reportName: 'Event Search Export'
             )
         );
 
-        Storage::delete($filePath);
+        Storage::disk('local')->delete($filePath);
     }
 
     private function generateCsv(): string
@@ -61,7 +61,7 @@ class ExportEventSearchJob implements ShouldQueue
                 $headerRow[] = $enumField->label();
             }
         }
-        fputcsv($handle, $headerRow);
+        fputcsv($handle, $headerRow, ',', '"', '');
 
         foreach ($events as $event) {
             $row = [];
@@ -71,14 +71,14 @@ class ExportEventSearchJob implements ShouldQueue
                     $row[] = $this->sanitizeCsvValue($enumField->getValue($event));
                 }
             }
-            fputcsv($handle, $row);
+            fputcsv($handle, $row, ',', '"', '');
         }
 
         rewind($handle);
         $content = stream_get_contents($handle);
         fclose($handle);
 
-        Storage::put($fileName, $content);
+        Storage::disk('local')->put($fileName, $content);
 
         return $fileName;
     }
