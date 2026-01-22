@@ -16,8 +16,14 @@ use App\Http\Controllers\HandleMonthlyHostFireEmailController;
 use App\Http\Controllers\Event\ConfirmHostInvitationController;
 use App\Http\Controllers\Event\AcceptOwnershipTransferController;
 use App\Http\Controllers\Event\ConfirmOwnershipTransferController;
+use App\Http\Controllers\Testing\BrowserTestLoginController;
 
 Route::get('/', HomeController::class)->name('home');
+
+// Browser testing login route - only available in local/testing environments
+if (app()->environment(['local', 'testing'])) {
+    Route::get('/_testing/login', BrowserTestLoginController::class)->name('testing.login');
+}
 
 Route::prefix('support')->name('support.')->group(function () {
     Route::post('/', SupportRequestController::class)->name('store');

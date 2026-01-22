@@ -27,6 +27,12 @@ abstract class AbstractFireEventController extends Controller
 
     public function store(FireEventRequest $request)
     {
+        // Prevent duplicate event creation within a short time window
+        if (auth()->user()->events()->where('created_at', '>', now()->subSeconds(10))->exists()) {
+            return back()->withErrors([
+                'duplicate' => 'An event was just created. Please wait a moment before creating another.',
+            ]);
+        }
 
         $event = CreateFireEventType::make()->handle(
             eventType: EventType::where('name', $this->getEventType())->first(),

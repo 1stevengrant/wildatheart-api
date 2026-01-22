@@ -497,3 +497,35 @@ test('an experience event is auto-published after creation', function () {
     expect($event)->not->toBeNull()
         ->and($event->approved_at)->not->toBeNull();
 });
+
+test('it prevents duplicate event creation within a short time window', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+
+    $eventData = [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '1 x 10-pack',
+    ];
+
+    // First request should succeed
+    $this->post(route('host.eventType.create.store', $eventType), $eventData);
+    expect($this->user->events()->count())->toBe(1);
+
+    // Second request immediately after should be blocked
+    $response = $this->post(route('host.eventType.create.store', $eventType), $eventData);
+    $response->assertSessionHasErrors('duplicate');
+    expect($this->user->events()->count())->toBe(1);
+});

@@ -20,8 +20,9 @@ it('redirects to the login page if the user is not logged in', function () {
         ->assertRedirect(route('login'));
 });
 
-it('redirects to the home page if the user is logged in but does not own the event', function () {
-    $this->actingAs(\App\Models\User::factory()->create())
+it('returns 403 if the user is logged in but does not own the event', function () {
+    // Use non-wildatheart.org email to avoid automatic admin role assignment
+    $this->actingAs(\App\Models\User::factory()->create(['email' => 'other@example.com']))
         ->get(route('my.events.edit', $this->event))
-        ->assertRedirect(route('home'));
+        ->assertForbidden();
 });

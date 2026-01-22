@@ -37,14 +37,14 @@ class SendAnnualFireCheckinsCommand extends Command
                     ->orWhere('last_checkin_email_sent_at', '<=', $thirtyDaysAgo);
             });
 
-        if ($limit) {
-            $query->limit((int) $limit);
-        }
-
         $count = 0;
+        $limitInt = $limit ? (int) $limit : null;
 
         if ($isDryRun) {
-            $events = $limit ? $query->get() : $query->cursor();
+            if ($limitInt) {
+                $query->limit($limitInt);
+            }
+            $events = $limitInt ? $query->get() : $query->cursor();
 
             foreach ($events as $event) {
                 $count++;
@@ -56,11 +56,17 @@ class SendAnnualFireCheckinsCommand extends Command
             return self::SUCCESS;
         }
 
-        $query->chunkById(100, function ($events) use (&$count) {
+        $query->chunkById(100, function ($events) use (&$count, $limitInt) {
             foreach ($events as $event) {
+                if ($limitInt !== null && $count >= $limitInt) {
+                    return false; // Stop chunking
+                }
                 AnnualFireCheckinEmailJob::dispatch($event);
                 $count++;
             }
+
+            // Return false to stop chunking if limit reached
+            return $limitInt === null || $count < $limitInt;
         });
 
         $this->info("Queued {$count} annual check-in emails. Horizon will process them.");

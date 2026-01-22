@@ -81,6 +81,7 @@ export const FireConfirmationModal = ({
                         className="w-full"
                         onClick={onConfirm}
                         disabled={processing}
+                        data-testid="confirm-create-button"
                     >
                         {processing ? <Spinner /> : "Confirm & Create Fire"}
                     </PrimaryButton>

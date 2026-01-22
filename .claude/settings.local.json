@@ -54,7 +54,12 @@
       "Bash(gh pr create:*)",
       "Bash(gh auth status:*)",
       "Bash(git config:*)",
-      "Bash(git cat-file:*)"
+      "Bash(git cat-file:*)",
+      "WebSearch",
+      "Bash(php:*)",
+      "mcp__herd__get_site_information",
+      "mcp__herd__secure_or_unsecure_site",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

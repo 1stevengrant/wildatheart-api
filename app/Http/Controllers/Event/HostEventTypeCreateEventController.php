@@ -48,6 +48,13 @@ class HostEventTypeCreateEventController extends Controller
             return to_route('host.captivating-fire');
         }
 
+        // Prevent duplicate event creation within a short time window
+        if (auth()->user()->events()->where('created_at', '>', now()->subSeconds(10))->exists()) {
+            return back()->withErrors([
+                'duplicate' => 'An event was just created. Please wait a moment before creating another.',
+            ]);
+        }
+
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,
             groupType: $eventType->group_type,
