@@ -16,6 +16,7 @@
         "eminos/statamic-tabs": "^1.2",
         "fakerphp/faker": "^1.23",
         "ghijk/laravel-email-preview": "^1.0",
+        "ghijk/statamic-typescript-generator": "*@dev",
         "ghijk/wild-at-heart": "*@dev",
         "inertiajs/inertia-laravel": "^2.0",
         "jacksleight/statamic-bard-texstyle": "^3.4",
@@ -146,6 +147,10 @@
         {
             "type": "path",
             "url": "addons/ghijk/wild-at-heart"
+        },
+        {
+            "type": "path",
+            "url": "addons/ghijk/statamic-typescript-generator"
         },
         {
             "type": "path",

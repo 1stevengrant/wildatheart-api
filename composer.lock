@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07f6619a6c82aee140e5faf171a45ad4",
+    "content-hash": "f402fe4a7732ac80d06c2f1b26f8c992",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -1361,8 +1361,56 @@
             }
         },
         {
+            "name": "ghijk/statamic-typescript-generator",
+            "version": "dev-feature/statamic-to-typescript",
+            "dist": {
+                "type": "path",
+                "url": "addons/ghijk/statamic-typescript-generator",
+                "reference": "ad9290ae3367933039380fc192cc2d97a3bcf6e9"
+            },
+            "require": {
+                "php": "^8.2",
+                "statamic/cms": "^5.0"
+            },
+            "type": "statamic-addon",
+            "extra": {
+                "statamic": {
+                    "name": "Statamic TypeScript Generator",
+                    "description": "Generate TypeScript definitions from Statamic blueprints"
+                },
+                "laravel": {
+                    "providers": [
+                        "Ghijk\\StatamicTypescriptGenerator\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ghijk\\StatamicTypescriptGenerator\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Ghijk\\StatamicTypescriptGenerator\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Generate TypeScript definitions from Statamic blueprints",
+            "keywords": [
+                "blueprints",
+                "code-generation",
+                "statamic",
+                "typescript"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-bugfix/86aep1eat",
+            "version": "dev-feature/statamic-to-typescript",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",
@@ -19290,6 +19338,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "ghijk/statamic-typescript-generator": 20,
         "ghijk/wild-at-heart": 20
     },
     "prefer-stable": true,

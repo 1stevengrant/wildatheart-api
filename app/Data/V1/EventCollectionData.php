@@ -37,8 +37,8 @@ class EventCollectionData extends Data
             eventGroupType: $event->eventType->group_type,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
-            longitude: $event->longitude,
-            latitude: $event->latitude,
+            longitude: $event->display_longitude ?? $event->longitude,
+            latitude: $event->display_latitude ?? $event->latitude,
         );
     }
 }
