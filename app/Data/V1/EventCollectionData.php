@@ -22,6 +22,7 @@ class EventCollectionData extends Data
         public ?string $hostAvatar,
         public ?float $longitude,
         public ?float $latitude,
+        public ?string $newCardHeading,
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -32,13 +33,14 @@ class EventCollectionData extends Data
             dates: $event->formatted_dates,
             sex: $event->sex->value,
             eventType: $event->eventType->name,
-            eventTypeImage: $event->eventType->image,
+            eventTypeImage: $event->eventType->new_image,
             eventTypeCardDescription: $event->eventTypeCardDescription,
             eventGroupType: $event->eventType->group_type,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
             longitude: $event->display_longitude ?? $event->longitude,
             latitude: $event->display_latitude ?? $event->latitude,
+            newCardHeading: $event->new_card_heading,
         );
     }
 }
