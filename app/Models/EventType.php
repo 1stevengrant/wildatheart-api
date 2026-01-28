@@ -70,6 +70,7 @@ class EventType extends BaseModel
             'event_guide_pages' => 'array',
             'action_buttons' => 'array',
             'new_content' => 'array',
+            'new_image' => 'string',
         ];
     }
 

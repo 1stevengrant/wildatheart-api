@@ -57,6 +57,7 @@ class Event extends BaseModel
             'auto_unpublished' => 'boolean',
             'is_featured' => 'boolean',
             'custom_landing_url' => 'string',
+            'new_card_heading' => 'string',
         ];
     }
 

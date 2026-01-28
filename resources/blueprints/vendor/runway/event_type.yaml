@@ -462,4 +462,17 @@ tabs:
             field:
               type: text
               display: 'Card Description'
+          -
+            handle: new_image
+            field:
+              max_files: 1
+              mode: grid
+              container: app
+              restrict: true
+              type: assets
+              display: 'New Image'
+              instructions: 'This is the new image for an event type in 2026'
+              validate:
+                - required
+                - image
 title: 'Event Type'
