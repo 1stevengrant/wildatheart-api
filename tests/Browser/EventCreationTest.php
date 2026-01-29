@@ -13,7 +13,7 @@ it('can load the fire creation page when authenticated', function () {
         ->whereNotNull('agreed_to_host_agreement_date')
         ->first();
 
-    if (!$userData) {
+    if (! $userData) {
         $this->markTestSkipped('No eligible user found in local database');
     }
 

@@ -162,7 +162,11 @@ class User extends Authenticatable
     public function profilePhoto()
     {
         if ($this->image) {
-            return Storage::disk('s3')->url($this->image);
+            return bunnyImage($this->image, [
+                'width' => 500,
+                'quality' => 75,
+                'format' => 'webp',
+            ]);
         }
 
         if ($this->given_name && $this->family_name) {

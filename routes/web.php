@@ -10,13 +10,13 @@ use App\Http\Controllers\UpcomingEventsController;
 use App\Http\Controllers\CreateSupportTicketController;
 use App\Http\Controllers\Event\ViewEventListingController;
 use App\Http\Controllers\Attendee\ConnectWithHostController;
+use App\Http\Controllers\Testing\BrowserTestLoginController;
 use App\Http\Controllers\Webhooks\SendGridWebhookController;
 use App\Http\Controllers\Event\AcceptHostInvitationController;
 use App\Http\Controllers\HandleMonthlyHostFireEmailController;
 use App\Http\Controllers\Event\ConfirmHostInvitationController;
 use App\Http\Controllers\Event\AcceptOwnershipTransferController;
 use App\Http\Controllers\Event\ConfirmOwnershipTransferController;
-use App\Http\Controllers\Testing\BrowserTestLoginController;
 
 Route::get('/', HomeController::class)->name('home');
 

@@ -19,8 +19,8 @@ class SendFiresCheckinsEmailCommand extends Command
         try {
             $this->info('Dispatching fire check-in jobs...');
 
-             SendFireCheckinsEmailJob::dispatch();
-             $this->line('  - Initial check-in emails job dispatched');
+            SendFireCheckinsEmailJob::dispatch();
+            $this->line('  - Initial check-in emails job dispatched');
 
             SendFireCheckinsReminderEmailJob::dispatch();
             $this->line('  - Reminder emails job dispatched');
