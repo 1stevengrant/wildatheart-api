@@ -18,6 +18,8 @@ class EventTypeData extends Data
         public string $group_type,
         public int $listings_count,
         public int $countries_count,
+        public ?string $summary,
+        public ?string $summary_link,
     ) {}
 
     public static function fromEventType(EventType $eventType): self
@@ -31,6 +33,8 @@ class EventTypeData extends Data
             group_type: $eventType->group_type,
             listings_count: $eventType->listings_count ?? 0,
             countries_count: $eventType->countries_count ?? 0,
+            summary: $eventType->summary,
+            summary_link: $eventType->summary_link,
         );
     }
 }

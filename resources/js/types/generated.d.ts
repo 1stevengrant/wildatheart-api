@@ -157,6 +157,7 @@ hero_image: string | null;
 hero_video: string | null;
 photos: Array<any> | null;
 summary: string | null;
+summary_link: string | null;
 key_details: Array<any> | null;
 action_buttons: Array<any> | null;
 new_content: Array<any> | null;
@@ -292,6 +293,8 @@ image: string;
 group_type: string;
 listings_count: number;
 countries_count: number;
+summary: string | null;
+summary_link: string | null;
 };
 }
 declare namespace App.DataTypeObjects {

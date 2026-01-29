@@ -68,7 +68,9 @@
       "mcp__herd__get_site_information",
       "mcp__herd__secure_or_unsecure_site",
       "Bash(pkill:*)",
-      "WebFetch(domain:docs.bunny.net)"
+      "WebFetch(domain:docs.bunny.net)",
+      "mcp__laravel-boost__database-connections",
+      "Bash(DB_DATABASE=wahlocal_test php artisan:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

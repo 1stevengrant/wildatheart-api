@@ -71,6 +71,8 @@ class EventType extends BaseModel
             'action_buttons' => 'array',
             'new_content' => 'array',
             'new_image' => 'string',
+            'summary' => 'string',
+            'summary_link' => 'string',
         ];
     }
 

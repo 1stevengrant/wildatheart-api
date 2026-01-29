@@ -349,6 +349,10 @@ components:
         summary:
           type: string
           nullable: true
+        summary_link:
+          type: string
+          nullable: true
+          description: "Link related to the event type summary"
         key_details:
           type: string
           nullable: true

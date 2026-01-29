@@ -38,6 +38,7 @@ class EventTypeData extends Data
         public readonly ?string $hero_video,
         public readonly ?array $photos,
         public readonly ?string $summary,
+        public readonly ?string $summary_link,
         public readonly ?array $key_details,
         public readonly ?array $action_buttons,
         public readonly ?array $new_content,
@@ -81,6 +82,7 @@ class EventTypeData extends Data
             hero_video: $eventType->hero_video,
             photos: $eventType->photos,
             summary: $eventType->summary,
+            summary_link: $eventType->summary_link,
             key_details: $eventType->key_details,
             action_buttons: $eventType->action_buttons,
             new_content: $eventType->new_content

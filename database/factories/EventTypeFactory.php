@@ -18,6 +18,9 @@ class EventTypeFactory extends Factory
     {
         return [
             'name' => fake()->word(),
+            'group_type' => 'fire',
+            'sex' => 'men',
+            'image' => 'test-image.jpg',
             'is_active' => true,
             'description' => fake()->paragraph(),
             'registration_welcome_video' => 'https://vimeo.com/505766418',
@@ -30,6 +33,7 @@ class EventTypeFactory extends Factory
                 'name' => 'Schedule',
             ],
             'summary' => fake()->paragraph(),
+            'summary_link' => fake()->url(),
         ];
     }
 
