@@ -1,29 +1,30 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SeoController;
 use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\BlogsController;
-use App\Http\Controllers\API\SearchController;
-use App\Http\Controllers\API\V1\EventController;
-use App\Http\Controllers\API\V1\StatsController;
-use App\Http\Controllers\API\SubsplashController;
-use App\Http\Controllers\API\V1\EventTypeController;
-use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
+use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
+use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\SearchForEventsController;
-use App\Http\Controllers\API\V1\Navs\AllNavsController;
-use App\Http\Controllers\API\V1\Navs\MobileNavController;
-use App\Http\Controllers\API\V1\Navs\DesktopNavController;
-use App\Http\Controllers\API\V1\Content\PageEntryController;
+use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
-use App\Http\Controllers\API\V1\Content\EventsEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
-use App\Http\Controllers\API\V1\Content\PrayersEntryController;
-use App\Http\Controllers\API\V1\Content\SubsplashAppController;
+use App\Http\Controllers\API\V1\Content\EventsEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
+use App\Http\Controllers\API\V1\Content\PageEntryController;
+use App\Http\Controllers\API\V1\Content\PrayersEntryController;
+use App\Http\Controllers\API\V1\Content\SubsplashAppController;
+use App\Http\Controllers\API\V1\EventController;
+use App\Http\Controllers\API\V1\EventTypeController;
+use App\Http\Controllers\API\V1\HostMailingAddressController;
+use App\Http\Controllers\API\V1\Navs\AllNavsController;
+use App\Http\Controllers\API\V1\Navs\DesktopNavController;
+use App\Http\Controllers\API\V1\Navs\MobileNavController;
+use App\Http\Controllers\API\V1\StatsController;
+use App\Http\Controllers\SeoController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,10 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('all', AllNavsController::class)->name('all');
         Route::get('desktop', DesktopNavController::class)->name('desktop');
         Route::get('mobile', MobileNavController::class)->name('mobile');
+    });
+
+    Route::prefix('host')->name('host.')->middleware('auth0.api')->group(function () {
+        Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
     });
 
     Route::prefix('events')->name('events.')->group(function () {

@@ -1,16 +1,16 @@
 <?php
 
-use Sentry\Laravel\Integration;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Sentry\Laravel\Integration;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
-        api: __DIR__ . '/../routes/api.php',
-        commands: __DIR__ . '/../routes/console.php',
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
         // channels: __DIR__.'/../routes/channels.php',
         health: '/up',
         then: function () {
@@ -46,6 +46,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'agreed_to_host_agreement' => \App\Http\Middleware\HasAgreedToHostAgreementMiddleware::class,
+            'auth0.api' => \App\Http\Middleware\Auth0ApiMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
