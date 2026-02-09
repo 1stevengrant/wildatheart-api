@@ -18,6 +18,7 @@ use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 use App\Http\Controllers\API\V1\EventController;
 use App\Http\Controllers\API\V1\EventTypeController;
+use App\Http\Controllers\API\V1\HostEventController;
 use App\Http\Controllers\API\V1\HostMailingAddressController;
 use App\Http\Controllers\API\V1\Navs\AllNavsController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
@@ -52,6 +53,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::prefix('host')->name('host.')->middleware('auth0.api')->group(function () {
         Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
+        Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
     });
 
     Route::prefix('events')->name('events.')->group(function () {
