@@ -39,3 +39,4 @@ node_modules/
 /playwright/.cache/
 .junie/
 tests/Browser/Screenshots
+storage/app/private/reports/*.csv
