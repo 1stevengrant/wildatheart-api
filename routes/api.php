@@ -8,6 +8,7 @@ use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\V1\EventController;
 use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\API\SubsplashController;
+use App\Http\Controllers\API\V1\AttendeeController;
 use App\Http\Controllers\API\V1\EventTypeController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
@@ -54,6 +55,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('search', \App\Http\Controllers\API\V1\SearchForEventsController::class)->name('api.events.search');
         Route::get('types', EventTypeController::class)->name('types');
         Route::get('{event}', [EventController::class, 'show'])->name('events.show');
+        Route::post('{event}/connect', [AttendeeController::class, 'store'])
+            ->middleware('throttle:connect')
+            ->name('connect.store');
     });
 
 });
