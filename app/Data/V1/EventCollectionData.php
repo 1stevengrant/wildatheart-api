@@ -12,7 +12,7 @@ class EventCollectionData extends Data
     public function __construct(
         public string $id,
         public string $location,
-        public string $dates,
+        public ?string $dates,
         public string $sex,
         public string $eventType,
         public string $eventTypeImage,
@@ -23,6 +23,7 @@ class EventCollectionData extends Data
         public ?float $longitude,
         public ?float $latitude,
         public ?string $newCardHeading,
+        public ?float $distance,
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -30,7 +31,7 @@ class EventCollectionData extends Data
         return new self(
             id: $event->id,
             location: $event->location,
-            dates: $event->formatted_dates,
+            dates: $event->eventType->group_type === 'fire' ? null : $event->formatted_dates,
             sex: $event->sex->value,
             eventType: $event->eventType->name,
             eventTypeImage: $event->eventType->new_image,
@@ -41,6 +42,7 @@ class EventCollectionData extends Data
             longitude: $event->display_longitude ?? $event->longitude,
             latitude: $event->display_latitude ?? $event->latitude,
             newCardHeading: $event->new_card_heading,
+            distance: $event->distance ? round((float) $event->distance) : null,
         );
     }
 }

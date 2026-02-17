@@ -70,7 +70,8 @@
       "Bash(pkill:*)",
       "WebFetch(domain:docs.bunny.net)",
       "mcp__laravel-boost__database-connections",
-      "Bash(DB_DATABASE=wahlocal_test php artisan:*)"
+      "Bash(DB_DATABASE=wahlocal_test php artisan:*)",
+      "WebFetch(domain:spatie.be)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

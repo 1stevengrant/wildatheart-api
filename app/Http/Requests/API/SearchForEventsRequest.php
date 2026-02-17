@@ -7,19 +7,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SearchForEventsRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-     */
+    /** @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string> */
     public function rules(): array
     {
         return [
@@ -27,6 +20,7 @@ class SearchForEventsRequest extends FormRequest
             'sw_longitude' => ['required', 'numeric'],
             'ne_latitude' => ['required', 'numeric', 'between:-90,90'],
             'ne_longitude' => ['required', 'numeric'],
+
             'sex' => ['nullable', 'string', Rule::in(['men', 'women'])],
             'type_group' => ['nullable', 'string'],
             'types' => ['nullable', 'string', 'regex:/^\d+(,\d+)*$/'],
@@ -35,6 +29,7 @@ class SearchForEventsRequest extends FormRequest
         ];
     }
 
+    /** @return array<string, string> */
     public function messages(): array
     {
         return [

@@ -317,16 +317,30 @@ class EventBuilder extends Builder
      */
     public function withinRadius(float $lat, float $lng, float $radiusMiles): EventBuilder
     {
-        $haversine = '(3959 * acos(
-            cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
-            sin(radians(?)) * sin(radians(latitude))
-        ))';
+        $haversine = '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))';
 
         return $this->select('events.*')
-            ->selectRaw("{$haversine} AS distance", [$lat, $lng, $lat])
+            ->selectRaw("$haversine AS distance", [$lat, $lng, $lat])
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->havingRaw("{$haversine} <= ?", [$lat, $lng, $lat, $radiusMiles])
+            ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $radiusMiles])
+            ->orderBy('distance');
+    }
+
+    /**
+     * Filter events within a ring (donut) between minRadius and maxRadius miles.
+     * Used for "load more" incremental radius expansion.
+     */
+    public function withinRing(float $lat, float $lng, float $minRadius, float $maxRadius): EventBuilder
+    {
+        $haversine = '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))';
+
+        return $this->select('events.*')
+            ->selectRaw("$haversine AS distance", [$lat, $lng, $lat])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->whereRaw("$haversine > ?", [$lat, $lng, $lat, $minRadius])
+            ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $maxRadius])
             ->orderBy('distance');
     }
 }
