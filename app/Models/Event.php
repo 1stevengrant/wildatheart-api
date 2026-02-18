@@ -5,7 +5,9 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Enums\EventSexEnum;
 use Illuminate\Support\Str;
+use Laravel\Pennant\Feature;
 use App\Builders\EventBuilder;
+use App\Features\NewConnectUrl;
 use App\Enums\Event\FrequencyEnum;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -273,6 +275,15 @@ class Event extends BaseModel
             get: function (): string {
                 return route('view.event', ['event' => $this]);
             }
+        );
+    }
+
+    protected function connectUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Feature::active(NewConnectUrl::class)
+                ? "/events/connect/{$this->id}"
+                : config('app.url') . "/connect/{$this->id}",
         );
     }
 

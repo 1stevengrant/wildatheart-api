@@ -24,7 +24,8 @@ class EventData extends Data
         public ?string $scheduledFor,
         public string $hostName,
         public ?string $hostAvatar,
-        public ?array $landingPage
+        public ?array $landingPage,
+        public string $connect_url,
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -45,6 +46,7 @@ class EventData extends Data
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
             landingPage: null,
+            connect_url: $event->connect_url,
         );
     }
 }

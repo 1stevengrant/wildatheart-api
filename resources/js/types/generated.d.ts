@@ -252,10 +252,24 @@ type: string;
 };
 }
 declare namespace App.Data.V1 {
+export type AttendeeData = {
+id: number;
+event_id: string;
+given_name: string;
+family_name: string;
+email: string;
+phone: string;
+city: string;
+state: string;
+country: string;
+country_code: string;
+marketing_updates: boolean;
+created_at: string;
+};
 export type EventCollectionData = {
 id: string;
 location: string;
-dates: string;
+dates: string | null;
 sex: string;
 eventType: string;
 eventTypeImage: string;
@@ -266,13 +280,14 @@ hostAvatar: string | null;
 longitude: number | null;
 latitude: number | null;
 newCardHeading: string | null;
+distance: number | null;
 };
 export type EventData = {
 id: string;
 location: string;
 latitude: string;
 longitude: string;
-dates: string;
+dates: string | null;
 sex: string;
 eventType: string;
 eventGroupType: string;
@@ -283,6 +298,7 @@ scheduledFor: string | null;
 hostName: string;
 hostAvatar: string | null;
 landingPage: Array<any> | null;
+connect_url: string;
 };
 export type EventTypeData = {
 id: number;
