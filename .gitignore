@@ -38,5 +38,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 .junie/
+.claude/settings.local.json
 tests/Browser/Screenshots
 storage/app/private/reports/*.csv
