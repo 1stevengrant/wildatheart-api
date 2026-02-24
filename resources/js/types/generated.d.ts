@@ -195,6 +195,7 @@ host_address_state: string | null;
 host_zip: string | null;
 host_country: string | null;
 host_wegive_id: string | null;
+created_at: string | null;
 };
 export type UserData = {
 id: number;
@@ -725,7 +726,7 @@ declare namespace App.Enums.Event {
 export type FrequencyEnum = 'biweekly' | 'weekly' | 'monthly' | 'quarterly' | 'varies';
 }
 declare namespace App.Enums.Internal {
-export type EventSearchField = 'name' | 'host_name' | 'host_email' | 'host_phone' | 'city' | 'state' | 'event_type' | 'frequency' | 'attendee_count' | 'start_date' | 'distance' | 'status' | 'host_street' | 'host_address_city' | 'host_address_state' | 'host_zip' | 'host_country' | 'host_wegive_id';
+export type EventSearchField = 'name' | 'host_name' | 'host_email' | 'host_phone' | 'city' | 'state' | 'event_type' | 'frequency' | 'attendee_count' | 'start_date' | 'distance' | 'status' | 'host_street' | 'host_address_city' | 'host_address_state' | 'host_zip' | 'host_country' | 'host_wegive_id' | 'created_at';
 }
 declare namespace App.StatamicDTO.Blueprints.Collections.Alerts {
 export type Alert = {

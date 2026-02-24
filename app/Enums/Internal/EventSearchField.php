@@ -24,6 +24,7 @@ enum EventSearchField: string
     case HostZip = 'host_zip';
     case HostCountry = 'host_country';
     case HostWeGiveId = 'host_wegive_id';
+    case CreatedAt = 'created_at';
 
     public function label(): string
     {
@@ -46,6 +47,7 @@ enum EventSearchField: string
             self::HostZip => 'Host Zip',
             self::HostCountry => 'Host Country',
             self::HostWeGiveId => 'Host WeGive ID',
+            self::CreatedAt => 'Created At',
         };
     }
 
@@ -69,7 +71,8 @@ enum EventSearchField: string
             self::HostAddressState,
             self::HostZip,
             self::HostCountry,
-            self::HostWeGiveId => false,
+            self::HostWeGiveId,
+            self::CreatedAt => false,
         };
     }
 
@@ -85,7 +88,7 @@ enum EventSearchField: string
             self::EventType => $event->eventType?->name,
             self::Frequency => $event->frequency?->value,
             self::AttendeeCount => (string) $event->attendee_count,
-            self::StartDate => $event->start_date?->format('Y-m-d'),
+            self::StartDate => $event->start_date,
             self::Distance => isset($event->distance) ? (string) round($event->distance, 2) : null,
             self::Status => self::getEventStatus($event),
             self::HostStreet => $event->user?->primaryAddress()?->street_address,
@@ -94,6 +97,7 @@ enum EventSearchField: string
             self::HostZip => $event->user?->primaryAddress()?->zip,
             self::HostCountry => $event->user?->primaryAddress()?->country,
             self::HostWeGiveId => $event->user?->wegive_donor_id,
+            self::CreatedAt => $event->created_at?->format('Y-m-d'),
         };
     }
 

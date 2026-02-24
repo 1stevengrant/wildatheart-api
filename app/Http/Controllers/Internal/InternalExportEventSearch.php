@@ -20,6 +20,8 @@ class InternalExportEventSearch extends Controller
             fields: $request->fields(),
             activeOnly: $request->activeOnly(),
             includeDeleted: $request->includeDeleted(),
+            createdFrom: $request->createdFrom(),
+            createdTo: $request->createdTo(),
         );
 
         return back()->with(['notifications' => [

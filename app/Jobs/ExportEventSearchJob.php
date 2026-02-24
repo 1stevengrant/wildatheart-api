@@ -28,6 +28,8 @@ class ExportEventSearchJob implements ShouldQueue
         private readonly array $fields,
         private readonly bool $activeOnly,
         private readonly bool $includeDeleted,
+        private readonly ?string $createdFrom = null,
+        private readonly ?string $createdTo = null,
     ) {}
 
     public function handle(): void
@@ -119,6 +121,14 @@ class ExportEventSearchJob implements ShouldQueue
 
         if (! empty($this->eventTypeIds)) {
             $query->whereIn('event_type_id', $this->eventTypeIds);
+        }
+
+        if ($this->createdFrom) {
+            $query->where('created_at', '>=', $this->createdFrom);
+        }
+
+        if ($this->createdTo) {
+            $query->where('created_at', '<=', "{$this->createdTo} 23:59:59");
         }
 
         return $query->get();

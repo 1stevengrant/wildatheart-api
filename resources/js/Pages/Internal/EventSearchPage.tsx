@@ -3,6 +3,7 @@ import React, { useState, useCallback } from "react";
 import { Combobox } from "@headlessui/react";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { router, usePage } from "@inertiajs/react";
+import { DatePickerInput } from "@mantine/dates";
 
 import Pagination from "@/Components/Pagination";
 import { useDebounce } from "@/Hooks/useDebounce";
@@ -30,6 +31,7 @@ type EventSearchResult = {
     host_address_state: string | null;
     host_zip: string | null;
     host_country: string | null;
+    created_at: string | null;
 };
 
 type AvailableField = {
@@ -54,6 +56,8 @@ type PageProps = {
         place_name: string;
         active_only: boolean;
         include_deleted: boolean;
+        created_from: string | null;
+        created_to: string | null;
     };
     availableFields: AvailableField[];
     eventTypes: EventType[];
@@ -79,6 +83,12 @@ const EventSearchPage = () => {
     const [activeOnly, setActiveOnly] = useState(filters.active_only ?? true);
     const [includeDeleted, setIncludeDeleted] = useState(
         filters.include_deleted ?? false
+    );
+    const [createdFrom, setCreatedFrom] = useState<Date | null>(
+        filters.created_from ? new Date(filters.created_from + "T00:00:00") : null
+    );
+    const [createdTo, setCreatedTo] = useState<Date | null>(
+        filters.created_to ? new Date(filters.created_to + "T00:00:00") : null
     );
 
     const [hasSearched, setHasSearched] = useState(
@@ -151,6 +161,12 @@ const EventSearchPage = () => {
                 place_name: placeName,
                 active_only: activeOnly,
                 include_deleted: includeDeleted,
+                created_from: createdFrom
+                    ? createdFrom.toISOString().split("T")[0]
+                    : null,
+                created_to: createdTo
+                    ? createdTo.toISOString().split("T")[0]
+                    : null,
             },
             {
                 preserveState: true,
@@ -179,6 +195,8 @@ const EventSearchPage = () => {
         );
         setActiveOnly(true);
         setIncludeDeleted(false);
+        setCreatedFrom(null);
+        setCreatedTo(null);
         setSearchError(null);
         setHasSearched(false);
         router.visit("/internal/event-search", {
@@ -203,6 +221,12 @@ const EventSearchPage = () => {
                 include_deleted: includeDeleted,
                 event_type_ids: selectedEventTypeIds,
                 fields: selectedFields,
+                created_from: createdFrom
+                    ? createdFrom.toISOString().split("T")[0]
+                    : null,
+                created_to: createdTo
+                    ? createdTo.toISOString().split("T")[0]
+                    : null,
             },
             {
                 preserveState: true,
@@ -438,6 +462,26 @@ const EventSearchPage = () => {
                                     Include deleted
                                 </span>
                             </label>
+                        </div>
+
+                        {/* Created Between Date Filters */}
+                        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <DatePickerInput
+                                className="[&>.mantine-DatePickerInput-label]:text-black"
+                                label="Created from"
+                                placeholder="Select start date"
+                                value={createdFrom}
+                                onChange={setCreatedFrom}
+                                clearable
+                            />
+                            <DatePickerInput
+                                className="[&>.mantine-DatePickerInput-label]:text-black"
+                                label="Created to"
+                                placeholder="Select end date"
+                                value={createdTo}
+                                onChange={setCreatedTo}
+                                clearable
+                            />
                         </div>
 
                         {/* Event Type Selection */}

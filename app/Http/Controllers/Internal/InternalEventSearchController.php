@@ -26,7 +26,9 @@ class InternalEventSearchController extends Controller
                 $request->hasSearchCoordinates() ? $request->radius() : null,
                 $request->eventTypeIds(),
                 $request->activeOnly(),
-                $request->includeDeleted()
+                $request->includeDeleted(),
+                $request->createdFrom(),
+                $request->createdTo()
             );
 
             return $this->transformResults($paginator);
@@ -47,6 +49,8 @@ class InternalEventSearchController extends Controller
                 'place_name' => $request->placeName(),
                 'active_only' => $request->activeOnly(),
                 'include_deleted' => $request->includeDeleted(),
+                'created_from' => $request->createdFrom(),
+                'created_to' => $request->createdTo(),
             ],
             'availableFields' => EventSearchField::toOptions(),
             'eventTypes' => $eventTypes,
@@ -62,13 +66,15 @@ class InternalEventSearchController extends Controller
             'event_type_ids' => $request->eventTypeIds(),
             'active_only' => $request->activeOnly(),
             'include_deleted' => $request->includeDeleted(),
+            'created_from' => $request->createdFrom(),
+            'created_to' => $request->createdTo(),
             'page' => $request->input('page', 1),
         ];
 
         return 'event_search:' . md5(serialize($params));
     }
 
-    private function searchEvents(?float $lat, ?float $lng, ?float $radius, array $eventTypeIds, bool $activeOnly, bool $includeDeleted): LengthAwarePaginator
+    private function searchEvents(?float $lat, ?float $lng, ?float $radius, array $eventTypeIds, bool $activeOnly, bool $includeDeleted, ?string $createdFrom = null, ?string $createdTo = null): LengthAwarePaginator
     {
         $query = Event::query()->with(['user', 'eventType']);
 
@@ -86,6 +92,14 @@ class InternalEventSearchController extends Controller
 
         if (! empty($eventTypeIds)) {
             $query->whereIn('event_type_id', $eventTypeIds);
+        }
+
+        if ($createdFrom) {
+            $query->where('created_at', '>=', $createdFrom);
+        }
+
+        if ($createdTo) {
+            $query->where('created_at', '<=', "{$createdTo} 23:59:59");
         }
 
         return $query->paginate(25)->withQueryString();

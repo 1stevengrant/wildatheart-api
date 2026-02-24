@@ -31,6 +31,8 @@ class InternalEventSearchRequest extends FormRequest
             'place_name' => ['nullable', 'string', 'max:255'],
             'active_only' => ['nullable', 'in:0,1,true,false'],
             'include_deleted' => ['nullable', 'in:0,1,true,false'],
+            'created_from' => ['nullable', 'date'],
+            'created_to' => ['nullable', 'date'],
         ];
     }
 
@@ -100,5 +102,19 @@ class InternalEventSearchRequest extends FormRequest
     public function includeDeleted(): bool
     {
         return $this->boolean('include_deleted', false);
+    }
+
+    public function createdFrom(): ?string
+    {
+        return $this->filled('created_from')
+            ? $this->date('created_from')->format('Y-m-d')
+            : null;
+    }
+
+    public function createdTo(): ?string
+    {
+        return $this->filled('created_to')
+            ? $this->date('created_to')->format('Y-m-d')
+            : null;
     }
 }
