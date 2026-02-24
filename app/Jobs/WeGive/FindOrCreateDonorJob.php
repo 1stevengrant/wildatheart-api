@@ -30,7 +30,7 @@ class FindOrCreateDonorJob implements ShouldQueue
     public int $maxExceptions = 3;
 
     public function __construct(
-        protected Attendee|User $donorModel,
+        public Attendee|User $donorModel,
     ) {}
 
     /**

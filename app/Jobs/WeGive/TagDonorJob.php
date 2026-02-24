@@ -30,8 +30,8 @@ class TagDonorJob implements ShouldQueue
     public int $maxExceptions = 3;
 
     public function __construct(
-        protected Attendee|User $taggable,
-        protected string $weGiveTagId,
+        public Attendee|User $taggable,
+        public string $weGiveTagId,
     ) {}
 
     /**
