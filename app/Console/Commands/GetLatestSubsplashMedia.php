@@ -62,19 +62,26 @@ class GetLatestSubsplashMedia extends Command
     {
         // Retrieve items on current page.
         $subsplashResponse = $this->subsplash->subsplashFetch($nextPage);
-        $mediaItemsInResponse = data_get($subsplashResponse, '_embedded.media-items');
+        $mediaItemsInResponse = data_get($subsplashResponse, '_embedded.media-items', []);
 
         // Update next page if available.
         $nextPage = data_get($subsplashResponse, '_links.next.href', null);
-
-        // Increment the total item counter.
-        $totalMediaItems = $totalMediaItems + count($mediaItemsInResponse);
 
         if ($errors = data_get($subsplashResponse, 'errors')) {
             foreach ($errors as $error) {
                 $this->error($error);
             }
         }
+
+        if (empty($mediaItemsInResponse)) {
+            $this->warn('No media items found in response.');
+            $nextPage = null;
+
+            return $totalMediaItems;
+        }
+
+        // Increment the total item counter.
+        $totalMediaItems = $totalMediaItems + count($mediaItemsInResponse);
 
         // Update or create entries for all media items.
         $bar = $this->output->createProgressBar($totalMediaItems);
