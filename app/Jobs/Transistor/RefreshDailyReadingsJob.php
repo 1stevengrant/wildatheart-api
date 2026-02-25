@@ -11,6 +11,12 @@ class RefreshDailyReadingsJob implements ShouldQueue
 {
     use Queueable;
 
+    public int $timeout = 300;
+
+    public int $tries = 3;
+
+    public int $backoff = 30;
+
     public function __construct(
         public bool $rebuildAstro = false,
     ) {}
