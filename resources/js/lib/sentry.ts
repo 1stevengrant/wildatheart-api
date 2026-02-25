@@ -9,6 +9,8 @@ export function initSentry(): void {
             "Non-Error promise rejection captured with value: null",
             /^Non-Error promise rejection captured with value:/,
             /CustomEvent/,
+            "Importing a module script failed",
+            "AxiosError: timeout exceeded",
         ],
         beforeSend(event) {
             const frames =
