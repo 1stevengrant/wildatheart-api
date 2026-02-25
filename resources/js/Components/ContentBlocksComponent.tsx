@@ -1,5 +1,7 @@
+import { lazy, Suspense } from "react";
 import Markdown from "react-markdown";
-import ReactPlayer from "react-player";
+
+const ReactPlayer = lazy(() => import("react-player"));
 
 export const ContentBlocksComponent = ({
     contentBlocks,
@@ -23,7 +25,11 @@ export const ContentBlocksComponent = ({
                                     </Markdown>
                                 );
                             case "video_block":
-                                return <ReactPlayer url={block.video} />;
+                                return (
+                                    <Suspense key={index} fallback={null}>
+                                        <ReactPlayer url={block.video} />
+                                    </Suspense>
+                                );
                             default:
                                 return null;
                         }

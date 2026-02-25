@@ -50,6 +50,27 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
+    build: {
+        chunkSizeWarningLimit: 1700,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('mapbox-gl')) {
+                        return 'mapbox-gl';
+                    }
+                    if (id.includes('@mantine')) {
+                        return 'mantine';
+                    }
+                    if (id.includes('recoil')) {
+                        return 'recoil';
+                    }
+                    if (id.includes('react-player') || id.includes('dashjs') || id.includes('hls.js')) {
+                        return 'react-player';
+                    }
+                },
+            },
+        },
+    },
     resolve: {
         alias: {
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
