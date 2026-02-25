@@ -44,7 +44,7 @@ class SearchController extends Controller
             $output = $entries->toArray();
             $output['data'] = $entries->map(function ($entry) {
                 return $this->previewService->build($entry);
-            });
+            })->filter()->values();
 
             return $output;
         });

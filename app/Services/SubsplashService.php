@@ -61,7 +61,11 @@ class SubsplashService
         $accessToken = $this->getAccessToken();
         $token = 'Bearer ' . $accessToken;
 
-        $response = Http::retry([100, 500, 1000])->withHeaders([
+        $response = Http::retry(
+            [100, 500, 1000],
+            when: fn ($exception, $request) => $exception->response->status() >= 500,
+            throw: false,
+        )->withHeaders([
             'Accept' => 'application/vnd.api+json',
             'Accept-Language' => 'en-US,en;q=0.9',
             'Authorization' => $token,
@@ -78,11 +82,10 @@ class SubsplashService
             return $json;
         }
 
-        if (isset($response->json()['errors'])) {
-            return $response->json();
+        if ($response->notFound()) {
+            return null;
         }
 
-        // Handle error appropriately
         throw new \Exception("Request to Subsplash API failed with {$response->status()} after three attempts: $url");
     }
 
