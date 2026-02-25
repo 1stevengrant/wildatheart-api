@@ -315,6 +315,25 @@ countries_count: number;
 summary: string | null;
 summary_link: string | null;
 };
+export type MyEventsRequestData = {
+status: string;
+page: number;
+per_page: number;
+};
+export type UserData = {
+id: number;
+given_name: string | null;
+family_name: string | null;
+fullname: string;
+email: string;
+opted_into_marketing: boolean;
+image: string | null;
+profile_step: number;
+phone: string | null;
+city: string | null;
+state: string | null;
+postal_code: string | null;
+};
 }
 declare namespace App.DataTypeObjects {
 export type Attributes = {

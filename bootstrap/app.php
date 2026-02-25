@@ -29,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'webhooks/sendgrid',
             'api/v1/webhooks/*',
-            'api/v1/events/*/connect'
+            'api/v1/events/*/connect',
         ]);
 
         $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);
@@ -47,6 +47,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'agreed_to_host_agreement' => \App\Http\Middleware\HasAgreedToHostAgreementMiddleware::class,
+            'auth0.jwt' => \App\Http\Middleware\Auth0JwtMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,

@@ -38,6 +38,13 @@ use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 |
 */
 
+Route::prefix('v1/auth')->middleware('auth0.jwt')->name('v1.auth.')->group(function () {
+    Route::get('me', \App\Http\Controllers\API\V1\Auth\MeController::class)
+        ->name('me');
+    Route::get('me/events', \App\Http\Controllers\API\V1\Auth\MyEventsController::class)
+        ->name('me.events');
+});
+
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('stats', StatsController::class)->name('stats');
 

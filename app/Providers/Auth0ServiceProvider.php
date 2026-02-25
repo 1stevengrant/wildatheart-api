@@ -19,6 +19,7 @@ class Auth0ServiceProvider extends ServiceProvider
                 'clientSecret' => config('auth0.client_secret'),
                 'cookieSecret' => config('auth0.cookie_secret'),
                 'redirectUri' => config('auth0.redirect'),
+                'audience' => [config('auth0.audience')],
             ]);
         });
     }

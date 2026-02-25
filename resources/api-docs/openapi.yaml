@@ -633,7 +633,8 @@ paths:
           in: query
           schema:
             type: string
-            enum: [draft, published, cancelled, completed]
+            enum: [active, inactive]
+            default: active
         - name: page
           in: query
           schema:
@@ -661,12 +662,14 @@ paths:
                     properties:
                       current_page:
                         type: integer
+                      last_page:
+                        type: integer
+                      per_page:
+                        type: integer
                       total:
                         type: integer
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        '403':
-          $ref: '#/components/responses/ForbiddenError'
 
   /auth/me/events/{id}:
     get:
