@@ -4,7 +4,6 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import React from "react";
 
-import "mapbox-gl/dist/mapbox-gl.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { createInertiaApp } from "@inertiajs/react";
@@ -20,7 +19,6 @@ import { mantineTheme } from "@/mantineTheme";
 Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_LARAVEL_DSN,
     maxBreadcrumbs: 50,
-    debug: true,
 });
 
 const appName = import.meta.env.VITE_APP_NAME || "Wild at Heart";
