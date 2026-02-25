@@ -39,7 +39,7 @@ class SubsplashService
 
         if ($response->successful()) {
             $data = $response->json();
-            Cache::put($SUBSPLASH_CLIENT_ID, $data['access_token'], $data['expires_in']);
+            Cache::put($SUBSPLASH_CLIENT_ID, $data['access_token'], $data['expires_in'] - 30);
 
             return $data['access_token'];
         }
@@ -74,6 +74,18 @@ class SubsplashService
             'mode' => 'cors',
             'credentials' => 'include',
         ])->get($url);
+
+        if ($response->status() === 401) {
+            Cache::forget(config('services.subsplash.client_id'));
+            $accessToken = $this->getAccessToken();
+
+            $response = Http::withHeaders([
+                'Accept' => 'application/vnd.api+json',
+                'Accept-Language' => 'en-US,en;q=0.9',
+                'Authorization' => "Bearer {$accessToken}",
+                'Cache-Control' => 'no-cache',
+            ])->get($url);
+        }
 
         if ($response->successful()) {
             $json = $response->json();
