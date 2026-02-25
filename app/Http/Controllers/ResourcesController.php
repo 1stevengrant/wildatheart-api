@@ -15,7 +15,7 @@ class ResourcesController extends Controller
         });
 
         return inertia('ResourcesPage', [
-            'eventTypes' => EventTypeData::collection($eventTypes),
+            'eventTypes' => EventTypeData::collect($eventTypes),
         ]);
     }
 }

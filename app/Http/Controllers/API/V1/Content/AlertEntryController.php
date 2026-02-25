@@ -19,7 +19,7 @@ class AlertEntryController extends Controller
             ->get();
 
         if ($entries->isEmpty()) {
-            return AlertResponse::collection([]);
+            return AlertResponse::collect([]);
         }
 
         $entries = $entries->map(function ($entry) {
@@ -29,6 +29,6 @@ class AlertEntryController extends Controller
             return $entry;
         });
 
-        return AlertResponse::collection($entries);
+        return AlertResponse::collect($entries);
     }
 }

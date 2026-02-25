@@ -190,14 +190,22 @@ class DbSyncCommand extends Command
     {
         $commonOptions = "--single-transaction --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password={$config['password']} {$config['database']} $ignoreString $additionalOptions";
 
+        $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_');
+
         if ($config['useSsh'] === true) {
-            $command = "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} mysqldump $commonOptions > $outputFile 2>/dev/null";
+            $command = "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} mysqldump $commonOptions > $outputFile 2>$errorFile";
         } else {
-            $command = "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFile 2>/dev/null";
+            $command = "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFile 2>$errorFile";
         }
 
         $result = 0;
         exec($command, $output, $result);
+
+        if ($result !== 0) {
+            $this->error('Export failed: ' . file_get_contents($errorFile));
+        }
+
+        @unlink($errorFile);
 
         return $result === 0 ? self::SUCCESS : self::FAILURE;
     }
@@ -208,14 +216,14 @@ class DbSyncCommand extends Command
     private function importDatabase(array $config): int
     {
         $command = $config['localPassword']
-            ? "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -p{$config['localPassword']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>/dev/null"
-            : "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>/dev/null";
+            ? "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -p{$config['localPassword']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>&1"
+            : "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>&1";
 
         $result = 0;
         exec($command, $output, $result);
 
         if ($result !== 0) {
-            $this->error('Import failed');
+            $this->error('Import failed: ' . implode("\n", $output));
 
             return self::FAILURE;
         }

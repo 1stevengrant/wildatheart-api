@@ -4,9 +4,8 @@ nav:
     - local_platform
     - settings
     - fields
+    - users
   sections:
-    top_level:
-      'top_level::dashboard': '@hide'
     content:
       reorder:
         - 'content::collections::pages'
@@ -20,21 +19,32 @@ nav:
         - 'content::taxonomies'
         - 'content::assets'
       items:
-        'content::collections::pages': '@move'
+        'content::collections::pages':
+          action: '@move'
+          icon: page
         'content::media':
           action: '@create'
           display: Media
           url: collections/media_item
+          icon: media-ticket
           children:
             'content::collections::media_item': '@move'
             'content::collections::media_series': '@move'
             'content::collections::experiences': '@move'
             'content::collections::podcasts': '@move'
             'content::collections::prayers': '@move'
-        'content::collections::blogs': '@move'
-        'content::collections::books': '@move'
-        'content::collections::contributors': '@move'
-        'content::collections::events': '@move'
+        'content::collections::blogs':
+          action: '@move'
+          icon: pencil-line
+        'content::collections::books':
+          action: '@move'
+          icon: book-prev-page
+        'content::collections::contributors':
+          action: '@move'
+          icon: fieldtype-users
+        'content::collections::events':
+          action: '@move'
+          icon: calendar-date
         'content::collections': '@hide'
         'content::navigation': '@hide'
     local_platform:
@@ -43,18 +53,24 @@ nav:
       items:
         'content::local_platform_events':
           action: '@move'
+          icon: calendar-date
           children:
             'content::local_platform_event_types': '@move'
             'content::local_platform_pages': '@move'
         'content::local_platform_users':
           action: '@move'
+          icon: users
           children:
             'content::local_platform_attendees': '@move'
         'content::globals': '@move'
-        'content::local_platform_email_templates': '@move'
+        'content::local_platform_email_templates':
+          action: '@move'
+          icon: mail-send-email-attachment-document
     settings:
       reorder:
         - 'content::collections::alerts'
       items:
         'content::collections::alerts': '@move'
-        'content::redirects': '@move'
+        'content::redirects':
+          action: '@move'
+          icon: arrow-roadmap-path-flow

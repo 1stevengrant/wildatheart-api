@@ -26,7 +26,7 @@ class PrayersEntryController extends Controller
             return $this->buildPrayerResponse($prayer);
         });
 
-        return PrayersShowResponse::collection($prayersResponse);
+        return PrayersShowResponse::collect($prayersResponse);
     }
 
     public function show($slug)

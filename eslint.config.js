@@ -3,7 +3,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import-x';
 import reactPlugin from 'eslint-plugin-react';
 import globals from 'globals';
 
@@ -13,7 +13,6 @@ export default [
             'node_modules/**',
             'vendor/**',
             'public/build/**',
-            'addons/ghijk/wild-at-heart/resources/dist/**',
             'resources/js/cp.js'
         ]
     },
@@ -42,7 +41,7 @@ export default [
         plugins: {
             '@typescript-eslint': tsPlugin,
             'prettier': prettierPlugin,
-            'import': importPlugin,
+            'import-x': importPlugin,
             'react': reactPlugin
         },
         settings: {
@@ -59,7 +58,7 @@ export default [
             'prefer-const': 'warn',
             'no-case-declarations': 'off',
             'prettier/prettier': 'error',
-            'import/order': ['error', {
+            'import-x/order': ['error', {
                 'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
                 'pathGroups': [
                     {

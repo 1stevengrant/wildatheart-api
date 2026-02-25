@@ -18,7 +18,7 @@ abstract class Controller extends BaseController
     protected function transformPaginatedData(LengthAwarePaginator $paginator, string $dataClass): array
     {
         return [
-            'data' => $dataClass::collection($paginator->items()),
+            'data' => $dataClass::collect($paginator->items()),
             'links' => [
                 'first' => $paginator->url(1),
                 'last' => $paginator->url($paginator->lastPage()),

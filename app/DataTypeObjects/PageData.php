@@ -10,7 +10,6 @@ class PageData extends Data
 {
     public string $id;
 
-    /** @var array<SlideBlock|GenericBlock|HeroTitleBlock> */
     public ?array $blocks;
 
     public ImageData $images;

@@ -20,7 +20,7 @@ class FiresPageController extends Controller
         });
 
         return inertia('UpcomingFiresPage', [
-            'fires' => EventData::collection($fires),
+            'fires' => EventData::collect($fires),
         ]);
     }
 }

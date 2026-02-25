@@ -123,7 +123,7 @@ class EventData extends Data
             zip: $event->zip,
             is_featured: $event->is_featured,
             custom_landing_url: $event->custom_landing_url,
-            managers: $event->managers->map(fn ($manager) => EventManagerData::fromUser($manager))->toArray(),
+            managers: $event->managers->map(fn ($manager) => EventManagerData::fromUser($manager))->all(),
         );
     }
 }

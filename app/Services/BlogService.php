@@ -4,8 +4,8 @@ namespace App\Services;
 
 use Statamic\Support\Str;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Statamic\Eloquent\Entries\Entry;
-use Spatie\LaravelData\DataCollection;
 use App\DataTypeObjects\API\V1\Content\BlogResponse;
 
 class BlogService
@@ -57,7 +57,7 @@ class BlogService
         ]);
     }
 
-    public function handleSingleSegmentUri(string $slug): BlogResponse|JsonResponse|DataCollection
+    public function handleSingleSegmentUri(string $slug): BlogResponse|JsonResponse|Collection
     {
         // Try to find author blogs first
         $author = $this->findAuthorBySlug($slug);
@@ -93,7 +93,7 @@ class BlogService
             ->first(fn ($entry) => explode('-', $entry->slug)[0] === $slug);
     }
 
-    public function getBlogsByAuthor(Entry $author): DataCollection
+    public function getBlogsByAuthor(Entry $author): Collection
     {
         $entries = $this->getEntryQuery()
             ->where('author', $author->id())
@@ -101,7 +101,7 @@ class BlogService
             ->get()
             ->map(fn ($entry) => $this->createBlogResponse($entry));
 
-        return BlogResponse::collection($entries);
+        return BlogResponse::collect($entries);
     }
 
     public function notFoundResponse(): JsonResponse
@@ -109,7 +109,7 @@ class BlogService
         return response()->json(['message' => 'Entry not found'], 404);
     }
 
-    public function showByAuthor(string $authorSlug): JsonResponse|DataCollection
+    public function showByAuthor(string $authorSlug): JsonResponse|Collection
     {
         $author = $this->findAuthorBySlug($authorSlug);
 

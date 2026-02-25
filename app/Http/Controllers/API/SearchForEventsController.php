@@ -73,7 +73,7 @@ class SearchForEventsController extends Controller
         }
 
         return response()->json([
-            'events' => EventMapData::collection($offsetEvents),
+            'events' => EventMapData::collect($offsetEvents),
             'featuredContent' => $featuredContent,
         ]);
 

@@ -10,8 +10,6 @@
         "phpstorm",
         "vscode"
     ],
-    "guidelines": [
-        "saloonphp/laravel-plugin"
-    ],
+    "guidelines": true,
     "herd_mcp": true
 }

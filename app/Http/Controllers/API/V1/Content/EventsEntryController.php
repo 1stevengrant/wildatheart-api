@@ -23,7 +23,7 @@ class EventsEntryController extends Controller
             return $this->buildEventResponse($event);
         });
 
-        return EventsShowResponse::collection($eventsResponse);
+        return EventsShowResponse::collect($eventsResponse);
     }
 
     public function show($slug)

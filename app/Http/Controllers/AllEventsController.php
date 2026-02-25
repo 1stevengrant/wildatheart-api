@@ -35,7 +35,7 @@ class AllEventsController extends Controller
         $endCollectionTime = microtime(true);
 
         return response()->json([
-            'data' => EventData::collection($offsetEvents),
+            'data' => EventData::collect($offsetEvents),
             'meta' => [
                 'response_time_ms' => round((microtime(true) - $startTime) * 1000, 2),
                 'events_time_ms' => round(($endEventsTime - $startEventsTime) * 1000, 2),

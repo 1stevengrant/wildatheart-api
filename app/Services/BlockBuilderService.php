@@ -23,15 +23,22 @@ class BlockBuilderService
 
     public function build(array $blocks)
     {
-
         $output = [];
-        foreach ($blocks as &$block) {
 
-            $output[] = match ($block['type']) {
-                'media_slider' => $this->processMediaSliderBlock($block),
-                'hero_title' => $this->processHeroTitleBlock($block),
-                default => $this->processDefaultBlock($block)
+        foreach ($blocks as &$block) {
+            $inner = $block;
+
+            if (($block['type'] ?? null) === 'set' && isset($block['attrs']['values'])) {
+                $inner = $block['attrs']['values'];
+            }
+
+            $result = match ($inner['type']) {
+                'media_slider' => $this->processMediaSliderBlock($inner),
+                'hero_title' => $this->processHeroTitleBlock($inner),
+                default => $this->processDefaultBlock($inner)
             };
+
+            $output[] = $result instanceof \Spatie\LaravelData\Data ? $result->toArray() : $result;
         }
 
         return $output;
@@ -59,9 +66,14 @@ class BlockBuilderService
 
     public function processHeroTitleBlock($block)
     {
+        $heroTitle = $block['hero_title'];
+
+        if ($heroTitle instanceof \Statamic\Fields\Value) {
+            $heroTitle = $heroTitle->raw();
+        }
+
         return HeroTitleBlock::from([
-            'hero_title' => $block['hero_title'],
-            'text_style' => $block['text_style'],
+            'hero_title' => $heroTitle,
         ]);
     }
 
