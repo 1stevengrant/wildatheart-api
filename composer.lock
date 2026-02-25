@@ -1362,7 +1362,7 @@
         },
         {
             "name": "ghijk/statamic-typescript-generator",
-            "version": "dev-prod",
+            "version": "dev-hotfix/FIRE-1F4",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/statamic-typescript-generator",
@@ -1410,7 +1410,7 @@
         },
         {
             "name": "ghijk/wild-at-heart",
-            "version": "dev-prod",
+            "version": "dev-hotfix/FIRE-1F4",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/wild-at-heart",
@@ -9508,16 +9508,16 @@
         },
         {
             "name": "statamic/cms",
-            "version": "v5.73.2",
+            "version": "v5.73.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/statamic/cms.git",
-                "reference": "75f7455d7423248542f8d816e20c235b2261c9e7"
+                "reference": "617ce53fb75552c4d309dd3ee87b1f072f667189"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/statamic/cms/zipball/75f7455d7423248542f8d816e20c235b2261c9e7",
-                "reference": "75f7455d7423248542f8d816e20c235b2261c9e7",
+                "url": "https://api.github.com/repos/statamic/cms/zipball/617ce53fb75552c4d309dd3ee87b1f072f667189",
+                "reference": "617ce53fb75552c4d309dd3ee87b1f072f667189",
                 "shasum": ""
             },
             "require": {
@@ -9612,7 +9612,7 @@
             ],
             "support": {
                 "issues": "https://github.com/statamic/cms/issues",
-                "source": "https://github.com/statamic/cms/tree/v5.73.2"
+                "source": "https://github.com/statamic/cms/tree/v5.73.10"
             },
             "funding": [
                 {
@@ -9620,7 +9620,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-26T15:54:39+00:00"
+            "time": "2026-02-20T21:48:50+00:00"
         },
         {
             "name": "statamic/eloquent-driver",
