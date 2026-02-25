@@ -11,6 +11,7 @@ export function initSentry(): void {
             /CustomEvent/,
             "Importing a module script failed",
             "AxiosError: timeout exceeded",
+            /window\.__firefox__/,
         ],
         beforeSend(event) {
             const frames =
