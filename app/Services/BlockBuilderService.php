@@ -46,7 +46,34 @@ class BlockBuilderService
 
     public function processDefaultBlock($block)
     {
-        return $block;
+        // Serialize then decode to resolve all Statamic Value/Values objects,
+        // then normalize link fields back to simple URL strings.
+        $array = json_decode(json_encode($block), true);
+
+        return $this->normalizeLinks($array);
+    }
+
+    private function normalizeLinks(mixed $data): mixed
+    {
+        if (! is_array($data)) {
+            return $data;
+        }
+
+        // Statamic v6 link fields serialize to either:
+        // - Simple/null link: ['url' => '/path'] or ['url' => null]
+        // - Entry reference: ['id', 'title', 'url', 'permalink', ...]
+        // Flatten to just the URL string (or null) for v5 API compatibility.
+        if (array_key_exists('url', $data)) {
+            if (count($data) === 1) {
+                return $data['url'];
+            }
+
+            if (isset($data['permalink']) && count($data) <= 6) {
+                return $data['url'];
+            }
+        }
+
+        return array_map(fn ($item) => $this->normalizeLinks($item), $data);
     }
 
     public function blocksBuilder($blocks)
@@ -79,8 +106,9 @@ class BlockBuilderService
 
     public function processMediaSliderBlock($block)
     {
-
-        $processedBlock = $block->toArray();
+        $processedBlock = $this->normalizeLinks(
+            json_decode(json_encode($block), true)
+        );
 
         $processedBlock['slides'] = [];
 
