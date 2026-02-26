@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\EventTypeEnum;
+use App\Models\EventTypeGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +20,7 @@ class EventTypeFactory extends Factory
         return [
             'name' => fake()->word(),
             'group_type' => 'fire',
-            'type' => EventTypeEnum::Gathering,
+            'type_id' => EventTypeGroup::factory(),
             'sex' => 'men',
             'image' => 'test-image.jpg',
             'is_active' => true,

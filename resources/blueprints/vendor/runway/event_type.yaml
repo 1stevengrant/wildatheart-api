@@ -93,20 +93,13 @@ tabs:
                 - required
                 - string
           -
-            handle: type
+            handle: type_id
             field:
-              options:
-                -
-                  key: gathering
-                  value: Gathering
-                -
-                  key: retreat
-                  value: Retreat
-                -
-                  key: course
-                  value: Course
-              type: radio
-              display: Type
+              resource: event_type_group
+              type: belongs_to
+              display: 'Event Type Group'
+              validate:
+                - required
           -
             handle: order
             field:

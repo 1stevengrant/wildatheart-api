@@ -20,6 +20,10 @@ return [
             'name' => 'Local Platform Event Types',
         ],
 
+        \App\Models\EventTypeGroup::class => [
+            'name' => 'Local Platform Event Type Groups',
+        ],
+
         \App\Models\Page::class => [
             'name' => 'Local Platform Pages',
             'cp_icon' => 'book-pages',

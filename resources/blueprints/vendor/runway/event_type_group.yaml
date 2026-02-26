@@ -1,0 +1,34 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: name
+            field:
+              type: text
+              display: Name
+          -
+            handle: sort_order
+            field:
+              type: integer
+              display: 'Sort Order'
+          -
+            import: icon
+          -
+            handle: summary
+            field:
+              buttons:
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - link
+              type: markdown
+              display: Summary
+  sidebar:
+    display: Sidebar
+    sections:
+      - {  }
+title: 'Event Type Group'
