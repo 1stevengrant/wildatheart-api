@@ -54,6 +54,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::prefix('host')->name('host.')->middleware('auth0.api')->group(function () {
         Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
         Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
+        Route::post('event-types/{eventType}/events/draft', [HostEventController::class, 'storeDraft'])->name('event-types.events.draft');
     });
 
     Route::prefix('events')->name('events.')->group(function () {
