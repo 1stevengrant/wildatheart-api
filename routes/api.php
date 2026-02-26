@@ -17,6 +17,7 @@ use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\V1\Navs\AllNavsController;
 use App\Http\Controllers\API\V1\Navs\MobileNavController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
+use App\Http\Controllers\API\V1\GroupedEventTypeController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
@@ -54,6 +55,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('', [EventController::class, 'index'])->name('events.index');
         Route::get('search', \App\Http\Controllers\API\V1\SearchForEventsController::class)->name('api.events.search');
         Route::get('types', EventTypeController::class)->name('types');
+        Route::get('types/grouped', GroupedEventTypeController::class)->name('types.grouped');
         Route::get('{event}', [EventController::class, 'show'])->name('events.show');
         Route::post('{event}/connect', [AttendeeController::class, 'store'])
             ->middleware('throttle:connect')

@@ -4,6 +4,7 @@ namespace App\Data;
 
 use App\Models\EventType;
 use App\Enums\EventSexEnum;
+use App\Enums\EventTypeEnum;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -15,6 +16,7 @@ class EventTypeData extends Data
         public readonly bool $allow_materials_order,
         public readonly ?string $number_of_items_in_material_order_label,
         public readonly string $group_type,
+        public readonly ?EventTypeEnum $type,
         public readonly string $name,
         public readonly ?string $filter_name,
         public readonly int $order,
@@ -54,6 +56,7 @@ class EventTypeData extends Data
             allow_materials_order: $eventType->allow_materials_order ?? false,
             number_of_items_in_material_order_label: $eventType->number_of_items_in_material_order_label,
             group_type: $eventType->group_type,
+            type: $eventType->type,
             name: $eventType->name,
             filter_name: $eventType->filter_name,
             order: $eventType->order ?? 0,

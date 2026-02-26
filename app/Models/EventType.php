@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use App\Enums\EventTypeEnum;
 use App\Builders\EventTypeBuilder;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -50,7 +51,7 @@ class EventType extends BaseModel
         });
 
         static::created(function () {
-            $cacheKeys = collect(['allEventTypes', 'experienceTypes', 'retreatTypes', 'fireTypes']);
+            $cacheKeys = collect(['allEventTypes', 'experienceTypes', 'retreatTypes', 'fireTypes', 'eventTypesGroupedByType']);
 
             $cacheKeys->each(function ($key) {
                 cache()->forget($key);
@@ -73,6 +74,7 @@ class EventType extends BaseModel
             'new_image' => 'string',
             'summary' => 'string',
             'summary_link' => 'string',
+            'type' => EventTypeEnum::class,
         ];
     }
 

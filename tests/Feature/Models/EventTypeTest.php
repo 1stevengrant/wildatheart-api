@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EventType;
+use App\Enums\EventTypeEnum;
 
 beforeEach(function () {
     // Skip seeder as it has outdated schema
@@ -98,4 +99,58 @@ it('includes summary and summary_link in V1 EventTypeData', function () {
 
     expect($data->summary)->toBe('Test summary')
         ->and($data->summary_link)->toBe('https://example.com');
+});
+
+it('casts the type field to EventTypeEnum', function () {
+    $eventType = EventType::factory()->create([
+        'type' => 'gathering',
+    ]);
+
+    $eventType->refresh();
+
+    expect($eventType->type)->toBe(EventTypeEnum::Gathering);
+});
+
+it('can create an event type with each type enum value', function (EventTypeEnum $type) {
+    $eventType = EventType::factory()->create([
+        'type' => $type,
+    ]);
+
+    $eventType->refresh();
+
+    expect($eventType->type)->toBe($type);
+})->with([
+    'gathering' => EventTypeEnum::Gathering,
+    'retreat' => EventTypeEnum::Retreat,
+    'course' => EventTypeEnum::Course,
+]);
+
+it('allows nullable type field', function () {
+    $eventType = EventType::factory()->create([
+        'type' => null,
+    ]);
+
+    $eventType->refresh();
+
+    expect($eventType->type)->toBeNull();
+});
+
+it('includes type in EventTypeData', function () {
+    $eventType = EventType::factory()->create([
+        'type' => EventTypeEnum::Course,
+    ]);
+
+    $data = \App\Data\EventTypeData::fromModel($eventType);
+
+    expect($data->type)->toBe(EventTypeEnum::Course);
+});
+
+it('includes type as string in V1 EventTypeData', function () {
+    $eventType = EventType::factory()->create([
+        'type' => EventTypeEnum::Retreat,
+    ]);
+
+    $data = \App\Data\V1\EventTypeData::fromEventType($eventType);
+
+    expect($data->type)->toBe('retreat');
 });
