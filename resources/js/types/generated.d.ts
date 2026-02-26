@@ -134,7 +134,7 @@ id: number;
 allow_materials_order: boolean;
 number_of_items_in_material_order_label: string | null;
 group_type: string;
-type: App.Enums.EventTypeEnum | null;
+type_id: number | null;
 name: string;
 filter_name: string | null;
 order: number;
@@ -309,7 +309,7 @@ camel_case_name: string;
 sex: string;
 image: string;
 group_type: string;
-type: string | null;
+type_group: string | null;
 listings_count: number;
 countries_count: number;
 summary: string | null;
@@ -740,7 +740,6 @@ subtitle: string | null;
 }
 declare namespace App.Enums {
 export type EventSexEnum = 'men' | 'women';
-export type EventTypeEnum = 'gathering' | 'retreat' | 'course';
 export type ReportFormat = 'csv';
 export type ReportName = 'getBAKRHosts' | 'getWAHRHosts' | 'getBAKRExperienceHosts' | 'getWAHExperienceHosts' | 'getFiresHosts' | 'getCAPRHosts' | 'getCAPExperienceHosts' | 'getSurvivalSchoolHosts';
 }
