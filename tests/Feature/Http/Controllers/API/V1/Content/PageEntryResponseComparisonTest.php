@@ -16,6 +16,31 @@ it('returns the same response as production for the media page', function () {
         ->toBe(normalizeJson($productionResponse->json()));
 })->group('comparison');
 
+it('returns the same response as production for a custom media item', function () {
+    $productionResponse = Http::withoutVerifying()
+        ->withBasicAuth('wah', 'wah')
+        ->get('https://local.wildatheart.org/api/content/v1/media-or-series/the-series/chapter-1-mark');
+
+    $localResponse = Http::withoutVerifying()
+        ->get('https://wahfires.test/api/content/v1/media-or-series/the-series/chapter-1-mark');
+
+    expect($productionResponse->status())->toBe(200, 'Production response was not 200');
+    expect($localResponse->status())->toBe(200, 'Local response was not 200');
+
+    $normalizedLocal = normalizeJson($localResponse->json());
+    $normalizedProd = normalizeJson($productionResponse->json());
+
+    expect($normalizedLocal['blueprint']['handle'])->toBe('custom_media_item');
+
+    // Verify blocks are not empty/null-filled (regression for union type docblock issue)
+    foreach ($normalizedLocal['blocks'] as $i => $block) {
+        $nonNullFields = collect($block)->reject(fn ($v) => is_null($v))->count();
+        expect($nonNullFields)->toBeGreaterThan(1, "Block {$i} ({$block['type']}) has mostly null fields");
+    }
+
+    expect($normalizedLocal)->toBe($normalizedProd);
+})->group('comparison');
+
 /**
  * Recursively normalize environment-specific values (URLs, domains)
  * so responses from different environments can be compared.
