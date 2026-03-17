@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Models\User;
 use App\Models\Event;
 use Statamic\Statamic;
+use App\Enums\UserRoleEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('viewPulse', function ($user) {
-            return $user->hasRole(User::ROLE_ADMIN);
+            return $user->hasRole(UserRoleEnum::Admin);
         });
 
         QueryBuilder::macro(

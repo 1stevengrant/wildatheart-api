@@ -76,6 +76,6 @@ class ExportContactsJob implements ShouldQueue
             return $event->attendees()->with(['event.eventType'])->get();
         }
 
-        return $this->user->contacts()->with(['event.eventType'])->get();
+        return $this->user->attendees()->with(['event.eventType'])->get();
     }
 }

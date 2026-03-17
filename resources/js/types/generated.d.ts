@@ -724,6 +724,7 @@ export type EventSexEnum = 'men' | 'women';
 export type EventTypeEnum = 'gathering' | 'retreat' | 'course';
 export type ReportFormat = 'csv';
 export type ReportName = 'getBAKRHosts' | 'getWAHRHosts' | 'getBAKRExperienceHosts' | 'getWAHExperienceHosts' | 'getFiresHosts' | 'getCAPRHosts' | 'getCAPExperienceHosts' | 'getSurvivalSchoolHosts';
+export type UserRoleEnum = 'admin' | 'host' | 'attendee';
 }
 declare namespace App.Enums.Event {
 export type FrequencyEnum = 'biweekly' | 'weekly' | 'monthly' | 'quarterly' | 'varies';

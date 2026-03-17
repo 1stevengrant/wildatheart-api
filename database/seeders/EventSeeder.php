@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Enums\UserRoleEnum;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +29,7 @@ class EventSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        $user->assignRole(User::ROLE_ADMIN);
+        $user->assignRole(UserRoleEnum::Admin);
 
         User::factory()->create([
             'family_name' => 'Morrison',

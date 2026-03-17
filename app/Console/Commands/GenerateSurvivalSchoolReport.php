@@ -81,7 +81,7 @@ class GenerateSurvivalSchoolReport extends Command
 
         $fullPath = Storage::path($filename);
 
-        $this->info("Report generated successfully!");
+        $this->info('Report generated successfully!');
         $this->line("Total events: {$events->count()}");
         $this->line("Total attendees: {$events->sum('attendees_count')}");
         $this->newLine();

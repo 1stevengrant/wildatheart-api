@@ -150,7 +150,7 @@ it('uses event type wegive tag when tagging old owner as co-host', function () {
     TransferEventOwnership::run($transfer, $newOwner);
 
     Bus::assertDispatched(FindOrCreateDonorJob::class, function ($job) use ($event) {
-        if (!isset($job->chained[0])) {
+        if (! isset($job->chained[0])) {
             return false;
         }
 
@@ -176,7 +176,7 @@ it('tags old owner with correct user instance', function () {
     TransferEventOwnership::run($transfer, $newOwner);
 
     Bus::assertDispatched(FindOrCreateDonorJob::class, function ($job) use ($oldOwner) {
-        if (!isset($job->chained[0])) {
+        if (! isset($job->chained[0])) {
             return false;
         }
 

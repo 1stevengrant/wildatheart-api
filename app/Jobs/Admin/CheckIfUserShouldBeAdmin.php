@@ -3,6 +3,7 @@
 namespace App\Jobs\Admin;
 
 use App\Models\User;
+use App\Enums\UserRoleEnum;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,7 +28,7 @@ class CheckIfUserShouldBeAdmin implements ShouldQueue
             str_contains($this->user->email, '@wildatheart.org') ||
             str_contains($this->user->email, '@ghijk.co.uk')
         ) {
-            $this->user->assignRole(User::ROLE_ADMIN);
+            $this->user->assignRole(UserRoleEnum::Admin);
         }
     }
 }
