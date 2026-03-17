@@ -4,16 +4,20 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Address;
 use App\Models\Attendee;
-use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
+
 test('full name returns the users email address if they have no first name or last name defined', function () {
     $user = User::factory()->create([
         'given_name' => null,
         'family_name' => null,
     ]);
+
     expect($user->fullname)->toBe($user->email);
 });
 
@@ -38,7 +42,7 @@ test('a family and given name can be nullable', function () {
 
 test('when a user is deleted, their events and related items are also deleted', function () {
     $user = User::factory()->create();
-    $event = \App\Models\Event::factory()->fires()->create([
+    $event = Event::factory()->fires()->create([
         'user_id' => $user->id,
     ]);
 

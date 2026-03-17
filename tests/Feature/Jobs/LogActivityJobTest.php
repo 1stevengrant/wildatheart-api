@@ -1,13 +1,16 @@
 <?php
 
-use App\Models\User;
-use App\Models\Event;
 use App\Jobs\LogActivityJob;
+use App\Models\Event;
+use App\Models\User;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
+
 it('logs an activity in the database', function () {
     $user = User::factory()->create();
     $event = Event::factory()->fires()->create(['user_id' => $user->id]);

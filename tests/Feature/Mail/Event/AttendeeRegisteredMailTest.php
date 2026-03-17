@@ -4,12 +4,13 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Attendee;
 use App\Models\EmailTemplate;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Event\AttendeeRegistered;
 
 beforeEach(function () {
+    Bus::fake();
     Mail::fake();
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
     EmailTemplate::where('slug', 'attendee-registered')->update([
         'body' => 'Hi [host_name], [attendee_name] has expressed interest in your event.',

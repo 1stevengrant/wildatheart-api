@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Jobs\Admin\GenerateAndEmailReport;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
     // Use fake storage and mail - specifically fake the local disk
     Storage::fake('local');

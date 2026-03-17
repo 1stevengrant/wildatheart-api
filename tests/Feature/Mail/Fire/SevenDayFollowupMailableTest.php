@@ -3,12 +3,13 @@
 use App\Models\User;
 use App\Models\Event;
 use App\Models\EmailTemplate;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Fire\SevenDayFollowupMailable;
 
 beforeEach(function () {
+    Bus::fake();
     Mail::fake();
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
     EmailTemplate::where('slug', 'fire-deactivating-soon')->update([
         'body' => 'Hi [event_host_name], your fire will be deactivated soon.',

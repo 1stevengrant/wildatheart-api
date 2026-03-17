@@ -23,13 +23,21 @@ export const UpdateProfileForm = ({
     redirectTo,
     buttonText,
 }: any) => {
-    const form = useForm({
+    const form = useForm<{
+        _method: string;
+        given_name: string;
+        family_name: string;
+        phone: string;
+        email: string;
+        image: File | null;
+        opted_into_marketing: boolean;
+    }>({
         _method: "PUT",
         given_name: user.given_name ?? "",
         family_name: user.family_name ?? "",
         phone: user.phone ?? "",
         email: user.email ?? "",
-        image: null as File | null,
+        image: null,
         opted_into_marketing: Boolean(user.opted_into_marketing),
     });
 

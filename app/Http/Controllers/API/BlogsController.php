@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use Statamic\Facades\Entry;
 use App\Services\BlogService;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
 
 class BlogsController extends Controller
@@ -14,10 +14,9 @@ class BlogsController extends Controller
 
     public function index()
     {
-        return Entry::query()
-            ->where('collection', 'blogs')
-            ->where('published', true)
-            ->orderBy('date', 'desc')
+        return EntryQueryBuilder::blogs()
+            ->published()
+            ->recentFirst()
             ->get()
             ->map(function ($entry) {
                 return $this->blogService->createBlogResponse($entry);

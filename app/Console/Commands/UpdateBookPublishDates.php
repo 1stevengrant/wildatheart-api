@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Statamic\Entries\Entry;
 use Illuminate\Console\Command;
+use App\Builders\EntryQueryBuilder;
 
 class UpdateBookPublishDates extends Command
 {
@@ -27,10 +27,10 @@ class UpdateBookPublishDates extends Command
     public function handle()
     {
 
-        $recentItems = Entry::query()
-            ->where('collection', 'books')
-            ->where('published', true)
-            ->orderBy('date', 'asc')
+        $recentItems = EntryQueryBuilder::query()
+            ->inCollection('books')
+            ->published()
+            ->oldestFirst()
             ->get();
 
         foreach ($recentItems as $item) {

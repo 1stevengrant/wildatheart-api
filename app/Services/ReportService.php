@@ -9,110 +9,35 @@ use App\DataTransferObjects\ReportData;
 
 class ReportService
 {
+    private function getScopeForReport(ReportName $reportName): ?string
+    {
+        return match ($reportName) {
+            ReportName::BAKR_HOSTS => 'becomingAKingRetreats',
+            ReportName::WAHR_HOSTS => 'wahRetreat',
+            ReportName::BAKR_EXPERIENCE_HOSTS => 'becomingAKingExperiences',
+            ReportName::WAHR_EXPERIENCE_HOSTS => 'wahExperience',
+            ReportName::FIRES_HOSTS => 'fires',
+            ReportName::CAPTIVATING_RETRAT_HOSTS => 'captivatingRetreat',
+            ReportName::CAPTIVATING_EXPERIENCE_HOSTS => 'captivatingExperience',
+            ReportName::SURVIVAL_SCHOOL_HOSTS => 'survivalSchool',
+        };
+    }
+
     /**
      * Generates a named report and returns it in the chosen format.
-     *
      *
      * @return string|null Returns null if config is invalid, otherwise returns formatted report as string.
      */
     public function generate(ReportName $reportName, ReportFormat $format = ReportFormat::CSV): ?string
     {
-        switch ($reportName) {
-            case ReportName::BAKR_HOSTS:
-                $report = $this->getBAKRHosts();
-                break;
-            case ReportName::WAHR_HOSTS:
-                $report = $this->getWAHRHosts();
-                break;
-            case ReportName::BAKR_EXPERIENCE_HOSTS:
-                $report = $this->getBAKRExperienceHosts();
-                break;
-            case ReportName::WAHR_EXPERIENCE_HOSTS:
-                $report = $this->getWAHExperienceHosts();
-                break;
-            case ReportName::FIRES_HOSTS:
-                $report = $this->getFiresHosts();
-                break;
-            case ReportName::CAPTIVATING_RETRAT_HOSTS:
-                $report = $this->getCAPRHosts();
-                break;
-            case ReportName::CAPTIVATING_EXPERIENCE_HOSTS:
-                $report = $this->getCAPExperienceHosts();
-                break;
-            case ReportName::SURVIVAL_SCHOOL_HOSTS:
-                $report = $this->getSurvivalSchoolHosts();
-                break;
-        }
+        $scope = $this->getScopeForReport($reportName);
 
-        switch ($format) {
-            case ReportFormat::CSV:
-                return $this->generateCSV($report);
-        }
+        $report = $this->getHostData(Event::query()->{$scope}());
 
-        return null;
-    }
-
-    private function getBAKRHosts(): ReportData
-    {
-        $headers = [
-            'given_name' => 'First Name',
-            'family_name' => 'Last Name',
-            'email' => 'Email',
-            'IS_BAKR_HOST' => 'IS_BAKR_HOST',
-        ];
-
-        $data = Event::query()
-            ->becomingAKingRetreats()
-            ->with('user')
-            ->get()
-            ->unique('user.id')
-            ->pluck('user')
-            ->map(
-                fn ($host) => [
-                    'given_name' => $host->given_name,
-                    'family_name' => $host->family_name,
-                    'email' => $host->email,
-                    'IS_BAKR_HOST' => 'TRUE',
-                ]
-            )
-            ->toArray();
-
-        return new ReportData($headers, $data);
-    }
-
-    private function getBAKRExperienceHosts(): ReportData
-    {
-        return $this->getHostData(Event::query()->becomingAKingExperiences());
-    }
-
-    private function getWAHRHosts(): ReportData
-    {
-        return $this->getHostData(Event::query()->wahRetreat());
-    }
-
-    private function getWAHExperienceHosts(): ReportData
-    {
-        return $this->getHostData(Event::query()->wahExperience());
-    }
-
-    private function getFiresHosts(): ReportData
-    {
-        return $this->getHostData(Event::query()->fires());
-    }
-
-    private function getCAPRHosts(): ReportData
-    {
-        return $this->getHostData(Event::query()->captivatingRetreat());
-    }
-
-    private function getCAPExperienceHosts(): ReportData
-    {
-        return $this->getHostData(Event::query()->captivatingExperience());
-    }
-
-    private function getSurvivalSchoolHosts(): ReportData
-    {
-        return $this->getHostData(Event::query()->survivalSchool());
+        return match ($format) {
+            ReportFormat::CSV => $this->generateCSV($report),
+            default => null,
+        };
     }
 
     private function getHostData($query): ReportData

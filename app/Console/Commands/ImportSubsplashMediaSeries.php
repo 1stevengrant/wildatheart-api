@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Statamic\Facades\Entry;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
+use App\Builders\EntryQueryBuilder;
 
 class ImportSubsplashMediaSeries extends Command
 {
@@ -32,10 +33,8 @@ class ImportSubsplashMediaSeries extends Command
     protected function createEntry(array $media): void
     {
 
-        $entry = Entry::query()
-            ->where('collection', 'media_series')
-            ->where('id', $media['dest_id'])
-            ->first();
+        $entry = EntryQueryBuilder::mediaSeries()
+            ->find($media['dest_id']);
 
         if (! $entry) {
             $entry = Entry::make()

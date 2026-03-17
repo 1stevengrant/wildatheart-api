@@ -5,33 +5,43 @@ namespace App\Services;
 use Carbon\Carbon;
 use Statamic\Entries\Entry;
 use App\DataTypeObjects\IconProps;
+use App\Builders\EntryQueryBuilder;
 use App\DataTypeObjects\SlideBlock;
 use Statamic\Eloquent\Assets\Asset;
 use App\DataTypeObjects\ButtonProps;
 use App\DataTypeObjects\CardVariant;
 use App\DataTypeObjects\HeroTitleBlock;
 use App\DataTypeObjects\MediaItemsSlide;
+use App\Services\Subsplash\SubsplashApiClient;
+use App\Services\Subsplash\SubsplashMediaSeriesImporter;
 
 class BlockBuilderService
 {
-    private PreviewBuilderService $previewBuilder;
-
-    public function __construct(PreviewBuilderService $previewBuilder)
-    {
-        $this->previewBuilder = $previewBuilder;
-    }
+    public function __construct(
+        private PreviewBuilderService $previewBuilder,
+        private SubsplashApiClient $apiClient,
+        private SubsplashMediaSeriesImporter $seriesImporter,
+        private BunnyCDNService $bunnyCDN,
+    ) {}
 
     public function build(array $blocks)
     {
-
         $output = [];
-        foreach ($blocks as &$block) {
 
-            $output[] = match ($block['type']) {
-                'media_slider' => $this->processMediaSliderBlock($block),
-                'hero_title' => $this->processHeroTitleBlock($block),
-                default => $this->processDefaultBlock($block)
+        foreach ($blocks as &$block) {
+            $inner = $block;
+
+            if (($block['type'] ?? null) === 'set' && isset($block['attrs']['values'])) {
+                $inner = $block['attrs']['values'];
+            }
+
+            $result = match ($inner['type']) {
+                'media_slider' => $this->processMediaSliderBlock($inner),
+                'hero_title' => $this->processHeroTitleBlock($inner),
+                default => $this->processDefaultBlock($inner)
             };
+
+            $output[] = $result instanceof \Spatie\LaravelData\Data ? $result->toArray() : $result;
         }
 
         return $output;
@@ -39,36 +49,54 @@ class BlockBuilderService
 
     public function processDefaultBlock($block)
     {
-        return $block;
+        // Serialize then decode to resolve all Statamic Value/Values objects,
+        // then normalize link fields back to simple URL strings.
+        $array = json_decode(json_encode($block), true);
+
+        return $this->normalizeLinks($array);
     }
 
-    public function blocksBuilder($blocks)
+    private function normalizeLinks(mixed $data): mixed
     {
-
-        $output = [];
-        foreach ($blocks as &$block) {
-
-            $output[] = match ($block['type']) {
-                'media_slider' => $this->processMediaSliderBlock($block),
-                default => $this->processDefaultBlock($block)
-            };
+        if (! is_array($data)) {
+            return $data;
         }
 
-        return $output;
+        // Statamic v6 link fields serialize to either:
+        // - Simple/null link: ['url' => '/path'] or ['url' => null]
+        // - Entry reference: ['id', 'title', 'url', 'permalink', ...]
+        // Flatten to just the URL string (or null) for v5 API compatibility.
+        if (array_key_exists('url', $data)) {
+            if (count($data) === 1) {
+                return $data['url'];
+            }
+
+            if (isset($data['permalink']) && count($data) <= 6) {
+                return $data['url'];
+            }
+        }
+
+        return array_map(fn ($item) => $this->normalizeLinks($item), $data);
     }
 
     public function processHeroTitleBlock($block)
     {
+        $heroTitle = $block['hero_title'];
+
+        if ($heroTitle instanceof \Statamic\Fields\Value) {
+            $heroTitle = $heroTitle->raw();
+        }
+
         return HeroTitleBlock::from([
-            'hero_title' => $block['hero_title'],
-            'text_style' => $block['text_style'],
+            'hero_title' => $heroTitle,
         ]);
     }
 
     public function processMediaSliderBlock($block)
     {
-
-        $processedBlock = $block->toArray();
+        $processedBlock = $this->normalizeLinks(
+            json_decode(json_encode($block), true)
+        );
 
         $processedBlock['slides'] = [];
 
@@ -106,43 +134,9 @@ class BlockBuilderService
             'variant' => CardVariant::portrait,
             'trim_description_bool' => $slide->trim_description_bool,
             'href' => $slide->uri,
-            'right_cta' => ButtonProps::from([
-                'text' => $slide->right_cta->text,
-                'href' => $slide->right_cta->href,
-                'variant' => $slide->right_cta->variant,
-                'leftIcon' => IconProps::from([
-                    'name' => $slide->right_cta->left_icon->icon,
-                    'width' => $slide->right_cta->left_icon->width,
-                    'height' => $slide->right_cta->left_icon->height,
-                ]),
-                'rightIcon' => IconProps::from([
-                    'name' => $slide->right_cta->right_icon->icon,
-                    'width' => $slide->right_cta->right_icon->width,
-                    'height' => $slide->right_cta->right_icon->height,
-                ]),
-                'openInModal' => $slide->right_cta->open_in_modal,
-                'openInNewTab' => $slide->right_cta->open_in_new_tab,
-            ]),
-            'left_cta' => ButtonProps::from([
-                'text' => $slide->left_cta->text,
-                'href' => $slide->left_cta->href,
-                'variant' => $slide->left_cta->variant,
-                'leftIcon' => IconProps::from([
-                    'name' => $slide->left_cta->left_icon->icon,
-                    'width' => $slide->left_cta->left_icon->width,
-                    'height' => $slide->left_cta->left_icon->height,
-                ]),
-                'rightIcon' => IconProps::from([
-                    'name' => $slide->left_cta->right_icon->icon,
-                    'width' => $slide->left_cta->right_icon->width,
-                    'height' => $slide->left_cta->right_icon->height,
-                ]),
-                'openInModal' => $slide->left_cta->open_in_modal,
-                'openInNewTab' => $slide->left_cta->open_in_new_tab,
-            ]),
+            'right_cta' => $this->buildButtonProps($slide->right_cta),
+            'left_cta' => $this->buildButtonProps($slide->left_cta),
         ]);
-
-        return $slide;
     }
 
     public function buildMediaItemsFromSeriesSlide(&$slide)
@@ -153,14 +147,12 @@ class BlockBuilderService
         }
 
         $seriesId = $slide->media_items_from_series->id;
-        $subsplash = new SubsplashService;
-        $statamicSeries = $subsplash->getSeriesInStatamic($seriesId);
+        $statamicSeries = $this->seriesImporter->findInStatamic($seriesId);
 
-        $mediaItemsFromSeries = Entry::query()
-            ->where('collection', 'media_item')
-            ->where('published', true)
-            ->where('data->series', 'like', "%{$statamicSeries->id}")
-            ->orderBy('date', 'asc')
+        $mediaItemsFromSeries = EntryQueryBuilder::mediaItems()
+            ->published()
+            ->inSeries($statamicSeries->id)
+            ->oldestFirst()
             ->get();
 
         foreach ($mediaItemsFromSeries as $mediaItem) {
@@ -202,16 +194,14 @@ class BlockBuilderService
     public function buildSubsplashSlide(&$slide): MediaItemsSlide
     {
         $subsplashListSlide = new MediaItemsSlide;
-        $subsplash = new SubsplashService;
-        $url = 'https://core.subsplash.com/builder/v1/list-rows?filter%5Bsource_list%5D=' . $slide->subsplash_list_id;
-        $subsplashList = $subsplash->subsplashFetch($url);
+        $subsplashList = $this->apiClient->getListRows($slide->subsplash_list_id);
         foreach ($subsplashList['_embedded']['list-rows'] as $item) {
             $series = $item['_embedded']['media-series'];
             $images = $series['_embedded']['images'];
             $wideImage = collect($images)->firstWhere('type', 'wide');
             $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
 
-            $entry = $subsplash->getSeriesInStatamic($series['id']);
+            $entry = $this->seriesImporter->findInStatamic($series['id']);
             // Need to import series if it doesn't exist
             if (! $entry) {
                 continue;
@@ -238,11 +228,11 @@ class BlockBuilderService
 
         $collectionsToLoadFrom = $slide->collections_to_load_from->pluck('handle');
 
-        $query = Entry::query()
-            ->where('published', true)
-            ->where('date', '<=', now())
+        $query = EntryQueryBuilder::query()
+            ->published()
+            ->pastPublishDate()
             ->where('collection', $slide->collections_to_load_from)
-            ->orderBy('date', 'desc');
+            ->recentFirst();
 
         // Add taxonomy terms filter if they exist
         if (! empty($slide->tags->toArray())) {
@@ -285,12 +275,30 @@ class BlockBuilderService
 
         if ($entry->collection->handle === 'blogs') {
             return $preview;
-            $slide->variant = CardVariant::blog;
-            $slide->leader = 'Article';
-            $slide->details = $entry->author->author_name;
         }
 
         return $slide;
+    }
+
+    private function buildButtonProps($cta): ButtonProps
+    {
+        return ButtonProps::from([
+            'text' => $cta->text,
+            'href' => $cta->href,
+            'variant' => $cta->variant,
+            'leftIcon' => IconProps::from([
+                'name' => $cta->left_icon->icon,
+                'width' => $cta->left_icon->width,
+                'height' => $cta->left_icon->height,
+            ]),
+            'rightIcon' => IconProps::from([
+                'name' => $cta->right_icon->icon,
+                'width' => $cta->right_icon->width,
+                'height' => $cta->right_icon->height,
+            ]),
+            'openInModal' => $cta->open_in_modal,
+            'openInNewTab' => $cta->open_in_new_tab,
+        ]);
     }
 
     public function imageFromCDN(?Asset $image)
@@ -299,9 +307,7 @@ class BlockBuilderService
             return null;
         }
 
-        $cdnUrl = 'https://b-cdn.wildatheart.org/';
-
-        return $cdnUrl . $image->path;
+        return $this->bunnyCDN->getBunnyCDNUrl($image);
     }
 
     public function buildBooksSlide($slide)
@@ -309,13 +315,13 @@ class BlockBuilderService
         $booksSlide = new MediaItemsSlide;
         $authorId = $slide->author->id;
         $excludedBookIds = $slide->excluded_books->pluck('id');
-        $query = Entry::query()
-            ->where('published', true)
-            ->where('date', '<=', now())
-            ->where('collection', 'books')
+        $query = EntryQueryBuilder::query()
+            ->published()
+            ->pastPublishDate()
+            ->inCollection('books')
             ->where('data->authors', 'like', "%{$authorId}%")
             ->whereNotIn('id', $excludedBookIds)
-            ->orderBy('date', 'desc');
+            ->recentFirst();
 
         $recentItems = $query->limit($slide->limit ?? 10)->get();
 

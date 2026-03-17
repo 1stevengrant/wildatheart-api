@@ -1,8 +1,8 @@
 # =============================================================================
 # TYPESCRIPT TYPES SYNC WORKFLOW
 # =============================================================================
-# This workflow syncs generated TypeScript types from the Laravel API to the
-# Astro frontend repository. It creates a PR whenever types change.
+# This workflow generates TypeScript types from PHP DTOs and Statamic blueprints,
+# validates them, and syncs them to the Astro frontend repo via PR.
 #
 # SETUP (GitHub App):
 # 1. Create GitHub App in wild-at-heart org with permissions:
@@ -32,8 +32,11 @@ on:
             - prod
             - staging
         paths:
-            - "resources/js/types/generated.d.ts"
-            - "resources/js/types/statamic.d.ts"
+            - "app/Data/**"
+            - "app/DataTypeObjects/**"
+            - "app/Enums/**"
+            - "config/typescript-transformer.php"
+            - "addons/ghijk/statamic-typescript-generator/**"
 
 jobs:
     sync-types:
@@ -70,6 +73,12 @@ jobs:
 
             - name: Generate TypeScript definitions
               run: php artisan typescript:transform
+
+            - name: Lint generated types
+              run: npm run lint
+
+            - name: Validate TypeScript compilation
+              run: npm run types
 
             - name: Upload types artifact
               uses: actions/upload-artifact@v4

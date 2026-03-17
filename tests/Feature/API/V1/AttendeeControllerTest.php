@@ -4,14 +4,12 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Jobs\LogActivityJob;
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\Event\IncreaseEventCountsJob;
 use App\Jobs\Admin\PostAttendeeContactToSlackJob;
 use App\Jobs\WeGive\SubscribeToCommunicationListJob;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
     Queue::fake();
 
     $user = User::factory()->create([
@@ -29,8 +27,8 @@ beforeEach(function () {
     $this->validData = [
         'given_name' => 'Jane',
         'family_name' => 'Smith',
-        'email' => 'jane.smith@gmail.com',
-        'confirm_email' => 'jane.smith@gmail.com',
+        'email' => 'jane.smith@example.com',
+        'confirm_email' => 'jane.smith@example.com',
         'city' => 'Denver',
         'state' => 'Colorado',
         'country' => 'United States',
@@ -64,14 +62,14 @@ it('creates an attendee successfully with valid data', function () {
 
     expect($response->json('given_name'))->toBe('Jane')
         ->and($response->json('family_name'))->toBe('Smith')
-        ->and($response->json('email'))->toBe('jane.smith@gmail.com')
+        ->and($response->json('email'))->toBe('jane.smith@example.com')
         ->and($response->json('marketing_updates'))->toBeTrue();
 
     $this->assertDatabaseHas('attendees', [
         'event_id' => $this->event->id,
         'given_name' => 'Jane',
         'family_name' => 'Smith',
-        'email' => 'jane.smith@gmail.com',
+        'email' => 'jane.smith@example.com',
     ]);
 });
 

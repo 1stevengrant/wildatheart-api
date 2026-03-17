@@ -2,21 +2,22 @@
 
 use App\Models\Event;
 use App\Models\EmailTemplate;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Event\AttendeeRegistered;
 use App\Mail\Event\AttendeeConnectedToHost;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
+    Bus::fake();
     Mail::fake();
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = Event::factory()->approved()->fires()->create();
 
     $this->attributes = [
         'family_name' => 'Doe',
         'given_name' => 'John',
-        'email' => 'steven@ghijk.co.uk',
-        'confirm_email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
+        'confirm_email' => 'steven@example.com',
         'city' => 'London',
         'state' => 'London',
         'country' => 'United Kingdom',
@@ -28,7 +29,7 @@ beforeEach(function () {
 });
 
 it('makes a connection between the anonymous user and host', function () {
-    $this->withoutExceptionHandling();
+
     $this->post(route('connect.store', $this->event), $this->attributes)
         ->assertRedirect(route('view.event', $this->event))
         ->assertSessionHas('notifications.message', "Connected with {$this->event->user->fullname}!");
@@ -38,7 +39,7 @@ it('makes a connection between the anonymous user and host', function () {
 });
 
 it('allows an anonymous user to see the form to connect with an event host', function () {
-    $this->withoutExceptionHandling();
+
     $this->get(route('connect.index', $this->event))
         ->assertInertia(fn (Assert $assert) => $assert
             ->component('ConnectWithHostPage')

@@ -3,13 +3,14 @@
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Attendee;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Event\AttendeeRegistered;
 use App\Mail\Event\AttendeeConnectedToHost;
 
 beforeEach(function () {
+    Bus::fake();
     Mail::fake();
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });
 
 it('sends email to primary host when attendee is created with no managers', function () {

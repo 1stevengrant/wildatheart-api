@@ -3,18 +3,22 @@
 namespace App\Http\Controllers\API;
 
 use Statamic\Entries\Entry;
-use App\Services\SubsplashService;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
 use Statamic\Eloquent\Entries\UuidEntryModel;
+use App\Services\Subsplash\SubsplashApiClient;
 
 class MediaSeriesDataController extends Controller
 {
+    public function __construct(
+        private SubsplashApiClient $apiClient,
+    ) {}
+
     public function show(string $slug)
     {
 
-        $series = Entry::query()
-            ->where('collection', 'media_series')
-            ->where('slug', $slug)
+        $series = EntryQueryBuilder::mediaSeries()
+            ->bySlug($slug)
             ->firstOrFail();
 
         if ($series->blueprint === 'custom_series') {
@@ -37,9 +41,7 @@ class MediaSeriesDataController extends Controller
         $responseData['uri'] = $series->uri;
         $responseData['blueprint'] = $series->blueprint;
 
-        $subsplash = new SubsplashService;
-
-        $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$series->subsplash_media_series_id}");
+        $subsplashSeries = $this->apiClient->getMediaSeries($series->subsplash_media_series_id);
 
         if (isset($subsplashSeries['errors']) && $subsplashSeries['errors'][0]['code'] === 'resource_not_found') {
             return response()->json($series);
@@ -56,7 +58,7 @@ class MediaSeriesDataController extends Controller
 
         $nextUrl = $relatedMediaItemsUrl;
         while ($nextUrl) {
-            $subsplashMediaItems = $subsplash->subsplashFetch($nextUrl . '&filter[status]=published');
+            $subsplashMediaItems = $this->apiClient->fetch($nextUrl . '&filter[status]=published');
             $allItems = array_merge($allItems, data_get($subsplashMediaItems, '_embedded.media-items', []));
             $nextUrl = data_get($subsplashMediaItems, '_links.next.href');
         }

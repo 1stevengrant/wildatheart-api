@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
+use App\Builders\EntryQueryBuilder;
 use Illuminate\Support\Facades\Http;
 use Stevebauman\Purify\Facades\Purify;
 
@@ -36,8 +37,7 @@ class ImportBlogs extends Command
         collect($blogs)
             ->each(function ($blog) {
 
-                $bart = Entry::query()
-                    ->where('collection', 'authors')
+                $bart = EntryQueryBuilder::authors()
                     ->where('title', $this::BART)
                     ->first();
                 if (! $bart) {
@@ -79,8 +79,7 @@ class ImportBlogs extends Command
                     $title,
                 ]);
 
-                $authorEntry = Entry::query()
-                    ->where('collection', 'authors')
+                $authorEntry = EntryQueryBuilder::authors()
                     ->where('title', $author)
                     ->first();
 

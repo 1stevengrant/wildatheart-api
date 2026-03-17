@@ -1,7 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
+
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 
     $this->fire = \App\Models\Event::factory()->fires()->approved()->create();
 });

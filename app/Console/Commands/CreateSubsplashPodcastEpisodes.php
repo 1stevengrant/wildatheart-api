@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
 use Statamic\Entries\Collection;
-use App\Services\SubsplashService;
+use App\Builders\EntryQueryBuilder;
+use App\Services\Subsplash\SubsplashApiClient;
+use App\Services\Subsplash\SubsplashMediaSeriesImporter;
 
 class CreateSubsplashPodcastEpisodes extends Command
 {
@@ -23,18 +25,23 @@ class CreateSubsplashPodcastEpisodes extends Command
      */
     protected $description = 'Create podcast entries in Statamic using Subsplash data';
 
+    public function __construct(
+        private SubsplashApiClient $apiClient,
+        private SubsplashMediaSeriesImporter $seriesImporter,
+    ) {
+        parent::__construct();
+    }
+
     public function handle(): void
     {
-        $podcasts = Entry::query()
-            ->where('collection', 'podcasts')
+        $podcasts = EntryQueryBuilder::podcasts()
             ->get();
 
         foreach ($podcasts as $podcast) {
             $this->info("Processing podcast {$podcast->title}");
-            $subsplash = new SubsplashService;
-            $subsplashSeries = $subsplash->subsplashFetch("https://core.subsplash.com/media/v1/media-series/{$podcast->subsplash_series_id}");
-            $subsplash->saveMediaSeriesAsEntry($subsplashSeries);
-            $subsplashMediaItems = $subsplash->getAllRelatedMediaItems($podcast->subsplash_series_id);
+            $subsplashSeries = $this->apiClient->getMediaSeries($podcast->subsplash_series_id);
+            $this->seriesImporter->import($subsplashSeries);
+            $subsplashMediaItems = $this->apiClient->getAllRelatedMediaItems($podcast->subsplash_series_id);
 
             $collection = collect($subsplashMediaItems);
             $chunks = $collection->chunk(100);
@@ -84,10 +91,8 @@ class CreateSubsplashPodcastEpisodes extends Command
 
         $title = data_get($media, 'title');
 
-        $entry = Entry::query()
-            ->where('collection', 'media_item')
-            ->where('id', data_get($media, 'id'))
-            ->first();
+        $entry = EntryQueryBuilder::mediaItems()
+            ->find(data_get($media, 'id'));
 
         if (! $entry) {
             $this->info("Creating entry for {$title}");

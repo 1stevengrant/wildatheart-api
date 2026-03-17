@@ -123,7 +123,6 @@ class DemoFireCheckinsCommand extends Command
         $this->info('=== Demo: Initial Check-in Email ===');
         $this->newLine();
 
-        // Simulate 91 days ago
         $event->update([
             'updated_at' => now()->subDays(91),
             'last_checkin_email_sent_at' => null,
@@ -133,23 +132,12 @@ class DemoFireCheckinsCommand extends Command
         $this->line('Simulated: Event inactive for 91 days, no previous check-in email.');
         $this->newLine();
 
-        if ($this->option('send')) {
-            $this->warn('Sending actual email...');
-            (new SendFireCheckinsEmailJob)->handle();
-            $event->refresh();
-            $this->info("✓ Initial check-in email sent to {$event->user->email}");
-            if ($event->managers->isNotEmpty()) {
-                $this->info("  CC'd: " . $event->managers->pluck('email')->implode(', '));
-            }
-        } else {
-            $this->warn('[DRY RUN] Would send initial check-in email to:');
-            $this->line("  To: {$event->user->email} ({$event->user->given_name})");
-            if ($event->managers->isNotEmpty()) {
-                $this->line('  CC: ' . $event->managers->pluck('email')->implode(', '));
-            }
-            $this->newLine();
-            $this->line('Add --send flag to actually send the email.');
-        }
+        $this->executeOrDryRun(
+            event: $event,
+            job: new SendFireCheckinsEmailJob,
+            sentLabel: 'Initial check-in email sent',
+            dryRunLabel: 'Would send initial check-in email',
+        );
 
         return self::SUCCESS;
     }
@@ -159,7 +147,6 @@ class DemoFireCheckinsCommand extends Command
         $this->info('=== Demo: 7-Day Reminder Email ===');
         $this->newLine();
 
-        // Simulate: initial email sent 8 days ago, no reminder yet
         $event->update([
             'last_checkin_email_sent_at' => now()->subDays(8),
             'last_checkin_reminder_sent_at' => null,
@@ -169,23 +156,12 @@ class DemoFireCheckinsCommand extends Command
         $this->line('Simulated: Initial email sent 8 days ago, no reminder yet, no confirmation.');
         $this->newLine();
 
-        if ($this->option('send')) {
-            $this->warn('Sending actual email...');
-            (new SendFireCheckinsReminderEmailJob)->handle();
-            $event->refresh();
-            $this->info("✓ Reminder email sent to {$event->user->email}");
-            if ($event->managers->isNotEmpty()) {
-                $this->info("  CC'd: " . $event->managers->pluck('email')->implode(', '));
-            }
-        } else {
-            $this->warn('[DRY RUN] Would send reminder email to:');
-            $this->line("  To: {$event->user->email} ({$event->user->given_name})");
-            if ($event->managers->isNotEmpty()) {
-                $this->line('  CC: ' . $event->managers->pluck('email')->implode(', '));
-            }
-            $this->newLine();
-            $this->line('Add --send flag to actually send the email.');
-        }
+        $this->executeOrDryRun(
+            event: $event,
+            job: new SendFireCheckinsReminderEmailJob,
+            sentLabel: 'Reminder email sent',
+            dryRunLabel: 'Would send reminder email',
+        );
 
         return self::SUCCESS;
     }
@@ -195,7 +171,6 @@ class DemoFireCheckinsCommand extends Command
         $this->info('=== Demo: Auto-Unpublish ===');
         $this->newLine();
 
-        // Simulate: initial email 14 days ago, reminder 4 days ago, no confirmation
         $event->update([
             'last_checkin_email_sent_at' => now()->subDays(14),
             'last_checkin_reminder_sent_at' => now()->subDays(4),
@@ -206,26 +181,35 @@ class DemoFireCheckinsCommand extends Command
         $this->line('Simulated: Initial email 14 days ago, reminder 4 days ago, no confirmation.');
         $this->newLine();
 
+        $this->executeOrDryRun(
+            event: $event,
+            job: new AutoUnpublishUnconfirmedFiresJob,
+            sentLabel: 'Fire unpublished and notification sent',
+            dryRunLabel: 'Would unpublish fire and send notification',
+        );
+
+        return self::SUCCESS;
+    }
+
+    protected function executeOrDryRun(Event $event, object $job, string $sentLabel, string $dryRunLabel): void
+    {
         if ($this->option('send')) {
-            $this->warn('Unpublishing and sending notification...');
-            (new AutoUnpublishUnconfirmedFiresJob)->handle();
+            $this->warn('Executing...');
+            $job->handle();
             $event->refresh();
-            $this->info('✓ Fire unpublished');
-            $this->info("✓ Notification sent to {$event->user->email}");
+            $this->info("✓ {$sentLabel} to {$event->user->email}");
             if ($event->managers->isNotEmpty()) {
                 $this->info("  CC'd: " . $event->managers->pluck('email')->implode(', '));
             }
         } else {
-            $this->warn('[DRY RUN] Would unpublish fire and send notification to:');
+            $this->warn("[DRY RUN] {$dryRunLabel} to:");
             $this->line("  To: {$event->user->email} ({$event->user->given_name})");
             if ($event->managers->isNotEmpty()) {
                 $this->line('  CC: ' . $event->managers->pluck('email')->implode(', '));
             }
             $this->newLine();
-            $this->line('Add --send flag to actually unpublish and send the email.');
+            $this->line('Add --send flag to actually execute.');
         }
-
-        return self::SUCCESS;
     }
 
     protected function demoFullFlow(Event $event): int

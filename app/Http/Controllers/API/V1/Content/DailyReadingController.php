@@ -47,7 +47,7 @@ class DailyReadingController extends Controller
             }
         }
 
-        return DailyReadingResponse::collection($dailyReadings);
+        return DailyReadingResponse::collect($dailyReadings);
     }
 
     public function getRecent(Request $request)
@@ -71,7 +71,7 @@ class DailyReadingController extends Controller
             }
         }
 
-        return DailyReadingResponse::collection($dailyReadings);
+        return DailyReadingResponse::collect($dailyReadings);
     }
 
     public function redirect($slug)

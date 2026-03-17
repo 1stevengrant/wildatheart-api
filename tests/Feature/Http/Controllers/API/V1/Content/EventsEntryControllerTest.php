@@ -4,9 +4,7 @@ namespace Tests\Feature\Http\Controllers\API\V1\Content;
 
 use Statamic\Facades\Entry;
 
-beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-});
+beforeEach(function () {});
 
 it('returns 404 when event not found', function () {
     // Arrange
@@ -27,7 +25,8 @@ test('it can get a list of events', function () {
         ->collection('events')
         ->slug('event-1')
         ->published(true)
-        ->blueprint('video_study')
+        ->blueprint('multiday_retreat')
+        ->date(now()->subDay())
         ->data([
             'title' => 'Event 1',
             'content' => '<p>This is a test event</p>',
@@ -41,7 +40,8 @@ test('it can get a list of events', function () {
         ->collection('events')
         ->slug('event-2')
         ->published(true)
-        ->blueprint('video_study')
+        ->blueprint('multiday_retreat')
+        ->date(now()->subDay())
         ->data([
             'title' => 'Event 2',
             'content' => '<p>This is another test event</p>',
@@ -68,7 +68,8 @@ test('it can show a specific event', function () {
         ->collection('events')
         ->slug('event-1')
         ->published(true)
-        ->blueprint('video_study')
+        ->blueprint('multiday_retreat')
+        ->date(now()->subDay())
         ->data([
             'title' => 'Event 1',
             'content' => '<p>This is a test event</p>',

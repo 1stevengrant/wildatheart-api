@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Statamic\Assets\Asset;
 use Illuminate\Console\Command;
+use App\Builders\EntryQueryBuilder;
 use Illuminate\Support\Facades\Http;
 use Statamic\Eloquent\Entries\Entry;
 
@@ -44,8 +45,7 @@ class ImportPrayers extends Command
                 $this->info('Importing ' . $prayer['title']);
                 $this->line('');
 
-                $existingPrayer = Entry::query()
-                    ->where('collection', 'prayers')
+                $existingPrayer = EntryQueryBuilder::prayers()
                     ->where('data->drupal_url', str_replace('https://wildatheart.org', '', $prayer['url']))
                     ->first();
 

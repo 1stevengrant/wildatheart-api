@@ -10,13 +10,18 @@ class DrupalUrlController extends Controller
 {
     public const LOG_NAME = 'redirects';
 
-    public function index(Request $request)
+    private function logRedirect(string $path, ?object $user): void
     {
         LogActivityJob::dispatch(
             logName: self::LOG_NAME,
-            description: 'Redirected legacy Drupal URL to Laravel URL: drupal',
-            causedBy: $request->user(),
+            description: "Redirected legacy Drupal URL to Laravel URL: {$path}",
+            causedBy: $user,
         );
+    }
+
+    public function index(Request $request)
+    {
+        $this->logRedirect('drupal', $request->user());
 
         return to_route('home');
     }
@@ -32,23 +37,13 @@ class DrupalUrlController extends Controller
             'becomingaking' => EventType::BECOMING_A_KING_EXPERIENCE,
         ];
 
+        $this->logRedirect("drupal/courses/{$course}", $request->user());
+
         if (isset($eventTypes[$course])) {
             $eventType = EventType::whereName($eventTypes[$course])->first();
 
-            LogActivityJob::dispatch(
-                logName: self::LOG_NAME,
-                description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
-                causedBy: $request->user(),
-            );
-
             return to_route('host.eventType.index', $eventType);
         }
-
-        LogActivityJob::dispatch(
-            logName: self::LOG_NAME,
-            description: 'Redirected legacy Drupal URL to Laravel URL: drupal/courses/' . $course,
-            causedBy: $request->user(),
-        );
 
         return to_route('home');
     }
@@ -68,7 +63,6 @@ class DrupalUrlController extends Controller
         foreach ($eventTypes as $key => $value) {
             if (str_contains($any, $key)) {
                 $any = str_replace($key, $eventTypes[$key], $any);
-
             }
         }
 
@@ -77,22 +71,13 @@ class DrupalUrlController extends Controller
             $any .= '-0';
         }
 
-        $event = \App\Models\Event::whereLegacyDrupalUrl('/' . $any)->first();
-        if (! $event) {
-            LogActivityJob::dispatch(
-                logName: self::LOG_NAME,
-                description: 'Redirected legacy Drupal URL to Laravel URL: drupal/' . $any,
-                causedBy: $request->user(),
-            );
+        $this->logRedirect("drupal/{$any}", $request->user());
 
+        $event = \App\Models\Event::whereLegacyDrupalUrl('/' . $any)->first();
+
+        if (! $event) {
             return to_route('home');
         }
-
-        LogActivityJob::dispatch(
-            logName: self::LOG_NAME,
-            description: 'Redirected legacy Drupal URL to Laravel URL: drupal/' . $any,
-            causedBy: $request->user(),
-        );
 
         return to_route('view.event', $event);
     }

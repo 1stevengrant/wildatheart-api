@@ -1,13 +1,16 @@
 <?php
 
 use App\Models\User;
-use Database\Seeders\DatabaseSeeder;
 use App\Jobs\ClearNavigationCacheJob;
+use App\Jobs\LogActivityJob;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Activitylog\Models\Activity;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Bus::fake()->except([ClearNavigationCacheJob::class, LogActivityJob::class]);
+    Mail::fake();
 });
 
 it('clears all navigation cache keys', function () {

@@ -40,6 +40,6 @@ class EventTypeController extends Controller
                 ->get();
         });
 
-        return response()->json(EventTypeData::collection($eventTypes));
+        return response()->json(EventTypeData::collect($eventTypes));
     }
 }

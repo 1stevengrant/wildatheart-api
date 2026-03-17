@@ -3,12 +3,10 @@
 use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\Fire\AnnualFireCheckinEmailJob;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
 
     Queue::fake();
 });

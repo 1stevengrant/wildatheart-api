@@ -4,10 +4,13 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\EventType;
-use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->user = User::factory()->create();
     $this->address = Address::factory()->create([
         'user_id' => $this->user->id,
@@ -306,8 +309,6 @@ test('a fire should not have an end date', function () {
 });
 
 test('an event that has no items in a material order, does not get passed to Zapier', function () {
-    Queue::fake();
-
     $this->actingAs($this->user);
     // Use a different event type since Fires now redirect to simple flow
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
@@ -328,12 +329,10 @@ test('an event that has no items in a material order, does not get passed to Zap
         'start_date' => $this->startDate,
         'number_of_items_in_material_order' => '0',
     ]);
-    \Illuminate\Support\Facades\Queue::assertNotPushed(\App\Jobs\PostToZapier::class);
+    Bus::assertNotDispatched(\App\Jobs\PostToZapier::class);
 });
 
 test('an event that has items in a material order, does get passed to Zapier', function () {
-    Queue::fake();
-
     $this->actingAs($this->user);
     $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
@@ -353,7 +352,7 @@ test('an event that has items in a material order, does get passed to Zapier', f
         'start_date' => $this->startDate,
         'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
-    \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\PostToZapier::class);
+    Bus::assertDispatched(\App\Jobs\PostToZapier::class);
 });
 
 test('fires event type redirects from complex flow to simple flow on index', function () {

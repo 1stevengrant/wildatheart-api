@@ -3,9 +3,13 @@
 use App\Models\User;
 use App\Models\Event;
 use App\Actions\Address\CreateAddress;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     User::factory()->create();
 });
 test('an address is added to the database', function () {

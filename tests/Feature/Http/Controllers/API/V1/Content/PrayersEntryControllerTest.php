@@ -3,9 +3,12 @@
 namespace Tests\Feature\Http\Controllers\API\V1\Content;
 
 use Statamic\Facades\Entry;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
 it('returns 404 when page not found', function () {
     // Arrange

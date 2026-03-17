@@ -15,6 +15,7 @@ use Tests\TestCase;
 
 uses(TestCase::class)->in('Feature');
 uses(TestCase::class)->in('Browser');
+uses(Tests\ProductionParityTestCase::class)->in('Parity');
 
 /*
 |--------------------------------------------------------------------------

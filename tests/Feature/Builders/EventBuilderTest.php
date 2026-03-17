@@ -2,10 +2,10 @@
 
 use App\Models\User;
 use App\Models\Event;
-use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Event::unsetEventDispatcher();
+    User::unsetEventDispatcher();
 });
 
 it('gets events that were last approved more than 90 days ago', function () {

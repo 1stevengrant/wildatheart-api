@@ -1,10 +1,14 @@
 <?php
 
 use App\Models\Event;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->event = Event::factory()->fires()->create();
 });
 

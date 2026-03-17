@@ -1,7 +1,6 @@
 import React from "react";
 
 import { MapPinIcon } from "@heroicons/react/24/solid";
-import mapboxgl from "mapbox-gl";
 import Map, { GeolocateControl, NavigationControl, Marker } from "react-map-gl";
 
 import { FireMarker } from "@/Components/Icons/FireMarker";
@@ -32,7 +31,6 @@ export const EventMap: React.FC<EventMapProps> = ({
     return (
         <div className={`w-full ${height} ${className}`}>
             <Map
-                mapLib={mapboxgl}
                 ref={mapRef}
                 {...commonMapProps}
                 initialViewState={{ zoom: 6 }}

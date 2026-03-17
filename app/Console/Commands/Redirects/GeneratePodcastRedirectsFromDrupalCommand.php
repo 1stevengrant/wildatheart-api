@@ -3,8 +3,8 @@
 namespace App\Console\Commands\Redirects;
 
 use Illuminate\Support\Str;
-use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
+use App\Builders\EntryQueryBuilder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -60,7 +60,7 @@ class GeneratePodcastRedirectsFromDrupalCommand extends Command
 
             $title = data_get($item, 'title');
             $slug = Str::slug($title);
-            $entry = Entry::query()->where('slug', $slug)->first();
+            $entry = EntryQueryBuilder::query()->bySlug($slug)->first();
 
             if ($entry) {
                 $entryTitle = $entry->title;

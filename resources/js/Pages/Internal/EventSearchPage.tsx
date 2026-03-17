@@ -9,8 +9,8 @@ import Pagination from "@/Components/Pagination";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { MapboxPlace } from "@/types/MapboxPlace";
 import { PaginatedData } from "@/types";
+import { MapboxPlace } from "@/types/MapboxPlace";
 
 type EventSearchResult = {
     id: string;

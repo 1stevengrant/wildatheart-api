@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use Statamic\Facades\Entry;
 use App\Services\BlogService;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Services\PreviewBuilderService;
@@ -27,10 +27,10 @@ class SearchController extends Controller
 
         // Check if the response is already cached
         $output = Cache::remember($cacheKey, 60, function () use ($collection, $limit, $authorSlug) {
-            $query = Entry::query()
-                ->where('collection', $collection)
-                ->where('published', true)
-                ->orderBy('date', 'desc');
+            $query = EntryQueryBuilder::query()
+                ->inCollection($collection)
+                ->published()
+                ->recentFirst();
 
             if ($authorSlug && $author = $this->blogService->findAuthorBySlug($authorSlug)) {
                 $query->where('author', $author->id());

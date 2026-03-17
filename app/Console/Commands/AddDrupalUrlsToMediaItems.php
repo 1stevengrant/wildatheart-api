@@ -4,7 +4,8 @@ namespace App\Console\Commands;
 
 use Statamic\Facades\Entry;
 use Illuminate\Console\Command;
-use App\Services\SubsplashService;
+use App\Builders\EntryQueryBuilder;
+use App\Services\Subsplash\SubsplashApiClient;
 
 // This is a mess, but it's a one off command that fixes the stuff thats in there now.
 class AddDrupalUrlsToMediaItems extends Command
@@ -13,10 +14,14 @@ class AddDrupalUrlsToMediaItems extends Command
 
     protected $description = 'Updates drupal_url field in subsplash_media_items using source_data.url from audio.json and video.json';
 
+    public function __construct(
+        private SubsplashApiClient $apiClient,
+    ) {
+        parent::__construct();
+    }
+
     public function handle()
     {
-        $subsplash = new SubsplashService;
-
         $this->info('Starting to update drupal_url for media items...');
         $allMediaData = $this->getAllMediaData();
 
@@ -49,14 +54,12 @@ class AddDrupalUrlsToMediaItems extends Command
 
             try {
                 // Check if the entry exists
-                $entry = Entry::query()
-                    ->where('collection', 'media_item')
-                    ->where('blueprint', 'subsplash_media_item')
-                    ->where('id', $destId)
-                    ->first();
+                $entry = EntryQueryBuilder::mediaItems()
+                    ->byBlueprint('subsplash_media_item')
+                    ->find($destId);
 
                 if (! $entry) {
-                    $mediaItem = $subsplash->getMediaItem($destId);
+                    $mediaItem = $this->apiClient->getMediaItem($destId);
                     if (data_get($mediaItem, 'id')) {
                         $this->error("No entry found for: $destId");
                         $notFound++;
@@ -91,7 +94,7 @@ class AddDrupalUrlsToMediaItems extends Command
             $newTitle = $this->cleanTitle($title);
 
             $this->info("searching for $newTitle");
-            $response = $subsplash->findMediaItemByTitle($newTitle);
+            $response = $this->apiClient->findMediaItemByTitle($newTitle);
             $mediaItems = data_get($response, '_embedded.media-items');
 
             if ($mediaItems) {
@@ -103,11 +106,9 @@ class AddDrupalUrlsToMediaItems extends Command
 
                 if ($newMediaItemId) {
 
-                    $entry = Entry::query()
-                        ->where('collection', 'media_item')
-                        ->where('blueprint', 'subsplash_media_item')
-                        ->where('id', $newMediaItemId)
-                        ->first();
+                    $entry = EntryQueryBuilder::mediaItems()
+                        ->byBlueprint('subsplash_media_item')
+                        ->find($newMediaItemId);
 
                     if (! $entry) {
                         $this->error("no entry found for id $newMediaItemId");
@@ -126,7 +127,6 @@ class AddDrupalUrlsToMediaItems extends Command
             } else {
                 $this->info("nothing found for $newTitle");
             }
-            dump($mediaItem);
         }
 
         foreach ($deletedItems as $item) {

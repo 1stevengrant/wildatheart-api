@@ -13,7 +13,6 @@ use App\Actions\Event\TransferEventOwnership;
 beforeEach(function () {
     Mail::fake();
     Bus::fake();
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });
 
 it('dispatches WeGive tagging jobs when ownership is transferred', function () {
