@@ -2,8 +2,8 @@
 
 use App\Models\User;
 use App\Enums\UserRoleEnum;
-use App\Actions\User\UpdateUserRole;
 use Illuminate\Support\Facades\Bus;
+use App\Actions\User\UpdateUserRole;
 use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {

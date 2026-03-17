@@ -1,10 +1,10 @@
 <?php
 
-use App\Enums\UserRoleEnum;
-use App\Jobs\Admin\CheckIfUserShouldBeAdmin;
 use App\Models\User;
+use App\Enums\UserRoleEnum;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\Admin\CheckIfUserShouldBeAdmin;
 
 beforeEach(function () {
     Bus::fake()->except(CheckIfUserShouldBeAdmin::class);

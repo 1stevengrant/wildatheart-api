@@ -2,9 +2,9 @@
 
 use App\Models\User;
 use App\Models\Event;
-use App\Actions\Address\CreateAddress;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use App\Actions\Address\CreateAddress;
 
 beforeEach(function () {
     Bus::fake();

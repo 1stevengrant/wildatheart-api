@@ -1,8 +1,8 @@
 <?php
 
-use App\Jobs\LogActivityJob;
-use App\Models\Event;
 use App\Models\User;
+use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 

@@ -1,10 +1,10 @@
 <?php
 
-use App\Jobs\Event\IncreaseEventCountsJob;
 use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
+use App\Jobs\Event\IncreaseEventCountsJob;
 
 beforeEach(function () {
     Bus::fake()->except(IncreaseEventCountsJob::class);

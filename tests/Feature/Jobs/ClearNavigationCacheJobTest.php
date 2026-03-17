@@ -1,11 +1,11 @@
 <?php
 
 use App\Models\User;
-use App\Jobs\ClearNavigationCacheJob;
 use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\ClearNavigationCacheJob;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Models\Activity;
 
 beforeEach(function () {

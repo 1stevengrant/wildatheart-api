@@ -1,10 +1,10 @@
 <?php
 
-use App\Jobs\Fire\UnpublishSingleUnconfirmedFireJob;
-use App\Mail\EventAutoUnpublishedMail;
 use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\EventAutoUnpublishedMail;
+use App\Jobs\Fire\UnpublishSingleUnconfirmedFireJob;
 
 beforeEach(function () {
     Bus::fake()->except(UnpublishSingleUnconfirmedFireJob::class);
