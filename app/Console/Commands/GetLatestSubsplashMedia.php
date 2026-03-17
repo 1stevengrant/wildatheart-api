@@ -44,7 +44,7 @@ class GetLatestSubsplashMedia extends Command
 
             // Loop through all paginated responses.
             while ($nextPage !== null) {
-                $totalMediaItems = $this->updateOrCreateEntrys($nextPage, $totalMediaItems);
+                $totalMediaItems = $this->updateOrCreateEntries($nextPage, $totalMediaItems);
 
                 // Only process the first batch if 'full' argument
                 // was not provided.
@@ -53,14 +53,14 @@ class GetLatestSubsplashMedia extends Command
                 }
             }
 
-            $this->info("Retreived $totalMediaItems items.");
+            $this->info("Retrieved $totalMediaItems items.");
         } catch (\Exception $e) {
             $this->error('Problem running command:');
             $this->error($e->getMessage());
         }
     }
 
-    private function updateOrCreateEntrys(&$nextPage, $totalMediaItems)
+    private function updateOrCreateEntries(&$nextPage, $totalMediaItems)
     {
         // Retrieve items on current page.
         $subsplashResponse = $this->apiClient->fetch($nextPage);

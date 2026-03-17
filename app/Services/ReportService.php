@@ -76,14 +76,10 @@ class ReportService
         return new ReportData($headers, $data);
     }
 
-    /**
-     * @param  array<string,string>  $headers  Key-value pairs where keys are data fields and values are header labels
-     * @param  array<string,string>  $data  Key-value pairs where keys are data fields and values are corresponding data
-     */
-    public function generateCSV(ReportData $report)
+    public function generateCSV(ReportData $report): string
     {
-        $twoMBInBytes = (5 * 1024 * 1024);
-        $csv = fopen('php://temp/maxmemory:' . $twoMBInBytes, 'r+');
+        $fiveMBInBytes = (5 * 1024 * 1024);
+        $csv = fopen('php://temp/maxmemory:' . $fiveMBInBytes, 'r+');
 
         fputcsv($csv, array_values($report->headers));
 

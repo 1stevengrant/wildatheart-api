@@ -36,8 +36,7 @@ class SearchController extends Controller
                 $query->where('author', $author->id());
             }
 
-            $query->limit($limit)
-                ->orderBy('date', 'desc');
+            $query->limit($limit);
 
             $entries = $query->paginate($limit);
 

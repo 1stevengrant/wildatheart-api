@@ -2,6 +2,7 @@
 
 namespace App\Services\Subsplash;
 
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -22,8 +23,9 @@ class SubsplashApiClient
         $scope = config('services.subsplash.scope');
         $tokenUrl = config('services.subsplash.authentication_token_url');
 
-        if (Cache::has($clientId)) {
-            return Cache::get($clientId);
+        $cached = Cache::get($clientId);
+        if ($cached !== null) {
+            return $cached;
         }
 
         $response = Http::asForm()->post($tokenUrl, [
@@ -40,7 +42,7 @@ class SubsplashApiClient
             return $data['access_token'];
         }
 
-        throw new \Exception('Failed to fetch access token');
+        throw new Exception('Failed to fetch access token');
     }
 
     public function fetch(string $url): ?array
@@ -48,8 +50,9 @@ class SubsplashApiClient
         $cacheDuration = config('services.subsplash.cache_duration');
 
         $cacheKey = md5($url);
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
+        $cached = Cache::get($cacheKey);
+        if ($cached !== null) {
+            return $cached;
         }
 
         $accessToken = $this->getAccessToken();
@@ -91,7 +94,7 @@ class SubsplashApiClient
             return null;
         }
 
-        throw new \Exception("Request to Subsplash API failed with {$response->status()} after three attempts: $url");
+        throw new Exception("Request to Subsplash API failed with {$response->status()} after three attempts: {$url}");
     }
 
     public function getMediaItem(string $mediaItemId): ?array

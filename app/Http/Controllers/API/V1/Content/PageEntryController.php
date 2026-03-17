@@ -32,7 +32,6 @@ class PageEntryController extends Controller
      */
     public function getPageBySlug(string $slug)
     {
-
         $page = $this->resolveLivePreview();
 
         if (! $page) {

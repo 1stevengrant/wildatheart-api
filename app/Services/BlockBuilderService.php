@@ -226,8 +226,6 @@ class BlockBuilderService
     {
         $recentlyAddedSlide = new MediaItemsSlide;
 
-        $collectionsToLoadFrom = $slide->collections_to_load_from->pluck('handle');
-
         $query = EntryQueryBuilder::query()
             ->published()
             ->pastPublishDate()

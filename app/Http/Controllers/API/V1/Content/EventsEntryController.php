@@ -22,16 +22,13 @@ class EventsEntryController extends Controller
             ->recentFirst()
             ->get();
 
-        $eventsResponse = $events->map(function ($event) {
-            return $this->buildEventResponse($event);
-        });
+        $eventsResponse = $events->map($this->buildEventResponse(...));
 
         return EventsShowResponse::collect($eventsResponse);
     }
 
     public function show($slug)
     {
-
         $event = $this->resolveLivePreview();
 
         if (! $event) {

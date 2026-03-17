@@ -99,7 +99,7 @@ class DailyReadingController extends Controller
 
         if ($matchingReading) {
             return response()->json([
-                'previous_slug' => str_replace('/daily-reading/', '', $reading['alias']),
+                'previous_slug' => str_replace('/daily-reading/', '', $matchingReading['alias']),
                 'current_slug' => Str::slug($matchingReading['title'], '-'),
             ]);
         }

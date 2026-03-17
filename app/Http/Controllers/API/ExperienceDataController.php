@@ -79,15 +79,9 @@ class ExperienceDataController extends Controller
 
     public function show($slug)
     {
-
         $experience = $this->getBySlug($slug);
 
         return response()->json($experience);
-    }
-
-    private function getSessionData($experience)
-    {
-        $sessions = [];
     }
 
     public function all()
@@ -95,14 +89,7 @@ class ExperienceDataController extends Controller
         $experiences = EntryQueryBuilder::experiences()
             ->get();
 
-        $output = [];
-        foreach ($experiences as $experience) {
-
-            $experienceData = $this->getBySlug($experience->slug);
-            $output[] = [
-                ...$experienceData->toArray(),
-            ];
-        }
+        $output = $experiences->map(fn ($experience) => $this->getBySlug($experience->slug)->toArray());
 
         return response()->json($output);
     }

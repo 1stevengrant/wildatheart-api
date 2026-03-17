@@ -254,7 +254,7 @@ class Event extends BaseModel
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: function (string $value): string|array {
+            get: function (string $value): string {
                 return str_replace(',', '', $value);
             }
         );
@@ -422,9 +422,7 @@ class Event extends BaseModel
 
                 // Fire: Logic depends on date and frequency
                 if ($this->isFire()) {
-
                     if ($this->frequency) {
-
                         return ucwords($this->frequency->label());
                     }
 

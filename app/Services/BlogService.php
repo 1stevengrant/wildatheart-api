@@ -40,7 +40,6 @@ class BlogService
 
     public function createBlogResponse(Entry $entry): ?BlogResponse
     {
-
         if (is_array($entry->content)) {
             $plainText = Str::markdown(collect($entry->content)->pluck('text')->implode("\n"));
         } else {

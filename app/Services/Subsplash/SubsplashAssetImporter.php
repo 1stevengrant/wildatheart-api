@@ -17,36 +17,42 @@ class SubsplashAssetImporter
             ->first();
         $sourceUrl = $image['_links']['related']['href'];
 
-        if (! $existingAsset) {
-            try {
-                $imageContent = file_get_contents($sourceUrl);
-
-                if ($imageContent !== false) {
-                    $container = AssetContainer::all()->where('handle', 's3')->first();
-
-                    if ($container) {
-                        $container->disk()->put($path, $imageContent);
-
-                        $asset = $container->makeAsset($path);
-                        $asset->data([
-                            'subsplash_image_id' => $image['id'],
-                            'subsplash_image_type' => $image['type'],
-                            'imported_at' => now(),
-                        ]);
-                        $asset->save();
-
-                        $existingAsset = $asset;
-                    }
-                }
-            } catch (\Exception $e) {
-                Log::warning('Failed to import Subsplash image: ' . $e->getMessage(), [
-                    'image_id' => $image['id'],
-                    'source_url' => $sourceUrl,
-                ]);
-            }
+        if ($existingAsset) {
+            return $existingAsset;
         }
 
-        return $existingAsset;
+        try {
+            $imageContent = file_get_contents($sourceUrl);
+
+            if ($imageContent === false) {
+                return null;
+            }
+
+            $container = AssetContainer::all()->where('handle', 's3')->first();
+
+            if (! $container) {
+                return null;
+            }
+
+            $container->disk()->put($path, $imageContent);
+
+            $asset = $container->makeAsset($path);
+            $asset->data([
+                'subsplash_image_id' => $image['id'],
+                'subsplash_image_type' => $image['type'],
+                'imported_at' => now(),
+            ]);
+            $asset->save();
+
+            return $asset;
+        } catch (\Exception $e) {
+            Log::warning('Failed to import Subsplash image: ' . $e->getMessage(), [
+                'image_id' => $image['id'],
+                'source_url' => $sourceUrl,
+            ]);
+
+            return null;
+        }
     }
 
     public function processImages(array $images): array
@@ -54,12 +60,7 @@ class SubsplashAssetImporter
         return collect($images)
             ->filter(fn ($image) => isset($image['_links']['related']['href']))
             ->map(function ($image) {
-                $sourceUrl = data_get($image, '_links.related.href');
-                $statamicAsset = null;
-
-                if ($sourceUrl) {
-                    $statamicAsset = $this->importImage($image);
-                }
+                $statamicAsset = $this->importImage($image);
 
                 $imageData = [
                     'id' => data_get($image, 'id'),

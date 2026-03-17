@@ -36,7 +36,7 @@ class UserObserver
      */
     public function deleting(User $user): void
     {
-        $user->events()->delete();
+        $user->events->each->delete();
         $user->addresses()->delete();
     }
 

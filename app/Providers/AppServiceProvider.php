@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\Event;
-use Statamic\Statamic;
 use App\Enums\UserRoleEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -44,10 +43,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(! app()->isProduction());
 
-        Statamic::vite('app', [
-            'resources/js/cp.js',
-        ]);
-
         Event::saving(function (Event $event): void {
             $event->load('user', 'eventType');
         });
@@ -72,11 +67,8 @@ class AppServiceProvider extends ServiceProvider
             }
         );
 
-        $this->bootEvent();
         $this->bootRoute();
     }
-
-    public function bootEvent(): void {}
 
     public function bootRoute(): void
     {

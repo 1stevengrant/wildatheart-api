@@ -25,7 +25,6 @@ class BlogsController extends Controller
 
     public function show(string $uri)
     {
-
         $uriParts = explode('/', $uri);
 
         if (count($uriParts) === 1) {

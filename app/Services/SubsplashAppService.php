@@ -194,7 +194,6 @@ class SubsplashAppService
 
     public function getDailyReading($id)
     {
-
         $reading = $this->transistor->getEpisode($id, 'wildatheart-daily');
 
         return [

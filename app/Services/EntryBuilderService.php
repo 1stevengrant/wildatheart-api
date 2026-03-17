@@ -8,7 +8,7 @@ use Statamic\Fieldtypes\Link\ArrayableLink;
 
 class EntryBuilderService
 {
-    public function buildResponseFromEntry(Entry $entry)
+    public function buildResponseFromEntry(Entry $entry): array
     {
         // Get all relationship field handles from the blueprint
         $relationshipFields = $entry->blueprint()
@@ -47,7 +47,7 @@ class EntryBuilderService
         return $this->ensureArrays($response);
     }
 
-    private function ensureArrays($data)
+    private function ensureArrays(mixed $data): mixed
     {
         if (is_array($data)) {
             return array_map(fn ($item) => $this->ensureArrays($item), $data);

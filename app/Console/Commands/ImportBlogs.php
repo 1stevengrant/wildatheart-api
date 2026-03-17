@@ -27,7 +27,7 @@ class ImportBlogs extends Command
 
     public const UNKNOWN_AUTHOR = 'Unknown Author';
 
-    public function handle()
+    public function handle(): void
     {
         $blogs = collect(Http::get('https://wildatheart.org/json/blogs')->json())
             ->toArray();
@@ -74,11 +74,6 @@ class ImportBlogs extends Command
 
                     return;
                 }
-                ray([
-                    $author,
-                    $title,
-                ]);
-
                 $authorEntry = EntryQueryBuilder::authors()
                     ->where('title', $author)
                     ->first();
@@ -107,7 +102,7 @@ class ImportBlogs extends Command
         $this->output->progressFinish();
     }
 
-    public function determinePublishedStatus($author): bool
+    public function determinePublishedStatus(string $author): bool
     {
         if ($author === $this::UNKNOWN_AUTHOR || $author === $this::MORGAN) {
             return false;

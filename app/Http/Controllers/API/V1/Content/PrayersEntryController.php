@@ -28,16 +28,13 @@ class PrayersEntryController extends Controller
             ->orderBy('order', 'asc')
             ->get();
 
-        $prayersResponse = $prayers->map(function ($prayer) {
-            return $this->buildPrayerResponse($prayer);
-        });
+        $prayersResponse = $prayers->map($this->buildPrayerResponse(...));
 
         return PrayersShowResponse::collect($prayersResponse);
     }
 
     public function show($slug)
     {
-
         $prayer = $this->resolveLivePreview();
 
         if (! $prayer) {

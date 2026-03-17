@@ -42,7 +42,7 @@ class EventType extends BaseModel
 
     public const string TYPE_FIRE = 'fire';
 
-    public static function boot(): void
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -56,7 +56,6 @@ class EventType extends BaseModel
             $cacheKeys->each(function ($key) {
                 cache()->forget($key);
             });
-
         });
     }
 

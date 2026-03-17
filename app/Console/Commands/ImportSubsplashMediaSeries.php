@@ -32,7 +32,6 @@ class ImportSubsplashMediaSeries extends Command
 
     protected function createEntry(array $media): void
     {
-
         $entry = EntryQueryBuilder::mediaSeries()
             ->find($media['dest_id']);
 

@@ -25,7 +25,6 @@ class SubsplashMediaSeriesImporter
             ->first();
 
         if ($entry && $entry->subsplash_media_series_id != $entry->id) {
-
             $duplicate = EntryFacade::make()
                 ->collection('media_series')
                 ->published(true)

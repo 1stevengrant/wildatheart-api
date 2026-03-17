@@ -11,7 +11,7 @@ use Statamic\Facades\Entry as EntryFacade;
 
 class SubsplashMediaItemImporter
 {
-    private $podcastIDs;
+    private ?Collection $podcastIDs = null;
 
     public function __construct(
         private SubsplashApiClient $apiClient,
@@ -99,7 +99,7 @@ class SubsplashMediaItemImporter
         $lastImported = Carbon::parse($lastImportedDateString);
 
         if ($lastImported->gte($mediaData->updatedAt)) {
-            if ($callback && is_callable($callback)) {
+            if ($callback) {
                 $callback('skipped', $mediaData->title, $lastImported, $mediaData->updatedAt);
             }
 
@@ -143,7 +143,6 @@ class SubsplashMediaItemImporter
         $images = [];
         foreach ($data['images_subsplash'] as $image) {
             if (! isset($image['statamic_asset_path'])) {
-
                 continue;
             }
             $images[$image['image_type_subsplash']] = $image['statamic_asset_path'];

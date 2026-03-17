@@ -52,7 +52,7 @@ class ImportPrayers extends Command
                 // Prepare the new data for comparison
                 $newData = [
                     'title' => $prayer['title'],
-                    'content' => $this->getBody($prayer['body']),
+                    'content' => $prayer['body'],
                     'summary' => $prayer['summary'],
                     'drupal_url' => str_replace('https://wildatheart.org', '', $prayer['url']),
                 ];
@@ -85,12 +85,7 @@ class ImportPrayers extends Command
         $this->output->progressFinish();
     }
 
-    public function getBody($body): string
-    {
-        return $body;
-    }
-
-    public function importFile($srcUrl)
+    public function importFile(string $srcUrl): ?string
     {
         $filename = basename($srcUrl);
 
@@ -111,13 +106,10 @@ class ImportPrayers extends Command
             true
         );
 
-        if ($uploadedFile) {
-            $asset = Asset::make()->container('s3')->path("files/prayers/{$filename}");
-            $asset->upload($uploadedFile);
-            $asset->save();
+        $asset = Asset::make()->container('s3')->path("files/prayers/{$filename}");
+        $asset->upload($uploadedFile);
+        $asset->save();
 
-            // Add the asset to the prayer data
-            return $asset->path;
-        }
+        return $asset->path;
     }
 }

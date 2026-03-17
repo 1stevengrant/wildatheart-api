@@ -135,7 +135,6 @@ class CallbackController extends Controller
 
     protected function findOrCreateUser(array $auth0User): User
     {
-
         $user = User::firstOrCreate(
             ['email' => $auth0User['email']],
             [

@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "wild-at-heart/local",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Wild at Heart Local platform for connecting community members to events worldwide.",
     "keywords": [
         "framework",
         "laravel"
@@ -16,7 +16,6 @@
         "fakerphp/faker": "^1.23",
         "ghijk/laravel-email-preview": "^1.0",
         "ghijk/statamic-typescript-generator": "*@dev",
-
         "inertiajs/inertia-laravel": "^2.0",
         "jacksleight/statamic-bard-texstyle": "^4.0",
         "ksubileau/color-thief-php": "^2.0",

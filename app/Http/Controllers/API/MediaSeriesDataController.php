@@ -16,7 +16,6 @@ class MediaSeriesDataController extends Controller
 
     public function show(string $slug)
     {
-
         $series = EntryQueryBuilder::mediaSeries()
             ->bySlug($slug)
             ->firstOrFail();
@@ -25,9 +24,8 @@ class MediaSeriesDataController extends Controller
             return $series;
         }
 
-        $responseData = $this->buildSubsplashMediaSeriesResponse($series);        // Return the view with the merged data
+        $responseData = $this->buildSubsplashMediaSeriesResponse($series);
 
-        // Return the view with the merged data
         return response()->json($responseData);
     }
 
@@ -75,7 +73,7 @@ class MediaSeriesDataController extends Controller
                 ->first();
 
             // The media hasn't been imported yet. Skip it.
-            if ($mediaItemEntry == null) {
+            if ($mediaItemEntry === null) {
                 continue;
             }
 

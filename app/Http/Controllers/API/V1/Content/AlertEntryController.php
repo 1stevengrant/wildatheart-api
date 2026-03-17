@@ -17,10 +17,6 @@ class AlertEntryController extends Controller
             ->orderBy('start_date', 'desc')
             ->get();
 
-        if ($entries->isEmpty()) {
-            return AlertResponse::collect([]);
-        }
-
         $entries = $entries->map(function ($entry) {
             $entry = $entry->toArray();
             $entry['link_url'] = $entry['link_url'] ? $entry['link_url']['url'] : null;

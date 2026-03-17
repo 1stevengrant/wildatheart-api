@@ -36,7 +36,6 @@ class MediaItemDataController extends Controller
             ->inSeries($mediaItem->series)
             ->get();
 
-        // $mediaItem = $mediaItem->toArray();
         $mediaItem['mediaItems'] = $mediaItemsInSeries->toArray();
 
         return response()->json($mediaItem);
@@ -44,14 +43,11 @@ class MediaItemDataController extends Controller
 
     public function subsplashMedia($slug)
     {
-
-        $responseData = [];
-
         $mediaItem = EntryQueryBuilder::mediaItems()
             ->bySlug($slug)
             ->firstOrFail();
 
-        $responseData = $this->buildSubsplashMediaItemResponse($mediaItem);        // Return the view with the merged data
+        $responseData = $this->buildSubsplashMediaItemResponse($mediaItem);
 
         return response()->json($responseData);
     }
@@ -168,7 +164,6 @@ class MediaItemDataController extends Controller
 
     public function getRedirects()
     {
-
         $mediaItem = EntryQueryBuilder::mediaItems()
             ->get();
 
