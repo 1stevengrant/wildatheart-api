@@ -97,7 +97,8 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,horizon,logs,vite --kill-others"
+            "@dev:types",
+            "npx concurrently -k -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" -n vite,horizon,logs,scheduler --kill-others \"npm run dev\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"php artisan schedule:work\""
         ],
         "pre-update-cmd": [
             "Statamic\\Console\\Composer\\Scripts::preUpdateCmd"
@@ -126,10 +127,6 @@
         ],
         "test:feature": [
             "pest tests/Feature --parallel --processes=4 --exclude-group=comparison"
-        ],
-        "dev": [
-            "@dev:types",
-            "npx concurrently -k -n vite,horizon,scheduler -c cyan,magenta,yellow \"npm run dev\" \"php artisan horizon\" \"php artisan schedule:work\""
         ],
         "dev:types": [
             "@php artisan statamic:generate-types --skip-pint",
