@@ -85,7 +85,9 @@ const EventSearchPage = () => {
         filters.include_deleted ?? false
     );
     const [createdFrom, setCreatedFrom] = useState<Date | null>(
-        filters.created_from ? new Date(filters.created_from + "T00:00:00") : null
+        filters.created_from
+            ? new Date(filters.created_from + "T00:00:00")
+            : null
     );
     const [createdTo, setCreatedTo] = useState<Date | null>(
         filters.created_to ? new Date(filters.created_to + "T00:00:00") : null
