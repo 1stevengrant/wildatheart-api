@@ -7,6 +7,7 @@ use App\Jobs\LogActivityJob;
 use App\Data\V1\AttendeeData;
 use App\Data\ConnectWithHostData;
 use App\Http\Controllers\Controller;
+use App\Actions\Attendee\CreateAttendee;
 use App\Jobs\Event\IncreaseEventCountsJob;
 use App\Jobs\Admin\PostAttendeeContactToSlackJob;
 use App\Jobs\WeGive\SubscribeToCommunicationListJob;
@@ -15,16 +16,14 @@ class AttendeeController extends Controller
 {
     public function store(Event $event, ConnectWithHostData $data)
     {
-        $attendee = $event->attendees()->create([
-            'user_id' => $event->user->id,
+        $attendee = CreateAttendee::run($event, [
             'given_name' => $data->given_name,
             'family_name' => $data->family_name,
             'email' => $data->email,
             'phone' => $data->phone,
             'city' => $data->city,
             'state' => $data->state,
-            'country' => getCountryCodeFromCountryName($data->country),
-            'country_code' => getCountryCodeFromCountryName($data->country),
+            'country' => $data->country,
             'marketing_updates' => $data->opted_into_marketing,
         ]);
 
@@ -42,7 +41,7 @@ class AttendeeController extends Controller
             );
         }
 
-        IncreaseEventCountsJob::class::dispatch($event, Event::COUNT_TYPE_ATTENDEE);
+        IncreaseEventCountsJob::dispatch($event, Event::COUNT_TYPE_ATTENDEE);
 
         PostAttendeeContactToSlackJob::dispatch($attendee, $event);
 

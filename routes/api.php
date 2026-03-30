@@ -12,6 +12,7 @@ use App\Http\Controllers\API\V1\AttendeeController;
 use App\Http\Controllers\API\V1\EventTypeController;
 use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\ExperienceDataController;
+use App\Http\Controllers\API\V1\ContactHostController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\V1\Navs\AllNavsController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
+use App\Http\Controllers\API\V1\ContactHostVerificationController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 
 /*
@@ -60,6 +62,14 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('{event}/connect', [AttendeeController::class, 'store'])
             ->middleware('throttle:connect')
             ->name('connect.store');
+
+        Route::post('{event}/contact-host-verifications', [ContactHostVerificationController::class, 'store'])
+            ->middleware('throttle:connect')
+            ->name('contact-host-verifications.store');
+
+        Route::post('{event}/contact-host', [ContactHostController::class, 'store'])
+            ->middleware('throttle:connect')
+            ->name('contact-host.store');
     });
 
 });

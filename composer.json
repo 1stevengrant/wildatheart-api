@@ -145,6 +145,10 @@
             "@php artisan package:discover --ansi",
             "@php artisan statamic:install --ansi"
         ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=horizon,logs,vite --kill-others"
+        ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "@php artisan boost:update --ansi"

@@ -39,7 +39,8 @@ class AttendeeObserver
             ),
             new TagDonorJob(
                 taggable: $attendee,
-                weGiveTagId: config('services.wegive.attendee_tag_id'),
+                weGiveTagId: $attendee->event->eventType->attendee_wegive_tag
+                    ?? config('services.wegive.attendee_tag_id'),
             ),
         ])->dispatch();
     }

@@ -37,6 +37,11 @@ class Attendee extends BaseModel
         return $this->belongsTo(Event::class);
     }
 
+    public function contactUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'contact_user_id');
+    }
+
     public function hasUser(): bool
     {
         return $this->user_id !== null;
@@ -66,7 +71,7 @@ class Attendee extends BaseModel
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucwords(mb_strtolower($value)),
+            get: fn (?string $value) => $value ? ucwords(mb_strtolower($value)) : null,
         );
     }
 

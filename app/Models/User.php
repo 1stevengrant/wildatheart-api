@@ -87,6 +87,7 @@ class User extends Authenticatable
             'deleted_at' => 'datetime',
             'super' => 'boolean',
             'agreed_to_host_agreement_date' => 'datetime',
+            'agreed_to_terms_at' => 'datetime',
             'last_login' => 'datetime',
             'preferences' => 'json',
             'profile_step' => 'integer',
@@ -204,6 +205,11 @@ class User extends Authenticatable
     public function hasAgreedToHostAgreement(): bool
     {
         return $this->agreed_to_host_agreement_date !== null;
+    }
+
+    public function hasAgreedToTerms(): bool
+    {
+        return $this->agreed_to_terms_at !== null;
     }
 
     public function isSuperAdmin(): bool

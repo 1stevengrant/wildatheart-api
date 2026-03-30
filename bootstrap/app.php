@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'webhooks/sendgrid',
             'api/v1/webhooks/*',
             'api/v1/events/*/connect',
+            'api/v1/events/*/contact-host/*',
         ]);
 
         $middleware->web(\App\Http\Middleware\HandleInertiaRequests::class);

@@ -133,6 +133,62 @@ class EventType extends BaseModel
         );
     }
 
+    protected function attendeeWegiveTag(): Attribute
+    {
+        return Attribute::make(
+            get: function (): ?int {
+                if (app()->isProduction()) {
+                    $eventTypeMappings = [
+                        self::FIRES => null,
+                        self::CAPTIVATING_FIRE => null,
+                        self::WAH_EXPERIENCE => null,
+                        self::WAH_RETREAT => null,
+                        self::SURVIVAL_SCHOOL => null,
+                        self::BECOMING_A_KING_EXPERIENCE => null,
+                        self::BECOMING_A_KING => null,
+                        self::CAPTIVATING_EXPERIENCE => null,
+                        self::CAPTIVATING_CORE_RETREAT => null,
+                    ];
+                } else {
+                    $eventTypeMappings = [
+                        self::FIRES => null,
+                        self::WAH_EXPERIENCE => null,
+                        self::WAH_RETREAT => null,
+                        self::SURVIVAL_SCHOOL => null,
+                        self::BECOMING_A_KING_EXPERIENCE => null,
+                        self::BECOMING_A_KING => null,
+                        self::CAPTIVATING_EXPERIENCE => null,
+                        self::CAPTIVATING_CORE_RETREAT => null,
+                        self::CAPTIVATING_FIRE => null,
+                    ];
+                }
+
+                return $eventTypeMappings[$this->name] ?? config('services.wegive.attendee_tag_id');
+            }
+        );
+    }
+
+    protected function attendeeTagName(): Attribute
+    {
+        return Attribute::make(
+            get: function (): string {
+                $tagMappings = [
+                    self::WAH_RETREAT => 'ATTENDEE_LOCAL_WAH_RETREAT',
+                    self::CAPTIVATING_CORE_RETREAT => 'ATTENDEE_LOCAL_CAPTIVATING_RETREAT',
+                    self::BECOMING_A_KING => 'ATTENDEE_LOCAL_BAK_RETREAT',
+                    self::WAH_EXPERIENCE => 'ATTENDEE_LOCAL_WAH_EXPERIENCE',
+                    self::CAPTIVATING_EXPERIENCE => 'ATTENDEE_LOCAL_CAPTIVATING_EXPERIENCE',
+                    self::BECOMING_A_KING_EXPERIENCE => 'ATTENDEE_LOCAL_BAK_EXPERIENCE',
+                    self::SURVIVAL_SCHOOL => 'ATTENDEE_LOCAL_SURVIVAL_SCHOOL',
+                    self::FIRES => 'ATTENDEE_LOCAL_FIRES',
+                    self::CAPTIVATING_FIRE => 'ATTENDEE_LOCAL_CAPTIVATING_FIRES',
+                ];
+
+                return $tagMappings[$this->name] ?? 'ATTENDEE_LOCAL_UNKNOWN';
+            }
+        );
+    }
+
     protected function camelCaseName(): Attribute
     {
         return Attribute::make(
