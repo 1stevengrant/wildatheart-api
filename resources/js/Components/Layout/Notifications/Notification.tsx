@@ -28,7 +28,7 @@ export const Notification = ({
             setReactNotifications([]);
         }, duration);
         return () => clearTimeout(timer);
-    });
+    }, [duration, setReactNotifications]);
 
     const icon =
         type === "success" ? (

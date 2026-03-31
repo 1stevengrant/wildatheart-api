@@ -31,7 +31,7 @@ class SendMaterialsOrderToZapier
             return;
         }
 
-        $mailingAddress = $user->primaryAddress();
+        $mailingAddress = $user->primaryAddress;
 
         $dataTransferObject = new GoogleSheetDataTransferObject(
             webhookUrl: $eventType->zapier_webhook_url,

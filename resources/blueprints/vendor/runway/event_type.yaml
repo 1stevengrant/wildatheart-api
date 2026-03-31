@@ -93,6 +93,21 @@ tabs:
                 - required
                 - string
           -
+            handle: type
+            field:
+              options:
+                -
+                  key: gathering
+                  value: Gathering
+                -
+                  key: retreat
+                  value: Retreat
+                -
+                  key: course
+                  value: Course
+              type: radio
+              display: Type
+          -
             handle: order
             field:
               input_type: number

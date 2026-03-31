@@ -47,6 +47,11 @@ class PreviewBuilderService
     private function buildExperienceSessionPreview(Entry $entry)
     {
         $preview = $this->buildSubsplashMediaItemPreview($entry);
+
+        if (! $preview) {
+            return null;
+        }
+
         $preview->title = $entry->title;
         $preview->description = $entry->description;
         $preview->published_at = $entry->date;

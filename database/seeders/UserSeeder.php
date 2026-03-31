@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Enums\UserRoleEnum;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -17,7 +18,7 @@ class UserSeeder extends Seeder
         ]);
         $users = User::factory()->count(10)->create();
         $users->each(function ($user) {
-            $user->assignRole(User::ROLE_ATTENDEE);
+            $user->assignRole(UserRoleEnum::Attendee);
         });
     }
 }

@@ -154,7 +154,7 @@ it('uses event type wegive tag when tagging new co-host', function () {
         ->post(route('accept.host.invitation.confirm', $invitation));
 
     Bus::assertDispatched(FindOrCreateDonorJob::class, function ($job) use ($event) {
-        if (!isset($job->chained[0])) {
+        if (! isset($job->chained[0])) {
             return false;
         }
 

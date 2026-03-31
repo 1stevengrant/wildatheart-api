@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Enums\UserRoleEnum;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -21,9 +22,9 @@ class RoleSeeder extends Seeder
         if (DB::table('roles')->count() > 0) {
             return;
         }
-        Role::create(['name' => User::ROLE_ADMIN]);
-        Role::create(['name' => User::ROLE_HOST]);
-        Role::create(['name' => User::ROLE_ATTENDEE]);
+        Role::create(['name' => UserRoleEnum::Admin->value]);
+        Role::create(['name' => UserRoleEnum::Host->value]);
+        Role::create(['name' => UserRoleEnum::Attendee->value]);
 
         $admin = User::factory()->create([
             'email' => 'jamie@wildatheart.org',
@@ -32,6 +33,6 @@ class RoleSeeder extends Seeder
             'given_name' => 'Jamie',
         ]);
 
-        $admin->assignRole(User::ROLE_ADMIN);
+        $admin->assignRole(UserRoleEnum::Admin);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Enums\UserRoleEnum;
 use Database\Seeders\DatabaseSeeder;
 use App\Jobs\Admin\CheckIfUserShouldBeAdmin;
 
@@ -12,7 +13,7 @@ it('checks if a user should be an admin', function () {
         'email' => 'steven@msn.com',
     ]);
     CheckIfUserShouldBeAdmin::dispatch($user);
-    expect($user->hasRole(User::ROLE_ADMIN))->toBeFalse();
+    expect($user->hasRole(UserRoleEnum::Admin))->toBeFalse();
 });
 
 it('checks if a user with @ghijk.co.uk email address should be an admin', function () {
@@ -27,6 +28,6 @@ it('checks if a user with @ghijk.co.uk email address should be an admin', functi
     CheckIfUserShouldBeAdmin::dispatch($user);
     CheckIfUserShouldBeAdmin::dispatch($user2);
 
-    expect($user->hasRole(User::ROLE_ADMIN))->toBeTrue()
-        ->and($user2->hasRole(User::ROLE_ADMIN))->toBeTrue();
+    expect($user->hasRole(UserRoleEnum::Admin))->toBeTrue()
+        ->and($user2->hasRole(UserRoleEnum::Admin))->toBeTrue();
 });

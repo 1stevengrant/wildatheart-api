@@ -1417,7 +1417,7 @@
         },
         {
             "name": "ghijk/statamic-typescript-generator",
-            "version": "dev-staging",
+            "version": "dev-hotfix/FIRE-1F4",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/statamic-typescript-generator",
@@ -1459,6 +1459,46 @@
                 "statamic",
                 "typescript"
             ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "ghijk/wild-at-heart",
+            "version": "dev-hotfix/FIRE-1F4",
+            "dist": {
+                "type": "path",
+                "url": "addons/ghijk/wild-at-heart",
+                "reference": "e40f4e8d4106f200031c41d18fc5d9c96d092ae0"
+            },
+            "require": {
+                "statamic/cms": "^5.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "statamic": {
+                    "name": "Wild At Heart",
+                    "description": "Wild At Heart addon"
+                },
+                "laravel": {
+                    "providers": [
+                        "Ghijk\\WildAtHeart\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ghijk\\WildAtHeart\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Ghijk\\WildAtHeart\\Tests\\": "tests"
+                }
+            },
             "transport-options": {
                 "relative": true
             }
@@ -10058,16 +10098,16 @@
         },
         {
             "name": "statamic/cms",
-            "version": "v6.8.0",
+            "version": "v5.73.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/statamic/cms.git",
-                "reference": "d62b8f6df992bcbc26dffe91a17cdffddd56e122"
+                "reference": "617ce53fb75552c4d309dd3ee87b1f072f667189"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/statamic/cms/zipball/d62b8f6df992bcbc26dffe91a17cdffddd56e122",
-                "reference": "d62b8f6df992bcbc26dffe91a17cdffddd56e122",
+                "url": "https://api.github.com/repos/statamic/cms/zipball/617ce53fb75552c4d309dd3ee87b1f072f667189",
+                "reference": "617ce53fb75552c4d309dd3ee87b1f072f667189",
                 "shasum": ""
             },
             "require": {
@@ -10179,7 +10219,7 @@
             ],
             "support": {
                 "issues": "https://github.com/statamic/cms/issues",
-                "source": "https://github.com/statamic/cms/tree/v6.8.0"
+                "source": "https://github.com/statamic/cms/tree/v5.73.10"
             },
             "funding": [
                 {
@@ -10187,7 +10227,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-27T20:38:39+00:00"
+            "time": "2026-02-20T21:48:50+00:00"
         },
         {
             "name": "statamic/eloquent-driver",

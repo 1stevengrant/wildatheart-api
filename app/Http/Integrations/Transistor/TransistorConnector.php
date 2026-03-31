@@ -73,7 +73,10 @@ class TransistorConnector extends Connector implements HasPagination
      */
     protected function defaultConfig(): array
     {
-        return [];
+        return [
+            'timeout' => 30,
+            'connect_timeout' => 10,
+        ];
     }
 
     protected function defaultAuth(): HeaderAuthenticator

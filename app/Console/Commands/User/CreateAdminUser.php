@@ -3,6 +3,7 @@
 namespace App\Console\Commands\User;
 
 use App\Models\User;
+use App\Enums\UserRoleEnum;
 use Illuminate\Console\Command;
 
 class CreateAdminUser extends Command
@@ -33,7 +34,7 @@ class CreateAdminUser extends Command
 
         if (User::where('email', $email)->exists()) {
             $this->error('User already exists.');
-            User::where('email', $email)->first()->assignRole(User::ROLE_ADMIN);
+            User::where('email', $email)->first()->assignRole(UserRoleEnum::Admin);
             $this->info('User role updated successfully.');
 
             return;
@@ -47,7 +48,7 @@ class CreateAdminUser extends Command
             'name' => $givenName . ' ' . $familyName,
         ]);
 
-        $user->assignRole(User::ROLE_ADMIN);
+        $user->assignRole(UserRoleEnum::Admin);
 
         $this->info('Admin user created successfully.');
     }
