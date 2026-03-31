@@ -1,14 +1,14 @@
 {
-  "_Set-B2LXftIP.js": {
-    "file": "assets/Set-B2LXftIP.js",
+  "_Set-C770wxJa.js": {
+    "file": "assets/Set-C770wxJa.js",
     "name": "Set",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/index.js"
     ]
   },
-  "_pusher-G-WqRr33.js": {
-    "file": "assets/pusher-G-WqRr33.js",
+  "_pusher-C_V9I0wi.js": {
+    "file": "assets/pusher-C_V9I0wi.js",
     "name": "pusher",
     "isDynamicEntry": true,
     "imports": [
@@ -31,8 +31,26 @@
     "src": "node_modules/laravel-echo/dist/echo.js",
     "isDynamicEntry": true
   },
+  "node_modules/pdfjs-dist/build/pdf.mjs": {
+    "file": "assets/pdf-DlcHQvJ_.js",
+    "name": "pdf",
+    "src": "node_modules/pdfjs-dist/build/pdf.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/pdfjs-dist/build/pdf.worker.min.mjs?worker&url": {
+    "file": "assets/pdf.worker.min-CweHLVtz.js",
+    "name": "pdf.worker.min",
+    "src": "node_modules/pdfjs-dist/build/pdf.worker.min.mjs?worker&url",
+    "isDynamicEntry": true
+  },
+  "node_modules/pdfjs-dist/web/pdf_viewer.mjs": {
+    "file": "assets/pdf_viewer-CLpLRcgt.js",
+    "name": "pdf_viewer",
+    "src": "node_modules/pdfjs-dist/web/pdf_viewer.mjs",
+    "isDynamicEntry": true
+  },
   "resources/css/app.css": {
-    "file": "assets/app-CJfGmKu6.css",
+    "file": "assets/app-B7N2BBPL.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -60,7 +78,7 @@
     "src": "resources/img/favicon.ico"
   },
   "resources/js/components/fieldtypes/CodeFieldtype.vue": {
-    "file": "assets/CodeFieldtype-CPkQ_3TO.js",
+    "file": "assets/CodeFieldtype-DaN-Z88G.js",
     "name": "CodeFieldtype",
     "src": "resources/js/components/fieldtypes/CodeFieldtype.vue",
     "isDynamicEntry": true,
@@ -69,7 +87,7 @@
     ]
   },
   "resources/js/components/fieldtypes/YamlFieldtype.vue": {
-    "file": "assets/YamlFieldtype-DRjBa3-w.js",
+    "file": "assets/YamlFieldtype-Yp4xBE-o.js",
     "name": "YamlFieldtype",
     "src": "resources/js/components/fieldtypes/YamlFieldtype.vue",
     "isDynamicEntry": true,
@@ -78,27 +96,27 @@
     ]
   },
   "resources/js/components/fieldtypes/bard/BardFieldtype.vue": {
-    "file": "assets/BardFieldtype-Cj1qZT54.js",
+    "file": "assets/BardFieldtype-FVysySc7.js",
     "name": "BardFieldtype",
     "src": "resources/js/components/fieldtypes/bard/BardFieldtype.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/index.js",
-      "_Set-B2LXftIP.js"
+      "_Set-C770wxJa.js"
     ],
     "dynamicImports": [
-      "_Set-B2LXftIP.js",
-      "_Set-B2LXftIP.js",
-      "_Set-B2LXftIP.js",
-      "_Set-B2LXftIP.js",
-      "_Set-B2LXftIP.js"
+      "_Set-C770wxJa.js",
+      "_Set-C770wxJa.js",
+      "_Set-C770wxJa.js",
+      "_Set-C770wxJa.js",
+      "_Set-C770wxJa.js"
     ],
     "css": [
       "assets/BardFieldtype-MglIzBdb.css"
     ]
   },
   "resources/js/components/fieldtypes/markdown/MarkdownFieldtype.vue": {
-    "file": "assets/MarkdownFieldtype-BDWRdpyW.js",
+    "file": "assets/MarkdownFieldtype-L93LiAV7.js",
     "name": "MarkdownFieldtype",
     "src": "resources/js/components/fieldtypes/markdown/MarkdownFieldtype.vue",
     "isDynamicEntry": true,
@@ -107,7 +125,7 @@
     ]
   },
   "resources/js/components/structures/PageTree.vue": {
-    "file": "assets/PageTree-8TeemKlq.js",
+    "file": "assets/PageTree-DTTQt_H_.js",
     "name": "PageTree",
     "src": "resources/js/components/structures/PageTree.vue",
     "isDynamicEntry": true,
@@ -116,7 +134,7 @@
     ]
   },
   "resources/js/index.js": {
-    "file": "assets/index-BCp-uoap.js",
+    "file": "assets/index-CAhFz5Lv.js",
     "name": "index",
     "src": "resources/js/index.js",
     "isEntry": true,
@@ -170,6 +188,7 @@
       "resources/svg/icons/asset-folder.svg?raw",
       "resources/svg/icons/assets.svg?raw",
       "resources/svg/icons/avatar.svg?raw",
+      "resources/svg/icons/backspace.svg?raw",
       "resources/svg/icons/bar-bottom-panel-close.svg?raw",
       "resources/svg/icons/bar-bottom-panel-open.svg?raw",
       "resources/svg/icons/bar-sidebar-left-panel-open.svg?raw",
@@ -225,6 +244,7 @@
       "resources/svg/icons/container-add.svg?raw",
       "resources/svg/icons/content-book-open.svg?raw",
       "resources/svg/icons/credit-card.svg?raw",
+      "resources/svg/icons/crop.svg?raw",
       "resources/svg/icons/cursor-click.svg?raw",
       "resources/svg/icons/dashboard-layout-2.svg?raw",
       "resources/svg/icons/dashboard-layout-3.svg?raw",
@@ -668,10 +688,13 @@
       "resources/svg/icons/x.svg?raw",
       "resources/svg/icons/zoom-fit-screen.svg?raw",
       "node_modules/laravel-echo/dist/echo.js",
-      "_pusher-G-WqRr33.js",
+      "_pusher-C_V9I0wi.js",
       "node_modules/@hoppscotch/vue-toasted/dist/vue-toasted.mjs",
       "resources/js/components/structures/PageTree.vue",
       "resources/js/components/structures/PageTree.vue",
+      "node_modules/pdfjs-dist/build/pdf.mjs",
+      "node_modules/pdfjs-dist/build/pdf.worker.min.mjs?worker&url",
+      "node_modules/pdfjs-dist/web/pdf_viewer.mjs",
       "resources/svg/filetypes/archive.svg",
       "resources/svg/filetypes/audio.svg",
       "resources/svg/filetypes/doc.svg",
@@ -688,13 +711,13 @@
       "resources/svg/filetypes/xml.svg",
       "resources/js/components/structures/PageTree.vue",
       "resources/js/components/fieldtypes/bard/BardFieldtype.vue",
-      "_Set-B2LXftIP.js",
+      "_Set-C770wxJa.js",
       "resources/js/components/fieldtypes/CodeFieldtype.vue",
       "resources/js/components/fieldtypes/markdown/MarkdownFieldtype.vue",
       "resources/js/components/fieldtypes/YamlFieldtype.vue"
     ],
     "css": [
-      "assets/index-CiFziGXX.css"
+      "assets/index-BJeBYnGw.css"
     ]
   },
   "resources/svg/architectural-lines.svg": {
@@ -706,7 +729,7 @@
     "src": "resources/svg/drag-dots.svg"
   },
   "resources/svg/filetypes/archive.svg": {
-    "file": "assets/archive-C0fyTLPq.js",
+    "file": "assets/archive-Dhhe_GLm.js",
     "name": "archive",
     "src": "resources/svg/filetypes/archive.svg",
     "isDynamicEntry": true,
@@ -715,7 +738,7 @@
     ]
   },
   "resources/svg/filetypes/audio.svg": {
-    "file": "assets/audio-CKF1nqne.js",
+    "file": "assets/audio-BgFTsP_D.js",
     "name": "audio",
     "src": "resources/svg/filetypes/audio.svg",
     "isDynamicEntry": true,
@@ -724,7 +747,7 @@
     ]
   },
   "resources/svg/filetypes/doc.svg": {
-    "file": "assets/doc-BTc84uiS.js",
+    "file": "assets/doc-DA5ot1ev.js",
     "name": "doc",
     "src": "resources/svg/filetypes/doc.svg",
     "isDynamicEntry": true,
@@ -733,7 +756,7 @@
     ]
   },
   "resources/svg/filetypes/excel.svg": {
-    "file": "assets/excel-jKAplCus.js",
+    "file": "assets/excel-tSGT1F1u.js",
     "name": "excel",
     "src": "resources/svg/filetypes/excel.svg",
     "isDynamicEntry": true,
@@ -742,7 +765,7 @@
     ]
   },
   "resources/svg/filetypes/folder.svg": {
-    "file": "assets/folder-Aurl3fDy.js",
+    "file": "assets/folder-2FCSxTms.js",
     "name": "folder",
     "src": "resources/svg/filetypes/folder.svg",
     "isDynamicEntry": true,
@@ -751,7 +774,7 @@
     ]
   },
   "resources/svg/filetypes/generic.svg": {
-    "file": "assets/generic-Cb0v4rVm.js",
+    "file": "assets/generic-_tc-lTVF.js",
     "name": "generic",
     "src": "resources/svg/filetypes/generic.svg",
     "isDynamicEntry": true,
@@ -760,7 +783,7 @@
     ]
   },
   "resources/svg/filetypes/image.svg": {
-    "file": "assets/image-BH6IcPCr.js",
+    "file": "assets/image-D6ZhmDWn.js",
     "name": "image",
     "src": "resources/svg/filetypes/image.svg",
     "isDynamicEntry": true,
@@ -769,7 +792,7 @@
     ]
   },
   "resources/svg/filetypes/json.svg": {
-    "file": "assets/json-QhfBoCrl.js",
+    "file": "assets/json-DOOl7tua.js",
     "name": "json",
     "src": "resources/svg/filetypes/json.svg",
     "isDynamicEntry": true,
@@ -778,7 +801,7 @@
     ]
   },
   "resources/svg/filetypes/layered.svg": {
-    "file": "assets/layered-DigM-gvF.js",
+    "file": "assets/layered-Bvxwy2bb.js",
     "name": "layered",
     "src": "resources/svg/filetypes/layered.svg",
     "isDynamicEntry": true,
@@ -787,7 +810,7 @@
     ]
   },
   "resources/svg/filetypes/pdf.svg": {
-    "file": "assets/pdf-CeCvQSty.js",
+    "file": "assets/pdf-Cy10RZmh.js",
     "name": "pdf",
     "src": "resources/svg/filetypes/pdf.svg",
     "isDynamicEntry": true,
@@ -796,7 +819,7 @@
     ]
   },
   "resources/svg/filetypes/picture.svg": {
-    "file": "assets/picture-CUnoFsUt.js",
+    "file": "assets/picture-CbS8vrSu.js",
     "name": "picture",
     "src": "resources/svg/filetypes/picture.svg",
     "isDynamicEntry": true,
@@ -805,7 +828,7 @@
     ]
   },
   "resources/svg/filetypes/presentation.svg": {
-    "file": "assets/presentation-DdJwo2VO.js",
+    "file": "assets/presentation-ZQ1gG2ma.js",
     "name": "presentation",
     "src": "resources/svg/filetypes/presentation.svg",
     "isDynamicEntry": true,
@@ -814,7 +837,7 @@
     ]
   },
   "resources/svg/filetypes/video.svg": {
-    "file": "assets/video-CIkpUk3M.js",
+    "file": "assets/video-CKWMsQ8L.js",
     "name": "video",
     "src": "resources/svg/filetypes/video.svg",
     "isDynamicEntry": true,
@@ -823,7 +846,7 @@
     ]
   },
   "resources/svg/filetypes/xml.svg": {
-    "file": "assets/xml-BvzXV5QF.js",
+    "file": "assets/xml-tWR6V-pg.js",
     "name": "xml",
     "src": "resources/svg/filetypes/xml.svg",
     "isDynamicEntry": true,
@@ -1123,6 +1146,12 @@
     "file": "assets/avatar-Bvvs1oEG.js",
     "name": "avatar",
     "src": "resources/svg/icons/avatar.svg?raw",
+    "isDynamicEntry": true
+  },
+  "resources/svg/icons/backspace.svg?raw": {
+    "file": "assets/backspace-D4n74bTQ.js",
+    "name": "backspace",
+    "src": "resources/svg/icons/backspace.svg?raw",
     "isDynamicEntry": true
   },
   "resources/svg/icons/bar-bottom-panel-close.svg?raw": {
@@ -1453,6 +1482,12 @@
     "file": "assets/credit-card-DTsblR7F.js",
     "name": "credit-card",
     "src": "resources/svg/icons/credit-card.svg?raw",
+    "isDynamicEntry": true
+  },
+  "resources/svg/icons/crop.svg?raw": {
+    "file": "assets/crop-BWQdCs__.js",
+    "name": "crop",
+    "src": "resources/svg/icons/crop.svg?raw",
     "isDynamicEntry": true
   },
   "resources/svg/icons/cursor-click.svg?raw": {

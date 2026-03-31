@@ -16,7 +16,6 @@
         "fakerphp/faker": "^1.23",
         "ghijk/laravel-email-preview": "^1.0",
         "ghijk/statamic-typescript-generator": "*@dev",
-
         "inertiajs/inertia-laravel": "^2.0",
         "jacksleight/statamic-bard-texstyle": "^4.0",
         "ksubileau/color-thief-php": "^2.0",
@@ -33,10 +32,10 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "lorisleiva/laravel-actions": "^2.8",
         "ndx/statamic-bard-color-picker": "^3.0",
-        "saloonphp/laravel-plugin": "^3.0",
+        "saloonphp/laravel-plugin": "^4.0",
         "saloonphp/pagination-plugin": "^2.2",
         "saloonphp/rate-limit-plugin": "^2.1",
-        "saloonphp/saloon": "^3.0",
+        "saloonphp/saloon": "^4.0",
         "sentry/sentry-laravel": "^4.10",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-data": "^4.0",
@@ -168,7 +167,6 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": [
-
         {
             "type": "path",
             "url": "addons/ghijk/statamic-typescript-generator"
