@@ -35,8 +35,8 @@ it('adds the end date for a retreat event type', function () {
         'is_private' => 0,
         'state' => 'New State',
     ]);
-    $endDate = Carbon::createFromFormat('Y-m-d', $newStartDate)->addDays(3)->format('Y-m-d');
-    expect($event->refresh()->end_date)->toBe($endDate);
+    $endDate = Carbon::createFromFormat('Y-m-d', $newStartDate)->addDays(3);
+    expect($event->refresh()->end_date->format('Y-m-d'))->toBe($endDate->format('Y-m-d'));
 
 });
 

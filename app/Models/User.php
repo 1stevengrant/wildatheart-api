@@ -126,11 +126,11 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: function (): string {
-                if ($this->given_name === null || $this->family_name === null) {
-                    return $this->email;
-                }
+                $name = collect([$this->given_name, $this->family_name])
+                    ->filter()
+                    ->implode(' ');
 
-                return "$this->given_name $this->family_name";
+                return $name ?: 'Member';
             }
         )->shouldCache();
     }

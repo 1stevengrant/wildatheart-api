@@ -9,12 +9,12 @@ use Database\Seeders\DatabaseSeeder;
 beforeEach(function () {
     $this->seed(DatabaseSeeder::class);
 });
-test('full name returns the users email address if they have no first name or last name defined', function () {
+test('full name returns Member if they have no first name or last name defined', function () {
     $user = User::factory()->create([
         'given_name' => null,
         'family_name' => null,
     ]);
-    expect($user->fullname)->toBe($user->email);
+    expect($user->fullname)->toBe('Member');
 });
 
 it('returns given name and family name as the fullname if both are defined', function () {
@@ -24,6 +24,24 @@ it('returns given name and family name as the fullname if both are defined', fun
     ]);
 
     expect($user->fullname)->toBe('John Doe');
+});
+
+it('returns only the given name if family name is null', function () {
+    $user = User::factory()->create([
+        'given_name' => 'John',
+        'family_name' => null,
+    ]);
+
+    expect($user->fullname)->toBe('John');
+});
+
+it('returns only the family name if given name is null', function () {
+    $user = User::factory()->create([
+        'given_name' => null,
+        'family_name' => 'Doe',
+    ]);
+
+    expect($user->fullname)->toBe('Doe');
 });
 
 test('a family and given name can be nullable', function () {
