@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('viewPulse', function ($user) {
-            return $user->hasRole(UserRoleEnum::Admin);
+            return $user->hasRole(UserRoleEnum::Admin->value);
         });
 
         QueryBuilder::macro(
