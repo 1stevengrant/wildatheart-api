@@ -21,7 +21,6 @@ import { eventIsAFire } from "@/helpers/eventIsAFire";
 import { useDates } from "@/Hooks/useDates";
 import { useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
-import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
@@ -29,7 +28,6 @@ const EditEventPage = () => {
     const { startDate, maxDate, handleStartDateChange, setStartDate } =
         useDates();
     const page = useTypedPage();
-    const route = useRoute();
 
     const user = page.props.auth.user!;
     const event = page.props.event as App.Data.EventData;

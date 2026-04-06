@@ -364,6 +364,13 @@ class Event extends BaseModel
                 // Retreat: Show date range "May 16th - 19th 2025"
                 if ($this->isRetreat()) {
                     if ($this->start_date && $this->end_date) {
+                        // Single day retreat
+                        if ($this->start_date->isSameDay($this->end_date)) {
+                            $format = $this->start_date->year !== $currentYear ? 'M jS Y' : 'M jS';
+
+                            return $this->start_date->format($format);
+                        }
+
                         // If same month and year, show condensed format
                         if ($this->start_date->month === $this->end_date->month && $this->start_date->year === $this->end_date->year) {
                             $endFormat = $this->end_date->year !== $currentYear ? 'jS Y' : 'jS';
@@ -419,7 +426,7 @@ class Event extends BaseModel
                 EventType::BECOMING_A_KING_EXPERIENCE => 'Becoming A King',
                 EventType::BECOMING_A_KING => 'Becoming A King Retreat',
                 EventType::CAPTIVATING_EXPERIENCE => 'Captivating Experience',
-                EventType::CAPTIVATING_CORE_RETREAT => 'Captivating Retreat',
+                EventType::CAPTIVATING_CORE_RETREAT => '4-Day Captivating Retreat',
                 default => $this->card_description ?? '',
             }
         );
@@ -508,6 +515,7 @@ class Event extends BaseModel
                 EventType::BECOMING_A_KING => 245,
                 EventType::CAPTIVATING_EXPERIENCE => 246,
                 EventType::CAPTIVATING_CORE_RETREAT => 247,
+                EventType::CAPTIVATING_CORE_RETREAT_1_DAY => 845,
             ];
         } else {
 
@@ -520,6 +528,7 @@ class Event extends BaseModel
                 EventType::BECOMING_A_KING => 286,
                 EventType::CAPTIVATING_EXPERIENCE => 287,
                 EventType::CAPTIVATING_CORE_RETREAT => 288,
+                EventType::CAPTIVATING_CORE_RETREAT_1_DAY => 855,
                 EventType::CAPTIVATING_FIRE => 289,
             ];
         }

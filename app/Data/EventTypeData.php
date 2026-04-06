@@ -44,6 +44,10 @@ class EventTypeData extends Data
         public readonly ?array $key_details,
         public readonly ?array $action_buttons,
         public readonly ?array $new_content,
+        public ?string $welcome_nav_text_override,
+        public ?string $before_event_nav_text_override,
+        public ?string $schedule_nav_text_override,
+        public ?string $faq_nav_text_override,
     ) {}
 
     /**
@@ -88,7 +92,11 @@ class EventTypeData extends Data
             summary_link: $eventType->summary_link,
             key_details: $eventType->key_details,
             action_buttons: $eventType->action_buttons,
-            new_content: $eventType->new_content
+            new_content: $eventType->new_content,
+            welcome_nav_text_override: $eventType->welcome_nav_text_override,
+            before_event_nav_text_override: $eventType->before_event_nav_text_override,
+            schedule_nav_text_override: $eventType->schedule_nav_text_override,
+            faq_nav_text_override: $eventType->faq_nav_text_override,
         );
     }
 }

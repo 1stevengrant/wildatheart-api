@@ -162,6 +162,10 @@ summary_link: string | null;
 key_details: Array<any> | null;
 action_buttons: Array<any> | null;
 new_content: Array<any> | null;
+welcome_nav_text_override: string | null;
+before_event_nav_text_override: string | null;
+schedule_nav_text_override: string | null;
+faq_nav_text_override: string | null;
 };
 export type FeaturedContentData = {
 show_in_regions: Array<string>;

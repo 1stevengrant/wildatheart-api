@@ -49,8 +49,8 @@ class ConnectWithHostController extends Controller
 
         if ($attendee->hasOptedIntoMarketing()) {
             SubscribeToCommunicationListJob::dispatch(
-                listMember: $attendee,
-                listId: config('services.wegive.marketing_list_id')
+                listId: config('services.wegive.marketing_list_id'),
+                listMember: $attendee
             );
         }
 

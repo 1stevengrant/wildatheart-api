@@ -4,6 +4,7 @@ import { ArrowLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { Link, usePage } from "@inertiajs/react";
 
+import { CustomMarkdown } from "@/Components/CustomMarkdown";
 import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
@@ -70,7 +71,9 @@ const FaqsEventTypePage = () => {
                                                         />
                                                     </Disclosure.Button>
                                                     <Disclosure.Panel className="border-t py-4  border-t-n700 text-white">
-                                                        {faq.answer}
+                                                        <CustomMarkdown>
+                                                            {faq.answer}
+                                                        </CustomMarkdown>
                                                     </Disclosure.Panel>
                                                 </>
                                             )}

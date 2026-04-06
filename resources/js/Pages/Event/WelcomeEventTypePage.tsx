@@ -11,14 +11,12 @@ import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { getVimeoId } from "@/helpers/getVimeoId";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
-import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
 const WelcomeEventTypePageFooter = () => {
     const page = usePage();
     const eventType = page.props.eventType as App.Data.EventTypeData;
-    const route = useRoute();
 
     return (
         <EmptyLayoutFooter>
@@ -32,7 +30,7 @@ const WelcomeEventTypePageFooter = () => {
                 className={primaryButtonClasses}
                 href={route("host.eventType.before", eventType)}
             >
-                Before
+                {eventType.before_event_nav_text_override ?? "Before"}
                 <ArrowRightIcon className={`w-4 h-4 ml-2`} />
             </Link>
         </EmptyLayoutFooter>
@@ -41,7 +39,7 @@ const WelcomeEventTypePageFooter = () => {
 
 const WelcomeEventTypePage = () => {
     const page = usePage();
-    const eventType = page.props.eventType as any;
+    const eventType = page.props.eventType as App.Data.EventTypeData;
 
     return (
         <EmptyLayout title={"Welcome"}>

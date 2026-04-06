@@ -20,26 +20,40 @@ class NewEventCreatedMailable extends Mailable implements ShouldQueue
 {
     use InteractsWithEmailTemplates, Queueable, SerializesModels;
 
-    public EmailTemplate $emailTemplate;
+    public ?EmailTemplate $emailTemplate = null;
 
     public string $emailContent;
+
+    public static array $templateMap = [
+        EventType::WAH_RETREAT => 'wah-retreat-created',
+        EventType::WAH_EXPERIENCE => 'wild-at-heart-experience-created',
+        EventType::CAPTIVATING_EXPERIENCE => 'captivating-experience-created',
+        EventType::CAPTIVATING_CORE_RETREAT => 'captivating-retreat-created',
+        EventType::CAPTIVATING_CORE_RETREAT_1_DAY => '1-day-captivating-retreat-created',
+        EventType::BECOMING_A_KING_EXPERIENCE => 'becoming-a-king-experience-created',
+        EventType::BECOMING_A_KING => 'becoming-a-king-retreat-event-created',
+        EventType::SURVIVAL_SCHOOL => 'survival-school-created',
+        EventType::FIRES => 'send-fires-welcome-email',
+        EventType::CAPTIVATING_FIRE => 'captivating-fires-welcome-email',
+    ];
+
+    public static function hasTemplateFor(string $eventTypeName): bool
+    {
+        return isset(self::$templateMap[$eventTypeName]);
+    }
 
     /**
      * Create a new message instance.
      */
     public function __construct(public Event $event)
     {
-        match ($this->event->eventType->name) {
-            EventType::WAH_RETREAT => $this->emailTemplate = $this->getEmailTemplate('wah-retreat-created'),
-            EventType::WAH_EXPERIENCE => $this->emailTemplate = $this->getEmailTemplate('wild-at-heart-experience-created'),
-            EventType::CAPTIVATING_EXPERIENCE => $this->emailTemplate = $this->getEmailTemplate('captivating-experience-created'),
-            EventType::CAPTIVATING_CORE_RETREAT => $this->emailTemplate = $this->getEmailTemplate('captivating-retreat-created'),
-            EventType::BECOMING_A_KING_EXPERIENCE => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-experience-created'),
-            EventType::BECOMING_A_KING => $this->emailTemplate = $this->getEmailTemplate('becoming-a-king-retreat-event-created'),
-            EventType::SURVIVAL_SCHOOL => $this->emailTemplate = $this->getEmailTemplate('survival-school-created'),
-            EventType::FIRES => $this->emailTemplate = $this->getEmailTemplate('send-fires-welcome-email'),
-            EventType::CAPTIVATING_FIRE => $this->emailTemplate = $this->getEmailTemplate('captivating-fires-welcome-email'),
-        };
+        $templateSlug = self::$templateMap[$this->event->eventType->name] ?? null;
+
+        if (! $templateSlug) {
+            return;
+        }
+
+        $this->emailTemplate = $this->getEmailTemplate($templateSlug);
     }
 
     /**

@@ -36,7 +36,12 @@ class EventBuilder extends Builder
 
     public function captivatingRetreat(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first()->id);
+        $eventTypes = EventType::whereIn('name', [
+            EventType::CAPTIVATING_CORE_RETREAT,
+            EventType::CAPTIVATING_CORE_RETREAT_1_DAY,
+        ])->pluck('id');
+
+        return $this->whereIn('event_type_id', $eventTypes);
     }
 
     public function captivatingFire(): EventBuilder
@@ -59,6 +64,7 @@ class EventBuilder extends Builder
         $eventTypes = EventType::whereIn('name', [
             EventType::WAH_RETREAT,
             EventType::CAPTIVATING_CORE_RETREAT,
+            EventType::CAPTIVATING_CORE_RETREAT_1_DAY,
             EventType::BECOMING_A_KING,
         ])->pluck('id');
 
