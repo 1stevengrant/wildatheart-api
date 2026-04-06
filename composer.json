@@ -32,10 +32,10 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "lorisleiva/laravel-actions": "^2.8",
         "ndx/statamic-bard-color-picker": "^3.0",
-        "saloonphp/laravel-plugin": "^3.0",
+        "saloonphp/laravel-plugin": "^4.0",
         "saloonphp/pagination-plugin": "^2.2",
         "saloonphp/rate-limit-plugin": "^2.1",
-        "saloonphp/saloon": "^3.0",
+        "saloonphp/saloon": "^4.0",
         "sentry/sentry-laravel": "^4.10",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-data": "^4.0",
@@ -132,6 +132,14 @@
             "@php artisan statamic:generate-types --skip-pint",
             "@php artisan typescript:transform"
         ],
+        "dev": [
+            "@dev:types",
+            "npx concurrently -k -n vite,horizon,scheduler -c cyan,magenta,yellow \"npm run dev\" \"php artisan horizon\" \"php artisan schedule:work\""
+        ],
+        "dev:types": [
+            "@php artisan statamic:generate-types --skip-pint",
+            "@php artisan typescript:transform"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
@@ -169,7 +177,6 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": [
-
         {
             "type": "path",
             "url": "addons/ghijk/statamic-typescript-generator"
