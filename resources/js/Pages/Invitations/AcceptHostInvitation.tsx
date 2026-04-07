@@ -6,14 +6,12 @@ import { singular } from "pluralize";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { CompleteProfileModal } from "@/Components/Modals/CompleteProfileModal";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
 const AcceptHostInvitation = () => {
     const page = useTypedPage();
     const { auth } = usePage<any>().props;
-    const route = useRoute();
 
     const invitation = page.props
         .invitation as App.Data.EventManagerInvitationWithEventData;

@@ -11,14 +11,12 @@ import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { eventTypeHasFaqs } from "@/helpers/eventTypeHasFaqs";
 import { eventTypeHasSchedule } from "@/helpers/eventTypeHasSchedule";
-import useRoute from "@/Hooks/useRoute";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
 const BeforeEventTypePageFooter = () => {
     const page = usePage();
     const eventType = page.props.eventType as App.Data.EventTypeData;
-    const route = useRoute();
     return (
         <EmptyLayoutFooter>
             <Link
@@ -44,7 +42,7 @@ const BeforeEventTypePageFooter = () => {
 
 const BeforeEventTypePage = () => {
     const page = usePage();
-    const eventType = page.props.eventType as any;
+    const eventType = page.props.eventType as App.Data.EventTypeData;
     return (
         <EmptyLayout title={`Before The Event`}>
             <SidebarLayout footer={<BeforeEventTypePageFooter />}>

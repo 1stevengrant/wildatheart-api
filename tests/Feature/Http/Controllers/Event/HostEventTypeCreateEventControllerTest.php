@@ -172,7 +172,7 @@ test('a retreat end date is 3 days after the start date', function () {
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a survival school end date is 4 days after the start date', function () {
@@ -198,7 +198,7 @@ test('a survival school end date is 4 days after the start date', function () {
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a survival school is a retreat event type group', function () {
@@ -249,7 +249,7 @@ test('a becoming a king retreat end date is 4 days after the start date', functi
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a captivating retreat end date is 4 days after the start date', function () {
@@ -275,7 +275,7 @@ test('a captivating retreat end date is 4 days after the start date', function (
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a fire should not have an end date', function () {

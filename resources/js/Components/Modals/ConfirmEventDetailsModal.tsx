@@ -8,6 +8,7 @@ export const ConfirmEventDetailsModal = ({
     open,
     setOpen,
     data,
+    eventTypeName,
     eventLocation,
     processing,
     onConfirm,
@@ -15,6 +16,7 @@ export const ConfirmEventDetailsModal = ({
     open: boolean;
     setOpen: (open: boolean) => void;
     data: App.Data.EventFormData;
+    eventTypeName: string;
     eventLocation: string;
     processing: boolean;
     onConfirm: () => void;
@@ -31,6 +33,10 @@ export const ConfirmEventDetailsModal = ({
                 <div className="mt-4 space-y-2">
                     <p>Please confirm your event details:</p>
                     <ul className="text-sm space-y-1">
+                        <li>
+                            <span className="font-medium">Event Type:</span>{" "}
+                            {eventTypeName}
+                        </li>
                         <li>
                             <span className="font-medium">Location:</span>{" "}
                             {eventLocation}

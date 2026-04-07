@@ -74,6 +74,7 @@ class MediaItemDataController extends Controller
         $responseData['title'] = $subsplashMediaItem['title'];
         $shortCode = data_get($subsplashMediaItem, 'short_code');
 
+
         // Check if Vimeo ID exists and use it instead of Subsplash
         if ($mediaItem->vimeo_id) {
             // Handle unlisted Vimeo videos that have a format like "1067873475/63a07f9357"
@@ -108,6 +109,12 @@ class MediaItemDataController extends Controller
         // Handle scenario where Subsplash API isn't returning summary_text
         if (isset($subsplashMediaItem['summary_text'])) {
             $responseData['summary_text'] = $subsplashMediaItem['summary_text'];
+        }
+
+        // If we're set to override we should use the cms description
+        if ($mediaItem->override_subsplash_content) {
+            $responseData['summary_text'] = null;
+            $responseData['summary'] = $mediaItem->description;
         }
 
         $responseData['short_code'] = $subsplashMediaItem['short_code'];

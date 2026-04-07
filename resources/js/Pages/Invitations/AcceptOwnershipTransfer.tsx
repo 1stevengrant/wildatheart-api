@@ -3,13 +3,11 @@ import { singular } from "pluralize";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
 const AcceptOwnershipTransfer = () => {
     const page = useTypedPage();
-    const route = useRoute();
 
     const transfer = page.props
         .transfer as App.Data.EventOwnershipTransferWithEventData;

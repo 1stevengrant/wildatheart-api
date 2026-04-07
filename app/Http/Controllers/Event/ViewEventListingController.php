@@ -25,12 +25,7 @@ class ViewEventListingController extends Controller
 
         IncreaseEventCountsJob::dispatch(event: $event, countType: Event::COUNT_TYPE_VIEW);
 
-        $this->seoService->setMetadata(
-            title: "Connect with $event->host_name for $event->name in $event->location",
-            description: preg_replace('/\s+/', ' ', $event->eventType->card_teaser_text),
-            image: bunnyImage($event->eventType->image),
-            url: url()->current(),
-        );
+        $this->seoService->setEventMetadata($event);
 
         LogActivityJob::dispatch(
             logName: 'events',

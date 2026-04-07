@@ -16,11 +16,11 @@ class EventType extends BaseModel
 {
     use HasFactory, HasRunwayResource, LogsActivity;
 
-    protected $guarded = ['id'];
-
     public const string WAH_RETREAT = 'Wild at Heart Retreat';
 
-    public const string CAPTIVATING_CORE_RETREAT = 'Captivating Retreat';
+    public const string CAPTIVATING_CORE_RETREAT = '4-Day Captivating Retreat';
+
+    public const string CAPTIVATING_CORE_RETREAT_1_DAY = '1-Day Captivating Retreat';
 
     public const string BECOMING_A_KING = 'Becoming A King Retreat';
 
@@ -73,6 +73,10 @@ class EventType extends BaseModel
             'new_image' => 'string',
             'summary' => 'string',
             'summary_link' => 'string',
+            'welcome_nav_text_override' => 'string',
+            'before_event_nav_text_override' => 'string',
+            'schedule_nav_text_override' => 'string',
+            'faq_nav_text_override' => 'string',
             'type' => EventTypeEnum::class,
         ];
     }

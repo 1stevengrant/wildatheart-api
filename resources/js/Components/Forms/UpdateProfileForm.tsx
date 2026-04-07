@@ -13,7 +13,6 @@ import TextInput from "@/Components/Forms/TextInput";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { UserAvatar } from "@/Components/UserAvatar";
 import { scrollToError } from "@/helpers/scrollToError";
-import useRoute from "@/Hooks/useRoute";
 
 const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-p200 hover:text-p200 transition ease-in-out duration-100 font-semibold text-sm`;
 
@@ -41,7 +40,6 @@ export const UpdateProfileForm = ({
         opted_into_marketing: Boolean(user.opted_into_marketing),
     });
 
-    const route = useRoute();
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [confirmingPhotoDelete, setConfirmingPhotoDelete] = useState(false);
     const photoRef = useRef<HTMLInputElement>(null);
@@ -77,7 +75,6 @@ export const UpdateProfileForm = ({
     };
 
     const clearPhotoFileInput = () => {
-        // @ts-ignore
         if (photoRef.current?.value) {
             photoRef.current.value = "";
             form.setData("image", null);

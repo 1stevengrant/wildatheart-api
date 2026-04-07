@@ -1,7 +1,5 @@
 import Vimeo from "@u-wave/react-vimeo";
 
-import { getVimeoId } from "@/helpers/getVimeoId";
-
 export const VideoSet = ({
     video,
     className = "",
@@ -16,7 +14,7 @@ export const VideoSet = ({
         <Vimeo
             className={className}
             responsive={true}
-            video={getVimeoId(video)}
+            video={video}
         />
     );
 };

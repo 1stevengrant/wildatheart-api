@@ -270,6 +270,30 @@ tabs:
                     display: Answer
                     validate:
                       - required
+      -
+        display: Overrides
+        instructions: 'Use these to override event type defaults'
+        fields:
+          -
+            handle: welcome_nav_text_override
+            field:
+              type: text
+              display: 'Welcome Nav Text'
+          -
+            handle: before_event_nav_text_override
+            field:
+              type: text
+              display: 'Before Event Nav Text'
+          -
+            handle: schedule_nav_text_override
+            field:
+              type: text
+              display: 'Schedule Nav Text'
+          -
+            handle: faq_nav_text_override
+            field:
+              type: text
+              display: 'FAQ Nav Text'
   resources:
     display: Resources
     sections:

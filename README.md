@@ -1,3 +1,4 @@
+
 <p align="center"><a href="https://local.wildatheart.org" target="_blank"><img src="public/favicon.svg" alt="Wild at 
 Heart Fires Logo"></a></p>
 

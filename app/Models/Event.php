@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use App\Enums\EventSexEnum;
 use Illuminate\Support\Str;
 use Laravel\Pennant\Feature;
@@ -228,22 +227,12 @@ class Event extends BaseModel
                     return '';
                 }
 
-                $startDate = $this->start_date instanceof Carbon
-                    ? $this->start_date
-                    : Carbon::parse($this->start_date);
+                $startFormatted = $this->start_date->format('D, M j');
 
-                $startFormatted = $startDate->format('D, M j');
+                if ($this->end_date && ! $this->start_date->isSameDay($this->end_date)) {
+                    $endFormatted = $this->end_date->format('D, M j');
 
-                if ($this->end_date) {
-                    $endDate = $this->end_date instanceof Carbon
-                        ? $this->end_date
-                        : Carbon::parse($this->end_date);
-
-                    if (! $startDate->isSameDay($endDate)) {
-                        $endFormatted = $endDate->format('D, M j');
-
-                        return "{$startFormatted} - {$endFormatted}";
-                    }
+                    return "{$startFormatted} - {$endFormatted}";
                 }
 
                 return $startFormatted;
@@ -330,24 +319,6 @@ class Event extends BaseModel
         );
     }
 
-    protected function startDate(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value): ?string {
-                return $value ? Carbon::parse($value)->format('Y-m-d') : null;
-            }
-        );
-    }
-
-    protected function endDate(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value): ?string {
-                return $value ? Carbon::parse($value)->format('Y-m-d') : null;
-            }
-        );
-    }
-
     protected function cardTitle(): Attribute
     {
         return Attribute::make(
@@ -393,30 +364,33 @@ class Event extends BaseModel
                 // Retreat: Show date range "May 16th - 19th 2025"
                 if ($this->isRetreat()) {
                     if ($this->start_date && $this->end_date) {
-                        $startDate = Carbon::parse($this->start_date);
-                        $endDate = Carbon::parse($this->end_date);
+                        // Single day retreat
+                        if ($this->start_date->isSameDay($this->end_date)) {
+                            $format = $this->start_date->year !== $currentYear ? 'M jS Y' : 'M jS';
+
+                            return $this->start_date->format($format);
+                        }
 
                         // If same month and year, show condensed format
-                        if ($startDate->month === $endDate->month && $startDate->year === $endDate->year) {
-                            $endFormat = $endDate->year !== $currentYear ? 'jS Y' : 'jS';
+                        if ($this->start_date->month === $this->end_date->month && $this->start_date->year === $this->end_date->year) {
+                            $endFormat = $this->end_date->year !== $currentYear ? 'jS Y' : 'jS';
 
-                            return $startDate->format('M jS') . '—' . $endDate->format($endFormat);
+                            return $this->start_date->format('M jS') . '—' . $this->end_date->format($endFormat);
                         }
 
                         // Different months or years
-                        $endFormat = $endDate->year !== $currentYear ? 'M jS Y' : 'M jS';
+                        $endFormat = $this->end_date->year !== $currentYear ? 'M jS Y' : 'M jS';
 
-                        return $startDate->format('M jS') . '—' . $endDate->format($endFormat);
+                        return $this->start_date->format('M jS') . '—' . $this->end_date->format($endFormat);
                     }
                 }
 
                 // Experience: Show "Starts May 31st 2025"
                 if ($this->isExperience()) {
                     if ($this->start_date) {
-                        $startDate = Carbon::parse($this->start_date);
-                        $format = $startDate->year !== $currentYear ? 'M jS Y' : 'M jS';
+                        $format = $this->start_date->year !== $currentYear ? 'M jS Y' : 'M jS';
 
-                        return 'Starts ' . $startDate->format($format);
+                        return 'Starts ' . $this->start_date->format($format);
                     }
                 }
 
@@ -431,10 +405,9 @@ class Event extends BaseModel
 
                 // Default: Just return the start date if available
                 if ($this->start_date) {
-                    $startDate = Carbon::parse($this->start_date);
-                    $format = $startDate->year !== $currentYear ? 'F jS Y' : 'F jS';
+                    $format = $this->start_date->year !== $currentYear ? 'F jS Y' : 'F jS';
 
-                    return $startDate->format($format);
+                    return $this->start_date->format($format);
                 }
 
                 return '';
@@ -453,7 +426,7 @@ class Event extends BaseModel
                 EventType::BECOMING_A_KING_EXPERIENCE => 'Becoming A King',
                 EventType::BECOMING_A_KING => 'Becoming A King Retreat',
                 EventType::CAPTIVATING_EXPERIENCE => 'Captivating Experience',
-                EventType::CAPTIVATING_CORE_RETREAT => 'Captivating Retreat',
+                EventType::CAPTIVATING_CORE_RETREAT => '4-Day Captivating Retreat',
                 default => $this->card_description ?? '',
             }
         );

@@ -43,7 +43,7 @@ class TransistorConnector extends Connector implements HasPagination
     {
         return new class(connector: $this, request: $request) extends PagedPaginator
         {
-            protected ?int $perPageLimit = 500;
+            protected ?int $perPageLimit = 100;
 
             protected function isLastPage(Response $response): bool
             {
@@ -74,7 +74,7 @@ class TransistorConnector extends Connector implements HasPagination
     protected function defaultConfig(): array
     {
         return [
-            'timeout' => 30,
+            'timeout' => 120,
             'connect_timeout' => 10,
         ];
     }
