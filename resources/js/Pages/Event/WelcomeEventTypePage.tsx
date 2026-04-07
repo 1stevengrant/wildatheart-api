@@ -9,7 +9,6 @@ import { EmptyLayoutBody } from "@/Components/Layout/Elements/EmptyLayoutBody";
 import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFooter";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
-import { getVimeoId } from "@/helpers/getVimeoId";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
@@ -57,9 +56,7 @@ const WelcomeEventTypePage = () => {
                                 <Vimeo
                                     className={`rounded-2xl`}
                                     responsive={true}
-                                    video={getVimeoId(
-                                        eventType.registration_welcome_video
-                                    )}
+                                    video={eventType.registration_welcome_video}
                                 />
                             ))}
                         {eventType.registration_welcome_text && (
