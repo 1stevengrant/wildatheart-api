@@ -41,7 +41,7 @@ class GroupedEventTypeController extends Controller
                 ->orderBy('order')
                 ->get()
                 ->groupBy('type')
-                ->map(fn ($group) => EventTypeData::collection($group))
+                ->map(fn ($group) => EventTypeData::collect($group))
                 ->toArray();
         });
 

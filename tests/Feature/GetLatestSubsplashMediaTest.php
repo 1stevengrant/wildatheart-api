@@ -1,18 +1,24 @@
 <?php
 
-use App\Services\SubsplashService;
+use App\Services\Subsplash\SubsplashApiClient;
 
 it('handles null media items in response without throwing', function () {
-    $subsplash = Mockery::mock(SubsplashService::class);
+    $apiClient = Mockery::mock(SubsplashApiClient::class);
 
-    $subsplash->shouldReceive('subsplashFetch')
+    $apiClient->shouldReceive('getPublishedMediaItemsUrl')
+        ->once()
+        ->andReturn('https://core.subsplash.com/media/v1/media-items?filter=test');
+
+    $apiClient->shouldReceive('fetch')
         ->once()
         ->andReturn([
             '_embedded' => [],
             '_links' => [],
         ]);
 
-    $this->app->instance(SubsplashService::class, $subsplash);
+    $apiClient->shouldReceive('getMediaItem')->never();
+
+    $this->app->instance(SubsplashApiClient::class, $apiClient);
 
     $this->artisan('app:get-latest-subsplash-media')
         ->assertSuccessful();

@@ -1,10 +1,14 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
+
 it('updates the user account', function () {
     $user = User::factory()->create();
 
@@ -14,7 +18,7 @@ it('updates the user account', function () {
             'name' => 'John Doe',
             'family_name' => 'Doe',
             'given_name' => 'John',
-            'email' => 'steven@ghijk.co.uk',
+            'email' => 'steven@example.com',
         ]
     );
 
@@ -22,5 +26,5 @@ it('updates the user account', function () {
         'given_name' => 'John',
         'family_name' => 'Doe',
         'name' => 'John Doe',
-        'email' => 'steven@ghijk.co.uk']);
+        'email' => 'steven@example.com']);
 });

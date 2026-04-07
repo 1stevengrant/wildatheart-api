@@ -1,14 +1,20 @@
 <?php
 
+use App\Models\Event;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EventAutoUnpublishedMail;
+use App\Jobs\Fire\UnpublishSingleUnconfirmedFireJob;
+
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake()->except(UnpublishSingleUnconfirmedFireJob::class);
+    Mail::fake();
 });
+
 it('unpublishes a single unconfirmed Fire event', function () {
-    \Illuminate\Support\Facades\Mail::fake();
+    $event = Event::factory()->fires()->approved()->create();
 
-    $event = \App\Models\Event::factory()->fires()->approved()->create();
-
-    \App\Jobs\Fire\UnpublishSingleUnconfirmedFireJob::dispatch($event);
+    UnpublishSingleUnconfirmedFireJob::dispatch($event);
 
     $event->refresh();
 
@@ -16,7 +22,7 @@ it('unpublishes a single unconfirmed Fire event', function () {
         ->and($event->auto_unpublished)->toBeTrue()
         ->and($event->auto_unpublished_at)->not->toBeNull();
 
-    Mail::assertQueued(\App\Mail\EventAutoUnpublishedMail::class, function ($mail) use ($event) {
+    Mail::assertQueued(EventAutoUnpublishedMail::class, function ($mail) use ($event) {
         return $mail->event->is($event);
     });
 });

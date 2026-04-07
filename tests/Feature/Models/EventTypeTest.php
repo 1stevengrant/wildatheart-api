@@ -2,14 +2,15 @@
 
 use App\Models\EventType;
 use App\Enums\EventTypeEnum;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
+use Spatie\Activitylog\Facades\Activity;
 
 beforeEach(function () {
+    Bus::fake();
+    Mail::fake();
+    Activity::disableLogging();
     // Skip seeder as it has outdated schema
-    // $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    EventType::truncate();
-});
-
-afterEach(function () {
     EventType::truncate();
 });
 

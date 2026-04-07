@@ -4,9 +4,7 @@ namespace Tests\Feature\Http\Controllers\API\V1\Content;
 
 use Statamic\Facades\Entry;
 
-beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-});
+beforeEach(function () {});
 
 it('returns 404 when event not found', function () {
     // Arrange

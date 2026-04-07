@@ -9,11 +9,11 @@ it('returns the same response as production for the media page', function () {
 
     $localResponse = Http::withoutVerifying()->get('https://wahfires.test/api/content/v1/page/media');
 
-    expect($productionResponse->status())->toBe(200, 'Production response was not 200');
-    expect($localResponse->status())->toBe(200, 'Local response was not 200');
-
-    expect(normalizeJson($localResponse->json()))
+    expect($productionResponse->status())->toBe(200, 'Production response was not 200')
+        ->and($localResponse->status())->toBe(200, 'Local response was not 200')
+        ->and(normalizeJson($localResponse->json()))
         ->toBe(normalizeJson($productionResponse->json()));
+
 })->group('comparison');
 
 it('returns the same response as production for a custom media item', function () {
@@ -24,8 +24,8 @@ it('returns the same response as production for a custom media item', function (
     $localResponse = Http::withoutVerifying()
         ->get('https://wahfires.test/api/content/v1/media-or-series/the-series/chapter-1-mark');
 
-    expect($productionResponse->status())->toBe(200, 'Production response was not 200');
-    expect($localResponse->status())->toBe(200, 'Local response was not 200');
+    expect($productionResponse->status())->toBe(200, 'Production response was not 200')
+        ->and($localResponse->status())->toBe(200, 'Local response was not 200');
 
     $normalizedLocal = normalizeJson($localResponse->json());
     $normalizedProd = normalizeJson($productionResponse->json());

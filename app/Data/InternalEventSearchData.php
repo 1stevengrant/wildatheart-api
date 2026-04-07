@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use Carbon\Carbon;
 use App\Models\Event;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -35,11 +34,6 @@ class InternalEventSearchData extends Data
 
     public static function fromModel(Event $event, ?float $distance): self
     {
-        $startDate = $event->start_date;
-        if ($startDate && ! $startDate instanceof Carbon) {
-            $startDate = Carbon::parse($startDate);
-        }
-
         return new self(
             id: $event->id,
             name: $event->name,
@@ -51,7 +45,7 @@ class InternalEventSearchData extends Data
             event_type: $event->eventType?->name,
             frequency: $event->frequency?->value,
             attendee_count: $event->attendee_count,
-            start_date: $startDate?->format('Y-m-d'),
+            start_date: $event->start_date?->format('Y-m-d'),
             distance: $distance !== null ? round($distance, 2) : null,
             status: self::getEventStatus($event),
             host_street: $event->user?->primaryAddress?->street_address,

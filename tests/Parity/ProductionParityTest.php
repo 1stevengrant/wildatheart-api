@@ -17,32 +17,83 @@ use Illuminate\Support\Facades\Http;
 
 const PRODUCTION_API_BASE = 'https://local.wildatheart.org/api';
 
+const PARITY_ENDPOINTS = [
+    'v1/stats',
+    'v1/navs/all',
+    'v1/navs/desktop',
+    'v1/navs/mobile',
+    'v1/events',
+    'v1/events/types',
+    'content/media/redirects',
+    'content/experiences/all',
+    'content/v1/seo/sitemap',
+    'content/v1/search',
+    'content/v1/blogs',
+    'content/v1/daily-reading',
+    'content/v1/daily-reading/recent',
+    'content/v1/prayers',
+    'content/v1/events',
+    'content/v1/alerts',
+    'content/v1/subsplash/daily-readings',
+    'content/v1/subsplash/daily-readings/list',
+    'content/v1/subsplash/prayers',
+    'events/all',
+];
+
+beforeAll(function () {
+    $productionResponses = [];
+
+    try {
+        $responses = Http::pool(function ($pool) {
+            foreach (PARITY_ENDPOINTS as $path) {
+                $pool->as($path)
+                    ->timeout(15)
+                    ->accept('application/json')
+                    ->get(PRODUCTION_API_BASE . '/' . $path);
+            }
+        });
+
+        foreach (PARITY_ENDPOINTS as $path) {
+            $response = $responses[$path];
+
+            if ($response instanceof \Illuminate\Http\Client\Response) {
+                $productionResponses[$path] = [
+                    'status' => $response->status(),
+                    'body' => $response->json(),
+                    'reachable' => true,
+                ];
+            } else {
+                $productionResponses[$path] = [
+                    'status' => 0,
+                    'body' => null,
+                    'reachable' => false,
+                    'error' => $response->getMessage(),
+                ];
+            }
+        }
+    } catch (\Exception $e) {
+        foreach (PARITY_ENDPOINTS as $path) {
+            $productionResponses[$path] = [
+                'status' => 0,
+                'body' => null,
+                'reachable' => false,
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
+
+    ProductionParityState::$responses = $productionResponses;
+});
+
 beforeEach(function () {
     config(['database.connections.mysql.database' => 'wahlocal']);
     DB::purge('mysql');
     DB::reconnect('mysql');
 });
 
-function fetchFromProduction(string $path): array
+class ProductionParityState
 {
-    try {
-        $response = Http::timeout(15)
-            ->accept('application/json')
-            ->get(PRODUCTION_API_BASE . '/' . $path);
-
-        return [
-            'status' => $response->status(),
-            'body' => $response->json(),
-            'reachable' => true,
-        ];
-    } catch (\Exception $e) {
-        return [
-            'status' => 0,
-            'body' => null,
-            'reachable' => false,
-            'error' => $e->getMessage(),
-        ];
-    }
+    public static array $responses = [];
 }
 
 function extractErrorFromResponse(\Illuminate\Testing\TestResponse $response): string
@@ -58,10 +109,11 @@ function extractErrorFromResponse(\Illuminate\Testing\TestResponse $response): s
 }
 
 it('matches production response for {endpoint}', function (string $path) {
-    $production = fetchFromProduction($path);
+    $production = ProductionParityState::$responses[$path] ?? null;
 
-    if (! $production['reachable']) {
-        $this->markTestSkipped("Production unreachable: {$production['error']}");
+    if (! $production || ! $production['reachable']) {
+        $error = $production['error'] ?? 'No response cached';
+        $this->markTestSkipped("Production unreachable: {$error}");
     }
 
     $local = $this->get("/api/{$path}", ['Accept' => 'application/json']);
@@ -141,34 +193,6 @@ it('matches production response for {endpoint}', function (string $path) {
             );
         }
     }
-})->with([
-    // V1 Core
-    'GET /api/v1/stats' => ['v1/stats'],
-    'GET /api/v1/navs/all' => ['v1/navs/all'],
-    'GET /api/v1/navs/desktop' => ['v1/navs/desktop'],
-    'GET /api/v1/navs/mobile' => ['v1/navs/mobile'],
-    'GET /api/v1/events' => ['v1/events'],
-    'GET /api/v1/events/types' => ['v1/events/types'],
-
-    // Content
-    'GET /api/content/media/redirects' => ['content/media/redirects'],
-    'GET /api/content/experiences/all' => ['content/experiences/all'],
-
-    // Content V1
-    'GET /api/content/v1/seo/sitemap' => ['content/v1/seo/sitemap'],
-    'GET /api/content/v1/search' => ['content/v1/search'],
-    'GET /api/content/v1/blogs' => ['content/v1/blogs'],
-    'GET /api/content/v1/daily-reading' => ['content/v1/daily-reading'],
-    'GET /api/content/v1/daily-reading/recent' => ['content/v1/daily-reading/recent'],
-    'GET /api/content/v1/prayers' => ['content/v1/prayers'],
-    'GET /api/content/v1/events' => ['content/v1/events'],
-    'GET /api/content/v1/alerts' => ['content/v1/alerts'],
-
-    // Subsplash App
-    'GET /api/content/v1/subsplash/daily-readings' => ['content/v1/subsplash/daily-readings'],
-    'GET /api/content/v1/subsplash/daily-readings/list' => ['content/v1/subsplash/daily-readings/list'],
-    'GET /api/content/v1/subsplash/prayers' => ['content/v1/subsplash/prayers'],
-
-    // Root-level
-    'GET /api/events/all' => ['events/all'],
-])->group('production-parity');
+})->with(
+    collect(PARITY_ENDPOINTS)->mapWithKeys(fn ($path) => ["GET /api/{$path}" => [$path]])->all()
+)->group('production-parity');

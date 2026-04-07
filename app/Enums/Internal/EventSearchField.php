@@ -88,7 +88,7 @@ enum EventSearchField: string
             self::EventType => $event->eventType?->name,
             self::Frequency => $event->frequency?->value,
             self::AttendeeCount => (string) $event->attendee_count,
-            self::StartDate => $event->start_date,
+            self::StartDate => $event->start_date?->format('Y-m-d'),
             self::Distance => isset($event->distance) ? (string) round($event->distance, 2) : null,
             self::Status => self::getEventStatus($event),
             self::HostStreet => $event->user?->primaryAddress?->street_address,

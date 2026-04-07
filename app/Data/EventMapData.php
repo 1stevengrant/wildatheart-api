@@ -15,9 +15,10 @@ class EventMapData extends Data
 {
     public function __construct(
         public string $id,
+        public ?string $name,
         public float $display_longitude,
         public float $display_latitude,
-        public string $type_group,
+        public ?string $type_group,
         public string $url,
         public string $event_type_image,
         public string $location,
@@ -33,6 +34,7 @@ class EventMapData extends Data
     {
         return new self(
             id: $event->id,
+            name: $event->name,
             display_longitude: $event->display_longitude ?? $event->longitude,
             display_latitude: $event->display_latitude ?? $event->latitude,
             type_group: $event->eventType?->group_type ?? '',

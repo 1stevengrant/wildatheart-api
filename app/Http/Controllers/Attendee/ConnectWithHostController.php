@@ -18,12 +18,7 @@ class ConnectWithHostController extends Controller
 
     public function index(Event $event)
     {
-        $this->seoService->setMetadata(
-            title: "Connect with $event->host_name for $event->name in $event->location",
-            description: $event->eventType->card_teaser_text ?? '',
-            image: bunnyImage($event->eventType->image),
-            url: url()->current()
-        );
+        $this->seoService->setEventMetadata($event);
 
         return inertia('ConnectWithHostPage', [
             'event' => EventData::fromModel($event),
@@ -54,8 +49,8 @@ class ConnectWithHostController extends Controller
 
         if ($attendee->hasOptedIntoMarketing()) {
             SubscribeToCommunicationListJob::dispatch(
-                listMember: $attendee,
-                listId: config('services.wegive.marketing_list_id')
+                listId: config('services.wegive.marketing_list_id'),
+                listMember: $attendee
             );
         }
 

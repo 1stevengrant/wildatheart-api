@@ -2,32 +2,41 @@
 
 use App\Models\User;
 use App\Enums\UserRoleEnum;
-use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 use App\Jobs\Admin\CheckIfUserShouldBeAdmin;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Bus::fake()->except(CheckIfUserShouldBeAdmin::class);
+    Mail::fake();
 });
-it('checks if a user should be an admin', function () {
+
+it('does not assign admin role to a user with a non-admin email', function () {
     $user = User::factory()->create([
-        'email' => 'steven@msn.com',
+        'email' => 'steven@example.com',
     ]);
-    CheckIfUserShouldBeAdmin::dispatch($user);
+
+    CheckIfUserShouldBeAdmin::dispatchSync($user);
+
     expect($user->hasRole(UserRoleEnum::Admin))->toBeFalse();
 });
 
-it('checks if a user with @ghijk.co.uk email address should be an admin', function () {
+it('assigns admin role to a user with @ghijk.co.uk email', function () {
     $user = User::factory()->create([
         'email' => 'steven@ghijk.co.uk',
     ]);
 
-    $user2 = User::factory()->create([
+    CheckIfUserShouldBeAdmin::dispatchSync($user);
+
+    expect($user->hasRole(UserRoleEnum::Admin))->toBeTrue();
+});
+
+it('assigns admin role to a user with @wildatheart.org email', function () {
+    $user = User::factory()->create([
         'email' => 'steven@wildatheart.org',
     ]);
 
-    CheckIfUserShouldBeAdmin::dispatch($user);
-    CheckIfUserShouldBeAdmin::dispatch($user2);
+    CheckIfUserShouldBeAdmin::dispatchSync($user);
 
-    expect($user->hasRole(UserRoleEnum::Admin))->toBeTrue()
-        ->and($user2->hasRole(UserRoleEnum::Admin))->toBeTrue();
+    expect($user->hasRole(UserRoleEnum::Admin))->toBeTrue();
 });

@@ -68,8 +68,6 @@ class StateSeeder extends Seeder
             ['name' => 'Wyoming', 'code' => 'WY'],
         ];
 
-        foreach ($states as $key => $state) {
-            State::create($state);
-        }
+        State::insert($states);
     }
 }

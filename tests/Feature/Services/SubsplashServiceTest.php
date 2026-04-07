@@ -6,16 +6,31 @@ use Mockery;
 use Carbon\Carbon;
 use Statamic\Facades\Term;
 use Statamic\Facades\Entry;
-use App\Services\SubsplashService;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Statamic\Facades\AssetContainer;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Subsplash\SubsplashApiClient;
+use App\Services\Subsplash\SubsplashTopicService;
+use App\Services\Subsplash\SubsplashAssetImporter;
+use App\Services\Subsplash\SubsplashMediaItemImporter;
+use App\Services\Subsplash\SubsplashMediaSeriesImporter;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
     Cache::flush();
-    $this->subsplashService = new SubsplashService;
+
+    $this->apiClient = new SubsplashApiClient;
+    $this->assetImporter = new SubsplashAssetImporter;
+    $this->topicService = new SubsplashTopicService;
+    $this->seriesImporter = new SubsplashMediaSeriesImporter($this->apiClient);
+    $this->importer = new SubsplashMediaItemImporter(
+        $this->apiClient,
+        $this->assetImporter,
+        $this->topicService,
+        $this->seriesImporter,
+    );
 
     // Setup S3 asset container for testing
     Storage::fake('s3');
@@ -33,7 +48,7 @@ describe('saveMediaItemAsEntry', function () {
     it('creates a new media item entry from subsplash data', function () {
         $mediaItem = createMediaItemData();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry)->not->toBeNull()
             ->and($entry->collection()->handle())->toBe('media_item')
@@ -64,7 +79,7 @@ describe('saveMediaItemAsEntry', function () {
             ])
             ->save();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->id())->toBe('test-media-item-123')
             ->and($entry->get('title'))->toBe('Test Media Item')
@@ -98,7 +113,7 @@ describe('saveMediaItemAsEntry', function () {
             $callbackAction = $action;
         };
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, false, $callback);
+        $entry = $this->importer->import($mediaItem, false, false, $callback);
 
         expect($callbackCalled)->toBeTrue()
             ->and($callbackAction)->toBe('skipped')
@@ -129,7 +144,7 @@ describe('saveMediaItemAsEntry', function () {
             $callbackCalled = true;
         };
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, true, $callback);
+        $entry = $this->importer->import($mediaItem, false, true, $callback);
 
         // Callback should NOT be called since we're forcing the import
         expect($callbackCalled)->toBeFalse()
@@ -153,7 +168,7 @@ describe('saveMediaItemAsEntry', function () {
             ])
             ->save();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->id())->toBe('custom-123')
             ->and($entry->blueprint()->handle())->toBe('custom_media_item')
@@ -163,7 +178,7 @@ describe('saveMediaItemAsEntry', function () {
     it('processes and saves subsplash fields correctly', function () {
         $mediaItem = createMediaItemData();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->get('title_subsplash'))->toBe('Test Media Item')
             ->and($entry->get('subtitle_subsplash'))->toBe('A subtitle')
@@ -184,7 +199,7 @@ describe('saveMediaItemAsEntry', function () {
             'https://images.subsplash.com/*' => Http::response('fake-image-content', 200),
         ]);
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         $images = $entry->get('images_subsplash');
 
@@ -198,7 +213,7 @@ describe('saveMediaItemAsEntry', function () {
         $mediaItem = createMediaItemData();
         $mediaItem['tags'] = ['topic:Faith', 'topic:Prayer', 'other-tag'];
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         $topicIds = $entry->get('topics_subsplash');
 
@@ -241,7 +256,7 @@ describe('saveMediaItemAsEntry', function () {
             'id' => 'series-123',
         ];
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->get('series'))->toBe('entry::series-123');
     });
@@ -249,7 +264,7 @@ describe('saveMediaItemAsEntry', function () {
     it('generates unique slug for new entries', function () {
         $mediaItem = createMediaItemData();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->slug())->toBe('test-media-item');
     });
@@ -271,7 +286,7 @@ describe('saveMediaItemAsEntry', function () {
             ])
             ->save();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, true);
+        $entry = $this->importer->import($mediaItem, true);
 
         expect($entry->slug())->toBe('updated-title');
     });
@@ -296,7 +311,7 @@ describe('saveMediaItemAsEntry', function () {
             ])
             ->save();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         // Main fields should NOT be updated
         expect($entry->get('title'))->toBe('Custom Title')
@@ -330,7 +345,7 @@ describe('saveMediaItemAsEntry', function () {
             $callbackCalls[] = $args;
         };
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem, false, false, $callback);
+        $entry = $this->importer->import($mediaItem, false, false, $callback);
 
         expect($callbackCalls)->toHaveCount(1)
             ->and($callbackCalls[0][0])->toBe('skipped')
@@ -369,7 +384,7 @@ describe('saveMediaItemAsEntry', function () {
             'id' => 'series-456',
         ];
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->get('media_type'))->toBe(['podcast-episode'])
             ->and($entry->get('series'))->toBe('entry::series-456');
@@ -382,7 +397,7 @@ describe('saveMediaItemAsEntry', function () {
         $mediaItem = createMediaItemData();
         $mediaItem['updated_at'] = '2024-01-15T10:30:00Z';
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         $lastImported = $entry->get('last_imported');
         $lastUpdated = $entry->get('last_updated');
@@ -406,7 +421,7 @@ describe('saveMediaItemAsEntry', function () {
             '_embedded' => [],
         ];
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry)->not->toBeNull()
             ->and($entry->get('title'))->toBe('Minimal Item')
@@ -431,7 +446,7 @@ describe('saveMediaItemAsEntry', function () {
 
         $mediaItem = createMediaItemData();
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         // Should update the existing entry, not create a new one
         expect($entry->id())->toBe('different-id-456')
@@ -442,7 +457,7 @@ describe('saveMediaItemAsEntry', function () {
         $mediaItem = createMediaItemData();
         // Default already has 2730000 milliseconds (45:30)
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->get('duration_subsplash'))->toBe('00:45:30');
     });
@@ -456,7 +471,7 @@ describe('saveMediaItemAsEntry', function () {
         // Set audio duration (in milliseconds: 1800000 ms = 30 minutes)
         $mediaItem['_embedded']['audio']['_embedded']['audio-outputs'][0]['duration'] = 1800000;
 
-        $entry = $this->subsplashService->saveMediaItemAsEntry($mediaItem);
+        $entry = $this->importer->import($mediaItem);
 
         expect($entry->get('duration_subsplash'))->toBe('00:30:00');
     });

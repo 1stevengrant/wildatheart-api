@@ -16,11 +16,11 @@ class EventType extends BaseModel
 {
     use HasFactory, HasRunwayResource, LogsActivity;
 
-    protected $guarded = ['id'];
-
     public const string WAH_RETREAT = 'Wild at Heart Retreat';
 
-    public const string CAPTIVATING_CORE_RETREAT = 'Captivating Retreat';
+    public const string CAPTIVATING_CORE_RETREAT = '4-Day Captivating Retreat';
+
+    public const string CAPTIVATING_CORE_RETREAT_1_DAY = '1-Day Captivating Retreat';
 
     public const string BECOMING_A_KING = 'Becoming A King Retreat';
 
@@ -42,7 +42,7 @@ class EventType extends BaseModel
 
     public const string TYPE_FIRE = 'fire';
 
-    public static function boot(): void
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -56,7 +56,6 @@ class EventType extends BaseModel
             $cacheKeys->each(function ($key) {
                 cache()->forget($key);
             });
-
         });
     }
 
@@ -74,6 +73,10 @@ class EventType extends BaseModel
             'new_image' => 'string',
             'summary' => 'string',
             'summary_link' => 'string',
+            'welcome_nav_text_override' => 'string',
+            'before_event_nav_text_override' => 'string',
+            'schedule_nav_text_override' => 'string',
+            'faq_nav_text_override' => 'string',
             'type' => EventTypeEnum::class,
         ];
     }
@@ -122,36 +125,10 @@ class EventType extends BaseModel
     {
         return Attribute::make(
             get: function (): ?int {
-                // these magic numbers are the tag ids in WeGive environments
-                // found at https://dashboard.wegive.com/data/tags/
+                $environment = app()->isProduction() ? 'production' : 'staging';
+                $mappings = config("services.wegive.event_type_tags.{$environment}", []);
 
-                if (app()->isProduction()) {
-                    $eventTypeMappings = [
-                        self::FIRES => 239,
-                        self::CAPTIVATING_FIRE => 240,
-                        self::WAH_EXPERIENCE => 241,
-                        self::WAH_RETREAT => 242,
-                        self::SURVIVAL_SCHOOL => 243,
-                        self::BECOMING_A_KING_EXPERIENCE => 244,
-                        self::BECOMING_A_KING => 245,
-                        self::CAPTIVATING_EXPERIENCE => 246,
-                        self::CAPTIVATING_CORE_RETREAT => 247,
-                    ];
-                } else {
-                    $eventTypeMappings = [
-                        self::FIRES => 281,
-                        self::WAH_EXPERIENCE => 282,
-                        self::WAH_RETREAT => 283,
-                        self::SURVIVAL_SCHOOL => 284,
-                        self::BECOMING_A_KING_EXPERIENCE => 285,
-                        self::BECOMING_A_KING => 286,
-                        self::CAPTIVATING_EXPERIENCE => 287,
-                        self::CAPTIVATING_CORE_RETREAT => 288,
-                        self::CAPTIVATING_FIRE => 289,
-                    ];
-                }
-
-                return $eventTypeMappings[$this->name] ?? null;
+                return $mappings[$this->name] ?? null;
             }
         );
     }

@@ -8,10 +8,26 @@ use App\Services\TransistorService;
  * @covers \App\Http\Controllers\API\V1\Content\DailyReadingController
  */
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     // Mock the TransistorService
     $this->transistorServiceMock = Mockery::mock(TransistorService::class);
     $this->app->instance(TransistorService::class, $this->transistorServiceMock);
+
+    // Create the daily readings JSON file required by the redirect endpoint
+    $jsonPath = storage_path('app/public/dailyreadings.json');
+    if (! is_dir(dirname($jsonPath))) {
+        mkdir(dirname($jsonPath), 0755, true);
+    }
+    file_put_contents($jsonPath, json_encode([
+        ['alias' => '/daily-reading/what-jesus-weeps-over', 'title' => 'What Jesus Weeps Over'],
+        ['alias' => '/daily-reading/his-child-his-reflection', 'title' => 'His Child His Reflection'],
+    ]));
+});
+
+afterEach(function () {
+    $jsonPath = storage_path('app/public/dailyreadings.json');
+    if (file_exists($jsonPath)) {
+        unlink($jsonPath);
+    }
 });
 
 $mockData = [
@@ -219,8 +235,8 @@ it('returns redirects', function () {
         ]);
 
     $responseData = $response->json();
-    expect($responseData['previous_slug'])->toEqual('what-jesus-weeps-over');
-    expect($responseData['current_slug'])->toEqual('what-jesus-weeps-over');
+    expect($responseData['previous_slug'])->toEqual('what-jesus-weeps-over')
+        ->and($responseData['current_slug'])->toEqual('what-jesus-weeps-over');
 });
 
 it('returns redirects using the old slug', function () {
@@ -229,6 +245,6 @@ it('returns redirects using the old slug', function () {
 
     // Assert
     $responseData = $response->json();
-    expect($responseData['current_slug'])->toEqual('his-child-his-reflection');
-    expect($responseData['previous_slug'])->toEqual('his-child-his-reflection');
+    expect($responseData['current_slug'])->toEqual('his-child-his-reflection')
+        ->and($responseData['previous_slug'])->toEqual('his-child-his-reflection');
 });

@@ -2,45 +2,32 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use Statamic\Entries\Entry;
-use Statamic\Facades\Token;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
-use Facades\Statamic\CP\LivePreview;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
-use App\Services\ImageBuilderService;
 use App\DataTypeObjects\MediaItemData;
 use App\Http\Controllers\API\MediaItemDataController;
+use App\Http\Controllers\API\V1\Content\Concerns\ResolvesLivePreview;
 
 class MediaItemEntryController extends Controller
 {
+    use ResolvesLivePreview;
+
+    public function __construct(
+        private readonly EntryBuilderService $entryBuilder,
+        private readonly BlockBuilderService $blockBuilder,
+    ) {}
+
     public function media($slug)
     {
+        $mediaItem = $this->resolveLivePreview();
 
-        // Check for token and live-preview query parameters
-        $request = request();
-        $token = $request->query('token', false);
-        $livePreview = $request->query('live-preview', false);
-
-        // If token is present or live-preview is true, adjust the query to include unpublished and future items
-
-        $mediaItem = null;
-
-        if ($token && $livePreview) {
-            // Skip published and date checks for live preview or token access
-
-            $token = Token::find($token);
-            $mediaItem = LivePreview::item($token);
-        } else {
-
-            $mediaItem = Entry::query()
-                ->where('collection', 'media_item')
-                ->where('slug', $slug)
-                ->where('published', true)
-                ->where(function ($query) {
-                    $query->where('date', '<=', now())
-                        ->orWhere('data->make_scheduled_page_public', true);
-                })
+        if (! $mediaItem) {
+            $mediaItem = EntryQueryBuilder::mediaItems()
+                ->published()
+                ->bySlug($slug)
+                ->visibleOrScheduled()
                 ->first();
         }
 
@@ -53,26 +40,19 @@ class MediaItemEntryController extends Controller
             return app(MediaItemDataController::class)->buildSubsplashMediaItemResponse($mediaItem);
         }
 
-        $entryBuilder = new EntryBuilderService;
+        $response = $this->entryBuilder->buildResponseFromEntry($mediaItem);
 
-        $response = $entryBuilder->buildResponseFromEntry($mediaItem);
-
-        $mediaItemsInSeries = Entry::query()
-            ->where('collection', 'media_item')
-            ->where('data->series', 'like', "%{$mediaItem->series}")
+        $mediaItemsInSeries = EntryQueryBuilder::mediaItems()
+            ->inSeries($mediaItem->series)
             ->get();
 
-        // $mediaItem = $mediaItem->toArray();
         $response['mediaItems'] = $mediaItemsInSeries->toArray();
 
         if (isset($mediaItem->blocks)) {
-            $blockBuilder = new BlockBuilderService;
-            $response['blocks'] = $blockBuilder->build($mediaItem->blocks);
+            $response['blocks'] = $this->blockBuilder->build($mediaItem->blocks);
         }
 
-        $imageBuilder = new ImageBuilderService;
-
-        $response['images'] = $imageBuilder->build($mediaItem->images);
+        $response['images'] = $mediaItem->images;
 
         return MediaItemData::from($response);
     }

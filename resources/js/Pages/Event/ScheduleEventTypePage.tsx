@@ -10,7 +10,6 @@ import { MailingAddressLink } from "@/Components/Links/MailingAddressLink";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { eventTypeHasFaqs } from "@/helpers/eventTypeHasFaqs";
-import { getVimeoId } from "@/helpers/getVimeoId";
 import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
@@ -64,9 +63,7 @@ const ScheduleEventTypePage = () => {
                                                     key={index}
                                                     className={`rounded-2xl`}
                                                     responsive={true}
-                                                    video={getVimeoId(
-                                                        schedule.video_url
-                                                    )}
+                                                    video={schedule.video_url}
                                                 />
                                             );
                                         case "text":

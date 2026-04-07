@@ -1,14 +1,16 @@
 <?php
 
 use App\Models\User;
-
-beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    $this->user = User::factory()->create();
-});
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 it('updates a user profile', function () {
-    $this->actingAs($this->user)
+    Bus::fake();
+    Mail::fake();
+
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
         ->put(route('user.profile'), [
             'family_name' => 'Doe',
             'given_name' => 'John',
@@ -16,9 +18,11 @@ it('updates a user profile', function () {
             'opted_into_marketing' => 1,
         ]);
 
-    expect($this->user->fresh()->family_name)->toBe('Doe')->and(
-        $this->user->fresh()->given_name)->toBe('John')->and(
-            $this->user->fresh()->phone)->toBe('1234567890');
+    $user->refresh();
+
+    expect($user->family_name)->toBe('Doe')
+        ->and($user->given_name)->toBe('John')
+        ->and($user->phone)->toBe('1234567890');
 });
 
 test('only authorised users can make profile updates', function () {

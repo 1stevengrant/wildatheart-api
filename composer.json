@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "wild-at-heart/local",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Wild at Heart Local platform for connecting community members to events worldwide.",
     "keywords": [
         "framework",
         "laravel"
@@ -97,30 +97,40 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,horizon,logs,vite --kill-others"
+            "@dev:types",
+            "npx concurrently -k -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" -n vite,horizon,logs,scheduler --kill-others \"npm run dev\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"php artisan schedule:work\""
         ],
         "pre-update-cmd": [
             "Statamic\\Console\\Composer\\Scripts::preUpdateCmd"
         ],
         "test": [
             "php artisan config:clear",
-            "pest --parallel --processes=8",
+            "pest --parallel --processes=8 --exclude-group=comparison",
             "php artisan test:cleanup-databases --force"
         ],
         "test:sequential": [
             "php artisan config:clear",
-            "pest",
+            "pest --exclude-group=comparison",
             "php artisan test:cleanup-databases --force"
         ],
         "test:fast": [
             "php artisan config:clear",
-            "pest --parallel --processes=8 --no-coverage"
+            "php artisan route:clear",
+            "pest --parallel --processes=8 --no-coverage --exclude-group=comparison"
+        ],
+        "test:comparison": [
+            "php artisan config:clear",
+            "pest --group=comparison"
         ],
         "test:unit": [
             "pest tests/Unit"
         ],
         "test:feature": [
-            "pest tests/Feature --parallel --processes=4"
+            "pest tests/Feature --parallel --processes=4 --exclude-group=comparison"
+        ],
+        "dev:types": [
+            "@php artisan statamic:generate-types --skip-pint",
+            "@php artisan typescript:transform"
         ],
         "dev": [
             "@dev:types",

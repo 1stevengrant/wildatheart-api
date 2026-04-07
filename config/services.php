@@ -49,6 +49,7 @@ return [
     ],
 
     'subsplash' => [
+        'base_url' => env('SUBSPLASH_BASE_URL', 'https://core.subsplash.com'),
         'client_id' => env('SUBSPLASH_CLIENT_ID'),
         'client_secret' => env('SUBSPLASH_CLIENT_SECRET'),
         'scope' => env('SUBSPLASH_SCOPE'),
@@ -68,6 +69,33 @@ return [
         'attendee_tag_id' => env('WEGIVE_ATTENDEE_TAG_ID', 330),
         // Weekly email & updates list at https://dashboard.wegive.com/engagement/communication-lists
         'marketing_list_id' => env('WEGIVE_MARKETING_LIST_ID', 'xxx'),
+        // Event type tag IDs found at https://dashboard.wegive.com/data/tags/
+        'event_type_tags' => [
+            'production' => [
+                'Fires' => 239,
+                'Captivating Fires' => 240,
+                'Wild at Heart Experience' => 241,
+                'Wild at Heart Retreat' => 242,
+                'Survival School' => 243,
+                'Becoming A King Experience' => 244,
+                'Becoming A King Retreat' => 245,
+                'Captivating Experience' => 246,
+                'Captivating Retreat' => 247,
+                '1-Day Captivating Retreat' => 854,
+            ],
+            'staging' => [
+                'Fires' => 281,
+                'Wild at Heart Experience' => 282,
+                'Wild at Heart Retreat' => 283,
+                'Survival School' => 284,
+                'Becoming A King Experience' => 285,
+                'Becoming A King Retreat' => 286,
+                'Captivating Experience' => 287,
+                'Captivating Retreat' => 288,
+                'Captivating Fires' => 289,
+                '1-Day Captivating Retreat' => 855,
+            ],
+        ],
     ],
 
 ];

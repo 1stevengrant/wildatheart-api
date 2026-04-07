@@ -2,11 +2,13 @@
 
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Queue;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->event = \App\Models\Event::factory()->fires()->create();
 
     $this->addressData = [
@@ -42,7 +44,6 @@ it('marks the gift as requested', function () {
 });
 
 it('sends mail notification to admin about the request', function () {
-    Mail::fake();
     $this->actingAs($this->event->user)
         ->post(route('gift.store', $this->event), $this->addressData);
 
@@ -50,10 +51,8 @@ it('sends mail notification to admin about the request', function () {
 });
 
 it('updates zapier about the request', function () {
-    Queue::fake();
     $this->actingAs($this->event->user)
         ->post(route('gift.store', $this->event), $this->addressData);
 
-    Queue::assertPushed(PostToZapier::class);
-
+    Bus::assertDispatched(PostToZapier::class);
 });

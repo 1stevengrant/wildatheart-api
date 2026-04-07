@@ -1,9 +1,13 @@
 <?php
 
 use App\Models\EventType;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->user = \App\Models\User::factory()->create();
     $this->actingAs($this->user);
 });

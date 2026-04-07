@@ -2,10 +2,13 @@
 
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->approvedEvent = \App\Models\Event::factory()->approved()->fires()->create();
     $this->notApprovedEvent = \App\Models\Event::factory()->fires()->create();
 });

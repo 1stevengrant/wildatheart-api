@@ -1,15 +1,19 @@
 <?php
 
 use App\Actions\User\CreateUser;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
+
 it('creates a new user', function () {
     $userAttributes = [
         'given_name' => 'John',
         'family_name' => 'Doe',
-        'email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
         'password' => 'password',
     ];
 
@@ -19,5 +23,5 @@ it('creates a new user', function () {
         'id' => $user->id,
         'given_name' => 'John',
         'family_name' => 'Doe',
-        'email' => 'steven@ghijk.co.uk']);
+        'email' => 'steven@example.com']);
 });

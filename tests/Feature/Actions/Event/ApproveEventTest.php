@@ -2,11 +2,14 @@
 
 use App\Models\Event;
 use App\Actions\Event\ApproveEvent;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    \App\Models\User::factory()->create();
+    Bus::fake();
+    Mail::fake();
 });
+
 it('it approves an event', function () {
     $event = Event::factory()->fires()->create([
         'approved_at' => null,

@@ -5,6 +5,7 @@ namespace App\Services;
 use Statamic\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use App\Builders\EntryQueryBuilder;
 use Statamic\Eloquent\Entries\Entry;
 use App\DataTypeObjects\API\V1\Content\BlogResponse;
 
@@ -27,19 +28,18 @@ class BlogService
 
     public const UNKNOWN_AUTHOR = 'Unknown Author';
 
-    private function getEntryQuery()
+    private function getEntryQuery(): EntryQueryBuilder
     {
-        return Entry::query()->where('collection', 'blogs');
+        return EntryQueryBuilder::blogs();
     }
 
-    private function getAuthorsQuery()
+    private function getAuthorsQuery(): EntryQueryBuilder
     {
-        return Entry::query()->where('collection', 'authors');
+        return EntryQueryBuilder::authors();
     }
 
     public function createBlogResponse(Entry $entry): ?BlogResponse
     {
-
         if (is_array($entry->content)) {
             $plainText = Str::markdown(collect($entry->content)->pluck('text')->implode("\n"));
         } else {

@@ -15,7 +15,7 @@ class ShowCdnUrl extends Fieldtype
      */
     public function preProcess($data)
     {
-        $cdn = new BunnyCDNService;
+        $cdn = app(BunnyCDNService::class);
 
         $asset = $this->field->parent();
         if ($asset) {

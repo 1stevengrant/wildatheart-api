@@ -5,6 +5,7 @@
 <script>
 import { FieldtypeMixin as Fieldtype } from '@statamic/cms';
 
+
 export default {
     mixins: [Fieldtype],
 };

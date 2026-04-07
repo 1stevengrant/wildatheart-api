@@ -1,8 +1,5 @@
 <?php
 
-beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-});
 it('sends the monthly email to a host and updates the timestamps', function () {
     \Illuminate\Support\Facades\Mail::fake();
 

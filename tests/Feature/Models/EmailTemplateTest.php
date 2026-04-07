@@ -2,12 +2,16 @@
 
 use App\Models\User;
 use App\Models\EmailTemplate;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 use function Pest\Laravel\assertDatabaseHas;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
+
 it('returns associated user when lastUpdatedByUser is called', function () {
     $user = User::factory()->create();
     $emailTemplate = EmailTemplate::factory()->create(['last_updated_by' => $user->id]);

@@ -3,52 +3,38 @@
 namespace App\Http\Controllers\API\V1\Content;
 
 use Statamic\Entries\Entry;
-use Statamic\Facades\Token;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
-use Facades\Statamic\CP\LivePreview;
 use App\Services\EntryBuilderService;
 use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
+use App\Http\Controllers\API\V1\Content\Concerns\ResolvesLivePreview;
 
 class EventsEntryController extends Controller
 {
+    use ResolvesLivePreview;
+
+    public function __construct(private readonly EntryBuilderService $entryBuilder) {}
+
     public function index()
     {
-        $events = Entry::query()
-            ->where('collection', 'events')
-            ->where('published', true)
-            ->orderBy('date', 'desc')
+        $events = EntryQueryBuilder::events()
+            ->published()
+            ->recentFirst()
             ->get();
 
-        $eventsResponse = $events->map(function ($event) {
-            return $this->buildEventResponse($event);
-        });
+        $eventsResponse = $events->map($this->buildEventResponse(...));
 
         return EventsShowResponse::collect($eventsResponse);
     }
 
     public function show($slug)
     {
+        $event = $this->resolveLivePreview();
 
-        // Check for token and live-preview query parameters
-        $request = request();
-        $token = $request->query('token', false);
-        $livePreview = $request->query('live-preview', false);
-
-        // If token is present or live-preview is true, adjust the query to include unpublished and future items
-
-        $event = null;
-
-        if ($token && $livePreview) {
-            // Skip published and date checks for live preview or token access
-
-            $token = Token::find($token);
-            $event = LivePreview::item($token);
-        } else {
-
-            $event = Entry::query()
-                ->where('collection', 'events')
-                ->where('slug', $slug)
-                ->where('published', true)
+        if (! $event) {
+            $event = EntryQueryBuilder::events()
+                ->published()
+                ->bySlug($slug)
                 ->where(function ($query) {
                     $query->where('date', '<=', now())
                         ->orWhere('data->show_in_collections', true);
@@ -68,15 +54,13 @@ class EventsEntryController extends Controller
 
     public function buildEventResponse(Entry $event)
     {
-        $entryBuilder = new EntryBuilderService;
+        $response = $this->entryBuilder->buildResponseFromEntry($event->blueprint->handle === 'video_study' ? $event->related_content : $event);
 
-        $response = $entryBuilder->buildResponseFromEntry($event->blueprint->handle === 'video_study' ? $event->related_content : $event);
-
-        if (isset($response['background_video_url'])) {
+        if (isset($response['background_video_url']) && is_array($response['background_video_url'])) {
             $response['background_video_url'] = $response['background_video_url']['url'];
         }
 
-        if (isset($response['featured_video_url']) && $response['featured_video_url']) {
+        if (isset($response['featured_video_url']) && is_array($response['featured_video_url'])) {
             $response['featured_video_url'] = $response['featured_video_url']['url'];
         }
 

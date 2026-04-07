@@ -1,11 +1,18 @@
 <?php
 
-use Database\Seeders\DatabaseSeeder;
+use App\Models\Event;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\Event\IncreaseEventCountsJob;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
-    $this->event = \App\Models\Event::factory()->fires()->approved()->create();
+    Bus::fake()->except(IncreaseEventCountsJob::class);
+    Mail::fake();
+
+    $this->event = Event::factory()->fires()->approved()->create();
 });
+
 it('queues the job to increase event counts', function () {
     Queue::fake();
 
@@ -13,11 +20,10 @@ it('queues the job to increase event counts', function () {
 
     expect($response->status())->toBe(200);
 
-    Queue::assertPushed(\App\Jobs\Event\IncreaseEventCountsJob::class);
+    Queue::assertPushed(IncreaseEventCountsJob::class);
 });
 
 it('increases the view count for the event', function () {
-
     $this->get(route('view.event', $this->event));
 
     expect($this->event->refresh()->view_count)->toBe(1);

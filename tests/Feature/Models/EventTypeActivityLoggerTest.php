@@ -5,11 +5,13 @@ use App\Models\EventType;
 
 use function Pest\Laravel\actingAs;
 
-use Database\Seeders\DatabaseSeeder;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Activitylog\Models\Activity;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
 
 it('logs activity when creating an event type', function () {
@@ -59,7 +61,6 @@ it('logs activity when updating an event type', function () {
 });
 
 it('does not log activity when no attributes have changed', function () {
-    \Illuminate\Support\Facades\Queue::fake();
     $user = User::factory()->create();
     $eventType = EventType::factory()->create(['name' => 'Test Event']);
 
@@ -71,7 +72,6 @@ it('does not log activity when no attributes have changed', function () {
 });
 
 it('logs system changes when no user is authenticated', function () {
-    \Illuminate\Support\Facades\Queue::fake();
     $eventType = EventType::create([
         'name' => 'System Created Event',
     ]);

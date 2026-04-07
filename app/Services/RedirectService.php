@@ -125,12 +125,7 @@ class RedirectService
     {
         $redirect = new RedirectData($source, $destination);
         $putRequest = new PutRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirect);
-        $response = $this->cloudflare->send($putRequest);
-        $body = $response->object();
-
-        if (! $body->success) {
-            throw new Exception(json_encode($body->errors));
-        }
+        $this->sendAndValidate($putRequest);
     }
 
     /**
@@ -144,14 +139,8 @@ class RedirectService
     public function createBulkInCloudflare(array $redirects): mixed
     {
         $putBulkRequest = new PutRequestBulk($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirects);
-        $response = $this->cloudflare->send($putBulkRequest);
-        $body = $response->object();
 
-        if (! $body->success) {
-            throw new Exception(json_encode($body->errors));
-        }
-
-        return $body;
+        return $this->sendAndValidate($putBulkRequest);
     }
 
     /**
@@ -163,10 +152,21 @@ class RedirectService
     public function deleteFromCloudflare(string $source): void
     {
         $deleteRequest = new DeleteRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, urlencode($source));
-        $response = $this->cloudflare->send($deleteRequest);
+        $this->sendAndValidate($deleteRequest);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function sendAndValidate(object $request): object
+    {
+        $response = $this->cloudflare->send($request);
         $body = $response->object();
+
         if (! $body->success) {
             throw new Exception(json_encode($body->errors));
         }
+
+        return $body;
     }
 }

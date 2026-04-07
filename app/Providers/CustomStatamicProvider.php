@@ -3,14 +3,14 @@
 namespace App\Providers;
 
 use Statamic\Statamic;
-use Statamic\Facades\Entry;
 use Statamic\Events\EntrySaved;
 use Statamic\Facades\Collection;
 use Statamic\Events\AssetUploaded;
+use App\Builders\EntryQueryBuilder;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
+use App\Jobs\Cloudflare\TriggerAstroBuildJob;
 use Illuminate\Support\Facades\Event as LaravelEvent;
-use Ghijk\WildAtHeart\Http\Controllers\Actions\TriggerAstroBuildController;
 
 class CustomStatamicProvider extends ServiceProvider
 {
@@ -34,22 +34,18 @@ class CustomStatamicProvider extends ServiceProvider
         });
 
         LaravelEvent::listen(function (EntrySaved $event): void {
-
             if ($event->entry->collection->handle === 'prayers') {
-
-                app(TriggerAstroBuildController::class)();
+                TriggerAstroBuildJob::dispatch();
             }
         });
 
         Collection::computed('media_item', 'custom_url', function ($entry, $value) {
-
             /**
              * Experience Sessions are presented sequentially in this format:
              * /experience/{EXPERIENCE_SLUG}/session-{POSITION_OF_ITEM_IN_EXPERIENCE}
              */
             if ($entry->blueprint->handle === 'experience_session') {
-                $experience = Entry::query()
-                    ->where('collection', 'experiences')
+                $experience = EntryQueryBuilder::experiences()
                     ->where(function ($query) use ($entry) {
                         $query->whereJsonContains('data->sessions', $entry->id);
                     })
@@ -66,12 +62,10 @@ class CustomStatamicProvider extends ServiceProvider
             }
 
             if ($entry->series) {
-
                 $series = $entry->series->value();
 
                 if ($series) {
-                    $podcast = Entry::query()
-                        ->where('collection', 'podcasts')
+                    $podcast = EntryQueryBuilder::podcasts()
                         ->where('data->subsplash_series_id', $series->id)
                         ->first();
 
@@ -84,25 +78,17 @@ class CustomStatamicProvider extends ServiceProvider
                 }
             }
 
-            return 'media' . '/' . $entry->slug();
+            return "media/{$entry->slug()}";
         });
 
         Collection::computed('blogs', 'blog_url', function ($entry, $value) {
-
             if ($entry->author) {
+                $authorSlug = explode('-', $entry->author->slug)[0];
 
-                $author = $entry->author;
-                if ($author) {
-                    // Most contributor slugs are using firstname-lastname slug
-                    // and we only need the first name for now.
-                    $authorSlug = explode('-', $author->slug)[0];
-
-                    return 'blogs/' . $authorSlug . '/' . $entry->slug;
-                }
+                return "blogs/{$authorSlug}/{$entry->slug}";
             }
 
-            // If there is no author, we will use the slug as is.
-            return 'blogs/' . $entry->slug;
+            return "blogs/{$entry->slug}";
         });
         Collection::computed('prayers', 'site_url', function ($entry, $value) {
             return mb_trim(config('app.frontend_url'), '/');
