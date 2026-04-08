@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Ai\Middleware\EnsureToolInputIsObject;
 use App\Services\Subsplash\SubsplashApiClient;
 use App\Services\Subsplash\SubsplashMediaItemImporter;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -41,6 +42,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        EnsureToolInputIsObject::register();
+
         Model::preventLazyLoading(! app()->isProduction());
 
         Event::saving(function (Event $event): void {

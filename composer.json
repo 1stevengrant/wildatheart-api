@@ -19,6 +19,7 @@
         "inertiajs/inertia-laravel": "^2.0",
         "jacksleight/statamic-bard-texstyle": "^4.0",
         "ksubileau/color-thief-php": "^2.0",
+        "laravel/ai": "^0.4.4",
         "laravel/framework": "^12.0",
         "laravel/horizon": "^5.29",
         "laravel/nightwatch": "^1.7",
@@ -133,12 +134,9 @@
             "@php artisan typescript:transform"
         ],
         "dev": [
+            "Composer\\Config::disableProcessTimeout",
             "@dev:types",
-            "npx concurrently -k -n vite,horizon,scheduler -c cyan,magenta,yellow \"npm run dev\" \"php artisan horizon\" \"php artisan schedule:work\""
-        ],
-        "dev:types": [
-            "@php artisan statamic:generate-types --skip-pint",
-            "@php artisan typescript:transform"
+            "npx concurrently -k -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" -n vite,horizon,logs,scheduler --kill-others \"npm run dev\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"php artisan schedule:work\""
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
