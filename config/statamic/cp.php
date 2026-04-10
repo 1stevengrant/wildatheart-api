@@ -128,6 +128,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Authentication
+    |--------------------------------------------------------------------------
+    |
+    | By default, the CP login form is available. Setting enabled to false
+    | will disable the login form and redirect unauthenticated users
+    | to the specified URL, or return a 401 if no redirect is set.
+    |
+    */
+
+    'auth' => [
+        'enabled' => false,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Thumbnails
     |--------------------------------------------------------------------------
     |
