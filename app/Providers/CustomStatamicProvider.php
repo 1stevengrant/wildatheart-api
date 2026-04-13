@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Statamic\Statamic;
+use Illuminate\Http\Request;
 use Statamic\Events\EntrySaved;
 use Statamic\Facades\Collection;
 use Statamic\Events\AssetUploaded;
@@ -98,9 +99,29 @@ class CustomStatamicProvider extends ServiceProvider
             return mb_trim(config('app.frontend_url'), '/');
         });
 
+        $this->overrideElevatedSessionMacro();
+
         Statamic::vite('app', [
             'resources/js/cp.js',
             'resources/css/cp.css',
         ]);
+    }
+
+    /**
+     * Override Statamic's hasElevatedSession macro to bypass elevated session
+     * checks when disabled via config. This covers both the RequireElevatedSession
+     * middleware and CpController::requireElevatedSession().
+     *
+     * @see https://github.com/statamic/cms/pull/14464
+     */
+    private function overrideElevatedSessionMacro(): void
+    {
+        if (config('statamic.users.elevated_sessions_enabled', true)) {
+            return;
+        }
+
+        Request::macro('hasElevatedSession', function () {
+            return true;
+        });
     }
 }

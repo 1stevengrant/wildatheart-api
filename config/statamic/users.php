@@ -128,7 +128,7 @@ return [
     'tables' => [
         'users' => 'users',
         'role_user' => 'role_user',
-        'roles' => false,
+        'roles' => 'statamic_roles',
         'group_user' => 'group_user',
         'groups' => false,
     ],
@@ -160,7 +160,7 @@ return [
     */
 
     'impersonate' => [
-        'enabled' => env('STATAMIC_IMPERSONATE_ENABLED', true),
+        'enabled' => env('STATAMIC_IMPERSONATE_ENABLED', false),
         'redirect' => env('STATAMIC_IMPERSONATE_REDIRECT', null),
     ],
 
@@ -175,4 +175,18 @@ return [
 
     'sort_field' => 'email',
     'sort_direction' => 'asc',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Elevated Sessions Enabled
+    |--------------------------------------------------------------------------
+    |
+    | Users may be required to reauthorize before performing certain
+    | sensitive actions. Disabling can be useful when using OAuth
+    | providers like Auth0 where password re-confirmation is not
+    | applicable.
+    |
+    */
+
+    'elevated_sessions_enabled' => false,
 ];
