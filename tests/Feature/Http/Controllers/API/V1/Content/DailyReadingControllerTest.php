@@ -12,8 +12,12 @@ beforeEach(function () {
     $this->transistorServiceMock = Mockery::mock(TransistorService::class);
     $this->app->instance(TransistorService::class, $this->transistorServiceMock);
 
-    // Create the daily readings JSON file required by the redirect endpoint
+    // Back up the existing file and write test fixture data
     $jsonPath = storage_path('app/public/dailyreadings.json');
+    $this->dailyReadingsExisted = file_exists($jsonPath);
+    if ($this->dailyReadingsExisted) {
+        $this->dailyReadingsBackup = file_get_contents($jsonPath);
+    }
     if (! is_dir(dirname($jsonPath))) {
         mkdir(dirname($jsonPath), 0755, true);
     }
@@ -25,7 +29,9 @@ beforeEach(function () {
 
 afterEach(function () {
     $jsonPath = storage_path('app/public/dailyreadings.json');
-    if (file_exists($jsonPath)) {
+    if ($this->dailyReadingsExisted) {
+        file_put_contents($jsonPath, $this->dailyReadingsBackup);
+    } elseif (file_exists($jsonPath)) {
         unlink($jsonPath);
     }
 });
