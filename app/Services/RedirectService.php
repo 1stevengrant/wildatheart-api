@@ -21,8 +21,8 @@ class RedirectService
         public string $cloudflareAccountId = '',
         public string $cloudflareNamespaceID = ''
     ) {
-        $this->cloudflareAccountId = $cloudflareAccountId ?: config('cloudflare.account_id');
-        $this->cloudflareNamespaceID = $cloudflareNamespaceID ?: config('cloudflare.kv_redirects_id');
+        $this->cloudflareAccountId = $cloudflareAccountId ?: config('cloudflare.account_id') || '';
+        $this->cloudflareNamespaceID = $cloudflareNamespaceID ?: config('cloudflare.kv_redirects_id') || '';
     }
 
     /**
@@ -94,7 +94,7 @@ class RedirectService
         $unsuccessfulKeys = $body->result->unsuccessful_keys;
 
         $successfulRedirects = collect($redirects)
-            ->filter(fn ($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
+            ->filter(fn($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
             ->toArray();
 
         Redirect::upsert(
