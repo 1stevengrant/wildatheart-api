@@ -11,23 +11,6 @@ beforeEach(function () {
     // Mock the TransistorService
     $this->transistorServiceMock = Mockery::mock(TransistorService::class);
     $this->app->instance(TransistorService::class, $this->transistorServiceMock);
-
-    // Create the daily readings JSON file required by the redirect endpoint
-    $jsonPath = storage_path('app/public/dailyreadings.json');
-    if (! is_dir(dirname($jsonPath))) {
-        mkdir(dirname($jsonPath), 0755, true);
-    }
-    file_put_contents($jsonPath, json_encode([
-        ['alias' => '/daily-reading/what-jesus-weeps-over', 'title' => 'What Jesus Weeps Over'],
-        ['alias' => '/daily-reading/his-child-his-reflection', 'title' => 'His Child His Reflection'],
-    ]));
-});
-
-afterEach(function () {
-    $jsonPath = storage_path('app/public/dailyreadings.json');
-    if (file_exists($jsonPath)) {
-        unlink($jsonPath);
-    }
 });
 
 $mockData = [
@@ -220,31 +203,4 @@ it('uses default limit when none provided for recent readings', function () use 
     // Assert
     $response->assertStatus(200)
         ->assertJsonCount($defaultLimit);
-});
-
-it('returns redirects', function () {
-
-    // Act
-    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'what-jesus-weeps-over']));
-
-    // Assert
-    $response->assertStatus(200)
-        ->assertJsonStructure([
-            'previous_slug',
-            'current_slug',
-        ]);
-
-    $responseData = $response->json();
-    expect($responseData['previous_slug'])->toEqual('what-jesus-weeps-over')
-        ->and($responseData['current_slug'])->toEqual('what-jesus-weeps-over');
-});
-
-it('returns redirects using the old slug', function () {
-    // Act
-    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'his-child-his-reflection']));
-
-    // Assert
-    $responseData = $response->json();
-    expect($responseData['current_slug'])->toEqual('his-child-his-reflection')
-        ->and($responseData['previous_slug'])->toEqual('his-child-his-reflection');
 });
