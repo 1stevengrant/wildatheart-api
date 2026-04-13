@@ -12,7 +12,6 @@
  * Usage: php artisan test --group=production-parity
  */
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 const PRODUCTION_API_BASE = 'https://local.wildatheart.org/api';
@@ -82,19 +81,8 @@ beforeAll(function () {
         }
     }
 
-    ProductionParityState::$responses = $productionResponses;
+    Tests\ProductionParityTestCase::$productionResponses = $productionResponses;
 });
-
-beforeEach(function () {
-    config(['database.connections.mysql.database' => 'wahlocal']);
-    DB::purge('mysql');
-    DB::reconnect('mysql');
-});
-
-class ProductionParityState
-{
-    public static array $responses = [];
-}
 
 function extractErrorFromResponse(\Illuminate\Testing\TestResponse $response): string
 {
@@ -109,14 +97,14 @@ function extractErrorFromResponse(\Illuminate\Testing\TestResponse $response): s
 }
 
 it('matches production response for {endpoint}', function (string $path) {
-    $production = ProductionParityState::$responses[$path] ?? null;
+    $production = Tests\ProductionParityTestCase::$productionResponses[$path] ?? null;
 
     if (! $production || ! $production['reachable']) {
         $error = $production['error'] ?? 'No response cached';
         $this->markTestSkipped("Production unreachable: {$error}");
     }
 
-    $local = $this->get("/api/{$path}", ['Accept' => 'application/json']);
+    $local = $this->get("/api/$path", ['Accept' => 'application/json']);
 
     // 1. Status code parity
     $errorDetail = $local->getStatusCode() >= 500
@@ -125,7 +113,7 @@ it('matches production response for {endpoint}', function (string $path) {
 
     expect($local->getStatusCode())->toBe(
         $production['status'],
-        "Status mismatch for /api/{$path}: production={$production['status']}, local={$local->getStatusCode()}{$errorDetail}"
+        "Status mismatch for /api/$path: production={$production['status']}, local={$local->getStatusCode()}$errorDetail"
     );
 
     if ($production['status'] !== 200 || $local->getStatusCode() !== 200) {
@@ -144,7 +132,7 @@ it('matches production response for {endpoint}', function (string $path) {
     if (! is_array($prodBody) || ! is_array($localBody)) {
         expect(gettype($localBody))->toBe(
             gettype($prodBody),
-            "Response type mismatch for /api/{$path}"
+            "Response type mismatch for /api/$path"
         );
 
         return;
@@ -156,7 +144,7 @@ it('matches production response for {endpoint}', function (string $path) {
     // 2. Response shape parity (list vs object)
     expect($localIsList)->toBe(
         $prodIsList,
-        "Shape mismatch for /api/{$path}: production=" . ($prodIsList ? 'list' : 'object') .
+        "Shape mismatch for /api/$path: production=" . ($prodIsList ? 'list' : 'object') .
         ', local=' . ($localIsList ? 'list' : 'object')
     );
 
@@ -169,7 +157,7 @@ it('matches production response for {endpoint}', function (string $path) {
 
         expect($localKeys)->toBe(
             $prodKeys,
-            "Top-level keys mismatch for /api/{$path}\nProduction: " . implode(', ', $prodKeys) .
+            "Top-level keys mismatch for /api/$path\nProduction: " . implode(', ', $prodKeys) .
             "\nLocal: " . implode(', ', $localKeys)
         );
     }
@@ -188,11 +176,11 @@ it('matches production response for {endpoint}', function (string $path) {
 
             expect($localItemKeys)->toBe(
                 $prodItemKeys,
-                "Item keys mismatch for /api/{$path}\nProduction: " . implode(', ', $prodItemKeys) .
+                "Item keys mismatch for /api/$path\nProduction: " . implode(', ', $prodItemKeys) .
                 "\nLocal: " . implode(', ', $localItemKeys)
             );
         }
     }
 })->with(
-    collect(PARITY_ENDPOINTS)->mapWithKeys(fn ($path) => ["GET /api/{$path}" => [$path]])->all()
+    collect(PARITY_ENDPOINTS)->mapWithKeys(fn ($path) => ["GET /api/$path" => [$path]])->all()
 )->group('production-parity');
