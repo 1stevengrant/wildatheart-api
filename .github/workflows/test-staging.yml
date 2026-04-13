@@ -82,25 +82,28 @@ jobs:
           path: astro
           ref: develop
           token: ${{ secrets.PAT_TOKEN }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+          cache: pnpm
+          cache-dependency-path: astro/pnpm-lock.yaml
       - name: Install deps from wildatheart.org-astro
         working-directory: astro
-        run: |
-          npm install
-          npm ci
+        run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
         working-directory: astro
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
       - name: Run Integration Tests On Astro in CF pointed at local-staging
         working-directory: astro
-        run: npx playwright test
+        run: pnpm exec playwright test
       - name: Start application
         working-directory: astro
         run: |
-          npm run build
-          npm run start &
+          pnpm run build
+          pnpm run start &
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.ASTRO_SENTRY_AUTH_TOKEN }}
           TRANSISTOR_API_KEY: ${{ secrets.TRANSISTOR_API_KEY }}
@@ -120,7 +123,7 @@ jobs:
           NODE_ENV: development
       - name: Run Integration Tests Through A Fresh Build
         working-directory: astro
-        run: BASE_URL=http://localhost:4321 npx playwright test
+        run: BASE_URL=http://localhost:4321 pnpm exec playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
