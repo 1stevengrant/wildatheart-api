@@ -187,13 +187,7 @@ Returns the daily reading content from the Transistor.fm API.
 
 Returns the most recent daily reading content.
 
-#### Daily Reading Redirect
-
--   URL: `/api/content/v1/daily-reading/redirect/{slug}`
--   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@redirect`
-
-Redirects the user to the correct daily reading content based on the slug.
+Legacy daily-reading URL aliases are handled by site redirects (Cloudflare KV), synced from `dailyreadings.json` via `php artisan redirects:sync-daily-reading-aliases` (run after updating that file).
 
 ### Pages
 
