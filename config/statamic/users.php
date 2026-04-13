@@ -128,7 +128,7 @@ return [
     'tables' => [
         'users' => 'users',
         'role_user' => 'role_user',
-        'roles' => false,
+        'roles' => 'statamic_roles',
         'group_user' => 'group_user',
         'groups' => false,
     ],
@@ -160,7 +160,7 @@ return [
     */
 
     'impersonate' => [
-        'enabled' => env('STATAMIC_IMPERSONATE_ENABLED', true),
+        'enabled' => env('STATAMIC_IMPERSONATE_ENABLED', false),
         'redirect' => env('STATAMIC_IMPERSONATE_REDIRECT', null),
     ],
 

@@ -87,8 +87,9 @@ class User extends Authenticatable
             'super' => 'boolean',
             'agreed_to_host_agreement_date' => 'datetime',
             'last_login' => 'datetime',
-            'preferences' => 'array',
+            'preferences' => 'json',
             'profile_step' => 'integer',
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 
