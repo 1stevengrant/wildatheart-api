@@ -132,14 +132,6 @@
             "@php artisan statamic:generate-types --skip-pint",
             "@php artisan typescript:transform"
         ],
-        "dev": [
-            "@dev:types",
-            "npx concurrently -k -n vite,horizon,scheduler -c cyan,magenta,yellow \"npm run dev\" \"php artisan horizon\" \"php artisan schedule:work\""
-        ],
-        "dev:types": [
-            "@php artisan statamic:generate-types --skip-pint",
-            "@php artisan typescript:transform"
-        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
