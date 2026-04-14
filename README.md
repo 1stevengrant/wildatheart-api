@@ -74,7 +74,20 @@ Make sure your server meets the minimum requirements before you start. [Official
 2. Make sure you have a `wahlocal_test` database created.
 3. If you're using Herd, set your PHP memory limit to at least 256M.
 4. Copy `.env.testing.example` to `.env.testing` and fill in the missing variables.
-5. Run the tests with `./vendor/bin/pest`.
+5. Run the tests with `composer test`.
+
+### Test commands
+
+| Command | Description |
+|---|---|
+| `composer test` | Parallel tests (8 processes), excludes comparison tests |
+| `composer test:sequential` | Non-parallel tests, excludes comparison tests |
+| `composer test:fast` | Parallel tests without coverage, excludes comparison tests |
+| `composer test:comparison` | Pre-rollout comparison tests (requires `php artisan db:production-sync`) |
+| `composer test:unit` | Unit tests only |
+| `composer test:feature` | Feature tests only (4 parallel processes) |
+
+Parallel test runs create temporary databases (`wahlocal_test_test_1`, etc.) that are automatically cleaned up after the test suite finishes. If you need to clean them up manually, run `php artisan test:cleanup-databases`.
 
 ## Notes
 

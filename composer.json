@@ -116,7 +116,8 @@
         "test:fast": [
             "php artisan config:clear",
             "php artisan route:clear",
-            "pest --parallel --processes=8 --no-coverage --exclude-group=comparison"
+            "pest --parallel --processes=8 --no-coverage --exclude-group=comparison",
+            "php artisan test:cleanup-databases --force"
         ],
         "test:comparison": [
             "php artisan config:clear",
@@ -126,7 +127,8 @@
             "pest tests/Unit"
         ],
         "test:feature": [
-            "pest tests/Feature --parallel --processes=4 --exclude-group=comparison"
+            "pest tests/Feature --parallel --processes=4 --exclude-group=comparison",
+            "php artisan test:cleanup-databases --force"
         ],
         "dev:types": [
             "@php artisan statamic:generate-types --skip-pint",
