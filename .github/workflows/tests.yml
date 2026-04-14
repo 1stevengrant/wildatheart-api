@@ -40,7 +40,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist
 
       - name: Create parity database
-        run: mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS wahlocal;"
+        run: mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS wahlocal_parity;"
 
       - name: Configure SSH for production sync
         run: |
@@ -65,12 +65,22 @@ jobs:
           DB_PASSWORD: password
 
       - name: Run tests
-        run: pest --parallel --processes=8 --exclude-group=comparison
+        run: pest --parallel --processes=8 --exclude-group=comparison,production-parity
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_DATABASE: wahlocal_test
-          DB_DATABASE_PARITY: wahlocal
+          DB_DATABASE_PARITY: wahlocal_parity
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
+      - name: Run parity tests
+        run: pest --group=production-parity
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: wahlocal_test
+          DB_DATABASE_PARITY: wahlocal_parity
           DB_USERNAME: root
           DB_PASSWORD: password
           REMOTE_USE_SSH: true

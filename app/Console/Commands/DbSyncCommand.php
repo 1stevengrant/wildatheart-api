@@ -100,8 +100,22 @@ class DbSyncCommand extends Command
             // File settings
             'importSqlFile' => config('dbsync.importSqlFile'),
             'removeFileAfterImport' => config('dbsync.removeFileAfterImport'),
-            'fileName' => $this->option('filename') ?? config('dbsync.defaultFileName'),
+            'fileName' => $this->resolveFileName(),
         ];
+    }
+
+    /**
+     * Resolve the SQL dump filename to an absolute path.
+     */
+    private function resolveFileName(): string
+    {
+        $fileName = $this->option('filename') ?? config('dbsync.defaultFileName');
+
+        if (! str_starts_with($fileName, '/')) {
+            $fileName = sys_get_temp_dir() . '/' . $fileName;
+        }
+
+        return $fileName;
     }
 
     /**

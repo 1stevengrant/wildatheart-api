@@ -28,6 +28,7 @@
         <env name="DB_HOST" value="127.0.0.1"/>
         <env name="DB_USERNAME" value="root"/>
         <env name="DB_DATABASE" value="wahlocal_test"/>
+        <env name="DB_DATABASE_PARITY" value="wahlocal_parity"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
