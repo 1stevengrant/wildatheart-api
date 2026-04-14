@@ -36,20 +36,16 @@ jobs:
           extensions: mbstring, mysql, xml, curl
           coverage: none
 
-      - name: Prepare environment
-        run: |
-          cp .env.testing.example .env
-          php artisan key:generate --no-interaction
-          php artisan config:clear
-        env:
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: wahlocal_test
-          DB_USERNAME: root
-          DB_PASSWORD: password
+      - name: Copy environment file
+        run: cp .env.testing.example .env
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
+
+      - name: Prepare environment
+        run: |
+          php artisan key:generate --no-interaction
+          php artisan config:clear
 
       - name: Create parity database
         run: mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS wahlocal_parity;"
