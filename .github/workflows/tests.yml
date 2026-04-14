@@ -67,7 +67,7 @@ jobs:
           DB_PASSWORD: password
 
       - name: Run tests
-        run: pest --parallel --processes=8 --exclude-group=comparison,production-parity
+        run: ./vendor/bin/pest --parallel --processes=8 --exclude-group=comparison,production-parity
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
@@ -77,7 +77,7 @@ jobs:
           DB_PASSWORD: password
 
       - name: Run parity tests
-        run: pest --group=production-parity
+        run: ./vendor/bin/pest --group=production-parity
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
@@ -95,7 +95,7 @@ jobs:
 
       - name: Cleanup test databases
         if: always()
-        run: php artisan test:cleanup-databases --force
+        run: test -f vendor/autoload.php && php artisan test:cleanup-databases --force || true
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
