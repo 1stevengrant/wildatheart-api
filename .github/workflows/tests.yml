@@ -36,6 +36,18 @@ jobs:
           extensions: mbstring, mysql, xml, curl
           coverage: none
 
+      - name: Prepare environment
+        run: |
+          cp .env.testing.example .env
+          php artisan key:generate --no-interaction
+          php artisan config:clear
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: wahlocal_test
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
@@ -48,12 +60,6 @@ jobs:
           echo "${{ secrets.FORGE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.REMOTE_DATABASE_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
-
-      - name: Prepare environment
-        run: |
-          cp .env.testing .env
-          php artisan key:generate
-          php artisan config:clear
 
       - name: Run migrations
         run: php artisan migrate --force
