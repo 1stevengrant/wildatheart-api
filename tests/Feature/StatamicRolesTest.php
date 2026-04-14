@@ -8,7 +8,6 @@ use Statamic\Auth\Eloquent\RoleModel;
 
 beforeEach(function () {
     Queue::fake();
-    $this->withoutVite();
 });
 
 it('allows a user with a statamic role to access the control panel', function () {
