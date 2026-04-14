@@ -252,7 +252,11 @@ class BlockBuilderService
         $recentItems = $query->limit($slide->limit ?? 10)->get();
 
         foreach ($recentItems as $item) {
-            $recentlyAddedSlide->slides[] = $this->createSlideFromEntry($item);
+            $slide = $this->createSlideFromEntry($item);
+
+            if ($slide) {
+                $recentlyAddedSlide->slides[] = $slide;
+            }
         }
 
         return $recentlyAddedSlide;
@@ -263,6 +267,10 @@ class BlockBuilderService
         $slide = SlideBlock::from();
 
         $preview = $this->previewBuilder->build($entry);
+
+        if (! $preview) {
+            return null;
+        }
 
         $slide->id = $preview->id;
         $slide->title = $preview->title;
@@ -320,7 +328,11 @@ class BlockBuilderService
         $recentItems = $query->limit($slide->limit ?? 10)->get();
 
         foreach ($recentItems as $item) {
-            $booksSlide->slides[] = $this->createSlideFromEntry($item);
+            $slide = $this->createSlideFromEntry($item);
+
+            if ($slide) {
+                $booksSlide->slides[] = $slide;
+            }
         }
 
         return $booksSlide;

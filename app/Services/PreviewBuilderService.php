@@ -41,6 +41,8 @@ class PreviewBuilderService
                 return $this->buildCustomMediaItemPreview($entry);
             case 'blog':
                 return $this->buildBlogPreview($entry);
+            default:
+                return $this->buildGenericPreview($entry);
         }
     }
 
@@ -218,6 +220,36 @@ class PreviewBuilderService
         if ($author) {
             $preview->author_name = $author->title;
             $preview->author_image_src = $bunnyCDN->getBunnyCDNUrl($author->image);
+        }
+
+        return $preview;
+    }
+
+    private function buildGenericPreview(Entry $entry): ContentPreview
+    {
+        $preview = new ContentPreview;
+        $bunnyCDN = new BunnyCDNService;
+
+        $preview->id = $entry->id;
+        $preview->title = $entry->title;
+        $preview->uri = $entry->uri;
+        $preview->published_at = $entry->date;
+        $preview->collection = $entry->collection;
+        $preview->blueprint = $entry->blueprint;
+
+        $description = $entry->description ?? $entry->summary ?? null;
+        if ($description && is_string($description)) {
+            $preview->description = strip_tags($description);
+        }
+
+        if ($entry->images && $entry->images->wide) {
+            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->images->wide);
+        } elseif ($entry->images && $entry->images->vertical) {
+            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->images->vertical);
+        } elseif ($entry->background_video_fallback_image) {
+            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->background_video_fallback_image);
+        } elseif ($entry->image) {
+            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->image);
         }
 
         return $preview;
