@@ -2,6 +2,11 @@
 
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Facades\Bus;
+
+beforeEach(function () {
+    Bus::fake();
+});
 
 test('that it sets a user as having agreed to the host agreement by adding a timestamp', function () {
     $user = User::factory()->create();

@@ -6,8 +6,10 @@ test('deployment artisan commands execute without failure', function () {
     // Store original config values
     $originalMaintenanceMode = app()->isDownForMaintenance();
 
+    $redisAvailable = rescue(fn () => app('redis')->connection()->ping(), false, false);
+
     // Array of commands to test
-    $commands = [
+    $commands = array_filter([
         'cache:clear',
         'config:clear',
         'config:cache',
@@ -17,10 +19,10 @@ test('deployment artisan commands execute without failure', function () {
         'event:cache',
         'route:clear',
         'route:cache',
-        'horizon:terminate',
-        'queue:restart',
+        $redisAvailable ? 'horizon:terminate' : null,
+        $redisAvailable ? 'queue:restart' : null,
         'migrate --force',
-    ];
+    ]);
 
     foreach ($commands as $command) {
         try {
