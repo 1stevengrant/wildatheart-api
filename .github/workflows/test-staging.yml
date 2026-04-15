@@ -95,7 +95,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
         working-directory: astro
-        run: pnpm exec playwright install chromium --with-deps
+        run: pnpm exec playwright install chromium webkit --with-deps
       - name: Run Integration Tests On Astro in CF pointed at local-staging
         working-directory: astro
         run: pnpm test:playwright:live
