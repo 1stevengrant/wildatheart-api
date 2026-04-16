@@ -93,6 +93,16 @@ jobs:
       - name: Install deps from wildatheart.org-astro
         working-directory: astro
         run: pnpm install --frozen-lockfile
+      - name: Get Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-ms-playwright-${{ steps.pw.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-ms-playwright-
       - name: Install Playwright Browsers
         working-directory: astro
         run: pnpm exec playwright install chromium webkit --with-deps
