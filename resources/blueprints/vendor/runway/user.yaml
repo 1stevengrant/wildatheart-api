@@ -3,6 +3,7 @@ tabs:
     display: Main
     sections:
       -
+        display: 'Personal Information'
         fields:
           -
             handle: name
@@ -16,11 +17,16 @@ tabs:
             field:
               type: text
               display: 'Given Name'
+              width: 50
           -
             handle: family_name
             field:
               type: text
               display: 'Family Name'
+              width: 50
+      -
+        display: Contact
+        fields:
           -
             handle: email
             field:
@@ -28,48 +34,76 @@ tabs:
               display: Email
               validate: required
               input_type: email
+              width: 50
           -
             handle: phone
             field:
               type: text
               display: Phone
+              width: 50
+  location:
+    display: Location
+    sections:
+      -
+        display: Address
+        fields:
           -
             handle: country_code
             field:
               type: text
               display: 'Country Code'
-          -
-            handle: city
-            field:
-              type: text
-              display: City
-          -
-            handle: state
-            field:
-              type: text
-              display: State
+              width: 50
           -
             handle: postal_code
             field:
               type: text
               display: 'Postal Code'
+              width: 50
           -
-            handle: provider_id
+            handle: city
             field:
               type: text
-              display: 'Provider Id'
-              visibility: read_only
+              display: City
+              width: 50
+          -
+            handle: state
+            field:
+              type: text
+              display: State
+              width: 50
+  account:
+    display: Account
+    sections:
+      -
+        display: Authentication
+        fields:
           -
             handle: provider
             field:
               type: text
               display: Provider
               visibility: read_only
+              width: 50
+          -
+            handle: provider_id
+            field:
+              type: text
+              display: 'Provider Id'
+              visibility: read_only
+              width: 50
           -
             handle: email_verified_at
             field:
               type: date
               display: 'Email Verified At'
+              width: 50
+          -
+            handle: last_login
+            field:
+              type: date
+              display: 'Last Login'
+              visibility: read_only
+              width: 50
           -
             handle: password
             field:
@@ -77,34 +111,66 @@ tabs:
               display: Password
               visibility: read_only
           -
-            handle: opted_into_marketing
-            field:
-              type: toggle
-              display: 'Opted Into Marketing'
-              validate: required
-          -
             handle: remember_token
             field:
               type: text
               display: 'Remember Token'
               visibility: read_only
+      -
+        display: Permissions
+        fields:
           -
             handle: super
             field:
               type: toggle
               display: Super
               validate: required
-          -
-            handle: last_login
-            field:
-              type: date
-              display: 'Last Login'
-              visibility: read_only
+      -
+        display: System
+        fields:
           -
             handle: deleted_at
             field:
               type: date
               display: 'Deleted At'
+  preferences:
+    display: Preferences
+    sections:
+      -
+        display: Marketing
+        fields:
+          -
+            handle: opted_into_marketing
+            field:
+              type: toggle
+              display: 'Opted Into Marketing'
+              validate: required
+  events:
+    display: Events
+    sections:
+      -
+        display: 'Hosted Events'
+        fields:
+          -
+            handle: events
+            field:
+              type: has_many
+              display: 'Hosted Events'
+              resource: event
+              mode: default
+              create: false
+      -
+        display: 'Co-Managed Events'
+        fields:
+          -
+            handle: managed_events
+            field:
+              type: has_many
+              display: 'Co-Managed Events'
+              resource: event
+              relationship_name: managedEvents
+              mode: default
+              create: false
   sidebar:
     display: Sidebar
     sections:
