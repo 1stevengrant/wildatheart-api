@@ -5,7 +5,7 @@ on:
 jobs:
   forge-deploy:
     name: "Deploy to Laravel Forge"
-    runs-on: ubuntu-latest-u
+    runs-on: ubuntu-latest-m
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
