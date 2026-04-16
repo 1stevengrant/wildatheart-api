@@ -133,6 +133,9 @@ tabs:
             field:
               type: date
               display: 'Deleted At'
+              visibility: read_only
+              listable: true
+              default_visibility: true
   preferences:
     display: Preferences
     sections:
