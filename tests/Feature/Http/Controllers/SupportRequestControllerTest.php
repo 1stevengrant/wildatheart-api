@@ -6,7 +6,7 @@ it('creates a support ticket and logs the activity', function () {
     Queue::fake();
     $attributes = [
         'name' => 'John Doe',
-        'email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
     ];
@@ -36,7 +36,7 @@ test('a support ticket requires a valid email address with valid dns and rfs', f
         'name' => 'John Doe',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
-        'email' => 'hello@digitalevangelistnet',
+        'email' => 'hello@@digitalevangelists',
     ];
 
     $response = $this->post(route('support.store'), $attributes);
@@ -58,7 +58,7 @@ test('a support ticket requires a valid email address', function () {
 
 test('a support ticket requires a name', function () {
     $attributes = [
-        'email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
     ];
@@ -70,7 +70,7 @@ test('a support ticket requires a name', function () {
 test('a support ticket requires a name with no more than 255 chars', function () {
     $attributes = [
         'name' => str_repeat('a', 256),
-        'email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
     ];
@@ -82,7 +82,7 @@ test('a support ticket requires a name with no more than 255 chars', function ()
 test('a support ticket requires a subject', function () {
     $attributes = [
         'name' => 'John Doe',
-        'email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
         'description' => 'This is a test feedback',
     ];
 
@@ -94,7 +94,7 @@ test('a support ticket requires a subject', function () {
 test('a support ticket requires a subject with no more than 255 chars', function () {
     $attributes = [
         'name' => 'John Doe',
-        'email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
         'subject' => str_repeat('a', 256),
         'description' => 'This is a test feedback',
     ];
@@ -107,7 +107,7 @@ test('a support ticket requires a subject with no more than 255 chars', function
 test('a support ticket requires a description', function () {
     $attributes = [
         'name' => 'John Doe',
-        'email' => 'steven@ghijk.co.uk',
+        'email' => 'steven@example.com',
         'subject' => 'Test feedback',
     ];
 

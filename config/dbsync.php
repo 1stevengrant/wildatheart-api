@@ -86,6 +86,7 @@ return [
     'environments' => [
         'local',
         'staging',
+        'testing',
     ],
 
     'localMysqlPath' => env('LOCAL_MYSQL_PATH', '/usr/local/bin/mysql'),

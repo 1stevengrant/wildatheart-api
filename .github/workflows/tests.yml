@@ -1,0 +1,108 @@
+name: Tests
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [staging, prod]
+  pull_request:
+    branches: [staging, prod]
+
+jobs:
+  tests:
+    name: "Pest"
+    runs-on: ubuntu-latest-m
+    timeout-minutes: 30
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: wahlocal_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, mysql, xml, curl
+          coverage: none
+
+      - name: Copy environment file
+        run: cp .env.testing.example .env
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Prepare environment
+        run: |
+          php artisan key:generate --no-interaction
+          php artisan config:clear
+
+      - name: Create parity database
+        run: mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS wahlocal_parity;"
+
+      - name: Configure SSH for production sync
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.FORGE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.REMOTE_DATABASE_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Run migrations
+        run: php artisan migrate --force
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: wahlocal_test
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
+      - name: Run tests
+        run: ./vendor/bin/pest --parallel --exclude-group=comparison,production-parity
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: wahlocal_test
+          DB_DATABASE_PARITY: wahlocal_parity
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
+      - name: Run parity tests
+        run: ./vendor/bin/pest --group=production-parity
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: wahlocal_test
+          DB_DATABASE_PARITY: wahlocal_parity
+          DB_USERNAME: root
+          DB_PASSWORD: password
+          REMOTE_USE_SSH: true
+          REMOTE_SSH_USERNAME: forge
+          REMOTE_DATABASE_HOST: ${{ secrets.REMOTE_DATABASE_HOST }}
+          REMOTE_DATABASE_USERNAME: ${{ secrets.REMOTE_DATABASE_USERNAME }}
+          REMOTE_DATABASE_NAME: ${{ secrets.REMOTE_DATABASE_NAME }}
+          REMOTE_DATABASE_PASSWORD: ${{ secrets.REMOTE_DATABASE_PASSWORD }}
+          REMOTE_DATABASE_EXCLUDE_DATA: activity_log,failed_jobs,issues,pulse_aggregates,pulse_entries,pulse_values
+
+      - name: Cleanup test databases
+        if: always()
+        run: test -f vendor/autoload.php && php artisan test:cleanup-databases --force || true
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: wahlocal_test
+          DB_USERNAME: root
+          DB_PASSWORD: password

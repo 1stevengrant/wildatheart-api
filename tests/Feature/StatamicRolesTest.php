@@ -1,10 +1,10 @@
 <?php
 
 use App\Models\User;
+use Statamic\Facades\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Statamic\Auth\Eloquent\RoleModel;
-use Statamic\Facades\Role;
 
 beforeEach(function () {
     Queue::fake();
@@ -20,13 +20,11 @@ it('allows a user with a statamic role to access the control panel', function ()
 
     $this->actingAs($user)
         ->get('/cp')
-        ->assertRedirect();
+        ->assertRedirect('/cp/collections/pages');
 
     $this->actingAs($user)
-        ->followingRedirects()
-        ->get('/cp')
-        ->assertOk()
-        ->assertDontSee('Unauthorized');
+        ->get('/cp/collections/blogs')
+        ->assertOk();
 });
 
 it('denies control panel access to a user without a statamic role', function () {
@@ -41,10 +39,12 @@ it('allows a super admin to access the control panel without a role', function (
     $user = User::factory()->create(['super' => true]);
 
     $this->actingAs($user)
-        ->followingRedirects()
         ->get('/cp')
-        ->assertOk()
-        ->assertDontSee('Unauthorized');
+        ->assertRedirect('/cp/collections/pages');
+
+    $this->actingAs($user)
+        ->get('/cp/collections/pages')
+        ->assertOk();
 });
 
 it('resolves role permissions from the database', function () {

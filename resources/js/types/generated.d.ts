@@ -68,6 +68,7 @@ zip: string | null;
 is_featured: boolean | null;
 custom_landing_url: string | null;
 managers: { [key: number]: App.Data.EventManagerData };
+managers_count: number;
 };
 export type EventFormData = {
 name: string;
@@ -105,9 +106,10 @@ invited_by_name: string;
 };
 export type EventMapData = {
 id: string;
+name: string | null;
 display_longitude: number;
 display_latitude: number;
-type_group: string;
+type_group: string | null;
 url: string;
 event_type_image: string;
 location: string;
@@ -406,7 +408,7 @@ vertical: string | null;
 };
 export type MediaItemData = {
 id: string;
-blocks: Array<App.DataTypeObjects.SlideBlock | App.DataTypeObjects.GenericBlock> | null;
+blocks: Array<App.StatamicDTO.Shared.HeroSet | App.StatamicDTO.Shared.HeroSliderSet | App.StatamicDTO.Shared.MediaSliderSet | App.StatamicDTO.Shared.CountdownSet | App.StatamicDTO.Shared.ButtonsSet | App.StatamicDTO.Shared.HeroTitleSet | App.StatamicDTO.Shared.HeroLogoSet | App.StatamicDTO.Shared.SubscribeFormSet | App.StatamicDTO.Shared.AddToCalendarSet | App.StatamicDTO.Shared.HeaderSet | App.StatamicDTO.Shared.ContainerSet | App.StatamicDTO.Shared.StyledTextSet | App.StatamicDTO.Shared.ColumnsBlockSet | App.StatamicDTO.Shared.BentoBlockSet | App.StatamicDTO.Shared.DividerBlockSet | App.StatamicDTO.Shared.VideoBlockSet | App.StatamicDTO.Shared.CodeBlockSet | App.StatamicDTO.Shared.TestimonialsBlockSet | App.StatamicDTO.Shared.ImageSliderBlockSet> | null;
 images: App.DataTypeObjects.ImageData | null;
 locale: string;
 parent: Array<App.DataTypeObjects.ParentData> | null;
@@ -428,7 +430,7 @@ slides: { [key: number]: App.DataTypeObjects.SlideBlock };
 };
 export type PageData = {
 id: string;
-blocks: Array<App.DataTypeObjects.SlideBlock | App.DataTypeObjects.GenericBlock | App.DataTypeObjects.HeroTitleBlock> | null;
+blocks: Array<App.StatamicDTO.Shared.HeroSet | App.StatamicDTO.Shared.HeroSliderSet | App.StatamicDTO.Shared.MediaSliderSet | App.StatamicDTO.Shared.CountdownSet | App.StatamicDTO.Shared.ButtonsSet | App.StatamicDTO.Shared.HeroTitleSet | App.StatamicDTO.Shared.HeroLogoSet | App.StatamicDTO.Shared.SubscribeFormSet | App.StatamicDTO.Shared.AddToCalendarSet | App.StatamicDTO.Shared.HeaderSet | App.StatamicDTO.Shared.ContainerSet | App.StatamicDTO.Shared.StyledTextSet | App.StatamicDTO.Shared.ColumnsBlockSet | App.StatamicDTO.Shared.BentoBlockSet | App.StatamicDTO.Shared.DividerBlockSet | App.StatamicDTO.Shared.VideoBlockSet | App.StatamicDTO.Shared.CodeBlockSet | App.StatamicDTO.Shared.TestimonialsBlockSet | App.StatamicDTO.Shared.ImageSliderBlockSet> | null;
 images: App.DataTypeObjects.ImageData;
 locale: string;
 parent: Array<App.DataTypeObjects.ParentData> | null;
@@ -570,7 +572,7 @@ current_episode_slug: string | null;
 uri: string | null;
 };
 export type ExperienceResponse = {
-blocks: Array<any> | null;
+blocks: Array<App.StatamicDTO.Shared.HeroSet | App.StatamicDTO.Shared.HeroSliderSet | App.StatamicDTO.Shared.MediaSliderSet | App.StatamicDTO.Shared.CountdownSet | App.StatamicDTO.Shared.ButtonsSet | App.StatamicDTO.Shared.HeroTitleSet | App.StatamicDTO.Shared.HeroLogoSet | App.StatamicDTO.Shared.SubscribeFormSet | App.StatamicDTO.Shared.AddToCalendarSet | App.StatamicDTO.Shared.HeaderSet | App.StatamicDTO.Shared.ContainerSet | App.StatamicDTO.Shared.StyledTextSet | App.StatamicDTO.Shared.ColumnsBlockSet | App.StatamicDTO.Shared.BentoBlockSet | App.StatamicDTO.Shared.DividerBlockSet | App.StatamicDTO.Shared.VideoBlockSet | App.StatamicDTO.Shared.CodeBlockSet | App.StatamicDTO.Shared.TestimonialsBlockSet | App.StatamicDTO.Shared.ImageSliderBlockSet> | null;
 height: string | null;
 images: Array<any> | null;
 position: string | null;
@@ -610,7 +612,7 @@ locale: string;
 }
 declare namespace App.DataTypeObjects.API.V1.Content.Events {
 export type EventsShowResponse = {
-blocks: Array<any> | null;
+blocks: Array<App.StatamicDTO.Shared.HeroSet | App.StatamicDTO.Shared.HeroSliderSet | App.StatamicDTO.Shared.MediaSliderSet | App.StatamicDTO.Shared.CountdownSet | App.StatamicDTO.Shared.ButtonsSet | App.StatamicDTO.Shared.HeroTitleSet | App.StatamicDTO.Shared.HeroLogoSet | App.StatamicDTO.Shared.SubscribeFormSet | App.StatamicDTO.Shared.AddToCalendarSet | App.StatamicDTO.Shared.HeaderSet | App.StatamicDTO.Shared.ContainerSet | App.StatamicDTO.Shared.StyledTextSet | App.StatamicDTO.Shared.ColumnsBlockSet | App.StatamicDTO.Shared.BentoBlockSet | App.StatamicDTO.Shared.DividerBlockSet | App.StatamicDTO.Shared.VideoBlockSet | App.StatamicDTO.Shared.CodeBlockSet | App.StatamicDTO.Shared.TestimonialsBlockSet | App.StatamicDTO.Shared.ImageSliderBlockSet> | null;
 description: string | null;
 buttons: Array<any> | null;
 event_logo: Array<any> | null;
@@ -697,7 +699,7 @@ related_content: Array<any> | null;
 declare namespace App.DataTypeObjects.Statamic.Blueprints {
 export type CustomSeries = {
 id: string;
-blocks: Array<any | any> | null;
+blocks: Array<App.StatamicDTO.Shared.HeroSet | App.StatamicDTO.Shared.HeroSliderSet | App.StatamicDTO.Shared.MediaSliderSet | App.StatamicDTO.Shared.CountdownSet | App.StatamicDTO.Shared.ButtonsSet | App.StatamicDTO.Shared.HeroTitleSet | App.StatamicDTO.Shared.HeroLogoSet | App.StatamicDTO.Shared.SubscribeFormSet | App.StatamicDTO.Shared.AddToCalendarSet | App.StatamicDTO.Shared.HeaderSet | App.StatamicDTO.Shared.ContainerSet | App.StatamicDTO.Shared.StyledTextSet | App.StatamicDTO.Shared.ColumnsBlockSet | App.StatamicDTO.Shared.BentoBlockSet | App.StatamicDTO.Shared.DividerBlockSet | App.StatamicDTO.Shared.VideoBlockSet | App.StatamicDTO.Shared.CodeBlockSet | App.StatamicDTO.Shared.TestimonialsBlockSet | App.StatamicDTO.Shared.ImageSliderBlockSet> | null;
 images: App.DataTypeObjects.ImageData | null;
 locale: string;
 parent: Array<App.DataTypeObjects.ParentData> | null;

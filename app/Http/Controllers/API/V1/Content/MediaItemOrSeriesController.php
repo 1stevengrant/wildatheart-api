@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use Statamic\Entries\Entry;
-use Statamic\Facades\Token;
 use Illuminate\Http\Request;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
-use Facades\Statamic\CP\LivePreview;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
-use App\Services\ImageBuilderService;
 use App\DataTypeObjects\MediaItemData;
 use App\DataTypeObjects\API\V1\ErrorResponse;
 use App\DataTypeObjects\API\V1\RedirectResponse;
@@ -17,15 +14,16 @@ use App\Http\Controllers\API\MediaItemDataController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
 use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
+use App\Http\Controllers\API\V1\Content\Concerns\ResolvesLivePreview;
 
 class MediaItemOrSeriesController extends Controller
 {
-    private BlockBuilderService $blockBuilder;
+    use ResolvesLivePreview;
 
-    public function __construct(BlockBuilderService $blockBuilder)
-    {
-        $this->blockBuilder = $blockBuilder;
-    }
+    public function __construct(
+        private readonly BlockBuilderService $blockBuilder,
+        private readonly EntryBuilderService $entryBuilder,
+    ) {}
 
     public function show($slugOrUri, Request $request)
     {
@@ -52,23 +50,10 @@ class MediaItemOrSeriesController extends Controller
             ]);
         }
 
-        // Check for token and live-preview query parameters
-        $token = $request->query('token', false);
-        $livePreview = $request->query('live-preview', false);
+        $mediaItemOrSeries = $this->resolveLivePreview();
 
-        // If token is present or live-preview is true, adjust the query to include unpublished and future items
-
-        $mediaItemOrSeries = null;
-
-        if ($token && $livePreview) {
-            // Skip published and date checks for live preview or token access
-
-            $token = Token::find($token);
-            if ($token) {
-                $mediaItemOrSeries = LivePreview::item($token);
-            }
-        } else {
-            $mediaItemOrSeries = Entry::query()
+        if (! $mediaItemOrSeries) {
+            $mediaItemOrSeries = EntryQueryBuilder::query()
                 ->where(function ($query) {
                     $query->where('collection', 'media_item')
                         ->orWhere('collection', 'media_series');
@@ -77,11 +62,8 @@ class MediaItemOrSeriesController extends Controller
                     $query->where('slug', $slug)
                         ->orWhere('uri', $uri);
                 })
-                ->where('published', true)
-                ->where(function ($query) {
-                    $query->where('date', '<=', now())
-                        ->orWhere('data->make_scheduled_page_public', true);
-                })
+                ->published()
+                ->visibleOrScheduled()
                 ->first();
         }
 
@@ -97,17 +79,13 @@ class MediaItemOrSeriesController extends Controller
             return app(MediaSeriesDataController::class)->buildSubsplashMediaSeriesResponse($mediaItemOrSeries);
         }
 
-        $entryBuilder = new EntryBuilderService;
-
-        $response = $entryBuilder->buildResponseFromEntry($mediaItemOrSeries);
+        $response = $this->entryBuilder->buildResponseFromEntry($mediaItemOrSeries);
 
         if (isset($mediaItemOrSeries->blocks)) {
             $response['blocks'] = $this->blockBuilder->build($mediaItemOrSeries->blocks);
         }
 
-        $imageBuilder = new ImageBuilderService;
-
-        $response['images'] = $imageBuilder->build($mediaItemOrSeries->images);
+        $response['images'] = $mediaItemOrSeries->images;
 
         if ($response['blueprint']['handle'] === 'custom_media_item') {
             return MediaItemData::from($response);
@@ -115,13 +93,11 @@ class MediaItemOrSeriesController extends Controller
 
         // Don't get related media items if series isn't defined.
         if ((bool) $mediaItemOrSeries->series) {
-            $mediaItemsInSeries = Entry::query()
-                ->where('collection', 'media_item')
-                ->where('data->series', 'like', "%{$mediaItemOrSeries->series}")
+            $mediaItemsInSeries = EntryQueryBuilder::mediaItems()
+                ->inSeries($mediaItemOrSeries->series)
                 ->limit(15)
                 ->get();
 
-            // $mediaItem = $mediaItem->toArray();
             $response['mediaItems'] = $mediaItemsInSeries->toArray();
         }
 

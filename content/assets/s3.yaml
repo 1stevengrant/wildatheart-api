@@ -1,7 +1,1 @@
-title: 'WordPress S3'
-disk: wordpress
-allow_uploads: true
-allow_downloading: true
-allow_renaming: true
-allow_moving: true
-create_folders: true
+disk: s3

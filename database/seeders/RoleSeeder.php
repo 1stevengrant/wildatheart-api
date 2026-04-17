@@ -18,7 +18,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        // if roles table is not empty, do not seed
+        // if the roles table is not empty, do not seed
         if (DB::table('roles')->count() > 0) {
             return;
         }

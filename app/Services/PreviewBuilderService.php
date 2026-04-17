@@ -6,44 +6,38 @@ use Statamic\Support\Str;
 use Statamic\Eloquent\Entries\Entry;
 use App\DataTypeObjects\ContentPreview;
 use App\DataTypeObjects\Previews\BlogPreview;
+use App\Services\Subsplash\SubsplashApiClient;
 
 /**
  * Service for building preview data for various blueprint and entry types in Statamic
  */
 class PreviewBuilderService
 {
-    private $bunnyCDN;
-
-    private $subsplash;
-
     public function __construct(
-        BunnyCDNService $bunnyCDN,
-        SubsplashService $subsplash
-    ) {
-        $this->bunnyCDN = $bunnyCDN;
-        $this->subsplash = $subsplash;
-    }
+        private BunnyCDNService $bunnyCDN,
+        private SubsplashApiClient $apiClient,
+    ) {}
 
     public function build(Entry $entry)
     {
-        switch ($entry->blueprint->handle) {
-            case 'podcast':
-                return $this->buildPodcastPreview($entry);
-            case 'subsplash_media_series':
-                return $this->buildSubsplashMediaSeriesPreview($entry);
-            case 'subsplash_media_item':
-                return $this->buildSubsplashMediaItemPreview($entry);
-            case 'experience_session':
-                return $this->buildExperienceSessionPreview($entry);
-            case 'book':
-                return $this->buildBookPreview($entry);
-            case 'custom_media_item':
-                return $this->buildCustomMediaItemPreview($entry);
-            case 'blog':
-                return $this->buildBlogPreview($entry);
-            default:
-                return $this->buildGenericPreview($entry);
-        }
+        return match ($entry->blueprint->handle) {
+            'podcast' => $this->buildPodcastPreview($entry),
+            'subsplash_media_series' => $this->buildSubsplashMediaSeriesPreview($entry),
+            'subsplash_media_item' => $this->buildSubsplashMediaItemPreview($entry),
+            'experience_session' => $this->buildExperienceSessionPreview($entry),
+            'book' => $this->buildBookPreview($entry),
+            'custom_media_item' => $this->buildCustomMediaItemPreview($entry),
+            'blog' => $this->buildBlogPreview($entry),
+            default => $this->buildGenericPreview($entry),
+        };
+    }
+
+    private function extractWideImageUrl(array $embedded): ?string
+    {
+        $images = data_get($embedded, 'images', []);
+        $wideImage = collect($images)->firstWhere('type', 'wide');
+
+        return data_get($wideImage, '_embedded.source._links.related.href');
     }
 
     private function buildExperienceSessionPreview(Entry $entry)
@@ -72,7 +66,7 @@ class PreviewBuilderService
         $preview->collection = $entry->collection;
         $preview->blueprint = $entry->blueprint;
 
-        $subsplashMediaItem = $this->subsplash->getMediaItem($entry->subsplash_media_item_id);
+        $subsplashMediaItem = $this->apiClient->getMediaItem($entry->subsplash_media_item_id);
 
         if (! $subsplashMediaItem) {
             return null;
@@ -80,19 +74,10 @@ class PreviewBuilderService
         $preview->blueprint = data_get($subsplashMediaItem, 'blueprint');
 
         if (! empty($subsplashMediaItem['_embedded'])) {
-            $images = data_get($subsplashMediaItem, '_embedded.images', []);
-            $wideImage = collect($images)->firstWhere('type', 'wide');
-            $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href', null);
-            $preview->featured_image_src = $wideImageUrl;
+            $preview->featured_image_src = $this->extractWideImageUrl($subsplashMediaItem['_embedded']);
         }
 
         $preview->description = data_get($subsplashMediaItem, 'summary');
-        // if ($entry->series->value() === null) {
-        //     dd($entry);
-        // }
-        if ($entry !== null && $entry->series !== null) {
-            // $preview->related_content = [$this->build($entry->series->value())];
-        }
 
         return $preview;
     }
@@ -100,13 +85,12 @@ class PreviewBuilderService
     private function buildCustomMediaItemPreview(Entry $entry)
     {
         $preview = new ContentPreview;
-        $bunnyCDN = new BunnyCDNService;
 
         $preview->id = $entry->id;
         $preview->title = $entry->title;
         $preview->uri = $entry->uri;
         if ($entry->images->wide) {
-            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->images->wide);
+            $preview->featured_image_src = $this->bunnyCDN->getBunnyCDNUrl($entry->images->wide);
         }
         $preview->description = $entry->description;
         $preview->published_at = $entry->date;
@@ -124,13 +108,10 @@ class PreviewBuilderService
         $preview->collection = $entry->collection;
         $preview->blueprint = $entry->blueprint;
 
-        $subsplashMediaSeries = $this->subsplash->getMediaSeries($entry->subsplash_series_id);
+        $subsplashMediaSeries = $this->apiClient->getMediaSeries($entry->subsplash_series_id);
 
         if (! empty($subsplashMediaSeries['_embedded'])) {
-            $images = $subsplashMediaSeries['_embedded']['images'];
-            $wideImage = collect($images)->firstWhere('type', 'wide');
-            $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
-            $preview->featured_image_src = $wideImageUrl;
+            $preview->featured_image_src = $this->extractWideImageUrl($subsplashMediaSeries['_embedded']);
         }
 
         if ($entry->description) {
@@ -142,7 +123,6 @@ class PreviewBuilderService
 
     private function buildSubsplashMediaSeriesPreview(Entry $entry)
     {
-
         $preview = new ContentPreview;
         $preview->id = $entry->id;
         $preview->title = $entry->title;
@@ -151,15 +131,12 @@ class PreviewBuilderService
         $preview->collection = $entry->collection;
         $preview->blueprint = $entry->blueprint;
 
-        $subsplashMediaSeries = $this->subsplash->getMediaSeries($entry->subsplash_series_id);
+        $subsplashMediaSeries = $this->apiClient->getMediaSeries($entry->subsplash_series_id);
 
         $preview->description = $subsplashMediaSeries['summary'];
 
         if (! empty($subsplashMediaSeries['_embedded'])) {
-            $images = $subsplashMediaSeries['_embedded']['images'];
-            $wideImage = collect($images)->firstWhere('type', 'wide');
-            $wideImageUrl = data_get($wideImage, '_embedded.source._links.related.href');
-            $preview->featured_image_src = $wideImageUrl;
+            $preview->featured_image_src = $this->extractWideImageUrl($subsplashMediaSeries['_embedded']);
         }
 
         if ($entry->description) {
@@ -172,14 +149,13 @@ class PreviewBuilderService
     private function buildBookPreview(Entry $entry)
     {
         $preview = new ContentPreview;
-        $bunnyCDN = new BunnyCDNService;
 
         $preview->id = $entry->id;
         $preview->title = $entry->title;
         $preview->uri = $entry->uri;
 
         if ($entry->images && $entry->images->vertical) {
-            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->images->vertical);
+            $preview->featured_image_src = $this->bunnyCDN->getBunnyCDNUrl($entry->images->vertical);
         }
 
         $preview->description = $entry->description;
@@ -203,7 +179,6 @@ class PreviewBuilderService
         $plainText = strip_tags($html);
 
         $preview = new BlogPreview;
-        $bunnyCDN = new BunnyCDNService;
 
         $preview->id = $entry->id;
         $preview->title = $entry->title;
@@ -213,13 +188,13 @@ class PreviewBuilderService
         $preview->collection = $entry->collection;
         $preview->blueprint = $entry->blueprint;
         if ($entry->images && $entry->images->vertical) {
-            $preview->featured_image_src = $bunnyCDN->getBunnyCDNUrl($entry->images->vertical);
+            $preview->featured_image_src = $this->bunnyCDN->getBunnyCDNUrl($entry->images->vertical);
         }
 
         $author = $entry->augmentedValue('author')->value();
         if ($author) {
             $preview->author_name = $author->title;
-            $preview->author_image_src = $bunnyCDN->getBunnyCDNUrl($author->image);
+            $preview->author_image_src = $this->bunnyCDN->getBunnyCDNUrl($author->image);
         }
 
         return $preview;

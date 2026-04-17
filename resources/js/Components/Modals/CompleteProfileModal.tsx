@@ -26,7 +26,14 @@ export const CompleteProfileModal = ({
     const { auth } = usePage<any>().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, errors } = useForm<{
+        _method: string;
+        given_name: string;
+        family_name: string;
+        phone: string;
+        email: string;
+        opted_into_marketing: boolean;
+    }>({
         _method: "PUT",
         given_name: auth.user?.given_name ?? "",
         family_name: auth.user?.family_name ?? "",

@@ -24,7 +24,12 @@ export const SupportModal = ({
     const { auth } = usePage<any>().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data, setData, post, errors, reset } = useForm({
+    const { data, setData, post, errors, reset } = useForm<{
+        name: string;
+        email: string;
+        subject: string;
+        description: string;
+    }>({
         name: auth.user
             ? `${auth.user.given_name} ${auth.user.family_name}`
             : "",

@@ -47,7 +47,7 @@ class DailyReadingController extends Controller
             }
         }
 
-        return DailyReadingResponse::collection($dailyReadings);
+        return DailyReadingResponse::collect($dailyReadings);
     }
 
     public function getRecent(Request $request)
@@ -71,41 +71,7 @@ class DailyReadingController extends Controller
             }
         }
 
-        return DailyReadingResponse::collection($dailyReadings);
-    }
-
-    public function redirect($slug)
-    {
-        // $allReadings = $this->index();
-
-        $jsonPath = storage_path('app/public/dailyreadings.json');
-        $jsonContents = file_get_contents($jsonPath);
-        $dailyReadingsData = json_decode($jsonContents, true);
-
-        if ($dailyReadingsData === null && json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException('Error decoding JSON: ' . json_last_error_msg());
-        }
-
-        $matchingReading = null;
-        $slug = mb_strtolower(urlencode($slug));
-        foreach ($dailyReadingsData as $reading) {
-
-            if (mb_strtolower(str_replace('/daily-reading/', '', $reading['alias'])) === $slug) {
-                $matchingReading = $reading;
-
-                break;
-            }
-        }
-
-        if ($matchingReading) {
-            return response()->json([
-                'previous_slug' => str_replace('/daily-reading/', '', $reading['alias']),
-                'current_slug' => Str::slug($matchingReading['title'], '-'),
-            ]);
-        }
-
-        // If no matching slug is found, return a 404 response
-        return response()->json(['error' => 'Daily reading not found'], 404);
+        return DailyReadingResponse::collect($dailyReadings);
     }
 
     public function refreshDailyReadings()

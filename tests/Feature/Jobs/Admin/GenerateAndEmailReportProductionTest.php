@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Jobs\Admin\GenerateAndEmailReport;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 
     // Mock the ReportService
     $this->reportService = $this->mock(ReportService::class);

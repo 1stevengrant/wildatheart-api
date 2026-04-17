@@ -2,9 +2,12 @@
 
 use App\Models\Event;
 use App\Actions\Event\UpdateEvent;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
 });
 
 it('updates an event with given data', function () {
@@ -12,7 +15,7 @@ it('updates an event with given data', function () {
 
     $newData = ['name' => 'Steven'];
 
-    UpdateEvent::run(event: $event, data: $newData);
+    UpdateEvent::run(data: $newData, event: $event);
 
     $this->assertDatabaseHas('events', [
         'id' => $event->id,

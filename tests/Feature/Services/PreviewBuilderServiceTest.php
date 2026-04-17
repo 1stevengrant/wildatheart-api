@@ -2,27 +2,20 @@
 
 use Statamic\Facades\Entry;
 use App\Services\BunnyCDNService;
-use App\Services\SubsplashService;
 use App\DataTypeObjects\ContentPreview;
 use App\Services\PreviewBuilderService;
+use App\Services\Subsplash\SubsplashApiClient;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-
-    // Create mock services
-    $this->subsplashService = Mockery::mock(SubsplashService::class);
+    $this->apiClient = Mockery::mock(SubsplashApiClient::class);
     $this->bunnyCDNService = Mockery::mock(BunnyCDNService::class);
 
-    // Create PreviewBuilderService with mocked dependencies
     $this->service = new PreviewBuilderService(
         $this->bunnyCDNService,
-        $this->subsplashService
+        $this->apiClient
     );
-});
 
-it('Returns content preview using data from Subsplash', function () {
-    // Mock the subsplash response
-    $mockSubsplashResponse = [
+    $this->mockSubsplashResponse = [
         '_embedded' => [
             'images' => [
                 [
@@ -41,12 +34,14 @@ it('Returns content preview using data from Subsplash', function () {
         ],
         'summary' => 'Test description',
     ];
+});
 
-    $this->subsplashService
+it('Returns content preview using data from Subsplash', function () {
+    $this->apiClient
         ->shouldReceive('getMediaItem')
         ->once()
         ->with('test-id')
-        ->andReturn($mockSubsplashResponse);
+        ->andReturn($this->mockSubsplashResponse);
 
     $entry = Entry::make()
         ->blueprint('subsplash_media_item')
@@ -68,32 +63,11 @@ it('Returns content preview using data from Subsplash', function () {
 });
 
 it('Returns content preview for subsplash series', function () {
-    // Mock the subsplash response
-    $mockSubsplashResponse = [
-        '_embedded' => [
-            'images' => [
-                [
-                    'type' => 'wide',
-                    '_embedded' => [
-                        'source' => [
-                            '_links' => [
-                                'related' => [
-                                    'href' => 'https://example.com/test-image.jpg',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-        'summary' => 'Test description',
-    ];
-
-    $this->subsplashService
+    $this->apiClient
         ->shouldReceive('getMediaSeries')
         ->once()
         ->with('test-series-id')
-        ->andReturn($mockSubsplashResponse);
+        ->andReturn($this->mockSubsplashResponse);
 
     $entry = Entry::make()
         ->blueprint('subsplash_media_series')
@@ -115,32 +89,11 @@ it('Returns content preview for subsplash series', function () {
 });
 
 it('Returns content preview for Podcast series', function () {
-    // Mock the subsplash response
-    $mockSubsplashResponse = [
-        '_embedded' => [
-            'images' => [
-                [
-                    'type' => 'wide',
-                    '_embedded' => [
-                        'source' => [
-                            '_links' => [
-                                'related' => [
-                                    'href' => 'https://example.com/test-image.jpg',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-        'summary' => 'Test description',
-    ];
-
-    $this->subsplashService
+    $this->apiClient
         ->shouldReceive('getMediaSeries')
         ->once()
         ->with('test-podcast-id')
-        ->andReturn($mockSubsplashResponse);
+        ->andReturn($this->mockSubsplashResponse);
 
     $entry = Entry::make()
         ->blueprint('podcast')

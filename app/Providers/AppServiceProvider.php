@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Models\Event;
-use Statamic\Statamic;
 use App\Enums\UserRoleEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -12,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Services\Subsplash\SubsplashApiClient;
+use App\Services\Subsplash\SubsplashMediaItemImporter;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
@@ -29,7 +30,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void {}
+    public function register(): void
+    {
+        $this->app->singleton(SubsplashApiClient::class);
+        $this->app->singleton(SubsplashMediaItemImporter::class);
+    }
 
     /**
      * Bootstrap any application services.
@@ -37,10 +42,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::preventLazyLoading(! app()->isProduction());
-
-        Statamic::vite('app', [
-            'resources/js/cp.js',
-        ]);
 
         Event::saving(function (Event $event): void {
             $event->load('user', 'eventType');
@@ -66,11 +67,8 @@ class AppServiceProvider extends ServiceProvider
             }
         );
 
-        $this->bootEvent();
         $this->bootRoute();
     }
-
-    public function bootEvent(): void {}
 
     public function bootRoute(): void
     {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Statamic\Entries\Entry;
+use App\Builders\EntryQueryBuilder;
 use Illuminate\Support\Facades\Cache;
 
 class SeoController extends Controller
@@ -15,7 +15,7 @@ class SeoController extends Controller
     public function getSitemap()
     {
         $pages = Cache::remember('sitemap_pages', 900, function () {
-            return Entry::query()
+            return EntryQueryBuilder::query()
                 ->where('collection', '!=', 'alerts')
                 ->where('uri', '!=', null)
                 ->where(function ($query) {

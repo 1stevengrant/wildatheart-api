@@ -5,8 +5,6 @@ use App\DataTransferObjects\ReportData;
 
 beforeEach(function () {
     $this->reportService = new ReportService;
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    $this->event = \App\Models\Event::factory()->approved()->fires()->create();
 });
 
 it(

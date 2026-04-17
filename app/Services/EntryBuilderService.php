@@ -4,10 +4,11 @@ namespace App\Services;
 
 use Statamic\Fields\Value;
 use Statamic\Entries\Entry;
+use Statamic\Fieldtypes\Link\ArrayableLink;
 
 class EntryBuilderService
 {
-    public function buildResponseFromEntry(Entry $entry)
+    public function buildResponseFromEntry(Entry $entry): array
     {
         // Get all relationship field handles from the blueprint
         $relationshipFields = $entry->blueprint()
@@ -46,34 +47,28 @@ class EntryBuilderService
         return $this->ensureArrays($response);
     }
 
-    private function ensureArrays($data)
+    private function ensureArrays(mixed $data): mixed
     {
-        // If already an array, recursively process its items
         if (is_array($data)) {
             return array_map(fn ($item) => $this->ensureArrays($item), $data);
         }
 
-        // If it's a Statamic Value object, convert it using jsonSerialize
         if ($data instanceof Value) {
-            $data = $data->jsonSerialize();
-
-            // Recursively process the result
-            return $this->ensureArrays($data);
+            return $this->ensureArrays($data->jsonSerialize());
         }
 
-        // If it's an object with toArray method, convert it
+        if ($data instanceof ArrayableLink) {
+            return (string) $data;
+        }
+
         if (is_object($data) && method_exists($data, 'toArray')) {
             try {
-                $data = $data->toArray();
-
-                // Recursively process the result
-                return $this->ensureArrays($data);
+                return $this->ensureArrays($data->toArray());
             } catch (\Exception $e) {
-                // If toArray fails, continue to return the object as-is
+                // If toArray fails, return as-is
             }
         }
 
-        // Return the data as-is (could be a scalar, null, or an object without toArray)
         return $data;
     }
 }

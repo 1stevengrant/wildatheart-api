@@ -1,11 +1,18 @@
 <?php
 
+use App\Models\Event;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
+
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    $this->event = \App\Models\Event::factory()->approved()->fires()->create();
+    Bus::fake();
+    Mail::fake();
+    $this->event = Event::factory()->approved()->fires()->create();
 });
 it('sets the appropriate meta data for a page', function () {
     $response = $this->get(route('view.event', $this->event));
 
-    expect($response)->assertSeeHtml("Connect with {$this->event->user->fullname} for {$this->event->name} in {$this->event->location}");
+    $expectedTitle = "Join {$this->event->host_name}'s " . Str::singular($this->event->eventType->name);
+    expect($response)->assertSeeHtml($expectedTitle);
 });

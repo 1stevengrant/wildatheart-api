@@ -33,7 +33,7 @@ class UpcomingEventsController extends Controller
 
         // Then convert each group to DataCollection
         $upcomingEvents = $sortedGroups->map(function ($events) {
-            return EventData::collection($events);
+            return EventData::collect($events);
         });
 
         return inertia('UpcomingEventsPage', [

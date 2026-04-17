@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\SubsplashService;
+use App\Services\Subsplash\SubsplashApiClient;
+use App\Services\Subsplash\SubsplashMediaItemImporter;
 
 class GetLatestSubsplashMedia extends Command
 {
@@ -19,8 +20,10 @@ class GetLatestSubsplashMedia extends Command
         $this->addOption('force', null, null, 'Force retrieval regardless of when the most recent change was');
     }
 
-    public function __construct(private SubsplashService $subsplash)
-    {
+    public function __construct(
+        private SubsplashApiClient $apiClient,
+        private SubsplashMediaItemImporter $importer,
+    ) {
         parent::__construct();
     }
 
@@ -37,12 +40,11 @@ class GetLatestSubsplashMedia extends Command
             }
 
             $totalMediaItems = 0;
-            $itemsPerPage = 500;
-            $nextPage = "https://core.subsplash.com/media/v1/media-items?filter%5Bstatus%5D=published&filter%5Bapp_key%5D=5289PV&page%5Bsize%5D=$itemsPerPage";
+            $nextPage = $this->apiClient->getPublishedMediaItemsUrl();
 
             // Loop through all paginated responses.
             while ($nextPage !== null) {
-                $totalMediaItems = $this->updateOrCreateEntrys($nextPage, $totalMediaItems);
+                $totalMediaItems = $this->updateOrCreateEntries($nextPage, $totalMediaItems);
 
                 // Only process the first batch if 'full' argument
                 // was not provided.
@@ -51,17 +53,17 @@ class GetLatestSubsplashMedia extends Command
                 }
             }
 
-            $this->info("Retreived $totalMediaItems items.");
+            $this->info("Retrieved $totalMediaItems items.");
         } catch (\Exception $e) {
             $this->error('Problem running command:');
             $this->error($e->getMessage());
         }
     }
 
-    private function updateOrCreateEntrys(&$nextPage, $totalMediaItems)
+    private function updateOrCreateEntries(&$nextPage, $totalMediaItems)
     {
         // Retrieve items on current page.
-        $subsplashResponse = $this->subsplash->subsplashFetch($nextPage);
+        $subsplashResponse = $this->apiClient->fetch($nextPage);
         $mediaItemsInResponse = data_get($subsplashResponse, '_embedded.media-items', []);
 
         // Update next page if available.
@@ -94,9 +96,9 @@ class GetLatestSubsplashMedia extends Command
             // Optional: Display current item in progress bar
             $bar->setMessage("Processing: {$item['title']}");
 
-            $item = $this->subsplash->getMediaItem($item['id']);
+            $item = $this->apiClient->getMediaItem($item['id']);
 
-            $this->subsplash->saveMediaItemAsEntry($item, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
+            $this->importer->import($item, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
                     $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
                         ? $lastUpdated->format('Y-m-d H:i:s')
@@ -120,7 +122,7 @@ class GetLatestSubsplashMedia extends Command
             $this->info("Fetching media item with ID: {$mediaItemId}");
 
             // Fetch the specific media item from Subsplash
-            $mediaItem = $this->subsplash->getMediaItem($mediaItemId);
+            $mediaItem = $this->apiClient->getMediaItem($mediaItemId);
 
             if (isset($mediaItem['errors'])) {
                 $this->error('Error fetching media item:');
@@ -146,7 +148,7 @@ class GetLatestSubsplashMedia extends Command
             $bar->start();
 
             // Save the media item as an entry
-            $entry = $this->subsplash->saveMediaItemAsEntry($mediaItem, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
+            $entry = $this->importer->import($mediaItem, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
                     $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
                         ? $lastUpdated->format('Y-m-d H:i:s')

@@ -14,7 +14,6 @@ use App\Jobs\WeGive\FindOrCreateDonorJob;
 beforeEach(function () {
     Mail::fake();
     Bus::fake();
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
 });
 
 it('dispatches WeGive tagging jobs when user accepts host invitation', function () {

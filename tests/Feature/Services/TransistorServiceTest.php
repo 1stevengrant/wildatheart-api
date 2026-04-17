@@ -2,167 +2,168 @@
 
 namespace Tests\Feature\Services;
 
+use Saloon\Http\Faking\MockClient;
 use App\Services\TransistorService;
-use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Saloon\Http\Faking\MockResponse;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     Cache::flush();
+
+    config([
+        'services.transistor.api_key' => 'test-api-key',
+        'services.transistor.api_url' => 'https://api.transistor.fm/v1/',
+        'services.transistor.cache_duration' => 3600,
+        'services.transistor.rate_limit_cache_store' => 'array',
+    ]);
+
     $this->transistorService = new TransistorService;
 });
 
-it('returns cached data when available', function () {
-    $url = 'https://api.transistor.fm/v1/episodes';
-    $cacheKey = md5($url);
-    $cachedData = ['data' => 'cached'];
-
-    Cache::shouldReceive('has')
-        ->once()
-        ->with($cacheKey)
-        ->andReturn(true);
-
-    Cache::shouldReceive('get')
-        ->once()
-        ->with($cacheKey)
-        ->andReturn($cachedData);
-
-    $result = $this->transistorService->transistorFetch($url);
-
-    expect($result)->toBe($cachedData);
+afterEach(function () {
+    MockClient::destroyGlobal();
 });
 
-it('fetches from API and caches data when not cached', function () {
-    $url = 'https://api.transistor.fm/v1/episodes';
-    $cacheKey = md5($url);
-    $apiResponse = ['data' => 'from_api'];
-    $cacheDuration = (int) config('services.transistor.cache_duration');
-
-    Cache::shouldReceive('has')
-        ->once()
-        ->with($cacheKey)
-        ->andReturn(false);
-
-    Http::fake([
-        $url => Http::response($apiResponse, 200),
-    ]);
-
-    Cache::shouldReceive('put')
-        ->once()
-        ->with($cacheKey, $apiResponse, $cacheDuration);
-
-    $result = $this->transistorService->transistorFetch($url);
-
-    expect($result)->toBe($apiResponse);
-});
-
-it('returns errors when API responds with errors', function () {
-    $url = 'https://api.transistor.fm/v1/episodes';
-    $cacheKey = md5($url);
-    $apiResponse = ['errors' => ['message' => 'Something went wrong']];
-
-    Cache::shouldReceive('has')
-        ->once()
-        ->with($cacheKey)
-        ->andReturn(false);
-
-    Http::fake([
-        $url => Http::response($apiResponse, 200),
-    ]);
-
-    $result = $this->transistorService->transistorFetch($url);
-
-    expect($result)->toBe($apiResponse);
-});
-
-it('throws an exception when API request fails', function () {
-    $url = 'https://api.transistor.fm/v1/episodes';
-    $cacheKey = md5($url);
-    Cache::shouldReceive('has')
-        ->once()
-        ->with($cacheKey)
-        ->andReturn(false);
-
-    Http::fake([
-        $url => Http::response(null, 500),
-    ]);
-
-    $this->expectException(\Exception::class);
-    $this->expectExceptionMessage('Failed to fetch data from Transistor API');
-
-    $this->transistorService->transistorFetch($url);
-});
-
-it('fetches recent episodes successfully', function () {
+it('returns cached data from getAll when available', function () {
     $showId = '12345';
-    $count = 2;
-    $expectedData = ['data' => ['episode1', 'episode2']];
+    $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';
+    $episodes = [
+        ['id' => '1', 'type' => 'episode', 'attributes' => ['title' => 'Episode 1']],
+        ['id' => '2', 'type' => 'episode', 'attributes' => ['title' => 'Episode 2']],
+    ];
 
-    Http::fake([
-        '*' => Http::response($expectedData, 200),
+    Cache::forever($url, $episodes);
+
+    $result = $this->transistorService->getAll($showId);
+
+    expect($result)->toBe($episodes);
+});
+
+it('fetches from API and caches when not cached', function () {
+    $showId = '12345';
+    $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';
+    $episodes = [
+        ['id' => '1', 'type' => 'episode', 'attributes' => ['title' => 'Episode 1']],
+        ['id' => '2', 'type' => 'episode', 'attributes' => ['title' => 'Episode 2']],
+    ];
+
+    $mockClient = MockClient::global([
+        GetEpisodesRequest::class => MockResponse::make([
+            'data' => $episodes,
+            'meta' => ['currentPage' => 1, 'totalPages' => 1],
+        ]),
     ]);
 
-    $result = $this->transistorService->getRecent($showId, $count);
+    $result = $this->transistorService->getAll($showId);
 
-    expect($result)->toBe($expectedData['data']);
+    $mockClient->assertSent(GetEpisodesRequest::class);
+    expect($result)->toBe($episodes);
+    expect(Cache::get($url))->toBe($episodes);
 });
 
-it('returns errors when API responds with errors in getRecent', function () {
+it('fetches recent episodes', function () {
     $showId = '12345';
-    $count = 2;
-    $errors = ['errors' => ['message' => 'Something went wrong']];
+    $episodes = [
+        ['id' => '1', 'type' => 'episode', 'attributes' => ['title' => 'Episode 1']],
+        ['id' => '2', 'type' => 'episode', 'attributes' => ['title' => 'Episode 2']],
+        ['id' => '3', 'type' => 'episode', 'attributes' => ['title' => 'Episode 3']],
+    ];
 
-    Http::fake([
-        '*' => Http::response($errors, 200),
+    MockClient::global([
+        GetEpisodesRequest::class => MockResponse::make([
+            'data' => $episodes,
+            'meta' => ['currentPage' => 1, 'totalPages' => 1],
+        ]),
     ]);
 
-    $result = $this->transistorService->getRecent($showId, $count);
+    $result = $this->transistorService->getRecent($showId, 2);
 
-    expect($result)->toBe($errors);
+    expect($result)->toHaveCount(2);
+    expect($result[0]['id'])->toBe('1');
+    expect($result[1]['id'])->toBe('2');
 });
 
-it('returns data from getAll', function () {
+it('returns single episode from getEpisode', function () {
     $showId = '12345';
-    $data = ['data' => ['episode1', 'episode2']];
-    $url = config('services.transistor.api_url') . 'episodes?show_id=12345&status=draft&pagination%5Bper%5D=1200';
+    $episodes = [
+        ['id' => '1', 'type' => 'episode', 'attributes' => ['title' => 'Episode 1']],
+        ['id' => '2', 'type' => 'episode', 'attributes' => ['title' => 'Episode 2']],
+    ];
 
-    Http::fake(function (Request $request) use ($url, $data) {
-        if ($request->url() === $url) {
-            return Http::response($data, 200);
-        }
+    MockClient::global([
+        GetEpisodesRequest::class => MockResponse::make([
+            'data' => $episodes,
+            'meta' => ['currentPage' => 1, 'totalPages' => 1],
+        ]),
+    ]);
 
-        return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
+    $result = $this->transistorService->getEpisode('2', $showId);
 
-    });
-
-    $result = $this->transistorService->getAll($showId, 'draft');
-
-    expect($result)->toBe($data['data']);
+    expect($result)->toBe(['id' => '2', 'type' => 'episode', 'attributes' => ['title' => 'Episode 2']]);
 });
 
-it('Requests all pages if more pags are available', function () {
+it('paginates through all pages', function () {
     $showId = '12345';
 
-    $firstPage = ['meta' => ['currentPage' => 1, 'totalPages' => 2], 'data' => ['episode1', 'episode2']];
-    $secondPage = ['meta' => ['currentPage' => 2, 'totalPages' => 2], 'data' => ['episode3', 'episode4']];
+    $mockClient = MockClient::global([
+        MockResponse::make([
+            'data' => [['id' => '1'], ['id' => '2']],
+            'meta' => ['currentPage' => 1, 'totalPages' => 2],
+        ]),
+        MockResponse::make([
+            'data' => [['id' => '3'], ['id' => '4']],
+            'meta' => ['currentPage' => 2, 'totalPages' => 2],
+        ]),
+    ]);
 
-    $url = config('services.transistor.api_url') . 'episodes?show_id=12345&status=draft&pagination%5Bper%5D=1200';
+    $result = $this->transistorService->getAll($showId);
 
-    Http::fake(function (Request $request) use ($url, $firstPage, $secondPage) {
-        if ($request->url() === $url) {
-            return Http::response($firstPage, 200);
-        }
-        if ($request->url() === $url . '&pagination%5Bpage%5D=2') {
-            return Http::response($secondPage, 200);
-        }
-
-        return Http::response(['errors' => [['title' => 'Resource not found']]], 200);
-
-    });
-
-    $result = $this->transistorService->getAll($showId, 'draft');
-    Http::assertSentCount(2);
-
-    expect($result)->toBe(array_merge($firstPage['data'], $secondPage['data']));
+    $mockClient->assertSentCount(2, GetEpisodesRequest::class);
+    expect($result)->toHaveCount(4);
+    expect($result[0]['id'])->toBe('1');
+    expect($result[3]['id'])->toBe('4');
 });
+
+it('updates an episode successfully', function () {
+    $episodeId = '123';
+    $data = ['episode' => ['title' => 'Updated Title']];
+
+    Http::fake([
+        'https://api.transistor.fm/v1/episodes/*' => Http::response([
+            'data' => ['id' => '123', 'attributes' => ['title' => 'Updated Title']],
+        ], 200),
+    ]);
+
+    $result = $this->transistorService->updateEpisode($episodeId, $data);
+
+    expect($result)->toHaveKey('data');
+    expect($result['data']['attributes']['title'])->toBe('Updated Title');
+});
+
+it('returns errors from updateEpisode when API responds with errors', function () {
+    $episodeId = '123';
+    $data = ['episode' => ['title' => 'Updated Title']];
+
+    Http::fake([
+        'https://api.transistor.fm/v1/episodes/*' => Http::response([
+            'errors' => [['title' => 'Validation failed']],
+        ], 200),
+    ]);
+
+    $result = $this->transistorService->updateEpisode($episodeId, $data);
+
+    expect($result)->toHaveKey('errors');
+});
+
+it('throws exception when updateEpisode fails', function () {
+    $episodeId = '123';
+    $data = ['episode' => ['title' => 'Updated Title']];
+
+    Http::fake([
+        'https://api.transistor.fm/v1/episodes/*' => Http::response(null, 500),
+    ]);
+
+    $this->transistorService->updateEpisode($episodeId, $data);
+})->throws(\Exception::class, 'Failed to update episode in Transistor API');

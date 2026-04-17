@@ -4,7 +4,6 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use App\Mail\EventAutoUnpublishedMail;
@@ -17,7 +16,6 @@ use App\Jobs\Fire\UnpublishSingleUnconfirmedFireJob;
 use App\Jobs\Fire\SendSingleFireCheckinReminderEmailJob;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
 
     Queue::fake();
     Mail::fake();

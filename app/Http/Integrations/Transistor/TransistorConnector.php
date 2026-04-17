@@ -28,7 +28,7 @@ class TransistorConnector extends Connector implements HasPagination
 
     protected function resolveRateLimitStore(): RateLimitStore
     {
-        return new LaravelCacheStore(Cache::store('redis'));
+        return new LaravelCacheStore(Cache::store(config('services.transistor.rate_limit_cache_store', 'redis')));
     }
 
     /**

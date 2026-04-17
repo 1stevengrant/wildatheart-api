@@ -4,17 +4,21 @@ namespace App\Http\Controllers\API;
 
 use Statamic\Entries\Entry;
 use App\DataTypeObjects\Blueprint;
-use App\Services\SubsplashService;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
+use App\Services\Subsplash\SubsplashApiClient;
 use App\DataTypeObjects\API\V1\Content\ExperienceResponse;
 
 class ExperienceDataController extends Controller
 {
+    public function __construct(
+        private SubsplashApiClient $apiClient,
+    ) {}
+
     private function getBySlug($slug)
     {
-        $experience = Entry::query()
-            ->where('collection', 'experiences')
-            ->where('slug', $slug)
+        $experience = EntryQueryBuilder::experiences()
+            ->bySlug($slug)
             ->firstOrFail();
 
         $experienceData = $experience->toArray();
@@ -48,8 +52,7 @@ class ExperienceDataController extends Controller
         $experienceResponse->related_event_type = collect(data_get($experienceData, 'related_event_type'))->first();
 
         $sessions = [];
-        $subsplash = new SubsplashService;
-        $relatedMedia = $subsplash->getRelatedMediaItems($experience->subsplash_series_id);
+        $relatedMedia = $this->apiClient->getRelatedMediaItems($experience->subsplash_series_id);
         $relatedMediaMap = [];
 
         foreach ($relatedMedia as $mediaItem) {
@@ -76,31 +79,17 @@ class ExperienceDataController extends Controller
 
     public function show($slug)
     {
-
         $experience = $this->getBySlug($slug);
 
         return response()->json($experience);
     }
 
-    private function getSessionData($experience)
-    {
-        $sessions = [];
-    }
-
     public function all()
     {
-        $experiences = Entry::query()
-            ->where('collection', 'experiences')
+        $experiences = EntryQueryBuilder::experiences()
             ->get();
 
-        $output = [];
-        foreach ($experiences as $experience) {
-
-            $experienceData = $this->getBySlug($experience->slug);
-            $output[] = [
-                ...$experienceData->toArray(),
-            ];
-        }
+        $output = $experiences->map(fn ($experience) => $this->getBySlug($experience->slug)->toArray());
 
         return response()->json($output);
     }

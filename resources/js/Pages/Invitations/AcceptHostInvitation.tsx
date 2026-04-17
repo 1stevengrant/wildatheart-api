@@ -44,9 +44,7 @@ const AcceptHostInvitation = () => {
                     <div className="bg-black border border-n800 rounded-lg p-6 mb-6">
                         <h2 className="text-2xl font-bold text-white mb-4">
                             {invitation.event.name}{" "}
-                            {singular(
-                                invitation.event.event_type_name as string
-                            )}
+                            {singular(invitation.event.event_type_name ?? "")}
                         </h2>
                         <p className="text-n40 mb-2">
                             <strong>Location:</strong>{" "}

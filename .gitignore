@@ -41,3 +41,7 @@ node_modules/
 .claude/settings.local.json
 tests/Browser/Screenshots
 storage/app/private/reports/*.csv
+.claude/settings.local.json
+resources/js/types/generated.d.ts
+resources/js/types/statamic.d.ts
+resources/users/roles.yaml

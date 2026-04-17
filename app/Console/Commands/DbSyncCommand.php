@@ -100,8 +100,22 @@ class DbSyncCommand extends Command
             // File settings
             'importSqlFile' => config('dbsync.importSqlFile'),
             'removeFileAfterImport' => config('dbsync.removeFileAfterImport'),
-            'fileName' => $this->option('filename') ?? config('dbsync.defaultFileName'),
+            'fileName' => $this->resolveFileName(),
         ];
+    }
+
+    /**
+     * Resolve the SQL dump filename to an absolute path.
+     */
+    private function resolveFileName(): string
+    {
+        $fileName = $this->option('filename') ?? config('dbsync.defaultFileName');
+
+        if (! str_starts_with($fileName, '/')) {
+            $fileName = sys_get_temp_dir() . '/' . $fileName;
+        }
+
+        return $fileName;
     }
 
     /**
@@ -142,7 +156,7 @@ class DbSyncCommand extends Command
     private function exportWithStructureOnlyTables(array $config, string $ignoreString, array $excludeDataTables): int
     {
         // First export only structure for tables where we want structure but no data
-        $structureOnlyFile = 'structure_' . $config['fileName'];
+        $structureOnlyFile = $this->buildSiblingFileName($config['fileName'], 'structure_');
         $structureOnlyTables = implode(' ', array_map('trim', $excludeDataTables));
 
         $structureResult = $this->executeExport(
@@ -166,7 +180,7 @@ class DbSyncCommand extends Command
             }
         }
 
-        $dataOnlyFile = 'data_' . $config['fileName'];
+        $dataOnlyFile = $this->buildSiblingFileName($config['fileName'], 'data_');
         $dataResult = $this->executeExport($config, $dataIgnoreString, $dataOnlyFile);
 
         if ($dataResult !== self::SUCCESS) {
@@ -176,11 +190,32 @@ class DbSyncCommand extends Command
         }
 
         // Combine the files
-        exec("cat $structureOnlyFile $dataOnlyFile > {$config['fileName']}");
+        $structureOnlyFileArg = escapeshellarg($structureOnlyFile);
+        $dataOnlyFileArg = escapeshellarg($dataOnlyFile);
+        $finalFileArg = escapeshellarg($config['fileName']);
+
+        exec("cat $structureOnlyFileArg $dataOnlyFileArg > $finalFileArg");
         unlink($structureOnlyFile);
         unlink($dataOnlyFile);
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Build a sibling filename next to $fileName with a prefix.
+     *
+     * Example: /tmp/file.sql + structure_ => /tmp/structure_file.sql
+     */
+    private function buildSiblingFileName(string $fileName, string $prefix): string
+    {
+        $directory = dirname($fileName);
+        $baseName = basename($fileName);
+
+        if ($baseName === '' || $baseName === '.' || $baseName === DIRECTORY_SEPARATOR) {
+            $baseName = 'file.sql';
+        }
+
+        return mb_rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $prefix . $baseName;
     }
 
     /**
@@ -190,14 +225,24 @@ class DbSyncCommand extends Command
     {
         $commonOptions = "--single-transaction --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password={$config['password']} {$config['database']} $ignoreString $additionalOptions";
 
+        $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_');
+        $outputFileArg = escapeshellarg($outputFile);
+        $errorFileArg = escapeshellarg($errorFile);
+
         if ($config['useSsh'] === true) {
-            $command = "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} mysqldump $commonOptions > $outputFile 2>/dev/null";
+            $command = "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} mysqldump $commonOptions > $outputFileArg 2>$errorFileArg";
         } else {
-            $command = "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFile 2>/dev/null";
+            $command = "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
         }
 
         $result = 0;
         exec($command, $output, $result);
+
+        if ($result !== 0) {
+            $this->error('Export failed: ' . file_get_contents($errorFile));
+        }
+
+        @unlink($errorFile);
 
         return $result === 0 ? self::SUCCESS : self::FAILURE;
     }
@@ -207,15 +252,17 @@ class DbSyncCommand extends Command
      */
     private function importDatabase(array $config): int
     {
+        $fileNameArg = escapeshellarg($config['fileName']);
+
         $command = $config['localPassword']
-            ? "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -p{$config['localPassword']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>/dev/null"
-            : "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -P{$config['localPort']} {$config['localDatabase']} < {$config['fileName']} 2>/dev/null";
+            ? "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -p{$config['localPassword']} -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1"
+            : "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1";
 
         $result = 0;
         exec($command, $output, $result);
 
         if ($result !== 0) {
-            $this->error('Import failed');
+            $this->error('Import failed: ' . implode("\n", $output));
 
             return self::FAILURE;
         }

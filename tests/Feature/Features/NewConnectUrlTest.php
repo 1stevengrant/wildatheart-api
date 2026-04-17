@@ -4,9 +4,12 @@ use App\Models\Event;
 use App\Data\V1\EventData;
 use Laravel\Pennant\Feature;
 use App\Features\NewConnectUrl;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
     Feature::purge(NewConnectUrl::class);
 });
 

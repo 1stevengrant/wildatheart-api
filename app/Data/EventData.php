@@ -71,6 +71,7 @@ class EventData extends Data
         public ?string $custom_landing_url = null,
         /** @var array<int, EventManagerData> */
         public array $managers = [],
+        public int $managers_count = 0,
     ) {}
 
     public static function fromModel(Event $event): self
@@ -123,7 +124,8 @@ class EventData extends Data
             zip: $event->zip,
             is_featured: $event->is_featured,
             custom_landing_url: $event->custom_landing_url,
-            managers: $event->managers->map(fn ($manager) => EventManagerData::fromUser($manager))->toArray(),
+            managers: $event->managers->map(fn ($manager) => EventManagerData::fromUser($manager))->all(),
+            managers_count: $event->managers?->count() ?? 0,
         );
     }
 }

@@ -14,7 +14,7 @@ class EventController extends Controller
     public function index()
     {
         return cache()->remember('events_collection', now()->addHour(), function () {
-            return EventCollectionData::collection(
+            return EventCollectionData::collect(
                 Event::query()
                     ->published()
                     ->active()

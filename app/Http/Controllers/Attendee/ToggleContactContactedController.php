@@ -13,30 +13,14 @@ class ToggleContactContactedController extends Controller
     {
         abort_unless($attendee->user_id == auth()->user()->id, 403);
 
-        if ($attendee->contacted_on) {
+        $wasContacted = (bool) $attendee->contacted_on;
 
-            $attendee->update([
-                'contacted_on' => null,
-            ]);
-
-            LogActivityJob::dispatch(
-                description: 'Contact unmarked as not contacted',
-                causedBy: auth()->user(),
-                performedOn: $attendee,
-            );
-
-            return redirect()->back()->with(['notifications' => [
-                'message' => 'Contact updated',
-                'type' => 'success',
-            ],
-            ]);
-        }
         $attendee->update([
-            'contacted_on' => now(),
+            'contacted_on' => $wasContacted ? null : now(),
         ]);
 
         LogActivityJob::dispatch(
-            description: 'Contact marked as contacted',
+            description: $wasContacted ? 'Contact unmarked as not contacted' : 'Contact marked as contacted',
             causedBy: auth()->user(),
             performedOn: $attendee,
         );
@@ -44,7 +28,6 @@ class ToggleContactContactedController extends Controller
         return redirect()->back()->with(['notifications' => [
             'message' => 'Contact updated',
             'type' => 'success',
-        ],
-        ]);
+        ]]);
     }
 }

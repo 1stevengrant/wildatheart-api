@@ -175,4 +175,18 @@ return [
 
     'sort_field' => 'email',
     'sort_direction' => 'asc',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Elevated Sessions Enabled
+    |--------------------------------------------------------------------------
+    |
+    | Users may be required to reauthorize before performing certain
+    | sensitive actions. Disabling can be useful when using OAuth
+    | providers like Auth0 where password re-confirmation is not
+    | applicable.
+    |
+    */
+
+    'elevated_sessions_enabled' => false,
 ];

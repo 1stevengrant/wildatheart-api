@@ -1,9 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->event = \App\Models\Event::factory()->fires()->create();
 });
 it('loads the edit event page for an authenticated user that owns the event', function () {

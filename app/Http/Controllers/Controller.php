@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-abstract class Controller extends BaseController
+abstract class Controller
 {
-    use AuthorizesRequests, ValidatesRequests;
+    use AuthorizesRequests;
 
     /**
      * Transform a paginated collection to match frontend PaginatedData structure
@@ -18,7 +16,7 @@ abstract class Controller extends BaseController
     protected function transformPaginatedData(LengthAwarePaginator $paginator, string $dataClass): array
     {
         return [
-            'data' => $dataClass::collection($paginator->items()),
+            'data' => $dataClass::collect($paginator->items()),
             'links' => [
                 'first' => $paginator->url(1),
                 'last' => $paginator->url($paginator->lastPage()),

@@ -36,7 +36,18 @@ const MailingAddressEventTypePage = () => {
         : "";
 
     const [phone, setPhone] = useState(phoneNumber);
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm<{
+        given_name: string;
+        family_name: string;
+        company: string;
+        street_address: string;
+        address2: string;
+        city: string;
+        state: string;
+        country: string;
+        phone: string;
+        zip: string;
+    }>({
         given_name: auth.user.given_name ?? "",
         family_name: auth.user.family_name ?? "",
         company: "",
