@@ -21,6 +21,8 @@ export function initSentry(): void {
             /CustomEvent/,
             "Importing a module script failed",
             "AxiosError: timeout exceeded",
+            "AxiosError: Network Error",
+            "Network Error",
             /window\.__firefox__/,
             /MetaMask/i,
             /Failed to connect to MetaMask/i,
