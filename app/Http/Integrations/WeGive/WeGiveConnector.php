@@ -2,6 +2,7 @@
 
 namespace App\Http\Integrations\WeGive;
 
+use RuntimeException;
 use Saloon\Http\Connector;
 use Saloon\Http\Auth\TokenAuthenticator;
 
@@ -13,13 +14,17 @@ class WeGiveConnector extends Connector
 
     public const INFO_LOG_NAME = 'wegive';
 
-    public ?int $tries = 3;
-
-    public ?int $retryInterval = 5000;
+    public ?int $tries = 1;
 
     protected function defaultAuth(): TokenAuthenticator
     {
-        return new TokenAuthenticator(config('services.wegive.api_key'));
+        $apiKey = config('services.wegive.api_key');
+
+        if (! is_string($apiKey) || $apiKey === '') {
+            throw new RuntimeException('WeGive API key is not configured. Set WEGIVE_API_KEY in the environment.');
+        }
+
+        return new TokenAuthenticator($apiKey);
     }
 
     public function resolveBaseUrl(): string
