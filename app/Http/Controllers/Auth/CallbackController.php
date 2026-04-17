@@ -135,21 +135,36 @@ class CallbackController extends Controller
 
     protected function findOrCreateUser(array $auth0User): User
     {
-        $user = User::firstOrCreate(
-            ['email' => $auth0User['email']],
-            [
+        $user = User::withTrashed()->byEmail($auth0User['email'])->first();
+
+        if ($user === null) {
+            $user = User::create([
+                'email' => $auth0User['email'],
                 'given_name' => $auth0User['given_name'] ?? null,
                 'family_name' => $auth0User['family_name'] ?? null,
                 'password' => bcrypt(Str::random(32)),
                 'provider_id' => $auth0User['sub'],
-            ]
-        );
+            ]);
 
-        LogActivityJob::dispatch(
-            logName: 'auth',
-            description: 'Created user',
-            properties: ['user' => $user->toArray()],
-        );
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'Created user',
+                properties: ['user' => $user->toArray()],
+            );
+
+            return $user;
+        }
+
+        if ($user->trashed()) {
+            $user->restore();
+            $user->forceFill(['provider_id' => $auth0User['sub']])->save();
+
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'Restored soft-deleted user on re-signup',
+                properties: ['user' => $user->toArray()],
+            );
+        }
 
         return $user;
     }

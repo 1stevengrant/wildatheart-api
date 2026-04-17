@@ -34,6 +34,7 @@ return [
         \App\Models\User::class => [
             'name' => 'Local Platform Users',
             'cp_icon' => 'users',
+            'title_field' => 'name',
         ],
 
         \App\Models\Attendee::class => [

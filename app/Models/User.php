@@ -10,6 +10,7 @@ use Laravolt\Avatar\Facade as Avatar;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -193,6 +194,11 @@ class User extends Authenticatable
     public function newEloquentBuilder($query): UserBuilder
     {
         return new UserBuilder($query);
+    }
+
+    public function scopeRunway(Builder $query): void
+    {
+        $query->withTrashed();
     }
 
     public function hasAgreedToHostAgreement(): bool
