@@ -134,6 +134,12 @@
             "@php artisan statamic:generate-types --skip-pint",
             "@php artisan typescript:transform"
         ],
+        "rector": "rector process",
+        "rector:dry": "rector process --dry-run",
+        "refactor": [
+            "@rector",
+            "pint"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
