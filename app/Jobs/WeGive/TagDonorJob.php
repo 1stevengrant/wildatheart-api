@@ -25,7 +25,8 @@ class TagDonorJob implements ShouldQueue
      */
     public int $tries = 3;
 
-    public int $backoff = 60;
+    /** @var array<int, int> */
+    public array $backoff = [60, 300, 900];
 
     public int $maxExceptions = 3;
 

@@ -17,10 +17,10 @@ class SupportRequestController extends Controller
         );
 
         Issue::create([
-            'email' => request('email'),
-            'name' => request('name'),
-            'subject' => 'Fires Feedback: ' . request('subject'),
-            'description' => request('description'),
+            'email' => $request->validated('email'),
+            'name' => mb_trim($request->validated('given_name') . ' ' . $request->validated('family_name')),
+            'subject' => 'Fires Feedback: ' . $request->validated('subject'),
+            'description' => $request->validated('description'),
         ]);
 
         return redirect()->back()->with(['notifications' => [

@@ -229,6 +229,7 @@ class User extends Authenticatable
     {
         return $this->given_name
             && $this->family_name
+            && $this->phone
             && filter_var($this->email, FILTER_VALIDATE_EMAIL);
     }
 
