@@ -1,11 +1,14 @@
 <?php
 
+use App\Models\Issue;
+use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\Queue;
 
 it('creates a support ticket and logs the activity', function () {
     Queue::fake();
     $attributes = [
-        'name' => 'John Doe',
+        'given_name' => 'John',
+        'family_name' => 'Doe',
         'email' => 'steven@example.com',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
@@ -14,14 +17,16 @@ it('creates a support ticket and logs the activity', function () {
     $response = $this->post(route('support.store'), $attributes);
 
     expect($response->status())->toBe(302)
-        ->and(\App\Models\Issue::count())->toBe(1);
+        ->and(Issue::count())->toBe(1)
+        ->and(Issue::first()->name)->toBe('John Doe');
 
-    Queue::assertPushed(\App\Jobs\LogActivityJob::class);
+    Queue::assertPushed(LogActivityJob::class);
 });
 
 test('a support ticket requires an email address', function () {
     $attributes = [
-        'name' => 'John Doe',
+        'given_name' => 'John',
+        'family_name' => 'Doe',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
     ];
@@ -33,7 +38,8 @@ test('a support ticket requires an email address', function () {
 
 test('a support ticket requires a valid email address with valid dns and rfs', function () {
     $attributes = [
-        'name' => 'John Doe',
+        'given_name' => 'John',
+        'family_name' => 'Doe',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
         'email' => 'hello@@digitalevangelists',
@@ -46,7 +52,8 @@ test('a support ticket requires a valid email address with valid dns and rfs', f
 
 test('a support ticket requires a valid email address', function () {
     $attributes = [
-        'name' => 'John Doe',
+        'given_name' => 'John',
+        'family_name' => 'Doe',
         'email' => 'steven',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
@@ -56,32 +63,60 @@ test('a support ticket requires a valid email address', function () {
     $response->assertSessionHasErrors('email');
 });
 
-test('a support ticket requires a name', function () {
+test('a support ticket requires a given name', function () {
     $attributes = [
+        'family_name' => 'Doe',
         'email' => 'steven@example.com',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
     ];
 
     $response = $this->post(route('support.store'), $attributes);
-    $response->assertSessionHasErrors('name');
+    $response->assertSessionHasErrors('given_name');
 });
 
-test('a support ticket requires a name with no more than 255 chars', function () {
+test('a support ticket requires a family name', function () {
     $attributes = [
-        'name' => str_repeat('a', 256),
+        'given_name' => 'John',
         'email' => 'steven@example.com',
         'subject' => 'Test feedback',
         'description' => 'This is a test feedback',
     ];
 
     $response = $this->post(route('support.store'), $attributes);
-    $response->assertSessionHasErrors('name');
+    $response->assertSessionHasErrors('family_name');
+});
+
+test('a support ticket requires a given name with no more than 255 chars', function () {
+    $attributes = [
+        'given_name' => str_repeat('a', 256),
+        'family_name' => 'Doe',
+        'email' => 'steven@example.com',
+        'subject' => 'Test feedback',
+        'description' => 'This is a test feedback',
+    ];
+
+    $response = $this->post(route('support.store'), $attributes);
+    $response->assertSessionHasErrors('given_name');
+});
+
+test('a support ticket requires a family name with no more than 255 chars', function () {
+    $attributes = [
+        'given_name' => 'John',
+        'family_name' => str_repeat('a', 256),
+        'email' => 'steven@example.com',
+        'subject' => 'Test feedback',
+        'description' => 'This is a test feedback',
+    ];
+
+    $response = $this->post(route('support.store'), $attributes);
+    $response->assertSessionHasErrors('family_name');
 });
 
 test('a support ticket requires a subject', function () {
     $attributes = [
-        'name' => 'John Doe',
+        'given_name' => 'John',
+        'family_name' => 'Doe',
         'email' => 'steven@example.com',
         'description' => 'This is a test feedback',
     ];
@@ -93,7 +128,8 @@ test('a support ticket requires a subject', function () {
 
 test('a support ticket requires a subject with no more than 255 chars', function () {
     $attributes = [
-        'name' => 'John Doe',
+        'given_name' => 'John',
+        'family_name' => 'Doe',
         'email' => 'steven@example.com',
         'subject' => str_repeat('a', 256),
         'description' => 'This is a test feedback',
@@ -106,7 +142,8 @@ test('a support ticket requires a subject with no more than 255 chars', function
 
 test('a support ticket requires a description', function () {
     $attributes = [
-        'name' => 'John Doe',
+        'given_name' => 'John',
+        'family_name' => 'Doe',
         'email' => 'steven@example.com',
         'subject' => 'Test feedback',
     ];

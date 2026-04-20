@@ -18,10 +18,14 @@ export const CompleteProfileModal = ({
     open,
     setOpen,
     onSuccess,
+    title = "Complete Your Profile",
+    description = "Please update the required fields below.",
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
     onSuccess?: () => void;
+    title?: string;
+    description?: string;
 }) => {
     const { auth } = usePage<any>().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,12 +74,9 @@ export const CompleteProfileModal = ({
                         as="h3"
                         className="font-semibold leading-6 text-lg"
                     >
-                        Complete Your Profile
+                        {title}
                     </Dialog.Title>
-                    <p className="mt-2 text-sm text-n40">
-                        Please provide your name to continue accepting this
-                        invitation.
-                    </p>
+                    <p className="mt-2 text-sm text-n40">{description}</p>
                     <FormFieldsWrapper>
                         <div>
                             <InputLabel
