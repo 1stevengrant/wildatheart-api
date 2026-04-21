@@ -89,7 +89,7 @@ class CallbackController extends Controller
         }
     }
 
-    protected function buildActivationMessage(array $transfers, array $invitations): string
+    private function buildActivationMessage(array $transfers, array $invitations): string
     {
         if (! empty($transfers)) {
             $message = $this->formatActivationMessage($transfers, 'the owner of');
@@ -122,7 +122,7 @@ class CallbackController extends Controller
         return 'You are now logged in!';
     }
 
-    protected function formatActivationMessage(array $items, string $role): string
+    private function formatActivationMessage(array $items, string $role): string
     {
         $eventName = $items[0]['event_name'];
 
@@ -133,7 +133,7 @@ class CallbackController extends Controller
         return "You are now {$role} {$eventName} and " . (count($items) - 1) . ' other event(s)!';
     }
 
-    protected function findOrCreateUser(array $auth0User): User
+    private function findOrCreateUser(array $auth0User): User
     {
         $user = User::withTrashed()->byEmail($auth0User['email'])->first();
 

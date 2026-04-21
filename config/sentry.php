@@ -39,37 +39,17 @@ return [
     ],
 
     'tracing' => [
-        // Trace queue jobs as their own transactions
-        'queue_job_transactions' => env('SENTRY_TRACE_QUEUE_ENABLED', false),
-
-        // Capture queue jobs as spans when executed on the sync driver
-        'queue_jobs' => true,
-
-        // Capture SQL queries as spans
-        'sql_queries' => true,
-
-        // Try to find out where the SQL query originated from and add it to the query spans
-        'sql_origin' => true,
-
-        // Capture views as spans
-        'views' => true,
-
-        // Capture Livewire components as spans
-        'livewire' => true,
-
-        // Capture HTTP client requests as spans
-        'http_client_requests' => true,
-
-        // Capture Redis operations as spans (this enables Redis events in Laravel)
-        'redis_commands' => env('SENTRY_TRACE_REDIS_COMMANDS', false),
-
-        // Try to find out where the Redis command originated from and add it to the command spans
-        'redis_origin' => true,
-
-        // Indicates if the tracing integrations supplied by Sentry should be loaded
+        // Performance tracing is handled by Nightwatch. Sentry is kept for exceptions only.
+        'queue_job_transactions' => false,
+        'queue_jobs' => false,
+        'sql_queries' => false,
+        'sql_origin' => false,
+        'views' => false,
+        'livewire' => false,
+        'http_client_requests' => false,
+        'redis_commands' => false,
+        'redis_origin' => false,
         'default_integrations' => true,
-
-        // Indicates that requests without a matching route should be traced
         'missing_routes' => false,
     ],
 

@@ -24,13 +24,11 @@ class PageEntryController extends Controller
     ) {}
 
     /**
-     * getPageBySlug
-     *
      * Get a page using its slug
      *
      * @urlParam slug string required The slug of the page. Example: media
      */
-    public function getPageBySlug(string $slug)
+    public function show(string $slug)
     {
         $page = $this->resolveLivePreview();
 

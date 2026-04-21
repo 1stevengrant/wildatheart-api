@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Builders\EntryQueryBuilder;
 use Illuminate\Support\Facades\Cache;
 
-class SeoController extends Controller
+class SitemapController extends Controller
 {
-    /**
-     * Get the sitemap as a JSON response.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSitemap()
+    public function __invoke(): JsonResponse
     {
         $pages = Cache::remember('sitemap_pages', 900, function () {
             return EntryQueryBuilder::query()
@@ -30,8 +26,6 @@ class SeoController extends Controller
                 });
         });
 
-        return response()->json(
-            $pages,
-        );
+        return response()->json($pages);
     }
 }

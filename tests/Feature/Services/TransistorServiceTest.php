@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Services;
 
+use Saloon\RateLimitPlugin\Limit;
 use Saloon\Http\Faking\MockClient;
 use App\Services\TransistorService;
 use Illuminate\Support\Facades\Http;
 use Saloon\Http\Faking\MockResponse;
 use Illuminate\Support\Facades\Cache;
+use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
 
 beforeEach(function () {
@@ -167,3 +169,44 @@ it('throws exception when updateEpisode fails', function () {
 
     $this->transistorService->updateEpisode($episodeId, $data);
 })->throws(\Exception::class, 'Failed to update episode in Transistor API');
+
+it('returns empty array and swallows rate limit exception on getAll', function () {
+    $showId = 'rate-limited-show';
+
+    MockClient::global([
+        GetEpisodesRequest::class => function () {
+            throw new RateLimitReachedException(
+                Limit::allow(5)->everySeconds(10)->name('too_many_attempts_limit')
+            );
+        },
+    ]);
+
+    $result = $this->transistorService->getAll($showId);
+
+    expect($result)->toBe([]);
+});
+
+it('serializes concurrent refreshes using a cache lock', function () {
+    $showId = 'locked-show';
+    $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';
+    $episodes = [['id' => '42', 'type' => 'episode', 'attributes' => ['title' => 'Cached While Waiting']]];
+
+    $lock = Cache::lock("transistor-refresh:{$showId}:published", 10);
+    $lock->get();
+
+    // Simulate another process populating the cache while the lock is held.
+    Cache::forever($url, $episodes);
+    $lock->release();
+
+    $mockClient = MockClient::global([
+        GetEpisodesRequest::class => MockResponse::make([
+            'data' => [],
+            'meta' => ['currentPage' => 1, 'totalPages' => 1],
+        ]),
+    ]);
+
+    $result = $this->transistorService->getAll($showId);
+
+    expect($result)->toBe($episodes);
+    $mockClient->assertSentCount(0, GetEpisodesRequest::class);
+});

@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
 use App\DataTypeObjects\MediaItemData;
-use App\Http\Controllers\API\MediaItemDataController;
+use App\Services\Subsplash\SubsplashMediaItemResponseBuilder;
 use App\Http\Controllers\API\V1\Content\Concerns\ResolvesLivePreview;
 
 class MediaItemEntryController extends Controller
@@ -17,9 +17,10 @@ class MediaItemEntryController extends Controller
     public function __construct(
         private readonly EntryBuilderService $entryBuilder,
         private readonly BlockBuilderService $blockBuilder,
+        private readonly SubsplashMediaItemResponseBuilder $subsplashMediaItemResponseBuilder,
     ) {}
 
-    public function media($slug)
+    public function show($slug)
     {
         $mediaItem = $this->resolveLivePreview();
 
@@ -35,9 +36,8 @@ class MediaItemEntryController extends Controller
             return response()->json(['error' => 'Media not found'], 404);
         }
 
-        // Adding this as workaround until I can refactor into a service
         if ($mediaItem->blueprint->handle === 'subsplash_media_item') {
-            return app(MediaItemDataController::class)->buildSubsplashMediaItemResponse($mediaItem);
+            return $this->subsplashMediaItemResponseBuilder->build($mediaItem);
         }
 
         $response = $this->entryBuilder->buildResponseFromEntry($mediaItem);

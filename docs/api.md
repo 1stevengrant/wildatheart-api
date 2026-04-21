@@ -18,7 +18,7 @@ All API endpoints are publicly accessible under the `/api` prefix. None require 
 
 -   URL: `/api/v1/webhooks/refresh-daily-readings`
 -   Method: `POST`
--   Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@refreshDailyReadings`
+-   Controller: `App\Http\Controllers\API\V1\Content\RefreshDailyReadingsController`
 
 ### Navigation
 
@@ -93,31 +93,31 @@ Caching is also implemented in this controller to prevent the same search from b
 
 -   URL: `/api/content/media-by-series-id/{slug}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\MediaItemDataController@mediaBySeriesId`
+-   Controller: `App\Http\Controllers\API\Media\MediaItemsBySeriesController@show`
 
 #### Media Redirects
 
 -   URL: `/api/content/media/redirects`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\MediaItemDataController@getRedirects`
+-   Controller: `App\Http\Controllers\API\Media\MediaRedirectsController@index`
 
 #### Media Show
 
 -   URL: `/api/content/media/{slug}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\MediaItemDataController@media`
+-   Controller: `App\Http\Controllers\API\Media\MediaItemController@show`
 
 #### Subsplash Media
 
 -   URL: `/api/content/subsplash-media/{slug}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\MediaItemDataController@subsplashMedia`
+-   Controller: `App\Http\Controllers\API\Media\SubsplashMediaItemController@show`
 
 ### Subsplash Proxy
 
 -   URL: `/api/content/subsplash/{any}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\SubsplashController@getProxy`
+-   Controller: `App\Http\Controllers\API\SubsplashController`
 
 Wildcard proxy route for Subsplash API requests.
 
@@ -127,7 +127,7 @@ Wildcard proxy route for Subsplash API requests.
 
 -   URL: `/api/content/experiences/all`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\ExperienceDataController@all`
+-   Controller: `App\Http\Controllers\API\AllExperiencesController`
 
 #### Experience Show
 
@@ -143,7 +143,7 @@ Wildcard proxy route for Subsplash API requests.
 
 -   URL: `/api/content/v1/seo/sitemap`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\SeoController@getSitemap`
+-   Controller: `App\Http\Controllers\SitemapController`
 
 ### Search
 
@@ -183,7 +183,7 @@ Returns the daily reading content from the Transistor.fm API.
 
 -   URL: `/api/content/v1/daily-reading/recent`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@getRecent`
+-   Controller: `App\Http\Controllers\API\V1\Content\RecentDailyReadingsController@index`
 
 Returns the most recent daily reading content.
 
@@ -193,7 +193,7 @@ Legacy daily-reading URL aliases are handled by site redirects (Cloudflare KV), 
 
 -   URL: `/api/content/v1/page/{slug}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\PageEntryController@getPageBySlug`
+-   Controller: `App\Http\Controllers\API\V1\Content\PageEntryController@show`
 
 Returns a page's content by its slug.
 
@@ -203,7 +203,7 @@ Returns a page's content by its slug.
 
 -   URL: `/api/content/v1/media/{slug}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\MediaItemEntryController@media`
+-   Controller: `App\Http\Controllers\API\V1\Content\MediaItemEntryController@show`
 
 #### Media or Series
 
@@ -255,43 +255,43 @@ Returns a single prayer by its slug.
 
 -   URL: `/api/content/v1/subsplash/daily-readings`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\SubsplashAppController@dailyReadingToday`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\TodaysDailyReadingController`
 
 #### Daily Reading Listen
 
 -   URL: `/api/content/v1/subsplash/daily-readings/listen/{id?}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\SubsplashAppController@dailyReadingsListen`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingAudioController@show`
 
 #### Daily Readings List
 
 -   URL: `/api/content/v1/subsplash/daily-readings/list`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\SubsplashAppController@dailyReadingsList`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController@index`
 
 #### Daily Reading by ID
 
 -   URL: `/api/content/v1/subsplash/daily-readings/{id}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\SubsplashAppController@dailyReading`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController@show`
 
 #### Prayers
 
 -   URL: `/api/content/v1/subsplash/prayers`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\SubsplashAppController@prayers`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController@index`
 
 #### Prayer by ID
 
 -   URL: `/api/content/v1/subsplash/prayers/{id}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\SubsplashAppController@prayer`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController@show`
 
 #### Listen Prayer
 
 -   URL: `/api/content/v1/subsplash/prayers/listen/{id}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\SubsplashAppController@listenPrayer`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\PrayerAudioController@show`
 
 ## Root-Level Endpoints (`/api`)
 

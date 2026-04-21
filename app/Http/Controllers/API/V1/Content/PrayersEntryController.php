@@ -53,7 +53,7 @@ class PrayersEntryController extends Controller
         return PrayersShowResponse::from($response);
     }
 
-    public function buildPrayerResponse(Entry $prayer)
+    private function buildPrayerResponse(Entry $prayer)
     {
         $response = $this->entryBuilder->buildResponseFromEntry($prayer);
 
