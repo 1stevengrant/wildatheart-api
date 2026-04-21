@@ -11,7 +11,7 @@ class SubsplashController extends Controller
         private SubsplashApiClient $apiClient,
     ) {}
 
-    public function getProxy($any)
+    public function __invoke($any)
     {
         $subsplashUrl = str_replace('/api/content/subsplash', '', request()->getRequestUri());
 

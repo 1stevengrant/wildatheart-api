@@ -49,7 +49,7 @@ class UpdateEventController extends Controller
      *
      * @throws BindingResolutionException
      */
-    protected function resolveFormRequest(string $eventTypeGroupType): FormRequest
+    private function resolveFormRequest(string $eventTypeGroupType): FormRequest
     {
         $formRequestClass = match ($eventTypeGroupType) {
             EventType::TYPE_FIRE => FireEventRequest::class,

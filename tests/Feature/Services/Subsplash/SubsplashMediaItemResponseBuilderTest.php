@@ -1,10 +1,10 @@
 <?php
 
-use Statamic\Facades\Entry;
-use Statamic\Facades\Collection;
 use App\Services\Subsplash\SubsplashApiClient;
-use App\Http\Controllers\API\MediaItemDataController;
+use App\Services\Subsplash\SubsplashMediaItemResponseBuilder;
 use App\Services\Subsplash\SubsplashMediaSeriesImporter;
+use Statamic\Facades\Collection;
+use Statamic\Facades\Entry;
 
 beforeEach(function () {
     Collection::findByHandle('media_item') ?? Collection::make('media_item')->save();
@@ -16,7 +16,7 @@ beforeEach(function () {
     $this->app->instance(SubsplashApiClient::class, $this->apiClient);
     $this->app->instance(SubsplashMediaSeriesImporter::class, $this->seriesImporter);
 
-    $this->controller = app(MediaItemDataController::class);
+    $this->builder = app(SubsplashMediaItemResponseBuilder::class);
 });
 
 afterEach(function () {
@@ -99,7 +99,7 @@ it('skips related media items whose Subsplash lookup returns null', function () 
         ->with('series-id')
         ->andReturn($seriesEntry);
 
-    $response = $this->controller->buildSubsplashMediaItemResponse($primaryEntry);
+    $response = $this->builder->build($primaryEntry);
 
     expect($response)->toBeArray()
         ->and($response['mediaItems'])->toHaveCount(1)

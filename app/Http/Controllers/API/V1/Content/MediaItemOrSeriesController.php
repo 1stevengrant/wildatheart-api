@@ -10,9 +10,9 @@ use App\Services\EntryBuilderService;
 use App\DataTypeObjects\MediaItemData;
 use App\DataTypeObjects\API\V1\ErrorResponse;
 use App\DataTypeObjects\API\V1\RedirectResponse;
-use App\Http\Controllers\API\MediaItemDataController;
-use App\Http\Controllers\API\MediaSeriesDataController;
 use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
+use App\Services\Subsplash\SubsplashMediaItemResponseBuilder;
+use App\Services\Subsplash\SubsplashMediaSeriesResponseBuilder;
 use App\DataTypeObjects\Statamic\Blueprints\SubsplashMediaSeries;
 use App\Http\Controllers\API\V1\Content\Concerns\ResolvesLivePreview;
 
@@ -23,6 +23,8 @@ class MediaItemOrSeriesController extends Controller
     public function __construct(
         private readonly BlockBuilderService $blockBuilder,
         private readonly EntryBuilderService $entryBuilder,
+        private readonly SubsplashMediaItemResponseBuilder $subsplashMediaItemResponseBuilder,
+        private readonly SubsplashMediaSeriesResponseBuilder $subsplashMediaSeriesResponseBuilder,
     ) {}
 
     public function show($slugOrUri, Request $request)
@@ -72,11 +74,11 @@ class MediaItemOrSeriesController extends Controller
         }
 
         if ($mediaItemOrSeries->blueprint->handle === 'subsplash_media_item') {
-            return app(MediaItemDataController::class)->buildSubsplashMediaItemResponse($mediaItemOrSeries);
+            return $this->subsplashMediaItemResponseBuilder->build($mediaItemOrSeries);
         }
 
         if ($mediaItemOrSeries->blueprint->handle === 'subsplash_media_series') {
-            return app(MediaSeriesDataController::class)->buildSubsplashMediaSeriesResponse($mediaItemOrSeries);
+            return $this->subsplashMediaSeriesResponseBuilder->build($mediaItemOrSeries);
         }
 
         $response = $this->entryBuilder->buildResponseFromEntry($mediaItemOrSeries);
@@ -107,6 +109,4 @@ class MediaItemOrSeriesController extends Controller
 
         return SubsplashMediaSeries::from($response);
     }
-
-    public function redirect($uri) {}
 }

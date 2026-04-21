@@ -1,58 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Services\Subsplash;
 
 use Statamic\Entries\Entry;
+use Illuminate\Http\JsonResponse;
 use App\Builders\EntryQueryBuilder;
-use App\Http\Controllers\Controller;
 use Statamic\Eloquent\Entries\UuidEntryModel;
-use App\Services\Subsplash\SubsplashApiClient;
-use App\Services\Subsplash\SubsplashMediaSeriesImporter;
 
-class MediaItemDataController extends Controller
+class SubsplashMediaItemResponseBuilder
 {
     public function __construct(
-        private SubsplashApiClient $apiClient,
-        private SubsplashMediaSeriesImporter $seriesImporter,
+        private readonly SubsplashApiClient $apiClient,
+        private readonly SubsplashMediaSeriesImporter $seriesImporter,
     ) {}
 
-    public function mediaBySeriesId($seriesId)
-    {
-        $mediaItemsInSeries = EntryQueryBuilder::mediaItems()
-            ->inSeries($seriesId)
-            ->orderBy('data->position', 'asc')
-            ->get();
-
-        return response()->json($mediaItemsInSeries);
-    }
-
-    public function media($slug)
-    {
-        $mediaItem = EntryQueryBuilder::mediaItems()
-            ->bySlug($slug)
-            ->firstOrFail();
-
-        $mediaItemsInSeries = EntryQueryBuilder::mediaItems()
-            ->inSeries($mediaItem->series)
-            ->get();
-
-        $mediaItem['mediaItems'] = $mediaItemsInSeries->toArray();
-
-        return response()->json($mediaItem);
-    }
-
-    public function subsplashMedia($slug)
-    {
-        $mediaItem = EntryQueryBuilder::mediaItems()
-            ->bySlug($slug)
-            ->firstOrFail();
-
-        $responseData = $this->buildSubsplashMediaItemResponse($mediaItem);
-
-        return response()->json($responseData);
-    }
-
-    public function buildSubsplashMediaItemResponse(Entry|UuidEntryModel $mediaItem)
+    public function build(Entry|UuidEntryModel $mediaItem): array|JsonResponse
     {
         $responseData = [];
 
@@ -74,9 +36,7 @@ class MediaItemDataController extends Controller
         $responseData['title'] = $subsplashMediaItem['title'];
         $shortCode = data_get($subsplashMediaItem, 'short_code');
 
-        // Check if Vimeo ID exists and use it instead of Subsplash
         if ($mediaItem->vimeo_id) {
-            // Handle unlisted Vimeo videos that have a format like "1067873475/63a07f9357"
             if (str_contains($mediaItem->vimeo_id, '/')) {
                 [$videoId, $hash] = explode('/', $mediaItem->vimeo_id);
                 $responseData['media_iframe_url'] = "https://player.vimeo.com/video/{$videoId}?h={$hash}&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1";
@@ -95,22 +55,18 @@ class MediaItemDataController extends Controller
             $responseData['position'] = $subsplashMediaItem['position'];
         }
 
-        // Handle scenario where Subsplash API isn't returning subtitle
         if (isset($subsplashMediaItem['subtitle'])) {
             $responseData['subtitle'] = $subsplashMediaItem['subtitle'];
         }
 
-        // Handle scenario where Subsplash API isn't returning summary
         if (isset($subsplashMediaItem['summary'])) {
             $responseData['summary'] = $subsplashMediaItem['summary'];
         }
 
-        // Handle scenario where Subsplash API isn't returning summary_text
         if (isset($subsplashMediaItem['summary_text'])) {
             $responseData['summary_text'] = $subsplashMediaItem['summary_text'];
         }
 
-        // If we're set to override we should use the cms description
         if ($mediaItem->override_subsplash_content) {
             $responseData['summary_text'] = null;
             $responseData['summary'] = $mediaItem->description;
@@ -119,7 +75,6 @@ class MediaItemDataController extends Controller
         $responseData['short_code'] = $subsplashMediaItem['short_code'];
 
         if (isset($subsplashMediaItem['_embedded']['media-series'])) {
-
             $subsplashSeries = $subsplashMediaItem['_embedded']['media-series'];
             $seriesId = data_get($subsplashSeries, 'id');
             $responseData['series'] = $subsplashSeries;
@@ -134,7 +89,7 @@ class MediaItemDataController extends Controller
 
             foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
                 $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
-                $mediaItemEntry = $this->apiClient->getMediaItem(data_get($mediaItem, 'id'));
+                $this->apiClient->getMediaItem(data_get($mediaItem, 'id'));
             }
 
             $mediaItemEntries = EntryQueryBuilder::mediaItems()
@@ -148,9 +103,7 @@ class MediaItemDataController extends Controller
             $responseData['mediaItems'] = [];
 
             foreach ($mediaItemEntries as $mediaItemEntry) {
-
                 $mediaItemId = $mediaItemEntry->data()->get('subsplash_media_item_id');
-                // Handle scenario where Subsplash API isn't returning accurately
                 if (! isset($subsplashMediaItemMap[$mediaItemId])) {
                     $mediaItem = $this->apiClient->getMediaItem($mediaItemId);
                     if ($mediaItem !== null) {
@@ -172,20 +125,5 @@ class MediaItemDataController extends Controller
         }
 
         return $responseData;
-    }
-
-    public function getRedirects()
-    {
-        $mediaItem = EntryQueryBuilder::mediaItems()
-            ->get();
-
-        $output = '';
-        foreach ($mediaItem as $item) {
-            if ($item->drupal_url) {
-                $output .= "{$item->drupal_url} {$item->uri} 301\n";
-            }
-        }
-
-        return response($output)->header('Content-Type', 'text/plain');
     }
 }
