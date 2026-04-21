@@ -74,7 +74,6 @@ class MediaItemDataController extends Controller
         $responseData['title'] = $subsplashMediaItem['title'];
         $shortCode = data_get($subsplashMediaItem, 'short_code');
 
-
         // Check if Vimeo ID exists and use it instead of Subsplash
         if ($mediaItem->vimeo_id) {
             // Handle unlisted Vimeo videos that have a format like "1067873475/63a07f9357"
@@ -154,10 +153,16 @@ class MediaItemDataController extends Controller
                 // Handle scenario where Subsplash API isn't returning accurately
                 if (! isset($subsplashMediaItemMap[$mediaItemId])) {
                     $mediaItem = $this->apiClient->getMediaItem($mediaItemId);
-                    $subsplashMediaItemMap[$mediaItemId] = $mediaItem;
+                    if ($mediaItem !== null) {
+                        $subsplashMediaItemMap[$mediaItemId] = $mediaItem;
+                    }
                 }
 
                 $subsplashMediaItem = $this->apiClient->getMediaItem($mediaItemEntry->subsplash_media_item_id);
+                if ($subsplashMediaItem === null) {
+                    continue;
+                }
+
                 $responseData['mediaItems'][] = [
                     ...$subsplashMediaItem,
                     'slug' => $mediaItemEntry->slug,
