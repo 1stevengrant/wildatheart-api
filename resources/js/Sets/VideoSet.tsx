@@ -10,11 +10,5 @@ export const VideoSet = ({
     if (!video) {
         return null;
     }
-    return (
-        <Vimeo
-            className={className}
-            responsive={true}
-            video={video}
-        />
-    );
+    return <Vimeo className={className} responsive={true} video={video} />;
 };

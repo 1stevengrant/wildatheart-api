@@ -2,6 +2,7 @@
 
 namespace App\DataTypeObjects\API\V1;
 
+use App\Enums\ContentStatus;
 use Spatie\LaravelData\Data;
 use App\DataTypeObjects\Blueprint;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -17,7 +18,7 @@ class EntryResponse extends Data
 
     public bool $published = true;
 
-    public string $status = 'published';
+    public string $status = ContentStatus::PUBLISHED->value;
 
     public string $slug;
 

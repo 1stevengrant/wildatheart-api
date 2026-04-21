@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Laravel\Pennant\Feature;
 use App\Builders\EventBuilder;
 use App\Features\NewConnectUrl;
+use App\Observers\EventObserver;
 use App\Enums\Event\FrequencyEnum;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -21,7 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[ObservedBy(\App\Observers\EventObserver::class)]
+#[ObservedBy(EventObserver::class)]
 class Event extends BaseModel
 {
     use HasFactory, HasRunwayResource, HasUuids, LogsActivity, SoftDeletes;
@@ -97,10 +98,6 @@ class Event extends BaseModel
     |--------------------------------------------------------------------------
     */
 
-    public const string FOR_MEN = 'men';
-
-    public const string FOR_WOMEN = 'women';
-
     public const string DEFAULT_COUNTRY = 'us';
 
     public const string COUNT_TYPE_VIEW = 'view_count';
@@ -161,24 +158,24 @@ class Event extends BaseModel
 
     public function managerInvitations(): HasMany
     {
-        return $this->hasMany(\App\Models\EventManagerInvitation::class);
+        return $this->hasMany(EventManagerInvitation::class);
     }
 
     public function pendingManagerInvitations(): HasMany
     {
         // Global scope on EventManagerInvitation already filters by pending status
-        return $this->hasMany(\App\Models\EventManagerInvitation::class);
+        return $this->hasMany(EventManagerInvitation::class);
     }
 
     public function ownershipTransfer(): HasOne
     {
-        return $this->hasOne(\App\Models\EventOwnershipTransfer::class);
+        return $this->hasOne(EventOwnershipTransfer::class);
     }
 
     public function pendingOwnershipTransfer(): HasOne
     {
         // Global scope on EventOwnershipTransfer already filters by pending status
-        return $this->hasOne(\App\Models\EventOwnershipTransfer::class);
+        return $this->hasOne(EventOwnershipTransfer::class);
     }
 
     /*

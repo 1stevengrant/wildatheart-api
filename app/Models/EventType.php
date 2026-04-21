@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EventSexEnum;
 use Illuminate\Support\Str;
 use App\Enums\EventTypeEnum;
 use App\Builders\EventTypeBuilder;
@@ -78,6 +79,7 @@ class EventType extends BaseModel
             'schedule_nav_text_override' => 'string',
             'faq_nav_text_override' => 'string',
             'type' => EventTypeEnum::class,
+            'sex' => EventSexEnum::class,
         ];
     }
 

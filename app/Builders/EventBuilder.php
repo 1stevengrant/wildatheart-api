@@ -3,8 +3,8 @@
 namespace App\Builders;
 
 use App\Models\User;
-use App\Models\Event;
 use App\Models\EventType;
+use App\Enums\EventSexEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
@@ -239,8 +239,10 @@ class EventBuilder extends Builder
 
     public function filterBySex(?string $sex): EventBuilder
     {
-        if ($sex && in_array(mb_strtolower($sex), [Event::FOR_MEN, Event::FOR_WOMEN])) {
-            return $this->where('sex', mb_strtolower($sex));
+        $sexEnum = $sex ? EventSexEnum::tryFrom(mb_strtolower($sex)) : null;
+
+        if ($sexEnum) {
+            return $this->where('sex', $sexEnum);
         }
 
         return $this;

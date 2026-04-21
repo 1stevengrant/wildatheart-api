@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
+use App\Enums\EventSexEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -31,7 +32,7 @@ class EventFactory extends Factory
             'user_id' => User::factory()->create()->id,
             'country' => 'US',
             'name' => fake()->sentence(),
-            'sex' => fake()->randomElement([Event::FOR_MEN, Event::FOR_WOMEN]),
+            'sex' => fake()->randomElement(EventSexEnum::cases()),
         ];
     }
 
@@ -50,7 +51,7 @@ class EventFactory extends Factory
             return [
                 'event_type_id' => EventType::where('name', EventType::WAH_EXPERIENCE)->first()->id,
                 'start_date' => now()->addDay(),
-                'sex' => Event::FOR_MEN,
+                'sex' => EventSexEnum::MEN,
             ];
         });
     }
@@ -61,7 +62,7 @@ class EventFactory extends Factory
             return [
                 'event_type_id' => EventType::where('name', EventType::CAPTIVATING_EXPERIENCE)->first()->id,
                 'start_date' => now()->addDay(),
-                'sex' => Event::FOR_WOMEN,
+                'sex' => EventSexEnum::WOMEN,
             ];
         });
     }
@@ -72,7 +73,7 @@ class EventFactory extends Factory
             return [
                 'event_type_id' => EventType::where('name', EventType::BECOMING_A_KING_EXPERIENCE)->first()->id,
                 'start_date' => now()->addDay(),
-                'sex' => Event::FOR_MEN,
+                'sex' => EventSexEnum::MEN,
             ];
         });
     }
@@ -84,7 +85,7 @@ class EventFactory extends Factory
                 'event_type_id' => EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first()->id,
                 'start_date' => now()->addDay(),
                 'end_date' => now()->addDays(3),
-                'sex' => Event::FOR_WOMEN,
+                'sex' => EventSexEnum::WOMEN,
             ];
         });
     }
@@ -96,7 +97,7 @@ class EventFactory extends Factory
                 'event_type_id' => EventType::where('name', EventType::BECOMING_A_KING)->first()->id,
                 'start_date' => now()->addDay(),
                 'end_date' => now()->addDays(3),
-                'sex' => Event::FOR_MEN,
+                'sex' => EventSexEnum::MEN,
             ];
         });
     }
@@ -108,7 +109,7 @@ class EventFactory extends Factory
                 'event_type_id' => EventType::where('name', EventType::WAH_RETREAT)->first()->id,
                 'start_date' => now()->addDay(),
                 'end_date' => now()->addDays(3),
-                'sex' => Event::FOR_MEN,
+                'sex' => EventSexEnum::MEN,
             ];
         });
     }

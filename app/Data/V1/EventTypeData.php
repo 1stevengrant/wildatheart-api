@@ -3,6 +3,7 @@
 namespace App\Data\V1;
 
 use App\Models\EventType;
+use App\Enums\EventSexEnum;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -13,7 +14,7 @@ class EventTypeData extends Data
         public int $id,
         public string $name,
         public string $camel_case_name,
-        public string $sex,
+        public EventSexEnum $sex,
         public string $image,
         public string $group_type,
         public ?string $type,

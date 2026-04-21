@@ -93,6 +93,7 @@
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install",
+            "@dev:types",
             "npm run build"
         ],
         "dev": [

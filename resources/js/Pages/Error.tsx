@@ -4,7 +4,10 @@ import { BackToEvents } from "@/Components/Buttons/BackToEvents";
 import { Logo } from "@/Components/Ui/Logo";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
-const errors: Record<number, { title: string; heading: string; description: string }> = {
+const errors: Record<
+    number,
+    { title: string; heading: string; description: string }
+> = {
     401: {
         title: "401 Unauthorized",
         heading: "Unauthorized",
@@ -18,27 +21,32 @@ const errors: Record<number, { title: string; heading: string; description: stri
     404: {
         title: "404 Not Found",
         heading: "Page Not Found",
-        description: "Sorry, the page you're looking for doesn't exist or has been moved.",
+        description:
+            "Sorry, the page you're looking for doesn't exist or has been moved.",
     },
     419: {
         title: "419 Session Expired",
         heading: "Session Expired",
-        description: "Your session has expired. Please refresh the page and try again.",
+        description:
+            "Your session has expired. Please refresh the page and try again.",
     },
     429: {
         title: "429 Too Many Requests",
         heading: "Too Many Requests",
-        description: "You've made too many requests. Please wait a moment and try again.",
+        description:
+            "You've made too many requests. Please wait a moment and try again.",
     },
     500: {
         title: "500 Server Error",
         heading: "Server Error",
-        description: "Something went wrong on our end. Our team has been notified.",
+        description:
+            "Something went wrong on our end. Our team has been notified.",
     },
     503: {
         title: "503 Service Unavailable",
         heading: "Under Maintenance",
-        description: "We're doing some maintenance right now. Please check back soon.",
+        description:
+            "We're doing some maintenance right now. Please check back soon.",
     },
 };
 
