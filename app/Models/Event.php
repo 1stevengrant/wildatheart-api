@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use App\Enums\EventSexEnum;
 use Illuminate\Support\Str;
+use Laravel\Pennant\Feature;
 use App\Builders\EventBuilder;
+use App\Features\NewConnectUrl;
 use App\Enums\Event\FrequencyEnum;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -57,6 +58,7 @@ class Event extends BaseModel
             'auto_unpublished' => 'boolean',
             'is_featured' => 'boolean',
             'custom_landing_url' => 'string',
+            'new_card_heading' => 'string',
         ];
     }
 
@@ -225,22 +227,12 @@ class Event extends BaseModel
                     return '';
                 }
 
-                $startDate = $this->start_date instanceof Carbon
-                    ? $this->start_date
-                    : Carbon::parse($this->start_date);
+                $startFormatted = $this->start_date->format('D, M j');
 
-                $startFormatted = $startDate->format('D, M j');
+                if ($this->end_date && ! $this->start_date->isSameDay($this->end_date)) {
+                    $endFormatted = $this->end_date->format('D, M j');
 
-                if ($this->end_date) {
-                    $endDate = $this->end_date instanceof Carbon
-                        ? $this->end_date
-                        : Carbon::parse($this->end_date);
-
-                    if (! $startDate->isSameDay($endDate)) {
-                        $endFormatted = $endDate->format('D, M j');
-
-                        return "{$startFormatted} - {$endFormatted}";
-                    }
+                    return "{$startFormatted} - {$endFormatted}";
                 }
 
                 return $startFormatted;
@@ -251,7 +243,7 @@ class Event extends BaseModel
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: function (string $value): string|array {
+            get: function (string $value): string {
                 return str_replace(',', '', $value);
             }
         );
@@ -272,6 +264,15 @@ class Event extends BaseModel
             get: function (): string {
                 return route('view.event', ['event' => $this]);
             }
+        );
+    }
+
+    protected function connectUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Feature::active(NewConnectUrl::class)
+                ? "/events/connect/{$this->id}"
+                : config('app.url') . "/connect/{$this->id}",
         );
     }
 
@@ -314,24 +315,6 @@ class Event extends BaseModel
         return Attribute::make(
             set: function ($value): string {
                 return getStateAbbreviation(mb_strtoupper($value));
-            }
-        );
-    }
-
-    protected function startDate(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value): ?string {
-                return $value ? Carbon::parse($value)->format('Y-m-d') : null;
-            }
-        );
-    }
-
-    protected function endDate(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value): ?string {
-                return $value ? Carbon::parse($value)->format('Y-m-d') : null;
             }
         );
     }
@@ -381,38 +364,39 @@ class Event extends BaseModel
                 // Retreat: Show date range "May 16th - 19th 2025"
                 if ($this->isRetreat()) {
                     if ($this->start_date && $this->end_date) {
-                        $startDate = Carbon::parse($this->start_date);
-                        $endDate = Carbon::parse($this->end_date);
+                        // Single day retreat
+                        if ($this->start_date->isSameDay($this->end_date)) {
+                            $format = $this->start_date->year !== $currentYear ? 'M jS Y' : 'M jS';
+
+                            return $this->start_date->format($format);
+                        }
 
                         // If same month and year, show condensed format
-                        if ($startDate->month === $endDate->month && $startDate->year === $endDate->year) {
-                            $endFormat = $endDate->year !== $currentYear ? 'jS Y' : 'jS';
+                        if ($this->start_date->month === $this->end_date->month && $this->start_date->year === $this->end_date->year) {
+                            $endFormat = $this->end_date->year !== $currentYear ? 'jS Y' : 'jS';
 
-                            return $startDate->format('M jS') . '—' . $endDate->format($endFormat);
+                            return $this->start_date->format('M jS') . '—' . $this->end_date->format($endFormat);
                         }
 
                         // Different months or years
-                        $endFormat = $endDate->year !== $currentYear ? 'M jS Y' : 'M jS';
+                        $endFormat = $this->end_date->year !== $currentYear ? 'M jS Y' : 'M jS';
 
-                        return $startDate->format('M jS') . '—' . $endDate->format($endFormat);
+                        return $this->start_date->format('M jS') . '—' . $this->end_date->format($endFormat);
                     }
                 }
 
                 // Experience: Show "Starts May 31st 2025"
                 if ($this->isExperience()) {
                     if ($this->start_date) {
-                        $startDate = Carbon::parse($this->start_date);
-                        $format = $startDate->year !== $currentYear ? 'M jS Y' : 'M jS';
+                        $format = $this->start_date->year !== $currentYear ? 'M jS Y' : 'M jS';
 
-                        return 'Starts ' . $startDate->format($format);
+                        return 'Starts ' . $this->start_date->format($format);
                     }
                 }
 
                 // Fire: Logic depends on date and frequency
                 if ($this->isFire()) {
-
                     if ($this->frequency) {
-
                         return ucwords($this->frequency->label());
                     }
 
@@ -421,10 +405,9 @@ class Event extends BaseModel
 
                 // Default: Just return the start date if available
                 if ($this->start_date) {
-                    $startDate = Carbon::parse($this->start_date);
-                    $format = $startDate->year !== $currentYear ? 'F jS Y' : 'F jS';
+                    $format = $this->start_date->year !== $currentYear ? 'F jS Y' : 'F jS';
 
-                    return $startDate->format($format);
+                    return $this->start_date->format($format);
                 }
 
                 return '';
@@ -443,7 +426,7 @@ class Event extends BaseModel
                 EventType::BECOMING_A_KING_EXPERIENCE => 'Becoming A King',
                 EventType::BECOMING_A_KING => 'Becoming A King Retreat',
                 EventType::CAPTIVATING_EXPERIENCE => 'Captivating Experience',
-                EventType::CAPTIVATING_CORE_RETREAT => 'Captivating Retreat',
+                EventType::CAPTIVATING_CORE_RETREAT => '4-Day Captivating Retreat',
                 default => $this->card_description ?? '',
             }
         );
@@ -514,41 +497,6 @@ class Event extends BaseModel
     {
         $this->approved_at = $this->approved_at ? null : now();
         $this->save();
-    }
-
-    public function getWeGiveTagAttribute(): ?int
-    {
-        // these magic numbers are the tag ids in WeGive environments
-        // found at https://dashboard.wegive.com/data/tags/
-
-        if (app()->isProduction()) {
-            $eventTypeMappings = [
-                EventType::FIRES => 239,
-                EventType::CAPTIVATING_FIRE => 240,
-                EventType::WAH_EXPERIENCE => 241,
-                EventType::WAH_RETREAT => 242,
-                EventType::SURVIVAL_SCHOOL => 243,
-                EventType::BECOMING_A_KING_EXPERIENCE => 244,
-                EventType::BECOMING_A_KING => 245,
-                EventType::CAPTIVATING_EXPERIENCE => 246,
-                EventType::CAPTIVATING_CORE_RETREAT => 247,
-            ];
-        } else {
-
-            $eventTypeMappings = [
-                EventType::FIRES => 281,
-                EventType::WAH_EXPERIENCE => 282,
-                EventType::WAH_RETREAT => 283,
-                EventType::SURVIVAL_SCHOOL => 284,
-                EventType::BECOMING_A_KING_EXPERIENCE => 285,
-                EventType::BECOMING_A_KING => 286,
-                EventType::CAPTIVATING_EXPERIENCE => 287,
-                EventType::CAPTIVATING_CORE_RETREAT => 288,
-                EventType::CAPTIVATING_FIRE => 289,
-            ];
-        }
-
-        return $eventTypeMappings[$this->eventType->name] ?? null;
     }
 
     public function hasBeenAutoUnpublished(): bool

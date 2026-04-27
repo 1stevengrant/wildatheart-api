@@ -1,0 +1,38 @@
+{
+    "name": "wild-at-heart/command-center",
+    "autoload": {
+        "psr-4": {
+            "WildAtHeart\\CommandCenter\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WildAtHeart\\CommandCenter\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "laravel/pennant": "^1.0",
+        "statamic/cms": "^6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.8"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Command Center",
+            "description": "Command Center addon"
+        },
+        "laravel": {
+            "providers": [
+                "WildAtHeart\\CommandCenter\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

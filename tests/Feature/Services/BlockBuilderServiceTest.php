@@ -3,22 +3,23 @@
 use Statamic\Facades\Term;
 use Statamic\Facades\Entry;
 use App\Services\BunnyCDNService;
-use App\Services\SubsplashService;
 use App\DataTypeObjects\SlideBlock;
 use App\Services\BlockBuilderService;
 use App\Services\PreviewBuilderService;
+use App\Services\Subsplash\SubsplashApiClient;
+use App\Services\Subsplash\SubsplashMediaSeriesImporter;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    $this->subsplashService = Mockery::mock(SubsplashService::class);
+    $this->apiClient = Mockery::mock(SubsplashApiClient::class);
     $this->bunnyCDNService = Mockery::mock(BunnyCDNService::class);
+    $this->seriesImporter = Mockery::mock(SubsplashMediaSeriesImporter::class);
 
     // Create PreviewBuilderService with mocked dependencies
     $previewBuilderService = new PreviewBuilderService(
         $this->bunnyCDNService,
-        $this->subsplashService
+        $this->apiClient
     );
-    $this->service = new BlockBuilderService($previewBuilderService);
+    $this->service = new BlockBuilderService($previewBuilderService, $this->apiClient, $this->seriesImporter, $this->bunnyCDNService);
 });
 
 it('it builds a content_in_taxonomy slide', function () {
@@ -30,19 +31,12 @@ it('it builds a content_in_taxonomy slide', function () {
     $mediaItem->set('title', 'test item');
     $mediaItem->save();
 
-    $block = [
-        'type' => 'hero_title',
-        'hero_title' => 'Welcome to our site',
-        'text_style' => 'bold',
-    ];
-
     $entry = Entry::make()->collection('pages')->slug('test');
 
     $testBlocks = [[
         'section_title' => 'Video Series',
         'link_to_more' => null,
         'media_series' => null,
-        'media_items' => null,
         'media_items' => null,
         'focused_item' => null,
         'slides' => [
@@ -77,17 +71,11 @@ it('it only returns slides that have the appropriate taxonomy', function () {
 
     $liveTalk = Entry::make()
         ->collection('media_item')
-        ->slug('podcast-1');
+        ->slug('live-talk-1');
 
     $liveTalk->set('title', 'live talk');
     $liveTalk->set('content_type', ['live-talks']);
     $liveTalk->save();
-
-    $block = [
-        'type' => 'hero_title',
-        'hero_title' => 'Welcome to our site',
-        'text_style' => 'bold',
-    ];
 
     $entry = Entry::make()->collection('pages')->slug('test');
 
@@ -101,7 +89,6 @@ it('it only returns slides that have the appropriate taxonomy', function () {
         'section_title' => 'Video Series',
         'link_to_more' => null,
         'media_series' => null,
-        'media_items' => null,
         'media_items' => null,
         'focused_item' => null,
         'slides' => [

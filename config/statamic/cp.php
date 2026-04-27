@@ -25,7 +25,7 @@ return [
     |
     */
 
-    'start_page' => 'dashboard',
+    'start_page' => 'collections/pages',
 
     /*
     |--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ return [
     */
 
     'widgets' => [
-        'getting_started',
+        //        'getting_started',
     ],
 
     /*
@@ -81,7 +81,7 @@ return [
     |
     */
 
-    'link_to_docs' => env('STATAMIC_LINK_TO_DOCS', true),
+    'link_to_docs' => env('STATAMIC_LINK_TO_DOCS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -118,13 +118,28 @@ return [
     |
     */
 
-    'custom_cms_name' => env('STATAMIC_CUSTOM_CMS_NAME', 'Statamic'),
+    'custom_cms_name' => env('STATAMIC_CUSTOM_CMS_NAME', 'Wild at Heart'),
 
     'custom_logo_url' => env('STATAMIC_CUSTOM_LOGO_URL', null),
 
     'custom_favicon_url' => env('STATAMIC_CUSTOM_FAVICON_URL', null),
 
     'custom_css_url' => env('STATAMIC_CUSTOM_CSS_URL', null),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication
+    |--------------------------------------------------------------------------
+    |
+    | By default, the CP login form is available. Setting enabled to false
+    | will disable the login form and redirect unauthenticated users
+    | to the specified URL, or return a 401 if no redirect is set.
+    |
+    */
+
+    'auth' => [
+        'enabled' => false,
+    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -37,7 +37,19 @@ const EventListItem = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const EventCreateProgress = () => {
-    const { eventType, eventSteps } = usePage().props as any;
+    const { eventType, eventSteps } = usePage<{
+        eventType: App.Data.EventTypeData;
+        eventSteps: {
+            guide: {
+                welcome: boolean;
+                before: boolean;
+                schedule: boolean;
+                faqs: boolean;
+            };
+            mailing_address: boolean;
+            event_registration: boolean;
+        };
+    }>().props;
 
     const isEventGuideStep =
         route().current("host.eventType.index") ||
@@ -102,7 +114,11 @@ export const EventCreateProgress = () => {
                                             className={`${route().current("host.eventType.index") ? `fill-white` : `${eventSteps.guide.welcome ? `fill-p200` : `stroke-white`}`}`}
                                         />
                                     </span>
-                                    <span>Welcome</span>
+
+                                    <span>
+                                        {eventType.welcome_nav_text_override ??
+                                            `Welcome`}
+                                    </span>
                                 </EventListItem>
                                 <EventListItem>
                                     <span>
@@ -110,32 +126,43 @@ export const EventCreateProgress = () => {
                                             className={`${route().current("host.eventType.before") ? `fill-white` : `${eventSteps.guide.before ? `fill-p200` : `stroke-white`}`}`}
                                         />
                                     </span>
-                                    <span>Before Your {eventName}</span>
+                                    <span>
+                                        {eventType.before_event_nav_text_override ??
+                                            `Before Your ${eventName}`}
+                                    </span>
                                 </EventListItem>
-                                {eventType.event_schedule.length > 0 && (
-                                    <>
-                                        <EventListItem>
-                                            <span>
-                                                <CircleIcon
-                                                    className={`${route().current("host.eventType.schedule") ? `fill-white` : `${eventSteps.guide.schedule ? `fill-p200` : `stroke-white`}`}`}
-                                                />
-                                            </span>
-                                            <span>{eventName} Schedule</span>
-                                        </EventListItem>
-                                    </>
-                                )}
-                                {eventType.event_faqs.length > 0 && (
-                                    <>
-                                        <EventListItem>
-                                            <span>
-                                                <CircleIcon
-                                                    className={`${route().current("host.eventType.faqs") ? `fill-white` : `${eventSteps.guide.faqs ? `fill-p200` : `stroke-white`}`}`}
-                                                />
-                                            </span>
-                                            <span>{eventName} FAQs</span>
-                                        </EventListItem>
-                                    </>
-                                )}
+                                {eventType.event_schedule &&
+                                    eventType.event_schedule.length > 0 && (
+                                        <>
+                                            <EventListItem>
+                                                <span>
+                                                    <CircleIcon
+                                                        className={`${route().current("host.eventType.schedule") ? `fill-white` : `${eventSteps.guide.schedule ? `fill-p200` : `stroke-white`}`}`}
+                                                    />
+                                                </span>
+                                                <span>
+                                                    {eventType.schedule_nav_text_override ??
+                                                        `${eventName} Schedule`}
+                                                </span>
+                                            </EventListItem>
+                                        </>
+                                    )}
+                                {eventType.event_faqs &&
+                                    eventType.event_faqs.length > 0 && (
+                                        <>
+                                            <EventListItem>
+                                                <span>
+                                                    <CircleIcon
+                                                        className={`${route().current("host.eventType.faqs") ? `fill-white` : `${eventSteps.guide.faqs ? `fill-p200` : `stroke-white`}`}`}
+                                                    />
+                                                </span>
+                                                <span>
+                                                    {eventType.faq_nav_text_override ??
+                                                        `${eventName} FAQs`}
+                                                </span>
+                                            </EventListItem>
+                                        </>
+                                    )}
                             </ul>
                         </li>
                         <li className={`flex`}>

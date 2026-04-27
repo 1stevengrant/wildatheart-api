@@ -8,7 +8,6 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
-import useRoute from "@/Hooks/useRoute";
 
 interface EventHostsProps {
     eventId: string;
@@ -23,7 +22,6 @@ export const EventHosts = ({
     pendingTransfer,
     isOwner = false,
 }: EventHostsProps) => {
-    const route = useRoute();
     const [email, setEmail] = useState("");
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState<{ email?: string }>({});

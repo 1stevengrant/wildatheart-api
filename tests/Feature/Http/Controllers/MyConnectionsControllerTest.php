@@ -3,11 +3,14 @@
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Attendee;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    $this->event = \App\Models\Event::factory()->fires()->create();
+    Bus::fake();
+    Mail::fake();
+    $this->event = Event::factory()->fires()->create();
 });
 
 test('loads a list of my contacts', function () {

@@ -1,15 +1,23 @@
 <?php
 
+use App\Models\User;
+use App\Models\Event;
 use App\Models\EventType;
+use App\Enums\Event\FrequencyEnum;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    $this->user = \App\Models\User::factory()->create();
+    Mail::fake();
+    Bus::fake();
+
+    $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
 
 it('creates a captivating fire', function () {
     $this->withoutExceptionHandling();
+
     $attributes = [
         'name' => 'Captivating Hearts',
         'street_address' => '123 Main St',
@@ -24,11 +32,13 @@ it('creates a captivating fire', function () {
         'locality' => 'Downtown',
         'neighborhood' => 'Skid Row',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'frequency' => \App\Enums\Event\FrequencyEnum::WEEKLY->value,
+        'frequency' => FrequencyEnum::WEEKLY->value,
     ];
 
     $this->post(route('host.captivating-fire.store'), $attributes);
-    $event = \App\Models\Event::query()->name('Captivating Hearts')->first();
+
+    $event = Event::query()->name('Captivating Hearts')->first();
+
     expect($event->name)->toBe('Captivating Hearts')
         ->and($event->eventType->name)->toBe(EventType::CAPTIVATING_FIRE)
         ->and($event->street_address)->toBe('123 Main St')
@@ -42,5 +52,4 @@ it('creates a captivating fire', function () {
         ->and($event->locality)->toBe('Downtown')
         ->and($event->neighborhood)->toBe('Skid Row')
         ->and($event->user_id)->toBe($this->user->id);
-
 });

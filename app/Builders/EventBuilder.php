@@ -9,49 +9,62 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
 {
+    /** @var array<string, int> */
+    private static array $eventTypeIdCache = [];
+
+    private static function eventTypeId(string $name): int
+    {
+        return self::$eventTypeIdCache[$name] ??= EventType::where('name', $name)->first()->id;
+    }
+
     public function fires(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::FIRES)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::FIRES));
     }
 
     public function becomingAKingRetreats(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::BECOMING_A_KING)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::BECOMING_A_KING));
     }
 
     public function becomingAKingExperiences(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::BECOMING_A_KING_EXPERIENCE)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::BECOMING_A_KING_EXPERIENCE));
     }
 
     public function wahRetreat(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::WAH_RETREAT)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::WAH_RETREAT));
     }
 
     public function wahExperience(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::WAH_EXPERIENCE)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::WAH_EXPERIENCE));
     }
 
     public function captivatingRetreat(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first()->id);
+        $eventTypeIds = [
+            self::eventTypeId(EventType::CAPTIVATING_CORE_RETREAT),
+            self::eventTypeId(EventType::CAPTIVATING_CORE_RETREAT_1_DAY),
+        ];
+
+        return $this->whereIn('event_type_id', $eventTypeIds);
     }
 
     public function captivatingFire(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::CAPTIVATING_FIRE)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::CAPTIVATING_FIRE));
     }
 
     public function captivatingExperience(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::CAPTIVATING_EXPERIENCE)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::CAPTIVATING_EXPERIENCE));
     }
 
     public function survivalSchool(): EventBuilder
     {
-        return $this->where('event_type_id', EventType::where('name', EventType::SURVIVAL_SCHOOL)->first()->id);
+        return $this->where('event_type_id', self::eventTypeId(EventType::SURVIVAL_SCHOOL));
     }
 
     public function retreats(): EventBuilder
@@ -59,6 +72,7 @@ class EventBuilder extends Builder
         $eventTypes = EventType::whereIn('name', [
             EventType::WAH_RETREAT,
             EventType::CAPTIVATING_CORE_RETREAT,
+            EventType::CAPTIVATING_CORE_RETREAT_1_DAY,
             EventType::BECOMING_A_KING,
         ])->pluck('id');
 
@@ -118,7 +132,7 @@ class EventBuilder extends Builder
         return $this->whereBetween('start_date', [now()->subYear(), now()]);
     }
 
-    public function updatedAgo(int $days): EventBuilder
+    public function inactiveForDays(int $days): EventBuilder
     {
         return $this->where(function ($query) use ($days) {
             $query->where('updated_at', '<', now()->subDays($days))
@@ -309,5 +323,43 @@ class EventBuilder extends Builder
     public function lastCheckinReminderSent(): EventBuilder
     {
         return $this->whereNotNull('last_checkin_reminder_sent_at');
+    }
+
+    private function haversineFormula(): string
+    {
+        return '(3959 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))';
+    }
+
+    /**
+     * Filter events within a radius of a geographic point using Haversine formula.
+     * Adds a calculated 'distance' column (in miles) to the results.
+     */
+    public function withinRadius(float $lat, float $lng, float $radiusMiles): EventBuilder
+    {
+        $haversine = $this->haversineFormula();
+
+        return $this->select('events.*')
+            ->selectRaw("$haversine AS distance", [$lat, $lng, $lat])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $radiusMiles])
+            ->orderBy('distance');
+    }
+
+    /**
+     * Filter events within a ring (donut) between minRadius and maxRadius miles.
+     * Used for "load more" incremental radius expansion.
+     */
+    public function withinRing(float $lat, float $lng, float $minRadius, float $maxRadius): EventBuilder
+    {
+        $haversine = $this->haversineFormula();
+
+        return $this->select('events.*')
+            ->selectRaw("$haversine AS distance", [$lat, $lng, $lat])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->whereRaw("$haversine > ?", [$lat, $lng, $lat, $minRadius])
+            ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $maxRadius])
+            ->orderBy('distance');
     }
 }

@@ -1,5 +1,4 @@
-import Markdown from "react-markdown";
-
+import { CustomMarkdown } from "@/Components/CustomMarkdown";
 import { proseClasses } from "@/helpers/proseClasses";
 
 export const TextSet = ({
@@ -11,7 +10,7 @@ export const TextSet = ({
 }) => {
     return (
         <div className={`${className} ${proseClasses}`}>
-            <Markdown>{text}</Markdown>
+            <CustomMarkdown>{text}</CustomMarkdown>
         </div>
     );
 };

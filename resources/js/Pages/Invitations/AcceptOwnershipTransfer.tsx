@@ -3,13 +3,11 @@ import { singular } from "pluralize";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import useRoute from "@/Hooks/useRoute";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
 const AcceptOwnershipTransfer = () => {
     const page = useTypedPage();
-    const route = useRoute();
 
     const transfer = page.props
         .transfer as App.Data.EventOwnershipTransferWithEventData;
@@ -32,7 +30,7 @@ const AcceptOwnershipTransfer = () => {
                     <div className="bg-black border border-n800 rounded-lg p-6 mb-6">
                         <h2 className="text-2xl font-bold text-white mb-4">
                             {transfer.event.name}{" "}
-                            {singular(transfer.event.event_type_name)}
+                            {singular(transfer.event.event_type_name ?? "")}
                         </h2>
                         <p className="text-n40 mb-2">
                             <strong>Location:</strong> {transfer.event.location}

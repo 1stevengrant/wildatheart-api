@@ -24,10 +24,15 @@ export const SupportModal = ({
     const { auth } = usePage<any>().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data, setData, post, errors, reset } = useForm({
-        name: auth.user
-            ? `${auth.user.given_name} ${auth.user.family_name}`
-            : "",
+    const { data, setData, post, errors, reset } = useForm<{
+        given_name: string;
+        family_name: string;
+        email: string;
+        subject: string;
+        description: string;
+    }>({
+        given_name: auth.user?.given_name ?? "",
+        family_name: auth.user?.family_name ?? "",
         email: auth.user ? auth.user.email : "",
         subject: "",
         description: "",
@@ -68,20 +73,43 @@ export const SupportModal = ({
                     </Dialog.Title>
                     <FormFieldsWrapper>
                         <div>
-                            <InputLabel htmlFor="name" value="Name" required />
+                            <InputLabel
+                                htmlFor="given_name"
+                                value="First Name"
+                                required
+                            />
                             <TextInput
-                                id="name"
-                                name="name"
-                                value={data.name}
+                                id="given_name"
+                                name="given_name"
+                                value={data.given_name}
                                 className="mt-1 block w-full"
-                                autoComplete="name"
+                                autoComplete="given-name"
                                 isFocused={true}
                                 disabled={isSubmitting}
                                 onChange={(e) =>
-                                    setData("name", e.target.value)
+                                    setData("given_name", e.target.value)
                                 }
                             />
-                            <InputError message={errors.name} />
+                            <InputError message={errors.given_name} />
+                        </div>
+                        <div>
+                            <InputLabel
+                                htmlFor="family_name"
+                                value="Last Name"
+                                required
+                            />
+                            <TextInput
+                                id="family_name"
+                                name="family_name"
+                                value={data.family_name}
+                                className="mt-1 block w-full"
+                                autoComplete="family-name"
+                                disabled={isSubmitting}
+                                onChange={(e) =>
+                                    setData("family_name", e.target.value)
+                                }
+                            />
+                            <InputError message={errors.family_name} />
                         </div>
                         <div>
                             <InputLabel

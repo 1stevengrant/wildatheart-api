@@ -18,6 +18,9 @@ class ClearEventCache extends Command
      *
      * @var string
      */
+    /**
+     * Called by EventObserver on created, updated, deleted, and restored events.
+     */
     protected $description = 'Clears the API event cache';
 
     public function handle(): void

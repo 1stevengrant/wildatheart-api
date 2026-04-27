@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Event;
+use Illuminate\Support\Str;
+use App\Enums\EventTypeEnum;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Artesaos\SEOTools\Facades\OpenGraph;
@@ -17,6 +20,19 @@ class SeoService
         $this->setJsonLd($title, $description, $url, $image);
     }
 
+    public function setEventMetadata(Event $event): void
+    {
+        $title = $this->buildEventTitle($event);
+        $description = preg_replace('/\s+/', ' ', $event->eventType->card_teaser_text ?? '');
+        $image = bunnyImage($event->eventType->image);
+        $url = url()->current();
+
+        $this->setSEOMeta($title, $description, $url);
+        $this->setEventOpenGraph($title, $description, $url, $image);
+        $this->setTwitterCard($title, $description, $image);
+        $this->setEventJsonLd($event, $title, $description, $url, $image);
+    }
+
     protected function setSEOMeta(string $title, string $description, string $url): void
     {
         SEOMeta::setTitle($title)
@@ -29,9 +45,20 @@ class SeoService
         OpenGraph::setTitle($title)
             ->setUrl($url)
             ->setDescription($description)
-            ->addProperty('type', 'articles')
+            ->addProperty('type', 'website')
             ->addImage($image)
             ->addProperty('locale', 'en-US');
+    }
+
+    protected function setEventOpenGraph(string $title, string $description, string $url, ?string $image): void
+    {
+        OpenGraph::setTitle($title)
+            ->setUrl($url)
+            ->setDescription($description)
+            ->addProperty('type', 'website')
+            ->addImage($image)
+            ->addProperty('locale', 'en-US')
+            ->addProperty('site_name', 'Wild at Heart');
     }
 
     protected function setTwitterCard(string $title, string $description, ?string $image): void
@@ -50,5 +77,57 @@ class SeoService
             ->setUrl($url);
 
         JsonLd::generate();
+    }
+
+    protected function setEventJsonLd(Event $event, string $title, string $description, string $url, ?string $image): void
+    {
+        $jsonLdType = match ($event->eventType->type) {
+            EventTypeEnum::Gathering => 'SocialEvent',
+            EventTypeEnum::Course => 'EducationEvent',
+            default => 'Event',
+        };
+
+        JsonLd::setType($jsonLdType)
+            ->setTitle($title)
+            ->setDescription($description)
+            ->addImage($image)
+            ->setUrl($url)
+            ->addValue('eventAttendanceMode', 'https://schema.org/OfflineEventAttendanceMode')
+            ->addValue('organizer', [
+                '@type' => 'Person',
+                'name' => $event->host_name,
+            ])
+            ->addValue('location', [
+                '@type' => 'Place',
+                'name' => $event->location,
+                'address' => $event->location,
+            ]);
+
+        if ($event->start_date) {
+            JsonLd::addValue('startDate', $event->start_date->toIso8601String());
+        }
+
+        if ($event->end_date) {
+            JsonLd::addValue('endDate', $event->end_date->toIso8601String());
+        }
+
+        JsonLd::generate();
+    }
+
+    private function buildEventTitle(Event $event): string
+    {
+        $eventTypeName = $event->eventType->name;
+        $date = $event->start_date?->format('M j, Y');
+
+        $title = match ($event->eventType->type) {
+            EventTypeEnum::Gathering => "Join {$event->host_name}'s " . Str::singular($eventTypeName),
+            default => "Join $event->host_name's $eventTypeName",
+        };
+
+        if ($date && $event->eventType->type !== EventTypeEnum::Gathering) {
+            $title .= " | $date";
+        }
+
+        return $title;
     }
 }

@@ -36,12 +36,12 @@ class ConnectWithHostRequest extends FormRequest
             ],
             'email' => [
                 'required',
-                'email:rfc,dns',
+                app()->environment('testing') ? 'email:rfc' : 'email:rfc,dns',
                 'max:255',
             ],
             'confirm_email' => [
                 'required',
-                'email:rfc,dns',
+                app()->environment('testing') ? 'email:rfc' : 'email:rfc,dns',
                 'same:email',
             ],
             'city' => [

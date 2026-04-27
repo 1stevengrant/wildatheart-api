@@ -5,11 +5,17 @@ namespace App\Services;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use App\Http\Integrations\Transistor\TransistorConnector;
+use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
 
 class TransistorService
 {
+    private const REFRESH_LOCK_TTL = 60;
+
+    private const REFRESH_LOCK_WAIT = 10;
+
     public function updateEpisode($episodeId, $data)
     {
         $TRANSISTOR_API_KEY = config('services.transistor.api_key');
@@ -75,15 +81,35 @@ class TransistorService
      */
     public function getAll($showId, $status = 'published')
     {
-
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
+        $url = $this->cacheKey($showId, $status);
 
         if (Cache::has($url)) {
             return Cache::get($url);
         }
-        $this->refreshEpisodeList($showId, $status);
 
-        return Cache::get($url);
+        try {
+            Cache::lock($this->lockKey($showId, $status), self::REFRESH_LOCK_TTL)
+                ->block(self::REFRESH_LOCK_WAIT, function () use ($showId, $status, $url) {
+                    // Another process may have populated the cache while we waited.
+                    if (Cache::has($url)) {
+                        return;
+                    }
+
+                    $this->performRefresh($showId, $status);
+                });
+        } catch (LockTimeoutException $e) {
+            Log::warning('Transistor refresh lock timeout; serving stale or empty data.', [
+                'show_id' => $showId,
+                'status' => $status,
+            ]);
+        } catch (RateLimitReachedException $e) {
+            Log::warning('Transistor rate limit reached during refresh; serving stale or empty data.', [
+                'show_id' => $showId,
+                'status' => $status,
+            ]);
+        }
+
+        return Cache::get($url) ?? [];
     }
 
     /**
@@ -91,14 +117,31 @@ class TransistorService
      */
     public function refreshEpisodeList($showId, $status = 'published')
     {
+        Cache::lock($this->lockKey($showId, $status), self::REFRESH_LOCK_TTL)
+            ->block(self::REFRESH_LOCK_WAIT, function () use ($showId, $status) {
+                $this->performRefresh($showId, $status);
+            });
+    }
+
+    private function performRefresh(string $showId, string $status): void
+    {
         Log::info('Refreshing episode list for showId: ' . $showId . ' and status: ' . $status);
-        $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
 
         $connector = new TransistorConnector;
         $request = new GetEpisodesRequest($showId);
         $request->query()->add('status', $status);
         $paginator = $connector->paginate($request);
         $episodes = $paginator->collect()->toArray();
-        Cache::forever($url, $episodes);
+        Cache::forever($this->cacheKey($showId, $status), $episodes);
+    }
+
+    private function cacheKey(string $showId, string $status): string
+    {
+        return config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=' . $status;
+    }
+
+    private function lockKey(string $showId, string $status): string
+    {
+        return "transistor-refresh:{$showId}:{$status}";
     }
 }

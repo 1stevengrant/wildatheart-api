@@ -29,7 +29,7 @@ readonly class CreateEventDataTransferObject
             state: $data['state'] ?? null,
             city: $data['city'] ?? null,
             zip: $data['zip'] ?? null,
-            country: $data['country'],
+            country: $data['country'] ?? '',
             latitude: $data['latitude'],
             longitude: $data['longitude'],
             region: $data['region'] ?? null,

@@ -207,6 +207,7 @@ const CreateEventEventTypePage = () => {
                     open={confirmModalOpen}
                     setOpen={setConfirmModalOpen}
                     data={data}
+                    eventTypeName={eventType.name}
                     eventLocation={event.location}
                     processing={processing}
                     onConfirm={confirmSubmit}

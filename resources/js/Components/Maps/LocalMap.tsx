@@ -102,7 +102,7 @@ export const LocalMap = () => {
     }, [types]);
 
     useEffect(() => {
-        mapboxgl.accessToken = import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN;
+        mapboxgl.accessToken = import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN;
 
         if (!mapboxgl.supported()) {
             setHasSupport(false);

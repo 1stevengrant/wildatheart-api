@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use Statamic\Entries\Entry;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
 use App\DataTypeObjects\API\V1\Content\AlertResponse;
 
@@ -10,17 +10,17 @@ class AlertEntryController extends Controller
 {
     public function index()
     {
-        $entries = Entry::query()
-            ->where('collection', 'alerts')
-            ->where('published', true)
+        $entries = EntryQueryBuilder::alerts()
+            ->published()
             ->where('start_date', '<=', now()->format('Y-m-d H:i:s'))
             ->where('end_date', '>=', now()->format('Y-m-d H:i:s'))
             ->orderBy('start_date', 'desc')
             ->get();
 
         if ($entries->isEmpty()) {
-            return AlertResponse::collection([]);
+            return AlertResponse::collect([]);
         }
+
 
         $entries = $entries->map(function ($entry) {
             $entry = $entry->toArray();
@@ -29,6 +29,6 @@ class AlertEntryController extends Controller
             return $entry;
         });
 
-        return AlertResponse::collection($entries);
+        return AlertResponse::collect($entries);
     }
 }

@@ -1,0 +1,145 @@
+# =============================================================================
+# TYPESCRIPT TYPES SYNC WORKFLOW
+# =============================================================================
+# This workflow generates TypeScript types from PHP DTOs and Statamic blueprints,
+# validates them, and syncs them to the Astro frontend repo via PR.
+#
+# SETUP (GitHub App):
+# 1. Create GitHub App in wild-at-heart org with permissions:
+#    - Contents: Read & Write
+#    - Pull requests: Read & Write
+#    - Metadata: Read-only
+# 2. Generate and download private key (.pem file)
+# 3. Install app on both wahfires and wildatheart.org-astro repos
+# 4. Add secrets to this repo:
+#    - GH_APP_ID: The app's numeric ID
+#    - GH_APP_PRIVATE_KEY: Contents of the .pem file
+# =============================================================================
+
+name: Sync TypeScript Types to Astro
+
+env:
+    TARGET_REPO: "wild-at-heart/wildatheart.org-astro"
+    SOURCE_TYPES_PATH: "resources/js/types"
+    TARGET_TYPES_PATH: "src/types"
+    PHP_VERSION: "8.4"
+    NODE_VERSION: "22"
+
+on:
+    push:
+        branches:
+            - main
+            - prod
+            - staging
+        paths:
+            - "app/Data/**"
+            - "app/DataTypeObjects/**"
+            - "app/Enums/**"
+            - "config/typescript-transformer.php"
+            - "addons/ghijk/statamic-typescript-generator/**"
+
+jobs:
+    sync-types:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout API repo
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ env.PHP_VERSION }}
+                  extensions: mbstring, xml, ctype, json, curl, pdo, pdo_sqlite
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+
+            - name: Install PHP dependencies
+              run: composer install --no-interaction --prefer-dist --no-scripts
+
+            - name: Prepare environment
+              run: |
+                  cp .env.example .env
+                  php artisan key:generate
+
+            - name: Install Node dependencies
+              run: npm ci
+
+            - name: Generate Statamic types (PHP DTOs)
+              run: php artisan statamic:generate-types --skip-pint
+
+            - name: Generate TypeScript definitions
+              run: php artisan typescript:transform
+
+            - name: Lint generated types
+              run: npm run lint
+
+            - name: Validate TypeScript compilation
+              run: npm run types
+
+            - name: Upload types artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: typescript-types
+                  path: |
+                      ${{ env.SOURCE_TYPES_PATH }}/generated.d.ts
+                      ${{ env.SOURCE_TYPES_PATH }}/statamic.d.ts
+                  retention-days: 30
+
+            - name: Generate GitHub App token
+              id: app-token
+              uses: actions/create-github-app-token@v1
+              with:
+                  app-id: ${{ secrets.GH_APP_ID }}
+                  private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+                  owner: wild-at-heart
+                  repositories: local.wildatheart.org,wildatheart.org-astro
+
+            - name: Checkout target repo
+              uses: actions/checkout@v4
+              with:
+                  repository: ${{ env.TARGET_REPO }}
+                  token: ${{ steps.app-token.outputs.token }}
+                  path: target-repo
+
+            - name: Copy type files to target repo
+              run: |
+                  mkdir -p target-repo/${{ env.TARGET_TYPES_PATH }}
+                  cp ${{ env.SOURCE_TYPES_PATH }}/generated.d.ts target-repo/${{ env.TARGET_TYPES_PATH }}/
+                  cp ${{ env.SOURCE_TYPES_PATH }}/statamic.d.ts target-repo/${{ env.TARGET_TYPES_PATH }}/
+
+            - name: Check for type changes
+              id: check-changes
+              run: |
+                  cd target-repo
+                  git add -A
+                  if git diff --cached --quiet; then
+                    echo "has_changes=false" >> $GITHUB_OUTPUT
+                  else
+                    echo "has_changes=true" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Create Pull Request
+              if: steps.check-changes.outputs.has_changes == 'true'
+              uses: peter-evans/create-pull-request@v6
+              with:
+                  token: ${{ steps.app-token.outputs.token }}
+                  path: target-repo
+                  commit-message: "chore: sync TypeScript types from Laravel API"
+                  title: "chore: Sync TypeScript types from Laravel API"
+                  body: |
+                      This PR was automatically generated to sync TypeScript types from the Laravel API repository.
+
+                      **Branch:** `${{ github.ref_name }}`
+                      **Triggered by:** ${{ github.event.head_commit.message }}
+                      **Commit:** ${{ github.repository }}@${{ github.sha }}
+
+                      ## Files Updated
+                      - `generated.d.ts` - Types from PHP DTOs (Spatie Laravel Data)
+                      - `statamic.d.ts` - Types from Statamic blueprints
+                  branch: sync-types-${{ github.ref_name }}-${{ github.run_number }}
+                  base: develop
+                  delete-branch: true

@@ -1,21 +1,22 @@
 <?php
 
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\BlogsController;
+use App\Http\Controllers\API\V1\AttendeeController;
+use App\Http\Controllers\API\AllExperiencesController;
 use App\Http\Controllers\API\ExperienceDataController;
-use App\Http\Controllers\API\MediaItemDataController;
+use App\Http\Controllers\API\Media\MediaItemController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\SubsplashController;
+use App\Http\Controllers\API\V1\GroupedEventTypeController;
+use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
-use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
-use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
-use App\Http\Controllers\API\V1\Content\PrayersEntryController;
-use App\Http\Controllers\API\V1\Content\SubsplashAppController;
 use App\Http\Controllers\API\V1\EventController;
 use App\Http\Controllers\API\V1\EventTypeController;
 use App\Http\Controllers\API\V1\HostEventController;
@@ -24,8 +25,19 @@ use App\Http\Controllers\API\V1\Navs\AllNavsController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\Navs\MobileNavController;
 use App\Http\Controllers\API\V1\StatsController;
-use App\Http\Controllers\SeoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\V1\Content\PrayersEntryController;
+use App\Http\Controllers\API\Media\MediaItemsBySeriesController;
+use App\Http\Controllers\API\Media\SubsplashMediaItemController;
+use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
+use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
+use App\Http\Controllers\API\V1\Content\RecentDailyReadingsController;
+use App\Http\Controllers\API\V1\Content\RefreshDailyReadingsController;
+use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayerAudioController;
+use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController;
+use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingAudioController;
+use App\Http\Controllers\API\V1\Content\SubsplashApp\TodaysDailyReadingController;
+use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController as SubsplashPrayersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +54,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('stats', StatsController::class)->name('stats');
 
     Route::prefix('webhooks')->name('webhooks.')->group(function () {
-        Route::post('refresh-daily-readings', [DailyReadingController::class, 'refreshDailyReadings'])->name('refreshDailyReadings');
+        Route::post('refresh-daily-readings', RefreshDailyReadingsController::class)->name('refreshDailyReadings');
     });
 
     Route::prefix('navs')->name('navs.')->group(function () {
@@ -59,26 +71,29 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::prefix('events')->name('events.')->group(function () {
         Route::get('', [EventController::class, 'index'])->name('events.index');
-        Route::get('search', \App\Http\Controllers\API\V1\SearchForEventsController::class)->name('api.events.search');
+        Route::get('search', App\Http\Controllers\API\V1\SearchForEventsController::class)->name('api.events.search');
         Route::get('types', EventTypeController::class)->name('types');
+        Route::get('types/grouped', GroupedEventTypeController::class)->name('types.grouped');
         Route::get('{event}', [EventController::class, 'show'])->name('events.show');
+        Route::post('{event}/connect', [AttendeeController::class, 'store'])
+            ->middleware('throttle:connect')
+            ->name('connect.store');
     });
-
 });
 
 Route::prefix('content')->group(function () {
     Route::name('content.')->group(function () {
         Route::get('/series/{slug}', [MediaSeriesDataController::class, 'show'])->name('series.show');
 
-        Route::get('/media-by-series-id/{slug}', [MediaItemDataController::class, 'mediaBySeriesId'])->name('media.bySeriesId');
-        Route::get('/media/redirects', [MediaItemDataController::class, 'getRedirects'])->name('media.getRedirects');
-        Route::get('/media/{slug}', [MediaItemDataController::class, 'media'])->name('media');
-        Route::get('/subsplash/{any}', [SubsplashController::class, 'getProxy'])->name('subsplash.getProxy')->where('any', '.*');
-        Route::get('/subsplash-media/{slug}', [MediaItemDataController::class, 'subsplashMedia'])->name('media.show');
-        Route::get('/experiences/all', [ExperienceDataController::class, 'all'])->name('experience.all');
+        Route::get('/media-by-series-id/{slug}', [MediaItemsBySeriesController::class, 'show'])->name('media.bySeriesId');
+        Route::get('/media/redirects', [MediaRedirectsController::class, 'index'])->name('media.getRedirects');
+        Route::get('/media/{slug}', [MediaItemController::class, 'show'])->name('media');
+        Route::get('/subsplash/{any}', SubsplashController::class)->name('subsplash.getProxy')->where('any', '.*');
+        Route::get('/subsplash-media/{slug}', [SubsplashMediaItemController::class, 'show'])->name('media.show');
+        Route::get('/experiences/all', AllExperiencesController::class)->name('experience.all');
         Route::get('/experiences/{slug}', [ExperienceDataController::class, 'show'])->name('experience.show');
         Route::prefix('v1')->name('v1.')->group(function () {
-            Route::get('/seo/sitemap', [SeoController::class, 'getSitemap'])->name('seo.sitemap');
+            Route::get('/seo/sitemap', SitemapController::class)->name('seo.sitemap');
             Route::prefix('search')->name('search.')->group(function () {
                 Route::get('/', [SearchController::class, 'index'])->name('index');
             });
@@ -88,11 +103,10 @@ Route::prefix('content')->group(function () {
             });
             Route::prefix('daily-reading')->name('dailyReading.')->group(function () {
                 Route::get('/', [DailyReadingController::class, 'index'])->name('index');
-                Route::get('/recent', [DailyReadingController::class, 'getRecent'])->name('getRecent');
-                Route::get('/redirect/{slug}', [DailyReadingController::class, 'redirect'])->name('redirect');
+                Route::get('/recent', [RecentDailyReadingsController::class, 'index'])->name('getRecent');
             });
-            Route::get('/page/{slug}', [PageEntryController::class, 'getPageBySlug'])->name('pages.bySlug');
-            Route::get('/media/{slug}', [MediaItemEntryController::class, 'media'])->name('media');
+            Route::get('/page/{slug}', [PageEntryController::class, 'show'])->name('pages.bySlug');
+            Route::get('/media/{slug}', [MediaItemEntryController::class, 'show'])->name('media');
             Route::get('/media-or-series/{slugOrUri}', [MediaItemOrSeriesController::class, 'show'])->name('mediaOrSeries')->where('slugOrUri', '.*');
             Route::prefix('prayers')->name('prayers.')->group(function () {
                 Route::get('/', [PrayersEntryController::class, 'index'])->name('index');
@@ -104,13 +118,13 @@ Route::prefix('content')->group(function () {
             });
             Route::get('/alerts', [AlertEntryController::class, 'index'])->name('alerts.index');
             Route::prefix('subsplash')->name('subsplash.')->group(function () {
-                Route::get('/daily-readings', [SubsplashAppController::class, 'dailyReadingToday'])->name('dailyReadings');
-                Route::get('/daily-readings/listen/{id?}', [SubsplashAppController::class, 'dailyReadingsListen'])->name('dailyReadingsListen');
-                Route::get('/daily-readings/list', [SubsplashAppController::class, 'dailyReadingsList'])->name('dailyReadingsList');
-                Route::get('/daily-readings/{id}', [SubsplashAppController::class, 'dailyReading'])->name('dailyReadingById');
-                Route::get('/prayers', [SubsplashAppController::class, 'prayers'])->name('prayers');
-                Route::get('/prayers/{id}', [SubsplashAppController::class, 'prayer'])->name('prayer');
-                Route::get('/prayers/listen/{id}', [SubsplashAppController::class, 'listenPrayer'])->name('listenPrayer');
+                Route::get('/daily-readings', TodaysDailyReadingController::class)->name('dailyReadings');
+                Route::get('/daily-readings/listen/{id?}', [DailyReadingAudioController::class, 'show'])->name('dailyReadingsListen');
+                Route::get('/daily-readings/list', [DailyReadingsController::class, 'index'])->name('dailyReadingsList');
+                Route::get('/daily-readings/{id}', [DailyReadingsController::class, 'show'])->name('dailyReadingById');
+                Route::get('/prayers', [SubsplashPrayersController::class, 'index'])->name('prayers');
+                Route::get('/prayers/{id}', [SubsplashPrayersController::class, 'show'])->name('prayer');
+                Route::get('/prayers/listen/{id}', [PrayerAudioController::class, 'show'])->name('listenPrayer');
             });
         });
     });

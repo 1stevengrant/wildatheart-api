@@ -1,13 +1,16 @@
 <?php
 
 use App\Models\EventType;
+use App\Enums\EventTypeEnum;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
+use Spatie\Activitylog\Facades\Activity;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    EventType::truncate();
-});
-
-afterEach(function () {
+    Bus::fake();
+    Mail::fake();
+    Activity::disableLogging();
+    // Skip seeder as it has outdated schema
     EventType::truncate();
 });
 
@@ -47,4 +50,108 @@ it('clears the cache when a new event type is created', function () {
     ]);
 
     expect(cache()->has('allEventTypes'))->toBeFalse();
+});
+
+it('can create an event type with summary and summary_link', function () {
+    $eventType = EventType::create([
+        'name' => 'Wild at Heart Retreat',
+        'is_active' => true,
+        'summary' => 'This is a summary of the event type',
+        'summary_link' => 'https://example.com/summary',
+    ]);
+
+    $eventType->refresh();
+
+    expect($eventType->summary)->toBe('This is a summary of the event type')
+        ->and($eventType->summary_link)->toBe('https://example.com/summary');
+});
+
+it('can create an event type with nullable summary and summary_link', function () {
+    $eventType = EventType::create([
+        'name' => 'Wild at Heart Retreat',
+        'is_active' => true,
+        'summary' => null,
+        'summary_link' => null,
+    ]);
+
+    expect($eventType->summary)->toBeNull()
+        ->and($eventType->summary_link)->toBeNull();
+});
+
+it('includes summary and summary_link in EventTypeData', function () {
+    $eventType = EventType::factory()->create([
+        'summary' => 'Test summary',
+        'summary_link' => 'https://example.com',
+    ]);
+
+    $data = \App\Data\EventTypeData::fromModel($eventType);
+
+    expect($data->summary)->toBe('Test summary')
+        ->and($data->summary_link)->toBe('https://example.com');
+});
+
+it('includes summary and summary_link in V1 EventTypeData', function () {
+    $eventType = EventType::factory()->create([
+        'summary' => 'Test summary',
+        'summary_link' => 'https://example.com',
+    ]);
+
+    $data = \App\Data\V1\EventTypeData::fromEventType($eventType);
+
+    expect($data->summary)->toBe('Test summary')
+        ->and($data->summary_link)->toBe('https://example.com');
+});
+
+it('casts the type field to EventTypeEnum', function () {
+    $eventType = EventType::factory()->create([
+        'type' => 'gathering',
+    ]);
+
+    $eventType->refresh();
+
+    expect($eventType->type)->toBe(EventTypeEnum::Gathering);
+});
+
+it('can create an event type with each type enum value', function (EventTypeEnum $type) {
+    $eventType = EventType::factory()->create([
+        'type' => $type,
+    ]);
+
+    $eventType->refresh();
+
+    expect($eventType->type)->toBe($type);
+})->with([
+    'gathering' => EventTypeEnum::Gathering,
+    'retreat' => EventTypeEnum::Retreat,
+    'course' => EventTypeEnum::Course,
+]);
+
+it('allows nullable type field', function () {
+    $eventType = EventType::factory()->create([
+        'type' => null,
+    ]);
+
+    $eventType->refresh();
+
+    expect($eventType->type)->toBeNull();
+});
+
+it('includes type in EventTypeData', function () {
+    $eventType = EventType::factory()->create([
+        'type' => EventTypeEnum::Course,
+    ]);
+
+    $data = \App\Data\EventTypeData::fromModel($eventType);
+
+    expect($data->type)->toBe(EventTypeEnum::Course);
+});
+
+it('includes type as string in V1 EventTypeData', function () {
+    $eventType = EventType::factory()->create([
+        'type' => EventTypeEnum::Retreat,
+    ]);
+
+    $data = \App\Data\V1\EventTypeData::fromEventType($eventType);
+
+    expect($data->type)->toBe('retreat');
 });

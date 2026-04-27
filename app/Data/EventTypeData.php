@@ -4,6 +4,7 @@ namespace App\Data;
 
 use App\Models\EventType;
 use App\Enums\EventSexEnum;
+use App\Enums\EventTypeEnum;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -15,6 +16,7 @@ class EventTypeData extends Data
         public readonly bool $allow_materials_order,
         public readonly ?string $number_of_items_in_material_order_label,
         public readonly string $group_type,
+        public readonly ?EventTypeEnum $type,
         public readonly string $name,
         public readonly ?string $filter_name,
         public readonly int $order,
@@ -38,9 +40,14 @@ class EventTypeData extends Data
         public readonly ?string $hero_video,
         public readonly ?array $photos,
         public readonly ?string $summary,
+        public readonly ?string $summary_link,
         public readonly ?array $key_details,
         public readonly ?array $action_buttons,
         public readonly ?array $new_content,
+        public ?string $welcome_nav_text_override,
+        public ?string $before_event_nav_text_override,
+        public ?string $schedule_nav_text_override,
+        public ?string $faq_nav_text_override,
     ) {}
 
     /**
@@ -53,6 +60,7 @@ class EventTypeData extends Data
             allow_materials_order: $eventType->allow_materials_order ?? false,
             number_of_items_in_material_order_label: $eventType->number_of_items_in_material_order_label,
             group_type: $eventType->group_type,
+            type: $eventType->type,
             name: $eventType->name,
             filter_name: $eventType->filter_name,
             order: $eventType->order ?? 0,
@@ -81,9 +89,14 @@ class EventTypeData extends Data
             hero_video: $eventType->hero_video,
             photos: $eventType->photos,
             summary: $eventType->summary,
+            summary_link: $eventType->summary_link,
             key_details: $eventType->key_details,
             action_buttons: $eventType->action_buttons,
-            new_content: $eventType->new_content
+            new_content: $eventType->new_content,
+            welcome_nav_text_override: $eventType->welcome_nav_text_override,
+            before_event_nav_text_override: $eventType->before_event_nav_text_override,
+            schedule_nav_text_override: $eventType->schedule_nav_text_override,
+            faq_nav_text_override: $eventType->faq_nav_text_override,
         );
     }
 }

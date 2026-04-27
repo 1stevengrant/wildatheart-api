@@ -4,8 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
-use Illuminate\Http\Request;
-use App\Http\Controllers\API\V1\Content\DailyReadingController;
+use App\Builders\EntryQueryBuilder;
 
 /**
  * This provides data in the required format for the app to render.
@@ -13,20 +12,16 @@ use App\Http\Controllers\API\V1\Content\DailyReadingController;
  */
 class SubsplashAppService
 {
-    private $baseUrl;
-
-    public function __construct(private TransistorService $transistor)
-    {
-        $transistor = new TransistorService;
-        $this->baseUrl = 'https://outpost.wildatheart.us';
-    }
+    public function __construct(
+        private TransistorService $transistor,
+        private BunnyCDNService $bunnyCDN,
+    ) {}
 
     public function getPrayerList()
     {
         // Get prayers from your database, ordered by your custom order field
-        $prayers = Entry::query()
-            ->where('collection', 'prayers')
-            ->where('published', true)
+        $prayers = EntryQueryBuilder::prayers()
+            ->published()
             ->orderBy('order', 'asc')
             ->get()
             ->toArray();
@@ -52,7 +47,7 @@ class SubsplashAppService
                     [
                         'images' => [
                             [
-                                'url' => 'https://b-cdn.wildatheart.org/files/prayers/wide-prayers.png',
+                                'url' => config('services.bunny.s3_cdn_url') . '/files/prayers/wide-prayers.png',
                                 'width' => 1920,
                                 'height' => 692,
                             ],
@@ -69,8 +64,7 @@ class SubsplashAppService
         $prayer = Entry::findOrFail($id)->toArray();
         $mp3 = null;
         if ($prayer['mp3']) {
-            $bunnyCDNService = new BunnyCDNService;
-            $mp3 = $bunnyCDNService->getBunnyCDNUrl($prayer['mp3']['path']);
+            $mp3 = $this->bunnyCDN->getBunnyCDNUrl($prayer['mp3']['path']);
         }
 
         $items = [
@@ -113,8 +107,7 @@ class SubsplashAppService
         $prayer = Entry::findOrFail($id)->toArray();
         $mp3 = null;
         if ($prayer['mp3']) {
-            $bunnyCDNService = new BunnyCDNService;
-            $mp3 = $bunnyCDNService->getBunnyCDNUrl($prayer['mp3']['path']);
+            $mp3 = $this->bunnyCDN->getBunnyCDNUrl($prayer['mp3']['path']);
         }
 
         return [
@@ -128,7 +121,7 @@ class SubsplashAppService
                     'format' => 'mp3',
                     'images' => [
                         [
-                            'url' => 'https://b-cdn.wildatheart.org/files/prayers/square-prayers.png',
+                            'url' => config('services.bunny.s3_cdn_url') . '/files/prayers/square-prayers.png',
                             'width' => 1024,
                             'height' => 1024,
                         ],
@@ -137,7 +130,7 @@ class SubsplashAppService
             ],
             'images' => [
                 [
-                    'url' => 'https://b-cdn.wildatheart.org/files/prayers/wide-prayers.png',
+                    'url' => config('services.bunny.s3_cdn_url') . '/files/prayers/wide-prayers.png',
                     'width' => 1920,
                     'height' => 692,
                 ],
@@ -197,13 +190,10 @@ class SubsplashAppService
                 ],
             ],
         ];
-
-        return $this->transformDailyReading();
     }
 
     public function getDailyReading($id)
     {
-
         $reading = $this->transistor->getEpisode($id, 'wildatheart-daily');
 
         return [
@@ -266,7 +256,7 @@ class SubsplashAppService
                     [
                         'images' => [
                             [
-                                'url' => 'https://b-cdn.wildatheart.org/files/daily-readings/daily-reading-banner.png',
+                                'url' => config('services.bunny.s3_cdn_url') . '/files/daily-readings/daily-reading-banner.png',
                                 'width' => 1920,
                                 'height' => 692,
                             ],
@@ -283,15 +273,10 @@ class SubsplashAppService
         $reading = null;
 
         if ($id) {
-            // Get a specific daily reading
             $reading = $this->transistor->getEpisode($id, 'wildatheart-daily');
         } else {
-            // Get the most recent daily reading
-            $dailyReadingController = app(DailyReadingController::class);
-            $request = new Request;
-            $request->merge(['limit' => 1]);
-            $response = $dailyReadingController->getRecent($request)->first()->toArray();
-            $reading = data_get($response, 'transistor_episode');
+            $recent = $this->transistor->getRecent('wildatheart-daily', 1);
+            $reading = $recent[0] ?? null;
         }
 
         $title = data_get($reading, 'attributes.title');
@@ -309,7 +294,7 @@ class SubsplashAppService
                     'format' => 'mp3',
                     'images' => [
                         [
-                            'url' => 'https://b-cdn.wildatheart.org/files/daily-readings/daily-reading-square.png',
+                            'url' => config('services.bunny.s3_cdn_url') . '/files/daily-readings/daily-reading-square.png',
                             'width' => 1024,
                             'height' => 1024,
                         ],
@@ -318,7 +303,7 @@ class SubsplashAppService
             ],
             'images' => [
                 [
-                    'url' => 'https://b-cdn.wildatheart.org/files/daily-readings/daily-reading-wide.png',
+                    'url' => config('services.bunny.s3_cdn_url') . '/files/daily-readings/daily-reading-wide.png',
                     'width' => 1920,
                     'height' => 692,
                 ],

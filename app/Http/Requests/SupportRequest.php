@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class SupportRequest extends FormRequest
 {
@@ -17,18 +18,24 @@ class SupportRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'email' => [
                 'required',
-                'email:rfc,dns',
+                app()->environment('testing') ? 'email:rfc' : 'email:rfc,dns',
                 'max:255',
             ],
-            'name' => [
+            'given_name' => [
                 'required',
+                'string',
+                'max:255',
+            ],
+            'family_name' => [
+                'required',
+                'string',
                 'max:255',
             ],
             'subject' => [

@@ -3,11 +3,9 @@
 use App\Models\User;
 use App\Models\EventType;
 use App\Jobs\PostToZapier;
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Queue;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
     Queue::fake();
     $this->user = User::factory()->create([
         'given_name' => null,

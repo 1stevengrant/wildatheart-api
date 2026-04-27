@@ -1,15 +1,15 @@
 openapi: 3.0.3
 info:
   title: Wild at Heart Local Event Platform API
-  version: 2.0.0
+  version: 1.0.0
   description: API for managing events and registrations
 
 servers:
-  - url: https://local.wildatheart.org/api/v2
+  - url: https://local.wildatheart.org/api/v1
     description: Production server
-  - url: https://local-staging.wildatheart.org/api/v2
+  - url: https://local-staging.wildatheart.org/api/v1
     description: Staging server
-  - url: https://wahfires.test/api/v2
+  - url: https://wahfires.test/api/v1
     description: Local development server
 
 components:
@@ -349,6 +349,10 @@ components:
         summary:
           type: string
           nullable: true
+        summary_link:
+          type: string
+          nullable: true
+          description: "Link related to the event type summary"
         key_details:
           type: string
           nullable: true
@@ -373,6 +377,49 @@ components:
             type: array
             items:
               type: string
+
+    Attendee:
+      type: object
+      description: "Public attendee contact information for events"
+      properties:
+        id:
+          type: integer
+          example: 123
+        event_id:
+          type: string
+          format: uuid
+          example: "996672cc-7221-426b-8eaf-d15ff0dfce00"
+        given_name:
+          type: string
+          example: "Jane"
+        family_name:
+          type: string
+          example: "Smith"
+        email:
+          type: string
+          format: email
+          example: "jane.smith@gmail.com"
+        phone:
+          type: string
+          example: "1234567890"
+        city:
+          type: string
+          example: "Denver"
+        state:
+          type: string
+          example: "Colorado"
+        country:
+          type: string
+          example: "United States"
+        country_code:
+          type: string
+          example: "US"
+        marketing_updates:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          example: "Jan. 28, 2026"
 
   responses:
     UnauthorizedError:
@@ -402,6 +449,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+
+    TooManyRequestsError:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Too Many Requests"
+              retry_after:
+                type: integer
+                description: Seconds until rate limit resets
+                example: 60
 
 security:
   - bearerAuth: []
@@ -1388,3 +1450,97 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/EventType'
+
+  /events/{eventId}/connect:
+    post:
+      tags:
+        - Events
+      summary: Connect with event host (public)
+      description: |
+        Allows public users to express interest in an event by providing contact information.
+        This creates an attendee record and notifies the event host.
+
+        This endpoint does not require authentication and is designed for visitors who want to connect with an event host.
+
+        **Rate Limit:** 3 requests per minute per IP address
+      security: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Event ID to connect with
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - given_name
+                - family_name
+                - email
+                - confirm_email
+                - city
+                - state
+                - country
+                - phone
+                - opted_into_marketing
+              properties:
+                given_name:
+                  type: string
+                  minLength: 2
+                  maxLength: 255
+                  example: "Jane"
+                family_name:
+                  type: string
+                  minLength: 2
+                  maxLength: 255
+                  example: "Smith"
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: "jane.smith@gmail.com"
+                  description: "Must be a valid email with DNS verification"
+                confirm_email:
+                  type: string
+                  format: email
+                  example: "jane.smith@gmail.com"
+                  description: "Must match email field exactly"
+                city:
+                  type: string
+                  maxLength: 255
+                  example: "Denver"
+                state:
+                  type: string
+                  maxLength: 255
+                  example: "Colorado"
+                country:
+                  type: string
+                  maxLength: 255
+                  example: "United States"
+                phone:
+                  type: string
+                  minLength: 9
+                  maxLength: 20
+                  example: "1234567890"
+                opted_into_marketing:
+                  type: boolean
+                  example: true
+                  description: "Whether the attendee opts into marketing communications"
+      responses:
+        '200':
+          description: Attendee created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendee'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsError'

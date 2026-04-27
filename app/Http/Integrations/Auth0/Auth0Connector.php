@@ -37,7 +37,10 @@ class Auth0Connector extends Connector
      */
     protected function defaultConfig(): array
     {
-        return [];
+        return [
+            'timeout' => 60,
+            'connect_timeout' => 10,
+        ];
     }
 
     /**

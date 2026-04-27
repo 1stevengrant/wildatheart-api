@@ -2,10 +2,14 @@
 
 use App\Models\User;
 use App\Models\Attendee;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
+    Bus::fake();
+    Mail::fake();
+
     $this->seed(\Database\Seeders\UserSeeder::class);
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     $this->event = \App\Models\Event::factory()->fires()->create();
     $this->attendees = Attendee::factory()->count(3)->create([
         'event_id' => $this->event->id,

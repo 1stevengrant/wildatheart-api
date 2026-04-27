@@ -1,11 +1,14 @@
 <?php
 
 use App\Models\Event;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
-    $this->event = Event::factory()->fires()->create();
+    Bus::fake();
+    Mail::fake();
+    $this->event = Event::factory()->fires()->approved()->create();
 });
 
 test('it shows a list of events belonging to the authenticated user', function () {

@@ -4,12 +4,12 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Models\Event;
 use App\Data\FeaturedContentData;
+use App\Data\V1\SearchEventsData;
 use App\Services\GeographyService;
 use App\Services\EventCacheService;
 use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
-use App\Http\Requests\API\SearchForEventsRequest;
 
 class SearchForEventsController extends Controller
 {
@@ -19,55 +19,86 @@ class SearchForEventsController extends Controller
         private readonly GeographyService $geographyService
     ) {}
 
-    public function __invoke(SearchForEventsRequest $request)
+    public function __invoke(SearchEventsData $data)
     {
-        $validatedData = $request->validated();
+        $cacheKey = $this->eventCacheService->generateSearchCacheKey($data->toArray());
 
-        $cacheKey = $this->eventCacheService->generateSearchCacheKey($validatedData);
+        if ($data->isCenterPointMode()) {
+            return cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data) {
+                $radius = $data->radius ?? 100;
 
-        $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData) {
+                if ($data->min_radius !== null) {
+                    $query = Event::query()
+                        ->published()->active()->public()
+                        ->filterBySex($data->sex)
+                        ->filterByTypeGroup($data->type_group)
+                        ->filterByEventTypes($data->types)
+                        ->betweenDates($data->start_date, $data->end_date)
+                        ->withinRing($data->latitude, $data->longitude, $data->min_radius, $radius)
+                        ->with(['eventType', 'user']);
+                } else {
+                    $query = Event::query()
+                        ->published()->active()->public()
+                        ->filterBySex($data->sex)
+                        ->filterByTypeGroup($data->type_group)
+                        ->filterByEventTypes($data->types)
+                        ->betweenDates($data->start_date, $data->end_date)
+                        ->withinRadius($data->latitude, $data->longitude, $radius)
+                        ->with(['eventType', 'user']);
+                }
+
+                $events = $query->get();
+                $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
+
+                return response()->json([
+                    'events' => $offsetEvents->map(fn (Event $event) => EventCollectionData::fromEvent($event)),
+                    'radius' => $radius,
+                    'total_count' => $events->count(),
+                    'featuredContent' => null,
+                ]);
+            });
+        }
+
+        $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data) {
             return Event::query()
                 ->published()
                 ->active()
                 ->public()
-                ->filterBySex($validatedData['sex'])
-                ->filterByTypeGroup($validatedData['type_group'])
-                ->filterByEventTypes($validatedData['types'])
-                ->betweenDates($validatedData['start_date'], $validatedData['end_date'])
+                ->filterBySex($data->sex)
+                ->filterByTypeGroup($data->type_group)
+                ->filterByEventTypes($data->types)
+                ->betweenDates($data->start_date, $data->end_date)
                 ->withinBoundingBox(
-                    $validatedData['sw_latitude'],
-                    $validatedData['sw_longitude'],
-                    $validatedData['ne_latitude'],
-                    $validatedData['ne_longitude']
+                    $data->sw_latitude,
+                    $data->sw_longitude,
+                    $data->ne_latitude,
+                    $data->ne_longitude
                 )
-                ->with(['eventType', 'user'])
                 ->orderBy('start_date')
+                ->with(['eventType', 'user'])
                 ->get();
         });
 
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
-        // Get featured content if enabled
         $featuredContent = null;
         $globalSet = \Statamic\Facades\GlobalSet::findByHandle('local_platform');
+
         if ($globalSet) {
-            $data = $globalSet->inDefaultSite()->data();
+            $siteData = $globalSet->inDefaultSite()->data();
 
-            // Check if featured content is enabled
-            if ($data->get('featured_content_enabled')) {
-                $showInRegions = $data->get('show_in_regions', []);
+            if ($siteData->get('featured_content_enabled')) {
+                $showInRegions = $siteData->get('show_in_regions', []);
 
-                // Check if current viewport contains any of the regions
                 $visibleRegions = $this->geographyService->getVisibleRegions(
-                    $validatedData['sw_latitude'],
-                    $validatedData['sw_longitude'],
-                    $validatedData['ne_latitude'],
-                    $validatedData['ne_longitude']
+                    $data->sw_latitude,
+                    $data->sw_longitude,
+                    $data->ne_latitude,
+                    $data->ne_longitude
                 );
 
-                // Show featured content if no regions specified or if regions match
                 if (empty($showInRegions) || array_intersect($showInRegions, $visibleRegions)) {
-                    $featuredContent = FeaturedContentData::fromStatamicData($data);
+                    $featuredContent = FeaturedContentData::fromStatamicData($siteData);
                 }
             }
         }
@@ -76,6 +107,5 @@ class SearchForEventsController extends Controller
             'events' => $offsetEvents->map(fn (Event $event) => EventCollectionData::fromEvent($event)),
             'featuredContent' => $featuredContent,
         ]);
-
     }
 }

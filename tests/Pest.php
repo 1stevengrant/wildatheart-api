@@ -14,6 +14,21 @@ use Tests\TestCase;
 */
 
 uses(TestCase::class)->in('Feature');
+uses(TestCase::class)->in('Browser');
+uses(Tests\ProductionParityTestCase::class)->in('Parity');
+
+/*
+|--------------------------------------------------------------------------
+| Browser Testing
+|--------------------------------------------------------------------------
+|
+| Pest's browser testing feature allows you to test your application in a real browser.
+| The configuration below sets up the browser testing environment.
+|
+*/
+
+pest()->browser()
+    ->timeout(30000);
 
 /*
 |--------------------------------------------------------------------------

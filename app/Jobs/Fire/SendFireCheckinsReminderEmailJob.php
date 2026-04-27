@@ -8,8 +8,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendFireCheckinsReminderEmailJob implements ShouldQueue
+class SendFireCheckinsReminderEmailJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,16 +32,22 @@ class SendFireCheckinsReminderEmailJob implements ShouldQueue
     public function handle(): void
     {
         $sevenDaysAgo = now()->subDays(7);
+        $ninetyDaysAgo = now()->subDays(90);
 
         Event::query()
-            ->with(['user'])
+            ->with(['user', 'managers'])
             ->allFires()
             ->lastCheckinReminderNotSent()
+            // Only target events that got initial email between 7-90 days ago
+            // Events with email 90+ days ago will get a fresh initial email instead
             ->where('last_checkin_email_sent_at', '<=', $sevenDaysAgo)
+            ->where('last_checkin_email_sent_at', '>', $ninetyDaysAgo)
             ->lastCheckinNotConfirmed()
             ->published()
-            ->each(function (Event $event) {
-                SendSingleFireCheckinReminderEmailJob::dispatch($event);
+            ->chunkById(100, function ($events) {
+                foreach ($events as $event) {
+                    SendSingleFireCheckinReminderEmailJob::dispatch($event);
+                }
             });
     }
 }

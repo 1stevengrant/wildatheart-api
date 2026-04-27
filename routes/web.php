@@ -3,21 +3,30 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\APIDocsController;
-use App\Http\Controllers\DrupalUrlController;
+use App\Http\Controllers\ApiSpecController;
 use App\Http\Controllers\FiresPageController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\UpcomingEventsController;
 use App\Http\Controllers\CreateSupportTicketController;
 use App\Http\Controllers\Event\ViewEventListingController;
 use App\Http\Controllers\Attendee\ConnectWithHostController;
+use App\Http\Controllers\Testing\BrowserTestLoginController;
 use App\Http\Controllers\Webhooks\SendGridWebhookController;
+use App\Http\Controllers\Drupal\DrupalHomeRedirectController;
 use App\Http\Controllers\Event\AcceptHostInvitationController;
 use App\Http\Controllers\HandleMonthlyHostFireEmailController;
+use App\Http\Controllers\Drupal\DrupalCourseRedirectController;
 use App\Http\Controllers\Event\ConfirmHostInvitationController;
+use App\Http\Controllers\Drupal\DrupalFallbackRedirectController;
 use App\Http\Controllers\Event\AcceptOwnershipTransferController;
 use App\Http\Controllers\Event\ConfirmOwnershipTransferController;
 
 Route::get('/', HomeController::class)->name('home');
+
+// Browser testing login route - only available in local/testing environments
+if (app()->environment(['local', 'testing'])) {
+    Route::get('/_testing/login', BrowserTestLoginController::class)->name('testing.login');
+}
 
 Route::prefix('support')->name('support.')->group(function () {
     Route::post('/', SupportRequestController::class)->name('store');
@@ -60,10 +69,10 @@ Route::prefix('fire/{event}')
     });
 
 Route::prefix('drupal')->name('drupal.')->group(function () {
-    Route::get('courses/{course}', [DrupalUrlController::class, 'courses'])->name('course');
-    Route::get('{any}', [DrupalUrlController::class, 'any'])
+    Route::get('courses/{course}', DrupalCourseRedirectController::class)->name('course');
+    Route::get('{any}', DrupalFallbackRedirectController::class)
         ->where('any', '.*')->name('drupal.any');
-    Route::get('/', [DrupalUrlController::class, 'index'])->name('index');
+    Route::get('/', DrupalHomeRedirectController::class)->name('index');
 });
 
 Route::name('upcoming.')->group(function () {
@@ -72,6 +81,6 @@ Route::name('upcoming.')->group(function () {
 });
 
 Route::middleware(['super_admin', 'auth'])->group(function () {
-    Route::get('/api/documentation', [APIDocsController::class, 'index'])->name('docs.index');
-    Route::get('/api/documentation/spec', [APIDocsController::class, 'spec'])->name('docs.spec');
+    Route::get('/api/documentation', APIDocsController::class)->name('docs.index');
+    Route::get('/api/documentation/spec', ApiSpecController::class)->name('docs.spec');
 });

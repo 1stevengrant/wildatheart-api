@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -21,6 +22,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'given_name' => fake()->firstName(),
             'family_name' => fake()->lastName(),
+            'phone' => fake()->e164PhoneNumber(),
             'email' => Str::random() . '@wildatheart.org',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),

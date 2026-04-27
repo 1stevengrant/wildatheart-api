@@ -21,8 +21,8 @@ class RedirectService
         public string $cloudflareAccountId = '',
         public string $cloudflareNamespaceID = ''
     ) {
-        $this->cloudflareAccountId = $cloudflareAccountId ?: config('cloudflare.account_id');
-        $this->cloudflareNamespaceID = $cloudflareNamespaceID ?: config('cloudflare.kv_redirects_id');
+        $this->cloudflareAccountId = $cloudflareAccountId ?: config('cloudflare.account_id') || '';
+        $this->cloudflareNamespaceID = $cloudflareNamespaceID ?: config('cloudflare.kv_redirects_id') || '';
     }
 
     /**
@@ -94,7 +94,7 @@ class RedirectService
         $unsuccessfulKeys = $body->result->unsuccessful_keys;
 
         $successfulRedirects = collect($redirects)
-            ->filter(fn ($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
+            ->filter(fn($redirect) => ! in_array($redirect->source, $unsuccessfulKeys))
             ->toArray();
 
         Redirect::upsert(
@@ -125,12 +125,7 @@ class RedirectService
     {
         $redirect = new RedirectData($source, $destination);
         $putRequest = new PutRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirect);
-        $response = $this->cloudflare->send($putRequest);
-        $body = $response->object();
-
-        if (! $body->success) {
-            throw new Exception(json_encode($body->errors));
-        }
+        $this->sendAndValidate($putRequest);
     }
 
     /**
@@ -144,14 +139,8 @@ class RedirectService
     public function createBulkInCloudflare(array $redirects): mixed
     {
         $putBulkRequest = new PutRequestBulk($this->cloudflareAccountId, $this->cloudflareNamespaceID, $redirects);
-        $response = $this->cloudflare->send($putBulkRequest);
-        $body = $response->object();
 
-        if (! $body->success) {
-            throw new Exception(json_encode($body->errors));
-        }
-
-        return $body;
+        return $this->sendAndValidate($putBulkRequest);
     }
 
     /**
@@ -163,10 +152,21 @@ class RedirectService
     public function deleteFromCloudflare(string $source): void
     {
         $deleteRequest = new DeleteRequest($this->cloudflareAccountId, $this->cloudflareNamespaceID, urlencode($source));
-        $response = $this->cloudflare->send($deleteRequest);
+        $this->sendAndValidate($deleteRequest);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function sendAndValidate(object $request): object
+    {
+        $response = $this->cloudflare->send($request);
         $body = $response->object();
+
         if (! $body->success) {
             throw new Exception(json_encode($body->errors));
         }
+
+        return $body;
     }
 }

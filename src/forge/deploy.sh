@@ -1,39 +1,47 @@
-# this is commented out but it's here for reference if the deploy script needs to be updated
-#cd /home/forge/local.wildatheart.org
-#git stash
-#git pull origin $FORGE_SITE_BRANCH
+cd /home/forge/local.wildatheart.org
+git stash
+git pull origin $FORGE_SITE_BRANCH
 
-# this is what will execute on the forge server
 if [[ $FORGE_DEPLOY_MESSAGE =~ "[BOT]" ]]; then
     echo "AUTO-COMMITTED ON PRODUCTION. NOTHING TO DEPLOY."
     exit 0
 fi
 
-$FORGE_COMPOSER install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-$FORGE_PHP artisan cache:clear
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-$FORGE_PHP artisan config:clear
-$FORGE_PHP artisan config:cache
+# Respect .nvmrc if present; fallback to Node 20
+if [ -f .nvmrc ]; then
+    nvm install
+    nvm use
+else
+    nvm install 20
+    nvm use 20
+fi
 
-$FORGE_PHP artisan view:clear
-$FORGE_PHP artisan view:cache
+echo "Node: $(node -v), npm: $(npm -v)"
 
-$FORGE_PHP artisan event:clear
-$FORGE_PHP artisan event:cache
 
-$FORGE_PHP artisan route:clear
-$FORGE_PHP artisan route:cache
+# Dependencies first
+composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+npm ci
 
-$FORGE_PHP artisan horizon:terminate
-$FORGE_PHP artisan queue:restart
-$FORGE_PHP artisan migrate --force
-
-( flock -w 10 9 || exit 1
-    echo 'Restarting FPM...'; sudo -S service $FORGE_PHP_FPM reload ) 9>/tmp/fpmlock
-
-npm install
+# Build assets before clearing caches
 npm run build
 
+# Laravel optimisations
+php artisan optimize
+php artisan event:cache
 
+# Database/queue management
+php artisan migrate --force
+php artisan horizon:terminate
 
+# Warm the Stache so file-based stores (collections, etc.) are pre-cached
+# and web requests never hit the Traverser real-time facade
+php artisan statamic:stache:warm
+
+# FPM restart last
+( flock -w 10 9 || exit 1
+    echo 'Restarting FPM...'; sudo -S service $FORGE_PHP_FPM reload ) 9>/tmp/fpmlock

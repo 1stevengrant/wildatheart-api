@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\API\V1\Content;
 
-use Statamic\Entries\Entry;
-use Statamic\Facades\Token;
 use App\DataTypeObjects\PageData;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
-use Facades\Statamic\CP\LivePreview;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
-use App\Services\ImageBuilderService;
+use App\Http\Controllers\API\V1\Content\Concerns\ResolvesLivePreview;
 
 /**
  * @group Page Entity Retrieval
@@ -18,49 +16,27 @@ use App\Services\ImageBuilderService;
  */
 class PageEntryController extends Controller
 {
-    private BlockBuilderService $blockBuilder;
+    use ResolvesLivePreview;
 
-    public function __construct(BlockBuilderService $blockBuilder)
-    {
-        $this->blockBuilder = $blockBuilder;
-    }
+    public function __construct(
+        private readonly BlockBuilderService $blockBuilder,
+        private readonly EntryBuilderService $entryBuilder,
+    ) {}
 
     /**
-     * getPageBySlug
-     *
      * Get a page using its slug
      *
      * @urlParam slug string required The slug of the page. Example: media
      */
-    public function getPageBySlug(string $slug)
+    public function show(string $slug)
     {
+        $page = $this->resolveLivePreview();
 
-        // Check for token and live-preview query parameters
-        $request = request();
-        $token = $request->query('token', false);
-        $livePreview = $request->query('live-preview', false);
-
-        // If token is present or live-preview is true, adjust the query to include unpublished and future items
-
-        $page = null;
-
-        if ($token && $livePreview) {
-            // Skip published and date checks for live preview or token access
-
-            $token = Token::find($token);
-            if ($token) {
-                $page = LivePreview::item($token);
-            }
-        } else {
-
-            $page = Entry::query()
-                ->where('collection', 'pages')
-                ->where('slug', $slug)
-                ->where('published', true)
-                ->where(function ($query) {
-                    $query->where('date', '<=', now())
-                        ->orWhere('data->make_scheduled_page_public', true);
-                })
+        if (! $page) {
+            $page = EntryQueryBuilder::pages()
+                ->published()
+                ->bySlug($slug)
+                ->visibleOrScheduled()
                 ->first();
         }
 
@@ -68,15 +44,11 @@ class PageEntryController extends Controller
             return response()->json(['error' => 'Page not found'], 404);
         }
 
-        $entryBuilder = new EntryBuilderService;
-
-        $response = $entryBuilder->buildResponseFromEntry($page);
+        $response = $this->entryBuilder->buildResponseFromEntry($page);
 
         $response['blocks'] = $this->blockBuilder->build($page->blocks);
 
-        $imageBuilder = new ImageBuilderService;
-
-        $response['images'] = $imageBuilder->build($page->images);
+        $response['images'] = $page->images;
 
         return PageData::from($response);
     }

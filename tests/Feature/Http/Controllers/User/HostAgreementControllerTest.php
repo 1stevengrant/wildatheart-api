@@ -1,9 +1,11 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Facades\Bus;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
 });
 
 test('that it sets a user as having agreed to the host agreement by adding a timestamp', function () {
@@ -12,10 +14,12 @@ test('that it sets a user as having agreed to the host agreement by adding a tim
     $this->actingAs($user)
         ->post(route('host.agreement.store'));
 
-    expect($user->fresh()->hasAgreedToHostAgreement())
+    $user->refresh();
+
+    expect($user->hasAgreedToHostAgreement())
         ->toBeTrue()
         ->and($user->agreed_to_host_agreement_date)
-        ->toBeInstanceOf(\Carbon\Carbon::class);
+        ->toBeInstanceOf(Carbon::class);
 });
 
 test('an unauthenticated user cannot post to the host agreement endpoint', function () {

@@ -14,7 +14,7 @@ class EventData extends Data
         public string $location,
         public string $latitude,
         public string $longitude,
-        public string $dates,
+        public ?string $dates,
         public string $sex,
         public string $eventType,
         public string $eventGroupType,
@@ -24,7 +24,8 @@ class EventData extends Data
         public ?string $scheduledFor,
         public string $hostName,
         public ?string $hostAvatar,
-        public ?array $landingPage
+        public ?array $landingPage,
+        public string $connect_url,
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -34,7 +35,7 @@ class EventData extends Data
             location: $event->location,
             latitude: $event->latitude,
             longitude: $event->longitude,
-            dates: $event->formatted_dates,
+            dates: $event->eventType->group_type === 'fire' ? null : $event->formatted_dates,
             sex: $event->sex->value,
             eventType: $event->eventType->name,
             eventGroupType: $event->eventType->group_type,
@@ -45,6 +46,7 @@ class EventData extends Data
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
             landingPage: null,
+            connect_url: $event->connect_url,
         );
     }
 }

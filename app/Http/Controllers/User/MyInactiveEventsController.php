@@ -19,7 +19,8 @@ class MyInactiveEventsController extends Controller
                         $q->published()->whereNot(fn ($sub) => $sub->active());
                     });
             })
-
+            ->orderByRaw('start_date < NOW()')
+            ->orderBy('start_date')
             ->with(['user', 'eventType', 'managers'])
             ->paginate()
             ->through(fn ($event) => EventData::fromModel($event));

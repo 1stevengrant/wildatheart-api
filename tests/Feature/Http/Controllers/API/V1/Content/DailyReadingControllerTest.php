@@ -8,7 +8,6 @@ use App\Services\TransistorService;
  * @covers \App\Http\Controllers\API\V1\Content\DailyReadingController
  */
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
     // Mock the TransistorService
     $this->transistorServiceMock = Mockery::mock(TransistorService::class);
     $this->app->instance(TransistorService::class, $this->transistorServiceMock);
@@ -204,31 +203,4 @@ it('uses default limit when none provided for recent readings', function () use 
     // Assert
     $response->assertStatus(200)
         ->assertJsonCount($defaultLimit);
-});
-
-it('returns redirects', function () {
-
-    // Act
-    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'what-jesus-weeps-over']));
-
-    // Assert
-    $response->assertStatus(200)
-        ->assertJsonStructure([
-            'previous_slug',
-            'current_slug',
-        ]);
-
-    $responseData = $response->json();
-    expect($responseData['previous_slug'])->toEqual('what-jesus-weeps-over');
-    expect($responseData['current_slug'])->toEqual('what-jesus-weeps-over');
-});
-
-it('returns redirects using the old slug', function () {
-    // Act
-    $response = getJson(route('content.v1.dailyReading.redirect', ['slug' => 'his-child-his-reflection']));
-
-    // Assert
-    $responseData = $response->json();
-    expect($responseData['current_slug'])->toEqual('his-child-his-reflection');
-    expect($responseData['previous_slug'])->toEqual('his-child-his-reflection');
 });

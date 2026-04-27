@@ -4,7 +4,6 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
-use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use App\Mail\EventAutoUnpublishedMail;
@@ -17,7 +16,6 @@ use App\Jobs\Fire\UnpublishSingleUnconfirmedFireJob;
 use App\Jobs\Fire\SendSingleFireCheckinReminderEmailJob;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
 
     Queue::fake();
     Mail::fake();
@@ -51,7 +49,7 @@ describe('Initial 90-day check-in emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -85,7 +83,7 @@ describe('Initial 90-day check-in emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -122,7 +120,7 @@ describe('Initial 90-day check-in emails', function () {
             ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -143,7 +141,7 @@ describe('Initial 90-day check-in emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -166,7 +164,7 @@ describe('Initial 90-day check-in emails', function () {
             ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -187,7 +185,7 @@ describe('Initial 90-day check-in emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -208,7 +206,7 @@ describe('Initial 90-day check-in emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -230,7 +228,7 @@ describe('Initial 90-day check-in emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -254,7 +252,7 @@ describe('Initial 90-day check-in emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -280,7 +278,7 @@ describe('7-day follow-up reminder emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
@@ -318,7 +316,7 @@ describe('7-day follow-up reminder emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
@@ -342,7 +340,7 @@ describe('7-day follow-up reminder emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
@@ -366,7 +364,7 @@ describe('7-day follow-up reminder emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
@@ -391,7 +389,7 @@ describe('7-day follow-up reminder emails', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(SendFireCheckinsReminderEmailJob::class);
@@ -411,13 +409,14 @@ describe('Auto-unpublishing fires', function () {
         $user = User::factory()->create();
         $fire = createFireEvent([
             'user_id' => $user->id,
+            'last_checkin_email_sent_at' => now()->subDays(14), // Initial email 14 days ago
             'last_checkin_reminder_sent_at' => now()->subDays(4),
             'last_checkin_confirmed_at' => null,
             'auto_unpublished' => false,
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
@@ -466,7 +465,7 @@ describe('Auto-unpublishing fires', function () {
             ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
@@ -491,7 +490,7 @@ describe('Auto-unpublishing fires', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
@@ -514,7 +513,7 @@ describe('Auto-unpublishing fires', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
@@ -538,7 +537,7 @@ describe('Auto-unpublishing fires', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
@@ -560,7 +559,7 @@ describe('Auto-unpublishing fires', function () {
         ]);
 
         // Run the command which should dispatch the job
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the job was dispatched
         Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class);
@@ -572,6 +571,117 @@ describe('Auto-unpublishing fires', function () {
         expect($fire->hasBeenAutoUnpublished())->toBeFalse();
 
         Mail::assertNotQueued(EventAutoUnpublishedMail::class);
+    });
+});
+
+describe('Mutual exclusivity', function () {
+    it('does not send reminder to fire that qualifies for initial email', function () {
+        // A fire with initial email 100 days ago qualifies for a NEW initial email
+        // It should NOT receive a reminder email (even though 100 days > 7 days)
+        $user = User::factory()->create();
+        $fire = createFireEvent([
+            'user_id' => $user->id,
+            'last_checkin_email_sent_at' => now()->subDays(100), // Qualifies for initial email
+            'last_checkin_reminder_sent_at' => null,
+            'last_checkin_confirmed_at' => null,
+            'updated_at' => now()->subDays(100),
+        ]);
+
+        $this->artisan('fire:send-checkins');
+
+        // Execute the reminder job
+        (new SendFireCheckinsReminderEmailJob)->handle();
+
+        // Should NOT dispatch reminder for this fire - it needs initial email first
+        Queue::assertNotPushed(SendSingleFireCheckinReminderEmailJob::class, function ($job) use ($fire) {
+            return $job->event->id === $fire->id;
+        });
+
+        // But initial email job SHOULD pick it up
+        (new SendFireCheckinsEmailJob)->handle();
+        Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class, function ($job) use ($fire) {
+            return $job->event->id === $fire->id;
+        });
+    });
+
+    it('does not unpublish fire that qualifies for initial email', function () {
+        // A fire that qualifies for initial email should NOT be unpublished
+        // even if it has an old reminder timestamp
+        $user = User::factory()->create();
+        $fire = createFireEvent([
+            'user_id' => $user->id,
+            'last_checkin_email_sent_at' => now()->subDays(100), // Qualifies for initial email
+            'last_checkin_reminder_sent_at' => now()->subDays(95), // Old reminder
+            'last_checkin_confirmed_at' => null,
+            'auto_unpublished' => false,
+            'updated_at' => now()->subDays(100),
+        ]);
+
+        $this->artisan('fire:send-checkins');
+
+        // Execute the unpublish job
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
+
+        // Should NOT dispatch unpublish for this fire - it needs initial email first
+        Queue::assertNotPushed(UnpublishSingleUnconfirmedFireJob::class, function ($job) use ($fire) {
+            return $job->event->id === $fire->id;
+        });
+
+        $fire->refresh();
+        expect($fire->isApproved())->toBeTrue()
+            ->and($fire->hasBeenAutoUnpublished())->toBeFalse();
+    });
+
+    it('processes fire through correct workflow without overlap', function () {
+        $user = User::factory()->create();
+
+        // Fire A: needs initial email (100 days old)
+        $fireA = createFireEvent([
+            'user_id' => $user->id,
+            'last_checkin_email_sent_at' => now()->subDays(100),
+            'last_checkin_reminder_sent_at' => null,
+            'last_checkin_confirmed_at' => null,
+            'updated_at' => now()->subDays(100),
+        ]);
+
+        // Fire B: needs reminder (10 days since initial, no reminder yet)
+        $fireB = createFireEvent([
+            'user_id' => $user->id,
+            'last_checkin_email_sent_at' => now()->subDays(10),
+            'last_checkin_reminder_sent_at' => null,
+            'last_checkin_confirmed_at' => null,
+        ]);
+
+        // Fire C: needs unpublish (14 days since initial, 4 days since reminder)
+        $fireC = createFireEvent([
+            'user_id' => $user->id,
+            'last_checkin_email_sent_at' => now()->subDays(14),
+            'last_checkin_reminder_sent_at' => now()->subDays(4),
+            'last_checkin_confirmed_at' => null,
+            'auto_unpublished' => false,
+        ]);
+
+        $this->artisan('fire:send-checkins');
+
+        // Execute all parent jobs
+        (new SendFireCheckinsEmailJob)->handle();
+        (new SendFireCheckinsReminderEmailJob)->handle();
+        (new AutoUnpublishUnconfirmedFiresJob)->handle();
+
+        // Fire A should ONLY get initial email (not reminder, not unpublish)
+        Queue::assertPushed(MonthlyFireCleanupEmailToHostJob::class, fn ($job) => $job->event->id === $fireA->id);
+        Queue::assertNotPushed(SendSingleFireCheckinReminderEmailJob::class, fn ($job) => $job->event->id === $fireA->id);
+        Queue::assertNotPushed(UnpublishSingleUnconfirmedFireJob::class, fn ($job) => $job->event->id === $fireA->id);
+
+        // Fire B should ONLY get reminder (not initial, not unpublish)
+        Queue::assertNotPushed(MonthlyFireCleanupEmailToHostJob::class, fn ($job) => $job->event->id === $fireB->id);
+        Queue::assertPushed(SendSingleFireCheckinReminderEmailJob::class, fn ($job) => $job->event->id === $fireB->id);
+        Queue::assertNotPushed(UnpublishSingleUnconfirmedFireJob::class, fn ($job) => $job->event->id === $fireB->id);
+
+        // Fire C should ONLY get unpublished (not initial, not reminder)
+        Queue::assertNotPushed(MonthlyFireCleanupEmailToHostJob::class, fn ($job) => $job->event->id === $fireC->id);
+        Queue::assertNotPushed(SendSingleFireCheckinReminderEmailJob::class, fn ($job) => $job->event->id === $fireC->id);
+        Queue::assertPushed(UnpublishSingleUnconfirmedFireJob::class, fn ($job) => $job->event->id === $fireC->id);
     });
 });
 
@@ -589,7 +699,7 @@ describe('Full workflow integration', function () {
         Carbon::setTestNow(now());
 
         // Run the command which should dispatch all three jobs
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the jobs were dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);
@@ -607,15 +717,11 @@ describe('Full workflow integration', function () {
 
         Carbon::setTestNow(now()->addDays(8));
 
-        // Run the command which should dispatch all three jobs
-        $this->artisan('app:send-fires-checkins-email-command');
+        // Run the command - jobs implement ShouldBeUnique so won't be re-dispatched
+        // while previous instances are still in the queue (Queue::fake doesn't complete them)
+        $this->artisan('fire:send-checkins');
 
-        // Assert that the jobs were dispatched
-        Queue::assertPushed(SendFireCheckinsEmailJob::class, 2);
-        Queue::assertPushed(SendFireCheckinsReminderEmailJob::class, 2);
-        Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class, 2);
-
-        // Execute the second job manually
+        // Execute the reminder job manually
         (new SendFireCheckinsReminderEmailJob)->handle();
 
         // Assert that the individual job was dispatched
@@ -636,15 +742,10 @@ describe('Full workflow integration', function () {
 
         Carbon::setTestNow(now()->addDays(3));
 
-        // Run the command which should dispatch all three jobs
-        $this->artisan('app:send-fires-checkins-email-command');
+        // Run the command - jobs implement ShouldBeUnique so won't be re-dispatched
+        $this->artisan('fire:send-checkins');
 
-        // Assert that the jobs were dispatched
-        Queue::assertPushed(SendFireCheckinsEmailJob::class, 3);
-        Queue::assertPushed(SendFireCheckinsReminderEmailJob::class, 3);
-        Queue::assertPushed(AutoUnpublishUnconfirmedFiresJob::class, 3);
-
-        // Execute the third job manually
+        // Execute the unpublish job manually
         (new AutoUnpublishUnconfirmedFiresJob)->handle();
 
         // Assert that the individual job was dispatched
@@ -686,13 +787,14 @@ describe('Full workflow integration', function () {
 
         $fireToUnpublish = createFireEvent([
             'user_id' => $user->id,
+            'last_checkin_email_sent_at' => now()->subDays(14), // Initial email 14 days ago
             'last_checkin_reminder_sent_at' => now()->subDays(4),
             'last_checkin_confirmed_at' => null,
             'auto_unpublished' => false,
         ]);
 
         // Run the command which should dispatch all three jobs
-        $this->artisan('app:send-fires-checkins-email-command');
+        $this->artisan('fire:send-checkins');
 
         // Assert that the jobs were dispatched
         Queue::assertPushed(SendFireCheckinsEmailJob::class);

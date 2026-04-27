@@ -26,8 +26,11 @@ class EventTypeData extends Data
         public ?string $registration_before_your_event_text,
         public bool $allow_materials_order,
         public ?string $number_of_items_in_material_order_label,
+        public ?string $type,
         public int $listings_count,
         public int $countries_count,
+        public ?string $summary,
+        public ?string $summary_link,
     ) {}
 
     public static function fromEventType(EventType $eventType): self
@@ -49,8 +52,11 @@ class EventTypeData extends Data
             registration_before_your_event_text: $eventType->registration_before_your_event_text,
             allow_materials_order: $eventType->allow_materials_order ?? false,
             number_of_items_in_material_order_label: $eventType->number_of_items_in_material_order_label,
+            type: $eventType->type?->value,
             listings_count: $eventType->listings_count ?? 0,
             countries_count: $eventType->countries_count ?? 0,
+            summary: $eventType->summary,
+            summary_link: $eventType->summary_link,
         );
     }
 }

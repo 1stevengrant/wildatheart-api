@@ -1,10 +1,10 @@
-import react from '@vitejs/plugin-react';
-import laravel from 'laravel-vite-plugin';
-import { resolve } from 'node:path';
-import { defineConfig } from 'vite';
-import vue2 from '@vitejs/plugin-vue2';
-import { run } from "vite-plugin-run";
+import { resolve } from "node:path";
 
+import statamic from "@statamic/cms/vite-plugin";
+import react from "@vitejs/plugin-react";
+import laravel from "laravel-vite-plugin";
+import { defineConfig } from "vite";
+import { run } from "vite-plugin-run";
 
 export default defineConfig({
     plugins: [
@@ -17,14 +17,7 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        vue2({
-            template: {
-                transformAssetUrls: {
-                    base: null,
-                    includeAbsolute: false,
-                },
-            },
-        }),
+        statamic(),
         react(),
         run([
             {
@@ -48,11 +41,32 @@ export default defineConfig({
         ]),
     ],
     esbuild: {
-        jsx: 'automatic',
+        jsx: "automatic",
+    },
+    build: {
+        chunkSizeWarningLimit: 1700,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('mapbox-gl')) {
+                        return 'mapbox-gl';
+                    }
+                    if (id.includes('@mantine')) {
+                        return 'mantine';
+                    }
+                    if (id.includes('recoil')) {
+                        return 'recoil';
+                    }
+                    if (id.includes('react-player') || id.includes('dashjs') || id.includes('hls.js')) {
+                        return 'react-player';
+                    }
+                },
+            },
+        },
     },
     resolve: {
         alias: {
-            'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
+            "ziggy-js": resolve(__dirname, "vendor/tightenco/ziggy"),
         },
     },
 });

@@ -153,8 +153,26 @@ export const useEventLocation = ({
             feature.id.includes("poi")
         )?.text;
 
-        // Handle Puerto Rico edge case
-        if (region === "Puerto Rico") {
+        // Fallback: extract country from feature context (city-states like Singapore)
+        if (!country) {
+            const featureWithCountryContext = location.find(
+                (feature: { context?: Array<{ id: string; text: string }> }) =>
+                    feature.context?.some((ctx) => ctx.id.includes("country"))
+            );
+            country = featureWithCountryContext?.context?.find(
+                (ctx: { id: string }) => ctx.id.includes("country")
+            )?.text;
+        }
+
+        // Map US territories to United States
+        const usTerritories = [
+            "Puerto Rico",
+            "Guam",
+            "U.S. Virgin Islands",
+            "American Samoa",
+            "Northern Mariana Islands",
+        ];
+        if (country && usTerritories.includes(country)) {
             country = "United States";
         }
 

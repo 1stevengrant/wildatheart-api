@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -17,6 +17,7 @@ import { useRecoilState } from "recoil";
 import { AuthUserMenu } from "@/Components/Layout/Elements/AuthUserMenu";
 import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
 import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
+import { CompleteProfileModal } from "@/Components/Modals/CompleteProfileModal";
 import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { SupportModal } from "@/Components/Modals/SupportModal";
 import { Logo } from "@/Components/Ui/Logo";
@@ -32,7 +33,17 @@ export const HostDashboardLayout = ({
 }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openSupportModal, setOpenSupportModal] = useState(false);
-    const { auth } = usePage<any>().props;
+    const { auth, show_profile_nudge } = usePage<any>().props;
+
+    const [showProfileNudge, setShowProfileNudge] = useState(
+        Boolean(show_profile_nudge)
+    );
+
+    useEffect(() => {
+        if (show_profile_nudge) {
+            setShowProfileNudge(true);
+        }
+    }, [show_profile_nudge]);
 
     const navigation = [
         {
@@ -82,6 +93,11 @@ export const HostDashboardLayout = ({
                 <LogoutModal
                     open={isLogoutModalOpen}
                     setOpen={setIsLogoutModalOpen}
+                />
+                <CompleteProfileModal
+                    open={showProfileNudge}
+                    setOpen={setShowProfileNudge}
+                    title="Finish setting up your profile"
                 />
                 <Transition show={sidebarOpen}>
                     <Dialog

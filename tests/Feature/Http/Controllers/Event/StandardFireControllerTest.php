@@ -1,9 +1,13 @@
 <?php
 
 use App\Models\EventType;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->user = \App\Models\User::factory()->create();
     $this->actingAs($this->user);
 });
@@ -43,4 +47,32 @@ it('creates a standard fire', function () {
         ->and($event->neighborhood)->toBe('Skid Row')
         ->and($event->user_id)->toBe($this->user->id);
 
+});
+
+it('prevents duplicate fire creation within a short time window', function () {
+    $attributes = [
+        'name' => 'Duplicate Fire Test',
+        'street_address' => '123 Main St',
+        'state' => 'CA',
+        'city' => 'Los Angeles',
+        'zip' => '90001',
+        'country' => 'US',
+        'latitude' => 34.05,
+        'longitude' => -118.24,
+        'region' => 'Southern California',
+        'district' => 'Greater Los Angeles',
+        'locality' => 'Downtown',
+        'neighborhood' => 'Skid Row',
+        'start_date' => now()->addDays(10)->format('Y-m-d'),
+        'frequency' => \App\Enums\Event\FrequencyEnum::WEEKLY->value,
+    ];
+
+    // First request should succeed
+    $this->post(route('host.fire.store'), $attributes);
+    expect($this->user->events()->count())->toBe(1);
+
+    // Second request immediately after should be blocked
+    $response = $this->post(route('host.fire.store'), $attributes);
+    $response->assertSessionHasErrors('duplicate');
+    expect($this->user->events()->count())->toBe(1);
 });

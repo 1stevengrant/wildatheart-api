@@ -43,7 +43,7 @@ export const LocalMapMarkers = () => {
                                 </span>
                             </Tippy>
                         </div>
-                        <div className={`md:hidden`}>
+                        <div className={`lg:hidden`}>
                             <span>
                                 <EventMarkerButton event={event} />
                             </span>

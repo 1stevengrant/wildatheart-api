@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventType;
-use App\Data\EventTypeData;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -15,7 +14,15 @@ class ResourcesController extends Controller
         });
 
         return inertia('ResourcesPage', [
-            'eventTypes' => EventTypeData::collection($eventTypes),
+            'eventTypes' => $eventTypes->map(fn(EventType $eventType) => [
+                'id' => $eventType->id,
+                'slug' => $eventType->slug,
+                'name' => $eventType->name,
+                'image' => $eventType->image,
+                'event_guide_pages' => $eventType->event_guide_pages,
+                'video_link' => $eventType->video_link,
+                'action_buttons' => $eventType->action_buttons,
+            ])->values(),
         ]);
     }
 }

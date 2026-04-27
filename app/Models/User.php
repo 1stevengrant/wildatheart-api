@@ -2,45 +2,64 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
 use App\Builders\UserBuilder;
+use App\Observers\UserObserver;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
 use Laravolt\Avatar\Facade as Avatar;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
-use App\Jobs\Admin\CheckIfUserShouldBeAdmin;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-#[\Illuminate\Database\Eloquent\Attributes\ObservedBy(\App\Observers\UserObserver::class)]
+#[ObservedBy(UserObserver::class)]
 class User extends Authenticatable
 {
     use HasFactory, HasRoles, HasRunwayResource, LogsActivity, Notifiable, SoftDeletes;
 
-    public const string ROLE_ADMIN = 'admin';
-
-    public const string ROLE_HOST = 'host';
-
-    public const string ROLE_ATTENDEE = 'attendee';
-
     public const int PROFILE_COMPLETE = 2;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'uuid',
+        'name',
+        'given_name',
+        'family_name',
+        'email',
+        'phone',
+        'country_code',
+        'city',
+        'state',
+        'postal_code',
+        'image',
+        'optimized_image',
+        'provider_id',
+        'provider',
+        'email_verified_at',
+        'password',
+        'last_login_at',
+        'salesforce_id',
+        'salesforce_contact_id',
+        'wegive_donor_id',
+        'profile_step',
+        'opted_into_marketing',
+        'date_opted_into_marketing',
+        'super',
+        'avatar',
+        'preferences',
+        'last_login',
+        'agreed_to_host_agreement_date',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -52,27 +71,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::created(function (User $user) {
-            CheckIfUserShouldBeAdmin::dispatch($user);
-        });
-
-        static::creating(function ($model) {
-            $model->uuid = (string) Str::uuid();
-        });
-
-        static::deleting(function ($user) {
-            $user->events->each->delete();
-            $user->addresses->each->delete();
-        });
-    }
-
     /**
-     * Get the attributes that should be cast.
-     *
      * @return array<string, string>
      */
     protected function casts(): array
@@ -89,9 +88,9 @@ class User extends Authenticatable
             'super' => 'boolean',
             'agreed_to_host_agreement_date' => 'datetime',
             'last_login' => 'datetime',
-            'preferences' => 'array',
+            'preferences' => 'json',
             'profile_step' => 'integer',
-
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 
@@ -120,20 +119,25 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    public function fullname(): Attribute
+    public function primaryAddress(): HasOne
+    {
+        return $this->hasOne(Address::class)->where('is_primary', true);
+    }
+
+    protected function fullname(): Attribute
     {
         return Attribute::make(
             get: function (): string {
-                if ($this->given_name === null || $this->family_name === null) {
-                    return $this->email;
-                }
+                $name = collect([$this->given_name, $this->family_name])
+                    ->filter()
+                    ->implode(' ');
 
-                return "$this->given_name $this->family_name";
+                return $name ?: 'Member';
             }
-        );
+        )->shouldCache();
     }
 
-    public function name(): Attribute
+    protected function name(): Attribute
     {
         return $this->fullname();
     }
@@ -146,30 +150,22 @@ class User extends Authenticatable
     protected function email(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => mb_strtolower($value),
-            set: fn (string $value) => mb_strtolower(str_replace(' ', '', $value)),
+            get: fn (?string $value) => $value ? mb_strtolower($value) : $value,
+            set: fn (?string $value) => $value ? mb_strtolower(str_replace(' ', '', $value)) : $value,
         );
     }
 
-    public function contacts(): HasManyThrough
-    {
-        return $this->hasManyThrough(
-            Attendee::class,
-            Event::class,
-        );
-    }
-
-    public function profilePhoto()
+    public function profilePhoto(): string
     {
         if ($this->image) {
-            return Storage::disk('s3')->url($this->image);
+            return bunnyImage($this->image, [
+                'width' => 500,
+                'quality' => 75,
+                'format' => 'webp',
+            ]);
         }
 
-        if ($this->given_name && $this->family_name) {
-            return Avatar::create($this->fullname)->toBase64();
-        }
-
-        return Avatar::create($this->email)->toBase64();
+        return Avatar::create($this->fullname)->toBase64();
     }
 
     public function deleteProfilePhoto(): void
@@ -200,14 +196,14 @@ class User extends Authenticatable
         return new UserBuilder($query);
     }
 
+    public function scopeRunway(Builder $query): void
+    {
+        $query->withTrashed();
+    }
+
     public function hasAgreedToHostAgreement(): bool
     {
         return $this->agreed_to_host_agreement_date !== null;
-    }
-
-    public function address(): HasMany
-    {
-        return $this->hasMany(Address::class);
     }
 
     public function isSuperAdmin(): bool
@@ -223,30 +219,24 @@ class User extends Authenticatable
             ->dontSubmitEmptyLogs()
             ->useLogName('users')
             ->setDescriptionForEvent(function (string $eventName) {
-                $user = auth()->user();
-                $userName = $user ? $user->fullname : 'System';
+                $userName = auth()->user()?->fullname ?? 'System';
 
                 return "User type has been {$eventName} by {$userName}";
             });
     }
 
-    public function primaryAddress(): ?Model
-    {
-        return $this->addresses()->where('is_primary', true)->first();
-    }
-
     public function hasCompleteProfile(): bool
     {
-        return
-            ! empty($this->family_name) &&
-            ! empty($this->given_name) &&
-            filter_var($this->email, FILTER_VALIDATE_EMAIL);
+        return $this->given_name
+            && $this->family_name
+            && $this->phone
+            && filter_var($this->email, FILTER_VALIDATE_EMAIL);
     }
 
     protected function md5Email(): Attribute
     {
         return Attribute::make(
             get: fn () => md5($this->email)
-        );
+        )->shouldCache();
     }
 }

@@ -13,7 +13,7 @@ export const EventScheduleLink = ({
             className={primaryButtonClasses}
             href={route("host.eventType.schedule", eventType)}
         >
-            Schedule
+            {eventType.schedule_nav_text_override ?? `Schedule`}
             <ArrowRightIcon className={`w-4 h-4 ml-2`} />
         </Link>
     );

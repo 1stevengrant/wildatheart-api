@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Event;
 
 use App\Models\Event;
 use App\Models\EventType;
-use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
+use App\Actions\Event\ApproveEvent;
 use App\Http\Requests\EventRequest;
 use App\Http\Controllers\Controller;
+use App\Actions\Event\SendMaterialsOrderToZapier;
 use App\Services\EventCreationStepHandlerService;
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HostEventTypeCreateEventController extends Controller
 {
@@ -48,9 +48,17 @@ class HostEventTypeCreateEventController extends Controller
             return to_route('host.captivating-fire');
         }
 
+        // Prevent duplicate event creation within a short time window
+        if (auth()->user()->events()->where('created_at', '>', now()->subSeconds(10))->exists()) {
+            return back()->withErrors([
+                'duplicate' => 'An event was just created. Please wait a moment before creating another.',
+            ]);
+        }
+
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,
             groupType: $eventType->group_type,
+            eventTypeName: $eventType->name,
         );
 
         $event = auth()->user()->events()->create([
@@ -74,31 +82,14 @@ class HostEventTypeCreateEventController extends Controller
             'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
         ]);
 
-        $mailingAddress = auth()->user()->primaryAddress();
+        ApproveEvent::run(event: $event);
 
-        if ($eventType->hasZapier() &&
-            $eventType->hasMaterialsOrder() &&
-            $request->number_of_items_in_material_order != '0'
-        ) {
-            $dataTransferObject = new GoogleSheetDataTransferObject(
-                webhookUrl: $eventType->zapier_webhook_url,
-                eventId: $event->id,
-                eventType: $eventType->name,
-                email: auth()->user()->email,
-                quantity: $request->number_of_items_in_material_order,
-                first_name: auth()->user()->given_name,
-                last_name: auth()->user()->family_name,
-                address_1: $mailingAddress->street_address,
-                address_2: $mailingAddress->address2,
-                city: $mailingAddress->city,
-                state: $mailingAddress->state,
-                zip: $mailingAddress->zip,
-                country: $mailingAddress->country,
-                date: now()->toDateTimeString(),
-            );
-
-            PostToZapier::dispatch($dataTransferObject);
-        }
+        SendMaterialsOrderToZapier::run(
+            event: $event,
+            eventType: $eventType,
+            user: auth()->user(),
+            quantity: $request->number_of_items_in_material_order,
+        );
 
         return to_route('my.events.active', ['event' => $event]);
     }

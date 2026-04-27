@@ -13,7 +13,7 @@ export const EventFaqsLink = ({
             className={primaryButtonClasses}
             href={route("host.eventType.faqs", eventType)}
         >
-            FAQs
+            {eventType.faq_nav_text_override ?? `FAQs`}
             <ArrowRightIcon className={`w-4 h-4 ml-2`} />
         </Link>
     );

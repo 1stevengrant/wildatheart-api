@@ -14,13 +14,9 @@ use App\Jobs\User\UpdateProfileFromAuth0Job;
 
 class CallbackController extends Controller
 {
-    protected Auth0SDK $auth0;
-
     public function __construct(
-        Auth0SDK $auth0
-    ) {
-        $this->auth0 = $auth0;
-    }
+        protected Auth0SDK $auth0
+    ) {}
 
     public function __invoke(Request $request)
     {
@@ -65,54 +61,7 @@ class CallbackController extends Controller
                 ],
             );
 
-            // Check if any ownership transfers or host invitations were activated
-            $message = 'You are now logged in!';
-
-            // Ownership transfers take priority in the message
-            if (! empty($activatedOwnershipTransfers)) {
-                $firstTransfer = $activatedOwnershipTransfers[0];
-                $eventName = $firstTransfer['event_name'];
-
-                if (count($activatedOwnershipTransfers) === 1) {
-                    $message = "You are now the owner of {$eventName}!";
-                } else {
-                    $message = "You are now the owner of {$eventName} and " . (count($activatedOwnershipTransfers) - 1) . ' other event(s)!';
-                }
-
-                LogActivityJob::dispatch(
-                    logName: 'auth',
-                    description: 'Ownership transfers activated',
-                    properties: [
-                        'count' => count($activatedOwnershipTransfers),
-                        'message' => $message,
-                    ],
-                );
-
-                // Clear the activated transfers from session
-                Session::forget('activated_ownership_transfers');
-            } elseif (! empty($activatedInvitations)) {
-                // Get the first activated invitation for the message
-                $firstInvitation = $activatedInvitations[0];
-                $eventName = $firstInvitation['event_name'];
-
-                if (count($activatedInvitations) === 1) {
-                    $message = "You are now a host for {$eventName}!";
-                } else {
-                    $message = "You are now a host for {$eventName} and " . (count($activatedInvitations) - 1) . ' other event(s)!';
-                }
-
-                LogActivityJob::dispatch(
-                    logName: 'auth',
-                    description: 'Host invitations activated',
-                    properties: [
-                        'count' => count($activatedInvitations),
-                        'message' => $message,
-                    ],
-                );
-
-                // Clear the activated invitations from session
-                Session::forget('activated_invitations');
-            }
+            $message = $this->buildActivationMessage($activatedOwnershipTransfers, $activatedInvitations);
 
             // Clear the intended URL session data
             Session::forget('auth.intended_url');
@@ -140,24 +89,82 @@ class CallbackController extends Controller
         }
     }
 
-    protected function findOrCreateUser(array $auth0User): User
+    private function buildActivationMessage(array $transfers, array $invitations): string
     {
+        if (! empty($transfers)) {
+            $message = $this->formatActivationMessage($transfers, 'the owner of');
 
-        $user = User::firstOrCreate(
-            ['email' => $auth0User['email']],
-            [
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'Ownership transfers activated',
+                properties: ['count' => count($transfers), 'message' => $message],
+            );
+
+            Session::forget('activated_ownership_transfers');
+
+            return $message;
+        }
+
+        if (! empty($invitations)) {
+            $message = $this->formatActivationMessage($invitations, 'a host for');
+
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'Host invitations activated',
+                properties: ['count' => count($invitations), 'message' => $message],
+            );
+
+            Session::forget('activated_invitations');
+
+            return $message;
+        }
+
+        return 'You are now logged in!';
+    }
+
+    private function formatActivationMessage(array $items, string $role): string
+    {
+        $eventName = $items[0]['event_name'];
+
+        if (count($items) === 1) {
+            return "You are now {$role} {$eventName}!";
+        }
+
+        return "You are now {$role} {$eventName} and " . (count($items) - 1) . ' other event(s)!';
+    }
+
+    private function findOrCreateUser(array $auth0User): User
+    {
+        $user = User::withTrashed()->byEmail($auth0User['email'])->first();
+
+        if ($user === null) {
+            $user = User::create([
+                'email' => $auth0User['email'],
                 'given_name' => $auth0User['given_name'] ?? null,
                 'family_name' => $auth0User['family_name'] ?? null,
                 'password' => bcrypt(Str::random(32)),
                 'provider_id' => $auth0User['sub'],
-            ]
-        );
+            ]);
 
-        LogActivityJob::dispatch(
-            logName: 'auth',
-            description: 'Created user',
-            properties: ['user' => $user->toArray()],
-        );
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'Created user',
+                properties: ['user' => $user->toArray()],
+            );
+
+            return $user;
+        }
+
+        if ($user->trashed()) {
+            $user->restore();
+            $user->forceFill(['provider_id' => $auth0User['sub']])->save();
+
+            LogActivityJob::dispatch(
+                logName: 'auth',
+                description: 'Restored soft-deleted user on re-signup',
+                properties: ['user' => $user->toArray()],
+            );
+        }
 
         return $user;
     }

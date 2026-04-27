@@ -8,8 +8,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendFireCheckinsEmailJob implements ShouldQueue
+class SendFireCheckinsEmailJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,20 +34,22 @@ class SendFireCheckinsEmailJob implements ShouldQueue
         $ninetyDaysAgo = now()->subDays(90);
 
         Event::query()
-            ->with(['user'])
+            ->with(['user', 'managers'])
             ->allFires()
             ->published()
             ->where(function ($query) use ($ninetyDaysAgo) {
                 $query->whereNull('last_checkin_email_sent_at')
                     ->orWhere('last_checkin_email_sent_at', '<=', $ninetyDaysAgo);
             })
-            ->updatedAgo(90)
+            ->inactiveForDays(90)
             ->where(function ($query) use ($ninetyDaysAgo) {
                 $query->whereNull('last_checkin_confirmed_at')
                     ->orWhere('last_checkin_confirmed_at', '<=', $ninetyDaysAgo);
             })
-            ->each(function (Event $event) {
-                MonthlyFireCleanupEmailToHostJob::dispatch($event);
+            ->chunkById(100, function ($events) {
+                foreach ($events as $event) {
+                    MonthlyFireCleanupEmailToHostJob::dispatch($event);
+                }
             });
     }
 }

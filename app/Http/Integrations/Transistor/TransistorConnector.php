@@ -28,7 +28,7 @@ class TransistorConnector extends Connector implements HasPagination
 
     protected function resolveRateLimitStore(): RateLimitStore
     {
-        return new LaravelCacheStore(Cache::store('redis'));
+        return new LaravelCacheStore(Cache::store(config('services.transistor.rate_limit_cache_store', 'redis')));
     }
 
     /**
@@ -43,7 +43,7 @@ class TransistorConnector extends Connector implements HasPagination
     {
         return new class(connector: $this, request: $request) extends PagedPaginator
         {
-            protected ?int $perPageLimit = 500;
+            protected ?int $perPageLimit = 100;
 
             protected function isLastPage(Response $response): bool
             {
@@ -73,7 +73,10 @@ class TransistorConnector extends Connector implements HasPagination
      */
     protected function defaultConfig(): array
     {
-        return [];
+        return [
+            'timeout' => 120,
+            'connect_timeout' => 10,
+        ];
     }
 
     protected function defaultAuth(): HeaderAuthenticator

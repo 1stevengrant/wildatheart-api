@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DoesntContainEmojis;
 use App\Rules\ShouldNotEndWithFire;
 use Illuminate\Foundation\Http\FormRequest;
-use Repat\LaravelRules\DoesntContainEmojis;
 use App\Http\Requests\Concerns\HasLocationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 

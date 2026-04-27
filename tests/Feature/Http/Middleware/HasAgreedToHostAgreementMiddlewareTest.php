@@ -2,15 +2,18 @@
 
 use App\Models\User;
 use App\Models\EventType;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(\Database\Seeders\DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->user = User::factory()->create([
         'agreed_to_host_agreement_date' => null,
     ]);
 
     $this->eventType = EventType::first();
-
 });
 
 it('redirects to host agreement when user has not agreed yet', function () {

@@ -7,14 +7,16 @@ use App\Data\V1\EventData;
 use Statamic\Facades\Entry;
 use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\API\V1\Content\EventsEntryController;
+use App\Services\EventResponseBuilder;
 
 class EventController extends Controller
 {
+    public function __construct(private readonly EventResponseBuilder $eventResponseBuilder) {}
+
     public function index()
     {
         return cache()->remember('events_collection', now()->addHour(), function () {
-            return EventCollectionData::collection(
+            return EventCollectionData::collect(
                 Event::query()
                     ->published()
                     ->active()
@@ -32,8 +34,7 @@ class EventController extends Controller
         $landingPage = Entry::find($event->eventType->related_landing_page_id);
 
         if ($landingPage) {
-            $landingPageResponse = app(EventsEntryController::class)->buildEventResponse($landingPage);
-            $eventData->landingPage = $landingPageResponse;
+            $eventData->landingPage = $this->eventResponseBuilder->build($landingPage);
         }
 
         return $eventData;

@@ -4,10 +4,15 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\EventType;
-use Database\Seeders\DatabaseSeeder;
+use App\Jobs\PostToZapier;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
-    $this->seed(DatabaseSeeder::class);
+    Bus::fake();
+    Mail::fake();
+
     $this->user = User::factory()->create();
     $this->address = Address::factory()->create([
         'user_id' => $this->user->id,
@@ -18,7 +23,7 @@ beforeEach(function () {
 
 it('creates a new event of a given type', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -42,7 +47,7 @@ it('creates a new event of a given type', function () {
 
 test('a user needs to have a given & family name for the event to be created', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
     $this->user->update([
         'given_name' => null,
         'family_name' => null,
@@ -70,7 +75,7 @@ test('a user needs to have a given & family name for the event to be created', f
 
 test('an event that has no materials order does not request the number of items in material order to be present', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::BECOMING_A_KING))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::BECOMING_A_KING))->first();
     $eventType->allow_materials_order = false;
     $eventType->save();
     $this->post(route('host.eventType.create.store', $eventType), [
@@ -95,7 +100,7 @@ test('an event that has no materials order does not request the number of items 
 
 test('an event with a materials order needs to match the values in the event model', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::BECOMING_A_KING))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::BECOMING_A_KING))->first();
     $eventType->allow_materials_order = true;
     $eventType->save();
     $response = $this->post(route('host.eventType.create.store', $eventType), [
@@ -121,10 +126,10 @@ test('an event with a materials order needs to match the values in the event mod
 
 test('an event with a materials order needs to needs to be a string', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::BECOMING_A_KING))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::BECOMING_A_KING))->first();
     $eventType->allow_materials_order = true;
     $eventType->save();
-    $this->post(route('host.eventType.create.store', $eventType), [
+    $response = $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
         'zip' => '12345',
@@ -142,13 +147,13 @@ test('an event with a materials order needs to needs to be a string', function (
         'number_of_items_in_material_order' => 10,
     ]);
 
-    expect(session('errors')->has('number_of_items_in_material_order'))->toBeTrue();
+    $response->assertSessionHasErrors('number_of_items_in_material_order');
 
 });
 
 test('a retreat end date is 3 days after the start date', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -169,12 +174,12 @@ test('a retreat end date is 3 days after the start date', function () {
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a survival school end date is 4 days after the start date', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::SURVIVAL_SCHOOL))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -195,12 +200,12 @@ test('a survival school end date is 4 days after the start date', function () {
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a survival school is a retreat event type group', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::SURVIVAL_SCHOOL))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -225,7 +230,7 @@ test('a survival school is a retreat event type group', function () {
 
 test('a becoming a king retreat end date is 4 days after the start date', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::BECOMING_A_KING))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::BECOMING_A_KING))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -246,12 +251,12 @@ test('a becoming a king retreat end date is 4 days after the start date', functi
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a captivating retreat end date is 4 days after the start date', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::CAPTIVATING_CORE_RETREAT))->first();
+    $eventType = EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT)->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -272,7 +277,7 @@ test('a captivating retreat end date is 4 days after the start date', function (
 
     $event = $this->user->events()->first();
     $startDate = Carbon::parse($this->startDate);
-    expect($event->end_date)->toBe($startDate->addDays(3)->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
 test('a fire should not have an end date', function () {
@@ -280,7 +285,7 @@ test('a fire should not have an end date', function () {
     // Fires use the simple flow and do not go through this controller
     // Testing that fires redirect to the simple flow is covered in other tests
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::FIRES))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::FIRES))->first();
 
     // Verify that fires redirect to the simple flow
     $response = $this->post(route('host.eventType.create.store', $eventType), [
@@ -306,11 +311,9 @@ test('a fire should not have an end date', function () {
 });
 
 test('an event that has no items in a material order, does not get passed to Zapier', function () {
-    Queue::fake();
-
     $this->actingAs($this->user);
     // Use a different event type since Fires now redirect to simple flow
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -328,14 +331,12 @@ test('an event that has no items in a material order, does not get passed to Zap
         'start_date' => $this->startDate,
         'number_of_items_in_material_order' => '0',
     ]);
-    \Illuminate\Support\Facades\Queue::assertNotPushed(\App\Jobs\PostToZapier::class);
+    Bus::assertNotDispatched(PostToZapier::class);
 });
 
 test('an event that has items in a material order, does get passed to Zapier', function () {
-    Queue::fake();
-
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::SURVIVAL_SCHOOL))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::SURVIVAL_SCHOOL))->first();
     $this->post(route('host.eventType.create.store', $eventType), [
         'name' => 'Test Event',
         'city' => 'Test City',
@@ -353,7 +354,7 @@ test('an event that has items in a material order, does get passed to Zapier', f
         'start_date' => $this->startDate,
         'number_of_items_in_material_order' => '1 x 10-pack',
     ]);
-    \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\PostToZapier::class);
+    Bus::assertDispatched(PostToZapier::class);
 });
 
 test('fires event type redirects from complex flow to simple flow on index', function () {
@@ -430,7 +431,7 @@ test('captivating fires event type redirects from complex flow to simple flow on
 
 test('other event types do not redirect and use complex flow normally', function () {
     $this->actingAs($this->user);
-    $eventType = EventType::query()->slug(\Illuminate\Support\Str::slug(EventType::WAH_RETREAT))->first();
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
 
     $response = $this->get(route('host.eventType.create', $eventType));
 
@@ -440,4 +441,92 @@ test('other event types do not redirect and use complex flow normally', function
         ->has('eventType')
         ->has('materialOrderItems')
     );
+});
+
+test('a retreat event is auto-published after creation', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
+
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Retreat',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '1 x 10-pack',
+    ]);
+
+    $event = $this->user->events()->first();
+
+    expect($event)->not->toBeNull()
+        ->and($event->approved_at)->not->toBeNull();
+});
+
+test('an experience event is auto-published after creation', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_EXPERIENCE))->first();
+
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Experience',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '0',
+    ]);
+
+    $event = $this->user->events()->first();
+
+    expect($event)->not->toBeNull()
+        ->and($event->approved_at)->not->toBeNull();
+});
+
+test('it prevents duplicate event creation within a short time window', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
+
+    $eventData = [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '1 x 10-pack',
+    ];
+
+    // First request should succeed
+    $this->post(route('host.eventType.create.store', $eventType), $eventData);
+    expect($this->user->events()->count())->toBe(1);
+
+    // Second request immediately after should be blocked
+    $response = $this->post(route('host.eventType.create.store', $eventType), $eventData);
+    $response->assertSessionHasErrors('duplicate');
+    expect($this->user->events()->count())->toBe(1);
 });

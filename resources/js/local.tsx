@@ -4,24 +4,19 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import React from "react";
 
-import "mapbox-gl/dist/mapbox-gl.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { createInertiaApp } from "@inertiajs/react";
 import { MantineProvider } from "@mantine/core";
-import * as Sentry from "@sentry/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 import { RecoilRoot } from "recoil";
 
 import { RouteContext } from "@/Hooks/useRoute";
+import { initSentry } from "@/lib/sentry";
 import { mantineTheme } from "@/mantineTheme";
 
-Sentry.init({
-    dsn: import.meta.env.VITE_SENTRY_LARAVEL_DSN,
-    maxBreadcrumbs: 50,
-    debug: true,
-});
+initSentry();
 
 const appName = import.meta.env.VITE_APP_NAME || "Wild at Heart";
 

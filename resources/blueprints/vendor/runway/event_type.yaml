@@ -93,6 +93,21 @@ tabs:
                 - required
                 - string
           -
+            handle: type
+            field:
+              options:
+                -
+                  key: gathering
+                  value: Gathering
+                -
+                  key: retreat
+                  value: Retreat
+                -
+                  key: course
+                  value: Course
+              type: radio
+              display: Type
+          -
             handle: order
             field:
               input_type: number
@@ -255,6 +270,30 @@ tabs:
                     display: Answer
                     validate:
                       - required
+      -
+        display: Overrides
+        instructions: 'Use these to override event type defaults'
+        fields:
+          -
+            handle: welcome_nav_text_override
+            field:
+              type: text
+              display: 'Welcome Nav Text'
+          -
+            handle: before_event_nav_text_override
+            field:
+              type: text
+              display: 'Before Event Nav Text'
+          -
+            handle: schedule_nav_text_override
+            field:
+              type: text
+              display: 'Schedule Nav Text'
+          -
+            handle: faq_nav_text_override
+            field:
+              type: text
+              display: 'FAQ Nav Text'
   resources:
     display: Resources
     sections:
@@ -462,4 +501,29 @@ tabs:
             field:
               type: text
               display: 'Card Description'
+          -
+            handle: summary
+            field:
+              type: textarea
+              display: Summary
+              instructions: 'A brief summary of this event type for the API'
+          -
+            handle: summary_link
+            field:
+              type: link
+              display: 'Summary Link'
+              instructions: 'A related link for the summary'
+          -
+            handle: new_image
+            field:
+              max_files: 1
+              mode: grid
+              container: app
+              restrict: true
+              type: assets
+              display: 'New Image'
+              instructions: 'This is the new image for an event type in 2026'
+              validate:
+                - required
+                - image
 title: 'Event Type'

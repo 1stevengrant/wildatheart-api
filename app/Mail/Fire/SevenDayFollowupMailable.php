@@ -6,6 +6,7 @@ use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\URL;
+use App\Traits\FormatsEventHostNames;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
@@ -15,7 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SevenDayFollowupMailable extends Mailable implements ShouldQueue
 {
-    use BurnExtinguishFireActions, InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use BurnExtinguishFireActions, FormatsEventHostNames, InteractsWithEmailTemplates, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 
@@ -50,7 +51,7 @@ class SevenDayFollowupMailable extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
-        $content = str_replace('[event_host_name]', $this->event->user->given_name, $content);
+        $content = str_replace('[event_host_name]', $this->getAllHostNames(), $content);
         $content = str_replace('[button_inactive]', $this->getInactiveButtonComponent(), $content);
         $content = str_replace('[button_active]', $this->getActiveButtonComponent(), $content);
         $this->emailContent = \Str::markdown($content);

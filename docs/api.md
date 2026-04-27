@@ -1,14 +1,58 @@
 # API
 
-While the vast majority of the Local platform uses Laravel and Inertia.js, there is an event search endpoint that is responsible for returning events based on a user's search criteria.
+All API endpoints are publicly accessible under the `/api` prefix. None require authentication. The only rate-limiting is on the event connect endpoint via `throttle:connect`.
 
-## Endpoints
+**Total: 38 public endpoints** (37 GET, 1 POST)
 
-### Event Search
+## V1 Core (`/api/v1`)
 
--   URL: `/api/events/search`
+### Stats
+
+-   URL: `/api/v1/stats`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\SearchForEventsController`
+-   Controller: `App\Http\Controllers\API\V1\StatsController`
+
+### Webhooks
+
+#### Refresh Daily Readings
+
+-   URL: `/api/v1/webhooks/refresh-daily-readings`
+-   Method: `POST`
+-   Controller: `App\Http\Controllers\API\V1\Content\RefreshDailyReadingsController`
+
+### Navigation
+
+#### All Navs
+
+-   URL: `/api/v1/navs/all`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Navs\AllNavsController`
+
+#### Desktop Nav
+
+-   URL: `/api/v1/navs/desktop`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Navs\DesktopNavController`
+
+#### Mobile Nav
+
+-   URL: `/api/v1/navs/mobile`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Navs\MobileNavController`
+
+### Events
+
+#### Event Index
+
+-   URL: `/api/v1/events`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\EventController@index`
+
+#### Event Search
+
+-   URL: `/api/v1/events/search`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\SearchForEventsController`
 
 This controller will gather events based on the map bounds from the front end that are updated on the fly as the user moves the map. The controller will return a JSON response with the events that fall within the map bounds.
 
@@ -16,59 +60,150 @@ This controller also includes an `offsetting service` at `App\Services\EventOffs
 
 Caching is also implemented in this controller to prevent the same search from being run multiple times in a short period of time.
 
-### Statamic Content API
+#### Event Types
 
-Statamic as a CMS ships with a headless API that is used in some parts of the Wild at Heart website. You can read about the specifics of the Statamic API in the [Statamic documentation](https://statamic.dev/rest-api).
-
-### Custom Statamic Content API
-
-As we pull content from a number of different sources like Subsplash and Transistor.fm we have created a custom Statamic API that pulls in content from these sources and returns it in a format that is easy to consume by the front end.
-
-#### Alerts
-
--   URL: `/api/content/v1/alerts`
+-   URL: `/api/v1/events/types`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\AlertEntryController@index`
+-   Controller: `App\Http\Controllers\API\V1\EventTypeController`
 
-#### Blogs
+#### Event Show
+
+-   URL: `/api/v1/events/{event}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\EventController@show`
+
+#### Event Connect (Attend)
+
+-   URL: `/api/v1/events/{event}/connect`
+-   Method: `POST`
+-   Middleware: `throttle:connect`
+-   Controller: `App\Http\Controllers\API\V1\AttendeeController@store`
+
+## Content API (`/api/content`)
+
+### Media & Series
+
+#### Series Show
+
+-   URL: `/api/content/series/{slug}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\MediaSeriesDataController@show`
+
+#### Media by Series ID
+
+-   URL: `/api/content/media-by-series-id/{slug}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\Media\MediaItemsBySeriesController@show`
+
+#### Media Redirects
+
+-   URL: `/api/content/media/redirects`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\Media\MediaRedirectsController@index`
+
+#### Media Show
+
+-   URL: `/api/content/media/{slug}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\Media\MediaItemController@show`
+
+#### Subsplash Media
+
+-   URL: `/api/content/subsplash-media/{slug}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\Media\SubsplashMediaItemController@show`
+
+### Subsplash Proxy
+
+-   URL: `/api/content/subsplash/{any}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\SubsplashController`
+
+Wildcard proxy route for Subsplash API requests.
+
+### Experiences
+
+#### All Experiences
+
+-   URL: `/api/content/experiences/all`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\AllExperiencesController`
+
+#### Experience Show
+
+-   URL: `/api/content/experiences/{slug}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\ExperienceDataController@show`
+
+## Content V1 API (`/api/content/v1`)
+
+### SEO
+
+#### Sitemap
+
+-   URL: `/api/content/v1/seo/sitemap`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\SitemapController`
+
+### Search
+
+-   URL: `/api/content/v1/search`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\SearchController@index`
+
+### Blogs
+
+#### Blog Index
 
 -   URL: `/api/content/v1/blogs`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\BlogsController@index`
+-   Controller: `App\Http\Controllers\API\BlogsController@index`
 
-Returns a list of all blog posts
+Returns a list of all blog posts.
 
-#### Contributor Blogs & Single Blog Post
+#### Blog Show / Contributor Blogs
 
 -   URL: `/api/content/v1/blogs/{uri}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\BlogsController@show`
+-   Controller: `App\Http\Controllers\API\BlogsController@show`
 
 This endpoint can return the posts for a specific contributor or a single blog post.
 
-#### Daily Reading
+### Daily Reading
+
+#### Daily Reading Index
 
 -   URL: `/api/content/v1/daily-reading`
 -   Method: `GET`
 -   Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@index`
 
-This controller returns the daily reading content for the Wild at Heart website from the Transistor.fm API.
+Returns the daily reading content from the Transistor.fm API.
 
 #### Daily Reading Recent
 
 -   URL: `/api/content/v1/daily-reading/recent`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@getRecent`
+-   Controller: `App\Http\Controllers\API\V1\Content\RecentDailyReadingsController@index`
 
 Returns the most recent daily reading content.
 
-#### Daily Reading Redirect
+Legacy daily-reading URL aliases are handled by site redirects (Cloudflare KV), synced from `dailyreadings.json` via `php artisan redirects:sync-daily-reading-aliases` (run after updating that file).
 
--   URL: `/api/content/v1/daily-reading/redirect/{slug}`
+### Pages
+
+-   URL: `/api/content/v1/page/{slug}`
 -   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\DailyReadingController@redirect`
+-   Controller: `App\Http\Controllers\API\V1\Content\PageEntryController@show`
 
-This controller is used to redirect the user to the correct daily reading content based on the slug.
+Returns a page's content by its slug.
+
+### Media
+
+#### Media Show
+
+-   URL: `/api/content/v1/media/{slug}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\MediaItemEntryController@show`
 
 #### Media or Series
 
@@ -76,36 +211,98 @@ This controller is used to redirect the user to the correct daily reading conten
 -   Method: `GET`
 -   Controller: `App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController@show`
 
-@TODO: Add more information about this endpoint
+### Prayers
 
-#### Media
-
--   URL: `/api/content/v1/media/{slug}`
--   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\MediaItemEntryController@media`
-
-@TODO: Add more information about this endpoint
-
-#### Page
-
--   URL: `/api/content/v1/page/{slug}`
--   Method: `GET`
--   Controller: `App\Http\Controllers\API\V1\Content\PageEntryController@getPageBySlug`
-
-This controller returns a page's content by its slug.
-
-#### Prayers
+#### Prayers Index
 
 -   URL: `/api/content/v1/prayers`
 -   Method: `GET`
 -   Controller: `App\Http\Controllers\API\V1\Content\PrayersEntryController@index`
 
-Returns a list of all prayers
+Returns a list of all prayers.
 
-#### Prayers Single
+#### Prayer Show
 
 -   URL: `/api/content/v1/prayers/{slug}`
 -   Method: `GET`
 -   Controller: `App\Http\Controllers\API\V1\Content\PrayersEntryController@show`
 
 Returns a single prayer by its slug.
+
+### Events (Statamic)
+
+#### Events Index
+
+-   URL: `/api/content/v1/events`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\EventsEntryController@index`
+
+#### Event Show
+
+-   URL: `/api/content/v1/events/{slug}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\EventsEntryController@show`
+
+### Alerts
+
+-   URL: `/api/content/v1/alerts`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\AlertEntryController@index`
+
+### Subsplash App
+
+#### Daily Reading Today
+
+-   URL: `/api/content/v1/subsplash/daily-readings`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\TodaysDailyReadingController`
+
+#### Daily Reading Listen
+
+-   URL: `/api/content/v1/subsplash/daily-readings/listen/{id?}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingAudioController@show`
+
+#### Daily Readings List
+
+-   URL: `/api/content/v1/subsplash/daily-readings/list`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController@index`
+
+#### Daily Reading by ID
+
+-   URL: `/api/content/v1/subsplash/daily-readings/{id}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController@show`
+
+#### Prayers
+
+-   URL: `/api/content/v1/subsplash/prayers`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController@index`
+
+#### Prayer by ID
+
+-   URL: `/api/content/v1/subsplash/prayers/{id}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController@show`
+
+#### Listen Prayer
+
+-   URL: `/api/content/v1/subsplash/prayers/listen/{id}`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\V1\Content\SubsplashApp\PrayerAudioController@show`
+
+## Root-Level Endpoints (`/api`)
+
+### Event Search (Legacy)
+
+-   URL: `/api/events/search`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\API\SearchForEventsController`
+
+### All Events
+
+-   URL: `/api/events/all`
+-   Method: `GET`
+-   Controller: `App\Http\Controllers\AllEventsController`

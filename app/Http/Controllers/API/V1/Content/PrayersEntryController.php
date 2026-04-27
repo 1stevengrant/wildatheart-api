@@ -3,55 +3,44 @@
 namespace App\Http\Controllers\API\V1\Content;
 
 use Statamic\Entries\Entry;
-use Statamic\Facades\Token;
 use App\DataTypeObjects\File;
 use App\Services\BunnyCDNService;
+use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
-use Facades\Statamic\CP\LivePreview;
 use App\DataTypeObjects\PlayableFile;
 use App\Services\EntryBuilderService;
 use App\DataTypeObjects\API\V1\Content\Prayers\PrayersShowResponse;
+use App\Http\Controllers\API\V1\Content\Concerns\ResolvesLivePreview;
 
 class PrayersEntryController extends Controller
 {
+    use ResolvesLivePreview;
+
+    public function __construct(
+        private readonly EntryBuilderService $entryBuilder,
+        private readonly BunnyCDNService $bunnyCDN,
+    ) {}
+
     public function index()
     {
-        $prayers = Entry::query()
-            ->where('collection', 'prayers')
-            ->where('published', true)
+        $prayers = EntryQueryBuilder::prayers()
+            ->published()
             ->orderBy('order', 'asc')
             ->get();
 
-        $prayersResponse = $prayers->map(function ($prayer) {
-            return $this->buildPrayerResponse($prayer);
-        });
+        $prayersResponse = $prayers->map($this->buildPrayerResponse(...));
 
-        return PrayersShowResponse::collection($prayersResponse);
+        return PrayersShowResponse::collect($prayersResponse);
     }
 
     public function show($slug)
     {
+        $prayer = $this->resolveLivePreview();
 
-        // Check for token and live-preview query parameters
-        $request = request();
-        $token = $request->query('token', false);
-        $livePreview = $request->query('live-preview', false);
-
-        // If token is present or live-preview is true, adjust the query to include unpublished and future items
-
-        $prayer = null;
-
-        if ($token && $livePreview) {
-            // Skip published and date checks for live preview or token access
-
-            $token = Token::find($token);
-            $prayer = LivePreview::item($token);
-        } else {
-
-            $prayer = Entry::query()
-                ->where('collection', 'prayers')
-                ->where('slug', $slug)
-                ->where('published', true)
+        if (! $prayer) {
+            $prayer = EntryQueryBuilder::prayers()
+                ->published()
+                ->bySlug($slug)
                 ->first();
         }
 
@@ -64,18 +53,15 @@ class PrayersEntryController extends Controller
         return PrayersShowResponse::from($response);
     }
 
-    public function buildPrayerResponse(Entry $prayer)
+    private function buildPrayerResponse(Entry $prayer)
     {
-        $entryBuilder = new EntryBuilderService;
+        $response = $this->entryBuilder->buildResponseFromEntry($prayer);
 
-        $response = $entryBuilder->buildResponseFromEntry($prayer);
-
-        $bunnyCDNService = new BunnyCDNService;
         if ($prayer->pdf) {
-            $response['pdf'] = File::from(array_merge($prayer->pdf->toArray(), ['url' => $bunnyCDNService->getBunnyCDNUrl($prayer->pdf)]));
+            $response['pdf'] = File::from(array_merge($prayer->pdf->toArray(), ['url' => $this->bunnyCDN->getBunnyCDNUrl($prayer->pdf)]));
         }
         if ($prayer->mp3) {
-            $response['mp3'] = PlayableFile::from(array_merge($prayer->mp3->toArray(), ['url' => $bunnyCDNService->getBunnyCDNUrl($prayer->mp3)]));
+            $response['mp3'] = PlayableFile::from(array_merge($prayer->mp3->toArray(), ['url' => $this->bunnyCDN->getBunnyCDNUrl($prayer->mp3)]));
         }
 
         return $response;
