@@ -26,6 +26,15 @@ class AcceptHostInvitationController extends Controller
             ]);
         }
 
+        if ($invitation->event === null) {
+            return to_route('home')->with([
+                'notifications' => [
+                    'message' => 'This event is no longer available.',
+                    'type' => 'error',
+                ],
+            ]);
+        }
+
         // Check if already accepted
         if (! $invitation->isPending()) {
             return to_route('my.events.edit', $invitation->event)->with([

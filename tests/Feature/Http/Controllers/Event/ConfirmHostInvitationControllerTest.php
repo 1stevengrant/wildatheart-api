@@ -9,6 +9,7 @@ use function Pest\Laravel\actingAs;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventManagerInvitation;
+use Illuminate\Contracts\Bus\Dispatcher;
 use App\Jobs\WeGive\FindOrCreateDonorJob;
 
 beforeEach(function () {
@@ -90,7 +91,7 @@ it('does not dispatch WeGive jobs if invitation is not pending', function () {
     $invitedUser = User::factory()->create(['email' => 'invited@example.com']);
 
     // Temporarily restore real bus
-    Bus::swap(app(\Illuminate\Contracts\Bus\Dispatcher::class));
+    Bus::swap(app(Dispatcher::class));
     $event = Event::factory()->fires()->approved()->for($eventOwner)->create();
 
     // Re-fake bus for the controller test
@@ -116,7 +117,7 @@ it('rejects invitation if email does not match logged in user', function () {
     $differentUser = User::factory()->create(['email' => 'different@example.com']);
 
     // Temporarily restore real bus
-    Bus::swap(app(\Illuminate\Contracts\Bus\Dispatcher::class));
+    Bus::swap(app(Dispatcher::class));
     $event = Event::factory()->fires()->approved()->for($eventOwner)->create();
 
     // Re-fake bus for the controller test
@@ -135,6 +136,48 @@ it('rejects invitation if email does not match logged in user', function () {
     expect($event->fresh()->managers->contains($differentUser))->toBeFalse();
     Bus::assertNotDispatched(FindOrCreateDonorJob::class);
     Bus::assertNotDispatched(TagDonorJob::class);
+});
+
+it('redirects home with an error when the event has been soft-deleted on the accept page', function () {
+    $eventOwner = User::factory()->create(['email' => 'owner@example.com']);
+    $invitedUser = User::factory()->create(['email' => 'invited@example.com']);
+    $event = Event::factory()->fires()->approved()->for($eventOwner)->create();
+
+    $invitation = EventManagerInvitation::create([
+        'event_id' => $event->id,
+        'email' => $invitedUser->email,
+        'invited_by_user_id' => $eventOwner->id,
+    ]);
+
+    $event->delete();
+
+    actingAs($invitedUser)
+        ->get(route('accept.host.invitation', $invitation))
+        ->assertRedirect(route('home'));
+});
+
+it('redirects home with an error when the event has been soft-deleted on confirm', function () {
+    $eventOwner = User::factory()->create(['email' => 'owner@example.com']);
+    $invitedUser = User::factory()->create(['email' => 'invited@example.com']);
+
+    Bus::swap(app(Dispatcher::class));
+    $event = Event::factory()->fires()->approved()->for($eventOwner)->create();
+    Bus::fake();
+
+    $invitation = EventManagerInvitation::create([
+        'event_id' => $event->id,
+        'email' => $invitedUser->email,
+        'invited_by_user_id' => $eventOwner->id,
+    ]);
+
+    $event->delete();
+
+    actingAs($invitedUser)
+        ->post(route('accept.host.invitation.confirm', $invitation))
+        ->assertRedirect(route('home'));
+
+    expect($invitation->fresh()->isPending())->toBeTrue();
+    Bus::assertNotDispatched(FindOrCreateDonorJob::class);
 });
 
 it('uses event type wegive tag when tagging new co-host', function () {

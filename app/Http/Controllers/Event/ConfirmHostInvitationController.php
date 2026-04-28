@@ -30,6 +30,15 @@ class ConfirmHostInvitationController extends Controller
 
         $event = $invitation->event;
 
+        if ($event === null) {
+            return to_route('home')->with([
+                'notifications' => [
+                    'message' => 'This event is no longer available.',
+                    'type' => 'error',
+                ],
+            ]);
+        }
+
         // Activate the invitation
         if ($invitation->isPending()) {
             $eventOwner = $event->user;
