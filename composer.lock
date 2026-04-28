@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe8695139985c39a0f23f83830e8b643",
+    "content-hash": "2778c0e1a999e58e172d651786d89ee6",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -1417,7 +1417,7 @@
         },
         {
             "name": "ghijk/statamic-typescript-generator",
-            "version": "dev-chore/composer-updates",
+            "version": "dev-bugfix/nightwatch-63",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/statamic-typescript-generator",
@@ -9901,16 +9901,16 @@
         },
         {
             "name": "statamic/cms",
-            "version": "v6.14.0",
+            "version": "v6.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/statamic/cms.git",
-                "reference": "8a48cc5fe1325857093407cb9ba48751a6c868ed"
+                "reference": "a14a46005b44c2361473a7677947ff4b9b0c7472"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/statamic/cms/zipball/8a48cc5fe1325857093407cb9ba48751a6c868ed",
-                "reference": "8a48cc5fe1325857093407cb9ba48751a6c868ed",
+                "url": "https://api.github.com/repos/statamic/cms/zipball/a14a46005b44c2361473a7677947ff4b9b0c7472",
+                "reference": "a14a46005b44c2361473a7677947ff4b9b0c7472",
                 "shasum": ""
             },
             "require": {
@@ -10022,7 +10022,7 @@
             ],
             "support": {
                 "issues": "https://github.com/statamic/cms/issues",
-                "source": "https://github.com/statamic/cms/tree/v6.14.0"
+                "source": "https://github.com/statamic/cms/tree/v6.15.0"
             },
             "funding": [
                 {
@@ -10030,7 +10030,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-16T19:47:00+00:00"
+            "time": "2026-04-27T14:04:07+00:00"
         },
         {
             "name": "statamic/eloquent-driver",
@@ -14843,7 +14843,7 @@
         },
         {
             "name": "wild-at-heart/command-center",
-            "version": "dev-chore/composer-updates",
+            "version": "dev-bugfix/nightwatch-63",
             "dist": {
                 "type": "path",
                 "url": "addons/wild-at-heart/command-center",

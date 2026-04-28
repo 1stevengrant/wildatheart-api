@@ -47,7 +47,7 @@
         "spatie/typescript-transformer": "^2.3",
         "squirephp/countries-en": "^3.5",
         "statamic-rad-pack/runway": "^9.0",
-        "statamic/cms": "^6.0",
+        "statamic/cms": "6.15.0",
         "statamic/eloquent-driver": "^5.0",
         "stevebauman/purify": "^6.2",
         "symfony/http-client": "^7.0",
