@@ -17,7 +17,6 @@ use App\Http\Middleware\EnsureProfileIsCompleteMiddleware;
 use App\Http\Middleware\HasAgreedToHostAgreementMiddleware;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
-use Illuminate\Routing\Route;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
