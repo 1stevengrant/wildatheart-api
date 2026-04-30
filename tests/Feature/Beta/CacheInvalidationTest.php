@@ -63,3 +63,44 @@ it('invalidates the cache on soft-delete', function () {
             ->exists()
     )->toBeFalse();
 });
+
+it('invalidates the cache when the beta-tester role is attached', function () {
+    $user = User::factory()->create(['beta_enabled' => false]);
+
+    // Prime cache.
+    expect(Feature::for($user)->active(BetaFeature::class))->toBeFalse();
+
+    $user->assignRole(UserRoleEnum::BetaTester->value);
+
+    expect(Feature::for($user)->active(BetaFeature::class))->toBeTrue();
+});
+
+it('invalidates the cache when the beta-tester role is detached', function () {
+    $user = User::factory()->create(['beta_enabled' => false]);
+    $user->assignRole(UserRoleEnum::BetaTester->value);
+
+    // Prime cache as true.
+    expect(Feature::for($user)->active(BetaFeature::class))->toBeTrue();
+
+    $user->removeRole(UserRoleEnum::BetaTester->value);
+
+    expect(Feature::for($user)->active(BetaFeature::class))->toBeFalse();
+});
+
+it('does not invalidate the cache for non-beta-tester role changes', function () {
+    Role::firstOrCreate(['name' => UserRoleEnum::Host->value]);
+
+    $user = User::factory()->create(['beta_enabled' => false]);
+
+    expect(Feature::for($user)->active(BetaFeature::class))->toBeFalse();
+
+    $user->assignRole(UserRoleEnum::Host->value);
+
+    // The features row for the beta scope should still exist (cache untouched).
+    expect(
+        DB::table('features')
+            ->where('name', BetaFeature::class)
+            ->where('scope', $user::class . '|' . $user->id)
+            ->exists()
+    )->toBeTrue();
+});

@@ -16,7 +16,10 @@ use App\Observers\AttendeeObserver;
 use Statamic\Events\GlobalVariablesSaved;
 use App\Listeners\LogStatamicEntryChanges;
 use App\Listeners\UpdateLastLoginDateTime;
+use Spatie\Permission\Events\RoleAttached;
+use Spatie\Permission\Events\RoleDetached;
 use App\Listeners\SaveSubsplashItemEntryWithId;
+use App\Listeners\InvalidateBetaCacheOnRoleChange;
 use App\Listeners\ClearNavigationCacheOnGlobalSavedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -45,6 +48,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         GlobalVariablesSaved::class => [
             ClearNavigationCacheOnGlobalSavedListener::class,
+        ],
+        RoleAttached::class => [
+            InvalidateBetaCacheOnRoleChange::class,
+        ],
+        RoleDetached::class => [
+            InvalidateBetaCacheOnRoleChange::class,
         ],
     ];
 
