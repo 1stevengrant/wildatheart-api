@@ -494,8 +494,13 @@ tabs:
     display: 'V1 API'
     sections:
       -
-        display: 'New Section'
+        display: 'V1 API'
         fields:
+          -
+            handle: new_card_heading
+            field:
+              type: text
+              display: 'New Card Heading'
           -
             handle: card_description
             field:
