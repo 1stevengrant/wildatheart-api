@@ -136,6 +136,20 @@ tabs:
               visibility: read_only
               listable: true
               default_visibility: true
+      -
+        display: Beta
+        fields:
+          -
+            handle: beta_enabled
+            field:
+              type: toggle
+              display: 'Beta enabled'
+              instructions: 'Override grants this user beta access regardless of role assignment. Members of the beta-tester role already have access.'
+              default: false
+              if:
+                user.super: 'equals true'
+              listable: hidden
+              visibility: visible
   preferences:
     display: Preferences
     sections:
