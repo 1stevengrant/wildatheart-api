@@ -10,6 +10,7 @@ use App\Features\BetaFeature;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Events\RoleAttached;
 use Spatie\Permission\Events\RoleDetached;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 
 class InvalidateBetaCacheOnRoleChange
 {
@@ -35,6 +36,8 @@ class InvalidateBetaCacheOnRoleChange
         $candidates = is_iterable($rolesOrIds) ? $rolesOrIds : [$rolesOrIds];
         $betaName = UserRoleEnum::BetaTester->value;
 
+        $betaId = false;
+
         foreach ($candidates as $candidate) {
             if ($candidate instanceof Role && $candidate->name === $betaName) {
                 return true;
@@ -44,8 +47,17 @@ class InvalidateBetaCacheOnRoleChange
                 return true;
             }
 
-            if (is_int($candidate) && Role::find($candidate)?->name === $betaName) {
-                return true;
+            if (is_int($candidate)) {
+                if ($betaId === false) {
+                    try {
+                        $betaId = Role::findByName($betaName)->getKey();
+                    } catch (RoleDoesNotExist) {
+                        $betaId = null;
+                    }
+                }
+                if ($betaId !== null && $candidate === $betaId) {
+                    return true;
+                }
             }
         }
 

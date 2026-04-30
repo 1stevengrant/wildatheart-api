@@ -92,15 +92,17 @@ it('does not invalidate the cache for non-beta-tester role changes', function ()
 
     $user = User::factory()->create(['beta_enabled' => false]);
 
+    // Prime the cache so a row exists (resolves to false).
     expect(Feature::for($user)->active(BetaFeature::class))->toBeFalse();
+
+    // Force the cached value to true — a state the resolver alone would never
+    // produce for this user (beta_enabled is false). If the listener over-fires
+    // and calls forget(), the resolver will re-run and return false, causing the
+    // final assertion to fail.
+    Feature::for($user)->activate(BetaFeature::class);
 
     $user->assignRole(UserRoleEnum::Host->value);
 
-    // The features row for the beta scope should still exist (cache untouched).
-    expect(
-        DB::table('features')
-            ->where('name', BetaFeature::class)
-            ->where('scope', $user::class . '|' . $user->id)
-            ->exists()
-    )->toBeTrue();
+    // Cache should NOT have been invalidated — the forced value persists.
+    expect(Feature::for($user)->active(BetaFeature::class))->toBeTrue();
 });
