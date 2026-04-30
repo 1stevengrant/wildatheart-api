@@ -3,7 +3,9 @@
 namespace App\Data\V1;
 
 use App\Models\EventType;
+use Statamic\Facades\Entry;
 use Spatie\LaravelData\Data;
+use App\Services\EventResponseBuilder;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -31,6 +33,7 @@ class EventTypeData extends Data
         public int $countries_count,
         public ?string $summary,
         public ?string $summary_link,
+        public ?array $landing_page,
     ) {}
 
     public static function fromEventType(EventType $eventType): self
@@ -57,6 +60,22 @@ class EventTypeData extends Data
             countries_count: $eventType->countries_count ?? 0,
             summary: $eventType->summary,
             summary_link: $eventType->summary_link,
+            landing_page: self::landingPage($eventType),
         );
+    }
+
+    private static function landingPage(EventType $eventType): ?array
+    {
+        if (! $eventType->related_landing_page_id) {
+            return null;
+        }
+
+        $landingPage = Entry::find($eventType->related_landing_page_id);
+
+        if (! $landingPage) {
+            return null;
+        }
+
+        return app(EventResponseBuilder::class)->build($landingPage);
     }
 }
