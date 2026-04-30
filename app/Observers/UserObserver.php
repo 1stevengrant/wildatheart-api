@@ -2,8 +2,11 @@
 
 namespace App\Observers;
 
+use Throwable;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Laravel\Pennant\Feature;
+use App\Features\BetaFeature;
 use App\Jobs\WeGive\FindOrCreateDonorJob;
 use App\Jobs\Admin\CheckIfUserShouldBeAdmin;
 
@@ -23,44 +26,40 @@ class UserObserver
         );
     }
 
-    /**
-     * Handle the User "updated" event.
-     */
     public function updated(User $user): void
     {
-        //
+        if ($user->wasChanged('beta_enabled')) {
+            $this->forgetBetaFeatureCache($user);
+        }
     }
 
-    /**
-     * Handle the User "deleting" event.
-     */
     public function deleting(User $user): void
     {
         $user->events->each->delete();
         $user->addresses()->delete();
     }
 
-    /**
-     * Handle the User "deleted" event.
-     */
     public function deleted(User $user): void
     {
-        //
+        $this->forgetBetaFeatureCache($user);
     }
 
-    /**
-     * Handle the User "restored" event.
-     */
     public function restored(User $user): void
     {
         //
     }
 
-    /**
-     * Handle the User "force deleted" event.
-     */
     public function forceDeleted(User $user): void
     {
         //
+    }
+
+    private function forgetBetaFeatureCache(User $user): void
+    {
+        try {
+            Feature::for($user)->forget(BetaFeature::class);
+        } catch (Throwable $e) {
+            report($e);
+        }
     }
 }
