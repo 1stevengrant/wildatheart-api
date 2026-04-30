@@ -7,6 +7,7 @@ enum UserRoleEnum: string
     case Admin = 'admin';
     case Host = 'host';
     case Attendee = 'attendee';
+    case BetaTester = 'beta-tester';
 
     public function label(): string
     {
@@ -14,6 +15,7 @@ enum UserRoleEnum: string
             self::Admin => 'Administrator',
             self::Host => 'Host',
             self::Attendee => 'Attendee',
+            self::BetaTester => 'Beta Tester',
         };
     }
 }

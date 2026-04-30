@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            BetaTesterRoleSeeder::class,
             StateSeeder::class,
             EventTypeSeeder::class,
             EmailTemplateSeeder::class,
