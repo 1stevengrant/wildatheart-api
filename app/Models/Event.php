@@ -424,6 +424,7 @@ class Event extends BaseModel
                 EventType::BECOMING_A_KING => 'Becoming A King Retreat',
                 EventType::CAPTIVATING_EXPERIENCE => 'Captivating Experience',
                 EventType::CAPTIVATING_CORE_RETREAT => '4-Day Captivating Retreat',
+                EventType::CAPTIVATING_CORE_RETREAT_1_DAY => '1-Day Captivating Retreat',
                 default => $this->card_description ?? '',
             }
         );

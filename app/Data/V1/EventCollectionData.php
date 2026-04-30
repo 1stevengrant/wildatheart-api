@@ -41,7 +41,7 @@ class EventCollectionData extends Data
             hostAvatar: $event->user->profilePhoto(),
             longitude: $event->display_longitude ?? $event->longitude,
             latitude: $event->display_latitude ?? $event->latitude,
-            newCardHeading: $event->new_card_heading,
+            newCardHeading: $event->eventType->card_description,
             distance: $event->distance ? round((float) $event->distance) : null,
         );
     }
