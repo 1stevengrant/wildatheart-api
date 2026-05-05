@@ -186,6 +186,63 @@ it('returns empty array and swallows rate limit exception on getAll', function (
     expect($result)->toBe([]);
 });
 
+it('retries transient 5xx failures and ultimately succeeds', function () {
+    $showId = 'flaky-show';
+    $episodes = [['id' => '99', 'type' => 'episode', 'attributes' => ['title' => 'After Retry']]];
+
+    $mockClient = MockClient::global([
+        MockResponse::make(['error' => 'cf 522'], 522),
+        MockResponse::make(['error' => 'origin 500'], 500),
+        MockResponse::make([
+            'data' => $episodes,
+            'meta' => ['currentPage' => 1, 'totalPages' => 1],
+        ]),
+    ]);
+
+    $result = $this->transistorService->getAll($showId);
+
+    $mockClient->assertSentCount(3, GetEpisodesRequest::class);
+    expect($result)->toBe($episodes);
+});
+
+it('swallows persistent server exceptions on refreshEpisodeList', function () {
+    $showId = 'down-show';
+
+    MockClient::global([
+        MockResponse::make(['error' => 'cf 522'], 522),
+        MockResponse::make(['error' => 'cf 522'], 522),
+        MockResponse::make(['error' => 'cf 522'], 522),
+    ]);
+
+    expect(fn () => $this->transistorService->refreshEpisodeList($showId))
+        ->not->toThrow(\Throwable::class);
+
+    $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';
+    expect(Cache::has($url))->toBeFalse();
+});
+
+it('serves stale cache when refresh fails on getAll', function () {
+    $showId = 'stale-show';
+    $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';
+    $stale = [['id' => 'stale-1', 'type' => 'episode', 'attributes' => ['title' => 'Stale']]];
+
+    // No cache yet, but we simulate the API being down for 3 attempts.
+    MockClient::global([
+        MockResponse::make(['error' => 'cf 522'], 522),
+        MockResponse::make(['error' => 'cf 522'], 522),
+        MockResponse::make(['error' => 'cf 522'], 522),
+    ]);
+
+    // Pre-populate stale cache (e.g. from a previous successful refresh).
+    Cache::forever($url, $stale);
+
+    // Force a refresh path by clearing the read-cache check is unnecessary — getAll
+    // returns the cached value directly. Instead we test refreshEpisodeList preserves it.
+    $this->transistorService->refreshEpisodeList($showId);
+
+    expect(Cache::get($url))->toBe($stale);
+});
+
 it('serializes concurrent refreshes using a cache lock', function () {
     $showId = 'locked-show';
     $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';

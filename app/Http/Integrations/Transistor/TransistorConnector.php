@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Cache;
 use Saloon\Traits\Plugins\AcceptsJson;
 use Saloon\Http\Auth\HeaderAuthenticator;
 use Saloon\PaginationPlugin\PagedPaginator;
+use Saloon\Exceptions\Request\ServerException;
+use Saloon\Exceptions\Request\RequestException;
 use Saloon\RateLimitPlugin\Traits\HasRateLimits;
+use Saloon\Exceptions\Request\FatalRequestException;
 use Saloon\PaginationPlugin\Contracts\HasPagination;
 use Saloon\RateLimitPlugin\Contracts\RateLimitStore;
 use Saloon\RateLimitPlugin\Stores\LaravelCacheStore;
@@ -18,6 +21,18 @@ use Saloon\RateLimitPlugin\Stores\LaravelCacheStore;
 class TransistorConnector extends Connector implements HasPagination
 {
     use AcceptsJson, HasRateLimits;
+
+    public ?int $tries = 3;
+
+    public ?int $retryInterval = 1000;
+
+    public ?bool $useExponentialBackoff = true;
+
+    public function handleRetry(FatalRequestException|RequestException $exception, Request $request): bool
+    {
+        return $exception instanceof FatalRequestException
+            || $exception instanceof ServerException;
+    }
 
     protected function resolveLimits(): array
     {
