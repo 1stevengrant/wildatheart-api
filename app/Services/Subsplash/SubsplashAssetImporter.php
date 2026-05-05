@@ -2,17 +2,18 @@
 
 namespace App\Services\Subsplash;
 
+use Statamic\Assets\Asset;
 use Illuminate\Support\Facades\Log;
 use Statamic\Facades\AssetContainer;
 
 class SubsplashAssetImporter
 {
-    public function importImage(array $image): ?\Statamic\Assets\Asset
+    public function importImage(array $image): ?Asset
     {
         $filename = 'subsplash_' . $image['id'] . '.jpg';
         $path = 'subsplash-imports/' . $filename;
 
-        $existingAsset = \Statamic\Assets\Asset::query()
+        $existingAsset = Asset::query()
             ->where('path', $path)
             ->first();
         $sourceUrl = $image['_links']['related']['href'];

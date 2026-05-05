@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Models\Event;
+use Statamic\Facades\GlobalSet;
 use App\Data\FeaturedContentData;
 use App\Data\V1\SearchEventsData;
 use App\Services\GeographyService;
@@ -82,7 +83,7 @@ class SearchForEventsController extends Controller
         $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
         $featuredContent = null;
-        $globalSet = \Statamic\Facades\GlobalSet::findByHandle('local_platform');
+        $globalSet = GlobalSet::findByHandle('local_platform');
 
         if ($globalSet) {
             $siteData = $globalSet->inDefaultSite()->data();

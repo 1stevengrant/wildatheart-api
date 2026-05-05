@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Services\Subsplash\SubsplashApiClient;
 use App\Services\Subsplash\SubsplashMediaItemImporter;
@@ -100,7 +101,7 @@ class GetLatestSubsplashMedia extends Command
 
             $this->importer->import($item, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
-                    $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
+                    $lastUpdatedFormatted = $lastUpdated instanceof Carbon
                         ? $lastUpdated->format('Y-m-d H:i:s')
                         : $lastUpdated;
                     $this->line("<comment>Skipped: {$title} (no changes since {$lastUpdatedFormatted})</comment>");
@@ -150,7 +151,7 @@ class GetLatestSubsplashMedia extends Command
             // Save the media item as an entry
             $entry = $this->importer->import($mediaItem, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
-                    $lastUpdatedFormatted = $lastUpdated instanceof \Carbon\Carbon
+                    $lastUpdatedFormatted = $lastUpdated instanceof Carbon
                         ? $lastUpdated->format('Y-m-d H:i:s')
                         : $lastUpdated;
                     $this->info("<comment>Skipped: {$title} (no changes since {$lastUpdatedFormatted})</comment>");

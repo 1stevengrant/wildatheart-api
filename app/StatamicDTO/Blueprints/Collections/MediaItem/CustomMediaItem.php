@@ -21,6 +21,7 @@ namespace App\StatamicDTO\Blueprints\Collections\MediaItem;
 use Spatie\LaravelData\Data;
 use App\StatamicDTO\Shared\HeroSet;
 use App\StatamicDTO\Shared\HeaderSet;
+use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ButtonsSet;
 use App\StatamicDTO\Shared\HeroLogoSet;
 use App\StatamicDTO\Shared\ImagesGroup;
@@ -68,8 +69,7 @@ class CustomMediaItem extends Data
 
     public ?string $subsplash_media_item_id = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $series = null;
+    public ?LinkField $series = null;
 
     public ?int $position = null;
 

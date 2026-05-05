@@ -1,6 +1,7 @@
 <?php
 
 use Tests\TestCase;
+use Tests\ProductionParityTestCase;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,7 @@ use Tests\TestCase;
 
 uses(TestCase::class)->in('Feature');
 uses(TestCase::class)->in('Browser');
-uses(Tests\ProductionParityTestCase::class)->in('Parity');
+uses(ProductionParityTestCase::class)->in('Parity');
 
 /*
 |--------------------------------------------------------------------------

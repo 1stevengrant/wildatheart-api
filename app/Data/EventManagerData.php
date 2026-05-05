@@ -4,6 +4,7 @@ namespace App\Data;
 
 use App\Models\User;
 use Spatie\LaravelData\Data;
+use App\Models\EventManagerInvitation;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -32,7 +33,7 @@ class EventManagerData extends Data
         );
     }
 
-    public static function fromInvitation(\App\Models\EventManagerInvitation $invitation): self
+    public static function fromInvitation(EventManagerInvitation $invitation): self
     {
         return new self(
             id: $invitation->id,

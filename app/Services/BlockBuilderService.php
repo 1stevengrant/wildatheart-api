@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use Statamic\Fields\Value;
 use Statamic\Entries\Entry;
+use Spatie\LaravelData\Data;
 use App\DataTypeObjects\IconProps;
 use App\Builders\EntryQueryBuilder;
 use App\DataTypeObjects\SlideBlock;
@@ -41,7 +43,7 @@ class BlockBuilderService
                 default => $this->processDefaultBlock($inner)
             };
 
-            $output[] = $result instanceof \Spatie\LaravelData\Data ? $result->toArray() : $result;
+            $output[] = $result instanceof Data ? $result->toArray() : $result;
         }
 
         return $output;
@@ -83,7 +85,7 @@ class BlockBuilderService
     {
         $heroTitle = $block['hero_title'];
 
-        if ($heroTitle instanceof \Statamic\Fields\Value) {
+        if ($heroTitle instanceof Value) {
             $heroTitle = $heroTitle->raw();
         }
 

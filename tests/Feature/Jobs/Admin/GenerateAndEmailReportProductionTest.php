@@ -106,13 +106,13 @@ it('handles case where local disk storage fails gracefully', function () {
         ->andReturn(true);
     Storage::shouldReceive('put')
         ->with('tmp/report.csv', $csvContent)
-        ->andThrow(new \Exception('Local disk full'));
+        ->andThrow(new Exception('Local disk full'));
 
     // Act & Assert
     expect(function () use ($email, $report, $reportTitle) {
         $job = new GenerateAndEmailReport($email, $report, $reportTitle);
         $job->handle($this->reportService);
-    })->toThrow(\Exception::class, 'Local disk full');
+    })->toThrow(Exception::class, 'Local disk full');
 
     // No email should be sent if file creation fails
     Mail::assertNothingSent();

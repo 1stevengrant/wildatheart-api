@@ -71,9 +71,6 @@ class Page extends Data
     /** @var string ISO 8601 date/time */
     public string $date;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from pages */
-    public ?array $parent = null;
-
     public ?bool $hide_navigation = null;
 
     public string $locale = 'default';

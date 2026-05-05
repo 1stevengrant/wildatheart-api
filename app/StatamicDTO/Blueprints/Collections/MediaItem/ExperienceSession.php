@@ -19,6 +19,7 @@
 namespace App\StatamicDTO\Blueprints\Collections\MediaItem;
 
 use Spatie\LaravelData\Data;
+use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ImagesGroup;
 use App\StatamicDTO\Shared\QuestionSet;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -41,14 +42,11 @@ class ExperienceSession extends Data
     /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from experiences */
     public ?array $experience = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $session_trailer = null;
+    public ?LinkField $session_trailer = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $experience_video = null;
+    public ?LinkField $experience_video = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $background_video_url = null;
+    public ?LinkField $background_video_url = null;
 
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $background_video_fallback_image = null;

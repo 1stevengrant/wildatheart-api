@@ -21,6 +21,7 @@ namespace App\StatamicDTO\Blueprints\Collections\MediaItem;
 use Spatie\LaravelData\Data;
 use App\StatamicDTO\Shared\HeroSet;
 use App\StatamicDTO\Shared\HeaderSet;
+use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ButtonsSet;
 use App\StatamicDTO\Shared\HeroLogoSet;
 use App\StatamicDTO\Shared\ImagesGroup;
@@ -64,26 +65,21 @@ class SubsplashMediaItem extends Data
     /** @var array[]|null Term references with {id, title, slug, taxonomy} */
     public ?array $topics = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $video_iframe_url = null;
+    public ?LinkField $video_iframe_url = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $video_direct_url = null;
+    public ?LinkField $video_direct_url = null;
 
     public ?string $vimeo_id = null;
 
     public ?bool $is_vertical_video = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $audio_iframe_url = null;
+    public ?LinkField $audio_iframe_url = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $audio_direct_url = null;
+    public ?LinkField $audio_direct_url = null;
 
     public ?string $document_title = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $document_direct_url = null;
+    public ?LinkField $document_direct_url = null;
 
     public ?ImagesGroup $images = null;
 
@@ -124,22 +120,17 @@ class SubsplashMediaItem extends Data
     /** @var array[]|null Term references with {id, title, slug, taxonomy} */
     public ?array $topics_subsplash = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $video_iframe_url_subsplash = null;
+    public ?LinkField $video_iframe_url_subsplash = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $video_direct_url_subsplash = null;
+    public ?LinkField $video_direct_url_subsplash = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $audio_iframe_url_subsplash = null;
+    public ?LinkField $audio_iframe_url_subsplash = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $audio_direct_url_subsplash = null;
+    public ?LinkField $audio_direct_url_subsplash = null;
 
     public ?string $document_title_subsplash = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $document_direct_url_subsplash = null;
+    public ?LinkField $document_direct_url_subsplash = null;
 
     public ?string $duration_subsplash = null;
 
@@ -151,8 +142,7 @@ class SubsplashMediaItem extends Data
     /** @var string ISO 8601 date/time */
     public string $date;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $series = null;
+    public ?LinkField $series = null;
 
     /** @var array[]|null Term references with {id, title, slug, taxonomy} */
     public ?array $content_type = null;

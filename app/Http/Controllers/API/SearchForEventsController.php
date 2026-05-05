@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Event;
 use App\Data\EventMapData;
+use Statamic\Facades\GlobalSet;
 use App\Data\FeaturedContentData;
 use App\Services\GeographyService;
 use App\Services\EventCacheService;
@@ -49,7 +50,7 @@ class SearchForEventsController extends Controller
 
         // Get featured content if enabled
         $featuredContent = null;
-        $globalSet = \Statamic\Facades\GlobalSet::findByHandle('local_platform');
+        $globalSet = GlobalSet::findByHandle('local_platform');
         if ($globalSet) {
             $data = $globalSet->inDefaultSite()->data();
 

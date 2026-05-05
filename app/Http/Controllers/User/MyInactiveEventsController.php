@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Event;
 use App\Data\EventData;
 use App\Models\EventType;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class MyInactiveEventsController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $events = \App\Models\Event::query()
+        $events = Event::query()
             ->controllableByUser(auth()->user())
             ->where(function ($query) {
                 $query->unpublished()

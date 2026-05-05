@@ -6,13 +6,14 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Traits\Body\HasJsonBody;
+use App\DataTransferObjects\RedirectData;
 
 class PutRequestBulk extends Request implements HasBody
 {
     use HasJsonBody;
 
     /**
-     * @param  \App\DataTransferObjects\RedirectData[]  $redirects
+     * @param  RedirectData[]  $redirects
      * */
     public function __construct(protected string $account, protected string $namespace, protected array $redirects) {}
 

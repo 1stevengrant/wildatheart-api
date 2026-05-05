@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
@@ -9,8 +10,8 @@ beforeEach(function () {
     Bus::fake();
     Mail::fake();
 
-    $this->approvedEvent = \App\Models\Event::factory()->approved()->fires()->create();
-    $this->notApprovedEvent = \App\Models\Event::factory()->fires()->create();
+    $this->approvedEvent = Event::factory()->approved()->fires()->create();
+    $this->notApprovedEvent = Event::factory()->fires()->create();
 });
 
 it('changes the approved at timestamp for an event to be null', function () {

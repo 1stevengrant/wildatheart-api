@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\User;
 use App\Models\Event;
 use App\Mail\ReportMailable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Enums\Internal\EventSearchField;
@@ -103,7 +104,7 @@ class ExportEventSearchJob implements ShouldQueue
         return $value;
     }
 
-    private function searchEvents(): \Illuminate\Support\Collection
+    private function searchEvents(): Collection
     {
         $query = Event::query()->with(['user', 'eventType']);
 

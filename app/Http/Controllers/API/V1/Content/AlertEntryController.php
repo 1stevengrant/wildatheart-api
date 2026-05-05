@@ -21,7 +21,6 @@ class AlertEntryController extends Controller
             return AlertResponse::collect([]);
         }
 
-
         $entries = $entries->map(function ($entry) {
             $entry = $entry->toArray();
             $entry['link_url'] = $entry['link_url'] ? $entry['link_url']['url'] : null;

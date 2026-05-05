@@ -19,6 +19,7 @@
 namespace App\StatamicDTO\Blueprints\Collections\Alerts;
 
 use Spatie\LaravelData\Data;
+use App\StatamicDTO\Shared\LinkField;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -38,8 +39,7 @@ class Alert extends Data
 
     public ?string $link_text = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $link_url = null;
+    public ?LinkField $link_url = null;
 
     public string $locale = 'default';
 

@@ -21,6 +21,7 @@ namespace App\StatamicDTO\Blueprints\Collections\Books;
 use Spatie\LaravelData\Data;
 use App\StatamicDTO\Shared\HeroSet;
 use App\StatamicDTO\Shared\HeaderSet;
+use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ButtonsSet;
 use App\StatamicDTO\Shared\HeroLogoSet;
 use App\StatamicDTO\Shared\ImagesGroup;
@@ -59,8 +60,7 @@ class Book extends Data
 
     public ?string $detail_description = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $buy_book_url = null;
+    public ?LinkField $buy_book_url = null;
 
     /** @var array[]|null Term references with {id, title, slug, taxonomy} */
     public ?array $topics = null;
