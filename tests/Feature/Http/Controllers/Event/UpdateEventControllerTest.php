@@ -20,7 +20,7 @@ test('updating a 1-Day Captivating Retreat keeps the duration at 1 day', functio
     $event = Event::factory()->for($this->user)->createQuietly([
         'event_type_id' => $eventType->id,
         'start_date' => now()->addDays(5),
-        'end_date' => now()->addDays(6),
+        'end_date' => now()->addDays(5),
     ]);
 
     $this->actingAs($this->user)->put(route('update.event', $event), [
@@ -32,7 +32,7 @@ test('updating a 1-Day Captivating Retreat keeps the duration at 1 day', functio
 
     $event->refresh();
     $startDate = Carbon::parse($this->newStartDate);
-    expect($event->end_date->format('Y-m-d'))->toBe($startDate->copy()->addDay()->format('Y-m-d'));
+    expect($event->end_date->format('Y-m-d'))->toBe($startDate->format('Y-m-d'));
 });
 
 test('updating a multi-day retreat sets the end date 3 days after the start date', function () {

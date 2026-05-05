@@ -229,7 +229,7 @@ class Event extends BaseModel
                 if ($this->end_date && ! $this->start_date->isSameDay($this->end_date)) {
                     $endFormatted = $this->end_date->format('D, M j');
 
-                    return "{$startFormatted} - {$endFormatted}";
+                    return "$startFormatted - $endFormatted";
                 }
 
                 return $startFormatted;
@@ -327,6 +327,11 @@ class Event extends BaseModel
                 ];
 
                 $format = $titleFormats[$this->eventType->group_type] ?? $titleFormats['default'];
+
+                if ($this->eventType->name === EventType::CAPTIVATING_CORE_RETREAT_1_DAY) {
+                    $format = '1-Day Retreat for';
+                }
+
                 $genderValue = ucfirst($this->sex->value);
 
                 return "$format $genderValue";

@@ -14,7 +14,7 @@ it('adds the end date for a retreat event type', function () {
     expect($request->end_date)->toBe($expectedEndDate);
 });
 
-it('sets a 1 day end date for a 1-Day Captivating Retreat', function () {
+it('sets the end date equal to the start date for a 1-Day Captivating Retreat', function () {
     $request = new Request(['start_date' => '2002-02-02']);
 
     EventDateHelper::adjustEndDateForRetreat(
@@ -23,7 +23,7 @@ it('sets a 1 day end date for a 1-Day Captivating Retreat', function () {
         EventType::CAPTIVATING_CORE_RETREAT_1_DAY,
     );
 
-    expect($request->end_date)->toBe('2002-02-03');
+    expect($request->end_date)->toBe('2002-02-02');
 });
 
 it('does not add an end date for non-retreat event types', function (string $groupType) {
