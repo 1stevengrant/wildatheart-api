@@ -10,6 +10,7 @@ use App\Features\NewConnectUrl;
 use App\Observers\EventObserver;
 use App\Enums\Event\FrequencyEnum;
 use Spatie\Activitylog\LogOptions;
+use App\Features\NewEventLandingFeature;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -259,6 +260,10 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
+                if (Feature::active(NewEventLandingFeature::class)) {
+                    return "/events/attend/$this->id";
+                }
+
                 return route('view.event', ['event' => $this]);
             }
         );

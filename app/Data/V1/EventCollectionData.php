@@ -24,6 +24,7 @@ class EventCollectionData extends Data
         public ?float $latitude,
         public ?string $newCardHeading,
         public ?float $distance,
+        public ?string $url = null,
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -35,7 +36,7 @@ class EventCollectionData extends Data
             sex: $event->sex->value,
             eventType: $event->eventType->name,
             eventTypeImage: $event->eventType->new_image,
-            eventTypeCardDescription: $event->eventTypeCardDescription,
+            eventTypeCardDescription: $event->event_type_card_description,
             eventGroupType: $event->eventType->group_type,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
@@ -43,6 +44,7 @@ class EventCollectionData extends Data
             latitude: $event->display_latitude ?? $event->latitude,
             newCardHeading: $event->eventType->card_description,
             distance: $event->distance ? round((float) $event->distance) : null,
+            url: $event->url,
         );
     }
 }
