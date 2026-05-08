@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use ColorThief\Exception\NotReadableException;
 
 class GenerateColorPalette implements ShouldQueue
 {
@@ -30,6 +31,8 @@ class GenerateColorPalette implements ShouldQueue
             $palette = $this->getPalette();
 
             $this->asset->set('color_palette', $palette)->save();
+        } catch (NotReadableException $e) {
+            $this->asset->set('color_palette', null)->save();
         } catch (\RuntimeException $e) {
             if (str_contains($e->getMessage(), 'blank or transparent')) {
                 $this->asset->set('color_palette', null)->save();

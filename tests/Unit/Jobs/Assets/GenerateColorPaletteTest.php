@@ -1,6 +1,7 @@
 <?php
 
 use App\Jobs\Assets\GenerateColorPalette;
+use ColorThief\Exception\NotReadableException;
 
 it('generates a color palette for an asset', function () {
     $asset = Mockery::mock('Statamic\Assets\Asset');
@@ -36,6 +37,25 @@ it('handles blank or transparent images gracefully', function () {
     $job->shouldReceive('getPalette')
         ->once()
         ->andThrow(new RuntimeException('Unable to compute the color palette of a blank or transparent image.'));
+
+    $job->handle();
+});
+
+it('handles unreadable images gracefully', function () {
+    $asset = Mockery::mock('Statamic\Assets\Asset');
+    $asset->shouldReceive('set')
+        ->once()
+        ->with('color_palette', null)
+        ->andReturnSelf();
+    $asset->shouldReceive('save')->once();
+
+    $job = Mockery::mock(GenerateColorPalette::class, [$asset])
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+
+    $job->shouldReceive('getPalette')
+        ->once()
+        ->andThrow(new NotReadableException('Unable to read image from binary data.'));
 
     $job->handle();
 });
