@@ -64,6 +64,14 @@ class StatsController extends Controller
                             'label' => 'All Time Fires',
                             'count' => Event::query()->fires()->count(),
                         ],
+                        [
+                            'label' => 'Fires run in the past year',
+                            'count' => Event::query()->fires()->published()->active()->count(),
+                        ],
+                        [
+                            'label' => 'Countries with current fires',
+                            'count' => Event::query()->fires()->published()->distinct('country')->count(),
+                        ],
                     ],
 
                 ],
