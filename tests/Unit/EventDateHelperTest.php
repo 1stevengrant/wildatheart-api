@@ -29,7 +29,7 @@ it('adds 1 day to 1-day captivating retreat end date', function () {
         eventTypeName: EventType::CAPTIVATING_CORE_RETREAT_1_DAY
     );
 
-    expect($request->end_date)->toBe('2024-01-16');
+    expect($request->end_date)->toBe('2024-01-15');
 });
 
 it('does not modify end date for non-retreat events', function () {

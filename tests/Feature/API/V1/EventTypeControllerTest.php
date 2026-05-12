@@ -68,3 +68,31 @@ it('returns null landing page when no related page is configured', function () {
         ->assertJsonPath('0.name', 'Fires')
         ->assertJsonPath('0.landing_page', null);
 });
+
+it('includes date selector metadata for fire event types', function () {
+    EventType::factory()->create([
+        'name' => EventType::FIRES,
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+
+    $response = $this->getJson('/api/v1/events/types');
+
+    $response->assertSuccessful()
+        ->assertJsonPath('0.date_selector_kind', 'recurring')
+        ->assertJsonPath('0.fixed_duration_days', null)
+        ->assertJsonPath('0.requires_frequency', true);
+});
+
+it('includes one-day duration metadata for one-day captivating retreat', function () {
+    EventType::factory()->create([
+        'name' => EventType::CAPTIVATING_CORE_RETREAT_1_DAY,
+        'group_type' => EventType::TYPE_RETREAT,
+    ]);
+
+    $response = $this->getJson('/api/v1/events/types');
+
+    $response->assertSuccessful()
+        ->assertJsonPath('0.date_selector_kind', 'fixed_duration_start_date')
+        ->assertJsonPath('0.fixed_duration_days', 1)
+        ->assertJsonPath('0.requires_frequency', false);
+});

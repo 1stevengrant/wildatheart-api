@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\API\V1\CreateEventRequest;
-use App\Http\Requests\API\V1\SaveEventDraftRequest;
-use App\Jobs\PostToZapier;
 use App\Models\Event;
 use App\Models\EventType;
+use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
+use App\Http\Controllers\Controller;
+use App\Support\EventTypeDateSelector;
+use App\Http\Requests\API\V1\CreateEventRequest;
+use App\Http\Requests\API\V1\SaveEventDraftRequest;
+use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HostEventController extends Controller
 {
@@ -18,6 +19,7 @@ class HostEventController extends Controller
         EventDateHelper::adjustEndDateForRetreat(
             request: $request,
             groupType: $eventType->group_type,
+            eventTypeName: $eventType->name,
         );
 
         $event = auth()->user()->events()->create([
@@ -37,6 +39,9 @@ class HostEventController extends Controller
             'state' => $request->state,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
+            'frequency' => EventTypeDateSelector::requiresFrequency($eventType->group_type)
+                ? $request->frequency
+                : null,
             'sex' => $eventType->sex,
             'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
         ]);
@@ -98,6 +103,7 @@ class HostEventController extends Controller
                 EventDateHelper::adjustEndDateForRetreat(
                     request: $request,
                     groupType: $eventType->group_type,
+                    eventTypeName: $eventType->name,
                 );
             }
             $event->fill($this->draftPayload($request, $eventType));
@@ -106,6 +112,7 @@ class HostEventController extends Controller
             EventDateHelper::adjustEndDateForRetreat(
                 request: $request,
                 groupType: $eventType->group_type,
+                eventTypeName: $eventType->name,
             );
 
             $event = auth()->user()->events()->create(
@@ -137,6 +144,9 @@ class HostEventController extends Controller
             'longitude' => $request->filled('longitude') ? $request->longitude : null,
             'start_date' => $request->filled('start_date') ? $request->start_date : null,
             'end_date' => $request->filled('end_date') ? $request->end_date : null,
+            'frequency' => EventTypeDateSelector::requiresFrequency($eventType->group_type)
+                ? ($request->filled('frequency') ? $request->frequency : null)
+                : null,
             'is_private' => $request->boolean('is_private', false),
             'number_of_items_in_material_order' => $request->filled('number_of_items_in_material_order')
                 ? $request->number_of_items_in_material_order
@@ -153,6 +163,6 @@ class HostEventController extends Controller
             'state' => $request->input('state'),
         ];
 
-        return array_filter($payload, fn($v) => $v !== null);
+        return array_filter($payload, fn ($v) => $v !== null);
     }
 }

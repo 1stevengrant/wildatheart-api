@@ -65,6 +65,9 @@ it('returns event type data with expected fields', function () {
             'name' => 'Fires',
             'group_type' => 'fire',
             'type' => 'gathering',
+            'date_selector_kind' => 'recurring',
+            'fixed_duration_days' => null,
+            'requires_frequency' => true,
             'summary' => 'A fire summary',
             'summary_link' => 'https://example.com',
         ]);

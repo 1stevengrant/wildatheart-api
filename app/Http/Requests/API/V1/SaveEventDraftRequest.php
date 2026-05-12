@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
+use App\Enums\Event\FrequencyEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveEventDraftRequest extends FormRequest
@@ -15,6 +16,7 @@ class SaveEventDraftRequest extends FormRequest
     public function rules(): array
     {
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
+        $frequencyValues = array_map(fn (FrequencyEnum $case) => $case->value, FrequencyEnum::cases());
 
         return [
             'event_id' => ['nullable', 'string', 'uuid'],
@@ -26,6 +28,7 @@ class SaveEventDraftRequest extends FormRequest
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric'],
             'start_date' => ['nullable', 'date'],
+            'frequency' => ['nullable', 'string', 'in:' . implode(',', $frequencyValues)],
             'is_private' => ['nullable', 'boolean'],
             'number_of_items_in_material_order' => ['nullable', 'string', 'in:' . implode(',', $validValues)],
             'co_host_emails' => ['nullable', 'array'],
