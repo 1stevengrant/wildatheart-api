@@ -14,13 +14,17 @@ use App\Features\NewEventLandingFeature;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Support\EventDateFormatters\FireFormatter;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
+use App\Support\EventDateFormatters\DefaultFormatter;
+use App\Support\EventDateFormatters\RetreatFormatter;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Support\EventDateFormatters\ExperienceFormatter;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[ObservedBy(EventObserver::class)]
@@ -189,30 +193,20 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
-                // Handle case where country doesn't exist
                 if (! $this->country) {
                     return $this->city ?: '';
                 }
 
-                if (mb_strtolower($this->country) === self::DEFAULT_COUNTRY || mb_strtolower($this->country) === 'united states') {
-                    if ($this->city && $this->region) {
-                        return $this->city . ', ' . getStateAbbreviation($this->region);
-                    }
-                }
+                $country = mb_strtolower($this->country);
 
-                if (mb_strtolower($this->country) === 'new zealand') {
-                    if ($this->city && $this->region) {
-                        return $this->city . ', NZ';
-                    }
-                }
-
-                if (mb_strtolower($this->country) === 'gb') {
-                    if ($this->city && $this->region) {
-                        return $this->city . ', UK';
-                    }
-                }
-
-                return $this->city . ', ' . mb_strtoupper($this->country);
+                return match (true) {
+                    in_array($country, [self::DEFAULT_COUNTRY, 'united states'], true)
+                        && $this->city
+                        && $this->region => $this->city . ', ' . getStateAbbreviation($this->region),
+                    $country === 'new zealand' && $this->city => $this->city . ', New Zealand',
+                    in_array($country, ['gb', 'united kingdom'], true) && $this->city => $this->city . ', UK',
+                    default => $this->city . ', ' . ucfirst($this->country),
+                };
             }
         );
     }
@@ -221,19 +215,16 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
-                if (! $this->start_date) {
-                    return '';
-                }
+                $year = now()->year;
 
-                $startFormatted = $this->start_date->format('D, M j');
-
-                if ($this->end_date && ! $this->start_date->isSameDay($this->end_date)) {
-                    $endFormatted = $this->end_date->format('D, M j');
-
-                    return "$startFormatted - $endFormatted";
-                }
-
-                return $startFormatted;
+                return match (true) {
+                    $this->isRetreat() => RetreatFormatter::format($this, $year)
+                        ?? DefaultFormatter::format($this, $year),
+                    $this->isExperience() => ExperienceFormatter::format($this, $year)
+                        ?? DefaultFormatter::format($this, $year),
+                    $this->isFire() => FireFormatter::format($this),
+                    default => DefaultFormatter::format($this, $year),
+                };
             }
         );
     }
@@ -241,9 +232,7 @@ class Event extends BaseModel
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: function (string $value): string {
-                return str_replace(',', '', $value);
-            }
+            get: fn (?string $value): string => str_replace(',', '', $value ?? ''),
         );
     }
 

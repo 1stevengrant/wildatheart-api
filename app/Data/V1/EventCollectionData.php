@@ -3,6 +3,7 @@
 namespace App\Data\V1;
 
 use App\Models\Event;
+use App\Models\EventType;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -32,7 +33,7 @@ class EventCollectionData extends Data
         return new self(
             id: $event->id,
             location: $event->location,
-            dates: $event->eventType->group_type === 'fire' ? null : $event->formatted_dates,
+            dates: $event->eventType->group_type === EventType::TYPE_FIRE ? null : $event->formatted_dates,
             sex: $event->sex->value,
             eventType: $event->eventType->name,
             eventTypeImage: $event->eventType->new_image,
