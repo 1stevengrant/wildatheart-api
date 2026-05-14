@@ -77,6 +77,26 @@ it('new zealand with city but no region still returns city and New Zealand', fun
     expect($event->location)->toBe('Auckland, New Zealand');
 });
 
+it('nz (2-letter code, lowercase) returns city and New Zealand', function () {
+    $event = Event::factory()->fires()->create([
+        'country' => 'nz',
+        'city' => 'Auckland',
+        'region' => null,
+    ]);
+
+    expect($event->location)->toBe('Auckland, New Zealand');
+});
+
+it('NZ (2-letter code, uppercase) returns city and New Zealand', function () {
+    $event = Event::factory()->fires()->create([
+        'country' => 'NZ',
+        'city' => 'Auckland',
+        'region' => null,
+    ]);
+
+    expect($event->location)->toBe('Auckland, New Zealand');
+});
+
 it('gb with city and region returns city and UK', function () {
     $event = Event::factory()->fires()->create([
         'country' => 'gb',

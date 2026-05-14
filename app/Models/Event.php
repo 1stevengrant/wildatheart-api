@@ -203,7 +203,7 @@ class Event extends BaseModel
                     in_array($country, [self::DEFAULT_COUNTRY, 'united states'], true)
                         && $this->city
                         && $this->region => $this->city . ', ' . getStateAbbreviation($this->region),
-                    $country === 'new zealand' && $this->city => $this->city . ', New Zealand',
+                    in_array($country, ['nz', 'new zealand'], true) && $this->city => $this->city . ', New Zealand',
                     in_array($country, ['gb', 'united kingdom'], true) && $this->city => $this->city . ', UK',
                     default => $this->city . ', ' . ucfirst($this->country),
                 };
