@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
+use App\Enums\EventSexEnum;
 use Illuminate\Support\Str;
 use App\Enums\EventTypeEnum;
 use App\Builders\EventTypeBuilder;
 use Spatie\Activitylog\LogOptions;
+use App\Observers\EventTypeObserver;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy(EventTypeObserver::class)]
 class EventType extends BaseModel
 {
     use HasFactory, HasRunwayResource, LogsActivity;
@@ -49,14 +53,6 @@ class EventType extends BaseModel
         static::creating(function ($eventType) {
             $eventType->slug = Str::slug($eventType->name);
         });
-
-        static::created(function () {
-            $cacheKeys = collect(['allEventTypes', 'experienceTypes', 'retreatTypes', 'fireTypes', 'eventTypesGroupedByType']);
-
-            $cacheKeys->each(function ($key) {
-                cache()->forget($key);
-            });
-        });
     }
 
     protected function casts(): array
@@ -78,6 +74,7 @@ class EventType extends BaseModel
             'schedule_nav_text_override' => 'string',
             'faq_nav_text_override' => 'string',
             'type' => EventTypeEnum::class,
+            'sex' => EventSexEnum::class,
         ];
     }
 

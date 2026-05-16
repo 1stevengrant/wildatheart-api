@@ -27,21 +27,24 @@ echo "Node: $(node -v), npm: $(npm -v)"
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 npm ci
 
+# Generate TypeScript types from PHP before building
+php artisan statamic:generate-types --skip-pint
+php artisan typescript:transform
+
 # Build assets before clearing caches
 npm run build
 
-# Laravel optimisations
-php artisan optimize
-php artisan event:cache
-
-# Database/queue management
+# Database/queue management (safe to run under old opcache)
 php artisan migrate --force
 php artisan horizon:terminate
 
-# Warm the Stache so file-based stores (collections, etc.) are pre-cached
-# and web requests never hit the Traverser real-time facade
-php artisan statamic:stache:warm
+# Drop stale caches before rebuilding them on fresh code
+php artisan optimize:clear
 
-# FPM restart last
+# Rebuild caches
+php artisan optimize
+php artisan event:cache
+
+# FPM reload last — this is what actually flushes opcache for running workers
 ( flock -w 10 9 || exit 1
     echo 'Restarting FPM...'; sudo -S service $FORGE_PHP_FPM reload ) 9>/tmp/fpmlock

@@ -1,10 +1,10 @@
 <?php
 
-use App\Services\Subsplash\SubsplashApiClient;
-use App\Services\Subsplash\SubsplashMediaItemResponseBuilder;
-use App\Services\Subsplash\SubsplashMediaSeriesImporter;
-use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
+use Statamic\Facades\Collection;
+use App\Services\Subsplash\SubsplashApiClient;
+use App\Services\Subsplash\SubsplashMediaSeriesImporter;
+use App\Services\Subsplash\SubsplashMediaItemResponseBuilder;
 
 beforeEach(function () {
     Collection::findByHandle('media_item') ?? Collection::make('media_item')->save();

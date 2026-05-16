@@ -2,6 +2,7 @@
 
 namespace App\Data\V1;
 
+use App\Enums\EventSexEnum;
 use Spatie\LaravelData\Data;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
@@ -41,7 +42,7 @@ class SearchEventsData extends Data
             'radius' => ['nullable', 'numeric', 'min:1', 'max:12500'],
             'min_radius' => ['nullable', 'numeric', 'min:0', 'max:12500'],
 
-            'sex' => ['nullable', 'string', Rule::in(['men', 'women'])],
+            'sex' => ['nullable', 'string', Rule::enum(EventSexEnum::class)],
             'type_group' => ['nullable', 'string'],
             'types' => ['nullable', 'string', 'regex:/^\d+(,\d+)*$/'],
             'start_date' => ['nullable', 'date', 'before_or_equal:end_date'],

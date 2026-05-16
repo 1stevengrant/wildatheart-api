@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Event;
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
 use Illuminate\Support\Facades\Bus;
@@ -9,7 +10,7 @@ beforeEach(function () {
     Bus::fake();
     Mail::fake();
 
-    $this->event = \App\Models\Event::factory()->fires()->create();
+    $this->event = Event::factory()->fires()->create();
 
     $this->addressData = [
         'country' => 'US',

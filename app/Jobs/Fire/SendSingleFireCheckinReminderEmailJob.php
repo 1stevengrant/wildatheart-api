@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Mail\Fire\SevenDayFollowupMailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -48,6 +49,6 @@ class SendSingleFireCheckinReminderEmailJob implements ShouldBeUnique, ShouldQue
             $mail->cc($this->event->managers->pluck('email'));
         }
 
-        $mail->send(new \App\Mail\Fire\SevenDayFollowupMailable($this->event));
+        $mail->send(new SevenDayFollowupMailable($this->event));
     }
 }

@@ -28,13 +28,13 @@ it('handles ReportService exception gracefully', function () {
         ->shouldReceive('generate')
         ->once()
         ->with($report, ReportFormat::CSV)
-        ->andThrow(new \Exception('Database connection failed'));
+        ->andThrow(new Exception('Database connection failed'));
 
     // Act & Assert
     expect(function () use ($email, $report, $reportTitle) {
         $job = new GenerateAndEmailReport($email, $report, $reportTitle);
         $job->handle($this->reportService);
-    })->toThrow(\Exception::class, 'Database connection failed');
+    })->toThrow(Exception::class, 'Database connection failed');
 
     // Verify no email was sent and no file remnants
     Mail::assertNothingSent();

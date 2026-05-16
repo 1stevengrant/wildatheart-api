@@ -1,18 +1,20 @@
 <?php
 
+use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
     Bus::fake();
     Mail::fake();
 
-    $this->fire = \App\Models\Event::factory()->fires()->approved()->create();
+    $this->fire = Event::factory()->fires()->approved()->create();
 });
 
 it('updates a Fire as a result of clicking a link in the email', function () {
 
-    $url = \Illuminate\Support\Facades\URL::signedRoute('fire.burn', ['event' => $this->fire]);
+    $url = URL::signedRoute('fire.burn', ['event' => $this->fire]);
 
     $this->get($url);
 
@@ -27,7 +29,7 @@ it('updates a Fire as a result of clicking a link in the email', function () {
 
 it('extinguishes a Fire as a result of clicking a link in the email', function () {
 
-    $url = \Illuminate\Support\Facades\URL::signedRoute('fire.extinguish.destroy', ['event' => $this->fire]);
+    $url = URL::signedRoute('fire.extinguish.destroy', ['event' => $this->fire]);
 
     $this->post($url);
 

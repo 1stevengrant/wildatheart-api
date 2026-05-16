@@ -69,12 +69,7 @@ class EventTypeData extends Data
             card_teaser_text: $eventType->card_teaser_text,
             tags: $eventType->tags,
             is_active: $eventType->is_active ?? true,
-            sex: match (true) {
-                $eventType->sex instanceof EventSexEnum => $eventType->sex,
-                is_string($eventType->sex) && $eventType->sex === 'men' => EventSexEnum::MEN,
-                is_string($eventType->sex) && $eventType->sex === 'women' => EventSexEnum::WOMEN,
-                default => EventSexEnum::MEN,
-            },
+            sex: $eventType->sex ?? EventSexEnum::MEN,
             slug: $eventType->slug,
             description: $eventType->description,
             event_guide_pages: $eventType->event_guide_pages,

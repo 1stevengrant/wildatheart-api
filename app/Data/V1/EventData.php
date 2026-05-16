@@ -3,6 +3,7 @@
 namespace App\Data\V1;
 
 use App\Models\Event;
+use App\Models\EventType;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -35,14 +36,14 @@ class EventData extends Data
             location: $event->location,
             latitude: $event->latitude,
             longitude: $event->longitude,
-            dates: $event->eventType->group_type === 'fire' ? null : $event->formatted_dates,
+            dates: $event->eventType->group_type === EventType::TYPE_FIRE ? null : $event->formatted_dates,
             sex: $event->sex->value,
             eventType: $event->eventType->name,
             eventGroupType: $event->eventType->group_type,
             eventTypeImage: $event->eventType->image,
             eventTypeDescription: $event->eventType->description,
             eventTypePhotos: $event->eventType->photos ?? [],
-            scheduledFor: $event->badgeDisplay,
+            scheduledFor: $event->badge_display,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
             landingPage: null,

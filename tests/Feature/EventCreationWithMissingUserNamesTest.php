@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Event;
 use App\Models\EventType;
 use App\Jobs\PostToZapier;
 use Illuminate\Support\Facades\Queue;
@@ -78,7 +79,7 @@ it('allows a user with a family and given name to create an event', function () 
             'state' => 'Test State',
             'start_date' => now(),
             'end_date' => now()->addDays(2),
-            'number_of_items_in_material_order' => \App\Models\Event::MATERIAL_ORDER_ITEMS[3]['value'],
+            'number_of_items_in_material_order' => Event::MATERIAL_ORDER_ITEMS[3]['value'],
         ]);
     Queue::assertPushed(PostToZapier::class);
 });

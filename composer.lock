@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe8695139985c39a0f23f83830e8b643",
+    "content-hash": "9d9d8e33ef44d84742e46f379e07e689",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -1417,7 +1417,7 @@
         },
         {
             "name": "ghijk/statamic-typescript-generator",
-            "version": "dev-chore/composer-updates",
+            "version": "dev-prod",
             "dist": {
                 "type": "path",
                 "url": "addons/ghijk/statamic-typescript-generator",
@@ -9901,16 +9901,16 @@
         },
         {
             "name": "statamic/cms",
-            "version": "v6.14.0",
+            "version": "v6.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/statamic/cms.git",
-                "reference": "8a48cc5fe1325857093407cb9ba48751a6c868ed"
+                "reference": "a14a46005b44c2361473a7677947ff4b9b0c7472"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/statamic/cms/zipball/8a48cc5fe1325857093407cb9ba48751a6c868ed",
-                "reference": "8a48cc5fe1325857093407cb9ba48751a6c868ed",
+                "url": "https://api.github.com/repos/statamic/cms/zipball/a14a46005b44c2361473a7677947ff4b9b0c7472",
+                "reference": "a14a46005b44c2361473a7677947ff4b9b0c7472",
                 "shasum": ""
             },
             "require": {
@@ -10022,7 +10022,7 @@
             ],
             "support": {
                 "issues": "https://github.com/statamic/cms/issues",
-                "source": "https://github.com/statamic/cms/tree/v6.14.0"
+                "source": "https://github.com/statamic/cms/tree/v6.15.0"
             },
             "funding": [
                 {
@@ -10030,7 +10030,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-16T19:47:00+00:00"
+            "time": "2026-04-27T14:04:07+00:00"
         },
         {
             "name": "statamic/eloquent-driver",
@@ -14320,6 +14320,65 @@
             "time": "2025-12-02T11:56:42+00:00"
         },
         {
+            "name": "toitzi/laravel-cloudflare-mail",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/toitzi/laravel-cloudflare-mail.git",
+                "reference": "e8fa27185e508215dcd14baca365ad1915f3e8cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/toitzi/laravel-cloudflare-mail/zipball/e8fa27185e508215dcd14baca365ad1915f3e8cf",
+                "reference": "e8fa27185e508215dcd14baca365ad1915f3e8cf",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "^12.0 || ^13.0",
+                "illuminate/mail": "^12.0 || ^13.0",
+                "illuminate/support": "^12.0 || ^13.0",
+                "php": "^8.3",
+                "symfony/mailer": "^7.0",
+                "symfony/mime": "^7.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Toitzi\\LaravelCloudflareMail\\CloudflareMailServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Toitzi\\LaravelCloudflareMail\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Oitzinger",
+                    "email": "hello@toitzi.dev",
+                    "homepage": "https://toitzi.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Cloudflare Email Service transport for Laravel mailers.",
+            "homepage": "https://github.com/toitzi/laravel-cloudflare-mail",
+            "support": {
+                "issues": "https://github.com/toitzi/laravel-cloudflare-mail/issues",
+                "source": "https://github.com/toitzi/laravel-cloudflare-mail/tree/v1.0.0"
+            },
+            "time": "2026-04-16T17:12:36+00:00"
+        },
+        {
             "name": "ueberdosis/tiptap-php",
             "version": "2.1.0",
             "source": {
@@ -14763,16 +14822,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.32.0",
+            "version": "v15.32.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "e7ff849803e471c93edf9396ccde549bf8002373"
+                "reference": "993bf0bea17f870412ad8a90f60c41cb8d5f1145"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/e7ff849803e471c93edf9396ccde549bf8002373",
-                "reference": "e7ff849803e471c93edf9396ccde549bf8002373",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/993bf0bea17f870412ad8a90f60c41cb8d5f1145",
+                "reference": "993bf0bea17f870412ad8a90f60c41cb8d5f1145",
                 "shasum": ""
             },
             "require": {
@@ -14790,7 +14849,7 @@
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "2.1.46",
+                "phpstan/phpstan": "2.1.51",
                 "phpstan/phpstan-phpunit": "2.0.16",
                 "phpstan/phpstan-strict-rules": "2.0.10",
                 "phpunit/phpunit": "^9.5 || ^10.5.21 || ^11",
@@ -14827,7 +14886,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.32.0"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.32.3"
             },
             "funding": [
                 {
@@ -14839,11 +14898,11 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-04-20T16:19:33+00:00"
+            "time": "2026-04-24T13:49:35+00:00"
         },
         {
             "name": "wild-at-heart/command-center",
-            "version": "dev-chore/composer-updates",
+            "version": "dev-prod",
             "dist": {
                 "type": "path",
                 "url": "addons/wild-at-heart/command-center",

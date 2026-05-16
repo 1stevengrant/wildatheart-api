@@ -4,6 +4,7 @@ namespace App\Jobs\Admin;
 
 use App\Enums\ReportName;
 use App\Enums\ReportFormat;
+use App\Mail\ReportMailable;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +54,7 @@ class GenerateAndEmailReport implements ShouldQueue
 
         Mail::to($emails)
             ->cc('nic@wildatheart.org')
-            ->send(new \App\Mail\ReportMailable($date, $filePath, $this->reportTitle));
+            ->send(new ReportMailable($date, $filePath, $this->reportTitle));
 
         // Clean up local temporary file
         $localDisk->delete($storagePath);

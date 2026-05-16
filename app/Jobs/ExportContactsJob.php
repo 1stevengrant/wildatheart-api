@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Collection;
 
 class ExportContactsJob implements ShouldQueue
 {
@@ -68,7 +69,7 @@ class ExportContactsJob implements ShouldQueue
         return $fileName;
     }
 
-    private function getContacts(): \Illuminate\Database\Eloquent\Collection
+    private function getContacts(): Collection
     {
         if ($this->eventId) {
             $event = Event::find($this->eventId);

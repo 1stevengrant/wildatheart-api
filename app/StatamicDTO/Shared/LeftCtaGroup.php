@@ -29,8 +29,7 @@ class LeftCtaGroup extends Data
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $image = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $href = null;
+    public ?LinkField $href = null;
 
     /** @var 'primary' | 'secondary' | 'cta' | null */
     public ?string $variant = null;

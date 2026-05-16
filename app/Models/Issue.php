@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
+use App\Observers\IssueObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-#[ObservedBy(\App\Observers\IssueObserver::class)]
+#[ObservedBy(IssueObserver::class)]
 class Issue extends BaseModel {}

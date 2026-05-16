@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Builders\AttendeeBuilder;
 use Spatie\Activitylog\LogOptions;
+use App\Observers\AttendeeObserver;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-#[ObservedBy(\App\Observers\AttendeeObserver::class)]
+#[ObservedBy(AttendeeObserver::class)]
 class Attendee extends BaseModel
 {
     use HasFactory, HasRunwayResource, LogsActivity, SoftDeletes;
@@ -45,28 +46,28 @@ class Attendee extends BaseModel
     protected function givenName(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucfirst($value),
+            get: fn (?string $value) => $value === null ? null : ucfirst($value),
         );
     }
 
     protected function familyName(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucfirst($value),
+            get: fn (?string $value) => $value === null ? null : ucfirst($value),
         );
     }
 
     protected function email(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => mb_strtolower($value),
+            get: fn (?string $value) => $value === null ? null : mb_strtolower($value),
         );
     }
 
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucwords(mb_strtolower($value)),
+            get: fn (?string $value) => $value === null ? null : ucwords(mb_strtolower($value)),
         );
     }
 

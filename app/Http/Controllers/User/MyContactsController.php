@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Event;
 use Inertia\Response;
+use App\Models\Attendee;
 use App\Data\AttendeeData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +16,7 @@ class MyContactsController extends Controller
     {
         $user = auth()->user();
 
-        $paginatedAttendees = \App\Models\Attendee::query()
+        $paginatedAttendees = Attendee::query()
             ->controllableByUser($user)
             ->with(['event.eventType'])
             ->orderByName()
@@ -22,7 +24,7 @@ class MyContactsController extends Controller
             ->paginate(10)
             ->appends(Request::all());
 
-        $myEvents = \App\Models\Event::query()
+        $myEvents = Event::query()
             ->controllableByUser($user)
             ->get();
 
@@ -35,7 +37,7 @@ class MyContactsController extends Controller
 
     public function destroy(int $attendeeId): RedirectResponse
     {
-        $attendee = \App\Models\Attendee::query()
+        $attendee = Attendee::query()
             ->controllableByUser(auth()->user())
             ->findOrFail($attendeeId);
 

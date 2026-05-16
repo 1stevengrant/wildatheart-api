@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable;
 
 class MonthlyFireCleanupEmailToHostJob implements ShouldBeUnique, ShouldQueue
 {
@@ -51,6 +52,6 @@ class MonthlyFireCleanupEmailToHostJob implements ShouldBeUnique, ShouldQueue
             $mail->cc($this->event->managers->pluck('email'));
         }
 
-        $mail->send(new \App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable($this->event));
+        $mail->send(new MonthlyFireCleanupEmailToHostMailable($this->event));
     }
 }

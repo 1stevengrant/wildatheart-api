@@ -5,7 +5,9 @@ namespace App\Services;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Saloon\Exceptions\Request\ServerException;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Saloon\Exceptions\Request\FatalRequestException;
 use App\Http\Integrations\Transistor\TransistorConnector;
 use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
@@ -107,6 +109,12 @@ class TransistorService
                 'show_id' => $showId,
                 'status' => $status,
             ]);
+        } catch (ServerException|FatalRequestException $e) {
+            Log::warning('Transistor API unreachable during refresh; serving stale or empty data.', [
+                'show_id' => $showId,
+                'status' => $status,
+                'exception' => $e->getMessage(),
+            ]);
         }
 
         return Cache::get($url) ?? [];
@@ -117,10 +125,18 @@ class TransistorService
      */
     public function refreshEpisodeList($showId, $status = 'published')
     {
-        Cache::lock($this->lockKey($showId, $status), self::REFRESH_LOCK_TTL)
-            ->block(self::REFRESH_LOCK_WAIT, function () use ($showId, $status) {
-                $this->performRefresh($showId, $status);
-            });
+        try {
+            Cache::lock($this->lockKey($showId, $status), self::REFRESH_LOCK_TTL)
+                ->block(self::REFRESH_LOCK_WAIT, function () use ($showId, $status) {
+                    $this->performRefresh($showId, $status);
+                });
+        } catch (ServerException|FatalRequestException $e) {
+            Log::warning('Transistor API unreachable during refresh; keeping existing cache.', [
+                'show_id' => $showId,
+                'status' => $status,
+                'exception' => $e->getMessage(),
+            ]);
+        }
     }
 
     private function performRefresh(string $showId, string $status): void

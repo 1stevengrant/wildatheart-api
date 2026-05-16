@@ -14,7 +14,7 @@ class ResourcesController extends Controller
         });
 
         return inertia('ResourcesPage', [
-            'eventTypes' => $eventTypes->map(fn(EventType $eventType) => [
+            'eventTypes' => $eventTypes->map(fn (EventType $eventType) => [
                 'id' => $eventType->id,
                 'slug' => $eventType->slug,
                 'name' => $eventType->name,

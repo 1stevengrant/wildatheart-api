@@ -35,14 +35,12 @@ class ContentCardSet extends Data
 
     public ?string $subtitle = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $href = null;
+    public ?LinkField $href = null;
 
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $background_image = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $background_video_url = null;
+    public ?LinkField $background_video_url = null;
 
     public ?bool $disable_aspect_ratio = null;
 }

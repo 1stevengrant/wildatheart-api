@@ -32,7 +32,7 @@ it('denies control panel access to a user without a statamic role', function () 
 
     $this->actingAs($user)
         ->get('/cp')
-        ->assertRedirect(route('statamic.cp.unauthorized'));
+        ->assertRedirect(route('login'));
 });
 
 it('allows a super admin to access the control panel without a role', function () {
