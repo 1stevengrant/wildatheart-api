@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Event;
-use App\Enums\UserRoleEnum;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -45,10 +43,6 @@ class AppServiceProvider extends ServiceProvider
 
         Event::saving(function (Event $event): void {
             $event->load('user', 'eventType');
-        });
-
-        Gate::define('viewPulse', function ($user) {
-            return $user->hasRole(UserRoleEnum::Admin->value);
         });
 
         QueryBuilder::macro(

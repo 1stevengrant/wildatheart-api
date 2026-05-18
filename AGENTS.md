@@ -17,8 +17,6 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/pail (PAIL) - v1
 - laravel/pennant (PENNANT) - v1
 - laravel/prompts (PROMPTS) - v0
-- laravel/pulse (PULSE) - v1
-- livewire/livewire (LIVEWIRE) - v4
 - statamic/cms (STATAMIC) - v6
 - tightenco/ziggy (ZIGGY) - v2
 - laravel/boost (BOOST) - v2
