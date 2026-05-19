@@ -40,6 +40,5 @@ class ImageSet extends Data
     /** @var mixed Unknown field type: width */
     public mixed $medium_width;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $link = null;
+    public ?LinkField $link = null;
 }

@@ -2,6 +2,7 @@
 
 namespace App\DataTypeObjects;
 
+use App\Enums\ContentStatus;
 use Spatie\LaravelData\Data;
 use App\Casts\PassthroughCast;
 use App\StatamicDTO\Shared\HeroSet;
@@ -41,7 +42,7 @@ class MediaItemData extends Data
 
     public string $locale = 'default';
 
-    /** @var \App\DataTypeObjects\ParentData[] */
+    /** @var ParentData[] */
     public ?array $parent = null;
 
     public bool $private = false;
@@ -56,7 +57,7 @@ class MediaItemData extends Data
 
     public string $slug;
 
-    public string $status = 'published';
+    public string $status = ContentStatus::PUBLISHED->value;
 
     public string $title;
 

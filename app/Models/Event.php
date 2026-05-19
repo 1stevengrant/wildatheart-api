@@ -7,21 +7,27 @@ use Illuminate\Support\Str;
 use Laravel\Pennant\Feature;
 use App\Builders\EventBuilder;
 use App\Features\NewConnectUrl;
+use App\Observers\EventObserver;
 use App\Enums\Event\FrequencyEnum;
 use Spatie\Activitylog\LogOptions;
+use App\Features\NewEventLandingFeature;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Support\EventDateFormatters\FireFormatter;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
+use App\Support\EventDateFormatters\DefaultFormatter;
+use App\Support\EventDateFormatters\RetreatFormatter;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Support\EventDateFormatters\ExperienceFormatter;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[ObservedBy(\App\Observers\EventObserver::class)]
+#[ObservedBy(EventObserver::class)]
 class Event extends BaseModel
 {
     use HasFactory, HasRunwayResource, HasUuids, LogsActivity, SoftDeletes;
@@ -97,10 +103,6 @@ class Event extends BaseModel
     |--------------------------------------------------------------------------
     */
 
-    public const string FOR_MEN = 'men';
-
-    public const string FOR_WOMEN = 'women';
-
     public const string DEFAULT_COUNTRY = 'us';
 
     public const string COUNT_TYPE_VIEW = 'view_count';
@@ -161,24 +163,24 @@ class Event extends BaseModel
 
     public function managerInvitations(): HasMany
     {
-        return $this->hasMany(\App\Models\EventManagerInvitation::class);
+        return $this->hasMany(EventManagerInvitation::class);
     }
 
     public function pendingManagerInvitations(): HasMany
     {
         // Global scope on EventManagerInvitation already filters by pending status
-        return $this->hasMany(\App\Models\EventManagerInvitation::class);
+        return $this->hasMany(EventManagerInvitation::class);
     }
 
     public function ownershipTransfer(): HasOne
     {
-        return $this->hasOne(\App\Models\EventOwnershipTransfer::class);
+        return $this->hasOne(EventOwnershipTransfer::class);
     }
 
     public function pendingOwnershipTransfer(): HasOne
     {
         // Global scope on EventOwnershipTransfer already filters by pending status
-        return $this->hasOne(\App\Models\EventOwnershipTransfer::class);
+        return $this->hasOne(EventOwnershipTransfer::class);
     }
 
     /*
@@ -191,30 +193,25 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
-                // Handle case where country doesn't exist
+                if (! $this->city) {
+                    return '';
+                }
+
                 if (! $this->country) {
-                    return $this->city ?: '';
+                    return $this->city;
                 }
 
-                if (mb_strtolower($this->country) === self::DEFAULT_COUNTRY || mb_strtolower($this->country) === 'united states') {
-                    if ($this->city && $this->region) {
-                        return $this->city . ', ' . getStateAbbreviation($this->region);
-                    }
+                $country = mb_strtolower($this->country);
+
+                if (in_array($country, [self::DEFAULT_COUNTRY, 'united states'], true) && $this->region) {
+                    return $this->city . ', ' . (getStateAbbreviation($this->region) ?? $this->region);
                 }
 
-                if (mb_strtolower($this->country) === 'new zealand') {
-                    if ($this->city && $this->region) {
-                        return $this->city . ', NZ';
-                    }
+                if (in_array($country, ['gb', 'united kingdom'], true)) {
+                    return $this->city . ', UK';
                 }
 
-                if (mb_strtolower($this->country) === 'gb') {
-                    if ($this->city && $this->region) {
-                        return $this->city . ', UK';
-                    }
-                }
-
-                return $this->city . ', ' . mb_strtoupper($this->country);
+                return $this->city . ', ' . (getCountryName($this->country) ?? ucfirst($this->country));
             }
         );
     }
@@ -223,19 +220,16 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
-                if (! $this->start_date) {
-                    return '';
-                }
+                $year = now()->year;
 
-                $startFormatted = $this->start_date->format('D, M j');
-
-                if ($this->end_date && ! $this->start_date->isSameDay($this->end_date)) {
-                    $endFormatted = $this->end_date->format('D, M j');
-
-                    return "{$startFormatted} - {$endFormatted}";
-                }
-
-                return $startFormatted;
+                return match (true) {
+                    $this->isRetreat() => RetreatFormatter::format($this, $year)
+                        ?? DefaultFormatter::format($this, $year),
+                    $this->isExperience() => ExperienceFormatter::format($this, $year)
+                        ?? DefaultFormatter::format($this, $year),
+                    $this->isFire() => FireFormatter::format($this),
+                    default => DefaultFormatter::format($this, $year),
+                };
             }
         );
     }
@@ -243,9 +237,7 @@ class Event extends BaseModel
     protected function city(): Attribute
     {
         return Attribute::make(
-            get: function (string $value): string {
-                return str_replace(',', '', $value);
-            }
+            get: fn (?string $value): string => str_replace(',', '', $value ?? ''),
         );
     }
 
@@ -262,6 +254,10 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
+                if (Feature::active(NewEventLandingFeature::class)) {
+                    return "/events/attend/$this->id";
+                }
+
                 return route('view.event', ['event' => $this]);
             }
         );
@@ -330,6 +326,11 @@ class Event extends BaseModel
                 ];
 
                 $format = $titleFormats[$this->eventType->group_type] ?? $titleFormats['default'];
+
+                if ($this->eventType->name === EventType::CAPTIVATING_CORE_RETREAT_1_DAY) {
+                    $format = '1-Day Retreat for';
+                }
+
                 $genderValue = ucfirst($this->sex->value);
 
                 return "$format $genderValue";
@@ -427,6 +428,7 @@ class Event extends BaseModel
                 EventType::BECOMING_A_KING => 'Becoming A King Retreat',
                 EventType::CAPTIVATING_EXPERIENCE => 'Captivating Experience',
                 EventType::CAPTIVATING_CORE_RETREAT => '4-Day Captivating Retreat',
+                EventType::CAPTIVATING_CORE_RETREAT_1_DAY => '1-Day Captivating Retreat',
                 default => $this->card_description ?? '',
             }
         );

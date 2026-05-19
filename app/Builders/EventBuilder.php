@@ -3,8 +3,8 @@
 namespace App\Builders;
 
 use App\Models\User;
-use App\Models\Event;
 use App\Models\EventType;
+use App\Enums\EventSexEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
@@ -205,8 +205,14 @@ class EventBuilder extends Builder
         float $neLatitude,
         float $neLongitude
     ): EventBuilder {
-        $swLongitude = fmod(($swLongitude + 540), 360) - 180;
-        $neLongitude = fmod(($neLongitude + 540), 360) - 180;
+        // A span >= 360° covers the whole world; skip longitude filtering entirely.
+        // Otherwise the wrap step below would collapse the box (e.g. 180 → -180).
+        if (abs($neLongitude - $swLongitude) >= 360) {
+            return $this->whereBetween('latitude', [$swLatitude, $neLatitude]);
+        }
+
+        $swLongitude = $this->wrapLongitude($swLongitude);
+        $neLongitude = $this->wrapLongitude($neLongitude);
 
         if ($swLongitude > $neLongitude) {
             return $this->whereBetween('latitude', [$swLatitude, $neLatitude])
@@ -218,6 +224,21 @@ class EventBuilder extends Builder
 
         return $this->whereBetween('latitude', [$swLatitude, $neLatitude])
             ->whereBetween('longitude', [$swLongitude, $neLongitude]);
+    }
+
+    private function wrapLongitude(float $longitude): float
+    {
+        $longitude = fmod($longitude, 360);
+
+        if ($longitude > 180) {
+            return $longitude - 360;
+        }
+
+        if ($longitude < -180) {
+            return $longitude + 360;
+        }
+
+        return $longitude;
     }
 
     public function betweenDates(?string $startDate = null, ?string $endDate = null): EventBuilder
@@ -239,8 +260,10 @@ class EventBuilder extends Builder
 
     public function filterBySex(?string $sex): EventBuilder
     {
-        if ($sex && in_array(mb_strtolower($sex), [Event::FOR_MEN, Event::FOR_WOMEN])) {
-            return $this->where('sex', mb_strtolower($sex));
+        $sexEnum = $sex ? EventSexEnum::tryFrom(mb_strtolower($sex)) : null;
+
+        if ($sexEnum) {
+            return $this->where('sex', $sexEnum);
         }
 
         return $this;

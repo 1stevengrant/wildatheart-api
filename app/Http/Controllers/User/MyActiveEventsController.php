@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Event;
 use App\Data\EventData;
 use App\Models\EventType;
 use App\Http\Controllers\Controller;
@@ -10,7 +11,7 @@ class MyActiveEventsController extends Controller
 {
     public function __invoke()
     {
-        $activeEvents = \App\Models\Event::query()
+        $activeEvents = Event::query()
             ->controllableByUser(auth()->user())
             ->published()
             ->active()

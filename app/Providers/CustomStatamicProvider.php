@@ -8,10 +8,12 @@ use Statamic\Events\EntrySaved;
 use Statamic\Facades\Collection;
 use Statamic\Events\AssetUploaded;
 use App\Builders\EntryQueryBuilder;
+use App\Exceptions\CpExceptionHandler;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
 use App\Jobs\Cloudflare\TriggerAstroBuildJob;
 use Illuminate\Support\Facades\Event as LaravelEvent;
+use Statamic\Exceptions\ControlPanelExceptionHandler;
 
 class CustomStatamicProvider extends ServiceProvider
 {
@@ -20,7 +22,7 @@ class CustomStatamicProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ControlPanelExceptionHandler::class, CpExceptionHandler::class);
     }
 
     /**

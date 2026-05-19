@@ -1,1 +1,2 @@
-disk: s3
+title: 'WordPress S3'
+disk: wordpress

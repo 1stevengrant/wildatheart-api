@@ -1,11 +1,13 @@
 <?php
 
 use App\Jobs\PostToZapier;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 it('posts the event details to zapier and adds the event to the spreadsheet', function () {
-    \Illuminate\Support\Facades\Queue::fake();
-    \Illuminate\Support\Facades\Http::fake();
+    Queue::fake();
+    Http::fake();
 
     $dataTransferObject = new GoogleSheetDataTransferObject(
         webhookUrl: 'https://hooks.zapier.com/hooks/catch/123456/abcdef',
@@ -26,5 +28,5 @@ it('posts the event details to zapier and adds the event to the spreadsheet', fu
 
     PostToZapier::dispatch($dataTransferObject);
 
-    \Illuminate\Support\Facades\Queue::assertPushed(PostToZapier::class);
+    Queue::assertPushed(PostToZapier::class);
 });

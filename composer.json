@@ -24,7 +24,6 @@
         "laravel/nightwatch": "^1.7",
         "laravel/pail": "^1.1",
         "laravel/pennant": "^1.19",
-        "laravel/pulse": "^1.2",
         "laravel/slack-notification-channel": "^3.5",
         "laravel/tinker": "^2.9",
         "laravolt/avatar": "^6.0",
@@ -47,12 +46,13 @@
         "spatie/typescript-transformer": "^2.3",
         "squirephp/countries-en": "^3.5",
         "statamic-rad-pack/runway": "^9.0",
-        "statamic/cms": "^6.0",
+        "statamic/cms": "6.19.0",
         "statamic/eloquent-driver": "^5.0",
         "stevebauman/purify": "^6.2",
         "symfony/http-client": "^7.0",
         "symfony/postmark-mailer": "^7.0",
         "tightenco/ziggy": "^2.6",
+        "toitzi/laravel-cloudflare-mail": "^1.0",
         "wild-at-heart/command-center": "*@dev"
     },
     "require-dev": {
@@ -93,6 +93,7 @@
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install",
+            "@dev:types",
             "npm run build"
         ],
         "dev": [

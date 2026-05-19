@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-use Statamic\Exceptions\ElevatedSessionAuthorizationException;
 use Statamic\Http\Middleware\CP\RequireElevatedSession;
+use Statamic\Exceptions\ElevatedSessionAuthorizationException;
 
 it('bypasses elevated session check when elevated sessions are disabled', function () {
     config(['statamic.users.elevated_sessions_enabled' => false]);

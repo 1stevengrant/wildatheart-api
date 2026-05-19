@@ -50,6 +50,5 @@ class CustomSlideSet extends Data
 
     public ?LeftCtaGroup $left_cta = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $link = null;
+    public ?LinkField $link = null;
 }

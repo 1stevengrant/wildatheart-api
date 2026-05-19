@@ -2,10 +2,12 @@
 
 namespace App\DataTypeObjects\Statamic\Blueprints;
 
+use App\Enums\ContentStatus;
 use Spatie\LaravelData\Data;
 use App\Casts\PassthroughCast;
 use App\DataTypeObjects\Blueprint;
 use App\DataTypeObjects\ImageData;
+use App\DataTypeObjects\ParentData;
 use App\StatamicDTO\Shared\HeroSet;
 use App\StatamicDTO\Shared\HeaderSet;
 use App\StatamicDTO\Shared\ButtonsSet;
@@ -48,7 +50,7 @@ class CustomSeries extends Data
 
     public string $locale = 'default';
 
-    /** @var \App\DataTypeObjects\ParentData[] */
+    /** @var ParentData[] */
     public ?array $parent = null;
 
     public bool $private;
@@ -63,7 +65,7 @@ class CustomSeries extends Data
 
     public string $slug;
 
-    public string $status = 'published';
+    public string $status = ContentStatus::PUBLISHED->value;
 
     public string $title;
 

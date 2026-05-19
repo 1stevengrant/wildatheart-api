@@ -23,6 +23,7 @@ use App\StatamicDTO\Shared\HeroSet;
 use App\StatamicDTO\Shared\IconSet;
 use App\StatamicDTO\Shared\ButtonSet;
 use App\StatamicDTO\Shared\HeaderSet;
+use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ActionsSet;
 use App\StatamicDTO\Shared\ButtonsSet;
 use App\StatamicDTO\Shared\ColumnsSet;
@@ -120,14 +121,12 @@ class MultidayRetreat extends Data
     /** @var array<CountdownSet>|null */
     public ?array $hero_subtitle = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $background_video_url = null;
+    public ?LinkField $background_video_url = null;
 
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $background_video_fallback_image = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $featured_video_url = null;
+    public ?LinkField $featured_video_url = null;
 
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $featured_video_fallback_image = null;

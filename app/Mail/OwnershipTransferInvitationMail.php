@@ -2,12 +2,15 @@
 
 namespace App\Mail;
 
+use Carbon\Carbon;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use App\Models\EventOwnershipTransfer;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class OwnershipTransferInvitationMail extends Mailable implements ShouldQueue
@@ -20,11 +23,11 @@ class OwnershipTransferInvitationMail extends Mailable implements ShouldQueue
     public function __construct(
         public Event $event,
         public string $transferredByName,
-        public ?\App\Models\EventOwnershipTransfer $transfer = null,
+        public ?EventOwnershipTransfer $transfer = null,
         public bool $userExists = false,
     ) {
         $this->event->formatted_start_date = $event->start_date
-            ? \Carbon\Carbon::parse($event->start_date)->format('F j, Y')
+            ? Carbon::parse($event->start_date)->format('F j, Y')
             : null;
     }
 
@@ -51,7 +54,7 @@ class OwnershipTransferInvitationMail extends Mailable implements ShouldQueue
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {

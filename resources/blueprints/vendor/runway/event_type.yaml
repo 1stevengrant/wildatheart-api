@@ -494,7 +494,7 @@ tabs:
     display: 'V1 API'
     sections:
       -
-        display: 'New Section'
+        display: 'V1 API'
         fields:
           -
             handle: card_description

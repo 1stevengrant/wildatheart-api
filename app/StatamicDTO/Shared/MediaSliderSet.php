@@ -33,8 +33,7 @@ class MediaSliderSet extends Data
 
     public ?string $section_title = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $link_to_more = null;
+    public ?LinkField $link_to_more = null;
 
     /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from media_series */
     public ?array $media_series = null;

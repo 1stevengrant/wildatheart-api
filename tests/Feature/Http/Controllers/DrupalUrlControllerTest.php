@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\User;
+use App\Models\Event;
+use App\Models\EventType;
 use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
@@ -8,7 +11,7 @@ beforeEach(function () {
     Bus::fake();
     Mail::fake();
 
-    $this->user = \App\Models\User::factory()->create();
+    $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
 
@@ -48,7 +51,7 @@ it('logs activity and redirects to home when event is not found', function () {
 it('logs activity and redirects to the event when event is found', function () {
     $this->withoutExceptionHandling();
     $legacyDrupalUrl = '/some-legacy-url';
-    $event = \App\Models\Event::factory()->fires()->create([
+    $event = Event::factory()->fires()->create([
         'legacy_drupal_url' => $legacyDrupalUrl,
     ]);
 
@@ -64,7 +67,7 @@ it('logs activity and redirects to the event when event is found', function () {
 
 it('logs activity and redirects to event type when course matches', function () {
     $course = 'basic';
-    $eventType = \App\Models\EventType::factory()->create(['name' => \App\Models\EventType::WAH_RETREAT]);
+    $eventType = EventType::factory()->create(['name' => EventType::WAH_RETREAT]);
 
     $response = $this->get('/drupal/courses/' . $course);
 

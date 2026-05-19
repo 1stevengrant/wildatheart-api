@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
@@ -19,7 +20,7 @@ test('it allows a user to soft delete their own event', function () {
 });
 
 test('a user can only delete their own events', function () {
-    $unauthorizedUser = \App\Models\User::factory()->create();
+    $unauthorizedUser = User::factory()->create();
 
     $this->actingAs($unauthorizedUser)
         ->delete(route('delete.event', $this->event))

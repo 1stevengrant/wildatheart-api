@@ -35,8 +35,7 @@ class NewImageSet extends Data
 
     public ?string $image_type_subsplash = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $image_source_url_subsplash = null;
+    public ?LinkField $image_source_url_subsplash = null;
 
     public ?string $image_dynamic_url_subsplash = null;
 }

@@ -31,8 +31,7 @@ class VideoBlockSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $preview_video_url = null;
+    public ?LinkField $preview_video_url = null;
 
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $preview_video_image = null;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1\Navs;
 
 use Exception;
 use Statamic\Facades\GlobalSet;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -94,7 +95,7 @@ abstract class BaseNavController extends Controller
     /**
      * Return consistent error response format
      */
-    private function errorResponse(string $message, int $code): \Illuminate\Http\JsonResponse
+    private function errorResponse(string $message, int $code): JsonResponse
     {
         return response()->json([
             'error' => $message,

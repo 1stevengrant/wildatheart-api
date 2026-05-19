@@ -48,14 +48,12 @@ class HeroSet extends Data
     /** @var array<CountdownSet>|null */
     public ?array $hero_subtitle = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $background_video_url = null;
+    public ?LinkField $background_video_url = null;
 
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $background_video_fallback_image = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $featured_video_url = null;
+    public ?LinkField $featured_video_url = null;
 
     /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
     public ?array $featured_video_fallback_image = null;

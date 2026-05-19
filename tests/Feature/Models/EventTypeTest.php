@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EventType;
+use App\Data\EventTypeData;
 use App\Enums\EventTypeEnum;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
@@ -84,7 +85,7 @@ it('includes summary and summary_link in EventTypeData', function () {
         'summary_link' => 'https://example.com',
     ]);
 
-    $data = \App\Data\EventTypeData::fromModel($eventType);
+    $data = EventTypeData::fromModel($eventType);
 
     expect($data->summary)->toBe('Test summary')
         ->and($data->summary_link)->toBe('https://example.com');
@@ -96,7 +97,7 @@ it('includes summary and summary_link in V1 EventTypeData', function () {
         'summary_link' => 'https://example.com',
     ]);
 
-    $data = \App\Data\V1\EventTypeData::fromEventType($eventType);
+    $data = App\Data\V1\EventTypeData::fromEventType($eventType);
 
     expect($data->summary)->toBe('Test summary')
         ->and($data->summary_link)->toBe('https://example.com');
@@ -141,7 +142,7 @@ it('includes type in EventTypeData', function () {
         'type' => EventTypeEnum::Course,
     ]);
 
-    $data = \App\Data\EventTypeData::fromModel($eventType);
+    $data = EventTypeData::fromModel($eventType);
 
     expect($data->type)->toBe(EventTypeEnum::Course);
 });
@@ -151,7 +152,7 @@ it('includes type as string in V1 EventTypeData', function () {
         'type' => EventTypeEnum::Retreat,
     ]);
 
-    $data = \App\Data\V1\EventTypeData::fromEventType($eventType);
+    $data = App\Data\V1\EventTypeData::fromEventType($eventType);
 
     expect($data->type)->toBe('retreat');
 });

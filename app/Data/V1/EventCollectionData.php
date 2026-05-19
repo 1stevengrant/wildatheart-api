@@ -3,6 +3,7 @@
 namespace App\Data\V1;
 
 use App\Models\Event;
+use App\Models\EventType;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -24,6 +25,7 @@ class EventCollectionData extends Data
         public ?float $latitude,
         public ?string $newCardHeading,
         public ?float $distance,
+        public ?string $url = null,
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -31,18 +33,19 @@ class EventCollectionData extends Data
         return new self(
             id: $event->id,
             location: $event->location,
-            dates: $event->eventType->group_type === 'fire' ? null : $event->formatted_dates,
+            dates: $event->eventType->group_type === EventType::TYPE_FIRE ? null : $event->formatted_dates,
             sex: $event->sex->value,
             eventType: $event->eventType->name,
             eventTypeImage: $event->eventType->new_image,
-            eventTypeCardDescription: $event->eventTypeCardDescription,
+            eventTypeCardDescription: $event->event_type_card_description,
             eventGroupType: $event->eventType->group_type,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
             longitude: $event->display_longitude ?? $event->longitude,
             latitude: $event->display_latitude ?? $event->latitude,
-            newCardHeading: $event->new_card_heading,
+            newCardHeading: $event->eventType->card_description,
             distance: $event->distance ? round((float) $event->distance) : null,
+            url: $event->url,
         );
     }
 }

@@ -42,8 +42,7 @@ class ThemeCardBlockSet extends Data
 
     public ?ButtonGroup $button = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $href = null;
+    public ?LinkField $href = null;
 
     /** @var array<TagSet>|null */
     public ?array $tags = null;

@@ -37,6 +37,15 @@ return [
 
     'mailers' => [
 
+        'cloudflare' => [
+            'transport' => 'cloudflare',
+            'account_id' => env('CLOUDFLARE_ACCOUNT_ID'),
+            'api_token' => env('CLOUDFLARE_EMAIL_API_TOKEN'),
+            'base_url' => env('CLOUDFLARE_EMAIL_BASE_URL', 'https://api.cloudflare.com/client/v4'),
+            'timeout' => 30,
+            'connect_timeout' => 10,
+        ],
+
         'smtp' => [
             'transport' => 'smtp',
             'scheme' => env('MAIL_SCHEME'),

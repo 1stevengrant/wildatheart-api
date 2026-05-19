@@ -1,5 +1,13 @@
 <?php
 
+use App\Models\Page;
+use App\Models\User;
+use App\Models\Event;
+use App\Models\Attendee;
+use App\Models\Redirect;
+use App\Models\EventType;
+use App\Models\EmailTemplate;
+
 return [
 
     /*
@@ -12,37 +20,37 @@ return [
     */
 
     'resources' => [
-        \App\Models\Redirect::class => [
+        Redirect::class => [
             'name' => 'Redirects',
         ],
 
-        \App\Models\EventType::class => [
+        EventType::class => [
             'name' => 'Local Platform Event Types',
         ],
 
-        \App\Models\Page::class => [
+        Page::class => [
             'name' => 'Local Platform Pages',
             'cp_icon' => 'book-pages',
         ],
 
-        \App\Models\Event::class => [
+        Event::class => [
             'name' => 'Local Platform Events',
             'cp_icon' => 'calendar',
             'title_field' => 'id',
         ],
 
-        \App\Models\User::class => [
+        User::class => [
             'name' => 'Local Platform Users',
             'cp_icon' => 'users',
             'title_field' => 'name',
         ],
 
-        \App\Models\Attendee::class => [
+        Attendee::class => [
             'name' => 'Local Platform Attendees',
             'cp_icon' => 'user',
         ],
 
-        \App\Models\EmailTemplate::class => [
+        EmailTemplate::class => [
             'name' => 'Local Platform Email Templates',
             'cp_icon' => 'email-utility',
         ],

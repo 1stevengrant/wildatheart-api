@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EventSexEnum;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -12,11 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('event_types', function (Blueprint $table) {
-            // create an enum column of sex with values of men, women or any
             $table->enum('sex', [
-                \App\Models\Event::FOR_MEN,
-                \App\Models\Event::FOR_WOMEN,
-            ])->default(\App\Models\Event::FOR_MEN)
+                EventSexEnum::MEN->value,
+                EventSexEnum::WOMEN->value,
+            ])->default(EventSexEnum::MEN->value)
                 ->after('name');
         });
     }

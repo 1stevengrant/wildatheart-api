@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\User;
+use App\Models\Event;
 use App\Models\EventType;
+use App\Enums\Event\FrequencyEnum;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 
@@ -8,7 +11,7 @@ beforeEach(function () {
     Bus::fake();
     Mail::fake();
 
-    $this->user = \App\Models\User::factory()->create();
+    $this->user = User::factory()->create();
     $this->actingAs($this->user);
 });
 
@@ -28,11 +31,11 @@ it('creates a standard fire', function () {
         'locality' => 'Downtown',
         'neighborhood' => 'Skid Row',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'frequency' => \App\Enums\Event\FrequencyEnum::WEEKLY->value,
+        'frequency' => FrequencyEnum::WEEKLY->value,
     ];
 
     $this->post(route('host.fire.store'), $attributes);
-    $event = \App\Models\Event::query()->name('Manly')->first();
+    $event = Event::query()->name('Manly')->first();
     expect($event->name)->toBe('Manly')
         ->and($event->eventType->name)->toBe(EventType::FIRES)
         ->and($event->street_address)->toBe('123 Main St')
@@ -64,7 +67,7 @@ it('prevents duplicate fire creation within a short time window', function () {
         'locality' => 'Downtown',
         'neighborhood' => 'Skid Row',
         'start_date' => now()->addDays(10)->format('Y-m-d'),
-        'frequency' => \App\Enums\Event\FrequencyEnum::WEEKLY->value,
+        'frequency' => FrequencyEnum::WEEKLY->value,
     ];
 
     // First request should succeed

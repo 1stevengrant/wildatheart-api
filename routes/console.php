@@ -4,9 +4,9 @@ use App\Enums\ReportName;
 use Illuminate\Support\Facades\Schedule;
 use App\Jobs\Admin\GenerateAndEmailReport;
 use App\Jobs\Transistor\RefreshDailyReadingsJob;
-use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
 use App\Console\Commands\GetLatestSubsplashMedia;
 use App\Console\Commands\WeGive\UpdateDonorIdCommand;
+use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
 
 Schedule::command(SendFiresCheckinsEmailCommand::class)->daily();
 Schedule::command(GetLatestSubsplashMedia::class)->everyFifteenMinutes()->environments('production');

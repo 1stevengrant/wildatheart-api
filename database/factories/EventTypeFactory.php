@@ -2,11 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\EventType;
+use App\Enums\EventSexEnum;
 use App\Enums\EventTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EventType>
+ * @extends Factory<EventType>
  */
 class EventTypeFactory extends Factory
 {
@@ -21,7 +23,7 @@ class EventTypeFactory extends Factory
             'name' => fake()->word(),
             'group_type' => 'fire',
             'type' => EventTypeEnum::Gathering,
-            'sex' => 'men',
+            'sex' => EventSexEnum::MEN,
             'image' => 'test-image.jpg',
             'is_active' => true,
             'description' => fake()->paragraph(),

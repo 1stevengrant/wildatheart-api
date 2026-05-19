@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\State;
+use Squire\Models\Country;
 
 if (! function_exists('getStateAbbreviation')) {
     function getStateAbbreviation(?string $stateName = null): ?string
@@ -313,6 +314,35 @@ if (! function_exists('getCountries')) {
     }
 }
 
+if (! function_exists('getCountryName')) {
+    function getCountryName(?string $country = null): ?string
+    {
+        if ($country === null) {
+            return null;
+        }
+
+        $normalized = mb_strtolower(mb_trim($country));
+
+        if ($normalized === '') {
+            return null;
+        }
+
+        $countries = getCountries();
+
+        if (mb_strlen($normalized) === 2) {
+            return $countries[mb_strtoupper($normalized)] ?? null;
+        }
+
+        foreach ($countries as $name) {
+            if (mb_strtolower($name) === $normalized) {
+                return $name;
+            }
+        }
+
+        return null;
+    }
+}
+
 if (! function_exists('getCountryCodeFromCountryName')) {
     function getCountryCodeFromCountryName(string $countryName): string
     {
@@ -320,7 +350,7 @@ if (! function_exists('getCountryCodeFromCountryName')) {
         $countryCode = Cache::get("country_code:{$normalizedName}");
 
         if ($countryCode === null) {
-            $country = \Squire\Models\Country::where('name', 'like', $countryName)->first();
+            $country = Country::where('name', 'like', $countryName)->first();
 
             if ($country) {
                 $countryCode = $country->code_2;

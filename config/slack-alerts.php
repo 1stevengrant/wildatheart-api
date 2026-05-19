@@ -1,5 +1,7 @@
 <?php
 
+use Spatie\SlackAlerts\Jobs\SendToSlackChannelJob;
+
 return [
     'slack_alerts_enabled' => env('SLACK_ALERTS_ENABLED', false),
 
@@ -16,5 +18,5 @@ return [
      * This job will send the message to Slack. You can extend this
      * job to set timeouts, retries, etc...
      */
-    'job' => Spatie\SlackAlerts\Jobs\SendToSlackChannelJob::class,
+    'job' => SendToSlackChannelJob::class,
 ];

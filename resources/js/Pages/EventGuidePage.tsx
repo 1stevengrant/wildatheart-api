@@ -26,9 +26,7 @@ const EventGuidePage = () => {
     const eventType = page.props.eventType as App.Data.EventTypeData;
     const pageTitle = `${eventType.name} Guide`;
     const pages = eventType.event_guide_pages ?? [];
-    const [selectedTab, setSelectedTab] = useState(() =>
-        getInitialTab(pages),
-    );
+    const [selectedTab, setSelectedTab] = useState(() => getInitialTab(pages));
 
     const handleTabChange = useCallback(
         (index: number) => {
@@ -36,7 +34,7 @@ const EventGuidePage = () => {
             const slug = slugify(pages[index].page_title);
             window.history.replaceState(null, "", `#${slug}`);
         },
-        [pages],
+        [pages]
     );
 
     return (

@@ -4,6 +4,7 @@ namespace App\Data\V1;
 
 use App\Models\EventType;
 use Statamic\Facades\Entry;
+use App\Enums\EventSexEnum;
 use Spatie\LaravelData\Data;
 use App\Services\EventResponseBuilder;
 use App\Support\EventTypeDateSelector;
@@ -17,7 +18,7 @@ class EventTypeData extends Data
         public string $name,
         public string $camel_case_name,
         public string $slug,
-        public string $sex,
+        public EventSexEnum $sex,
         public string $image,
         public string $group_type,
         public int $order,

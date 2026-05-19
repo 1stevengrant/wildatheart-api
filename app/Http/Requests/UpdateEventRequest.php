@@ -15,12 +15,8 @@ class UpdateEventRequest extends FormRequest
         return auth()->check();
     }
 
-    /**
-     * Prepare the data for validation.
-     */
     protected function prepareForValidation(): void
     {
-        // Get the event
         $event = $this->route('event');
 
         if ($event && $this->has('start_date')) {

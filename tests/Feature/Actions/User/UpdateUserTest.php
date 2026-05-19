@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Actions\User\UpdateUser;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 
@@ -12,7 +13,7 @@ beforeEach(function () {
 it('updates the user account', function () {
     $user = User::factory()->create();
 
-    \App\Actions\User\UpdateUser::run(
+    UpdateUser::run(
         $user,
         [
             'name' => 'John Doe',

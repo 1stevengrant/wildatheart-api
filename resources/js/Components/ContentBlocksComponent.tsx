@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+
 import Markdown from "react-markdown";
 
 const ReactPlayer = lazy(() => import("react-player"));

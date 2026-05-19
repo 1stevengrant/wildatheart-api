@@ -12,7 +12,10 @@
  * Usage: php artisan test --group=production-parity
  */
 
+use Tests\ProductionParityTestCase;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Testing\TestResponse;
 
 const PRODUCTION_API_BASE = 'https://local.wildatheart.org/api';
 
@@ -55,7 +58,7 @@ beforeAll(function () {
         foreach (PARITY_ENDPOINTS as $path) {
             $response = $responses[$path];
 
-            if ($response instanceof \Illuminate\Http\Client\Response) {
+            if ($response instanceof Response) {
                 $productionResponses[$path] = [
                     'status' => $response->status(),
                     'body' => $response->json(),
@@ -70,7 +73,7 @@ beforeAll(function () {
                 ];
             }
         }
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         foreach (PARITY_ENDPOINTS as $path) {
             $productionResponses[$path] = [
                 'status' => 0,
@@ -81,10 +84,10 @@ beforeAll(function () {
         }
     }
 
-    Tests\ProductionParityTestCase::$productionResponses = $productionResponses;
+    ProductionParityTestCase::$productionResponses = $productionResponses;
 });
 
-function extractErrorFromResponse(\Illuminate\Testing\TestResponse $response): string
+function extractErrorFromResponse(TestResponse $response): string
 {
     $content = $response->getContent();
     $json = json_decode($content, true);
@@ -97,7 +100,7 @@ function extractErrorFromResponse(\Illuminate\Testing\TestResponse $response): s
 }
 
 it('matches production response for {endpoint}', function (string $path) {
-    $production = Tests\ProductionParityTestCase::$productionResponses[$path] ?? null;
+    $production = ProductionParityTestCase::$productionResponses[$path] ?? null;
 
     if (! $production || ! $production['reachable']) {
         $error = $production['error'] ?? 'No response cached';

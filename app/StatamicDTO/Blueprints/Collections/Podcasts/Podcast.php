@@ -19,6 +19,7 @@
 namespace App\StatamicDTO\Blueprints\Collections\Podcasts;
 
 use Spatie\LaravelData\Data;
+use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ImagesGroup;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -43,17 +44,13 @@ class Podcast extends Data
     /** @var 'video' | 'audio' | null */
     public ?string $video_or_audio = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $spotify_url = null;
+    public ?LinkField $spotify_url = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $itunes_url = null;
+    public ?LinkField $itunes_url = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $youtube_url = null;
+    public ?LinkField $youtube_url = null;
 
-    /** @var array{url: string|null, text: string|null, newWindow: bool}|null */
-    public ?array $rss_feed_url = null;
+    public ?LinkField $rss_feed_url = null;
 
     public ?ImagesGroup $images = null;
 
