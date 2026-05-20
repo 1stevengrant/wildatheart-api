@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Models\Event;
+use App\Data\EventData;
 use App\Models\EventType;
 use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Support\EventTypeDateSelector;
 use App\Http\Requests\API\V1\CreateEventRequest;
@@ -14,6 +16,32 @@ use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HostEventController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $baseQuery = Event::query()
+            ->controllableByUser(auth()->user())
+            ->with(['user', 'eventType', 'managers'])
+            ->orderByRaw('start_date < NOW()')
+            ->orderBy('start_date');
+
+        $listed = (clone $baseQuery)
+            ->published()
+            ->get()
+            ->map(fn (Event $event) => EventData::fromModel($event))
+            ->values();
+
+        $drafts = (clone $baseQuery)
+            ->unpublished()
+            ->get()
+            ->map(fn (Event $event) => EventData::fromModel($event))
+            ->values();
+
+        return response()->json([
+            'listed' => $listed,
+            'drafts' => $drafts,
+        ]);
+    }
+
     public function store(CreateEventRequest $request, EventType $eventType)
     {
         EventDateHelper::adjustEndDateForRetreat(
