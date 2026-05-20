@@ -16,6 +16,7 @@ class EventTypeController extends Controller
         $eventTypes = cache()->remember('eventTypesWithCounts', now()->addHours(6), function () {
             return EventType::query()
                 ->select('event_types.*')
+                ->active()
                 ->withCount([
                     'events as listings_count' => function ($query) {
                         $query->whereNotNull('approved_at')
@@ -37,6 +38,7 @@ class EventTypeController extends Controller
                                 ->orWhereNull('start_date');
                         }),
                 ])
+                ->orderBy('order')
                 ->get();
         });
 

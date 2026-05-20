@@ -10,6 +10,7 @@ use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\AttendeeController;
 use App\Http\Controllers\API\V1\EventTypeController;
+use App\Http\Controllers\API\V1\HostEventController;
 use App\Http\Controllers\API\AllExperiencesController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\Media\MediaItemController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\API\V1\GroupedEventTypeController;
 use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
+use App\Http\Controllers\API\V1\HostMailingAddressController;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
@@ -61,6 +63,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('mobile', MobileNavController::class)->name('mobile');
     });
 
+    Route::prefix('host')->name('host.')->middleware('auth0.api')->group(function () {
+        Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
+        Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
+        Route::post('event-types/{eventType}/events/draft', [HostEventController::class, 'storeDraft'])->name('event-types.events.draft');
+    });
+
     Route::prefix('events')->name('events.')->group(function () {
         Route::get('', [EventController::class, 'index'])->name('events.index');
         Route::get('search', App\Http\Controllers\API\V1\SearchForEventsController::class)->name('api.events.search');
@@ -71,7 +79,6 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->middleware('throttle:connect')
             ->name('connect.store');
     });
-
 });
 
 Route::prefix('content')->group(function () {

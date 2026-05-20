@@ -3,6 +3,7 @@
 use Sentry\Laravel\Integration;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\Auth0ApiMiddleware;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Session\Middleware\StartSession;
@@ -59,6 +60,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
+            'agreed_to_host_agreement' => HasAgreedToHostAgreementMiddleware::class,
+            'auth0.api' => Auth0ApiMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role' => RoleMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'super_admin' => SuperAdminMiddleware::class,
             'agreed_to_host_agreement' => HasAgreedToHostAgreementMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'profile_complete' => EnsureProfileIsCompleteMiddleware::class,
