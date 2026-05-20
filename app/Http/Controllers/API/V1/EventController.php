@@ -21,6 +21,7 @@ class EventController extends Controller
                     ->published()
                     ->active()
                     ->public()
+                    ->hasEventType()
                     ->with(['eventType', 'user'])
                     ->orderBy('start_date')
                     ->get()
@@ -30,6 +31,8 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
+        abort_if($event->eventType === null, 404, 'Event is missing an event type and cannot be served.');
+
         $eventData = EventData::from($event);
         $landingPage = Entry::find($event->eventType->related_landing_page_id);
 
