@@ -1,11 +1,7 @@
 <?php
 
-use App\Http\Requests\FireEventRequest;
+use App\Data\FireEventData;
 use Illuminate\Support\Facades\Validator;
-
-beforeEach(function () {
-    $this->request = new FireEventRequest;
-});
 
 it('validates valid fire event data', function () {
     $validator = Validator::make([
@@ -14,7 +10,7 @@ it('validates valid fire event data', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-    ], (new FireEventRequest)->rules());
+    ], FireEventData::rules());
 
     expect($validator->passes())->toBeTrue();
 });
@@ -26,7 +22,7 @@ it('fails validation when name ends with fire', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'frequency' => 'Weekly',
-    ], (new FireEventRequest)->rules());
+    ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
 });
@@ -38,7 +34,7 @@ it('fails validation when name contains emoji', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'frequency' => 'Weekly',
-    ], (new FireEventRequest)->rules());
+    ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
 });
@@ -50,7 +46,7 @@ it('fails validation when name is too short', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'frequency' => 'Weekly',
-    ], (new FireEventRequest)->rules());
+    ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
 });
@@ -58,7 +54,7 @@ it('fails validation when name is too short', function () {
 it('fails validation when required fields are missing', function () {
     $validator = Validator::make([
         'name' => 'Forest Incident',
-    ], (new FireEventRequest)->rules());
+    ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has('frequency'))->toBeTrue()
@@ -73,7 +69,19 @@ it('fails validation when name is longer than 255 characters', function () {
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'frequency' => 'Weekly',
-    ], (new FireEventRequest)->rules());
+    ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
+});
+
+it('accepts is_private boolean', function () {
+    $validator = Validator::make([
+        'name' => 'Forest Incident',
+        'frequency' => 'Weekly',
+        'latitude' => '40.7128',
+        'longitude' => '-74.0060',
+        'is_private' => true,
+    ], FireEventData::rules());
+
+    expect($validator->passes())->toBeTrue();
 });

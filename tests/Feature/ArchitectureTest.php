@@ -60,7 +60,9 @@ arch('queued jobs implement ShouldQueue')
 
 arch('data objects extend Spatie\\LaravelData\\Data')
     ->expect('App\Data')
-    ->toExtend('Spatie\LaravelData\Data');
+    ->classes()
+    ->toExtend('Spatie\LaravelData\Data')
+    ->ignoring('App\Data\Concerns');
 
 arch('enums are confined to App\\Enums')
     ->expect('App\Enums')

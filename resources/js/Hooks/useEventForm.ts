@@ -1,41 +1,46 @@
 import { useState } from "react";
 
+import type { FormDataKeys } from "@inertiajs/core";
 import { useForm } from "@inertiajs/react";
 
-interface UseEventFormProps {
-    initialData?: Partial<App.Data.EventFormData>;
+interface UseEventFormProps<T> {
+    initialData?: Partial<T> & Partial<App.Data.EventFormData>;
     user: any;
     eventType?: any;
 }
 
-export const useEventForm = ({ initialData, user }: UseEventFormProps) => {
-    const [isPrivate, setIsPrivate] = useState(
-        initialData?.is_private || false
-    );
+export const useEventForm = <
+    T extends Record<string, any> = App.Data.EventFormData,
+>({
+    initialData,
+    user,
+}: UseEventFormProps<T>) => {
+    const seed = (initialData ?? {}) as Partial<App.Data.EventFormData>;
 
-    const { data, setData, post, put, processing, errors } =
-        useForm<App.Data.EventFormData>({
-            name: initialData?.name || `${user.given_name}'s`,
-            state: initialData?.state || "",
-            city: initialData?.city || "",
-            zip: initialData?.zip || "",
-            country: initialData?.country || "",
-            latitude: initialData?.latitude || null,
-            longitude: initialData?.longitude || null,
-            region: initialData?.region || "",
-            district: initialData?.district || "",
-            locality: initialData?.locality || "",
-            neighborhood: initialData?.neighborhood || "",
-            street_address: initialData?.street_address || "",
-            poi: initialData?.poi || "",
-            is_private: initialData?.is_private || false,
-            start_date: initialData?.start_date || null,
-            end_date: initialData?.end_date || null,
-            frequency: initialData?.frequency || "monthly",
-            number_of_items_in_material_order:
-                initialData?.number_of_items_in_material_order || null,
-            ...initialData,
-        });
+    const [isPrivate, setIsPrivate] = useState(seed.is_private || false);
+
+    const { data, setData, post, put, processing, errors } = useForm<T>({
+        name: seed.name || `${user.given_name}'s`,
+        state: seed.state || "",
+        city: seed.city || "",
+        zip: seed.zip || "",
+        country: seed.country || "",
+        latitude: seed.latitude || null,
+        longitude: seed.longitude || null,
+        region: seed.region || "",
+        district: seed.district || "",
+        locality: seed.locality || "",
+        neighborhood: seed.neighborhood || "",
+        street_address: seed.street_address || "",
+        poi: seed.poi || "",
+        is_private: seed.is_private || false,
+        start_date: seed.start_date || null,
+        end_date: seed.end_date || null,
+        frequency: seed.frequency || "monthly",
+        number_of_items_in_material_order:
+            seed.number_of_items_in_material_order || null,
+        ...initialData,
+    } as unknown as T);
 
     const updateLocationData = (locationData: any) => {
         // Update all location fields, clearing old values when new location doesn't have them
@@ -44,13 +49,14 @@ export const useEventForm = ({ initialData, user }: UseEventFormProps) => {
             // Keep null for coordinates, empty string for text fields
             const defaultValue =
                 key === "latitude" || key === "longitude" ? null : "";
-            setData(key as keyof App.Data.EventFormData, value ?? defaultValue);
+            setData(key as FormDataKeys<T>, (value ?? defaultValue) as never);
         });
     };
 
     const handlePrivacyToggle = () => {
-        setIsPrivate(!isPrivate);
-        setData("is_private", !isPrivate);
+        const next = !isPrivate;
+        setIsPrivate(next);
+        setData("is_private" as FormDataKeys<T>, next as never);
     };
 
     return {
