@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Models\User;
 use App\Models\Event;
 use App\Data\EventData;
 use App\Models\EventType;
@@ -9,6 +10,7 @@ use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Models\EventManagerInvitation;
 use App\Support\EventTypeDateSelector;
 use App\Http\Requests\API\V1\CreateEventRequest;
 use App\Http\Requests\API\V1\SaveEventDraftRequest;
@@ -20,7 +22,7 @@ class HostEventController extends Controller
     {
         $baseQuery = Event::query()
             ->controllableByUser(auth()->user())
-            ->with(['user', 'eventType', 'managers'])
+            ->with(['user', 'eventType', 'managers', 'pendingManagerInvitations'])
             ->orderByRaw('start_date < NOW()')
             ->orderBy('start_date');
 
@@ -136,6 +138,7 @@ class HostEventController extends Controller
             }
             $event->fill($this->draftPayload($request, $eventType));
             $event->save();
+            $this->syncCoHostInvitations($event, $request);
         } else {
             EventDateHelper::adjustEndDateForRetreat(
                 request: $request,
@@ -153,11 +156,12 @@ class HostEventController extends Controller
                     ]
                 )
             );
+            $this->syncCoHostInvitations($event, $request);
         }
 
         return response()->json([
             'success' => true,
-            'event' => $event->fresh(),
+            'event' => $event->fresh(['managers', 'pendingManagerInvitations']),
         ]);
     }
 
@@ -192,5 +196,53 @@ class HostEventController extends Controller
         ];
 
         return array_filter($payload, fn ($v) => $v !== null);
+    }
+
+    /**
+     * Sync pending co-host invitations from the draft request.
+     * Does not send invitation emails — that happens when publishing via the event manager flow.
+     */
+    private function syncCoHostInvitations(Event $event, SaveEventDraftRequest $request): void
+    {
+        if (! $request->has('co_host_emails')) {
+            return;
+        }
+
+        $emails = collect($request->validated('co_host_emails') ?? [])
+            ->map(fn (string $email) => mb_strtolower(mb_trim($email)))
+            ->filter()
+            ->unique()
+            ->reject(fn (string $email) => $email === mb_strtolower($event->user?->email ?? ''))
+            ->reject(function (string $email) use ($event) {
+                $user = User::where('email', $email)->first();
+
+                if (! $user) {
+                    return false;
+                }
+
+                return $user->id === $event->user_id
+                    || $event->managers()->where('user_id', $user->id)->exists();
+            })
+            ->values();
+
+        $staleInvitations = $event->pendingManagerInvitations();
+
+        if ($emails->isNotEmpty()) {
+            $staleInvitations->whereNotIn('email', $emails->all());
+        }
+
+        $staleInvitations->get()->each(fn (EventManagerInvitation $invitation) => $invitation->delete());
+
+        foreach ($emails as $email) {
+            if ($event->pendingManagerInvitations()->where('email', $email)->exists()) {
+                continue;
+            }
+
+            EventManagerInvitation::create([
+                'event_id' => $event->id,
+                'email' => $email,
+                'invited_by_user_id' => auth()->id(),
+            ]);
+        }
     }
 }

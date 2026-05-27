@@ -73,5 +73,9 @@ class SaveEventDraftRequest extends FormRequest
         if (! empty($merge)) {
             $this->merge($merge);
         }
+
+        if ($this->has('co_host_emails') && ! is_array($this->co_host_emails)) {
+            $this->merge(['co_host_emails' => []]);
+        }
     }
 }
