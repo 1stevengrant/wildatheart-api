@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Event;
 
-use Log;
-use Gate;
 use App\Models\Event;
 use App\Models\EventType;
+use App\Data\FireEventData;
 use Illuminate\Http\Request;
+use App\Data\UpdateEventData;
+use App\Support\EventDateHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FireEventRequest;
-use App\Http\Requests\UpdateEventRequest;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateEventController extends Controller
 {
@@ -19,43 +17,28 @@ class UpdateEventController extends Controller
     {
         abort_unless(Gate::allows('update', $event), 403);
 
-        try {
+        $groupType = $event->eventType->group_type;
 
-            $formRequest = $this->resolveFormRequest($event->eventType->group_type);
-
-            $event->update($formRequest->validated());
-
-            return to_route('my.events.active')->with([
-                'notifications' => [
-                    'message' => 'Event updated successfully!',
-                    'type' => 'success',
-                ],
-            ]);
-        } catch (BindingResolutionException $e) {
-
-            Log::error('Failed to resolve form request: ' . $e->getMessage());
-
-            return to_route('my.events.active')->with([
-                'notifications' => [
-                    'message' => 'There was an error processing your request.',
-                    'type' => 'error',
-                ],
-            ]);
+        if ($groupType === EventType::TYPE_RETREAT && $request->has('start_date')) {
+            EventDateHelper::adjustEndDateForRetreat(
+                request: $request,
+                groupType: $groupType,
+                eventTypeName: $event->eventType->name,
+            );
         }
-    }
 
-    /**
-     * Resolve the appropriate FormRequest based on event type group
-     *
-     * @throws BindingResolutionException
-     */
-    private function resolveFormRequest(string $eventTypeGroupType): FormRequest
-    {
-        $formRequestClass = match ($eventTypeGroupType) {
-            EventType::TYPE_FIRE => FireEventRequest::class,
-            default => UpdateEventRequest::class,
+        $data = match ($groupType) {
+            EventType::TYPE_FIRE => FireEventData::validateAndCreate($request),
+            default => UpdateEventData::validateAndCreate($request),
         };
 
-        return app()->make($formRequestClass);
+        $event->update($data->toArray());
+
+        return to_route('my.events.active')->with([
+            'notifications' => [
+                'message' => 'Event updated successfully!',
+                'type' => 'success',
+            ],
+        ]);
     }
 }

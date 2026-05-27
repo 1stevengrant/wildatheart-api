@@ -2,9 +2,11 @@
 
 use App\Models\User;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use App\Jobs\WeGive\TagDonorJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Integrations\WeGive\WeGiveConnector;
 
 beforeEach(function () {
     Mail::fake();
@@ -54,4 +56,17 @@ it('dispatches WeGive tagging for different event types', function () {
         return $job->taggable->id === $host->id
             && $job->weGiveTagId == $event->eventType->wegive_tag; // Use == for type-safe comparison
     });
+});
+
+it('does not crash and logs when an event is created without an event type', function () {
+    $host = User::factory()->create();
+
+    $event = Event::factory()->for($host)->create(['event_type_id' => null]);
+
+    Bus::assertDispatched(LogActivityJob::class, function ($job) use ($event) {
+        return $job->logName === WeGiveConnector::ERROR_LOG_NAME
+            && $job->performedOn->is($event);
+    });
+
+    Bus::assertNotDispatched(TagDonorJob::class);
 });

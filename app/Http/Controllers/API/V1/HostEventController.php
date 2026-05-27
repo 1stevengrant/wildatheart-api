@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Models\User;
 use App\Models\Event;
 use App\Data\EventData;
 use App\Models\EventType;
@@ -162,6 +161,7 @@ class HostEventController extends Controller
         return response()->json([
             'success' => true,
             'event' => $event->fresh(['managers', 'pendingManagerInvitations']),
+            'event' => $event->fresh(),
         ]);
     }
 

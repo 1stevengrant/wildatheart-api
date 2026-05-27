@@ -17,8 +17,7 @@ class EventObserver
 {
     public function saving(Event $event): void
     {
-        // Auto-populate new_card_heading if not explicitly set
-        if (empty($event->new_card_heading) && $event->relationLoaded('eventType')) {
+        if (empty($event->new_card_heading) && $event->relationLoaded('eventType') && $event->eventType !== null) {
             $groupType = $event->eventType->group_type;
 
             $event->new_card_heading = match ($groupType) {
@@ -41,11 +40,23 @@ class EventObserver
 
     public function created(Event $event): void
     {
+        Artisan::call('app:clear-event-cache');
+
+        if ($event->eventType === null) {
+            LogActivityJob::dispatch(
+                logName: WeGiveConnector::ERROR_LOG_NAME,
+                description: 'Event created without an event type; skipping notifications and WeGive tagging',
+                properties: ['event_id' => $event->id],
+                causedBy: $event->user,
+                performedOn: $event,
+            );
+
+            return;
+        }
+
         SendNewEventSlackAlert::dispatch($event);
 
         Mail::to($event->user)->send(new NewEventCreatedMailable($event));
-
-        Artisan::call('app:clear-event-cache');
 
         if ($event->eventType->wegive_tag) {
             Bus::chain([

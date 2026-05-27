@@ -19,7 +19,7 @@ class HostMailingAddressController extends Controller
             $user->update([
                 'given_name' => $request->given_name,
                 'family_name' => $request->family_name,
-                'name' => $request->given_name.' '.$request->family_name,
+                'name' => $request->given_name . ' ' . $request->family_name,
             ]);
         }
 

@@ -16,7 +16,6 @@ class LogStatamicEntryChanges
 
     public function handle(object $event): void
     {
-        ray($event);
         $entry = $event->entry;
         $user = auth()->user() ?? 'System';
         if ($event instanceof EntrySaving) {

@@ -35,6 +35,19 @@ return [
             'strict' => true,
             'engine' => null,
         ],
+        'local' => [
+            'driver' => 'mysql',
+            'host' => env('LOCAL_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('LOCAL_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('LOCAL_DB_DATABASE', 'wahlocal'),
+            'username' => env('LOCAL_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('LOCAL_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
     ],
 
     'migrations' => [
