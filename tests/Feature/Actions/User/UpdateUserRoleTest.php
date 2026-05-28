@@ -17,3 +17,12 @@ it('updates a user role', function () {
 
     expect($user->fresh()->hasRole(UserRoleEnum::Admin))->toBeTrue();
 });
+
+it('is a no-op when the user already has the role', function () {
+    $user = User::factory()->create();
+    $user->assignRole(UserRoleEnum::Host->value);
+
+    UpdateUserRole::run($user, UserRoleEnum::Host);
+
+    expect($user->fresh()->hasRole(UserRoleEnum::Host))->toBeTrue();
+});
