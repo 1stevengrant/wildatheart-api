@@ -3,8 +3,8 @@
 namespace App\Data\V1;
 
 use App\Models\EventType;
-use Statamic\Facades\Entry;
 use App\Enums\EventSexEnum;
+use Statamic\Facades\Entry;
 use Spatie\LaravelData\Data;
 use App\Services\EventResponseBuilder;
 use App\Support\EventTypeDateSelector;
