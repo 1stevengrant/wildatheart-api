@@ -3,18 +3,29 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
+use App\Enums\Event\FrequencyEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveEventDraftRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $eventId = $this->input('event_id');
+
+        if (! $eventId) {
+            return true;
+        }
+
+        return Event::where('id', $eventId)
+            ->where('user_id', $this->user()->id)
+            ->whereNull('approved_at')
+            ->exists();
     }
 
     public function rules(): array
     {
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
+        $frequencyValues = array_map(fn (FrequencyEnum $case) => $case->value, FrequencyEnum::cases());
 
         return [
             'event_id' => ['nullable', 'string', 'uuid'],
@@ -26,6 +37,7 @@ class SaveEventDraftRequest extends FormRequest
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric'],
             'start_date' => ['nullable', 'date'],
+            'frequency' => ['nullable', 'string', 'in:' . implode(',', $frequencyValues)],
             'is_private' => ['nullable', 'boolean'],
             'number_of_items_in_material_order' => ['nullable', 'string', 'in:' . implode(',', $validValues)],
             'co_host_emails' => ['nullable', 'array'],
@@ -69,6 +81,10 @@ class SaveEventDraftRequest extends FormRequest
 
         if (! empty($merge)) {
             $this->merge($merge);
+        }
+
+        if ($this->has('co_host_emails') && ! is_array($this->co_host_emails)) {
+            $this->merge(['co_host_emails' => []]);
         }
     }
 }

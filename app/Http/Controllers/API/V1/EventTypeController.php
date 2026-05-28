@@ -6,12 +6,13 @@ use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Http\Request;
 use App\Data\V1\EventTypeData;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class EventTypeController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
         $eventTypes = cache()->remember('eventTypesWithCounts', now()->addHours(6), function () {
             return EventType::query()

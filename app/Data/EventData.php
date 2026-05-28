@@ -124,8 +124,28 @@ class EventData extends Data
             zip: $event->zip,
             is_featured: $event->is_featured,
             custom_landing_url: $event->custom_landing_url,
-            managers: $event->managers->map(fn ($manager) => EventManagerData::fromUser($manager))->all(),
+            managers: self::assembleManagers($event),
             managers_count: $event->managers?->count() ?? 0,
         );
+    }
+
+    /**
+     * @return array<int, EventManagerData>
+     */
+    private static function assembleManagers(Event $event): array
+    {
+        $managers = $event->managers
+            ->map(fn ($manager) => EventManagerData::fromUser($manager))
+            ->all();
+
+        if (! $event->relationLoaded('pendingManagerInvitations')) {
+            return $managers;
+        }
+
+        $pendingInvitations = $event->pendingManagerInvitations
+            ->map(fn ($invitation) => EventManagerData::fromInvitation($invitation))
+            ->all();
+
+        return array_merge($managers, $pendingInvitations);
     }
 }

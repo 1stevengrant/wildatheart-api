@@ -8,7 +8,7 @@ use App\Support\EventDateHelper;
 it('adds the end date for a retreat event type', function () {
     $request = new Request(['start_date' => '2002-02-02']);
 
-    EventDateHelper::adjustEndDateForRetreat($request, EventType::TYPE_RETREAT);
+    EventDateHelper::adjustEndDateForRetreat($request, EventType::TYPE_RETREAT, EventType::WAH_RETREAT);
 
     $expectedEndDate = Carbon::createFromFormat('Y-m-d', '2002-02-02')->addDays(3)->format('Y-m-d');
     expect($request->end_date)->toBe($expectedEndDate);
@@ -29,7 +29,7 @@ it('sets the end date equal to the start date for a 1-Day Captivating Retreat', 
 it('does not add an end date for non-retreat event types', function (string $groupType) {
     $request = new Request(['start_date' => '2002-02-02']);
 
-    EventDateHelper::adjustEndDateForRetreat($request, $groupType);
+    EventDateHelper::adjustEndDateForRetreat($request, $groupType, 'Test Event Type');
 
     expect($request->end_date)->toBeNull();
 })->with([

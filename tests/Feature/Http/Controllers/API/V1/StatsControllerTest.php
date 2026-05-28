@@ -71,3 +71,51 @@ it('returns the number of upcoming retreats', function () {
             'count' => 3,
         ]);
 });
+
+it('returns the number of fires run in the past year', function () {
+    Event::factory()->fires()->approved()->create([
+        'start_date' => now()->subMonths(6),
+    ]);
+    Event::factory()->fires()->approved()->create([
+        'start_date' => now()->subMonths(14),
+    ]);
+    Event::factory()->fires()->approved()->create([
+        'start_date' => null,
+    ]);
+    Event::factory()->fires()->create([
+        'start_date' => now()->subMonths(3),
+    ]);
+
+    cache()->forget('event_stats');
+
+    $this->getJson(route('v1.stats'))
+        ->assertOk()
+        ->assertJsonFragment([
+            'label' => 'Fires run in the past year',
+            'count' => 3,
+        ]);
+});
+
+it('returns the number of countries with current fires', function () {
+    Event::factory()->fires()->approved()->create([
+        'country' => 'US',
+    ]);
+    Event::factory()->fires()->approved()->create([
+        'country' => 'CA',
+    ]);
+    Event::factory()->fires()->approved()->create([
+        'country' => 'US',
+    ]);
+    Event::factory()->fires()->create([
+        'country' => 'MX',
+    ]);
+
+    cache()->forget('event_stats');
+
+    $this->getJson(route('v1.stats'))
+        ->assertOk()
+        ->assertJsonFragment([
+            'label' => 'Countries with current fires',
+            'count' => 2,
+        ]);
+});

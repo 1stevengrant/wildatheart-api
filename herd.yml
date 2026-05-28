@@ -1,4 +1,4 @@
-name: wahfires
+name: local.wildatheart
 php: '8.4'
 secured: true
 aliases:

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,25 +24,47 @@ class Auth0ApiMiddleware
         $token = $request->bearerToken();
 
         if (! $token) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
+            Log::warning('Auth0ApiMiddleware: missing bearer token', [
+                'path' => $request->path(),
+            ]);
+
+            return response()->json(['message' => 'Unauthenticated.', 'reason' => 'missing_bearer_token'], 401);
         }
 
-        $auth0Domain = config('auth0.base_url');
-        $response = Http::withToken($token)->get("{$auth0Domain}/userinfo");
+        $cacheKey = 'auth0_user:' . hash('sha256', $token);
 
-        if ($response->failed()) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
-        }
+        $user = cache()->remember($cacheKey, 60, function () use ($token, $request) {
+            $auth0Domain = config('auth0.base_url');
+            $response = Http::withToken($token)->get("{$auth0Domain}/userinfo");
 
-        $auth0User = $response->json();
+            if ($response->failed()) {
+                Log::warning('Auth0ApiMiddleware: userinfo call failed', [
+                    'path' => $request->path(),
+                    'auth0_domain' => $auth0Domain,
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
 
-        if (! isset($auth0User['email'])) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
-        }
+                return null;
+            }
 
-        $user = User::where('email', $auth0User['email'])->first();
+            $auth0User = $response->json();
+
+            if (! isset($auth0User['email'])) {
+                Log::warning('Auth0ApiMiddleware: userinfo response missing email', [
+                    'path' => $request->path(),
+                    'keys' => array_keys($auth0User ?? []),
+                ]);
+
+                return null;
+            }
+
+            return User::where('email', $auth0User['email'])->first();
+        });
 
         if (! $user) {
+            cache()->forget($cacheKey);
+
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 

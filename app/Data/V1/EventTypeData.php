@@ -3,10 +3,11 @@
 namespace App\Data\V1;
 
 use App\Models\EventType;
-use App\Enums\EventSexEnum;
 use Statamic\Facades\Entry;
+use App\Enums\EventSexEnum;
 use Spatie\LaravelData\Data;
 use App\Services\EventResponseBuilder;
+use App\Support\EventTypeDateSelector;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -30,6 +31,9 @@ class EventTypeData extends Data
         public bool $allow_materials_order,
         public ?string $number_of_items_in_material_order_label,
         public ?string $type,
+        public string $date_selector_kind,
+        public ?int $fixed_duration_days,
+        public bool $requires_frequency,
         public int $listings_count,
         public int $countries_count,
         public ?string $summary,
@@ -57,6 +61,9 @@ class EventTypeData extends Data
             allow_materials_order: $eventType->allow_materials_order ?? false,
             number_of_items_in_material_order_label: $eventType->number_of_items_in_material_order_label,
             type: $eventType->type?->value,
+            date_selector_kind: EventTypeDateSelector::kind($eventType->group_type),
+            fixed_duration_days: EventTypeDateSelector::fixedDurationDays($eventType->group_type, $eventType->name),
+            requires_frequency: EventTypeDateSelector::requiresFrequency($eventType->group_type),
             listings_count: $eventType->listings_count ?? 0,
             countries_count: $eventType->countries_count ?? 0,
             summary: $eventType->summary,
