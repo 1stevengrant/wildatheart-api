@@ -31,10 +31,10 @@ class SearchForEventsController extends Controller
                 ->published()
                 ->active()
                 ->public()
-                ->filterBySex($validatedData['sex'])
-                ->filterByTypeGroup($validatedData['type_group'])
-                ->filterByEventTypes($validatedData['types'])
-                ->betweenDates($validatedData['start_date'], $validatedData['end_date'])
+                ->filterBySex($validatedData['sex'] ?? null)
+                ->filterByTypeGroup($validatedData['type_group'] ?? null)
+                ->filterByEventTypes($validatedData['types'] ?? null)
+                ->betweenDates($validatedData['start_date'] ?? null, $validatedData['end_date'] ?? null)
                 ->withinBoundingBox(
                     $validatedData['sw_latitude'],
                     $validatedData['sw_longitude'],
