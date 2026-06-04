@@ -4,12 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\BlogsController;
+use App\Http\Controllers\API\V1\MeController;
 use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\V1\EventController;
 use App\Http\Controllers\API\V1\StatsController;
 use App\Http\Controllers\API\SubsplashController;
 use App\Http\Controllers\API\V1\AttendeeController;
 use App\Http\Controllers\API\V1\EventTypeController;
+use App\Http\Controllers\API\V1\HostEventController;
 use App\Http\Controllers\API\AllExperiencesController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\Media\MediaItemController;
@@ -22,6 +24,7 @@ use App\Http\Controllers\API\V1\GroupedEventTypeController;
 use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
+use App\Http\Controllers\API\V1\HostMailingAddressController;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
@@ -35,6 +38,7 @@ use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayerAudioController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingAudioController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\TodaysDailyReadingController;
+use App\Http\Controllers\API\V1\SearchForEventsController as V1SearchForEventsController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController as SubsplashPrayersController;
 
 /*
@@ -61,9 +65,18 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('mobile', MobileNavController::class)->name('mobile');
     });
 
+    Route::get('me', MeController::class)->middleware('auth0.api')->name('me');
+
+    Route::prefix('host')->name('host.')->middleware('auth0.api')->group(function () {
+        Route::get('events', [HostEventController::class, 'index'])->name('events.index');
+        Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
+        Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
+        Route::post('event-types/{eventType}/events/draft', [HostEventController::class, 'storeDraft'])->name('event-types.events.draft');
+    });
+
     Route::prefix('events')->name('events.')->group(function () {
         Route::get('', [EventController::class, 'index'])->name('events.index');
-        Route::get('search', App\Http\Controllers\API\V1\SearchForEventsController::class)->name('api.events.search');
+        Route::get('search', V1SearchForEventsController::class)->name('search');
         Route::get('types', EventTypeController::class)->name('types');
         Route::get('types/grouped', GroupedEventTypeController::class)->name('types.grouped');
         Route::get('{event}', [EventController::class, 'show'])->name('events.show');
@@ -71,7 +84,6 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->middleware('throttle:connect')
             ->name('connect.store');
     });
-
 });
 
 Route::prefix('content')->group(function () {
@@ -123,5 +135,5 @@ Route::prefix('content')->group(function () {
     });
 });
 
-Route::get('events/search', SearchForEventsController::class)->name('api.events.search');
+Route::get('events/search', SearchForEventsController::class)->name('api.events.search.legacy');
 Route::get('events/all', AllEventsController::class)->name('api.events.all');

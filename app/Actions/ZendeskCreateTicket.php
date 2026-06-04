@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\Issue;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Lorisleiva\Actions\Concerns\AsJob;
 
@@ -29,7 +30,7 @@ class ZendeskCreateTicket
             $statusCode = $response->status();
             $responseData = $response->json();
         } else {
-            ray('Zendesk ticket creation is disabled in non-production environments.', $issue->toArray());
+            Log::info('Zendesk ticket creation is disabled in non-production environments.', $issue->toArray());
         }
     }
 }

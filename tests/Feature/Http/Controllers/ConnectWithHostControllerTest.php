@@ -45,7 +45,7 @@ it('allows an anonymous user to see the form to connect with an event host', fun
             ->component('ConnectWithHostPage')
         )
         ->assertStatus(200)
-        ->assertSeeHtml($this->event->host_name . '&#039;s Fire');
+        ->assertSeeHtml(e($this->event->host_name . "'s Fire"));
 });
 
 test('making a contact requires a first name', function () {

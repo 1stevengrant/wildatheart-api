@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Services\BlockBuilderService;
 use App\Services\EntryBuilderService;
 use App\DataTypeObjects\MediaItemData;
+use App\Services\MediaOrSeriesResolver;
 use App\DataTypeObjects\API\V1\ErrorResponse;
 use App\DataTypeObjects\API\V1\RedirectResponse;
 use App\DataTypeObjects\Statamic\Blueprints\CustomSeries;
@@ -23,18 +24,14 @@ class MediaItemOrSeriesController extends Controller
     public function __construct(
         private readonly BlockBuilderService $blockBuilder,
         private readonly EntryBuilderService $entryBuilder,
+        private readonly MediaOrSeriesResolver $resolver,
         private readonly SubsplashMediaItemResponseBuilder $subsplashMediaItemResponseBuilder,
         private readonly SubsplashMediaSeriesResponseBuilder $subsplashMediaSeriesResponseBuilder,
     ) {}
 
     public function show($slugOrUri, Request $request)
     {
-        $uri = $slugOrUri;
         $slug = $slugOrUri;
-
-        if (str_contains($slugOrUri, '/')) {
-            $uri = '/media/' . $slugOrUri;
-        }
 
         $seriesRedirects = [
             'the-series-official-trailer',
@@ -52,22 +49,8 @@ class MediaItemOrSeriesController extends Controller
             ]);
         }
 
-        $mediaItemOrSeries = $this->resolveLivePreview();
-
-        if (! $mediaItemOrSeries) {
-            $mediaItemOrSeries = EntryQueryBuilder::query()
-                ->where(function ($query) {
-                    $query->where('collection', 'media_item')
-                        ->orWhere('collection', 'media_series');
-                })
-                ->where(function ($query) use ($slug, $uri) {
-                    $query->where('slug', $slug)
-                        ->orWhere('uri', $uri);
-                })
-                ->published()
-                ->visibleOrScheduled()
-                ->first();
-        }
+        $mediaItemOrSeries = $this->resolveLivePreview()
+            ?? $this->resolver->resolve($slugOrUri);
 
         if (! $mediaItemOrSeries) {
             return ErrorResponse::from(['error' => 'Media not found']);

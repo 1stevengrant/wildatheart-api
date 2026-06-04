@@ -280,6 +280,31 @@ test('a captivating retreat end date is 4 days after the start date', function (
     expect($event->end_date->format('Y-m-d'))->toBe($startDate->addDays(3)->format('Y-m-d'));
 });
 
+test('a one-day captivating retreat end date matches the start date', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::where('name', EventType::CAPTIVATING_CORE_RETREAT_1_DAY)->first();
+    $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+        'number_of_items_in_material_order' => '1 x 10-pack',
+    ]);
+
+    $event = $this->user->events()->first();
+    expect($event->end_date->format('Y-m-d'))->toBe(Carbon::parse($this->startDate)->format('Y-m-d'));
+});
+
 test('a fire should not have an end date', function () {
     // This test is now covered by the Fire controller tests
     // Fires use the simple flow and do not go through this controller

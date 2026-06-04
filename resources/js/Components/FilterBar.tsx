@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { usePage, router } from "@inertiajs/react";
 import pickBy from "lodash/pickBy";
-import { usePrevious } from "react-use";
 
 import SelectInput from "@/Components/Forms/SelectInput";
+
+function usePrevious<T>(value: T): T | undefined {
+    const ref = useRef<T | undefined>(undefined);
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
 
 export const FilterBar = () => {
     const { filters, myEvents } = usePage<{

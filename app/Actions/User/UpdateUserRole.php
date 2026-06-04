@@ -13,6 +13,10 @@ class UpdateUserRole
 
     public function handle(User $user, UserRoleEnum $role): void
     {
+        if ($user->hasRole($role->value)) {
+            return;
+        }
+
         $user->assignRole($role->value);
         LogActivityJob::dispatch(
             description: 'Update User Role',

@@ -193,20 +193,25 @@ class Event extends BaseModel
     {
         return Attribute::make(
             get: function (): string {
+                if (! $this->city) {
+                    return '';
+                }
+
                 if (! $this->country) {
-                    return $this->city ?: '';
+                    return $this->city;
                 }
 
                 $country = mb_strtolower($this->country);
 
-                return match (true) {
-                    in_array($country, [self::DEFAULT_COUNTRY, 'united states'], true)
-                        && $this->city
-                        && $this->region => $this->city . ', ' . getStateAbbreviation($this->region),
-                    in_array($country, ['nz', 'new zealand'], true) && $this->city => $this->city . ', New Zealand',
-                    in_array($country, ['gb', 'united kingdom'], true) && $this->city => $this->city . ', UK',
-                    default => $this->city . ', ' . ucfirst($this->country),
-                };
+                if (in_array($country, [self::DEFAULT_COUNTRY, 'united states'], true) && $this->region) {
+                    return $this->city . ', ' . (getStateAbbreviation($this->region) ?? $this->region);
+                }
+
+                if (in_array($country, ['gb', 'united kingdom'], true)) {
+                    return $this->city . ', UK';
+                }
+
+                return $this->city . ', ' . (getCountryName($this->country) ?? ucfirst($this->country));
             }
         );
     }

@@ -41,6 +41,12 @@ class FindOrCreateDonorJob implements ShouldQueue
      */
     public function handle(): void
     {
+        $apiKey = config('services.wegive.api_key');
+
+        if (! is_string($apiKey) || $apiKey === '') {
+            return;
+        }
+
         if (! $this->donorModel->email) {
             LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,

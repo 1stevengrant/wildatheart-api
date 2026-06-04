@@ -117,6 +117,11 @@ class EventBuilder extends Builder
         return $this->whereNotNull('approved_at');
     }
 
+    public function hasEventType(): EventBuilder
+    {
+        return $this->whereNotNull('event_type_id');
+    }
+
     public function unpublished(): EventBuilder
     {
         return $this->whereNull('approved_at');

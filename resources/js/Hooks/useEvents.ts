@@ -90,7 +90,7 @@ export const useEvents = () => {
                 source.cancel("Operation canceled by the user.");
             });
 
-            const response = await axios.get(route("api.events.search"), {
+            const response = await axios.get(route("api.events.search.legacy"), {
                 params: {
                     sw_latitude: sw.lat,
                     sw_longitude: sw.lng,

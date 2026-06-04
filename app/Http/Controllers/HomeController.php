@@ -21,16 +21,16 @@ class HomeController extends Controller
 
         return inertia('HomePage', [
             'allEventTypes' => cache()->remember('allEventTypes', now()->addDay(), function () {
-                return EventType::query()->active()->get();
+                return EventType::query()->active()->orderBy('order')->get();
             }),
             'experienceTypes' => cache()->remember('experienceTypes', now()->addDay(), function () {
-                return EventType::query()->slug('%experience%')->active()->get();
+                return EventType::query()->slug('%experience%')->active()->orderBy('order')->get();
             }),
             'retreatTypes' => cache()->remember('retreatTypes', now()->addDay(), function () {
-                return EventType::query()->slug('%retreat%')->active()->get();
+                return EventType::query()->slug('%retreat%')->active()->orderBy('order')->get();
             }),
             'fireTypes' => cache()->remember('fireTypes', now()->addDay(), function () {
-                return EventType::query()->slug('%fire%')->active()->get();
+                return EventType::query()->slug('%fire%')->active()->orderBy('order')->get();
             }),
         ]);
     }
