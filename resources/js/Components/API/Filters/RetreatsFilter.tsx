@@ -14,7 +14,7 @@ export const RetreatsFilter = () => {
         <div className={`border-b border-n400 py-8`}>
             <FilterTypeWrapper
                 icon={<RetreatsIcon className={`stroke-white w-8 h-8`} />}
-                title={`Multi-Day Retreats`}
+                title={`Retreats`}
                 text={retreatTypeDescription}
             />
             {retreatEventTypes.map((eventType: any, index: number) => {

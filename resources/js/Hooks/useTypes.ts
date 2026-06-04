@@ -44,12 +44,14 @@ export const useTypes = () => {
         }
     );
 
-    const retreatEventTypes = props.allEventTypes.filter((eventType: any) => {
-        return (
-            eventType.name.toLowerCase().includes(retreatTypeGroup) ||
-            eventType.name.toLowerCase().includes("school")
-        );
-    });
+    const retreatEventTypes = props.allEventTypes
+        .filter((eventType: any) => {
+            return (
+                eventType.name.toLowerCase().includes(retreatTypeGroup) ||
+                eventType.name.toLowerCase().includes("school")
+            );
+        })
+        .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
 
     const mensEventTypeIds = props.allEventTypes
         .filter((eventType: any) => {
