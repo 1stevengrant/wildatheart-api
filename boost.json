@@ -4,6 +4,7 @@
         "cursor",
         "phpstorm"
     ],
+    "cloud": false,
     "editors": [
         "claude_code",
         "cursor",
