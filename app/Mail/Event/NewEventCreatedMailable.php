@@ -4,10 +4,9 @@ namespace App\Mail\Event;
 
 use App\Models\Event;
 use App\Models\EventType;
+use App\Mail\BaseMailable;
 use Illuminate\Support\Str;
 use App\Models\EmailTemplate;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use App\Jobs\Event\MarkWelcomeSentJob;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
@@ -16,9 +15,9 @@ use Illuminate\Mail\Mailables\Attachment;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NewEventCreatedMailable extends Mailable implements ShouldQueue
+class NewEventCreatedMailable extends BaseMailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, SerializesModels;
 
     public ?EmailTemplate $emailTemplate = null;
 

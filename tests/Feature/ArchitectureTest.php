@@ -84,4 +84,5 @@ arch('form requests extend FormRequest')
 
 arch('mailables extend Mailable')
     ->expect('App\Mail')
-    ->toExtend('Illuminate\Mail\Mailable');
+    ->toExtend('Illuminate\Mail\Mailable')
+    ->ignoring('App\Mail\Transport');

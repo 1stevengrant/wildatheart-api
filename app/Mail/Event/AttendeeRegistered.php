@@ -5,9 +5,8 @@ namespace App\Mail\Event;
 use App\Models\Event;
 use App\Models\Attendee;
 use App\Models\EventType;
+use App\Mail\BaseMailable;
 use App\Models\EmailTemplate;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use App\Traits\FormatsEventHostNames;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
@@ -16,9 +15,9 @@ use Illuminate\Mail\Mailables\Attachment;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AttendeeRegistered extends Mailable implements ShouldQueue
+class AttendeeRegistered extends BaseMailable implements ShouldQueue
 {
-    use FormatsEventHostNames, InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use FormatsEventHostNames, InteractsWithEmailTemplates, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 

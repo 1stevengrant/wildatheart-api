@@ -91,8 +91,8 @@ return [
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
+                'cloudflare',
                 'smtp',
-                'log',
             ],
         ],
 

@@ -3,9 +3,8 @@
 namespace App\Mail\Fire;
 
 use App\Models\Event;
+use App\Mail\BaseMailable;
 use App\Models\EmailTemplate;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\URL;
 use App\Traits\FormatsEventHostNames;
 use Illuminate\Mail\Mailables\Content;
@@ -16,9 +15,9 @@ use Illuminate\Mail\Mailables\Attachment;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MonthlyFireCleanupEmailToHostMailable extends Mailable implements ShouldQueue
+class MonthlyFireCleanupEmailToHostMailable extends BaseMailable implements ShouldQueue
 {
-    use BurnExtinguishFireActions, FormatsEventHostNames, InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use BurnExtinguishFireActions, FormatsEventHostNames, InteractsWithEmailTemplates, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 
