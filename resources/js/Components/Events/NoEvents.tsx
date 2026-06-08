@@ -18,7 +18,7 @@ export const NoEvents = ({ type }: { type: string }) => {
             <ul
                 className={`grid grid-cols-3 gap-6 md:gap-0 md:flex md:flex-row md:space-x-6 md:justify-center mt-8`}
             >
-                {typedEventTypes.map((eventType: any, index: number) => (
+                {typedEventTypes.map((eventType: App.Data.EventTypeData, index: number) => (
                     <li
                         key={index}
                         className={`flex flex-col justify-center items-center`}

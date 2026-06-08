@@ -40,6 +40,7 @@
         "spatie/laravel-data": "^4.0",
         "spatie/laravel-failed-job-monitor": "^4.3",
         "spatie/laravel-permission": "^6.10",
+        "spatie/laravel-query-builder": "^7.3",
         "spatie/laravel-ray": "^1.36",
         "spatie/laravel-slack-alerts": "^1.2",
         "spatie/laravel-typescript-transformer": "^2.5",
