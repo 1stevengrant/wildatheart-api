@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Enums\Internal\EventSearchField;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Enums\Internal\EventVisibilityFilter;
 
 class ExportEventSearchJob implements ShouldQueue
 {
@@ -31,6 +32,7 @@ class ExportEventSearchJob implements ShouldQueue
         private readonly bool $includeDeleted,
         private readonly ?string $createdFrom = null,
         private readonly ?string $createdTo = null,
+        private readonly EventVisibilityFilter $privacy = EventVisibilityFilter::All,
     ) {}
 
     public function handle(): void
@@ -106,7 +108,7 @@ class ExportEventSearchJob implements ShouldQueue
 
     private function searchEvents(): Collection
     {
-        $query = Event::query()->with(['user', 'eventType']);
+        $query = Event::query()->with(['user.primaryAddress', 'eventType']);
 
         if ($this->lat !== null && $this->lng !== null && $this->radius !== null) {
             $query->withinRadius($this->lat, $this->lng, $this->radius);
@@ -115,6 +117,8 @@ class ExportEventSearchJob implements ShouldQueue
         if ($this->activeOnly) {
             $query->published();
         }
+
+        $this->privacy->applyTo($query);
 
         if ($this->includeDeleted) {
             $query->withTrashed();

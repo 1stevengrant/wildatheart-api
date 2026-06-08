@@ -30,6 +30,7 @@ class InternalEventSearchData extends Data
         public ?string $host_country,
         public ?string $host_wegive_id,
         public ?string $created_at,
+        public string $privacy,
     ) {}
 
     public static function fromModel(Event $event, ?float $distance): self
@@ -55,6 +56,7 @@ class InternalEventSearchData extends Data
             host_country: $event->user?->primaryAddress?->country,
             host_wegive_id: $event->user?->wegive_donor_id,
             created_at: $event->created_at?->format('Y-m-d'),
+            privacy: $event->is_private ? 'Private' : 'Public',
         );
     }
 

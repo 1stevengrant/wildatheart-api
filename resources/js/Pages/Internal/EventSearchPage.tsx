@@ -12,27 +12,7 @@ import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PaginatedData } from "@/types";
 import { MapboxPlace } from "@/types/MapboxPlace";
 
-type EventSearchResult = {
-    id: string;
-    name: string | null;
-    host_name: string | null;
-    host_email: string | null;
-    host_phone: string | null;
-    city: string | null;
-    state: string | null;
-    event_type: string | null;
-    frequency: string | null;
-    attendee_count: number | null;
-    start_date: string | null;
-    distance: number | null;
-    status: string;
-    host_street: string | null;
-    host_address_city: string | null;
-    host_address_state: string | null;
-    host_zip: string | null;
-    host_country: string | null;
-    created_at: string | null;
-};
+type EventSearchResult = App.Data.InternalEventSearchData;
 
 type AvailableField = {
     key: string;
@@ -47,18 +27,7 @@ type EventType = {
 
 type PageProps = {
     results: PaginatedData<EventSearchResult>;
-    filters: {
-        lat: number | null;
-        lng: number | null;
-        radius: number;
-        event_type_ids: number[];
-        fields: string[];
-        place_name: string;
-        active_only: boolean;
-        include_deleted: boolean;
-        created_from: string | null;
-        created_to: string | null;
-    };
+    filters: App.Data.InternalEventSearchFiltersData;
     availableFields: AvailableField[];
     eventTypes: EventType[];
 };
@@ -84,6 +53,8 @@ const EventSearchPage = () => {
     const [includeDeleted, setIncludeDeleted] = useState(
         filters.include_deleted ?? false
     );
+    const [privacy, setPrivacy] =
+        useState<App.Enums.Internal.EventVisibilityFilter>(filters.privacy);
     const [createdFrom, setCreatedFrom] = useState<Date | null>(
         filters.created_from
             ? new Date(filters.created_from + "T00:00:00")
@@ -163,6 +134,7 @@ const EventSearchPage = () => {
                 place_name: placeName,
                 active_only: activeOnly,
                 include_deleted: includeDeleted,
+                privacy: privacy,
                 created_from: createdFrom
                     ? createdFrom.toISOString().split("T")[0]
                     : null,
@@ -197,6 +169,7 @@ const EventSearchPage = () => {
         );
         setActiveOnly(true);
         setIncludeDeleted(false);
+        setPrivacy("all");
         setCreatedFrom(null);
         setCreatedTo(null);
         setSearchError(null);
@@ -221,6 +194,7 @@ const EventSearchPage = () => {
                 radius: filters.lat && filters.lng ? radius : null,
                 active_only: activeOnly,
                 include_deleted: includeDeleted,
+                privacy: privacy,
                 event_type_ids: selectedEventTypeIds,
                 fields: selectedFields,
                 created_from: createdFrom
@@ -463,6 +437,27 @@ const EventSearchPage = () => {
                                 <span className="text-sm font-medium text-gray-700">
                                     Include deleted
                                 </span>
+                            </label>
+                            <label className="flex items-center space-x-3">
+                                <span className="text-sm font-medium text-gray-700">
+                                    Visibility
+                                </span>
+                                <select
+                                    value={privacy}
+                                    onChange={(e) =>
+                                        setPrivacy(
+                                            e.target
+                                                .value as App.Enums.Internal.EventVisibilityFilter
+                                        )
+                                    }
+                                    className="rounded-lg border border-gray-300 bg-white text-gray-900 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                >
+                                    <option value="all">All</option>
+                                    <option value="public">Public only</option>
+                                    <option value="private">
+                                        Private only
+                                    </option>
+                                </select>
                             </label>
                         </div>
 
