@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest-m
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Start Laravel Forge Deployment
         id: deploy
         run: |
@@ -74,9 +74,9 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest-m
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Get latest tests in wildatheart.org-astro
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: wild-at-heart/wildatheart.org-astro
           path: astro
