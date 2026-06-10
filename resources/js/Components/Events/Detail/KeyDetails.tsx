@@ -1,17 +1,5 @@
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 
-type KeyDetailItem = {
-    id: string;
-    icon: string;
-    type: string;
-    headline: string;
-    description: string;
-    fields: {
-        icon: string;
-        headline: string;
-        description: string;
-    };
-};
 export const KeyDetails = ({ event }: { event: App.Data.EventData }) => {
     return (
         <>
@@ -23,7 +11,7 @@ export const KeyDetails = ({ event }: { event: App.Data.EventData }) => {
                         </HeadingOne>
                         <ul className={`my-8`}>
                             {event.event_type_data.key_details.map(
-                                (item: KeyDetailItem) => (
+                                (item) => (
                                     <li
                                         className="mb-4 flex items-start"
                                         key={item.id}

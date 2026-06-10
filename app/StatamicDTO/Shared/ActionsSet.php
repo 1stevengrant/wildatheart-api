@@ -18,6 +18,8 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\OpenInAppSet;
+use App\StatamicDTO\Shared\ShareSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 

@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\StatamicEntryReference;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -31,9 +32,8 @@ class BooksSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from authors */
-    public ?array $author = null;
+    public ?StatamicEntryReference $author = null;
 
-    /** @var array[]|null Entry references from books with {id, title, slug, url, collection} */
+    /** @var array<StatamicEntryReference>|null */
     public ?array $excluded_books = null;
 }

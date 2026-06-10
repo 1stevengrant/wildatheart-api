@@ -2,23 +2,33 @@ import { Accordion } from "@/Components/Accordion";
 import { ImageSet } from "@/Sets/ImageSet";
 import { TextSet } from "@/Sets/TextSet";
 import { VideoSet } from "@/Sets/VideoSet";
-import { ContentBlock } from "@/types/EventType";
 
-export const PageContent = ({ content }: { content: Array<ContentBlock> }) => (
+export const PageContent = ({
+    content,
+}: {
+    content: Array<App.Data.EventType.ContentBlockData>;
+}) => (
     <>
         {content
             .filter((block) => block.enabled)
             .map((block, index) => {
                 switch (block.type) {
                     case "body_set":
-                        return <TextSet key={index} text={block.body} />;
+                        return (
+                            <TextSet key={index} text={block.body ?? undefined} />
+                        );
                     case "video_set":
-                        return <VideoSet key={index} video={block.video} />;
+                        return (
+                            <VideoSet
+                                key={index}
+                                video={block.video ?? undefined}
+                            />
+                        );
                     case "image_set":
                         return (
                             <ImageSet
                                 key={index}
-                                image={block.image}
+                                image={block.image ?? undefined}
                                 params={{ height: 400 }}
                             />
                         );

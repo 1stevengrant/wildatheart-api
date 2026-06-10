@@ -18,6 +18,9 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\LinkField;
+use App\StatamicDTO\Shared\StatamicAsset;
+use App\StatamicDTO\Shared\VideoButtonGroup;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -33,8 +36,7 @@ class VideoBlockSet extends Data
 
     public ?LinkField $preview_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $preview_video_image = null;
+    public ?StatamicAsset $preview_video_image = null;
 
     public ?VideoButtonGroup $video_button = null;
 

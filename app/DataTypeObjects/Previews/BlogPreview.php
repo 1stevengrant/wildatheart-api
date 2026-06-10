@@ -12,5 +12,6 @@ class BlogPreview extends ContentPreview
 
     public ?string $author_image_src = null;
 
+    /** @var array<string>|null */
     public ?array $tags = null;
 }

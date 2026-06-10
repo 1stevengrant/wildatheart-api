@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\StatamicTermReference;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -31,11 +32,11 @@ class ContentInTaxonomySet extends Data
 
     public bool $enabled = true;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var array<StatamicTermReference>|null */
     public ?array $tags = null;
 
-    /** @var mixed Unknown field type: collections */
-    public mixed $collections_to_load_from;
+    /** @var string[]|null */
+    public ?array $collections_to_load_from = null;
 
     public ?int $limit = null;
 }

@@ -18,6 +18,8 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\ContentCardSet;
+use App\StatamicDTO\Shared\ThemeCardBlockSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 

@@ -18,20 +18,24 @@
 
 namespace App\StatamicDTO\Blueprints\Collections\Experiences;
 
-use Spatie\LaravelData\Data;
-use App\StatamicDTO\Shared\ButtonSet;
-use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ActionsSet;
+use App\StatamicDTO\Shared\AddToCalendarSet;
+use App\StatamicDTO\Shared\ButtonSet;
 use App\StatamicDTO\Shared\ButtonsSet;
 use App\StatamicDTO\Shared\ColumnsSet;
-use App\StatamicDTO\Shared\ImagesGroup;
-use App\StatamicDTO\Shared\TextLineSet;
 use App\StatamicDTO\Shared\CountdownSet;
+use App\StatamicDTO\Shared\HandleTitle;
 use App\StatamicDTO\Shared\HeroTitleSet;
 use App\StatamicDTO\Shared\ImageTitleSet;
+use App\StatamicDTO\Shared\ImagesGroup;
+use App\StatamicDTO\Shared\LinkField;
+use App\StatamicDTO\Shared\StatamicAsset;
+use App\StatamicDTO\Shared\StatamicEntryReference;
+use App\StatamicDTO\Shared\StatamicTermReference;
 use App\StatamicDTO\Shared\StyledTextSet;
 use App\StatamicDTO\Shared\TestimonialSet;
-use App\StatamicDTO\Shared\AddToCalendarSet;
+use App\StatamicDTO\Shared\TextLineSet;
+use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -46,7 +50,7 @@ class Experience extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var array<StatamicTermReference>|null */
     public ?array $topics = null;
 
     /** @var array<TestimonialSet>|null */
@@ -54,17 +58,15 @@ class Experience extends Data
 
     public ?string $subsplash_series_id = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $experience_logo = null;
+    public ?StatamicAsset $experience_logo = null;
 
     public ?string $host_a_group_link = null;
 
     public ?string $find_a_group_link = null;
 
-    /** @var mixed Unknown field type: belongs_to */
-    public mixed $related_event_type;
+    public ?int $related_event_type = null;
 
-    /** @var array[]|null Entry references from media_item with {id, title, slug, url, collection} */
+    /** @var array<StatamicEntryReference>|null */
     public ?array $sessions = null;
 
     public ?ImagesGroup $images = null;
@@ -73,8 +75,7 @@ class Experience extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?StatamicAsset $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
@@ -88,8 +89,7 @@ class Experience extends Data
 
     public ?string $leader_text = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $hero_logo = null;
+    public ?StatamicAsset $hero_logo = null;
 
     /** @var array<TextLineSet>|null */
     public ?array $hero_title = null;
@@ -99,13 +99,11 @@ class Experience extends Data
 
     public ?LinkField $background_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_video_fallback_image = null;
+    public ?StatamicAsset $background_video_fallback_image = null;
 
     public ?LinkField $featured_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $featured_video_fallback_image = null;
+    public ?StatamicAsset $featured_video_fallback_image = null;
 
     /** @var array<ButtonSet|AddToCalendarSet>|null */
     public ?array $buttons = null;
@@ -118,9 +116,6 @@ class Experience extends Data
 
     /** @var '0' | '1' | '2' | '3' | '4' | '5' | null */
     public ?string $height = null;
-
-    /** @var mixed Unknown field type: trigger_astro_build */
-    public mixed $trigger_astro_build_field;
 
     public ?string $slug = null;
 
@@ -145,11 +140,9 @@ class Experience extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?HandleTitle $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?HandleTitle $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

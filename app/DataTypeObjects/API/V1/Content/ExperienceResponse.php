@@ -26,6 +26,7 @@ use App\StatamicDTO\Shared\ImageSliderBlockSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class ExperienceResponse extends EntryResponse
@@ -37,16 +38,19 @@ class ExperienceResponse extends EntryResponse
 
     public ?string $height = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $images = null;
 
     public ?string $position = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $sessions = null;
 
     public ?string $subtitle = null;
 
     public ?string $hero_logo = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $hero_title = null;
 
     public int $updated_by = 0;
@@ -55,16 +59,20 @@ class ExperienceResponse extends EntryResponse
 
     public ?string $button_text = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $description = null;
 
     public ?string $leader_text = null;
 
     public ?string $hero_variant = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $testimonials = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $hero_subtitle = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $experience_logo = null;
 
     public ?string $find_a_group_link = null;
@@ -79,9 +87,12 @@ class ExperienceResponse extends EntryResponse
 
     public ?string $background_video_url = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $featured_video_fallback_image = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $background_video_fallback_image = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $sessionData = null;
 }

@@ -12,7 +12,6 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { eventTypeBackground } from "@/helpers/eventTypeBackground";
 import { getRouteForEventType } from "@/helpers/getRouteForEventType";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { EventTypeActionButton } from "@/types/EventTypeActionButton";
 
 const ResourcesPage = ({
     eventTypes,
@@ -81,7 +80,7 @@ const ResourcesPage = ({
                                 eventType.action_buttons.length > 0 && (
                                     <>
                                         {eventType.action_buttons.map(
-                                            (button: EventTypeActionButton) => (
+                                            (button) => (
                                                 <ListItem
                                                     openInNewTab={
                                                         button.open_in_new_tab

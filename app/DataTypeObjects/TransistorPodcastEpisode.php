@@ -4,6 +4,7 @@ namespace App\DataTypeObjects;
 
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class TransistorPodcastEpisode extends Data
@@ -64,6 +65,7 @@ class Attributes extends Data
 
     public ?string $transcript_url;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>>')]
     public array $transcripts;
 
     public string $formatted_summary;

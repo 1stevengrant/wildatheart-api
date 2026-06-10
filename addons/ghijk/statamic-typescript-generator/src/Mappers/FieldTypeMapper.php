@@ -14,6 +14,7 @@ class FieldTypeMapper
         'spacer',
         'revealer',
         'html',
+        'trigger_astro_build',
     ];
 
     /**

@@ -18,6 +18,15 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\BooksSet;
+use App\StatamicDTO\Shared\ContentInTaxonomySet;
+use App\StatamicDTO\Shared\CustomSlideSet;
+use App\StatamicDTO\Shared\LinkField;
+use App\StatamicDTO\Shared\MediaItemSet;
+use App\StatamicDTO\Shared\MediaItemsFromSeriesSet;
+use App\StatamicDTO\Shared\SeriesSet;
+use App\StatamicDTO\Shared\StatamicEntryReference;
+use App\StatamicDTO\Shared\SubsplashListIdSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -35,10 +44,9 @@ class MediaSliderSet extends Data
 
     public ?LinkField $link_to_more = null;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from media_series */
-    public ?array $media_series = null;
+    public ?StatamicEntryReference $media_series = null;
 
-    /** @var array[]|null Entry references from media_item with {id, title, slug, url, collection} */
+    /** @var array<StatamicEntryReference>|null */
     public ?array $media_items = null;
 
     public ?int $focused_item = null;

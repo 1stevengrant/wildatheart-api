@@ -18,18 +18,16 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\StatamicAsset;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class ImagesGroup extends Data
 {
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $wide = null;
+    public ?StatamicAsset $wide = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $square = null;
+    public ?StatamicAsset $square = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $vertical = null;
+    public ?StatamicAsset $vertical = null;
 }

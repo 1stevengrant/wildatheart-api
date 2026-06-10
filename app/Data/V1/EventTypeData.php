@@ -9,6 +9,7 @@ use Spatie\LaravelData\Data;
 use App\Services\EventResponseBuilder;
 use App\Support\EventTypeDateSelector;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class EventTypeData extends Data
@@ -23,9 +24,12 @@ class EventTypeData extends Data
         public string $group_type,
         public int $order,
         public ?string $description,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.KeyDetailData> | null')]
         public ?array $key_details,
         public ?string $card_teaser_text,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.FaqData> | null')]
         public ?array $event_faqs,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.ScheduleBlockData> | null')]
         public ?array $event_schedule,
         public ?string $registration_before_your_event_text,
         public bool $allow_materials_order,
@@ -38,6 +42,8 @@ class EventTypeData extends Data
         public int $countries_count,
         public ?string $summary,
         public ?string $summary_link,
+        /** Freeform CMS landing-page entry response; shape varies by blueprint. */
+        #[LiteralTypeScriptType('Record<string, unknown> | null')]
         public ?array $landing_page,
     ) {}
 

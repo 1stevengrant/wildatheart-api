@@ -18,6 +18,11 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\AppPreviewBlockSet;
+use App\StatamicDTO\Shared\ButtonCloudSet;
+use App\StatamicDTO\Shared\ButtonsSet;
+use App\StatamicDTO\Shared\ImageSet;
+use App\StatamicDTO\Shared\StyledTextSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -34,8 +39,7 @@ class ColumnSet extends Data
     /** @var array<StyledTextSet|ImageSet|ButtonsSet|ButtonCloudSet|AppPreviewBlockSet>|null */
     public ?array $blocks = null;
 
-    /** @var mixed Unknown field type: width */
-    public mixed $column_width;
+    public ?string $column_width = null;
 
     /** @var '0' | '1' | '2' | null */
     public ?string $horizontal_alignment = null;

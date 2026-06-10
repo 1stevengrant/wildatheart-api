@@ -18,6 +18,8 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\ButtonSet2;
+use App\StatamicDTO\Shared\TitleGroup;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 

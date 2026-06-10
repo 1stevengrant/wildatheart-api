@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\TestimonialSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 

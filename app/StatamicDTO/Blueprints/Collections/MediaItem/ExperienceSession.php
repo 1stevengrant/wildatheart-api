@@ -18,10 +18,14 @@
 
 namespace App\StatamicDTO\Blueprints\Collections\MediaItem;
 
-use Spatie\LaravelData\Data;
-use App\StatamicDTO\Shared\LinkField;
+use App\StatamicDTO\Shared\HandleTitle;
 use App\StatamicDTO\Shared\ImagesGroup;
+use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\QuestionSet;
+use App\StatamicDTO\Shared\StatamicAsset;
+use App\StatamicDTO\Shared\StatamicEntryReference;
+use App\StatamicDTO\Shared\StatamicTermReference;
+use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -36,11 +40,10 @@ class ExperienceSession extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var array<StatamicTermReference>|null */
     public ?array $topics = null;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from experiences */
-    public ?array $experience = null;
+    public ?StatamicEntryReference $experience = null;
 
     public ?LinkField $session_trailer = null;
 
@@ -48,8 +51,7 @@ class ExperienceSession extends Data
 
     public ?LinkField $background_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_video_fallback_image = null;
+    public ?StatamicAsset $background_video_fallback_image = null;
 
     public ?string $subsplash_media_item_id = null;
 
@@ -65,8 +67,7 @@ class ExperienceSession extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?StatamicAsset $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
@@ -77,10 +78,10 @@ class ExperienceSession extends Data
 
     public ?string $slug = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var array<StatamicTermReference>|null */
     public ?array $content_type = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var array<StatamicTermReference>|null */
     public ?array $media_type = null;
 
     public string $locale = 'default';
@@ -101,11 +102,9 @@ class ExperienceSession extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?HandleTitle $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?HandleTitle $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

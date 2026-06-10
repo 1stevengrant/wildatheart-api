@@ -18,6 +18,9 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\CodeBlockSet;
+use App\StatamicDTO\Shared\ImageSet;
+use App\StatamicDTO\Shared\MiniBioSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 

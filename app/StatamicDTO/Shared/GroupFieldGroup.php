@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\StatamicTermReference;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -29,6 +30,6 @@ class GroupFieldGroup extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var array<StatamicTermReference>|null */
     public ?array $topics = null;
 }

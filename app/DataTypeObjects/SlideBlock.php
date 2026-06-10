@@ -9,9 +9,9 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class SlideBlock extends Data
 {
-    public $id = null;
+    public ?string $id = null;
 
-    public $type = 'slide';
+    public string $type = 'slide';
 
     public ?string $title = null;
 
@@ -41,6 +41,7 @@ class SlideBlock extends Data
 
     public ?string $date = null;
 
+    /** @var array<string>|null */
     public ?array $tags = null;
 }
 

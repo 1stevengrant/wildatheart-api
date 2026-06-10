@@ -26,6 +26,7 @@ use App\StatamicDTO\Shared\ImageSliderBlockSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class EventsShowResponse extends EntryResponse
@@ -37,48 +38,64 @@ class EventsShowResponse extends EntryResponse
 
     public ?string $description;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $buttons;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $event_logo;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $event_type;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $featured_image;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $featured_video_fallback_image;
 
     public ?string $featured_video_url;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $topics;
 
     public ?string $background_video_url;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $background_video_fallback_image;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $height;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $hero_logo;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $hero_subtitle;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $hero_title;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $hero_variant;
 
     public bool $hide_from_search_engines;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>>')]
     public array $images;
 
     public ?bool $is_local_event;
 
     public ?string $leader_text;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $position;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $related_event_type;
 
     public ?string $seo_description;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $seo_image;
 
     public ?string $seo_title;
@@ -91,15 +108,20 @@ class EventsShowResponse extends EntryResponse
 
     public ?string $subtitle;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $testimonials;
 
     public ?string $wide;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $width;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $final_details_blocks;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $vertical_videos_block;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $icons;
 }

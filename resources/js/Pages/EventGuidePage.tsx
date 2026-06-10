@@ -4,7 +4,6 @@ import { EventHeader } from "@/Components/EventTypes/EventTypeHeader";
 import { TabNavigation } from "@/Components/EventTypes/TabNavigation";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
-import { GuidePage } from "@/types/EventType";
 
 const slugify = (text: string) =>
     text
@@ -12,7 +11,7 @@ const slugify = (text: string) =>
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
-const getInitialTab = (pages: Array<GuidePage>) => {
+const getInitialTab = (pages: Array<App.Data.EventType.GuidePageData>) => {
     const hash = window.location.hash.slice(1);
     if (!hash) {
         return 0;

@@ -23,6 +23,7 @@ class ButtonProps extends Data
     public ?bool $openInNewTab;
 }
 
+#[TypeScript]
 class IconProps extends Data
 {
     public ?string $name;

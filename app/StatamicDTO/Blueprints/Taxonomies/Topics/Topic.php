@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Blueprints\Taxonomies\Topics;
 
+use App\StatamicDTO\Shared\HandleTitle;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -40,6 +41,5 @@ class Topic extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $taxonomy = null;
+    public ?HandleTitle $taxonomy = null;
 }

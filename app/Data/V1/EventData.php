@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\EventType;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class EventData extends Data
@@ -21,10 +22,13 @@ class EventData extends Data
         public string $eventGroupType,
         public string $eventTypeImage,
         public string $eventTypeDescription,
+        /** @var array<string> */
         public array $eventTypePhotos,
         public ?string $scheduledFor,
         public string $hostName,
         public ?string $hostAvatar,
+        /** Freeform CMS landing-page entry response; shape varies by blueprint. */
+        #[LiteralTypeScriptType('Record<string, unknown> | null')]
         public ?array $landingPage,
         public string $connect_url,
     ) {}

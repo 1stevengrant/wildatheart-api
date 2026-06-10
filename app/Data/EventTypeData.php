@@ -7,6 +7,7 @@ use App\Enums\EventSexEnum;
 use App\Enums\EventTypeEnum;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class EventTypeData extends Data
@@ -28,21 +29,28 @@ class EventTypeData extends Data
         public readonly EventSexEnum $sex,
         public readonly string $slug,
         public readonly ?string $description,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.GuidePageData> | null')]
         public readonly ?array $event_guide_pages,
         public readonly ?string $video_link,
         public readonly ?string $registration_welcome_video,
         public readonly ?string $registration_welcome_text,
         public readonly ?string $registration_before_your_event_text,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.ScheduleBlockData> | null')]
         public readonly ?array $event_schedule,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.FaqData> | null')]
         public readonly ?array $event_faqs,
         public readonly string $image,
         public readonly ?string $hero_image,
         public readonly ?string $hero_video,
+        /** @var array<string>|null */
         public readonly ?array $photos,
         public readonly ?string $summary,
         public readonly ?string $summary_link,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.KeyDetailData> | null')]
         public readonly ?array $key_details,
+        #[LiteralTypeScriptType('Array<App.Data.EventType.ActionButtonData> | null')]
         public readonly ?array $action_buttons,
+        /** @var array<string>|null */
         public readonly ?array $new_content,
         public ?string $welcome_nav_text_override,
         public ?string $before_event_nav_text_override,

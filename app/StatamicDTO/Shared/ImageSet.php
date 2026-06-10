@@ -18,6 +18,8 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\LinkField;
+use App\StatamicDTO\Shared\StatamicAsset;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -31,14 +33,11 @@ class ImageSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $image = null;
+    public ?StatamicAsset $image = null;
 
-    /** @var mixed Unknown field type: width */
-    public mixed $small_width;
+    public ?string $small_width = null;
 
-    /** @var mixed Unknown field type: width */
-    public mixed $medium_width;
+    public ?string $medium_width = null;
 
     public ?LinkField $link = null;
 }

@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\StatamicAsset;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -31,8 +32,7 @@ class AppPreviewBlockSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public array $screenshot;
+    public StatamicAsset $screenshot;
 
     public ?string $screen_capture_url = null;
 }

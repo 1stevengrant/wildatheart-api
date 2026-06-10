@@ -18,8 +18,9 @@
 
 namespace App\StatamicDTO\Blueprints\Collections\Alerts;
 
-use Spatie\LaravelData\Data;
+use App\StatamicDTO\Shared\HandleTitle;
 use App\StatamicDTO\Shared\LinkField;
+use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -59,11 +60,9 @@ class Alert extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?HandleTitle $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?HandleTitle $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

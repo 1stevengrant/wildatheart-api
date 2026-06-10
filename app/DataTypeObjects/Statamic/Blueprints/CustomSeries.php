@@ -30,6 +30,7 @@ use App\StatamicDTO\Shared\ImageSliderBlockSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class CustomSeries extends Data
@@ -59,6 +60,7 @@ class CustomSeries extends Data
 
     public ?string $seo_description = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $seo_image = null;
 
     public ?string $seo_title = null;

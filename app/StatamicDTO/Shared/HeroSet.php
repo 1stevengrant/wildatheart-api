@@ -18,6 +18,18 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\ActionsSet;
+use App\StatamicDTO\Shared\AddToCalendarSet;
+use App\StatamicDTO\Shared\ButtonSet;
+use App\StatamicDTO\Shared\ButtonsSet;
+use App\StatamicDTO\Shared\ColumnsSet;
+use App\StatamicDTO\Shared\CountdownSet;
+use App\StatamicDTO\Shared\HeroTitleSet;
+use App\StatamicDTO\Shared\ImageTitleSet;
+use App\StatamicDTO\Shared\LinkField;
+use App\StatamicDTO\Shared\StatamicAsset;
+use App\StatamicDTO\Shared\StyledTextSet;
+use App\StatamicDTO\Shared\TextLineSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -39,8 +51,7 @@ class HeroSet extends Data
 
     public ?string $leader_text = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $hero_logo = null;
+    public ?StatamicAsset $hero_logo = null;
 
     /** @var array<TextLineSet>|null */
     public ?array $hero_title = null;
@@ -50,13 +61,11 @@ class HeroSet extends Data
 
     public ?LinkField $background_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_video_fallback_image = null;
+    public ?StatamicAsset $background_video_fallback_image = null;
 
     public ?LinkField $featured_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $featured_video_fallback_image = null;
+    public ?StatamicAsset $featured_video_fallback_image = null;
 
     /** @var array<ButtonSet|AddToCalendarSet>|null */
     public ?array $buttons = null;

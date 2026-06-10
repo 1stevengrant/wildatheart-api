@@ -18,36 +18,39 @@
 
 namespace App\StatamicDTO\Blueprints\Collections\Events;
 
-use Spatie\LaravelData\Data;
-use App\StatamicDTO\Shared\HeroSet;
-use App\StatamicDTO\Shared\IconSet;
-use App\StatamicDTO\Shared\ButtonSet;
-use App\StatamicDTO\Shared\HeaderSet;
-use App\StatamicDTO\Shared\LinkField;
 use App\StatamicDTO\Shared\ActionsSet;
+use App\StatamicDTO\Shared\AddToCalendarSet;
+use App\StatamicDTO\Shared\BentoBlockSet;
+use App\StatamicDTO\Shared\ButtonSet;
 use App\StatamicDTO\Shared\ButtonsSet;
-use App\StatamicDTO\Shared\ColumnsSet;
-use App\StatamicDTO\Shared\HeroLogoSet;
-use App\StatamicDTO\Shared\ImagesGroup;
-use App\StatamicDTO\Shared\TextLineSet;
 use App\StatamicDTO\Shared\CodeBlockSet;
+use App\StatamicDTO\Shared\ColumnsBlockSet;
+use App\StatamicDTO\Shared\ColumnsSet;
 use App\StatamicDTO\Shared\ContainerSet;
 use App\StatamicDTO\Shared\CountdownSet;
-use App\StatamicDTO\Shared\HeroTitleSet;
-use App\StatamicDTO\Shared\BentoBlockSet;
-use App\StatamicDTO\Shared\HeroSliderSet;
-use App\StatamicDTO\Shared\ImageTitleSet;
-use App\StatamicDTO\Shared\StyledTextSet;
-use App\StatamicDTO\Shared\VideoBlockSet;
-use App\StatamicDTO\Shared\MediaSliderSet;
-use App\StatamicDTO\Shared\TestimonialSet;
-use App\StatamicDTO\Shared\ColumnsBlockSet;
 use App\StatamicDTO\Shared\DividerBlockSet;
-use App\StatamicDTO\Shared\AddToCalendarSet;
-use App\StatamicDTO\Shared\SubscribeFormSet;
+use App\StatamicDTO\Shared\HandleTitle;
+use App\StatamicDTO\Shared\HeaderSet;
+use App\StatamicDTO\Shared\HeroLogoSet;
+use App\StatamicDTO\Shared\HeroSet;
+use App\StatamicDTO\Shared\HeroSliderSet;
+use App\StatamicDTO\Shared\HeroTitleSet;
+use App\StatamicDTO\Shared\IconSet;
 use App\StatamicDTO\Shared\ImageSliderBlockSet;
+use App\StatamicDTO\Shared\ImageTitleSet;
+use App\StatamicDTO\Shared\ImagesGroup;
+use App\StatamicDTO\Shared\LinkField;
+use App\StatamicDTO\Shared\MediaSliderSet;
+use App\StatamicDTO\Shared\StatamicAsset;
+use App\StatamicDTO\Shared\StatamicTermReference;
+use App\StatamicDTO\Shared\StyledTextSet;
+use App\StatamicDTO\Shared\SubscribeFormSet;
+use App\StatamicDTO\Shared\TestimonialSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
+use App\StatamicDTO\Shared\TextLineSet;
 use App\StatamicDTO\Shared\VerticalVideosBlockGroup;
+use App\StatamicDTO\Shared\VideoBlockSet;
+use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -62,19 +65,16 @@ class MultidayRetreat extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var array<StatamicTermReference>|null */
     public ?array $topics = null;
 
-    /** @var array{id: string, title: string, slug: string, taxonomy: string}|null */
-    public ?array $event_type = null;
+    public ?StatamicTermReference $event_type = null;
 
     public ?bool $is_local_event = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $event_logo = null;
+    public ?StatamicAsset $event_logo = null;
 
-    /** @var mixed Unknown field type: belongs_to */
-    public mixed $related_event_type;
+    public ?int $related_event_type = null;
 
     /** @var array<IconSet>|null */
     public ?array $icons = null;
@@ -90,8 +90,7 @@ class MultidayRetreat extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?StatamicAsset $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
@@ -112,8 +111,7 @@ class MultidayRetreat extends Data
 
     public ?string $leader_text = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $hero_logo = null;
+    public ?StatamicAsset $hero_logo = null;
 
     /** @var array<TextLineSet>|null */
     public ?array $hero_title = null;
@@ -123,13 +121,11 @@ class MultidayRetreat extends Data
 
     public ?LinkField $background_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_video_fallback_image = null;
+    public ?StatamicAsset $background_video_fallback_image = null;
 
     public ?LinkField $featured_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $featured_video_fallback_image = null;
+    public ?StatamicAsset $featured_video_fallback_image = null;
 
     /** @var array<ButtonSet|AddToCalendarSet>|null */
     public ?array $buttons = null;
@@ -164,11 +160,9 @@ class MultidayRetreat extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?HandleTitle $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?HandleTitle $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

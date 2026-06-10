@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\StatamicAsset;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -33,6 +34,6 @@ class ImageSliderBlockSet extends Data
 
     public ?string $title = null;
 
-    /** @var array[]|null Asset array with {id, url, permalink, alt, width, height} */
+    /** @var array<StatamicAsset>|null */
     public ?array $images = null;
 }

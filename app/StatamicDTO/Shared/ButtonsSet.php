@@ -18,6 +18,8 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\AddToCalendarSet;
+use App\StatamicDTO\Shared\ButtonSet;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 

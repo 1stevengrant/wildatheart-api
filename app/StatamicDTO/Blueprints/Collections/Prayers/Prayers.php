@@ -18,27 +18,29 @@
 
 namespace App\StatamicDTO\Blueprints\Collections\Prayers;
 
-use Spatie\LaravelData\Data;
-use App\StatamicDTO\Shared\HeroSet;
-use App\StatamicDTO\Shared\HeaderSet;
+use App\StatamicDTO\Shared\AddToCalendarSet;
+use App\StatamicDTO\Shared\BentoBlockSet;
 use App\StatamicDTO\Shared\ButtonsSet;
-use App\StatamicDTO\Shared\HeroLogoSet;
-use App\StatamicDTO\Shared\ImagesGroup;
 use App\StatamicDTO\Shared\CodeBlockSet;
+use App\StatamicDTO\Shared\ColumnsBlockSet;
 use App\StatamicDTO\Shared\ContainerSet;
 use App\StatamicDTO\Shared\CountdownSet;
-use App\StatamicDTO\Shared\HeroTitleSet;
-use App\StatamicDTO\Shared\BentoBlockSet;
-use App\StatamicDTO\Shared\HeroSliderSet;
-use App\StatamicDTO\Shared\StyledTextSet;
-use App\StatamicDTO\Shared\VideoBlockSet;
-use App\StatamicDTO\Shared\MediaSliderSet;
-use App\StatamicDTO\Shared\ColumnsBlockSet;
 use App\StatamicDTO\Shared\DividerBlockSet;
-use App\StatamicDTO\Shared\AddToCalendarSet;
-use App\StatamicDTO\Shared\SubscribeFormSet;
+use App\StatamicDTO\Shared\HandleTitle;
+use App\StatamicDTO\Shared\HeaderSet;
+use App\StatamicDTO\Shared\HeroLogoSet;
+use App\StatamicDTO\Shared\HeroSet;
+use App\StatamicDTO\Shared\HeroSliderSet;
+use App\StatamicDTO\Shared\HeroTitleSet;
 use App\StatamicDTO\Shared\ImageSliderBlockSet;
+use App\StatamicDTO\Shared\ImagesGroup;
+use App\StatamicDTO\Shared\MediaSliderSet;
+use App\StatamicDTO\Shared\StatamicAsset;
+use App\StatamicDTO\Shared\StyledTextSet;
+use App\StatamicDTO\Shared\SubscribeFormSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
+use App\StatamicDTO\Shared\VideoBlockSet;
+use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -59,11 +61,9 @@ class Prayers extends Data
 
     public ?string $summary = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $pdf = null;
+    public ?StatamicAsset $pdf = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $mp3 = null;
+    public ?StatamicAsset $mp3 = null;
 
     public ?string $drupal_url = null;
 
@@ -73,8 +73,7 @@ class Prayers extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?StatamicAsset $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
@@ -103,11 +102,9 @@ class Prayers extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?HandleTitle $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?HandleTitle $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

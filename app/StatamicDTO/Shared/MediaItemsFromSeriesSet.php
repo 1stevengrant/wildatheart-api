@@ -18,6 +18,7 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\StatamicEntryReference;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -31,6 +32,5 @@ class MediaItemsFromSeriesSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from media_series */
-    public ?array $media_items_from_series = null;
+    public ?StatamicEntryReference $media_items_from_series = null;
 }

@@ -18,6 +18,8 @@
 
 namespace App\StatamicDTO\Shared;
 
+use App\StatamicDTO\Shared\ButtonGroup;
+use App\StatamicDTO\Shared\StatamicAsset;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -37,8 +39,7 @@ class SlideSet extends Data
 
     public ?string $description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_image = null;
+    public ?StatamicAsset $background_image = null;
 
     public ?string $background_video_url = null;
 

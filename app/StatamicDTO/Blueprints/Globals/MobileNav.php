@@ -18,9 +18,9 @@
 
 namespace App\StatamicDTO\Blueprints\Globals;
 
-use Spatie\LaravelData\Data;
 use App\StatamicDTO\Shared\StandardNavLinkSet;
 use App\StatamicDTO\Shared\StandardNavLinkSet2;
+use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]

@@ -6,14 +6,13 @@ import {
     tabListClasses,
     tabPanelClasses,
 } from "@/helpers/tabClasses";
-import { GuidePage } from "@/types/EventType";
 
 export const TabNavigation = ({
     pages,
     selectedTab,
     onChange,
 }: {
-    pages: Array<GuidePage>;
+    pages: Array<App.Data.EventType.GuidePageData>;
     selectedTab: number;
     onChange: (index: number) => void;
 }) => (

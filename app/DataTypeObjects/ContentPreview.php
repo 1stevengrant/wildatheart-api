@@ -6,11 +6,12 @@ use Spatie\LaravelData\Data;
 use Statamic\Fields\Blueprint;
 use Statamic\Entries\Collection;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class ContentPreview extends Data
 {
-    public $id = null;
+    public ?string $id = null;
 
     public ?string $title = null;
 
@@ -22,9 +23,12 @@ class ContentPreview extends Data
 
     public ?string $published_at = null;
 
+    #[LiteralTypeScriptType('Record<string, unknown> | null')]
     public ?Collection $collection = null;
 
+    #[LiteralTypeScriptType('Record<string, unknown> | null')]
     public ?Blueprint $blueprint = null;
 
+    #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
     public ?array $related_content = null;
 }

@@ -12,6 +12,17 @@ use Ghijk\StatamicTypescriptGenerator\Registry\SharedSetRegistry;
 
 class PhpDtoGenerator
 {
+    /**
+     * Fieldtypes that are control-panel UI only and serialize no data.
+     */
+    protected const SKIP_TYPES = [
+        'section',
+        'spacer',
+        'revealer',
+        'html',
+        'trigger_astro_build',
+    ];
+
     protected array $generatedClasses = [];
 
     protected array $nestedDtos = [];
@@ -23,6 +34,13 @@ class PhpDtoGenerator
     protected string $basePath = '';
 
     protected bool $linkFieldGenerated = false;
+
+    /**
+     * Tracks which shared base reference DTOs have already been generated this run.
+     *
+     * @var array<string, bool>
+     */
+    protected array $baseDtosGenerated = [];
 
     protected SharedSetRegistry $sharedRegistry;
 
@@ -44,6 +62,7 @@ class PhpDtoGenerator
 
         $this->generatedClasses = [];
         $this->linkFieldGenerated = false;
+        $this->baseDtosGenerated = [];
         $this->sharedRegistry->clear();
 
         // Discover blueprints
@@ -182,6 +201,10 @@ class PhpDtoGenerator
 
             $phpTypeInfo = $this->resolvePhpType($field, $className, $imports, []);
 
+            if ($phpTypeInfo === null) {
+                continue;
+            }
+
             $properties[] = [
                 'name' => $field['handle'],
                 'type' => $phpTypeInfo['type'],
@@ -201,6 +224,13 @@ class PhpDtoGenerator
                 // Skip if already added from blueprint
                 if (in_array($name, $addedFields, true)) {
                     continue;
+                }
+
+                // Runtime fields may reference a shared base DTO by class name.
+                if (! empty($config['import'])) {
+                    $shortName = class_basename($config['import']);
+                    $this->ensureBaseDto($shortName);
+                    $imports[] = $config['import'];
                 }
 
                 $properties[] = [
@@ -246,19 +276,31 @@ class PhpDtoGenerator
      *
      * @param  array  $nestingPath  Track the nesting path for sub-namespace generation
      */
-    protected function resolvePhpType(array $field, string $parentClass, array &$imports, array $nestingPath): array
+    protected function resolvePhpType(array $field, string $parentClass, array &$imports, array $nestingPath): ?array
     {
         $handle = $field['handle'];
         $fieldType = $field['type'] ?? 'text';
         $config = $field['config'] ?? [];
         $required = $field['required'] ?? false;
 
+        // UI-only fieldtypes carry no serialized data; omit them from the DTO.
+        if (in_array($fieldType, self::SKIP_TYPES, true)) {
+            return null;
+        }
+
         return match ($fieldType) {
             // Text types
-            'text', 'textarea', 'markdown', 'code', 'slug', 'color', 'hidden' => [
+            'text', 'textarea', 'markdown', 'code', 'slug', 'color', 'hidden', 'width', 'template', 'icon', 'form' => [
                 'type' => 'string',
                 'nullable' => ! $required,
                 'docblock' => null,
+            ],
+
+            // Reference-list types serialize to an array of handles.
+            'collections', 'taxonomies', 'navs', 'sites', 'structures', 'user_roles', 'user_groups' => [
+                'type' => 'array',
+                'nullable' => ! $required,
+                'docblock' => '/** @var string[]|null */',
             ],
 
             // Number types
@@ -299,26 +341,29 @@ class PhpDtoGenerator
             ],
 
             // Assets
-            'assets' => $this->resolveAssetType($config, $required),
+            'assets' => $this->resolveAssetType($config, $required, $imports),
 
             // Link
             'link' => $this->resolveLinkType($required, $imports),
 
             // Entries reference
-            'entries' => $this->resolveEntriesType($config, $required),
+            'entries' => $this->resolveEntriesType($config, $required, $imports),
 
             // Terms reference
-            'terms' => $this->resolveTermsType($config, $required),
+            'terms' => $this->resolveTermsType($config, $required, $imports),
 
             // Users reference
-            'users' => $this->resolveUsersType($config, $required),
+            'users' => $this->resolveUsersType($config, $required, $imports),
+
+            // Runway relationships
+            'belongs_to' => [
+                'type' => 'int',
+                'nullable' => true,
+                'docblock' => null,
+            ],
 
             // Table
-            'table' => [
-                'type' => 'array',
-                'nullable' => ! $required,
-                'docblock' => '/** @var array[]|null Table rows with cells */',
-            ],
+            'table' => $this->resolveTableType($required, $imports),
 
             // Bard - rich text or structured blocks
             'bard' => $this->resolveBardType($field, $parentClass, $imports, $nestingPath),
@@ -453,97 +498,130 @@ class PhpDtoGenerator
     }
 
     /**
-     * Resolve asset type.
+     * Resolve asset type as a typed shared DTO reference.
      */
-    protected function resolveAssetType(array $config, bool $required): array
+    protected function resolveAssetType(array $config, bool $required, array &$imports): array
     {
-        $maxFiles = $config['max_files'] ?? null;
+        return $this->referenceSharedDto('StatamicAsset', $config['max_files'] ?? null, $required, $imports);
+    }
 
-        if ($maxFiles === 1) {
+    /**
+     * Resolve entries reference type as a typed shared DTO reference.
+     */
+    protected function resolveEntriesType(array $config, bool $required, array &$imports): array
+    {
+        return $this->referenceSharedDto('StatamicEntryReference', $config['max_items'] ?? null, $required, $imports);
+    }
+
+    /**
+     * Resolve terms reference type as a typed shared DTO reference.
+     */
+    protected function resolveTermsType(array $config, bool $required, array &$imports): array
+    {
+        return $this->referenceSharedDto('StatamicTermReference', $config['max_items'] ?? null, $required, $imports);
+    }
+
+    /**
+     * Resolve users reference type as a typed shared DTO reference.
+     */
+    protected function resolveUsersType(array $config, bool $required, array &$imports): array
+    {
+        return $this->referenceSharedDto('StatamicUserReference', $config['max_items'] ?? null, $required, $imports);
+    }
+
+    /**
+     * Resolve a Statamic `table` field as an array of typed table rows.
+     */
+    protected function resolveTableType(bool $required, array &$imports): array
+    {
+        return $this->referenceSharedDto('StatamicTableRow', null, $required, $imports);
+    }
+
+    /**
+     * Build a property definition that references a shared base DTO.
+     *
+     * A `single` cardinality ($maxOrNull === 1) maps to a native nullable class
+     * type; anything else maps to a typed `array<Class>` so the transformer can
+     * resolve it into a precise TypeScript array.
+     */
+    protected function referenceSharedDto(string $className, ?int $maxOrNull, bool $required, array &$imports): array
+    {
+        $this->ensureBaseDto($className);
+        $imports[] = "App\\StatamicDTO\\Shared\\{$className}";
+
+        if ($maxOrNull === 1) {
             return [
-                'type' => 'array',
+                'type' => $className,
                 'nullable' => ! $required,
-                'docblock' => '/** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */',
+                'docblock' => null,
             ];
         }
 
-        // Use array[] instead of array<array{...}> for PHPDoc compatibility
+        $nullSuffix = $required ? '' : '|null';
+
         return [
             'type' => 'array',
             'nullable' => ! $required,
-            'docblock' => '/** @var array[]|null Asset array with {id, url, permalink, alt, width, height} */',
+            'docblock' => "/** @var array<{$className}>{$nullSuffix} */",
         ];
     }
 
     /**
-     * Resolve entries reference type.
+     * Lazily register a shared base reference DTO once per generation run.
      */
-    protected function resolveEntriesType(array $config, bool $required): array
+    protected function ensureBaseDto(string $className): void
     {
-        $maxItems = $config['max_items'] ?? null;
-        $collections = $config['collections'] ?? [];
-        $collectionStr = ! empty($collections) ? ' from ' . implode(', ', $collections) : '';
-
-        if ($maxItems === 1) {
-            return [
-                'type' => 'array',
-                'nullable' => ! $required,
-                'docblock' => "/** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference{$collectionStr} */",
-            ];
+        if (! empty($this->baseDtosGenerated[$className])) {
+            return;
         }
 
-        // Use array[] instead of array<array{...}> for PHPDoc compatibility
-        return [
-            'type' => 'array',
-            'nullable' => ! $required,
-            'docblock' => "/** @var array[]|null Entry references{$collectionStr} with {id, title, slug, url, collection} */",
-        ];
-    }
+        $properties = match ($className) {
+            'StatamicAsset' => [
+                ['name' => 'id', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'url', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'permalink', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'alt', 'type' => 'string', 'nullable' => true, 'docblock' => null],
+                ['name' => 'width', 'type' => 'int', 'nullable' => true, 'docblock' => null],
+                ['name' => 'height', 'type' => 'int', 'nullable' => true, 'docblock' => null],
+            ],
+            'StatamicEntryReference' => [
+                ['name' => 'id', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'title', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'slug', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'url', 'type' => 'string', 'nullable' => true, 'docblock' => null],
+                ['name' => 'collection', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+            ],
+            'StatamicTermReference' => [
+                ['name' => 'id', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'title', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'slug', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'taxonomy', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+            ],
+            'StatamicUserReference' => [
+                ['name' => 'id', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'name', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'email', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'avatar', 'type' => 'string', 'nullable' => true, 'docblock' => null],
+            ],
+            'StatamicTableRow' => [
+                ['name' => 'cells', 'type' => 'array', 'nullable' => false, 'docblock' => '/** @var string[] */'],
+            ],
+            'HandleTitle' => [
+                ['name' => 'handle', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+                ['name' => 'title', 'type' => 'string', 'nullable' => false, 'docblock' => null],
+            ],
+            default => throw new \InvalidArgumentException("Unknown shared base DTO: {$className}"),
+        };
 
-    /**
-     * Resolve terms reference type.
-     */
-    protected function resolveTermsType(array $config, bool $required): array
-    {
-        $maxItems = $config['max_items'] ?? null;
+        $code = $this->renderClass(
+            $className,
+            'App\\StatamicDTO\\Shared',
+            ['Spatie\\LaravelData\\Data', 'Spatie\\TypeScriptTransformer\\Attributes\\TypeScript'],
+            $properties,
+        );
 
-        if ($maxItems === 1) {
-            return [
-                'type' => 'array',
-                'nullable' => ! $required,
-                'docblock' => '/** @var array{id: string, title: string, slug: string, taxonomy: string}|null */',
-            ];
-        }
-
-        // Use array[] instead of array<array{...}> for PHPDoc compatibility
-        return [
-            'type' => 'array',
-            'nullable' => ! $required,
-            'docblock' => '/** @var array[]|null Term references with {id, title, slug, taxonomy} */',
-        ];
-    }
-
-    /**
-     * Resolve users reference type.
-     */
-    protected function resolveUsersType(array $config, bool $required): array
-    {
-        $maxItems = $config['max_items'] ?? null;
-
-        if ($maxItems === 1) {
-            return [
-                'type' => 'array',
-                'nullable' => ! $required,
-                'docblock' => '/** @var array{id: string, name: string, email: string, avatar: string|null}|null */',
-            ];
-        }
-
-        // Use array[] instead of array<array{...}> for PHPDoc compatibility
-        return [
-            'type' => 'array',
-            'nullable' => ! $required,
-            'docblock' => '/** @var array[]|null User references with {id, name, email, avatar} */',
-        ];
+        $this->sharedRegistry->storeGeneratedCode($className, $code);
+        $this->baseDtosGenerated[$className] = true;
     }
 
     /**
@@ -729,6 +807,11 @@ class PhpDtoGenerator
             $newPath = array_merge($nestingPath, [$setKey]);
 
             $phpTypeInfo = $this->resolvePhpType($resolvedField, $className, $sharedImports, $newPath);
+
+            if ($phpTypeInfo === null) {
+                continue;
+            }
+
             $properties[] = [
                 'name' => $resolvedField['handle'],
                 'type' => $phpTypeInfo['type'],
@@ -829,6 +912,11 @@ class PhpDtoGenerator
 
         foreach ($resolvedFields as $resolvedField) {
             $phpTypeInfo = $this->resolvePhpType($resolvedField, $className, $sharedImports, $nestingPath);
+
+            if ($phpTypeInfo === null) {
+                continue;
+            }
+
             $properties[] = [
                 'name' => $resolvedField['handle'],
                 'type' => $phpTypeInfo['type'],
@@ -924,6 +1012,11 @@ class PhpDtoGenerator
 
         foreach ($resolvedFields as $resolvedField) {
             $phpTypeInfo = $this->resolvePhpType($resolvedField, $className, $sharedImports, $nestingPath);
+
+            if ($phpTypeInfo === null) {
+                continue;
+            }
+
             $properties[] = [
                 'name' => $resolvedField['handle'],
                 'type' => $phpTypeInfo['type'],
