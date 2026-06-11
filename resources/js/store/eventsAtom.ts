@@ -7,7 +7,7 @@ const eventsListState = atom<App.Data.EventMapData[]>({
 
 const eventsListLoadingState = atom({
     key: "EventsListLoading",
-    default: false,
+    default: true,
 });
 
 const selectedEventTypeState = atom({
