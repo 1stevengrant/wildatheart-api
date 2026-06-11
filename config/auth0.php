@@ -7,6 +7,13 @@ return [
     'base_url' => env('AUTH0_DOMAIN'),
     'cookie_secret' => 'c1XhulxTocmsvHIQ1tBOp7McazNhkZVO',
     'audience' => env('AUTH0_AUDIENCE'),
+    'api' => [
+        'audience' => env('AUTH0_API_AUDIENCE', 'https://api.wildatheart.org'),
+        'custom_domain' => env('AUTH0_API_CUSTOM_DOMAIN', 'auth.wildatheart.org'),
+        'tenant_domain' => env('AUTH0_API_TENANT_DOMAIN', 'ransomed-heart.auth0.com'),
+        'jwks_uri' => env('AUTH0_API_JWKS_URI', 'https://auth.wildatheart.org/.well-known/jwks.json'),
+        'userinfo_url' => env('AUTH0_API_USERINFO_URL', 'https://auth.wildatheart.org/userinfo'),
+    ],
     'management' => [
         'client_id' => env('AUTH0_MANAGEMENT_CLIENT_ID'),
         'client_secret' => env('AUTH0_MANAGEMENT_CLIENT_SECRET'),

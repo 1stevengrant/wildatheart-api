@@ -14,10 +14,13 @@ use App\Http\Controllers\API\V1\EventTypeController;
 use App\Http\Controllers\API\V1\HostEventController;
 use App\Http\Controllers\API\AllExperiencesController;
 use App\Http\Controllers\API\ExperienceDataController;
+use App\Http\Controllers\API\V1\CurrentUserController;
 use App\Http\Controllers\API\Media\MediaItemController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
+use App\Http\Controllers\API\V1\HostContactsController;
 use App\Http\Controllers\API\V1\Navs\AllNavsController;
+use App\Http\Controllers\API\V1\EventInterestController;
 use App\Http\Controllers\API\V1\Navs\MobileNavController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\GroupedEventTypeController;
@@ -26,6 +29,7 @@ use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\HostMailingAddressController;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
+use App\Http\Controllers\API\V1\ArchivedHostContactsController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\Media\MediaItemsBySeriesController;
@@ -55,6 +59,14 @@ use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController as Subspl
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('stats', StatsController::class)->name('stats');
 
+    Route::get('me', CurrentUserController::class)
+        ->middleware(['auth0.api', 'throttle:userProfile'])
+        ->name('me');
+
+    Route::patch('users/me', [CurrentUserController::class, 'update'])
+        ->middleware(['auth0.jwt', 'throttle:userProfile'])
+        ->name('users.me.update');
+
     Route::prefix('webhooks')->name('webhooks.')->group(function () {
         Route::post('refresh-daily-readings', RefreshDailyReadingsController::class)->name('refreshDailyReadings');
     });
@@ -72,6 +84,13 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
         Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
         Route::post('event-types/{eventType}/events/draft', [HostEventController::class, 'storeDraft'])->name('event-types.events.draft');
+        Route::get('contacts', [HostContactsController::class, 'index'])->name('contacts.index');
+        Route::post('contacts/{event}/{user}/archive', [ArchivedHostContactsController::class, 'store'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('contacts.archive.store');
+        Route::delete('contacts/{event}/{user}/archive', [ArchivedHostContactsController::class, 'destroy'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('contacts.archive.destroy');
     });
 
     Route::prefix('events')->name('events.')->group(function () {
@@ -83,6 +102,18 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('{event}/connect', [AttendeeController::class, 'store'])
             ->middleware('throttle:connect')
             ->name('connect.store');
+
+        Route::middleware(['auth0.jwt', 'throttle:interests'])->group(function () {
+            Route::get('{event}/interests/me', [EventInterestController::class, 'show'])
+                ->where('event', '[0-9a-fA-F-]{36}')
+                ->name('interests.show');
+            Route::post('{event}/interests', [EventInterestController::class, 'store'])
+                ->where('event', '[0-9a-fA-F-]{36}')
+                ->name('interests.store');
+            Route::delete('{event}/interests/me', [EventInterestController::class, 'destroy'])
+                ->where('event', '[0-9a-fA-F-]{36}')
+                ->name('interests.destroy');
+        });
     });
 });
 

@@ -114,6 +114,26 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class)->withTimestamps();
     }
 
+    public function interestedEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Event::class,
+            'event_user_interests',
+            'user_id',
+            'event_id'
+        )
+            ->withTimestamps()
+            ->withPivot('archived_at');
+    }
+
+    public function interestIn(string $eventId): ?EventUserInterest
+    {
+        return EventUserInterest::query()
+            ->where('user_id', $this->id)
+            ->where('event_id', $eventId)
+            ->first();
+    }
+
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);

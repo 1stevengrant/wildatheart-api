@@ -161,6 +161,18 @@ class Event extends BaseModel
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
+    public function interestedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'event_user_interests',
+            'event_id',
+            'user_id'
+        )
+            ->withTimestamps()
+            ->withPivot('archived_at');
+    }
+
     public function managerInvitations(): HasMany
     {
         return $this->hasMany(EventManagerInvitation::class);
