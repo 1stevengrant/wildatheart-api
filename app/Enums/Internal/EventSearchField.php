@@ -25,6 +25,7 @@ enum EventSearchField: string
     case HostCountry = 'host_country';
     case HostWeGiveId = 'host_wegive_id';
     case CreatedAt = 'created_at';
+    case Privacy = 'privacy';
 
     public function label(): string
     {
@@ -48,6 +49,7 @@ enum EventSearchField: string
             self::HostCountry => 'Host Country',
             self::HostWeGiveId => 'Host WeGive ID',
             self::CreatedAt => 'Created At',
+            self::Privacy => 'Privacy',
         };
     }
 
@@ -72,7 +74,8 @@ enum EventSearchField: string
             self::HostZip,
             self::HostCountry,
             self::HostWeGiveId,
-            self::CreatedAt => false,
+            self::CreatedAt,
+            self::Privacy => false,
         };
     }
 
@@ -98,6 +101,7 @@ enum EventSearchField: string
             self::HostCountry => $event->user?->primaryAddress?->country,
             self::HostWeGiveId => $event->user?->wegive_donor_id,
             self::CreatedAt => $event->created_at?->format('Y-m-d'),
+            self::Privacy => $event->is_private ? 'Private' : 'Public',
         };
     }
 

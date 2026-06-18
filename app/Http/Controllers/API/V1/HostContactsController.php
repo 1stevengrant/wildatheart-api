@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Data\V1\HostContactData;
 use App\Models\EventUserInterest;
@@ -11,12 +10,13 @@ use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use App\Filters\ArchivedInterestFilter;
 
 class HostContactsController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $host = $this->host();
+        $host = $this->user();
 
         $eventIds = $host->events()->pluck('events.id')
             ->merge($host->managedEvents()->pluck('events.id'))
@@ -37,7 +37,7 @@ class HostContactsController extends Controller
         $contacts = QueryBuilder::for($base)
             ->allowedFilters(
                 AllowedFilter::partial('event', 'events.name'),
-                AllowedFilter::callback('archived', $this->archivedFilter(...))->default('false'),
+                AllowedFilter::custom('archived', new ArchivedInterestFilter)->default('false'),
             )
             ->allowedSorts(
                 AllowedSort::field('name', 'users.given_name'),
@@ -53,30 +53,5 @@ class HostContactsController extends Controller
         );
 
         return response()->json($contacts);
-    }
-
-    private function archivedFilter($query, $value): void
-    {
-        $normalised = is_string($value) ? mb_strtolower($value) : $value;
-
-        if ($normalised === 'all') {
-            return;
-        }
-
-        $showArchived = filter_var($normalised, FILTER_VALIDATE_BOOLEAN);
-
-        if ($showArchived) {
-            $query->whereNotNull('event_user_interests.archived_at');
-        } else {
-            $query->whereNull('event_user_interests.archived_at');
-        }
-    }
-
-    private function host(): User
-    {
-        /** @var User $user */
-        $user = auth()->user();
-
-        return $user;
     }
 }

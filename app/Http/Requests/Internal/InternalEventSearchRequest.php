@@ -5,6 +5,7 @@ namespace App\Http\Requests\Internal;
 use Illuminate\Validation\Rule;
 use App\Enums\Internal\EventSearchField;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\Internal\EventVisibilityFilter;
 
 class InternalEventSearchRequest extends FormRequest
 {
@@ -31,6 +32,7 @@ class InternalEventSearchRequest extends FormRequest
             'place_name' => ['nullable', 'string', 'max:255'],
             'active_only' => ['nullable', 'in:0,1,true,false'],
             'include_deleted' => ['nullable', 'in:0,1,true,false'],
+            'privacy' => ['nullable', Rule::enum(EventVisibilityFilter::class)],
             'created_from' => ['nullable', 'date'],
             'created_to' => ['nullable', 'date'],
         ];
@@ -102,6 +104,11 @@ class InternalEventSearchRequest extends FormRequest
     public function includeDeleted(): bool
     {
         return $this->boolean('include_deleted', false);
+    }
+
+    public function privacy(): EventVisibilityFilter
+    {
+        return $this->enum('privacy', EventVisibilityFilter::class) ?? EventVisibilityFilter::All;
     }
 
     public function createdFrom(): ?string

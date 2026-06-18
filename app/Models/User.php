@@ -126,6 +126,14 @@ class User extends Authenticatable
             ->withPivot('archived_at');
     }
 
+    public function interestIn(string $eventId): ?EventUserInterest
+    {
+        return EventUserInterest::query()
+            ->where('user_id', $this->id)
+            ->where('event_id', $eventId)
+            ->first();
+    }
+
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);

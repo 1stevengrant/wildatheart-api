@@ -2,16 +2,14 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Attachment;
 
-class ReportMailable extends Mailable
+class ReportMailable extends BaseMailable
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     /**
      * Create a new message instance.

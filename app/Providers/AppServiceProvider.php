@@ -4,15 +4,18 @@ namespace App\Providers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Services\Subsplash\SubsplashApiClient;
+use App\Mail\Transport\CloudflareFailoverTransport;
 use App\Services\Subsplash\SubsplashMediaItemImporter;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Toitzi\LaravelCloudflareMail\CloudflareTransportFactory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -62,6 +65,16 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->bootRoute();
+        $this->bootMail();
+    }
+
+    public function bootMail(): void
+    {
+        Mail::extend('cloudflare', function (array $config = []): CloudflareFailoverTransport {
+            $inner = $this->app->make(CloudflareTransportFactory::class)->make($config);
+
+            return new CloudflareFailoverTransport($inner);
+        });
     }
 
     public function bootRoute(): void

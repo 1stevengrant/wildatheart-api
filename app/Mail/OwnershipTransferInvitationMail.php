@@ -4,8 +4,6 @@ namespace App\Mail;
 
 use Carbon\Carbon;
 use App\Models\Event;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use App\Models\EventOwnershipTransfer;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
@@ -13,9 +11,9 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OwnershipTransferInvitationMail extends Mailable implements ShouldQueue
+class OwnershipTransferInvitationMail extends BaseMailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     /**
      * Create a new message instance.

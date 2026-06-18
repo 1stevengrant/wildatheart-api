@@ -3,14 +3,13 @@
 namespace App\Services\Subsplash;
 
 use Statamic\Entries\Entry;
-use Illuminate\Http\JsonResponse;
 use Statamic\Eloquent\Entries\UuidEntryModel;
 
 class SubsplashMediaSeriesResponseBuilder
 {
     public function __construct(private readonly SubsplashApiClient $apiClient) {}
 
-    public function build(Entry|UuidEntryModel $series): array|JsonResponse
+    public function build(Entry|UuidEntryModel $series): array
     {
         $responseData = [];
 
@@ -23,7 +22,12 @@ class SubsplashMediaSeriesResponseBuilder
         $subsplashSeries = $this->apiClient->getMediaSeries($series->subsplash_media_series_id);
 
         if (isset($subsplashSeries['errors']) && $subsplashSeries['errors'][0]['code'] === 'resource_not_found') {
-            return response()->json($series);
+            $responseData['subtitle'] = '';
+            $responseData['subsplash_data'] = $subsplashSeries;
+            $responseData['_embedded'] = '';
+            $responseData['mediaItems'] = [];
+
+            return $responseData;
         }
 
         $responseData['subtitle'] = data_get($subsplashSeries, 'subtitle', '');
@@ -42,15 +46,32 @@ class SubsplashMediaSeriesResponseBuilder
             $nextUrl = data_get($subsplashMediaItems, '_links.next.href');
         }
 
-        $subsplashMediaItemMap = [];
+        $itemIds = array_column($allItems, 'id');
+
+        $matchingEntries = Entry::query()
+            ->where(function ($query) use ($itemIds) {
+                $query->whereIn('id', $itemIds)
+                    ->orWhereIn('data->subsplash_media_item_id', $itemIds);
+            })
+            ->where('published', true)
+            ->where(function ($query) {
+                $query->where('date', '<=', now())
+                    ->orWhere('data->make_scheduled_page_public', true);
+            })
+            ->get();
+
+        $entriesByItemId = [];
+        foreach ($matchingEntries as $entry) {
+            $entriesByItemId[$entry->id()] = $entry;
+
+            if ($subsplashMediaItemId = $entry->get('subsplash_media_item_id')) {
+                $entriesByItemId[$subsplashMediaItemId] = $entry;
+            }
+        }
+
         $responseData['mediaItems'] = [];
         foreach ($allItems as $mediaItem) {
-            $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
-
-            $mediaItemEntry = Entry::query()
-                ->where('id', $mediaItem['id'])
-                ->orWhere('data->subsplash_media_item_id', $mediaItem['id'])
-                ->first();
+            $mediaItemEntry = $entriesByItemId[$mediaItem['id']] ?? null;
 
             if ($mediaItemEntry === null) {
                 continue;

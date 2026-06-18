@@ -22,6 +22,7 @@ class InternalExportEventSearch extends Controller
             includeDeleted: $request->includeDeleted(),
             createdFrom: $request->createdFrom(),
             createdTo: $request->createdTo(),
+            privacy: $request->privacy(),
         );
 
         return back()->with(['notifications' => [

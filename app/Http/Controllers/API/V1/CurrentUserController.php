@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Models\User;
 use App\Data\UserData;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -13,16 +12,12 @@ class CurrentUserController extends Controller
 {
     public function __invoke(): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-
-        return response()->json(UserData::fromModel($user));
+        return response()->json(UserData::fromModel($this->user()));
     }
 
     public function update(UpdateCurrentUserData $data): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->user();
 
         $user->fill($data->toArray())->save();
 

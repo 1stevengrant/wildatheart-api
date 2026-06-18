@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Data\InternalEventSearchData;
 use Illuminate\Support\Facades\Cache;
 use App\Enums\Internal\EventSearchField;
+use App\Data\InternalEventSearchFiltersData;
+use App\Enums\Internal\EventVisibilityFilter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Http\Requests\Internal\InternalEventSearchRequest;
 
@@ -28,7 +30,8 @@ class InternalEventSearchController extends Controller
                 $request->activeOnly(),
                 $request->includeDeleted(),
                 $request->createdFrom(),
-                $request->createdTo()
+                $request->createdTo(),
+                $request->privacy()
             );
 
             return $this->transformResults($paginator);
@@ -40,18 +43,19 @@ class InternalEventSearchController extends Controller
 
         return inertia('Internal/EventSearchPage', [
             'results' => $results,
-            'filters' => [
-                'lat' => $request->hasSearchCoordinates() ? $request->lat() : null,
-                'lng' => $request->hasSearchCoordinates() ? $request->lng() : null,
-                'radius' => $request->hasSearchCoordinates() ? $request->radius() : null,
-                'event_type_ids' => $request->eventTypeIds(),
-                'fields' => $request->fields(),
-                'place_name' => $request->placeName(),
-                'active_only' => $request->activeOnly(),
-                'include_deleted' => $request->includeDeleted(),
-                'created_from' => $request->createdFrom(),
-                'created_to' => $request->createdTo(),
-            ],
+            'filters' => new InternalEventSearchFiltersData(
+                lat: $request->hasSearchCoordinates() ? $request->lat() : null,
+                lng: $request->hasSearchCoordinates() ? $request->lng() : null,
+                radius: $request->hasSearchCoordinates() ? $request->radius() : null,
+                event_type_ids: $request->eventTypeIds(),
+                fields: $request->fields(),
+                place_name: $request->placeName(),
+                active_only: $request->activeOnly(),
+                include_deleted: $request->includeDeleted(),
+                created_from: $request->createdFrom(),
+                created_to: $request->createdTo(),
+                privacy: $request->privacy(),
+            ),
             'availableFields' => EventSearchField::toOptions(),
             'eventTypes' => $eventTypes,
         ]);
@@ -68,15 +72,16 @@ class InternalEventSearchController extends Controller
             'include_deleted' => $request->includeDeleted(),
             'created_from' => $request->createdFrom(),
             'created_to' => $request->createdTo(),
+            'privacy' => $request->privacy()->value,
             'page' => $request->input('page', 1),
         ];
 
         return 'event_search:' . md5(serialize($params));
     }
 
-    private function searchEvents(?float $lat, ?float $lng, ?float $radius, array $eventTypeIds, bool $activeOnly, bool $includeDeleted, ?string $createdFrom = null, ?string $createdTo = null): LengthAwarePaginator
+    private function searchEvents(?float $lat, ?float $lng, ?float $radius, array $eventTypeIds, bool $activeOnly, bool $includeDeleted, ?string $createdFrom = null, ?string $createdTo = null, EventVisibilityFilter $privacy = EventVisibilityFilter::All): LengthAwarePaginator
     {
-        $query = Event::query()->with(['user', 'eventType']);
+        $query = Event::query()->with(['user.primaryAddress', 'eventType']);
 
         if ($lat !== null && $lng !== null && $radius !== null) {
             $query->withinRadius($lat, $lng, $radius);
@@ -85,6 +90,8 @@ class InternalEventSearchController extends Controller
         if ($activeOnly) {
             $query->published();
         }
+
+        $privacy->applyTo($query);
 
         if ($includeDeleted) {
             $query->withTrashed();

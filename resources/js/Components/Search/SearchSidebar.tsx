@@ -5,13 +5,19 @@ import { FeaturedContentCard } from "@/Components/Maps/FeaturedContentCard";
 import { NoSearchResults } from "@/Components/NoSearchResults";
 import { FiltersPanel } from "@/Components/Search/FiltersPanel";
 import { QuickFilters } from "@/Components/Search/QuickFilters";
+import { IsLoading } from "@/Components/Ui/IsLoading";
 import { isSelectedEvent } from "@/helpers/isSelectedEvent";
 import { showFilterPanelState } from "@/store";
-import { eventsListState, currentEventState } from "@/store/eventsAtom";
+import {
+    eventsListState,
+    eventsListLoadingState,
+    currentEventState,
+} from "@/store/eventsAtom";
 import { featuredContentState } from "@/store/featuredContentAtom";
 
 export const SearchSidebar = () => {
     const [events] = useRecoilState(eventsListState);
+    const [isLoading] = useRecoilState(eventsListLoadingState);
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
     const [showFilterPanel] = useRecoilState(showFilterPanelState);
     const [featuredContent] = useRecoilState(featuredContentState);
@@ -29,7 +35,12 @@ export const SearchSidebar = () => {
                     </div>
 
                     <div className="px-4">
-                        {events.length === 0 ? (
+                        {isLoading ? (
+                            <IsLoading
+                                className={`py-8`}
+                                text={`Loading Events`}
+                            />
+                        ) : events.length === 0 ? (
                             <NoSearchResults />
                         ) : (
                             events.map((event: any) => (

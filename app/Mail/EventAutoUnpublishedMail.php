@@ -4,8 +4,6 @@ namespace App\Mail;
 
 use App\Models\Event;
 use App\Models\EmailTemplate;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,9 +11,9 @@ use Illuminate\Mail\Mailables\Attachment;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EventAutoUnpublishedMail extends Mailable implements ShouldQueue
+class EventAutoUnpublishedMail extends BaseMailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 

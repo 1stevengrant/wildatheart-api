@@ -3,9 +3,8 @@
 namespace App\Mail\Fire;
 
 use App\Models\Event;
+use App\Mail\BaseMailable;
 use App\Models\EmailTemplate;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,9 +12,9 @@ use Illuminate\Mail\Mailables\Attachment;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ConfirmFireUnpublishedMailable extends Mailable implements ShouldQueue
+class ConfirmFireUnpublishedMailable extends BaseMailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 

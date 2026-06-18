@@ -3,8 +3,7 @@
 namespace App\Mail\Fire;
 
 use App\Models\Event;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
+use App\Mail\BaseMailable;
 use Illuminate\Support\Facades\URL;
 use App\Traits\FormatsEventHostNames;
 use Illuminate\Mail\Mailables\Content;
@@ -13,9 +12,9 @@ use Illuminate\Mail\Mailables\Envelope;
 use App\Traits\BurnExtinguishFireActions;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AnnualFireCheckinMailable extends Mailable implements ShouldQueue
+class AnnualFireCheckinMailable extends BaseMailable implements ShouldQueue
 {
-    use BurnExtinguishFireActions, FormatsEventHostNames, Queueable, SerializesModels;
+    use BurnExtinguishFireActions, FormatsEventHostNames, SerializesModels;
 
     public string $hostNames;
 

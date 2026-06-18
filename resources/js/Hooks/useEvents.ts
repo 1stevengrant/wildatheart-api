@@ -1,19 +1,22 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 import axios, { CancelTokenSource } from "axios";
 import { LngLatBounds } from "react-map-gl";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
-import { eventsListState } from "@/store/eventsAtom";
+import { eventsListState, eventsListLoadingState } from "@/store/eventsAtom";
 import { featuredContentState } from "@/store/featuredContentAtom";
 
 export const useEvents = () => {
-    const [showLoading, setShowLoading] = useState(false);
+    const [showLoading, setShowLoading] = useRecoilState(
+        eventsListLoadingState
+    );
     const setEvents = useSetRecoilState(eventsListState);
     const setFeaturedContent = useSetRecoilState(featuredContentState);
     const zoomAttemptsRef = useRef(0);
     const isZoomingRef = useRef(false);
     const pendingRequestRef = useRef(false);
+    const requestIdRef = useRef(0);
     const latestBoundsRef = useRef<LngLatBounds | null>(null);
     const latestParamsRef = useRef<{
         currentSex: string;
@@ -82,6 +85,11 @@ export const useEvents = () => {
         const ne = bounds.getNorthEast();
         const sw = bounds.getSouthWest();
 
+        // Tag this request so only the most recent one can clear the loading
+        // state. A superseded (cancelled) request must not switch off the
+        // spinner for the request that replaced it.
+        const requestId = ++requestIdRef.current;
+
         try {
             setShowLoading(true);
             const source: CancelTokenSource = axios.CancelToken.source();
@@ -104,8 +112,6 @@ export const useEvents = () => {
                 },
                 cancelToken: source.token,
             });
-
-            setShowLoading(false);
 
             // Handle new response structure with events and featuredContent
             const responseData = response.data;
@@ -139,6 +145,10 @@ export const useEvents = () => {
                 zoomAttemptsRef.current = 0;
             }
 
+            if (requestId === requestIdRef.current) {
+                setShowLoading(false);
+            }
+
             return {
                 count: eventCount,
                 shouldZoomOut,
@@ -149,7 +159,12 @@ export const useEvents = () => {
             } else {
                 console.log("Error:", error);
             }
-            setShowLoading(false);
+            // Only clear loading when no newer request has superseded this one.
+            // If it has, the replacement controls the spinner; if it has not,
+            // we must clear it here so the UI is never stuck loading.
+            if (requestId === requestIdRef.current) {
+                setShowLoading(false);
+            }
             return {
                 count: 0,
                 shouldZoomOut: false,

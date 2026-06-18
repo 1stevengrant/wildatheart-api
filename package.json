@@ -85,6 +85,7 @@
         "lightningcss-linux-x64-gnu": "^1.29.1"
     },
     "overrides": {
-        "minimatch": "^10.2.1"
+        "minimatch": "^10.2.1",
+        "shell-quote": "^1.8.4"
     }
 }

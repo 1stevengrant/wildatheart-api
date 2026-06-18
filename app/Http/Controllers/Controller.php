@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 abstract class Controller
 {
     use AuthorizesRequests;
+
+    protected function user(): User
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        return $user;
+    }
 
     /**
      * Transform a paginated collection to match frontend PaginatedData structure

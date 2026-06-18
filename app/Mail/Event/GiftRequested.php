@@ -3,9 +3,8 @@
 namespace App\Mail\Event;
 
 use App\Models\Event;
+use App\Mail\BaseMailable;
 use App\Models\EmailTemplate;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,9 +12,9 @@ use Illuminate\Mail\Mailables\Attachment;
 use App\Traits\InteractsWithEmailTemplates;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class GiftRequested extends Mailable implements ShouldQueue
+class GiftRequested extends BaseMailable implements ShouldQueue
 {
-    use InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use InteractsWithEmailTemplates, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 
