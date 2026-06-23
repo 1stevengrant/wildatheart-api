@@ -68,13 +68,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
             'super_admin' => SuperAdminMiddleware::class,
-            'agreed_to_host_agreement' => HasAgreedToHostAgreementMiddleware::class,
-            'auth0.api' => Auth0ApiMiddleware::class,
-            'permission' => PermissionMiddleware::class,
             'profile_complete' => EnsureProfileIsCompleteMiddleware::class,
-            'role' => RoleMiddleware::class,
-            'role_or_permission' => RoleOrPermissionMiddleware::class,
-            'super_admin' => SuperAdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
