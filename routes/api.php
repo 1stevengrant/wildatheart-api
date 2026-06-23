@@ -77,9 +77,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('mobile', MobileNavController::class)->name('mobile');
     });
 
-    Route::get('me', MeController::class)->middleware('auth0.api')->name('me');
+    Route::get('me', MeController::class)->middleware('auth0.jwt')->name('me');
 
-    Route::prefix('host')->name('host.')->middleware('auth0.api')->group(function () {
+    Route::prefix('host')->name('host.')->middleware('auth0.jwt')->group(function () {
         Route::get('events', [HostEventController::class, 'index'])->name('events.index');
         Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
         Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
