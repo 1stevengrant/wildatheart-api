@@ -45,3 +45,4 @@ storage/app/private/reports/*.csv
 resources/js/types/generated.d.ts
 resources/js/types/statamic.d.ts
 resources/users/roles.yaml
+!resources/views/vendor/
