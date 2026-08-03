@@ -13,24 +13,66 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
     const setReactNotifications = useSetRecoilState(reactNotificationState);
     const page = usePage();
     const event = page.props.event as App.Data.EventData;
+    const meta = page.props.meta as App.Data.SocialMetaData | null;
+
+    // event.url is relative under the NewEventLandingFeature flag, so resolve
+    // it against the current origin to guarantee an absolute, shareable link.
+    const shareUrl =
+        typeof window !== "undefined"
+            ? new URL(event.url, window.location.origin).href
+            : event.url;
+    // Prefer the server-composed social title so the share text matches the
+    // unfurled preview card; event.name alone can be an awkward possessive
+    // (e.g. "Duane's hosted by Duane Crabtree").
+    const shareTitle = meta?.title ?? `${event.name} hosted by ${event.host}`;
+
     const shareLinks = [
         {
             title: "Facebook",
-            url: `https://www.facebook.com/sharer/sharer.php?u=${event.url}`,
+            url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
         },
         {
             title: "Twitter",
-            url: `https://twitter.com/share?url=${event.url}&text=${event.name} hosted by ${event.host}`,
+            url: `https://twitter.com/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`,
         },
         {
             title: "LinkedIn",
-            url: `https://www.linkedin.com/shareArticle?url=${event.url}&title=${event.name}&source=${event.url}`,
+            url: `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}&source=${encodeURIComponent(shareUrl)}`,
         },
         {
             title: "Email",
-            url: `mailto:?subject=Check out this Fire from ${event.host}&body=${event.name} - ${event.url}`,
+            url: `mailto:?subject=${encodeURIComponent(`Check out this event from ${event.host}`)}&body=${encodeURIComponent(`${shareTitle} - ${shareUrl}`)}`,
         },
     ];
+
+    const canUseNativeShare = (): boolean =>
+        typeof navigator !== "undefined" &&
+        typeof navigator.share === "function" &&
+        window.matchMedia("(max-width: 767px)").matches;
+
+    const handleShareClick = async (): Promise<void> => {
+        if (!canUseNativeShare()) {
+            setOpen(true);
+
+            return;
+        }
+
+        try {
+            await navigator.share({
+                title: shareTitle,
+                text: shareTitle,
+                url: shareUrl,
+            });
+        } catch (error) {
+            // User dismissing the native sheet rejects with AbortError; ignore
+            // it and only fall back to the modal on a genuine failure.
+            if (error instanceof DOMException && error.name === "AbortError") {
+                return;
+            }
+
+            setOpen(true);
+        }
+    };
 
     const handleLinkClick = (event: React.FormEvent) => {
         event.preventDefault();
@@ -41,7 +83,7 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
 
     const copyToClipboard = async (): Promise<void> => {
         try {
-            await navigator.clipboard.writeText(event.url);
+            await navigator.clipboard.writeText(shareUrl);
             setReactNotifications((prevState) => [
                 ...prevState,
                 {
@@ -68,7 +110,7 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
         >
             <button
                 className={`flex items-center space-x-2 rounded-full`}
-                onClick={() => setOpen(true)}
+                onClick={handleShareClick}
             >
                 <PaperAirplaneIcon className={"w-6 h-6 -rotate-45"} />
                 <span>Share</span>

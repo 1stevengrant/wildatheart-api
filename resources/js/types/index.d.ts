@@ -18,6 +18,7 @@ export interface Auth {
 export type InertiaSharedProps<T = unknown> = T & {
     auth: Auth;
     errors: any;
+    meta?: App.Data.SocialMetaData | null;
 };
 
 export type PaginatedData<T> = {

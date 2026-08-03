@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use Illuminate\Support\Str;
+use App\Data\SocialMetaData;
 use App\Enums\EventTypeEnum;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -12,25 +13,51 @@ use Artesaos\SEOTools\Facades\TwitterCard;
 
 class SeoService
 {
+    /**
+     * The metadata most recently rendered server-side, shared with Inertia so
+     * the client can keep the document's social tags in sync during
+     * client-side navigation (when the server-rendered tags are never reissued).
+     */
+    protected ?SocialMetaData $sharedMeta = null;
+
     public function setMetadata(string $title, string $description, ?string $image, string $url): void
     {
         $this->setSEOMeta($title, $description, $url);
         $this->setOpenGraph($title, $description, $url, $image);
         $this->setTwitterCard($title, $description, $image);
         $this->setJsonLd($title, $description, $url, $image);
+
+        $this->recordSharedMeta($title, $description, $url, $image);
     }
 
     public function setEventMetadata(Event $event): void
     {
         $title = $this->buildEventTitle($event);
         $description = preg_replace('/\s+/', ' ', $event->eventType->card_teaser_text ?? '');
-        $image = bunnyImage($event->eventType->image);
+        $image = openGraphImage($event->eventType->image);
         $url = url()->current();
 
         $this->setSEOMeta($title, $description, $url);
         $this->setEventOpenGraph($title, $description, $url, $image);
         $this->setTwitterCard($title, $description, $image);
         $this->setEventJsonLd($event, $title, $description, $url, $image);
+
+        $this->recordSharedMeta($title, $description, $url, $image);
+    }
+
+    public function getSharedMeta(): ?SocialMetaData
+    {
+        return $this->sharedMeta;
+    }
+
+    protected function recordSharedMeta(string $title, string $description, string $url, ?string $image): void
+    {
+        $this->sharedMeta = new SocialMetaData(
+            title: $title,
+            description: $description,
+            url: $url,
+            image: $image,
+        );
     }
 
     protected function setSEOMeta(string $title, string $description, string $url): void
@@ -56,17 +83,31 @@ class SeoService
             ->setUrl($url)
             ->setDescription($description)
             ->addProperty('type', 'website')
-            ->addImage($image)
+            ->addImage($image, $this->openGraphImageAttributes($image))
             ->addProperty('locale', 'en-US')
             ->addProperty('site_name', 'Wild at Heart');
     }
 
     protected function setTwitterCard(string $title, string $description, ?string $image): void
     {
-        TwitterCard::setTitle($title)
+        TwitterCard::setType('summary_large_image')
+            ->setTitle($title)
             ->addImage($image)
             ->setDescription($description)
             ->setSite('@wildatheart');
+    }
+
+    /**
+     * @return array{secure_url: string, type: string, width: int, height: int}
+     */
+    protected function openGraphImageAttributes(string $image): array
+    {
+        return [
+            'secure_url' => $image,
+            'type' => 'image/jpeg',
+            'width' => 1200,
+            'height' => 630,
+        ];
     }
 
     protected function setJsonLd(string $title, string $description, string $url, ?string $image): void

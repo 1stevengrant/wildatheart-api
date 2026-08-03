@@ -91,7 +91,7 @@ jobs:
           REMOTE_DATABASE_USERNAME: ${{ secrets.REMOTE_DATABASE_USERNAME }}
           REMOTE_DATABASE_NAME: ${{ secrets.REMOTE_DATABASE_NAME }}
           REMOTE_DATABASE_PASSWORD: ${{ secrets.REMOTE_DATABASE_PASSWORD }}
-          REMOTE_DATABASE_EXCLUDE_DATA: activity_log,failed_jobs,issues,pulse_aggregates,pulse_entries,pulse_values
+          REMOTE_DATABASE_EXCLUDE_DATA: activity_log,failed_jobs,issues
 
       - name: Cleanup test databases
         if: always()

@@ -6,7 +6,7 @@ import React from "react";
 
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-import { createInertiaApp } from "@inertiajs/react";
+import { createInertiaApp, router } from "@inertiajs/react";
 import { MantineProvider } from "@mantine/core";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
@@ -14,9 +14,16 @@ import { RecoilRoot } from "recoil";
 
 import { RouteContext } from "@/Hooks/useRoute";
 import { initSentry } from "@/lib/sentry";
+import { syncSocialMeta } from "@/lib/socialMeta";
 import { mantineTheme } from "@/mantineTheme";
 
 initSentry();
+
+// Server-rendered social tags go stale on client-side navigation (no SSR), so
+// refresh them on every Inertia visit to keep native sharing accurate.
+router.on("navigate", (event) => {
+    syncSocialMeta(event.detail.page.props.meta as App.Data.SocialMetaData);
+});
 
 const appName = import.meta.env.VITE_APP_NAME || "Wild at Heart";
 

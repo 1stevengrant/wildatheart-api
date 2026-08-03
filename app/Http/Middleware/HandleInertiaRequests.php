@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -15,6 +16,8 @@ class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
+
+    public function __construct(private SeoService $seoService) {}
 
     /**
      * Determine the current asset version.
@@ -41,6 +44,7 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'notifications' => fn () => Session::get('notifications'),
+            'meta' => fn () => $this->seoService->getSharedMeta(),
         ];
     }
 
