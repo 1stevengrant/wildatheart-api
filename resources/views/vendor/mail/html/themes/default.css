@@ -1,3 +1,25 @@
+/*
+ * Wild at Heart mail theme.
+ *
+ * Palette values are copied from tailwind.config.js. They cannot be imported:
+ * this file is read as a static stylesheet at render time and inlined onto
+ * elements by CssToInlineStyles, so it never passes through the Tailwind build.
+ * If the design system palette changes, mirror the change here.
+ *
+ * Token reference (tailwind.config.js):
+ *   black #010101   matt-black #0D151A
+ *   p200  #DD7A2B   p300 #D65F00   p400 #964300
+ *   p100  #E7A26B   p75  #EEBD96
+ *   n40   #E0E1E2   n100 #7D8488   n700 #29353A   n800 #1B272D
+ *   g300  #818D59   r200 #DA3131
+ *
+ * Contrast notes (all against the #0D151A card unless stated):
+ *   body text  n40 on card  ~15.9:1
+ *   links      p100 on card  ~8.6:1
+ *   button     white on p400 ~6.8:1 (see the note above the button rules)
+ *   footer     n100 on black ~5.5:1
+ */
+
 /* Base */
 
 body,
@@ -10,8 +32,8 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 
 body {
     -webkit-text-size-adjust: none;
-    background-color: #ffffff;
-    color: #52525b;
+    background-color: #010101;
+    color: #E0E1E2;
     height: 100%;
     line-height: 1.4;
     margin: 0;
@@ -28,7 +50,7 @@ blockquote {
 }
 
 a {
-    color: #18181b;
+    color: #E7A26B;
 }
 
 a img {
@@ -38,36 +60,60 @@ a img {
 /* Typography */
 
 h1 {
-    color: #18181b;
-    font-size: 18px;
+    color: #ffffff;
+    font-size: 20px;
     font-weight: bold;
+    letter-spacing: 0.01em;
     margin-top: 0;
     text-align: start;
 }
 
 h2 {
-    font-size: 16px;
+    color: #ffffff;
+    font-size: 17px;
     font-weight: bold;
     margin-top: 0;
     text-align: start;
 }
 
 h3 {
-    font-size: 14px;
+    color: #ffffff;
+    font-size: 15px;
     font-weight: bold;
     margin-top: 0;
     text-align: left;
 }
 
 p {
+    color: #E0E1E2;
     font-size: 16px;
-    line-height: 1.5em;
+    line-height: 1.6em;
     margin-top: 0;
     text-align: left;
 }
 
 p.sub {
     font-size: 12px;
+}
+
+ul,
+ol {
+    color: #E0E1E2;
+    font-size: 16px;
+    line-height: 1.6em;
+}
+
+blockquote {
+    border-left: 3px solid #964300;
+    color: #C3C6C8;
+    margin: 21px 0;
+    padding-left: 16px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #29353A;
+    margin: 28px 0;
 }
 
 img {
@@ -80,7 +126,7 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #fafafa;
+    background-color: #010101;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -98,12 +144,13 @@ img {
 /* Header */
 
 .header {
-    padding: 25px 0;
+    background-color: #010101;
+    padding: 32px 0 24px;
     text-align: center;
 }
 
 .header a {
-    color: #18181b;
+    color: #ffffff;
     font-size: 19px;
     font-weight: bold;
     text-decoration: none;
@@ -112,11 +159,12 @@ img {
 /* Logo */
 
 .logo {
-    height: 75px;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    max-height: 75px;
-    width: 75px;
+    border: 0;
+    display: block;
+    height: auto;
+    margin: 0 auto;
+    max-width: 164px;
+    width: 164px;
 }
 
 /* Body */
@@ -125,9 +173,9 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #fafafa;
-    border-bottom: 1px solid #fafafa;
-    border-top: 1px solid #fafafa;
+    background-color: #010101;
+    border-bottom: 1px solid #010101;
+    border-top: 1px solid #010101;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -137,16 +185,22 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 570px;
-    background-color: #ffffff;
-    border-color: #e4e4e7;
-    border-radius: 4px;
+    background-color: #0D151A;
+    border-color: #1B272D;
+    border-radius: 8px;
+    border-style: solid;
     border-width: 1px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
     padding: 0;
     width: 570px;
 }
 
+/*
+ * Deliberately sets no colour. CssToInlineStyles resolves by specificity, and
+ * `.inner-body a` (0,1,1) outranks `.button-primary` (0,1,0), so a colour here
+ * would repaint button labels with the link colour. Body links take their
+ * colour from the base `a` rule instead.
+ */
 .inner-body a {
     overflow-wrap: break-word;
 }
@@ -154,13 +208,18 @@ img {
 /* Subcopy */
 
 .subcopy {
-    border-top: 1px solid #e4e4e7;
+    border-top: 1px solid #29353A;
     margin-top: 25px;
     padding-top: 25px;
 }
 
 .subcopy p {
+    color: #A9ADAF;
     font-size: 14px;
+}
+
+.subcopy a {
+    color: #EEBD96;
 }
 
 /* Footer */
@@ -176,13 +235,14 @@ img {
 }
 
 .footer p {
-    color: #a1a1aa;
+    color: #7D8488;
     font-size: 12px;
+    line-height: 1.6em;
     text-align: center;
 }
 
 .footer a {
-    color: #a1a1aa;
+    color: #7D8488;
     text-decoration: underline;
 }
 
@@ -197,17 +257,20 @@ img {
 }
 
 .table th {
-    border-bottom: 1px solid #e4e4e7;
+    border-bottom: 1px solid #29353A;
+    color: #ffffff;
     margin: 0;
     padding-bottom: 8px;
+    text-align: left;
 }
 
 .table td {
-    color: #52525b;
+    border-bottom: 1px solid #1B272D;
+    color: #C3C6C8;
     font-size: 15px;
     line-height: 18px;
     margin: 0;
-    padding: 10px 0;
+    padding: 12px 0;
 }
 
 .content-cell {
@@ -230,55 +293,65 @@ img {
 
 .button {
     -webkit-text-size-adjust: none;
-    border-radius: 4px;
-    color: #fff;
+    border-radius: 6px;
+    color: #ffffff;
     display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
     overflow: hidden;
     text-decoration: none;
 }
 
+/*
+ * Fills are the 400 step rather than the brighter 300. White on p300 (#D65F00)
+ * is 3.8:1, under the 4.5:1 AA floor for text this size; white on p400 is
+ * 6.8:1. Same for success: white on g300 is 3.6:1, on g400 it is 6.4:1.
+ */
 .button-blue,
 .button-primary {
-    background-color: #18181b;
-    border-bottom: 8px solid #18181b;
-    border-left: 18px solid #18181b;
-    border-right: 18px solid #18181b;
-    border-top: 8px solid #18181b;
+    background-color: #964300;
+    border-bottom: 10px solid #964300;
+    border-left: 20px solid #964300;
+    border-right: 20px solid #964300;
+    border-top: 10px solid #964300;
+    color: #ffffff;
 }
 
 .button-green,
 .button-success {
-    background-color: #16a34a;
-    border-bottom: 8px solid #16a34a;
-    border-left: 18px solid #16a34a;
-    border-right: 18px solid #16a34a;
-    border-top: 8px solid #16a34a;
+    background-color: #5A633E;
+    border-bottom: 10px solid #5A633E;
+    border-left: 20px solid #5A633E;
+    border-right: 20px solid #5A633E;
+    border-top: 10px solid #5A633E;
+    color: #ffffff;
 }
 
 .button-red,
 .button-error {
-    background-color: #dc2626;
-    border-bottom: 8px solid #dc2626;
-    border-left: 18px solid #dc2626;
-    border-right: 18px solid #dc2626;
-    border-top: 8px solid #dc2626;
+    background-color: #DA3131;
+    border-bottom: 10px solid #DA3131;
+    border-left: 20px solid #DA3131;
+    border-right: 20px solid #DA3131;
+    border-top: 10px solid #DA3131;
+    color: #ffffff;
 }
 
 /* Panels */
 
 .panel {
-    border-left: #18181b solid 4px;
+    border-left: #D65F00 solid 4px;
     margin: 21px 0;
 }
 
 .panel-content {
-    background-color: #fafafa;
-    color: #52525b;
+    background-color: #1B272D;
+    color: #E0E1E2;
     padding: 16px;
 }
 
 .panel-content p {
-    color: #52525b;
+    color: #E0E1E2;
 }
 
 .panel-item {
