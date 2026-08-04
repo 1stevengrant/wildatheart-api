@@ -80,7 +80,7 @@ return [
                 'Becoming A King Experience' => 244,
                 'Becoming A King Retreat' => 245,
                 'Captivating Experience' => 246,
-                'Captivating Retreat' => 247,
+                '4-Day Captivating Retreat' => 247,
                 '1-Day Captivating Retreat' => 854,
             ],
             'staging' => [
@@ -91,7 +91,7 @@ return [
                 'Becoming A King Experience' => 285,
                 'Becoming A King Retreat' => 286,
                 'Captivating Experience' => 287,
-                'Captivating Retreat' => 288,
+                '4-Day Captivating Retreat' => 288,
                 'Captivating Fires' => 289,
                 '1-Day Captivating Retreat' => 855,
             ],

@@ -32,7 +32,7 @@ class TagDonorJob implements ShouldQueue
 
     public function __construct(
         public Attendee|User $taggable,
-        public string $weGiveTagId,
+        public ?string $weGiveTagId,
     ) {}
 
     /**
@@ -42,12 +42,13 @@ class TagDonorJob implements ShouldQueue
      */
     public function handle(): void
     {
-        if (! $this->taggable->wegive_donor_id) {
+        if (! $this->taggable->wegive_donor_id || ! $this->weGiveTagId) {
             LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
                 description: 'Missing required tagging data',
                 properties: [
                     'taggable_id' => $this->taggable->id,
+                    'tag' => $this->weGiveTagId,
                 ],
                 causedBy: $this->taggable,
                 performedOn: $this->taggable,

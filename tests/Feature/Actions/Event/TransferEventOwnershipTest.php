@@ -45,6 +45,38 @@ it('dispatches WeGive tagging jobs when ownership is transferred', function () {
     });
 });
 
+it('transfers ownership without tagging when the event type has no wegive tag', function () {
+    config()->set('services.wegive.event_type_tags.staging', []);
+
+    $oldOwner = User::factory()->create(['email' => 'oldowner@example.com']);
+    $newOwner = User::factory()->create(['email' => 'newowner@example.com']);
+    $event = Event::factory()->fires()->approved()->for($oldOwner)->create();
+
+    expect($event->eventType->wegive_tag)->toBeNull();
+
+    $transfer = EventOwnershipTransfer::create([
+        'event_id' => $event->id,
+        'email' => $newOwner->email,
+        'transferred_by_user_id' => $oldOwner->id,
+    ]);
+
+    TransferEventOwnership::run($transfer, $newOwner);
+
+    expect($event->fresh()->user_id)->toBe($newOwner->id);
+
+    Bus::assertDispatched(FindOrCreateDonorJob::class, function ($job) use ($oldOwner) {
+        if (! isset($job->chained[0])) {
+            return false;
+        }
+
+        $chainedJob = unserialize($job->chained[0]);
+
+        return $job->donorModel->id === $oldOwner->id
+            && $chainedJob instanceof TagDonorJob
+            && $chainedJob->weGiveTagId === null;
+    });
+});
+
 it('transfers ownership to new owner', function () {
     $oldOwner = User::factory()->create();
     $newOwner = User::factory()->create();
