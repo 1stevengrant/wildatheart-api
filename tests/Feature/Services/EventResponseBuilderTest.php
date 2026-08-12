@@ -13,11 +13,11 @@ beforeEach(function () {
     }
 });
 
-function landingPage(string $blueprintHandle): Statamic\Entries\Entry
+function landingPage(string $blueprintHandle, bool $linked = true): Statamic\Entries\Entry
 {
     $data = ['title' => 'Landing Page'];
 
-    if ($blueprintHandle === 'video_study') {
+    if ($blueprintHandle === 'video_study' && $linked) {
         // A video_study landing page is a pointer: the real content, and the
         // logo, live on the linked experiences entry.
         $experience = Entry::make()
@@ -107,4 +107,35 @@ it('still normalises the video url fields', function () {
 
     expect($response['background_video_url'])->toBe('https://example.test/background.mp4')
         ->and($response['featured_video_url'])->toBe('https://example.test/featured.mp4');
+});
+
+it('falls back to the pointer entry when a video_study has no related content', function () {
+    $entryBuilder = Mockery::mock(EntryBuilderService::class);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::type(Statamic\Entries\Entry::class))
+        ->andReturn(['title' => 'Unlinked Study']);
+
+    $unlinked = landingPage('video_study', linked: false);
+
+    expect($unlinked->related_content)->toBeNull();
+
+    $response = (new EventResponseBuilder($entryBuilder))->build($unlinked);
+
+    expect($response['title'])->toBe('Unlinked Study')
+        ->and($response['event_logo'])->toBeNull();
+});
+
+it('builds from the linked entry when a video_study has related content', function () {
+    $linked = landingPage('video_study');
+
+    $entryBuilder = Mockery::mock(EntryBuilderService::class);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->related_content->id()))
+        ->andReturn(['title' => 'Linked Experience']);
+
+    $response = (new EventResponseBuilder($entryBuilder))->build($linked);
+
+    expect($response['title'])->toBe('Linked Experience');
 });

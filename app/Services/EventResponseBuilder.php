@@ -10,9 +10,15 @@ class EventResponseBuilder
 
     public function build(Entry $event): array
     {
-        $response = $this->entryBuilder->buildResponseFromEntry(
-            $event->blueprint->handle === 'video_study' ? $event->related_content : $event
-        );
+        // A video_study entry points at the experiences entry holding the real
+        // landing page. An unlinked or dangling pointer augments to null, so
+        // fall back to the entry itself: a sparse landing page built from its
+        // own title and slug beats a 500.
+        $source = $event->blueprint->handle === 'video_study'
+            ? ($event->related_content ?? $event)
+            : $event;
+
+        $response = $this->entryBuilder->buildResponseFromEntry($source);
 
         if (isset($response['background_video_url']) && is_array($response['background_video_url'])) {
             $response['background_video_url'] = $response['background_video_url']['url'];
