@@ -24,7 +24,7 @@ tabs:
               container: s3
               folder: wp-app/uploads
               type: assets
-              display: 'Experience Logo'
+              display: 'Event Type Logo'
               max_files: 1
           -
             handle: host_a_group_link
