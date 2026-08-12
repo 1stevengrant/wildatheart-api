@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Models\Event;
+use App\Builders\EventBuilder;
 use Statamic\Facades\GlobalSet;
 use App\Data\FeaturedContentData;
 use App\Data\V1\SearchEventsData;
+use Illuminate\Http\JsonResponse;
 use App\Services\GeographyService;
+use Illuminate\Support\Collection;
 use App\Services\EventCacheService;
 use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
@@ -14,99 +17,199 @@ use App\Services\EventOffsettingService;
 
 class SearchForEventsController extends Controller
 {
+    /**
+     * How long, in seconds, a search response may be reused by shared caches.
+     */
+    private const CACHE_TTL_SECONDS = 60;
+
     public function __construct(
         private readonly EventOffsettingService $eventOffsettingService,
         private readonly EventCacheService $eventCacheService,
         private readonly GeographyService $geographyService
     ) {}
 
-    public function __invoke(SearchEventsData $data)
+    public function __invoke(SearchEventsData $data): JsonResponse
     {
         $cacheKey = $this->eventCacheService->generateSearchCacheKey($data->toArray());
 
-        if ($data->isCenterPointMode()) {
-            return cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data) {
-                $radius = $data->radius ?? 100;
+        $payload = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data) {
+            if ($data->isNearestMode()) {
+                return $this->nearestPayload($data);
+            }
 
-                if ($data->min_radius !== null) {
-                    $query = Event::query()
-                        ->published()->active()->public()
-                        ->filterBySex($data->sex)
-                        ->filterByTypeGroup($data->type_group)
-                        ->filterByEventTypes($data->types)
-                        ->betweenDates($data->start_date, $data->end_date)
-                        ->withinRing($data->latitude, $data->longitude, $data->min_radius, $radius)
-                        ->with(['eventType', 'user']);
-                } else {
-                    $query = Event::query()
-                        ->published()->active()->public()
-                        ->filterBySex($data->sex)
-                        ->filterByTypeGroup($data->type_group)
-                        ->filterByEventTypes($data->types)
-                        ->betweenDates($data->start_date, $data->end_date)
-                        ->withinRadius($data->latitude, $data->longitude, $radius)
-                        ->with(['eventType', 'user']);
-                }
+            if ($data->isCenterPointMode()) {
+                return $this->centerPointPayload($data);
+            }
 
-                $events = $query->get();
-                $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
-
-                return response()->json([
-                    'events' => $offsetEvents->map(fn (Event $event) => EventCollectionData::fromEvent($event)),
-                    'radius' => $radius,
-                    'total_count' => $events->count(),
-                    'featuredContent' => null,
-                ]);
-            });
-        }
-
-        $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data) {
-            return Event::query()
-                ->published()
-                ->active()
-                ->public()
-                ->filterBySex($data->sex)
-                ->filterByTypeGroup($data->type_group)
-                ->filterByEventTypes($data->types)
-                ->betweenDates($data->start_date, $data->end_date)
-                ->withinBoundingBox(
-                    $data->sw_latitude,
-                    $data->sw_longitude,
-                    $data->ne_latitude,
-                    $data->ne_longitude
-                )
-                ->orderBy('start_date')
-                ->with(['eventType', 'user'])
-                ->get();
+            return $this->boundingBoxPayload($data);
         });
 
-        $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
+        return $this->cacheableResponse($payload);
+    }
 
-        $featuredContent = null;
-        $globalSet = GlobalSet::findByHandle('local_platform');
+    /**
+     * @return array{events: Collection<int, EventCollectionData>, radius: ?float, total_count: int, pagination: null, featuredContent: null}
+     */
+    private function nearestPayload(SearchEventsData $data): array
+    {
+        $events = $this->filteredQuery($data)
+            ->nearestTo($data->latitude, $data->longitude, $data->nearestLimit())
+            ->with(['eventType', 'user'])
+            ->get();
 
-        if ($globalSet) {
-            $siteData = $globalSet->inDefaultSite()->data();
+        return [
+            'events' => $this->presentEvents($events),
+            'radius' => $this->effectiveRadius($events),
+            'total_count' => $events->count(),
+            'pagination' => null,
+            'featuredContent' => null,
+        ];
+    }
 
-            if ($siteData->get('featured_content_enabled')) {
-                $showInRegions = $siteData->get('show_in_regions', []);
+    /**
+     * @return array{events: Collection<int, EventCollectionData>, radius: float, total_count: int, pagination: ?array, featuredContent: null}
+     */
+    private function centerPointPayload(SearchEventsData $data): array
+    {
+        $radius = $data->radius ?? 100;
 
-                $visibleRegions = $this->geographyService->getVisibleRegions(
-                    $data->sw_latitude,
-                    $data->sw_longitude,
-                    $data->ne_latitude,
-                    $data->ne_longitude
-                );
+        $query = $this->filteredQuery($data);
 
-                if (empty($showInRegions) || array_intersect($showInRegions, $visibleRegions)) {
-                    $featuredContent = FeaturedContentData::fromStatamicData($siteData);
-                }
-            }
+        if ($data->min_radius !== null) {
+            $query->withinRing($data->latitude, $data->longitude, $data->min_radius, $radius);
+        } else {
+            $query->withinRadius($data->latitude, $data->longitude, $radius);
         }
 
-        return response()->json([
-            'events' => $offsetEvents->map(fn (Event $event) => EventCollectionData::fromEvent($event)),
-            'featuredContent' => $featuredContent,
-        ]);
+        $query->with(['eventType', 'user']);
+
+        if (! $data->isPaginated()) {
+            $events = $query->get();
+
+            return [
+                'events' => $this->presentEvents($events),
+                'radius' => $radius,
+                'total_count' => $events->count(),
+                'pagination' => null,
+                'featuredContent' => null,
+            ];
+        }
+
+        $paginator = $query->paginate(
+            perPage: $data->perPage(),
+            page: $data->currentPage()
+        );
+
+        return [
+            'events' => $this->presentEvents($paginator->getCollection()),
+            'radius' => $radius,
+            'total_count' => $paginator->total(),
+            'pagination' => [
+                'current_page' => $paginator->currentPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
+                'last_page' => $paginator->lastPage(),
+                'has_more' => $paginator->hasMorePages(),
+            ],
+            'featuredContent' => null,
+        ];
+    }
+
+    /**
+     * @return array{events: Collection<int, EventCollectionData>, featuredContent: ?FeaturedContentData}
+     */
+    private function boundingBoxPayload(SearchEventsData $data): array
+    {
+        $events = $this->filteredQuery($data)
+            ->withinBoundingBox(
+                $data->sw_latitude,
+                $data->sw_longitude,
+                $data->ne_latitude,
+                $data->ne_longitude
+            )
+            ->orderBy('start_date')
+            ->with(['eventType', 'user'])
+            ->get();
+
+        return [
+            'events' => $this->presentEvents($events),
+            'featuredContent' => $this->featuredContentFor($data),
+        ];
+    }
+
+    private function filteredQuery(SearchEventsData $data): EventBuilder
+    {
+        return Event::query()
+            ->published()
+            ->active()
+            ->public()
+            ->filterBySex($data->sex)
+            ->filterByTypeGroup($data->type_group)
+            ->filterByEventTypes($data->types)
+            ->betweenDates($data->start_date, $data->end_date);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Collection<int, Event>  $events
+     * @return Collection<int, EventCollectionData>
+     */
+    private function presentEvents($events): Collection
+    {
+        return $this->eventOffsettingService
+            ->offsetEvents($events)
+            ->map(fn (Event $event) => EventCollectionData::fromEvent($event));
+    }
+
+    /**
+     * The radius, in miles, that a client needs to cover every event in the result.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection<int, Event>  $events
+     */
+    private function effectiveRadius($events): ?float
+    {
+        if ($events->isEmpty()) {
+            return null;
+        }
+
+        return (float) ceil((float) $events->max('distance'));
+    }
+
+    private function featuredContentFor(SearchEventsData $data): ?FeaturedContentData
+    {
+        $globalSet = GlobalSet::findByHandle('local_platform');
+
+        if (! $globalSet) {
+            return null;
+        }
+
+        $siteData = $globalSet->inDefaultSite()->data();
+
+        if (! $siteData->get('featured_content_enabled')) {
+            return null;
+        }
+
+        $showInRegions = $siteData->get('show_in_regions', []);
+
+        $visibleRegions = $this->geographyService->getVisibleRegions(
+            $data->sw_latitude,
+            $data->sw_longitude,
+            $data->ne_latitude,
+            $data->ne_longitude
+        );
+
+        if (! empty($showInRegions) && ! array_intersect($showInRegions, $visibleRegions)) {
+            return null;
+        }
+
+        return FeaturedContentData::fromStatamicData($siteData);
+    }
+
+    private function cacheableResponse(array $payload): JsonResponse
+    {
+        return response()
+            ->json($payload)
+            ->setPublic()
+            ->setMaxAge(self::CACHE_TTL_SECONDS)
+            ->setSharedMaxAge(self::CACHE_TTL_SECONDS);
     }
 }
