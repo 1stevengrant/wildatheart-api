@@ -9,6 +9,8 @@ use Spatie\LaravelData\Data;
 use App\Services\EventResponseBuilder;
 use App\Support\EventTypeDateSelector;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\TypeScriptType;
+use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
 
 #[TypeScript]
 class EventTypeData extends Data
@@ -38,6 +40,7 @@ class EventTypeData extends Data
         public int $countries_count,
         public ?string $summary,
         public ?string $summary_link,
+        #[TypeScriptType('\\' . EventsShowResponse::class . '|null')]
         public ?array $landing_page,
     ) {}
 

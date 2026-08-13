@@ -6,6 +6,8 @@ use App\Models\Event;
 use App\Models\EventType;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\TypeScriptType;
+use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
 
 #[TypeScript]
 class EventData extends Data
@@ -25,6 +27,7 @@ class EventData extends Data
         public ?string $scheduledFor,
         public string $hostName,
         public ?string $hostAvatar,
+        #[TypeScriptType('\\' . EventsShowResponse::class . '|null')]
         public ?array $landingPage,
         public string $connect_url,
     ) {}
