@@ -390,4 +390,20 @@ class EventBuilder extends Builder
             ->whereRaw("$haversine <= ?", [$lat, $lng, $lat, $maxRadius])
             ->orderBy('distance');
     }
+
+    /**
+     * Order events by their distance from a geographic point, nearest first,
+     * with no radius constraint. Adds a calculated 'distance' column (in miles).
+     */
+    public function nearestTo(float $lat, float $lng, int $limit): EventBuilder
+    {
+        $haversine = $this->haversineFormula();
+
+        return $this->select('events.*')
+            ->selectRaw("$haversine AS distance", [$lat, $lng, $lat])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->orderBy('distance')
+            ->limit($limit);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Event;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(SeoService::class);
         $this->app->singleton(SubsplashApiClient::class);
         $this->app->singleton(SubsplashMediaItemImporter::class);
     }

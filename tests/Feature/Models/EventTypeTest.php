@@ -156,3 +156,19 @@ it('includes type as string in V1 EventTypeData', function () {
 
     expect($data->type)->toBe('retreat');
 });
+
+it('has a WeGive tag configured for every event type name', function (string $eventTypeName) {
+    expect(config("services.wegive.event_type_tags.production.{$eventTypeName}"))->not->toBeNull();
+    expect(config("services.wegive.event_type_tags.staging.{$eventTypeName}"))->not->toBeNull();
+})->with([
+    EventType::FIRES,
+    EventType::CAPTIVATING_FIRE,
+    EventType::WAH_EXPERIENCE,
+    EventType::CAPTIVATING_EXPERIENCE,
+    EventType::BECOMING_A_KING_EXPERIENCE,
+    EventType::WAH_RETREAT,
+    EventType::CAPTIVATING_CORE_RETREAT,
+    EventType::CAPTIVATING_CORE_RETREAT_1_DAY,
+    EventType::BECOMING_A_KING,
+    EventType::SURVIVAL_SCHOOL,
+]);

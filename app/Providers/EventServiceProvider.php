@@ -17,6 +17,7 @@ use Statamic\Events\GlobalVariablesSaved;
 use App\Listeners\LogStatamicEntryChanges;
 use App\Listeners\UpdateLastLoginDateTime;
 use App\Listeners\SaveSubsplashItemEntryWithId;
+use App\Listeners\ClearEventTypeCacheOnEntrySavedListener;
 use App\Listeners\ClearNavigationCacheOnGlobalSavedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -33,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         EntrySaved::class => [
             SaveSubsplashItemEntryWithId::class,
+            ClearEventTypeCacheOnEntrySavedListener::class,
         ],
         EntrySaving::class => [
             LogStatamicEntryChanges::class,

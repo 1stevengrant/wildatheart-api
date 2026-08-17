@@ -6,9 +6,9 @@ use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
 use Spatie\TypeScriptTransformer\Collectors\DefaultCollector;
 use Spatie\TypeScriptTransformer\Transformers\EnumTransformer;
 use Spatie\TypeScriptTransformer\Writers\TypeDefinitionWriter;
+use App\Support\TypeScript\UnionAwareDataTypeScriptTransformer;
 use Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer;
-use Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer;
 
 return [
     /*
@@ -40,7 +40,7 @@ return [
         SpatieStateTransformer::class,
         EnumTransformer::class,
         //        Spatie\TypeScriptTransformer\Transformers\SpatieEnumTransformer::class,
-        DataTypeScriptTransformer::class,
+        UnionAwareDataTypeScriptTransformer::class,
         DtoTransformer::class,
     ],
 

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Sentry\Laravel\Integration;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
@@ -73,4 +74,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         Integration::handles($exceptions);
+
+        // API clients should get a 422 with the validation errors, never a 302
+        // back to a page they did not come from.
+        $exceptions->shouldRenderJsonWhen(
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson()
+        );
     })->create();

@@ -180,6 +180,40 @@ it('redirects home with an error when the event has been soft-deleted on confirm
     Bus::assertNotDispatched(FindOrCreateDonorJob::class);
 });
 
+it('accepts the invitation without tagging when the event type has no wegive tag', function () {
+    config()->set('services.wegive.event_type_tags.staging', []);
+
+    $eventOwner = User::factory()->create(['email' => 'owner@example.com']);
+    $invitedUser = User::factory()->create(['email' => 'invited@example.com']);
+    $event = Event::factory()->fires()->approved()->for($eventOwner)->create();
+
+    expect($event->eventType->wegive_tag)->toBeNull();
+
+    $invitation = EventManagerInvitation::create([
+        'event_id' => $event->id,
+        'email' => $invitedUser->email,
+        'invited_by_user_id' => $eventOwner->id,
+    ]);
+
+    actingAs($invitedUser)
+        ->post(route('accept.host.invitation.confirm', $invitation))
+        ->assertRedirect(route('my.events.edit', $event));
+
+    expect($event->fresh()->managers->contains($invitedUser))->toBeTrue();
+
+    Bus::assertDispatched(FindOrCreateDonorJob::class, function ($job) use ($invitedUser) {
+        if (! isset($job->chained[0])) {
+            return false;
+        }
+
+        $chainedJob = unserialize($job->chained[0]);
+
+        return $job->donorModel->id === $invitedUser->id
+            && $chainedJob instanceof TagDonorJob
+            && $chainedJob->weGiveTagId === null;
+    });
+});
+
 it('uses event type wegive tag when tagging new co-host', function () {
     $eventOwner = User::factory()->create();
     $invitedUser = User::factory()->create();
