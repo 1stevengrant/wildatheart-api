@@ -3,6 +3,7 @@
 namespace App\Data;
 
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 use App\Data\Concerns\HasLocationRules;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -14,7 +15,7 @@ class UpdateEventData extends Data
     public function __construct(
         public string $start_date,
         public ?string $end_date,
-        public ?bool $is_private,
+        public bool|Optional $is_private,
         public ?float $latitude,
         public ?float $longitude,
         public ?string $country = null,
