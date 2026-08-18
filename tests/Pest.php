@@ -1,7 +1,9 @@
 <?php
 
 use Tests\TestCase;
+use App\Models\User;
 use Tests\ProductionParityTestCase;
+use App\Services\Auth0\JwtAccessTokenVerifier;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +55,20 @@ pest()->browser()
 |
 */
 
-function something()
+function mockJwtAuthentication(User $user, array $claims = []): void
 {
-    // ..
+    test()->mock(JwtAccessTokenVerifier::class)
+        ->shouldReceive('verify')
+        ->andReturn(array_merge([
+            'sub' => $user->provider_id ?? "auth0|test-{$user->id}",
+            'email' => $user->email,
+            'email_verified' => true,
+            'given_name' => $user->given_name,
+            'family_name' => $user->family_name,
+        ], $claims));
+}
+
+function jwtAuthenticationHeaders(): array
+{
+    return ['Authorization' => 'Bearer fake.jwt.token'];
 }

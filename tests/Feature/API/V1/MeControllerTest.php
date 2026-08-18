@@ -2,13 +2,13 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use App\Services\Auth0\JwtAccessTokenVerifier;
+use Auth0\SDK\Exception\InvalidTokenException;
 
 beforeEach(function () {
     Bus::fake();
     Mail::fake();
-    config(['auth0.base_url' => 'https://example.auth0.com']);
 });
 
 it('returns the authenticated user data', function () {
@@ -24,14 +24,9 @@ it('returns the authenticated user data', function () {
         'profile_step' => 2,
     ]);
 
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([
-            'email' => $user->email,
-            'sub' => 'auth0|abc123',
-        ]),
-    ]);
+    mockJwtAuthentication($user);
 
-    $response = $this->withHeader('Authorization', 'Bearer fake-token')
+    $response = $this->withHeaders(jwtAuthenticationHeaders())
         ->getJson('/api/v1/me');
 
     $response->assertOk()
@@ -62,14 +57,9 @@ it('handles users with null optional fields', function () {
         'profile_step' => null,
     ]);
 
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([
-            'email' => $user->email,
-            'sub' => 'auth0|abc123',
-        ]),
-    ]);
+    mockJwtAuthentication($user);
 
-    $response = $this->withHeader('Authorization', 'Bearer fake-token')
+    $response = $this->withHeaders(jwtAuthenticationHeaders())
         ->getJson('/api/v1/me');
 
     $response->assertOk()
@@ -90,25 +80,35 @@ it('returns 401 without a bearer token', function () {
         ->assertUnauthorized();
 });
 
-it('returns 401 when Auth0 rejects the token', function () {
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([], 401),
-    ]);
+it('returns 401 when JWT verification fails', function () {
+    $this->mock(JwtAccessTokenVerifier::class)
+        ->shouldReceive('verify')
+        ->andThrow(new InvalidTokenException('Invalid test token'));
 
-    $this->withHeader('Authorization', 'Bearer bad-token')
+    $this->withHeaders(jwtAuthenticationHeaders())
         ->getJson('/api/v1/me')
-        ->assertUnauthorized();
+        ->assertUnauthorized()
+        ->assertJsonPath('error', 'invalid_token');
 });
 
-it('returns 401 when the Auth0 email has no matching local user', function () {
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([
-            'email' => 'unknown@wildatheart.org',
-            'sub' => 'auth0|abc123',
-        ]),
-    ]);
+it('provisions a user from verified JWT claims', function () {
+    $this->mock(JwtAccessTokenVerifier::class)
+        ->shouldReceive('verify')
+        ->andReturn([
+            'sub' => 'auth0|new-user',
+            'email' => 'new-user@wildatheart.org',
+            'email_verified' => true,
+            'given_name' => 'New',
+            'family_name' => 'User',
+        ]);
 
-    $this->withHeader('Authorization', 'Bearer fake-token')
+    $this->withHeaders(jwtAuthenticationHeaders())
         ->getJson('/api/v1/me')
-        ->assertUnauthorized();
+        ->assertOk()
+        ->assertJsonPath('email', 'new-user@wildatheart.org');
+
+    $this->assertDatabaseHas('users', [
+        'provider_id' => 'auth0|new-user',
+        'email' => 'new-user@wildatheart.org',
+    ]);
 });

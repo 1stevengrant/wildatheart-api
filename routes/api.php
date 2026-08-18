@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\AllEventsController;
 use App\Http\Controllers\API\BlogsController;
-use App\Http\Controllers\API\V1\MeController;
 use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\V1\EventController;
 use App\Http\Controllers\API\V1\StatsController;
@@ -60,7 +59,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('stats', StatsController::class)->name('stats');
 
     Route::get('me', CurrentUserController::class)
-        ->middleware(['auth0.api', 'throttle:userProfile'])
+        ->middleware(['auth0.jwt', 'throttle:userProfile'])
         ->name('me');
 
     Route::patch('users/me', [CurrentUserController::class, 'update'])
@@ -76,8 +75,6 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('desktop', DesktopNavController::class)->name('desktop');
         Route::get('mobile', MobileNavController::class)->name('mobile');
     });
-
-    Route::get('me', MeController::class)->middleware('auth0.jwt')->name('me');
 
     Route::prefix('host')->name('host.')->middleware('auth0.jwt')->group(function () {
         Route::get('events', [HostEventController::class, 'index'])->name('events.index');

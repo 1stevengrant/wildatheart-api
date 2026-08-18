@@ -3,27 +3,19 @@
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 beforeEach(function () {
-    config(['auth0.base_url' => 'https://auth.example.test']);
-
     $this->host = User::factory()->create(['email' => 'host@example.test']);
     $this->event = Event::factory()->fires()->approved()->for($this->host)->create([
         'name' => 'Becoming a King Fire',
     ]);
 
-    Http::fake([
-        'auth.example.test/userinfo' => Http::response([
-            'email' => $this->host->email,
-            'email_verified' => true,
-        ]),
-    ]);
+    mockJwtAuthentication($this->host);
 });
 
 function hostBearer(): array
 {
-    return ['Authorization' => 'Bearer fake.userinfo.token'];
+    return jwtAuthenticationHeaders();
 }
 
 it('returns 401 when no bearer token is provided', function () {

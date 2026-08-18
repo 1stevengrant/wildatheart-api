@@ -4,13 +4,8 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventManagerInvitation;
-
-beforeEach(function () {
-    config(['auth0.base_url' => 'https://example.auth0.com']);
-});
 
 it('returns 401 without a bearer token', function () {
     $this->getJson('/api/v1/host/events')
@@ -43,14 +38,9 @@ it('returns listed and draft buckets for events controllable by the authenticate
     $listedOutsideControl = $createEvent($otherUser, now(), 5);
     $draftOutsideControl = $createEvent($otherUser, null, 6);
 
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([
-            'email' => $host->email,
-            'sub' => 'auth0|host123',
-        ]),
-    ]);
+    mockJwtAuthentication($host);
 
-    $response = $this->withHeader('Authorization', 'Bearer fake-token')
+    $response = $this->withHeaders(jwtAuthenticationHeaders())
         ->getJson('/api/v1/host/events');
 
     $response->assertOk()
@@ -85,14 +75,9 @@ it('persists co-host invitations when saving a draft and returns them on host ev
     ]);
     $eventType = EventType::factory()->create();
 
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([
-            'email' => $host->email,
-            'sub' => 'auth0|host123',
-        ]),
-    ]);
+    mockJwtAuthentication($host);
 
-    $saveResponse = $this->withHeader('Authorization', 'Bearer fake-token')
+    $saveResponse = $this->withHeaders(jwtAuthenticationHeaders())
         ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
             'name' => 'Denver, CO',
             'co_host_emails' => ['cohost@wildatheart.org', 'second@wildatheart.org'],
@@ -106,7 +91,7 @@ it('persists co-host invitations when saving a draft and returns them on host ev
     expect(EventManagerInvitation::where('event_id', $draftId)->pluck('email')->all())
         ->toEqual(['cohost@wildatheart.org', 'second@wildatheart.org']);
 
-    $indexResponse = $this->withHeader('Authorization', 'Bearer fake-token')
+    $indexResponse = $this->withHeaders(jwtAuthenticationHeaders())
         ->getJson('/api/v1/host/events');
 
     $draft = collect($indexResponse->json('drafts'))->firstWhere('id', $draftId);
@@ -133,14 +118,9 @@ it('prevents a user from updating another users draft', function () {
             'approved_at' => null,
         ]));
 
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([
-            'email' => $host->email,
-            'sub' => 'auth0|host123',
-        ]),
-    ]);
+    mockJwtAuthentication($host);
 
-    $this->withHeader('Authorization', 'Bearer fake-token')
+    $this->withHeaders(jwtAuthenticationHeaders())
         ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
             'event_id' => $otherDraft->id,
             'name' => 'Hijacked Draft',
@@ -180,14 +160,9 @@ it('syncs co-host invitations when updating a draft', function () {
         'invited_by_user_id' => $host->id,
     ]);
 
-    Http::fake([
-        'https://example.auth0.com/userinfo' => Http::response([
-            'email' => $host->email,
-            'sub' => 'auth0|host123',
-        ]),
-    ]);
+    mockJwtAuthentication($host);
 
-    $this->withHeader('Authorization', 'Bearer fake-token')
+    $this->withHeaders(jwtAuthenticationHeaders())
         ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
             'event_id' => $draft->id,
             'co_host_emails' => ['new@wildatheart.org'],
