@@ -2,6 +2,7 @@
 
 namespace WildAtHeart\CommandCenter\Http\Controllers\CP;
 
+use Throwable;
 use Inertia\Inertia;
 use Inertia\Response;
 use Statamic\Facades\User;
@@ -9,8 +10,7 @@ use Illuminate\Http\Request;
 use Laravel\Pennant\Feature;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Client\RequestException;
+use App\Actions\Astro\TriggerAstroBuild;
 use Statamic\Http\Controllers\CP\CpController;
 
 class CommandCenterController extends CpController
@@ -53,10 +53,10 @@ class CommandCenterController extends CpController
                 return response()->json(['message' => 'Skipped Astro build in development environment']);
             }
 
-            $response = Http::post(config('cloudflare.astro_build_hook'));
+            TriggerAstroBuild::run();
 
-            return response()->json($response->json());
-        } catch (RequestException $e) {
+            return response()->json(['message' => 'Astro production build triggered']);
+        } catch (Throwable $e) {
             return response()->json([
                 'error' => $e->getMessage(),
             ], 500);

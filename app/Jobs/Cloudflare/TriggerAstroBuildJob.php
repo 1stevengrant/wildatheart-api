@@ -2,27 +2,30 @@
 
 namespace App\Jobs\Cloudflare;
 
-use Illuminate\Support\Facades\Http;
+use App\Actions\Astro\TriggerAstroBuild;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\Middleware\FailOnException;
+use InvalidArgumentException;
 
 class TriggerAstroBuildJob implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
+    public int $tries = 2;
+
+    /** @var array<int, int> */
+    public array $backoff = [60, 120];
+
+    public function middleware(): array
     {
-        //
+        return [
+            new FailOnException([InvalidArgumentException::class]),
+        ];
     }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    public function handle(TriggerAstroBuild $triggerAstroBuild): void
     {
-        Http::post('https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/60bfbe99-ab1b-44e2-8856-d5eeb228bb9a');
+        $triggerAstroBuild->handle();
     }
 }
