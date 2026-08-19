@@ -133,6 +133,7 @@ tabs:
                 - events
               type: entries
               display: 'Related Landing Page'
+              instructions: 'Select the Statamic Events entry used as the landing page for this event type. The API includes its content in event type and individual event responses, which allows clients to display the correct landing page.'
   media:
     display: Media
     sections:

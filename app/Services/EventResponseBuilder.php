@@ -20,6 +20,12 @@ class EventResponseBuilder
 
         $response = $this->entryBuilder->buildResponseFromEntry($source);
 
+        if ($source !== $event) {
+            $eventResponse = $this->entryBuilder->buildResponseFromEntry($event);
+            $response['topics'] = $eventResponse['topics'] ?? [];
+            $response['blocks'] = $this->videoStudyBlocks($response, $eventResponse);
+        }
+
         if (isset($response['background_video_url']) && is_array($response['background_video_url'])) {
             $response['background_video_url'] = $response['background_video_url']['url'];
         }
@@ -34,5 +40,30 @@ class EventResponseBuilder
         $response['event_logo'] ??= $response['experience_logo'] ?? null;
 
         return $response;
+    }
+
+    private function videoStudyBlocks(array $relatedResponse, array $eventResponse): array
+    {
+        if (! empty($relatedResponse['blocks'])) {
+            return $relatedResponse['blocks'];
+        }
+
+        if (! empty($eventResponse['blocks'])) {
+            return $eventResponse['blocks'];
+        }
+
+        $blocks = [];
+
+        if (! empty($relatedResponse['hero_title'])) {
+            $blocks[] = [
+                'hero_title' => $relatedResponse['hero_title'],
+                'type' => 'hero_title',
+            ];
+        }
+
+        return [
+            ...$blocks,
+            ...($relatedResponse['hero_subtitle'] ?? []),
+        ];
     }
 }
