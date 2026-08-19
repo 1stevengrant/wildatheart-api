@@ -134,8 +134,109 @@ it('builds from the linked entry when a video_study has related content', functi
         ->once()
         ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->related_content->id()))
         ->andReturn(['title' => 'Linked Experience']);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->id()))
+        ->andReturn(['title' => 'Landing Page', 'topics' => []]);
 
     $response = (new EventResponseBuilder($entryBuilder))->build($linked);
 
     expect($response['title'])->toBe('Linked Experience');
+});
+
+it('retains augmented topics from a video_study while building landing page fields from related content', function () {
+    $linked = landingPage('video_study');
+    $parentTopics = [
+        ['slug' => 'for-women', 'title' => 'For Women'],
+        ['slug' => 'beginner-friendly', 'title' => 'Beginner Friendly'],
+    ];
+    $experienceLogo = ['id' => 's3::captivating-experience-white.png'];
+    $heroTitle = [
+        ['text' => 'Restore Your', 'type' => 'text_line'],
+        ['text' => 'Feminine Heart', 'type' => 'text_line'],
+    ];
+    $heroSubtitle = [
+        ['type' => 'text', 'text' => '<p>A six-session video series.</p>'],
+    ];
+
+    $entryBuilder = Mockery::mock(EntryBuilderService::class);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->related_content->id()))
+        ->andReturn([
+            'title' => 'Linked Experience',
+            'topics' => [],
+            'experience_logo' => $experienceLogo,
+            'blocks' => [],
+            'hero_title' => $heroTitle,
+            'hero_subtitle' => $heroSubtitle,
+        ]);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->id()))
+        ->andReturn([
+            'title' => 'Landing Page',
+            'topics' => $parentTopics,
+        ]);
+
+    $response = (new EventResponseBuilder($entryBuilder))->build($linked);
+
+    expect($response['title'])->toBe('Linked Experience')
+        ->and($response['topics'])->toBe($parentTopics)
+        ->and($response['blocks'])->toBe([
+            ['hero_title' => $heroTitle, 'type' => 'hero_title'],
+            ...$heroSubtitle,
+        ])
+        ->and($response['experience_logo'])->toBe($experienceLogo)
+        ->and($response['event_logo'])->toBe($experienceLogo);
+});
+
+it('preserves non-empty related blocks instead of replacing them with parent presentation content', function () {
+    $linked = landingPage('video_study');
+    $relatedBlocks = [
+        ['type' => 'text', 'text' => '<p>Related presentation</p>'],
+    ];
+
+    $entryBuilder = Mockery::mock(EntryBuilderService::class);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->related_content->id()))
+        ->andReturn([
+            'blocks' => $relatedBlocks,
+            'hero_title' => [['text' => 'Legacy title']],
+        ]);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->id()))
+        ->andReturn([
+            'blocks' => [['type' => 'text', 'text' => '<p>Parent presentation</p>']],
+            'topics' => [],
+        ]);
+
+    $response = (new EventResponseBuilder($entryBuilder))->build($linked);
+
+    expect($response['blocks'])->toBe($relatedBlocks);
+});
+
+it('uses parent presentation blocks when related blocks are empty', function () {
+    $linked = landingPage('video_study');
+    $parentBlocks = [
+        ['type' => 'text', 'text' => '<p>Parent presentation</p>'],
+    ];
+
+    $entryBuilder = Mockery::mock(EntryBuilderService::class);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->related_content->id()))
+        ->andReturn([
+            'blocks' => [],
+            'hero_title' => [['text' => 'Legacy title']],
+        ]);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->id()))
+        ->andReturn([
+            'blocks' => $parentBlocks,
+            'topics' => [],
+        ]);
+
+    $response = (new EventResponseBuilder($entryBuilder))->build($linked);
+
+    expect($response['blocks'])->toBe($parentBlocks);
 });
