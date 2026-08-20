@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Event\UserConnectedToHost;
 use App\Jobs\WeGive\FindOrCreateDonorJob;
+use App\Mail\Event\EventInterestCancelled;
 use App\Mail\Event\EventInterestRegistered;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Jobs\Admin\PostUserInterestToSlackJob;
@@ -519,19 +520,111 @@ it('does not fire side effects on a repeat POST while interest already exists', 
     Bus::assertDispatchedTimes(PostUserInterestToSlackJob::class, 1);
 });
 
-it('does not fire side effects on DELETE', function () {
-    $this->withHeaders(bearer())
-        ->postJson("/api/v1/events/{$this->eventId}/interests")
-        ->assertOk();
+it('notifies the host when an existing interest is cancelled', function () {
+    $interestedUser = User::factory()->create([
+        'provider_id' => $this->sub,
+        'provider' => 'auth0',
+        'email' => 'jwt.user@example.test',
+        'given_name' => 'Jwt',
+        'family_name' => 'User',
+    ]);
 
-    Bus::assertDispatchedTimes(PostUserInterestToSlackJob::class, 1);
+    DB::table('event_user_interests')->insert([
+        'user_id' => $interestedUser->id,
+        'event_id' => $this->eventId,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    Mail::fake();
+    Bus::fake();
 
     $this->withHeaders(bearer())
         ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
         ->assertNoContent();
 
-    Mail::assertQueued(EventInterestRegistered::class, 1);
-    Bus::assertDispatchedTimes(PostUserInterestToSlackJob::class, 1);
+    Mail::assertQueued(EventInterestCancelled::class, function (EventInterestCancelled $mail) use ($interestedUser) {
+        $mail->content();
+
+        return $mail->hasTo($this->host->email)
+            && $mail->hasReplyTo($interestedUser->email)
+            && str_contains($mail->render(), 'Jwt User has cancelled their interest')
+            && str_contains($mail->render(), $this->event->name);
+    });
+});
+
+it('CCs event managers on the cancellation email', function () {
+    $interestedUser = User::factory()->create([
+        'provider_id' => $this->sub,
+        'provider' => 'auth0',
+        'email' => 'jwt.user@example.test',
+    ]);
+    $manager1 = User::factory()->create(['email' => 'manager1@example.test']);
+    $manager2 = User::factory()->create(['email' => 'manager2@example.test']);
+    $this->event->managers()->attach([$manager1->id, $manager2->id]);
+
+    DB::table('event_user_interests')->insert([
+        'user_id' => $interestedUser->id,
+        'event_id' => $this->eventId,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    Mail::fake();
+    Bus::fake();
+
+    $this->withHeaders(bearer())
+        ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
+        ->assertNoContent();
+
+    Mail::assertQueued(EventInterestCancelled::class, function (EventInterestCancelled $mail) use ($manager1, $manager2) {
+        return $mail->hasTo($this->host->email)
+            && $mail->hasCc($manager1->email)
+            && $mail->hasCc($manager2->email);
+    });
+});
+
+it('does not run unrelated registration side effects when interest is cancelled', function () {
+    $interestedUser = User::factory()->create([
+        'provider_id' => $this->sub,
+        'provider' => 'auth0',
+        'email' => 'jwt.user@example.test',
+    ]);
+
+    DB::table('event_user_interests')->insert([
+        'user_id' => $interestedUser->id,
+        'event_id' => $this->eventId,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    Mail::fake();
+    Bus::fake();
+
+    $this->withHeaders(bearer())
+        ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
+        ->assertNoContent();
+
+    Mail::assertNotQueued(EventInterestRegistered::class);
+    Mail::assertNotQueued(UserConnectedToHost::class);
+    Bus::assertNotDispatched(PostUserInterestToSlackJob::class);
+    Bus::assertNotDispatched(FindOrCreateDonorJob::class);
+    Bus::assertNotDispatched(TagDonorJob::class);
+});
+
+it('does not notify anyone when cancelling without an existing interest', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $this->withHeaders(bearer())
+        ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
+        ->assertNoContent();
+
+    $this->withHeaders(bearer())
+        ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
+        ->assertNoContent();
+
+    Mail::assertNotQueued(EventInterestCancelled::class);
 });
 
 it('rate-limits the interests endpoints per authenticated user', function () {
