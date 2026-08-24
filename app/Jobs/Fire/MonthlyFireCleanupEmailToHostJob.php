@@ -39,6 +39,7 @@ class MonthlyFireCleanupEmailToHostJob implements ShouldBeUnique, ShouldQueue
         $this->event->update([
             'last_checkin_email_sent_at' => now(),
             'last_checkin_reminder_sent_at' => null,
+            'last_checkin_confirmed_at' => null,
         ]);
 
         activity('fire')

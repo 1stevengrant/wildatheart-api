@@ -134,6 +134,22 @@ class User extends Authenticatable
             ->first();
     }
 
+    protected function givenName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value): ?string => $this->normalizeUppercaseName($value),
+            set: fn (?string $value): ?string => $this->normalizeUppercaseName($value),
+        );
+    }
+
+    protected function familyName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value): ?string => $this->normalizeUppercaseName($value),
+            set: fn (?string $value): ?string => $this->normalizeUppercaseName($value),
+        );
+    }
+
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
@@ -173,6 +189,27 @@ class User extends Authenticatable
             get: fn (?string $value) => $value ? mb_strtolower($value) : $value,
             set: fn (?string $value) => $value ? mb_strtolower(str_replace(' ', '', $value)) : $value,
         );
+    }
+
+    private function normalizeUppercaseName(?string $name): ?string
+    {
+        if ($name === null) {
+            return null;
+        }
+
+        if (mb_strtoupper($name) !== $name) {
+            return $name;
+        }
+
+        if (mb_strtolower($name) === $name) {
+            return $name;
+        }
+
+        if (mb_strlen($name) <= 2) {
+            return $name;
+        }
+
+        return mb_convert_case(mb_strtolower($name), MB_CASE_TITLE);
     }
 
     public function profilePhoto(): string

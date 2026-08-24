@@ -3,6 +3,7 @@
 use App\Models\Page;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Activity;
 use App\Models\Attendee;
 use App\Models\Redirect;
 use App\Models\EventType;
@@ -20,6 +21,16 @@ return [
     */
 
     'resources' => [
+        Activity::class => [
+            'name' => 'Activity Log',
+            'cp_icon' => 'history',
+            'title_field' => 'description',
+            'read_only' => true,
+            'duplicatable' => false,
+            'order_by' => 'created_at',
+            'order_by_direction' => 'DESC',
+        ],
+
         Redirect::class => [
             'name' => 'Redirects',
         ],
