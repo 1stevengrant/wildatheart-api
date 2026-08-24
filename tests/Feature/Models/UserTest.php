@@ -48,6 +48,26 @@ it('returns only the family name if given name is null', function () {
     expect($user->fullname)->toBe('Doe');
 });
 
+it('normalizes uppercase names', function () {
+    $user = User::factory()->create([
+        'given_name' => 'JIM',
+        'family_name' => 'LYNUM',
+    ]);
+
+    expect($user->fullname)->toBe('Jim Lynum')
+        ->and($user->getRawOriginal('given_name'))->toBe('Jim')
+        ->and($user->getRawOriginal('family_name'))->toBe('Lynum');
+});
+
+it('preserves intentional mixed name casing', function () {
+    $user = User::factory()->create([
+        'given_name' => 'AJ',
+        'family_name' => 'McDonald',
+    ]);
+
+    expect($user->fullname)->toBe('AJ McDonald');
+});
+
 test('a family and given name can be nullable', function () {
     $user = User::factory()->create([
         'given_name' => null,

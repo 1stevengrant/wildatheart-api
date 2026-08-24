@@ -1,0 +1,94 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: description
+            field:
+              type: text
+              display: Description
+              listable: true
+              default_visibility: true
+          -
+            handle: log_name
+            field:
+              type: text
+              display: 'Log Name'
+              width: 50
+              listable: true
+              default_visibility: true
+          -
+            handle: event
+            field:
+              type: text
+              display: Event
+              width: 50
+              listable: true
+              default_visibility: true
+          -
+            handle: causer_type
+            field:
+              type: text
+              display: 'Causer Type'
+              width: 50
+          -
+            handle: causer_id
+            field:
+              type: text
+              display: 'Causer ID'
+              width: 50
+              listable: true
+          -
+            handle: subject_type
+            field:
+              type: text
+              display: 'Subject Type'
+              width: 50
+              listable: true
+          -
+            handle: subject_id
+            field:
+              type: text
+              display: 'Subject ID'
+              width: 50
+              listable: true
+          -
+            handle: batch_uuid
+            field:
+              type: text
+              display: 'Batch UUID'
+          -
+            handle: properties_json
+            field:
+              type: code
+              display: Properties
+              mode: json
+              visibility: computed
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: id
+            field:
+              type: text
+              display: ID
+              visibility: read_only
+          -
+            handle: created_at
+            field:
+              type: date
+              display: 'Created At'
+              time_enabled: true
+              listable: true
+              default_visibility: true
+          -
+            handle: updated_at
+            field:
+              type: date
+              display: 'Updated At'
+              time_enabled: true
+title: 'Activity Log'
