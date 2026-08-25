@@ -2,7 +2,8 @@
 
 namespace Tests;
 
-use Database\Seeders\DatabaseSeeder;
+use Saloon\Config;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -10,15 +11,20 @@ abstract class TestCase extends BaseTestCase
 {
     use LazilyRefreshDatabase;
 
+    /**
+     * Seed once during migrate:fresh (per process) instead of re-running
+     * the DatabaseSeeder inside every test's transaction.
+     */
+    protected $seed = true;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->withoutVite();
-    }
 
-    protected function afterRefreshingDatabase(): void
-    {
-        $this->seed(DatabaseSeeder::class);
+        Http::preventStrayRequests();
+        Config::preventStrayRequests();
+
     }
 }
