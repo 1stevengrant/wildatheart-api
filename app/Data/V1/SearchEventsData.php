@@ -18,6 +18,7 @@ class SearchEventsData extends Data
         public ?float $longitude,
         public ?float $radius,
         public ?float $min_radius,
+        public ?int $nearest,
         public ?string $sex,
         public ?string $type_group,
         public ?string $types,
@@ -41,6 +42,7 @@ class SearchEventsData extends Data
             'longitude' => ['nullable', 'numeric'],
             'radius' => ['nullable', 'numeric', 'min:1', 'max:12500'],
             'min_radius' => ['nullable', 'numeric', 'min:0', 'max:12500'],
+            'nearest' => ['nullable', 'integer', 'min:1', 'max:100'],
 
             'sex' => ['nullable', 'string', Rule::enum(EventSexEnum::class)],
             'type_group' => ['nullable', 'string'],

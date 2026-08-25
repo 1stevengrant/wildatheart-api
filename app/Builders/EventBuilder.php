@@ -375,6 +375,21 @@ class EventBuilder extends Builder
     }
 
     /**
+     * Order events by distance from a geographic point and limit the results.
+     */
+    public function nearestTo(float $lat, float $lng, int $limit): EventBuilder
+    {
+        $haversine = $this->haversineFormula();
+
+        return $this->select('events.*')
+            ->selectRaw("$haversine AS distance", [$lat, $lng, $lat])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->orderBy('distance')
+            ->limit($limit);
+    }
+
+    /**
      * Filter events within a ring (donut) between minRadius and maxRadius miles.
      * Used for "load more" incremental radius expansion.
      */

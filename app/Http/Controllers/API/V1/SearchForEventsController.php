@@ -27,28 +27,22 @@ class SearchForEventsController extends Controller
         if ($data->isCenterPointMode()) {
             return cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data) {
                 $radius = $data->radius ?? 100;
+                $query = Event::query()
+                    ->published()->active()->public()
+                    ->filterBySex($data->sex)
+                    ->filterByTypeGroup($data->type_group)
+                    ->filterByEventTypes($data->types)
+                    ->betweenDates($data->start_date, $data->end_date);
 
                 if ($data->min_radius !== null) {
-                    $query = Event::query()
-                        ->published()->active()->public()
-                        ->filterBySex($data->sex)
-                        ->filterByTypeGroup($data->type_group)
-                        ->filterByEventTypes($data->types)
-                        ->betweenDates($data->start_date, $data->end_date)
-                        ->withinRing($data->latitude, $data->longitude, $data->min_radius, $radius)
-                        ->with(['eventType', 'user']);
+                    $query->withinRing($data->latitude, $data->longitude, $data->min_radius, $radius);
+                } elseif ($data->nearest !== null) {
+                    $query->nearestTo($data->latitude, $data->longitude, $data->nearest);
                 } else {
-                    $query = Event::query()
-                        ->published()->active()->public()
-                        ->filterBySex($data->sex)
-                        ->filterByTypeGroup($data->type_group)
-                        ->filterByEventTypes($data->types)
-                        ->betweenDates($data->start_date, $data->end_date)
-                        ->withinRadius($data->latitude, $data->longitude, $radius)
-                        ->with(['eventType', 'user']);
+                    $query->withinRadius($data->latitude, $data->longitude, $radius);
                 }
 
-                $events = $query->get();
+                $events = $query->with(['eventType', 'user'])->get();
                 $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
 
                 return response()->json([
