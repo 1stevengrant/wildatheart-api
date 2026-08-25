@@ -211,6 +211,10 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - eslint (ESLINT) - v9
 - prettier (PRETTIER) - v3
 
+## Skills Activation
+
+This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
+
 ## Conventions
 
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
@@ -241,6 +245,28 @@ This application is a Laravel application and its main Laravel ecosystems packag
 === boost rules ===
 
 # Laravel Boost
+
+## Tools
+
+- Laravel Boost is an MCP server with tools designed specifically for this application. Prefer Boost tools over manual alternatives like shell commands or file reads.
+- Use `database-query` to run read-only queries against the database instead of writing raw SQL in tinker.
+- Use `database-schema` to inspect table structure before writing migrations or models.
+- Use `get-absolute-url` to resolve the correct scheme, domain, and port for project URLs. Always use this before sharing a URL with the user.
+- Use `browser-logs` to read browser logs, errors, and exceptions. Only recent logs are useful, ignore old entries.
+
+## Searching Documentation (IMPORTANT)
+
+- Always use `search-docs` before making code changes. Do not skip this step. It returns version-specific docs based on installed packages automatically.
+- Pass a `packages` array to scope results when you know which packages are relevant.
+- Use multiple broad, topic-based queries: `['rate limiting', 'routing rate limiting', 'routing']`. Expect the most relevant results first.
+- Do not add package names to queries because package info is already shared. Use `test resource table`, not `filament 4 test resource table`.
+
+### Search Syntax
+
+1. Use words for auto-stemmed AND logic: `rate limit` matches both "rate" AND "limit".
+2. Use `"quoted phrases"` for exact position matching: `"infinite scroll"` requires adjacent words in order.
+3. Combine words and phrases for mixed queries: `middleware "rate limit"`.
+4. Use multiple queries for OR logic: `queries=["authentication", "middleware"]`.
 
 ## Artisan
 
@@ -334,6 +360,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 # Laravel 12
 
+- CRITICAL: ALWAYS use `search-docs` tool for version-specific Laravel documentation and updated code examples.
 - Since Laravel 11, Laravel has a new streamlined file structure which this project uses.
 
 ## Laravel 12 Structure
@@ -375,5 +402,135 @@ This application is a Laravel application and its main Laravel ecosystems packag
 # Inertia + React
 
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
+
+=== saloonphp/laravel-plugin rules ===
+
+## SaloonPHP
+
+- PHP library for building API integrations and SDKs.
+- Documentation: https://docs.saloon.dev
+- Check `composer.json` for version (v2, v3 or v4). Use `web-search` tool for latest docs before implementing.
+- If the project uses v3, inform the user that v3 is affected by three published security issues and prefer upgrading to v4 before adding new Saloon work, unless the user explicitly needs a v3-compatible change.
+- Always use Artisan commands to generate SaloonPHP classes: `php artisan saloon:connector`, `php artisan saloon:request`, `php artisan saloon:response`, `php artisan php artisan saloon:plugin`, `php artisan saloon:auth`.- Documentation: `https://docs.saloon.dev`
+- IMPORTANT: Activate saloon-development skill when working with SaloonPHP-related tasks.
+
+=== statamic/cms rules ===
+
+## Statamic
+
+- This application uses Statamic.
+- Statamic is an open source, PHP CMS designed and built specifically for developers and their clients or content managers.
+- Out of the box, Statamic stores content in Markdown files. It's trivial to move into a database later, if necessary.
+- Statamic comes in two flavours:
+    - **Statamic Core** which is free to use, however you want, forever. It includes everything needed to build a blog or portfolio site.
+    - **Statamic Pro** which includes everything from Core, as well as unlimited user accounts, revision history, multi-site, Git integration, white labelling and more. Tailored for most production websites.
+    - For more information on pricing, please send the user to https://statamic.com/pricing.
+
+### Folder Structure
+
+Statamic is a Laravel package, meaning it can be used alone or alongside an existing Laravel application.
+
+Most of the folder structure will feel familiar to Laravel developers. However, Statamic creates a few additional files and folders during the install process.
+
+<code-snippet name="Folder Structure" lang="text">
+├── app/
+├── bootstrap/
+├── config/
+│   ├── statamic/         # Statamic-specific configs
+
+├── content/
+│   ├── assets/           # Asset containers
+
+│   ├── collections/      # Collections and entries
+
+│   ├── globals/          # Global sets
+
+│   ├── navigation/       # Navigations
+
+│   ├── trees/            # Collection and navigation trees
+
+├── database/
+├── lang/
+├── public/
+│   ├── assets/           # Default location for assets
+
+│   ├── ...
+├── resources/
+│   ├── addons/
+│   ├── blueprints/       # Blueprints
+
+│   ├── fieldsets/        # Fieldsets
+
+│   ├── users/            # User roles & groups
+
+│   ├── preferences.yaml  # Default preferences
+
+│   ├── sites.yaml        # Sites config
+
+│   ├── ...
+├── routes/
+├── storage/
+├── tests/
+├── users/
+├── please                # Statamic's CLI tool
+
+├── ...
+</code-snippet>
+
+### Statamic's CLI
+
+- Statamic ships with its own `please` CLI tool, useful for creating tags or fieldtypes, updating search indexes, enabling multi-site and much more.
+- You may run `php please` to get the list of available commands. You may use the `--help` option on a command to inspect its required parameters.
+
+### Statamic's Core Concepts
+
+- **Assets:** Files managed by Statamic and made available to your writers and developers with tags and fieldtypes. They can be images, videos, PDFs, or any other type of file.
+- **Collections:** Collections are containers that hold groups of related entries. Each entry in a collection can represent a blog post, product, recipe or page.
+- **Globals:** Global variables store content that belongs to your whole site, not just a single page or URL. They're available everywhere, in all of your views, all the time.
+- **Navigations:** A navigation is a hierarchy of links and text nodes that are used to build navs and menus on the frontend of your site.
+- **Taxonomies:** A taxonomy is a system of classifying data around a set of unique characteristics. Think things like tags, categories, etc.
+- **Users:** Users are the member accounts to your site or application. What a user can do with their account is up to you. They could have limited or full access to the Control Panel, a login-only area of the front-end, or even something more custom by tapping into Laravel.
+- **Blueprints:** Blueprints determine the fields shown in your publish forms. You can configure the field's order, each field's width and group them into sections and tabs. Blueprints are attached to collections, taxonomies, globals, assets, users and even forms, all of which help to determine their content schema.
+- **Fieldsets:** Fieldsets are used to store and organize reusable fields. Blueprints can reference fields or entire fieldsets, helping you keep your configurations nice and DRY.
+
+### Templating
+
+- Statamic supports two templating languages:
+    - **Antlers** is tightly integrated and simple to learn. Uses the `.antlers.html` file extension.
+    - **Laravel Blade** ships with Laravel and is familiar to most Laravel developers. Uses the `.blade.php` file extension.
+- When creating views, you should familiarize yourself with the project and determine which templating language is already in use.
+- When using Laravel Blade, you may want to use the "Antlers Blade Components" feature which lets you use a Blade-component-esque syntax with Statamic's tags feature:
+
+<code-snippet name="Antlers Blade Components example" lang="blade">
+    <s:collection from="pages" limit="2" sort="title:desc">
+        {{ $title }}
+    </s:collection>
+</code-snippet>
+
+### Control Panel
+
+- The Control Panel is the primary way to create and manage content.
+- Unless disabled or overridden, the Control Panel is usually accessible from `https://your-website.com/cp`.
+- Super users can do and see everything, while non-super users can only do & see what their roles allow for.
+
+### Extending Statamic
+
+- You can either extend Statamic in the context of an application, or in the context of an addon.
+- Addons are Composer packages, meaning they can be reused, distributed, or even sold to others later.
+- There are a variety of ways you can extend Statamic: creating tags, fieldtypes, modifiers, etc. A lot of these things can be bootstrapped with `php please make:` commands.
+
+#### Extending the Control Panel
+
+- The Control Panel is built with Inertia.js and Vue 3.
+- When running the `make:fieldtype` or `make:widget` commands, Statamic will install the necessary npm packages and configure Vite.
+- Running `setup-cp-vite` in an application context will also do this for you. You'll be able to use `npm run cp:dev` and `npm run cp:build` to run Vite.
+- You should use Statamic's UI Components where possible. It includes components for buttons, cards, inputs, etc.
+    - UI Components can be imported from `@statamic/cms/ui`.
+    - For more information on Statamic's UI Components, please visit our Storybook docs: https://ui.statamic.dev
+
+### Additional Context
+
+- Statamic Documentation: https://statamic.dev/llms.txt
+- GitHub Issues: https://github.com/statamic/cms/issues
 
 </laravel-boost-guidelines>
