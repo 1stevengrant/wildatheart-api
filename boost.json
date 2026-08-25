@@ -2,15 +2,33 @@
     "agents": [
         "claude_code",
         "cursor",
-        "phpstorm"
+        "codex"
     ],
     "cloud": false,
-    "editors": [
-        "claude_code",
-        "cursor",
-        "phpstorm",
-        "vscode"
-    ],
     "guidelines": true,
-    "herd_mcp": true
+    "mcp": true,
+    "nightwatch": true,
+    "packages": [
+        "saloonphp/laravel-plugin",
+        "statamic/cms",
+        "lorisleiva/laravel-actions",
+        "spatie/laravel-query-builder",
+        "spatie/laravel-ray",
+        "barryvdh/laravel-debugbar"
+    ],
+    "sail": false,
+    "skills": [
+        "laravel-best-practices",
+        "configuring-horizon",
+        "configure-nightwatch",
+        "pennant-development",
+        "pest-testing",
+        "inertia-react-development",
+        "tailwindcss-development",
+        "laravel-actions",
+        "saloon-development",
+        "laravel-query-builder",
+        "debugging-output-and-previewing-html-using-ray",
+        "debug-using-debugbar"
+    ]
 }
