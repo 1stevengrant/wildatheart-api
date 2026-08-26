@@ -28,35 +28,35 @@ class Attributes extends Data
 
     public string $status;
 
-    public string $published_at;
+    public ?string $published_at;
 
     public ?int $duration;
 
     public bool $explicit;
 
-    public string $keywords;
+    public ?string $keywords;
 
-    public string $alternate_url;
+    public ?string $alternate_url;
 
     public string $media_url;
 
     public ?string $image_url;
 
-    public string $video_url;
+    public ?string $video_url;
 
-    public string $author;
+    public ?string $author;
 
     public ?string $summary;
 
-    public string $description;
+    public ?string $description;
 
-    public string $slug;
+    public ?string $slug;
 
     public string $created_at;
 
     public string $updated_at;
 
-    public string $formatted_published_at;
+    public ?string $formatted_published_at;
 
     public string $duration_in_mmss;
 
