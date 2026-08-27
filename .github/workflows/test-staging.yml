@@ -118,15 +118,10 @@ jobs:
             ${{ runner.os }}-ms-playwright-
       - name: Install Playwright Browsers
         working-directory: astro
-        run: pnpm exec playwright install chromium webkit --with-deps
-      - name: Run Integration Tests On Astro in CF pointed at local-staging
+        run: pnpm exec playwright install chromium --with-deps
+      - name: Build Astro against local-staging
         working-directory: astro
-        run: pnpm test:playwright:live
-      - name: Start application
-        working-directory: astro
-        run: |
-          pnpm run build
-          pnpm run start &
+        run: pnpm build
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.ASTRO_SENTRY_AUTH_TOKEN }}
           TRANSISTOR_API_KEY: ${{ secrets.TRANSISTOR_API_KEY }}
@@ -143,10 +138,29 @@ jobs:
           WAH_LOCAL_API_URL: "https://local-staging.wildatheart.org/api/v1"
           CONTENT_API_V1_URL: "https://local-staging.wildatheart.org/api/content/v1"
           CONTENT_API_AUTH_TOKEN: "Basic d2FoOndhaA=="
-          NODE_ENV: development
-      - name: Run Integration Tests Through A Fresh Build
+      - name: Preview the build
         working-directory: astro
-        run: BASE_URL=http://localhost:4321 pnpm exec playwright test
+        run: pnpm preview &
+      - name: Wait for preview
+        run: |
+          echo "Waiting for preview at http://localhost:4321"
+          for i in {1..30}; do
+            STATUS=$(curl -sS -o /tmp/preview-body -w "%{http_code}" "http://localhost:4321" || true)
+            if [ "$STATUS" = "200" ]; then
+              echo "Preview is reachable"
+              exit 0
+            fi
+            echo "Not ready yet ($i/30); HTTP ${STATUS:-failed}; retrying in 5s..."
+            sleep 5
+          done
+          echo "Preview never became reachable at http://localhost:4321"
+          echo "Last HTTP status: ${STATUS:-failed}"
+          echo "Last body (truncated):"
+          head -c 400 /tmp/preview-body || true
+          exit 1
+      - name: Run Integration Tests Against The Build
+        working-directory: astro
+        run: BASE_URL=http://localhost:4321 pnpm test:playwright:integration
       - name: Upload trace
         if: failure()
         uses: actions/upload-artifact@v4

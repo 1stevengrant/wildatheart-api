@@ -26,6 +26,7 @@ use App\StatamicDTO\Shared\ButtonsSet;
 use App\StatamicDTO\Shared\ColumnsSet;
 use App\StatamicDTO\Shared\ImagesGroup;
 use App\StatamicDTO\Shared\TextLineSet;
+use App\StatamicDTO\Shared\CodeBlockSet;
 use App\StatamicDTO\Shared\CountdownSet;
 use App\StatamicDTO\Shared\HeroTitleSet;
 use App\StatamicDTO\Shared\ImageTitleSet;
@@ -80,7 +81,7 @@ class Experience extends Data
 
     public float $sitemap_priority;
 
-    /** @var array<HeroTitleSet|ImageTitleSet|CountdownSet|ButtonsSet|ActionsSet|StyledTextSet|ColumnsSet>|null */
+    /** @var array<HeroTitleSet|ImageTitleSet|CountdownSet|ButtonsSet|ActionsSet|StyledTextSet|ColumnsSet|CodeBlockSet>|null */
     public ?array $blocks = null;
 
     /** @var 'center' | 'left' | null */
