@@ -104,7 +104,7 @@ class MultidayRetreat extends Data
 
     public ?bool $show_in_collections = null;
 
-    /** @var array<HeroTitleSet|ImageTitleSet|CountdownSet|ButtonsSet|ActionsSet|StyledTextSet|ColumnsSet>|null */
+    /** @var array<HeroTitleSet|ImageTitleSet|CountdownSet|ButtonsSet|ActionsSet|StyledTextSet|ColumnsSet|CodeBlockSet>|null */
     public ?array $blocks = null;
 
     /** @var 'center' | 'left' | null */

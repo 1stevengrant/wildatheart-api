@@ -31,7 +31,7 @@ class HeroSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array<HeroTitleSet|ImageTitleSet|CountdownSet|ButtonsSet|ActionsSet|StyledTextSet|ColumnsSet>|null */
+    /** @var array<HeroTitleSet|ImageTitleSet|CountdownSet|ButtonsSet|ActionsSet|StyledTextSet|ColumnsSet|CodeBlockSet>|null */
     public ?array $blocks = null;
 
     /** @var 'center' | 'left' | null */
