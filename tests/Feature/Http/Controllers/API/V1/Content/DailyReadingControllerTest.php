@@ -189,6 +189,40 @@ it('returns limited number of recent daily readings', function () use ($mockData
         ]);
 });
 
+it('returns daily readings when transistor sends null optional attributes', function () use ($mockData) {
+    $episode = $mockData[0];
+    $episode['attributes']['video_url'] = null;
+    $episode['attributes']['keywords'] = null;
+    $episode['attributes']['alternate_url'] = null;
+    $episode['attributes']['author'] = null;
+    $episode['attributes']['description'] = null;
+    $episode['attributes']['slug'] = null;
+    $episode['attributes']['published_at'] = null;
+    $episode['attributes']['formatted_published_at'] = null;
+
+    $this->transistorServiceMock->shouldReceive('getAll')
+        ->with('wildatheart-daily')
+        ->once()
+        ->andReturn([$episode]);
+
+    $this->transistorServiceMock->shouldReceive('getAll')
+        ->with('wildatheart-daily', 'scheduled')
+        ->once()
+        ->andReturn([]);
+
+    $this->transistorServiceMock->shouldReceive('getAll')
+        ->with('wildatheart-daily', 'draft')
+        ->once()
+        ->andReturn([]);
+
+    $response = getJson(route('content.v1.dailyReading.index'));
+
+    $response->assertSuccessful()
+        ->assertJsonPath('0.transistor_episode.attributes.video_url', null)
+        ->assertJsonPath('0.transistor_episode.attributes.slug', null)
+        ->assertJsonPath('0.current_episode_slug', 'what-jesus-weeps-over');
+});
+
 it('uses default limit when none provided for recent readings', function () use ($mockData) {
     // Arrange
     $defaultLimit = 1;

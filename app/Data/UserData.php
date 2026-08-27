@@ -32,7 +32,7 @@ class UserData extends Data
             family_name: $user->family_name,
             fullname: $user->fullname,
             email: $user->email,
-            opted_into_marketing: $user->opted_into_marketing,
+            opted_into_marketing: (bool) $user->opted_into_marketing,
             image: $user->profilePhoto(),
             profile_step: $user->profile_step,
             phone: $user->phone,

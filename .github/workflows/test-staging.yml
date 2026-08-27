@@ -2,9 +2,20 @@ name: Playwright Tests
 on:
   push:
     branches: [staging]
+  workflow_dispatch:
+    inputs:
+      skip_deploy:
+        description: Skip the Forge staging deploy and only run Playwright against the current local-staging site
+        type: boolean
+        default: false
+      astro_ref:
+        description: Branch or ref of wildatheart.org-astro to run tests from
+        type: string
+        default: develop
 jobs:
   forge-deploy:
     name: "Deploy to Laravel Forge"
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.skip_deploy != 'true'
     runs-on: ubuntu-latest-m
     steps:
       - name: Checkout code
@@ -71,6 +82,7 @@ jobs:
   test:
     name: "Run Integration Tests"
     needs: forge-deploy
+    if: always() && !cancelled() && (needs.forge-deploy.result == 'success' || needs.forge-deploy.result == 'skipped')
     timeout-minutes: 60
     runs-on: ubuntu-latest-m
     steps:
@@ -80,7 +92,7 @@ jobs:
         with:
           repository: wild-at-heart/wildatheart.org-astro
           path: astro
-          ref: develop
+          ref: ${{ inputs.astro_ref || 'develop' }}
           token: ${{ secrets.PAT_TOKEN }}
       - uses: pnpm/action-setup@v4
         with:

@@ -66,10 +66,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth0.api' => Auth0ApiMiddleware::class,
             'auth0.jwt' => Auth0JwtMiddleware::class,
             'permission' => PermissionMiddleware::class,
-            'profile_complete' => EnsureProfileIsCompleteMiddleware::class,
             'role' => RoleMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
             'super_admin' => SuperAdminMiddleware::class,
+            'profile_complete' => EnsureProfileIsCompleteMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
