@@ -44,6 +44,7 @@ it('lists contacts for events the host owns', function () {
         ->and($response->json('data.0.user_id'))->toBe($interestedUser->id)
         ->and($response->json('data.0.event_id'))->toBe($this->event->id)
         ->and($response->json('data.0.event_name'))->toBe('Becoming a King Fire')
+        ->and($response->json('data.0.event_type_name'))->toBe($this->event->eventType->name)
         ->and($response->json('data.0.email'))->toBe('alice@example.test')
         ->and($response->json('data.0.given_name'))->toBe('Alice')
         ->and($response->json('data.0.archived_at'))->toBeNull();
@@ -69,7 +70,8 @@ it('includes contacts for events the host manages', function () {
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(1)
-        ->and($response->json('data.0.event_id'))->toBe($managedEvent->id);
+        ->and($response->json('data.0.event_id'))->toBe($managedEvent->id)
+        ->and($response->json('data.0.event_type_name'))->toBe($managedEvent->eventType->name);
 });
 
 it('excludes contacts from events the host does not own or manage', function () {
@@ -176,7 +178,7 @@ it('sorts by created_at asc and desc with desc as the default', function () {
     expect($asc->json('data.0.user_id'))->toBe($older->id);
 });
 
-it('filters by event name (partial match)', function () {
+it('filters contacts by event id', function () {
     $kingsEvent = $this->event;
     $retreatEvent = Event::factory()->fires()->approved()->for($this->host)->create([
         'name' => 'Wilderness Retreat',
@@ -189,11 +191,103 @@ it('filters by event name (partial match)', function () {
     ]);
 
     $response = $this->withHeaders(hostBearer())
-        ->getJson('/api/v1/host/contacts?filter[event]=Retreat')
+        ->getJson("/api/v1/host/contacts?filter[event]={$retreatEvent->id}")
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(1)
         ->and($response->json('data.0.event_name'))->toBe('Wilderness Retreat');
+});
+
+it('filters contacts by multiple comma-separated event ids', function () {
+    $secondEvent = Event::factory()->fires()->approved()->for($this->host)->create();
+    $unselectedEvent = Event::factory()->fires()->approved()->for($this->host)->create();
+
+    $selectedContact = User::factory()->create();
+    $secondSelectedContact = User::factory()->create();
+    $unselectedContact = User::factory()->create();
+
+    DB::table('event_user_interests')->insert([
+        ['user_id' => $selectedContact->id, 'event_id' => $this->event->id, 'created_at' => now(), 'updated_at' => now()],
+        ['user_id' => $secondSelectedContact->id, 'event_id' => $secondEvent->id, 'created_at' => now(), 'updated_at' => now()],
+        ['user_id' => $unselectedContact->id, 'event_id' => $unselectedEvent->id, 'created_at' => now(), 'updated_at' => now()],
+    ]);
+
+    $response = $this->withHeaders(hostBearer())
+        ->getJson("/api/v1/host/contacts?filter[event]={$this->event->id},{$secondEvent->id}")
+        ->assertOk();
+
+    expect($response->json('data'))->toHaveCount(2)
+        ->and(collect($response->json('data'))->pluck('user_id')->all())
+        ->toContain($selectedContact->id, $secondSelectedContact->id)
+        ->not->toContain($unselectedContact->id);
+});
+
+it('searches contact names email and phone', function (string $search) {
+    $contact = User::factory()->create([
+        'given_name' => 'Quinn',
+        'family_name' => 'Young',
+        'email' => 'quinn.young@example.test',
+        'phone' => '+64 21 555 0017',
+    ]);
+    $otherContact = User::factory()->create();
+
+    DB::table('event_user_interests')->insert([
+        ['user_id' => $contact->id, 'event_id' => $this->event->id, 'created_at' => now(), 'updated_at' => now()],
+        ['user_id' => $otherContact->id, 'event_id' => $this->event->id, 'created_at' => now(), 'updated_at' => now()],
+    ]);
+
+    $response = $this->withHeaders(hostBearer())
+        ->getJson('/api/v1/host/contacts?' . http_build_query(['filter' => ['search' => $search]]))
+        ->assertOk();
+
+    expect($response->json('data'))->toHaveCount(1)
+        ->and($response->json('data.0.user_id'))->toBe($contact->id);
+})->with([
+    'given name' => 'Quinn',
+    'family name' => 'Young',
+    'email' => 'young@example',
+    'phone' => '555 0017',
+]);
+
+it('fuzzily searches contact names before applying event filters and pagination', function () {
+    $selectedContact = User::factory()->create([
+        'given_name' => 'Quinn',
+        'family_name' => 'Young',
+    ]);
+    $unselectedContact = User::factory()->create([
+        'given_name' => 'Jung',
+        'family_name' => 'Park',
+    ]);
+    $unselectedEvent = Event::factory()->fires()->approved()->for($this->host)->create();
+
+    DB::table('event_user_interests')->insert([
+        ['user_id' => $selectedContact->id, 'event_id' => $this->event->id, 'created_at' => now(), 'updated_at' => now()],
+        ['user_id' => $unselectedContact->id, 'event_id' => $unselectedEvent->id, 'created_at' => now(), 'updated_at' => now()],
+    ]);
+
+    $response = $this->withHeaders(hostBearer())
+        ->getJson('/api/v1/host/contacts?' . http_build_query([
+            'filter' => [
+                'search' => 'Jung',
+                'event' => $this->event->id,
+            ],
+            'per_page' => 1,
+        ]))
+        ->assertOk();
+
+    expect($response->json('data'))->toHaveCount(1)
+        ->and($response->json('data.0.user_id'))->toBe($selectedContact->id)
+        ->and($response->json('total'))->toBe(1)
+        ->and($response->json('per_page'))->toBe(1);
+});
+
+it('rejects an excessively long contact search', function () {
+    $this->withHeaders(hostBearer())
+        ->getJson('/api/v1/host/contacts?' . http_build_query([
+            'filter' => ['search' => str_repeat('a', 101)],
+        ]))
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('filter.search');
 });
 
 it('hides archived contacts by default and reveals them with filter[archived]=true', function () {
@@ -222,6 +316,71 @@ it('hides archived contacts by default and reveals them with filter[archived]=tr
         ->assertOk();
     expect($allResponse->json('data'))->toHaveCount(2);
 });
+
+it('filters contacts added on or after a date', function () {
+    $before = User::factory()->create();
+    $onDate = User::factory()->create();
+
+    DB::table('event_user_interests')->insert([
+        ['user_id' => $before->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-09 23:59:59', 'updated_at' => now()],
+        ['user_id' => $onDate->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-10 00:00:00', 'updated_at' => now()],
+    ]);
+
+    $response = $this->withHeaders(hostBearer())
+        ->getJson('/api/v1/host/contacts?filter[added_from]=2026-07-10')
+        ->assertOk();
+
+    expect($response->json('data'))->toHaveCount(1)
+        ->and($response->json('data.0.user_id'))->toBe($onDate->id);
+});
+
+it('filters contacts added on or before a date', function () {
+    $onDate = User::factory()->create();
+    $after = User::factory()->create();
+
+    DB::table('event_user_interests')->insert([
+        ['user_id' => $onDate->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-20 23:59:59', 'updated_at' => now()],
+        ['user_id' => $after->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-21 00:00:00', 'updated_at' => now()],
+    ]);
+
+    $response = $this->withHeaders(hostBearer())
+        ->getJson('/api/v1/host/contacts?filter[added_to]=2026-07-20')
+        ->assertOk();
+
+    expect($response->json('data'))->toHaveCount(1)
+        ->and($response->json('data.0.user_id'))->toBe($onDate->id);
+});
+
+it('includes both date boundaries when filtering contacts by a range', function () {
+    $before = User::factory()->create();
+    $fromBoundary = User::factory()->create();
+    $toBoundary = User::factory()->create();
+    $after = User::factory()->create();
+
+    DB::table('event_user_interests')->insert([
+        ['user_id' => $before->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-09 23:59:59', 'updated_at' => now()],
+        ['user_id' => $fromBoundary->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-10 00:00:00', 'updated_at' => now()],
+        ['user_id' => $toBoundary->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-20 23:59:59', 'updated_at' => now()],
+        ['user_id' => $after->id, 'event_id' => $this->event->id, 'created_at' => '2026-07-21 00:00:00', 'updated_at' => now()],
+    ]);
+
+    $response = $this->withHeaders(hostBearer())
+        ->getJson('/api/v1/host/contacts?filter[added_from]=2026-07-10&filter[added_to]=2026-07-20')
+        ->assertOk();
+
+    expect($response->json('data'))->toHaveCount(2)
+        ->and($response->json('data.*.user_id'))->toContain($fromBoundary->id, $toBoundary->id);
+});
+
+it('rejects invalid contact added date filters', function (string $filter, string $value) {
+    $this->withHeaders(hostBearer())
+        ->getJson("/api/v1/host/contacts?filter[{$filter}]={$value}")
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors("filter.{$filter}");
+})->with([
+    'invalid from date' => ['added_from', 'not-a-date'],
+    'invalid to date format' => ['added_to', '2026/07/20'],
+]);
 
 it('archives a contact via POST', function () {
     $contact = User::factory()->create();
