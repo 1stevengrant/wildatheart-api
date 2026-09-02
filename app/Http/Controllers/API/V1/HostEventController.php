@@ -11,7 +11,9 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Actions\Event\SaveEventDraft;
 use App\Support\EventTypeDateSelector;
+use App\Actions\Event\PublishEventDraft;
 use App\Http\Requests\API\V1\CreateEventRequest;
+use App\Http\Requests\API\V1\PublishEventRequest;
 use App\Http\Requests\API\V1\SaveEventDraftRequest;
 use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
@@ -114,6 +116,16 @@ class HostEventController extends Controller
         return response()->json([
             'success' => true,
             'event' => $event->fresh(['managers', 'pendingManagerInvitations']),
+        ]);
+    }
+
+    public function publish(PublishEventRequest $request, EventType $eventType, Event $event): JsonResponse
+    {
+        $publishedEvent = PublishEventDraft::run($request, $eventType, $event, auth()->user());
+
+        return response()->json([
+            'success' => true,
+            'event' => EventData::fromModel($publishedEvent),
         ]);
     }
 }
