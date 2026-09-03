@@ -25,6 +25,7 @@ use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\GroupedEventTypeController;
 use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
+use App\Http\Controllers\API\V1\ContactInvitationsController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
 use App\Http\Controllers\API\V1\HostMailingAddressController;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
@@ -34,6 +35,7 @@ use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\Media\MediaItemsBySeriesController;
 use App\Http\Controllers\API\Media\SubsplashMediaItemController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
+use App\Http\Controllers\API\V1\HostContactInvitationsController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 use App\Http\Controllers\API\V1\Content\RecentDailyReadingsController;
 use App\Http\Controllers\API\V1\Content\RefreshDailyReadingsController;
@@ -92,12 +94,20 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('events.approve');
         Route::get('contacts', [HostContactsController::class, 'index'])->name('contacts.index');
+        Route::post('contact-invitations', [HostContactInvitationsController::class, 'store'])->name('contact-invitations.store');
+        Route::delete('contact-invitations/{invitation}', [HostContactInvitationsController::class, 'destroy'])->name('contact-invitations.destroy');
         Route::post('contacts/{event}/{user}/archive', [ArchivedHostContactsController::class, 'store'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('contacts.archive.store');
         Route::delete('contacts/{event}/{user}/archive', [ArchivedHostContactsController::class, 'destroy'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('contacts.archive.destroy');
+    });
+
+    Route::prefix('contact-invitations')->name('contact-invitations.')->group(function () {
+        Route::post('preview', [ContactInvitationsController::class, 'preview'])->name('preview');
+        Route::post('accept', [ContactInvitationsController::class, 'accept'])->name('accept');
+        Route::post('decline', [ContactInvitationsController::class, 'decline'])->name('decline');
     });
 
     Route::prefix('events')->name('events.')->group(function () {
