@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Address;
+use App\Models\Attendee;
 use App\Models\EventType;
 use App\Jobs\PostToZapier;
 use Carbon\CarbonInterface;
@@ -422,4 +423,243 @@ it('does not send co-host emails when publishing without co-hosts', function () 
         ->assertOk();
 
     Mail::assertNothingQueued();
+});
+
+it('allows an owner to soft delete their event and cascades attendees', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+    $attendee = Attendee::factory()->for($event)->create();
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->deleteJson("/api/v1/host/events/{$event->id}")
+        ->assertOk()
+        ->assertJsonPath('success', true);
+
+    expect($event->fresh()->deleted_at)->not->toBeNull();
+    expect($attendee->fresh()->deleted_at)->not->toBeNull();
+});
+
+it('returns 403 when a co-host tries to delete an event', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $coHost = User::factory()->create(['email' => 'cohost@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+    $event->managers()->attach($coHost->id);
+
+    mockJwtAuthentication($coHost);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->deleteJson("/api/v1/host/events/{$event->id}")
+        ->assertForbidden();
+
+    expect($event->fresh()->deleted_at)->toBeNull();
+});
+
+it('returns 403 when another user tries to delete an event', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $otherUser = User::factory()->create(['email' => 'other@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+
+    mockJwtAuthentication($otherUser);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->deleteJson("/api/v1/host/events/{$event->id}")
+        ->assertForbidden();
+
+    expect($event->fresh()->deleted_at)->toBeNull();
+});
+
+it('returns 401 when deleting an event without authentication', function () {
+    $event = Event::withoutEvents(fn () => Event::factory()->create([
+        'approved_at' => now(),
+    ]));
+
+    $this->deleteJson("/api/v1/host/events/{$event->id}")
+        ->assertUnauthorized();
+});
+
+it('allows an owner to unpublish a listed event', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/unpublish")
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('event.id', $event->id)
+        ->assertJsonPath('event.approved_at', null);
+
+    expect($event->fresh()->approved_at)->toBeNull();
+});
+
+it('allows a co-host to unpublish a listed event', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $coHost = User::factory()->create(['email' => 'cohost@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+    $event->managers()->attach($coHost->id);
+
+    mockJwtAuthentication($coHost);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/unpublish")
+        ->assertOk()
+        ->assertJsonPath('success', true);
+
+    expect($event->fresh()->approved_at)->toBeNull();
+});
+
+it('allows an owner to approve an unpublished event', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('event.id', $event->id);
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
+});
+
+it('allows a co-host to approve an unpublished event', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $coHost = User::factory()->create(['email' => 'cohost@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+    $event->managers()->attach($coHost->id);
+
+    mockJwtAuthentication($coHost);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk()
+        ->assertJsonPath('success', true);
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
+});
+
+it('returns 403 when another user tries to unpublish an event', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $otherUser = User::factory()->create(['email' => 'other@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+
+    mockJwtAuthentication($otherUser);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/unpublish")
+        ->assertForbidden();
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
+});
+
+it('returns 401 when unpublishing an event without authentication', function () {
+    $event = Event::withoutEvents(fn () => Event::factory()->create([
+        'approved_at' => now(),
+    ]));
+
+    $this->postJson("/api/v1/host/events/{$event->id}/unpublish")
+        ->assertUnauthorized();
+});
+
+it('allows an owner to update a published event draft fields', function () {
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+            'name' => 'Original Name',
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $event->id,
+            'name' => 'Updated Listed Event',
+        ])
+        ->assertOk()
+        ->assertJsonPath('success', true);
+
+    expect($event->fresh()->name)->toBe('Updated Listed Event');
+    expect($event->fresh()->approved_at)->not->toBeNull();
 });

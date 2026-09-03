@@ -82,6 +82,15 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
         Route::post('event-types/{eventType}/events/draft', [HostEventController::class, 'storeDraft'])->name('event-types.events.draft');
         Route::post('event-types/{eventType}/events/{event}/publish', [HostEventController::class, 'publish'])->name('event-types.events.publish');
+        Route::delete('events/{event}', [HostEventController::class, 'destroy'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.destroy');
+        Route::post('events/{event}/unpublish', [HostEventController::class, 'unpublish'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.unpublish');
+        Route::post('events/{event}/publish', [HostEventController::class, 'approve'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.approve');
         Route::get('contacts', [HostContactsController::class, 'index'])->name('contacts.index');
         Route::post('contacts/{event}/{user}/archive', [ArchivedHostContactsController::class, 'store'])
             ->where('event', '[0-9a-fA-F-]{36}')
