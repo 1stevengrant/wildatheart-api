@@ -9,11 +9,11 @@ use App\Data\FeaturedContentData;
 use App\Data\V1\SearchEventsData;
 use Illuminate\Http\JsonResponse;
 use App\Services\GeographyService;
-use Illuminate\Support\Collection;
 use App\Services\EventCacheService;
 use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
+use Illuminate\Database\Eloquent\Collection;
 
 class SearchForEventsController extends Controller
 {
@@ -32,7 +32,7 @@ class SearchForEventsController extends Controller
     {
         $cacheKey = $this->eventCacheService->generateSearchCacheKey($data->toArray());
 
-        $payload = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data) {
+        $payload = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data): array {
             if ($data->isNearestMode()) {
                 return $this->nearestPayload($data);
             }
@@ -48,7 +48,7 @@ class SearchForEventsController extends Controller
     }
 
     /**
-     * @return array{events: Collection<int, EventCollectionData>, radius: ?float, total_count: int, pagination: null, featuredContent: null}
+     * @return array{events: array<int, array<string, mixed>>, radius: ?float, total_count: int, pagination: null, featuredContent: null}
      */
     private function nearestPayload(SearchEventsData $data): array
     {
@@ -67,7 +67,7 @@ class SearchForEventsController extends Controller
     }
 
     /**
-     * @return array{events: Collection<int, EventCollectionData>, radius: float, total_count: int, pagination: ?array, featuredContent: null}
+     * @return array{events: array<int, array<string, mixed>>, radius: float, total_count: int, pagination: ?array, featuredContent: null}
      */
     private function centerPointPayload(SearchEventsData $data): array
     {
@@ -116,7 +116,7 @@ class SearchForEventsController extends Controller
     }
 
     /**
-     * @return array{events: Collection<int, EventCollectionData>, featuredContent: ?FeaturedContentData}
+     * @return array{events: array<int, array<string, mixed>>, featuredContent: ?array<string, mixed>}
      */
     private function boundingBoxPayload(SearchEventsData $data): array
     {
@@ -150,20 +150,22 @@ class SearchForEventsController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Collection<int, Event>  $events
-     * @return Collection<int, EventCollectionData>
+     * @param  Collection<int, Event>  $events
+     * @return array<int, array<string, mixed>>
      */
-    private function presentEvents($events): Collection
+    private function presentEvents($events): array
     {
         return $this->eventOffsettingService
             ->offsetEvents($events)
-            ->map(fn (Event $event) => EventCollectionData::fromEvent($event));
+            ->map(fn (Event $event): array => EventCollectionData::fromEvent($event)->toArray())
+            ->values()
+            ->toArray();
     }
 
     /**
      * The radius, in miles, that a client needs to cover every event in the result.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection<int, Event>  $events
+     * @param  Collection<int, Event>  $events
      */
     private function effectiveRadius($events): ?float
     {
@@ -174,7 +176,7 @@ class SearchForEventsController extends Controller
         return (float) ceil((float) $events->max('distance'));
     }
 
-    private function featuredContentFor(SearchEventsData $data): ?FeaturedContentData
+    private function featuredContentFor(SearchEventsData $data): ?array
     {
         $globalSet = GlobalSet::findByHandle('local_platform');
 
@@ -201,7 +203,7 @@ class SearchForEventsController extends Controller
             return null;
         }
 
-        return FeaturedContentData::fromStatamicData($siteData);
+        return FeaturedContentData::fromStatamicData($siteData)->toArray();
     }
 
     private function cacheableResponse(array $payload): JsonResponse

@@ -6,6 +6,6 @@ class EventCacheService
 {
     public function generateSearchCacheKey(array $validatedData): string
     {
-        return 'events_search_' . md5(json_encode($validatedData));
+        return 'events_search_v2_' . md5(json_encode($validatedData));
     }
 }

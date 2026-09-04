@@ -3,32 +3,35 @@
 namespace App\Http\Controllers\API\V1\Navs;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
 class AllNavsController extends BaseNavController
 {
-    public function __invoke()
+    public function __invoke(): JsonResponse
     {
-        $cacheKey = 'navigation.all';
+        $cacheKey = 'navigation.all.v2';
 
         try {
-            return Cache::remember($cacheKey, now()->addMinutes($this->getCacheDuration()), function () {
+            $navigation = Cache::remember($cacheKey, now()->addMinutes($this->getCacheDuration()), function (): array {
                 $desktopController = new DesktopNavController;
                 $mobileController = new MobileNavController;
 
                 $desktopData = $this->fetchNavData($desktopController);
                 $mobileData = $this->fetchNavData($mobileController);
 
-                return response()->json([
+                return [
                     'desktop' => $desktopData,
                     'mobile' => $mobileData,
-                ], 200, [
-                    'Content-Type' => 'application/json',
-                    'Cache-Control' => 'public, max-age=' . ($this->getCacheDuration() * 60),
-                    'X-Navigation-Type' => 'all',
-                ]);
+                ];
             });
+
+            return response()->json($navigation, 200, [
+                'Content-Type' => 'application/json',
+                'Cache-Control' => 'public, max-age=' . ($this->getCacheDuration() * 60),
+                'X-Navigation-Type' => 'all',
+            ]);
         } catch (Exception $e) {
             Log::error("All Navigation API error: {$e->getMessage()}", [
                 'trace' => $e->getTraceAsString(),

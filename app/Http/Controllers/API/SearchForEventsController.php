@@ -26,8 +26,8 @@ class SearchForEventsController extends Controller
 
         $cacheKey = $this->eventCacheService->generateSearchCacheKey($validatedData);
 
-        $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData) {
-            return Event::query()
+        $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData): array {
+            $eventModels = Event::query()
                 ->published()
                 ->active()
                 ->public()
@@ -44,9 +44,11 @@ class SearchForEventsController extends Controller
                 ->with(['eventType', 'user', 'managers'])
                 ->orderBy('start_date')
                 ->get();
-        });
 
-        $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
+            $offsetEvents = $this->eventOffsettingService->offsetEvents($eventModels);
+
+            return EventMapData::collect($offsetEvents)->toArray();
+        });
 
         // Get featured content if enabled
         $featuredContent = null;
@@ -74,7 +76,7 @@ class SearchForEventsController extends Controller
         }
 
         return response()->json([
-            'events' => EventMapData::collect($offsetEvents),
+            'events' => $events,
             'featuredContent' => $featuredContent,
         ]);
 

@@ -18,7 +18,7 @@ class EventTypeController extends Controller
      * Serialising an event type resolves its Statamic landing page, so the
      * cache holds the finished payload rather than just the query result.
      */
-    private const CACHE_KEY = 'eventTypesWithCounts.serialised';
+    private const CACHE_KEY = 'eventTypesWithCounts.serialised.v2';
 
     private const CACHE_TTL_SECONDS = 300;
 

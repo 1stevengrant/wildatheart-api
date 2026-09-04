@@ -20,17 +20,17 @@ class HomeController extends Controller
         );
 
         return inertia('HomePage', [
-            'allEventTypes' => cache()->remember('allEventTypes', now()->addDay(), function () {
-                return EventType::query()->active()->orderBy('order')->get();
+            'allEventTypes' => cache()->remember('allEventTypes.v2', now()->addDay(), function (): array {
+                return EventType::query()->active()->orderBy('order')->get()->toArray();
             }),
-            'experienceTypes' => cache()->remember('experienceTypes', now()->addDay(), function () {
-                return EventType::query()->slug('%experience%')->active()->orderBy('order')->get();
+            'experienceTypes' => cache()->remember('experienceTypes.v2', now()->addDay(), function (): array {
+                return EventType::query()->slug('%experience%')->active()->orderBy('order')->get()->toArray();
             }),
-            'retreatTypes' => cache()->remember('retreatTypes', now()->addDay(), function () {
-                return EventType::query()->slug('%retreat%')->active()->orderBy('order')->get();
+            'retreatTypes' => cache()->remember('retreatTypes.v2', now()->addDay(), function (): array {
+                return EventType::query()->slug('%retreat%')->active()->orderBy('order')->get()->toArray();
             }),
-            'fireTypes' => cache()->remember('fireTypes', now()->addDay(), function () {
-                return EventType::query()->slug('%fire%')->active()->orderBy('order')->get();
+            'fireTypes' => cache()->remember('fireTypes.v2', now()->addDay(), function (): array {
+                return EventType::query()->slug('%fire%')->active()->orderBy('order')->get()->toArray();
             }),
         ]);
     }

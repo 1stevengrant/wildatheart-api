@@ -3,13 +3,13 @@
 use App\Models\EventType;
 
 $cacheKeys = [
-    'allEventTypes',
-    'experienceTypes',
-    'retreatTypes',
-    'fireTypes',
-    'eventTypesGroupedByType',
-    'event_types',
-    'event_types_list',
+    'allEventTypes.v2',
+    'experienceTypes.v2',
+    'retreatTypes.v2',
+    'fireTypes.v2',
+    'eventTypesGroupedByType.v2',
+    'event_types.v2',
+    'event_types_list.v2',
 ];
 
 beforeEach(function () use ($cacheKeys) {

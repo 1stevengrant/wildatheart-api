@@ -2,6 +2,7 @@
 
 use App\Models\Event;
 use App\Mail\HostInvitationMail;
+use App\Mail\Transport\CloudflareFailoverTransport;
 
 /**
  * Guards the Wild at Heart mail theme in resources/views/vendor/mail.
@@ -55,4 +56,17 @@ test('it fills primary buttons with the brand orange and a legible label', funct
 
 test('it does not break link text mid-word', function () {
     expect(renderBrandedEmail())->not->toContain('word-break: break-all');
+});
+
+it('resolves the Cloudflare transport through the Laravel mail manager', function (): void {
+    config()->set([
+        'mail.mailers.cloudflare.account_id' => 'test-account',
+        'mail.mailers.cloudflare.api_token' => 'test-token',
+    ]);
+
+    $transport = app('mail.manager')
+        ->mailer('cloudflare')
+        ->getSymfonyTransport();
+
+    expect($transport)->toBeInstanceOf(CloudflareFailoverTransport::class);
 });
