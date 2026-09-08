@@ -2,11 +2,14 @@
 
 use App\Services\TransistorService;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Cache;
 use App\Jobs\Cloudflare\TriggerAstroBuildJob;
 use App\Jobs\Transistor\RefreshEpisodeListJob;
 use App\Jobs\Transistor\RefreshDailyReadingsJob;
 
 beforeEach(function () {
+    Cache::flush();
+
     Bus::fake()->except([RefreshDailyReadingsJob::class]);
 });
 

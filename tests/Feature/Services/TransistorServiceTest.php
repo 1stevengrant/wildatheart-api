@@ -267,3 +267,35 @@ it('serializes concurrent refreshes using a cache lock', function () {
     expect($result)->toBe($episodes);
     $mockClient->assertSentCount(0, GetEpisodesRequest::class);
 });
+
+it('preserves cached episodes and shares the API cooldown after a 429', function (?string $retryAfter, int $cooldown) {
+    $url = config('services.transistor.api_url') . 'episodes?show_id=limited-show&status=draft';
+    $stale = [['id' => 'cached-episode']];
+    Cache::forever($url, $stale);
+
+    $mockClient = MockClient::global([
+        MockResponse::make([
+            'data' => [['id' => 'partial-refresh']],
+            'meta' => ['currentPage' => 1, 'totalPages' => 2],
+        ]),
+        MockResponse::make([], 429, $retryAfter === null ? [] : ['Retry-After' => $retryAfter]),
+        MockResponse::make(['data' => [], 'meta' => ['currentPage' => 1, 'totalPages' => 1]]),
+    ]);
+
+    try {
+        $this->transistorService->refreshEpisodeList('limited-show', 'draft');
+        $this->fail('Expected the API cooldown to interrupt pagination.');
+    } catch (RateLimitReachedException $exception) {
+        expect($exception->getLimit()->getRemainingSeconds())->toBe($cooldown);
+    }
+
+    expect(Cache::get($url))->toBe($stale);
+    expect(fn () => $this->transistorService->refreshEpisodeList('another-show', 'published'))
+        ->toThrow(RateLimitReachedException::class);
+    $mockClient->assertSentCount(2);
+})->with([
+    'documented cooldown without a header' => [null, 10],
+    'longer retry header' => ['45', 45],
+    'invalid retry header' => ['invalid', 10],
+    'shorter retry header' => ['2', 10],
+]);
