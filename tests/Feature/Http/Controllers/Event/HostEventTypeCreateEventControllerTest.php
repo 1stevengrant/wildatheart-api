@@ -151,6 +151,35 @@ test('an event with a materials order needs to needs to be a string', function (
 
 });
 
+test('an event with a materials order uses the expected attendees label in validation errors', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(Str::slug(EventType::BECOMING_A_KING))->first();
+    $eventType->allow_materials_order = true;
+    $eventType->number_of_items_in_material_order_label = 'Expected number of attendees';
+    $eventType->save();
+
+    $response = $this->post(route('host.eventType.create.store', $eventType), [
+        'name' => 'Test Event',
+        'city' => 'Test City',
+        'zip' => '12345',
+        'country' => 'US',
+        'latitude' => 45.1234,
+        'longitude' => -110.1234,
+        'region' => 'Test Region',
+        'district' => 'Test District',
+        'locality' => 'Test Locality',
+        'neighborhood' => 'Test Neighborhood',
+        'street_address' => '123 Test St',
+        'is_private' => false,
+        'state' => 'MT',
+        'start_date' => $this->startDate,
+    ]);
+
+    $response->assertSessionHasErrors([
+        'number_of_items_in_material_order' => 'The expected number of attendees field is required.',
+    ]);
+});
+
 test('a retreat end date is 3 days after the start date', function () {
     $this->actingAs($this->user);
     $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();

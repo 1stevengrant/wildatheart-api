@@ -331,6 +331,47 @@ it('returns validation errors when publishing without required fields and does n
     Mail::assertNothingQueued();
 });
 
+it('uses the expected attendees label when materials order is missing on publish', function () {
+    $host = User::factory()->create([
+        'email' => 'host@wildatheart.org',
+        'provider_id' => 'auth0|host-materials-label',
+        'provider' => 'auth0',
+    ]);
+    Address::factory()->create([
+        'user_id' => $host->id,
+        'is_primary' => true,
+    ]);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'number_of_items_in_material_order_label' => 'Expected number of attendees',
+        'group_type' => 'retreat',
+    ]);
+
+    $draft = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload();
+    unset($payload['number_of_items_in_material_order']);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$draft->id}/publish",
+            $payload,
+        )
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['number_of_items_in_material_order'])
+        ->assertJsonPath(
+            'errors.number_of_items_in_material_order.0',
+            'The expected number of attendees field is required.',
+        );
+});
+
 it('dispatches zapier when materials order applies on publish', function () {
     Mail::fake();
     Bus::fake();

@@ -6,10 +6,12 @@ use App\Models\Event;
 use App\Enums\Event\FrequencyEnum;
 use App\Support\EventTypeDateSelector;
 use App\Http\Requests\Concerns\HasLocationRules;
+use App\Http\Requests\Concerns\HasMaterialOrderValidationAttributes;
 
 class PublishEventRequest extends SaveEventDraftRequest
 {
     use HasLocationRules;
+    use HasMaterialOrderValidationAttributes;
 
     public function authorize(): bool
     {

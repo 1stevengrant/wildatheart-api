@@ -7,10 +7,12 @@ use App\Enums\Event\FrequencyEnum;
 use App\Support\EventTypeDateSelector;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasLocationRules;
+use App\Http\Requests\Concerns\HasMaterialOrderValidationAttributes;
 
 class CreateEventRequest extends FormRequest
 {
     use HasLocationRules;
+    use HasMaterialOrderValidationAttributes;
 
     public function authorize(): bool
     {
