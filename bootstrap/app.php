@@ -42,7 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
 
-        $middleware->preventRequestForgery(except: [
+        $middleware->validateCsrfTokens(except: [
             'webhooks/sendgrid',
             'api/v1/webhooks/*',
             'api/v1/events/*/connect',
