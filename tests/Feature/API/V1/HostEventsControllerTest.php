@@ -704,3 +704,41 @@ it('allows an owner to update a published event draft fields', function () {
     expect($event->fresh()->name)->toBe('Updated Listed Event');
     expect($event->fresh()->approved_at)->not->toBeNull();
 });
+
+it('persists expected attendees material order on draft save and returns it on host events index', function () {
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'number_of_items_in_material_order_label' => 'Expected number of attendees',
+    ]);
+
+    mockJwtAuthentication($host);
+
+    $saveResponse = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => 'Woodland Park, CO',
+            'latitude' => 38.9939,
+            'longitude' => -105.0567,
+            'start_date' => now()->addDays(14)->format('Y-m-d'),
+            'number_of_items_in_material_order' => '2 x 10-pack',
+            'expected_attendees' => '11-20',
+        ])
+        ->assertOk()
+        ->assertJsonPath('success', true);
+
+    $draftId = $saveResponse->json('event.id');
+
+    expect($draftId)->not->toBeNull();
+    expect(Event::find($draftId)?->number_of_items_in_material_order)->toBe('2 x 10-pack');
+
+    $indexResponse = $this->withHeaders(jwtAuthenticationHeaders())
+        ->getJson('/api/v1/host/events')
+        ->assertOk();
+
+    $draft = collect($indexResponse->json('drafts'))->firstWhere('id', $draftId);
+
+    expect($draft)->not->toBeNull()
+        ->and($draft['number_of_items_in_material_order'])->toBe('2 x 10-pack');
+});

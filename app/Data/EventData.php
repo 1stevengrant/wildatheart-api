@@ -72,6 +72,7 @@ class EventData extends Data
         /** @var array<int, EventManagerData> */
         public array $managers = [],
         public int $managers_count = 0,
+        public ?string $number_of_items_in_material_order = null,
     ) {}
 
     public static function fromModel(Event $event): self
@@ -126,6 +127,7 @@ class EventData extends Data
             custom_landing_url: $event->custom_landing_url,
             managers: self::assembleManagers($event),
             managers_count: $event->managers?->count() ?? 0,
+            number_of_items_in_material_order: $event->number_of_items_in_material_order,
         );
     }
 
