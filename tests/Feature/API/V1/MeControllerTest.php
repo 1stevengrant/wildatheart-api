@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use App\Services\Auth0\JwtAccessTokenVerifier;
 use Auth0\SDK\Exception\InvalidTokenException;
 
@@ -111,4 +112,27 @@ it('provisions a user from verified JWT claims', function () {
         'provider_id' => 'auth0|new-user',
         'email' => 'new-user@wildatheart.org',
     ]);
+});
+
+it('returns the current user when the generated avatar cache is corrupted', function () {
+    $user = User::factory()->create([
+        'image' => null,
+        'given_name' => 'Nic',
+        'family_name' => 'Bovee',
+    ]);
+
+    $user->forceFill([
+        'provider_id' => 'auth0|test-' . $user->id,
+    ])->save();
+
+    Cache::put('user_avatar_v2:' . md5($user->fullname), new stdClass);
+
+    mockJwtAuthentication($user);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->getJson('/api/v1/me')
+        ->assertOk()
+        ->assertJsonPath('id', $user->id)
+        ->assertJsonPath('email', $user->email)
+        ->assertJsonStructure(['image']);
 });
