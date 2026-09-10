@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 use App\Actions\Astro\TriggerAstroBuild;
 use App\Jobs\Cloudflare\TriggerAstroBuildJob;
 
@@ -54,4 +55,14 @@ it('delegates queued rebuilds to the TriggerAstroBuild action', function () {
     });
 
     (new TriggerAstroBuildJob)->handle(app(TriggerAstroBuild::class));
+});
+
+it('collapses repeated dispatches into a single queued build', function () {
+    Queue::fake();
+
+    TriggerAstroBuildJob::dispatch()->delay(now()->addHour());
+    TriggerAstroBuildJob::dispatch()->delay(now()->addHour());
+    TriggerAstroBuildJob::dispatch()->delay(now()->addHour());
+
+    Queue::assertPushed(TriggerAstroBuildJob::class, 1);
 });
