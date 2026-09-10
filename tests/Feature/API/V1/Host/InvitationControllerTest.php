@@ -102,7 +102,7 @@ it('accepts a pending invitation and adds the user as a host', function () {
     mockJwtAuthentication($newHost);
 
     $response = $this->withHeaders(jwtAuthenticationHeaders())
-        ->postJson("/api/v1/host/invitations/{$invitation->id}/acceptance");
+        ->postJson("/api/v1/host/invitations/{$invitation->id}/accept");
 
     $response->assertOk()
         ->assertJsonPath('event_id', $event->id);
