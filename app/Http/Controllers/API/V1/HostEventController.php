@@ -8,11 +8,18 @@ use App\Models\EventType;
 use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
 use Illuminate\Http\JsonResponse;
+use App\Actions\Event\DeleteEvent;
+use App\Actions\Event\ApproveEvent;
 use App\Http\Controllers\Controller;
 use App\Actions\Event\SaveEventDraft;
 use App\Support\EventTypeDateSelector;
+use App\Actions\Event\PublishEventDraft;
 use App\Http\Requests\API\V1\CreateEventRequest;
+use App\Http\Requests\API\V1\PublishEventRequest;
 use App\Http\Requests\API\V1\SaveEventDraftRequest;
+use App\Http\Requests\API\V1\ApproveHostEventRequest;
+use App\Http\Requests\API\V1\DestroyHostEventRequest;
+use App\Http\Requests\API\V1\UnpublishHostEventRequest;
 use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HostEventController extends Controller
@@ -114,6 +121,45 @@ class HostEventController extends Controller
         return response()->json([
             'success' => true,
             'event' => $event->fresh(['managers', 'pendingManagerInvitations']),
+        ]);
+    }
+
+    public function publish(PublishEventRequest $request, EventType $eventType, Event $event): JsonResponse
+    {
+        $publishedEvent = PublishEventDraft::run($request, $eventType, $event, auth()->user());
+
+        return response()->json([
+            'success' => true,
+            'event' => EventData::fromModel($publishedEvent),
+        ]);
+    }
+
+    public function destroy(DestroyHostEventRequest $request, Event $event): JsonResponse
+    {
+        DeleteEvent::run($event);
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    public function unpublish(UnpublishHostEventRequest $request, Event $event): JsonResponse
+    {
+        $event->unpublish();
+
+        return response()->json([
+            'success' => true,
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations'])),
+        ]);
+    }
+
+    public function approve(ApproveHostEventRequest $request, Event $event): JsonResponse
+    {
+        ApproveEvent::run($event);
+
+        return response()->json([
+            'success' => true,
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations'])),
         ]);
     }
 }

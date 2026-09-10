@@ -45,6 +45,7 @@ class HostContactsController extends Controller
     }
 
     public function index(HostContactsIndexData $data): JsonResponse
+    public function index(HostContactsIndexData $data): JsonResponse
     {
         $host = $this->user();
 

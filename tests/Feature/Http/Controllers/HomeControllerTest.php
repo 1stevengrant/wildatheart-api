@@ -4,7 +4,7 @@ use App\Models\EventType;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('home page event types are ordered by their model order column', function () {
-    cache()->forget('allEventTypes');
+    cache()->forget('allEventTypes.v2');
 
     $laterRetreat = EventType::factory()->create([
         'name' => 'Second Retreat',
@@ -25,8 +25,8 @@ test('home page event types are ordered by their model order column', function (
 
     $allEventTypes = collect($response->viewData('page')['props']['allEventTypes']);
     $retreatIds = $allEventTypes
-        ->filter(fn (array $eventType) => str_contains(strtolower($eventType['name']), 'retreat')
-            || str_contains(strtolower($eventType['name']), 'school'))
+        ->filter(fn (array $eventType) => str_contains(mb_strtolower($eventType['name']), 'retreat')
+            || str_contains(mb_strtolower($eventType['name']), 'school'))
         ->pluck('id')
         ->values()
         ->all();

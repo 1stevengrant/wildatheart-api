@@ -43,14 +43,14 @@ it('gets a list of inactive event types', function () {
 });
 
 it('clears the cache when a new event type is created', function () {
-    cache()->put('allEventTypes', 'cached', now()->addDay());
+    cache()->put('allEventTypes.v2', 'cached', now()->addDay());
 
     EventType::create([
         'name' => 'Wild at Heart Retreat',
         'is_active' => true,
     ]);
 
-    expect(cache()->has('allEventTypes'))->toBeFalse();
+    expect(cache()->has('allEventTypes.v2'))->toBeFalse();
 });
 
 it('can create an event type with summary and summary_link', function () {

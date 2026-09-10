@@ -72,3 +72,30 @@ function jwtAuthenticationHeaders(): array
 {
     return ['Authorization' => 'Bearer fake.jwt.token'];
 }
+
+function configureSerializedArrayCache(): void
+{
+    config()->set([
+        'cache.default' => 'serialized-array',
+        'cache.serializable_classes' => false,
+        'cache.stores.serialized-array' => [
+            'driver' => 'array',
+            'serialize' => true,
+        ],
+    ]);
+
+    app('cache')->forgetDriver('serialized-array');
+}
+
+function expectCacheValueToContainOnlyPrimitives(mixed $value): void
+{
+    expect(is_object($value))->toBeFalse();
+
+    if (! is_array($value)) {
+        return;
+    }
+
+    foreach ($value as $nestedValue) {
+        expectCacheValueToContainOnlyPrimitives($nestedValue);
+    }
+}

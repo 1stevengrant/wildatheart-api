@@ -31,9 +31,9 @@ class Auth0ApiMiddleware
             return response()->json(['message' => 'Unauthenticated.', 'reason' => 'missing_bearer_token'], 401);
         }
 
-        $cacheKey = 'auth0_user:' . hash('sha256', $token);
+        $cacheKey = 'auth0_user_id:' . hash('sha256', $token);
 
-        $user = cache()->remember($cacheKey, 60, function () use ($token, $request) {
+        $userId = cache()->remember($cacheKey, 60, function () use ($token, $request) {
             $auth0Domain = config('auth0.base_url');
             $response = Http::withToken($token)->get("{$auth0Domain}/userinfo");
 
@@ -59,8 +59,10 @@ class Auth0ApiMiddleware
                 return null;
             }
 
-            return User::where('email', $auth0User['email'])->first();
+            return User::query()->where('email', $auth0User['email'])->value('id');
         });
+
+        $user = $userId ? User::query()->find($userId) : null;
 
         if (! $user) {
             cache()->forget($cacheKey);

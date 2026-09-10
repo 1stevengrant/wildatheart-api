@@ -21,6 +21,7 @@ class HostContactData extends Data
         public ?string $city,
         public ?string $state,
         public ?string $country,
+        public string $image,
         public string $interested_at,
         public ?string $archived_at,
     ) {}
@@ -42,6 +43,7 @@ class HostContactData extends Data
             city: $user->city,
             state: $user->state,
             country: $user->country_code ? getCountryName($user->country_code) : null,
+            image: $user->profilePhoto(),
             interested_at: $interest->created_at?->toIso8601String() ?? '',
             archived_at: $interest->archived_at?->toIso8601String(),
         );

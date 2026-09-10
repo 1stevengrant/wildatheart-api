@@ -40,18 +40,18 @@ abstract class BaseNavController extends Controller
     /**
      * Fetch and process navigation data with caching
      */
-    public function getNavigationData()
+    public function getNavigationData(): JsonResponse
     {
-        $cacheKey = "navigation.{$this->getGlobalSetHandle()}";
+        $cacheKey = "navigation.{$this->getGlobalSetHandle()}.v2";
 
         try {
-            return Cache::remember($cacheKey, now()->addMinutes($this->getCacheDuration()), function () {
+            $response = Cache::remember($cacheKey, now()->addMinutes($this->getCacheDuration()), function (): array {
                 $globalSet = GlobalSet::findByHandle($this->getGlobalSetHandle());
 
                 if (! $globalSet) {
                     Log::warning("Navigation global set not found: {$this->getGlobalSetHandle()}");
 
-                    return $this->errorResponse($this->getNotFoundMessage(), 404);
+                    return $this->errorPayload($this->getNotFoundMessage(), 404);
                 }
 
                 // Get the variables (actual content) for the default site
@@ -60,7 +60,7 @@ abstract class BaseNavController extends Controller
                 if (! $variables) {
                     Log::warning("Navigation variables not found for: {$this->getGlobalSetHandle()}");
 
-                    return $this->errorResponse('No navigation data found for default site', 404);
+                    return $this->errorPayload('No navigation data found for default site', 404);
                 }
 
                 // Get the navigation data
@@ -69,19 +69,16 @@ abstract class BaseNavController extends Controller
                 if (empty($data)) {
                     Log::warning("Empty navigation data for: {$this->getGlobalSetHandle()}");
 
-                    return $this->errorResponse('Navigation data is empty', 404);
+                    return $this->errorPayload('Navigation data is empty', 404);
                 }
 
                 // Process the data
                 $processedData = $this->processNavigationData($data);
 
-                // Return as resource with proper headers
-                return response()->json($processedData, 200, [
-                    'Content-Type' => 'application/json',
-                    'Cache-Control' => 'public, max-age=' . ($this->getCacheDuration() * 60),
-                    'X-Navigation-Type' => $this->getGlobalSetHandle(),
-                ]);
+                return $this->successPayload($processedData);
             });
+
+            return response()->json($response['data'], $response['status'], $response['headers']);
         } catch (Exception $e) {
             Log::error("Navigation API error: {$e->getMessage()}", [
                 'handle' => $this->getGlobalSetHandle(),
@@ -97,11 +94,42 @@ abstract class BaseNavController extends Controller
      */
     private function errorResponse(string $message, int $code): JsonResponse
     {
-        return response()->json([
-            'error' => $message,
-            'code' => $code,
-            'navigation_type' => $this->getGlobalSetHandle(),
-        ], $code);
+        $response = $this->errorPayload($message, $code);
+
+        return response()->json($response['data'], $response['status']);
+    }
+
+    /**
+     * @return array{data: array<string, mixed>, status: int, headers: array<string, string>}
+     */
+    private function errorPayload(string $message, int $code): array
+    {
+        return [
+            'data' => [
+                'error' => $message,
+                'code' => $code,
+                'navigation_type' => $this->getGlobalSetHandle(),
+            ],
+            'status' => $code,
+            'headers' => [],
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array{data: array<string, mixed>, status: int, headers: array<string, string>}
+     */
+    private function successPayload(array $data): array
+    {
+        return [
+            'data' => $data,
+            'status' => 200,
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Cache-Control' => 'public, max-age=' . ($this->getCacheDuration() * 60),
+                'X-Navigation-Type' => $this->getGlobalSetHandle(),
+            ],
+        ];
     }
 
     /**

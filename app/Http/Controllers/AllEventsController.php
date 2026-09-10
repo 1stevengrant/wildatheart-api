@@ -16,22 +16,34 @@ class AllEventsController extends Controller
     public function __invoke(Request $request)
     {
         $startTime = microtime(true);
-        $events = cache()->remember('all_events', now()->addMinutes(15), function () {
-            return Event::query()
+        $eventsTime = $startTime;
+        $offsetTime = $startTime;
+        $collectionTime = $startTime;
+
+        $data = cache()->remember('all_events.v2', now()->addMinutes(15), function () use (&$eventsTime, &$offsetTime, &$collectionTime): array {
+            $events = Event::query()
                 ->published()
                 ->active()
                 ->public()
                 ->with(['eventType', 'user', 'managers'])
                 ->orderBy('start_date')
                 ->get();
+            $eventsTime = microtime(true);
+
+            $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
+            $offsetTime = microtime(true);
+
+            $data = EventData::collect($offsetEvents)->toArray();
+            $collectionTime = microtime(true);
+
+            return $data;
         });
-        $eventsTime = microtime(true);
 
-        $offsetEvents = $this->eventOffsettingService->offsetEvents($events);
-        $offsetTime = microtime(true);
-
-        $data = EventData::collect($offsetEvents);
-        $collectionTime = microtime(true);
+        if ($eventsTime === $startTime) {
+            $eventsTime = microtime(true);
+            $offsetTime = $eventsTime;
+            $collectionTime = $eventsTime;
+        }
 
         return response()->json([
             'data' => $data,

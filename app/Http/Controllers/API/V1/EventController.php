@@ -15,7 +15,7 @@ class EventController extends Controller
 
     public function index()
     {
-        return cache()->remember('events_collection', now()->addHour(), function () {
+        return cache()->remember('events_collection.v2', now()->addHour(), function (): array {
             return EventCollectionData::collect(
                 Event::query()
                     ->published()
@@ -25,7 +25,7 @@ class EventController extends Controller
                     ->with(['eventType', 'user'])
                     ->orderBy('start_date')
                     ->get()
-            );
+            )->toArray();
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Event;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Actions\Event\DeleteEvent;
 use App\Http\Controllers\Controller;
 
 class DeleteEventController extends Controller
@@ -18,7 +19,7 @@ class DeleteEventController extends Controller
             ]);
         }
 
-        $event->delete();
+        DeleteEvent::run($event);
 
         return redirect()->back()->with(['notifications' => [
             'message' => 'Event deleted successfully.',

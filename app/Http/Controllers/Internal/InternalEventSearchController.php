@@ -37,8 +37,8 @@ class InternalEventSearchController extends Controller
             return $this->transformResults($paginator);
         });
 
-        $eventTypes = Cache::remember('event_types_list', now()->addHours(1), function () {
-            return EventType::query()->orderBy('name')->get(['id', 'name']);
+        $eventTypes = Cache::remember('event_types_list.v2', now()->addHours(1), function (): array {
+            return EventType::query()->orderBy('name')->get(['id', 'name'])->toArray();
         });
 
         return inertia('Internal/EventSearchPage', [
