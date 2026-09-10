@@ -59,7 +59,7 @@ class HostContactsQuery
     }
 
     /** @return Collection<int, string> */
-    private function eventIds(User $host): Collection
+    public function eventIds(User $host): Collection
     {
         return $host->events()->pluck('events.id')
             ->merge($host->managedEvents()->pluck('events.id'))

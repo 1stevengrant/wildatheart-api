@@ -17,6 +17,10 @@ class HostContactsController extends Controller
     {
         $host = $this->user();
 
+        if ($this->contactsQuery->eventIds($host)->isEmpty()) {
+            return response()->json(HostContactData::collect([]));
+        }
+
         $contacts = $this->contactsQuery->paginate($host, $data);
 
         $contacts->getCollection()->transform(
