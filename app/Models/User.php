@@ -217,7 +217,11 @@ class User extends Authenticatable
             ]);
         }
 
-        return Avatar::create($this->fullname)->toBase64();
+        try {
+            return Avatar::create($this->fullname)->toBase64();
+        } catch (\Throwable) {
+            return '';
+        }
     }
 
     public function deleteProfilePhoto(): void
