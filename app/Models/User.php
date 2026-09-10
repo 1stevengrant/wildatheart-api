@@ -6,6 +6,7 @@ use App\Builders\UserBuilder;
 use App\Observers\UserObserver;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
+use Database\Factories\UserFactory;
 use Laravolt\Avatar\Facade as Avatar;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
@@ -15,8 +16,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use StatamicRadPack\Runway\Traits\HasRunwayResource;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -24,52 +27,43 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 #[ObservedBy(UserObserver::class)]
+#[Fillable([
+    'uuid',
+    'name',
+    'given_name',
+    'family_name',
+    'email',
+    'phone',
+    'country_code',
+    'city',
+    'state',
+    'postal_code',
+    'image',
+    'optimized_image',
+    'provider_id',
+    'provider',
+    'email_verified_at',
+    'password',
+    'last_login_at',
+    'salesforce_id',
+    'salesforce_contact_id',
+    'wegive_donor_id',
+    'profile_step',
+    'opted_into_marketing',
+    'date_opted_into_marketing',
+    'super',
+    'avatar',
+    'preferences',
+    'last_login',
+    'agreed_to_host_agreement_date',
+])]
+#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, HasRunwayResource, LogsActivity, Notifiable, SoftDeletes;
 
     public const int PROFILE_COMPLETE = 2;
-
-    protected $fillable = [
-        'uuid',
-        'name',
-        'given_name',
-        'family_name',
-        'email',
-        'phone',
-        'country_code',
-        'city',
-        'state',
-        'postal_code',
-        'image',
-        'optimized_image',
-        'provider_id',
-        'provider',
-        'email_verified_at',
-        'password',
-        'last_login_at',
-        'salesforce_id',
-        'salesforce_contact_id',
-        'wegive_donor_id',
-        'profile_step',
-        'opted_into_marketing',
-        'date_opted_into_marketing',
-        'super',
-        'avatar',
-        'preferences',
-        'last_login',
-        'agreed_to_host_agreement_date',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
 
     /**
      * @return array<string, string>
@@ -78,6 +72,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'password' => 'hashed',
             'last_login_at' => 'datetime',
             'date_opted_into_marketing' => 'datetime',
             'opted_into_marketing' => 'boolean',
@@ -222,7 +217,11 @@ class User extends Authenticatable
             ]);
         }
 
-        return Avatar::create($this->fullname)->toBase64();
+        try {
+            return Avatar::create($this->fullname)->toBase64();
+        } catch (\Throwable) {
+            return '';
+        }
     }
 
     public function deleteProfilePhoto(): void

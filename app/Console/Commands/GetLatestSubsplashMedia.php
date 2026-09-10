@@ -15,7 +15,7 @@ class GetLatestSubsplashMedia extends Command
 
     protected $full = false;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->addOption('full', null, null, 'Perform a full import of all media items');
         $this->addOption('force', null, null, 'Force retrieval regardless of when the most recent change was');

@@ -72,8 +72,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function bootMail(): void
     {
-        Mail::extend('cloudflare', function (array $config = []): CloudflareFailoverTransport {
-            $inner = $this->app->make(CloudflareTransportFactory::class)->make($config);
+        $cloudflareTransportFactory = $this->app->make(CloudflareTransportFactory::class);
+
+        Mail::extend('cloudflare', function (array $config = []) use ($cloudflareTransportFactory): CloudflareFailoverTransport {
+            $inner = $cloudflareTransportFactory->make($config);
 
             return new CloudflareFailoverTransport($inner);
         });

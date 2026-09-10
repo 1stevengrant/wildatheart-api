@@ -19,8 +19,8 @@ use Spatie\Permission\Middleware\PermissionMiddleware;
 use App\Http\Middleware\EnsureProfileIsCompleteMiddleware;
 use App\Http\Middleware\HasAgreedToHostAgreementMiddleware;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -29,20 +29,20 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         // channels: __DIR__.'/../routes/channels.php',
         health: '/up',
-        then: function () {
+        then: function (): void {
             Route::middleware('non-inertia')
                 ->group(base_path('routes/non_inertia.php'));
         }
     )
-    ->withMiddleware(function (Middleware $middleware) {
-        $middleware->redirectGuestsTo(function () {
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo(function (): string {
             session()->put('auth.intended_url', request()->url());
 
             return route('login');
         });
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
 
-        $middleware->validateCsrfTokens(except: [
+        $middleware->preventRequestForgery(except: [
             'webhooks/sendgrid',
             'api/v1/webhooks/*',
             'api/v1/events/*/connect',
@@ -57,7 +57,7 @@ return Application::configure(basePath: dirname(__DIR__))
             AddQueuedCookiesToResponse::class,
             StartSession::class,
             ShareErrorsFromSession::class,
-            ValidateCsrfToken::class,
+            PreventRequestForgery::class,
             SubstituteBindings::class,
         ]);
 
@@ -72,12 +72,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'profile_complete' => EnsureProfileIsCompleteMiddleware::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
+    ->withExceptions(function (Exceptions $exceptions): void {
         Integration::handles($exceptions);
 
         // API clients should get a 422 with the validation errors, never a 302
         // back to a page they did not come from.
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*') || $request->expectsJson()
+            fn (Request $request): bool => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();

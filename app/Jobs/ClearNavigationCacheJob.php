@@ -20,9 +20,9 @@ class ClearNavigationCacheJob implements ShouldQueue
      * @var array<string>
      */
     private const NAVIGATION_CACHE_KEYS = [
-        'navigation.desktop_nav',
-        'navigation.mobile_nav',
-        'navigation.all',
+        'navigation.desktop_nav.v2',
+        'navigation.mobile_nav.v2',
+        'navigation.all.v2',
     ];
 
     public function __construct(

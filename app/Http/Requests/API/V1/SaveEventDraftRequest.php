@@ -16,10 +16,10 @@ class SaveEventDraftRequest extends FormRequest
             return true;
         }
 
-        return Event::where('id', $eventId)
-            ->where('user_id', $this->user()->id)
-            ->whereNull('approved_at')
-            ->exists();
+        $event = Event::find($eventId);
+
+        return $event instanceof Event
+            && $event->isOwnedOrManagedBy($this->user());
     }
 
     public function rules(): array

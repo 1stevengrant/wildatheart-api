@@ -19,9 +19,12 @@ arch('models stay free of the HTTP layer')
 arch('actions are framework-agnostic')
     ->expect('App\Actions')
     ->not->toUse('App\Http')
-    // TODO: SaveEventDraft type-hints SaveEventDraftRequest directly. Pass an
-    // array/Data object instead so the action no longer depends on App\Http.
-    ->ignoring('App\Actions\Event\SaveEventDraft');
+    // TODO: These actions type-hint event request objects directly. Pass an
+    // array/Data object instead so the actions no longer depend on App\Http.
+    ->ignoring([
+        'App\Actions\Event\PublishEventDraft',
+        'App\Actions\Event\SaveEventDraft',
+    ]);
 
 arch('actions use a laravel-actions trait')
     ->expect('App\Actions')

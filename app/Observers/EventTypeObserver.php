@@ -7,14 +7,14 @@ use App\Models\EventType;
 class EventTypeObserver
 {
     public const array CACHE_KEYS = [
-        'allEventTypes',
-        'experienceTypes',
-        'retreatTypes',
-        'fireTypes',
-        'eventTypesGroupedByType',
-        'eventTypesWithCounts.serialised',
-        'event_types',
-        'event_types_list',
+        'allEventTypes.v2',
+        'experienceTypes.v2',
+        'retreatTypes.v2',
+        'fireTypes.v2',
+        'eventTypesGroupedByType.v2',
+        'eventTypesWithCounts.serialised.v2',
+        'event_types.v2',
+        'event_types_list.v2',
     ];
 
     public function created(EventType $eventType): void

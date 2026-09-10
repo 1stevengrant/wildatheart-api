@@ -13,7 +13,7 @@ class GroupedEventTypeController extends Controller
 {
     public function __invoke(): JsonResponse
     {
-        $eventTypes = cache()->remember('eventTypesGroupedByType', now()->addHours(6), function () {
+        $eventTypes = cache()->remember('eventTypesGroupedByType.v2', now()->addHours(6), function (): array {
             return EventType::query()
                 ->select('event_types.*')
                 ->whereNotNull('type')

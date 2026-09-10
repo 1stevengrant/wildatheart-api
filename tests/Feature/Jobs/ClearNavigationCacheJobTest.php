@@ -14,21 +14,21 @@ beforeEach(function () {
 });
 
 it('clears all navigation cache keys', function () {
-    Cache::put('navigation.desktop_nav', ['test' => 'desktop'], 60);
-    Cache::put('navigation.mobile_nav', ['test' => 'mobile'], 60);
-    Cache::put('navigation.all', ['test' => 'all'], 60);
+    Cache::put('navigation.desktop_nav.v2', ['test' => 'desktop'], 60);
+    Cache::put('navigation.mobile_nav.v2', ['test' => 'mobile'], 60);
+    Cache::put('navigation.all.v2', ['test' => 'all'], 60);
 
     ClearNavigationCacheJob::dispatchSync('desktop_nav');
 
-    expect(Cache::get('navigation.desktop_nav'))->toBeNull()
-        ->and(Cache::get('navigation.mobile_nav'))->toBeNull()
-        ->and(Cache::get('navigation.all'))->toBeNull();
+    expect(Cache::get('navigation.desktop_nav.v2'))->toBeNull()
+        ->and(Cache::get('navigation.mobile_nav.v2'))->toBeNull()
+        ->and(Cache::get('navigation.all.v2'))->toBeNull();
 });
 
 it('logs activity with global handle and user', function () {
     $user = User::factory()->create();
 
-    Cache::put('navigation.desktop_nav', ['test' => 'desktop'], 60);
+    Cache::put('navigation.desktop_nav.v2', ['test' => 'desktop'], 60);
 
     ClearNavigationCacheJob::dispatchSync(
         globalHandle: 'desktop_nav',

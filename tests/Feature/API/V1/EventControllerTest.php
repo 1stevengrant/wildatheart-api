@@ -30,7 +30,7 @@ it('returns 404 with a clear message when the event has no event type', function
 });
 
 it('excludes events with a null event type from the index endpoint', function () {
-    cache()->forget('events_collection');
+    cache()->forget('events_collection.v2');
 
     makeEventWithoutType();
 
