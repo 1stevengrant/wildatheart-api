@@ -28,7 +28,7 @@ class HostEventController extends Controller
     {
         $baseQuery = Event::query()
             ->controllableByUser(auth()->user())
-            ->with(['user', 'eventType', 'managers', 'pendingManagerInvitations'])
+            ->with(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])
             ->orderByRaw('start_date < NOW()')
             ->orderBy('start_date');
 
@@ -120,7 +120,7 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => $event->fresh(['managers', 'pendingManagerInvitations']),
+            'event' => $event->fresh(['managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser']),
         ]);
     }
 
@@ -149,7 +149,7 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations'])),
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
         ]);
     }
 
@@ -159,7 +159,7 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations'])),
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
         ]);
     }
 }

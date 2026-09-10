@@ -16,14 +16,14 @@ As the new owner, you'll have full control over this event, including the abilit
 
 @if($transfer)
 {{-- For users without accounts - use transfer acceptance route --}}
-<x-mail::button :url="route('accept.ownership.transfer', $transfer)">
+<x-mail::button :url="mb_rtrim(config('app.frontend_url'), '/') . '/accept-ownership-transfer/' . $transfer->id">
 Accept Ownership Transfer
 </x-mail::button>
 
 Click the button above to accept this ownership transfer. If you don't have an account yet, you'll be able to create one and will automatically become the owner.
 @else
 {{-- For existing users - go directly to acceptance route --}}
-<x-mail::button :url="route('accept.ownership.transfer', $transfer)">
+<x-mail::button :url="mb_rtrim(config('app.frontend_url'), '/') . '/accept-ownership-transfer/' . $transfer->id">
 Accept Ownership Transfer
 </x-mail::button>
 

@@ -35,9 +35,11 @@ use App\Http\Controllers\API\V1\Content\PrayersEntryController;
 use App\Http\Controllers\API\Media\MediaItemsBySeriesController;
 use App\Http\Controllers\API\Media\SubsplashMediaItemController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
+use App\Http\Controllers\API\V1\Host\OwnershipTransferController;
 use App\Http\Controllers\API\V1\HostContactInvitationsController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
 use App\Http\Controllers\API\V1\Content\RecentDailyReadingsController;
+use App\Http\Controllers\API\V1\Host\EventOwnershipTransferController;
 use App\Http\Controllers\API\V1\Content\RefreshDailyReadingsController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayerAudioController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController;
@@ -94,6 +96,16 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('events/{event}/publish', [HostEventController::class, 'approve'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('events.approve');
+        Route::post('events/{event}/ownership-transfers', [EventOwnershipTransferController::class, 'store'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.ownershipTransfers.store');
+        Route::delete('events/{event}/ownership-transfers', [EventOwnershipTransferController::class, 'destroy'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.ownershipTransfers.destroy');
+        Route::get('ownership-transfers/{transfer}', [OwnershipTransferController::class, 'show'])
+            ->name('ownershipTransfers.show');
+        Route::post('ownership-transfers/{transfer}/accept', [OwnershipTransferController::class, 'accept'])
+            ->name('ownershipTransfers.accept');
         Route::get('invitations/{invitation}', [HostInvitationController::class, 'show'])
             ->name('invitations.show');
         Route::post('invitations/{invitation}/accept', [HostInvitationController::class, 'accept'])

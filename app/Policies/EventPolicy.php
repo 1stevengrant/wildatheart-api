@@ -41,4 +41,10 @@ class EventPolicy
         return $event->isOwnedOrManagedBy($user)
             || $user->hasRole(UserRoleEnum::Admin);
     }
+
+    public function transferOwnership(User $user, Event $event): bool
+    {
+        return $user->id === $event->user_id
+            || $user->hasRole(UserRoleEnum::Admin);
+    }
 }
