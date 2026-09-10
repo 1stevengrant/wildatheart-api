@@ -4,8 +4,6 @@ namespace App\Actions\Event;
 
 use App\Models\User;
 use App\Models\Event;
-use App\Mail\HostInvitationMail;
-use Illuminate\Support\Facades\Mail;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class SendPendingCoHostInvitations
@@ -16,10 +14,6 @@ class SendPendingCoHostInvitations
     {
         $event->loadMissing('pendingManagerInvitations');
 
-        foreach ($event->pendingManagerInvitations as $invitation) {
-            Mail::to($invitation->email)->send(
-                new HostInvitationMail($event, $invitedBy->fullname, $invitation)
-            );
-        }
+        SendCoHostInvitationEmails::run($event->pendingManagerInvitations, $event, $invitedBy);
     }
 }

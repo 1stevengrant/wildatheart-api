@@ -203,6 +203,62 @@ it('syncs co-host invitations when updating a draft', function () {
     expect($emails)->toEqual(['new@wildatheart.org']);
 });
 
+it('immediately sends a co-host invitation email when inviting to an already published event', function () {
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+
+    $publishedEvent = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $publishedEvent->id,
+            'co_host_emails' => ['cohost@wildatheart.org'],
+        ])
+        ->assertOk();
+
+    Mail::assertQueued(HostInvitationMail::class, 1);
+});
+
+it('does not resend a co-host invitation email for an already-pending invitation on a published event', function () {
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+
+    $publishedEvent = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+
+    EventManagerInvitation::create([
+        'event_id' => $publishedEvent->id,
+        'email' => 'cohost@wildatheart.org',
+        'invited_by_user_id' => $host->id,
+    ]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $publishedEvent->id,
+            'co_host_emails' => ['cohost@wildatheart.org'],
+        ])
+        ->assertOk();
+
+    Mail::assertNotQueued(HostInvitationMail::class);
+});
+
 it('publishes a draft and moves it to the listed bucket', function () {
     Mail::fake();
     Bus::fake();
