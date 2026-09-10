@@ -16,7 +16,7 @@ As a host, you'll be able to help manage this event, edit details, and view atte
 
 @if($invitation)
 {{-- For users without accounts - use invitation acceptance route --}}
-<x-mail::button :url="route('accept.host.invitation', $invitation)">
+<x-mail::button :url="mb_rtrim(config('app.frontend_url'), '/') . '/accept-host-invitation/' . $invitation->id">
 Accept Invitation
 </x-mail::button>
 

@@ -43,6 +43,7 @@ use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayerAudioController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingAudioController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\TodaysDailyReadingController;
+use App\Http\Controllers\API\V1\Host\InvitationController as HostInvitationController;
 use App\Http\Controllers\API\V1\SearchForEventsController as V1SearchForEventsController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayersController as SubsplashPrayersController;
 
@@ -93,6 +94,10 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('events/{event}/publish', [HostEventController::class, 'approve'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('events.approve');
+        Route::get('invitations/{invitation}', [HostInvitationController::class, 'show'])
+            ->name('invitations.show');
+        Route::post('invitations/{invitation}/accept', [HostInvitationController::class, 'accept'])
+            ->name('invitations.accept');
         Route::get('contacts', [HostContactsController::class, 'index'])->name('contacts.index');
         Route::post('contact-invitations', [HostContactInvitationsController::class, 'store'])->name('contact-invitations.store');
         Route::delete('contact-invitations/{invitation}', [HostContactInvitationsController::class, 'destroy'])->name('contact-invitations.destroy');
