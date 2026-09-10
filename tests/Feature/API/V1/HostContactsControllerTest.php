@@ -3,6 +3,8 @@
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\HostContactsExportJob;
+use Illuminate\Support\Facades\Queue;
 
 beforeEach(function () {
     $this->host = User::factory()->create(['email' => 'host@example.test']);
@@ -20,6 +22,34 @@ function hostBearer(): array
 
 it('returns 401 when no bearer token is provided', function () {
     $this->getJson('/api/v1/host/contacts')->assertUnauthorized();
+});
+
+it('queues a contacts export for the authenticated host', function () {
+    Queue::fake();
+
+    $response = $this->withHeaders(hostBearer())
+        ->postJson('/api/v1/host/contacts/export?filter[archived]=all', [
+            'contacts' => [
+                ['event_id' => (string) $this->event->id, 'user_id' => 123],
+            ],
+        ])
+        ->assertOk();
+
+    expect($response->json('message'))->toContain('export');
+    Queue::assertPushed(HostContactsExportJob::class);
+});
+
+it('requires bearer authentication for contacts exports', function () {
+    $this->postJson('/api/v1/host/contacts/export')->assertUnauthorized();
+});
+
+it('validates selected contact identifiers', function () {
+    $this->withHeaders(hostBearer())
+        ->postJson('/api/v1/host/contacts/export', [
+            'contacts' => [['event_id' => 'not-a-uuid', 'user_id' => 'invalid']],
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['contacts.0.event_id', 'contacts.0.user_id']);
 });
 
 it('lists contacts for events the host owns', function () {

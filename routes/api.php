@@ -82,6 +82,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
         Route::post('event-types/{eventType}/events/draft', [HostEventController::class, 'storeDraft'])->name('event-types.events.draft');
         Route::get('contacts', [HostContactsController::class, 'index'])->name('contacts.index');
+        Route::post('contacts/export', [HostContactsController::class, 'export'])->name('contacts.export');
         Route::post('contacts/{event}/{user}/archive', [ArchivedHostContactsController::class, 'store'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('contacts.archive.store');

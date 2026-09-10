@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Data\V1\HostContactData;
 use App\Models\EventUserInterest;
 use Illuminate\Http\JsonResponse;
+use App\Jobs\HostContactsExportJob;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -16,6 +19,31 @@ use Illuminate\Database\Eloquent\Builder;
 
 class HostContactsController extends Controller
 {
+    public function export(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'filter' => ['nullable', 'array'],
+            'filter.search' => ['nullable', 'string', 'max:100'],
+            'filter.event' => ['nullable', 'string'],
+            'filter.archived' => ['nullable', Rule::in(['false', 'true', 'all'])],
+            'filter.added_from' => ['nullable', Rule::date()->format('Y-m-d')],
+            'filter.added_to' => ['nullable', Rule::date()->format('Y-m-d')],
+            'contacts' => ['nullable', 'array', 'max:1000'],
+            'contacts.*.event_id' => ['required', 'uuid'],
+            'contacts.*.user_id' => ['required', 'integer'],
+        ]);
+
+        HostContactsExportJob::dispatch(
+            hostId: $this->user()->id,
+            filters: $validated['filter'] ?? [],
+            selectedContacts: $validated['contacts'] ?? [],
+        );
+
+        return response()->json([
+            'message' => 'Your contacts export is being generated. You will receive an email shortly.',
+        ]);
+    }
+
     public function index(HostContactsIndexData $data): JsonResponse
     {
         $host = $this->user();
