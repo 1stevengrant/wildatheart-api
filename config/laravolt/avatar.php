@@ -7,6 +7,12 @@ use Laravolt\Avatar\Generator\DefaultGenerator;
  */
 return [
 
+    'cache' => [
+        'enabled' => false,
+        'key_prefix' => 'avatar_',
+        'duration' => env('AVATAR_CACHE_DURATION', 86400),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Image Driver

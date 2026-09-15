@@ -36,6 +36,17 @@ it('returns an empty profile photo when avatar generation fails', function () {
     expect($user->profilePhoto())->toBe('');
 });
 
+it('returns a generated avatar on repeated calls for a user without an image', function () {
+    $user = User::factory()->create([
+        'image' => null,
+        'given_name' => 'Jane',
+        'family_name' => 'Doe',
+    ]);
+
+    expect($user->profilePhoto())->toStartWith('data:image')
+        ->and($user->profilePhoto())->toStartWith('data:image');
+});
+
 it('returns given name and family name as the fullname if both are defined', function () {
     $user = User::factory()->create([
         'given_name' => 'John',
