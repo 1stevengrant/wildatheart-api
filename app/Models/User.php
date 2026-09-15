@@ -219,7 +219,9 @@ class User extends Authenticatable
 
         try {
             return Avatar::create($this->fullname)->toBase64();
-        } catch (\Throwable) {
+        } catch (\Throwable $exception) {
+            report($exception);
+
             return '';
         }
     }
