@@ -26,8 +26,7 @@ class RightCtaGroup extends Data
 {
     public ?string $text = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $image = null;
+    public ?AssetReference $image = null;
 
     public ?LinkField $href = null;
 

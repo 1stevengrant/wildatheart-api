@@ -32,15 +32,21 @@ use App\StatamicDTO\Shared\HeroTitleSet;
 use App\StatamicDTO\Shared\BentoBlockSet;
 use App\StatamicDTO\Shared\HeroSliderSet;
 use App\StatamicDTO\Shared\StyledTextSet;
+use App\StatamicDTO\Shared\TermReference;
 use App\StatamicDTO\Shared\VideoBlockSet;
+use App\StatamicDTO\Shared\AssetReference;
+use App\StatamicDTO\Shared\EntryReference;
 use App\StatamicDTO\Shared\MediaSliderSet;
 use App\StatamicDTO\Shared\ColumnsBlockSet;
 use App\StatamicDTO\Shared\DividerBlockSet;
 use App\StatamicDTO\Shared\AddToCalendarSet;
 use App\StatamicDTO\Shared\SubscribeFormSet;
+use App\StatamicDTO\Shared\BlueprintReference;
+use App\StatamicDTO\Shared\CollectionReference;
 use App\StatamicDTO\Shared\ImageSliderBlockSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class Book extends Data
@@ -53,7 +59,7 @@ class Book extends Data
 
     public ?ImagesGroup $images = null;
 
-    /** @var array[]|null Entry references from authors with {id, title, slug, url, collection} */
+    /** @var EntryReference[]|null */
     public ?array $authors = null;
 
     public ?string $description = null;
@@ -62,7 +68,7 @@ class Book extends Data
 
     public ?LinkField $buy_book_url = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var TermReference[]|null */
     public ?array $topics = null;
 
     /** @var string ISO 8601 date/time */
@@ -75,14 +81,14 @@ class Book extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?AssetReference $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
     public float $sitemap_priority;
 
     /** @var mixed Unknown field type: trigger_astro_build */
+    #[LiteralTypeScriptType('unknown')]
     public mixed $trigger_astro_build_field;
 
     public ?string $slug = null;
@@ -108,11 +114,9 @@ class Book extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?CollectionReference $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?BlueprintReference $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

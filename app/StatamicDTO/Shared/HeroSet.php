@@ -39,8 +39,7 @@ class HeroSet extends Data
 
     public ?string $leader_text = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $hero_logo = null;
+    public ?AssetReference $hero_logo = null;
 
     /** @var array<TextLineSet>|null */
     public ?array $hero_title = null;
@@ -50,13 +49,11 @@ class HeroSet extends Data
 
     public ?LinkField $background_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_video_fallback_image = null;
+    public ?AssetReference $background_video_fallback_image = null;
 
     public ?LinkField $featured_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $featured_video_fallback_image = null;
+    public ?AssetReference $featured_video_fallback_image = null;
 
     /** @var array<ButtonSet|AddToCalendarSet>|null */
     public ?array $buttons = null;

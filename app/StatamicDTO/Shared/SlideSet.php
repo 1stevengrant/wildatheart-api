@@ -37,8 +37,7 @@ class SlideSet extends Data
 
     public ?string $description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_image = null;
+    public ?AssetReference $background_image = null;
 
     public ?string $background_video_url = null;
 

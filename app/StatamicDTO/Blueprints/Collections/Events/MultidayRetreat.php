@@ -38,17 +38,22 @@ use App\StatamicDTO\Shared\BentoBlockSet;
 use App\StatamicDTO\Shared\HeroSliderSet;
 use App\StatamicDTO\Shared\ImageTitleSet;
 use App\StatamicDTO\Shared\StyledTextSet;
+use App\StatamicDTO\Shared\TermReference;
 use App\StatamicDTO\Shared\VideoBlockSet;
+use App\StatamicDTO\Shared\AssetReference;
 use App\StatamicDTO\Shared\MediaSliderSet;
 use App\StatamicDTO\Shared\TestimonialSet;
 use App\StatamicDTO\Shared\ColumnsBlockSet;
 use App\StatamicDTO\Shared\DividerBlockSet;
 use App\StatamicDTO\Shared\AddToCalendarSet;
 use App\StatamicDTO\Shared\SubscribeFormSet;
+use App\StatamicDTO\Shared\BlueprintReference;
+use App\StatamicDTO\Shared\CollectionReference;
 use App\StatamicDTO\Shared\ImageSliderBlockSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
 use App\StatamicDTO\Shared\VerticalVideosBlockGroup;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class MultidayRetreat extends Data
@@ -62,19 +67,18 @@ class MultidayRetreat extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var TermReference[]|null */
     public ?array $topics = null;
 
-    /** @var array{id: string, title: string, slug: string, taxonomy: string}|null */
-    public ?array $event_type = null;
+    public ?TermReference $event_type = null;
 
     public ?bool $is_local_event = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $event_logo = null;
+    public ?AssetReference $event_logo = null;
 
-    /** @var mixed Unknown field type: belongs_to */
-    public mixed $related_event_type;
+    /** @var array<string, mixed>|null Runway belongs_to reference */
+    #[LiteralTypeScriptType('Record<string, unknown> | null')]
+    public ?array $related_event_type = null;
 
     /** @var array<IconSet>|null */
     public ?array $icons = null;
@@ -90,8 +94,7 @@ class MultidayRetreat extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?AssetReference $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
@@ -112,8 +115,7 @@ class MultidayRetreat extends Data
 
     public ?string $leader_text = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $hero_logo = null;
+    public ?AssetReference $hero_logo = null;
 
     /** @var array<TextLineSet>|null */
     public ?array $hero_title = null;
@@ -123,13 +125,11 @@ class MultidayRetreat extends Data
 
     public ?LinkField $background_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $background_video_fallback_image = null;
+    public ?AssetReference $background_video_fallback_image = null;
 
     public ?LinkField $featured_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $featured_video_fallback_image = null;
+    public ?AssetReference $featured_video_fallback_image = null;
 
     /** @var array<ButtonSet|AddToCalendarSet>|null */
     public ?array $buttons = null;
@@ -164,11 +164,9 @@ class MultidayRetreat extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?CollectionReference $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?BlueprintReference $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

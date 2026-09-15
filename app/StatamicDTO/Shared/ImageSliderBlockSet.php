@@ -33,6 +33,6 @@ class ImageSliderBlockSet extends Data
 
     public ?string $title = null;
 
-    /** @var array[]|null Asset array with {id, url, permalink, alt, width, height} */
+    /** @var AssetReference[]|null */
     public ?array $images = null;
 }

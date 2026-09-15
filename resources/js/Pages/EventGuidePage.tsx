@@ -17,7 +17,7 @@ const getInitialTab = (pages: Array<GuidePage>) => {
     if (!hash) {
         return 0;
     }
-    const index = pages.findIndex((p) => slugify(p.page_title) === hash);
+    const index = pages.findIndex((p) => slugify(p.page_title ?? "") === hash);
     return index >= 0 ? index : 0;
 };
 
@@ -31,7 +31,7 @@ const EventGuidePage = () => {
     const handleTabChange = useCallback(
         (index: number) => {
             setSelectedTab(index);
-            const slug = slugify(pages[index].page_title);
+            const slug = slugify(pages[index].page_title ?? "");
             window.history.replaceState(null, "", `#${slug}`);
         },
         [pages]

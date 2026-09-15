@@ -19,6 +19,7 @@
 namespace App\StatamicDTO\Blueprints\Globals;
 
 use Spatie\LaravelData\Data;
+use App\StatamicDTO\Shared\AssetReference;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -30,8 +31,7 @@ class LocalPlatform extends Data
 
     public ?bool $featured_content_enabled = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public array $featured_content_image;
+    public AssetReference $featured_content_image;
 
     public string $featured_content_text;
 

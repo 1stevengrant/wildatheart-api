@@ -31,6 +31,5 @@ class ImageTitleSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $assets_field = null;
+    public ?AssetReference $assets_field = null;
 }

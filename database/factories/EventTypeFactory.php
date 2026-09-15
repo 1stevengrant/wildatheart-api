@@ -31,10 +31,19 @@ class EventTypeFactory extends Factory
             'registration_welcome_text' => fake()->paragraph(),
             'registration_before_your_event_text' => fake()->paragraph(),
             'event_schedule' => [
-                'name' => 'Schedule',
+                [
+                    'id' => 'schedule-1',
+                    'type' => 'text',
+                    'enabled' => true,
+                    'text_block' => fake()->paragraph(),
+                ],
             ],
             'event_faqs' => [
-                'name' => 'Schedule',
+                [
+                    'id' => 'faq-1',
+                    'question' => fake()->sentence(),
+                    'answer' => fake()->paragraph(),
+                ],
             ],
             'summary' => fake()->paragraph(),
             'summary_link' => fake()->url(),

@@ -31,6 +31,5 @@ class MediaItemsFromSeriesSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from media_series */
-    public ?array $media_items_from_series = null;
+    public ?EntryReference $media_items_from_series = null;
 }

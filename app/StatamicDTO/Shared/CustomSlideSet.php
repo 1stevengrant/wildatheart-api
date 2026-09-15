@@ -33,8 +33,7 @@ class CustomSlideSet extends Data
 
     public ?string $tag = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $featured_image = null;
+    public ?AssetReference $featured_image = null;
 
     public ?string $leader = null;
 
