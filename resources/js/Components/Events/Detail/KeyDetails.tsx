@@ -1,17 +1,6 @@
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 
-type KeyDetailItem = {
-    id: string;
-    icon: string;
-    type: string;
-    headline: string;
-    description: string;
-    fields: {
-        icon: string;
-        headline: string;
-        description: string;
-    };
-};
+type KeyDetailItem = App.Data.EventType.KeyDetailData;
 export const KeyDetails = ({ event }: { event: App.Data.EventData }) => {
     return (
         <>
@@ -30,7 +19,7 @@ export const KeyDetails = ({ event }: { event: App.Data.EventData }) => {
                                     >
                                         <div
                                             dangerouslySetInnerHTML={{
-                                                __html: item.icon,
+                                                __html: item.icon ?? "",
                                             }}
                                             className={`w-6 h-6 text-white`}
                                         />

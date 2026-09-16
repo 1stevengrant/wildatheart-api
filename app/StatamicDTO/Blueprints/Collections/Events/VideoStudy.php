@@ -20,7 +20,13 @@ namespace App\StatamicDTO\Blueprints\Collections\Events;
 
 use Spatie\LaravelData\Data;
 use App\StatamicDTO\Shared\ImagesGroup;
+use App\StatamicDTO\Shared\TermReference;
+use App\StatamicDTO\Shared\AssetReference;
+use App\StatamicDTO\Shared\EntryReference;
+use App\StatamicDTO\Shared\BlueprintReference;
+use App\StatamicDTO\Shared\CollectionReference;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class VideoStudy extends Data
@@ -34,11 +40,10 @@ class VideoStudy extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var TermReference[]|null */
     public ?array $topics = null;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference */
-    public ?array $related_content = null;
+    public ?EntryReference $related_content = null;
 
     public ?ImagesGroup $images = null;
 
@@ -46,14 +51,14 @@ class VideoStudy extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?AssetReference $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
     public float $sitemap_priority;
 
     /** @var mixed Unknown field type: trigger_astro_build */
+    #[LiteralTypeScriptType('unknown')]
     public mixed $trigger_astro_build_field;
 
     public ?string $slug = null;
@@ -79,11 +84,9 @@ class VideoStudy extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?CollectionReference $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?BlueprintReference $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

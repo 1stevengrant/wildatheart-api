@@ -227,105 +227,12 @@ class User extends Authenticatable
         }
 
         try {
-            return $this->cachedOrGeneratedInitialsAvatar();
-        } catch (Throwable $exception) {
+            return Avatar::create($this->fullname)->toBase64();
+        } catch (\Throwable $exception) {
             report($exception);
-            $this->forgetGeneratedAvatarCaches();
 
-            try {
-                return $this->generateInitialsAvatar();
-            } catch (Throwable) {
-                return $this->placeholderAvatarUrl();
-            }
+            return '';
         }
-    }
-
-    private function cachedOrGeneratedInitialsAvatar(): string
-    {
-        $cacheKey = $this->generatedAvatarCacheKey();
-        $cached = Cache::get($cacheKey);
-
-        if (is_string($cached) && $cached !== '') {
-            return $cached;
-        }
-
-        if ($cached !== null) {
-            Cache::forget($cacheKey);
-        }
-
-        $photo = $this->generateInitialsAvatar();
-        Cache::put($cacheKey, $photo, now()->addSeconds(self::GENERATED_AVATAR_CACHE_TTL_SECONDS));
-
-        return $photo;
-    }
-
-    private function generateInitialsAvatar(): string
-    {
-        $avatar = Avatar::create($this->fullname);
-        $this->disableLibraryAvatarCache($avatar);
-        $this->forgetLegacyAvatarCache($avatar);
-
-        $photo = $avatar->toBase64();
-
-        if (is_string($photo) && $photo !== '') {
-            return $photo;
-        }
-
-        if ($photo instanceof Stringable) {
-            $photo = (string) $photo;
-
-            if ($photo !== '') {
-                return $photo;
-            }
-        }
-
-        throw new RuntimeException('Generated avatar was not a string.');
-    }
-
-    private function generatedAvatarCacheKey(): string
-    {
-        return self::GENERATED_AVATAR_CACHE_PREFIX . md5($this->fullname);
-    }
-
-    private function placeholderAvatarUrl(): string
-    {
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->fullname) . '&background=random';
-    }
-
-    private function forgetGeneratedAvatarCaches(): void
-    {
-        Cache::forget($this->generatedAvatarCacheKey());
-
-        try {
-            $this->forgetLegacyAvatarCache(Avatar::create($this->fullname));
-        } catch (Throwable) {
-        }
-    }
-
-    private function forgetLegacyAvatarCache(object $avatar): void
-    {
-        $reflection = new ReflectionClass($avatar);
-
-        if (! $reflection->hasProperty('cacheKeyPrefix') || ! $reflection->hasMethod('cacheKey')) {
-            return;
-        }
-
-        $prefix = $reflection->getProperty('cacheKeyPrefix');
-        $cacheKey = $reflection->getMethod('cacheKey');
-
-        Cache::forget($prefix->getValue($avatar) . $cacheKey->invoke($avatar));
-    }
-
-    private function disableLibraryAvatarCache(object $avatar): void
-    {
-        $reflection = new ReflectionClass($avatar);
-
-        if (! $reflection->hasProperty('cacheEnabled')) {
-            return;
-        }
-
-        $cacheEnabled = $reflection->getProperty('cacheEnabled');
-        $cacheEnabled->setValue($avatar, false);
     }
 
     public function deleteProfilePhoto(): void

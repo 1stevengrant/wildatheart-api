@@ -6,11 +6,20 @@ use App\Models\EventType;
 use App\Enums\EventSexEnum;
 use App\Enums\EventTypeEnum;
 use Spatie\LaravelData\Data;
+use App\Data\EventType\FaqData;
+use App\Data\EventType\GuidePageData;
+use App\Data\EventType\KeyDetailData;
+use App\Data\EventType\ActionButtonData;
+use App\Data\EventType\ScheduleBlockData;
+use App\Data\Concerns\CollectsNullableData;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class EventTypeData extends Data
 {
+    use CollectsNullableData;
+
     public function __construct(
         public int $id,
         public readonly bool $allow_materials_order,
@@ -28,21 +37,29 @@ class EventTypeData extends Data
         public readonly EventSexEnum $sex,
         public readonly string $slug,
         public readonly ?string $description,
+        /** @var GuidePageData[]|null */
         public readonly ?array $event_guide_pages,
         public readonly ?string $video_link,
         public readonly ?string $registration_welcome_video,
         public readonly ?string $registration_welcome_text,
         public readonly ?string $registration_before_your_event_text,
+        /** @var ScheduleBlockData[]|null */
         public readonly ?array $event_schedule,
+        /** @var FaqData[]|null */
         public readonly ?array $event_faqs,
         public readonly string $image,
         public readonly ?string $hero_image,
         public readonly ?string $hero_video,
+        /** @var string[]|null Asset paths in the `app` container */
         public readonly ?array $photos,
         public readonly ?string $summary,
         public readonly ?string $summary_link,
+        /** @var KeyDetailData[]|null */
         public readonly ?array $key_details,
+        /** @var ActionButtonData[]|null */
         public readonly ?array $action_buttons,
+        /** @var array<int, array<string, mixed>>|null Unused jsonb column: no blueprint field writes it and no consumer reads it */
+        #[LiteralTypeScriptType('Array<Record<string, unknown>> | null')]
         public readonly ?array $new_content,
         public ?string $welcome_nav_text_override,
         public ?string $before_event_nav_text_override,
@@ -72,21 +89,21 @@ class EventTypeData extends Data
             sex: $eventType->sex ?? EventSexEnum::MEN,
             slug: $eventType->slug,
             description: $eventType->description,
-            event_guide_pages: $eventType->event_guide_pages,
+            event_guide_pages: self::collectOrNull(GuidePageData::class, $eventType->event_guide_pages),
             video_link: $eventType->video_link,
             registration_welcome_video: $eventType->registration_welcome_video,
             registration_welcome_text: $eventType->registration_welcome_text,
             registration_before_your_event_text: $eventType->registration_before_your_event_text,
-            event_schedule: $eventType->event_schedule,
-            event_faqs: $eventType->event_faqs,
+            event_schedule: self::collectOrNull(ScheduleBlockData::class, $eventType->event_schedule),
+            event_faqs: self::collectOrNull(FaqData::class, $eventType->event_faqs),
             image: $eventType->image,
             hero_image: $eventType->hero_image,
             hero_video: $eventType->hero_video,
             photos: $eventType->photos,
             summary: $eventType->summary,
             summary_link: $eventType->summary_link,
-            key_details: $eventType->key_details,
-            action_buttons: $eventType->action_buttons,
+            key_details: self::collectOrNull(KeyDetailData::class, $eventType->key_details),
+            action_buttons: self::collectOrNull(ActionButtonData::class, $eventType->action_buttons),
             new_content: $eventType->new_content,
             welcome_nav_text_override: $eventType->welcome_nav_text_override,
             before_event_nav_text_override: $eventType->before_event_nav_text_override,

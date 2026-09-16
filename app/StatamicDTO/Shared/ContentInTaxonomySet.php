@@ -20,6 +20,7 @@ namespace App\StatamicDTO\Shared;
 
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class ContentInTaxonomySet extends Data
@@ -31,10 +32,11 @@ class ContentInTaxonomySet extends Data
 
     public bool $enabled = true;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var TermReference[]|null */
     public ?array $tags = null;
 
     /** @var mixed Unknown field type: collections */
+    #[LiteralTypeScriptType('unknown')]
     public mixed $collections_to_load_from;
 
     public ?int $limit = null;

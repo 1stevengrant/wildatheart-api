@@ -90,7 +90,10 @@ const ResourcesPage = ({
                                                     url={
                                                         button.button_url ?? ``
                                                     }
-                                                    text={button.button_label}
+                                                    text={
+                                                        button.button_label ??
+                                                        ``
+                                                    }
                                                     icon={
                                                         <LinkIcon
                                                             className={`w-6 h-6 mr-2`}

@@ -42,7 +42,7 @@ class ExperienceResponseBuilder
         $experienceResponse->hero_variant = data_get($experienceData, 'hero_variant.value');
         $experienceResponse->testimonials = $experienceData['testimonials'];
         $experienceResponse->background_video_url = data_get($experienceData, 'background_video_url.url');
-        $experienceResponse->background_video_fallback_image = data_get($experienceData, 'background_video_fallback_image.url');
+        $experienceResponse->background_video_fallback_image = data_get($experienceData, 'background_video_fallback_image');
         $experienceResponse->featured_video_url = data_get($experienceData, 'featured_video_url.url');
         $experienceResponse->featured_video_fallback_image = data_get($experienceData, 'featured_video_fallback_image');
         $experienceResponse->experience_logo = data_get($experienceData, 'experience_logo');

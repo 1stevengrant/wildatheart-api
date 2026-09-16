@@ -32,11 +32,14 @@ use App\StatamicDTO\Shared\BentoBlockSet;
 use App\StatamicDTO\Shared\HeroSliderSet;
 use App\StatamicDTO\Shared\StyledTextSet;
 use App\StatamicDTO\Shared\VideoBlockSet;
+use App\StatamicDTO\Shared\AssetReference;
 use App\StatamicDTO\Shared\MediaSliderSet;
 use App\StatamicDTO\Shared\ColumnsBlockSet;
 use App\StatamicDTO\Shared\DividerBlockSet;
 use App\StatamicDTO\Shared\AddToCalendarSet;
 use App\StatamicDTO\Shared\SubscribeFormSet;
+use App\StatamicDTO\Shared\BlueprintReference;
+use App\StatamicDTO\Shared\CollectionReference;
 use App\StatamicDTO\Shared\ImageSliderBlockSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -59,11 +62,9 @@ class Prayers extends Data
 
     public ?string $summary = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $pdf = null;
+    public ?AssetReference $pdf = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $mp3 = null;
+    public ?AssetReference $mp3 = null;
 
     public ?string $drupal_url = null;
 
@@ -73,8 +74,7 @@ class Prayers extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?AssetReference $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
@@ -103,11 +103,9 @@ class Prayers extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?CollectionReference $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?BlueprintReference $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

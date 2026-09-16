@@ -7,7 +7,6 @@ use App\Models\Attendee;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Cache;
 use Laravolt\Avatar\Facade as Avatar;
 
 beforeEach(function () {
@@ -22,6 +21,30 @@ test('full name returns Member if they have no first name or last name defined',
     ]);
 
     expect($user->fullname)->toBe('Member');
+});
+
+it('returns an empty profile photo when avatar generation fails', function () {
+    Avatar::shouldReceive('create')
+        ->once()
+        ->andThrow(new TypeError('Avatar generation failed'));
+
+    $user = new User([
+        'given_name' => 'Contact',
+        'family_name' => 'User',
+    ]);
+
+    expect($user->profilePhoto())->toBe('');
+});
+
+it('returns a generated avatar on repeated calls for a user without an image', function () {
+    $user = User::factory()->create([
+        'image' => null,
+        'given_name' => 'Jane',
+        'family_name' => 'Doe',
+    ]);
+
+    expect($user->profilePhoto())->toStartWith('data:image')
+        ->and($user->profilePhoto())->toStartWith('data:image');
 });
 
 it('returns given name and family name as the fullname if both are defined', function () {

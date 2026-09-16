@@ -27,6 +27,7 @@ use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\ContactInvitationsController;
 use App\Http\Controllers\API\V1\Content\AlertEntryController;
+use App\Http\Controllers\API\V1\HostContactsExportController;
 use App\Http\Controllers\API\V1\HostMailingAddressController;
 use App\Http\Controllers\API\V1\Content\EventsEntryController;
 use App\Http\Controllers\API\V1\ArchivedHostContactsController;
@@ -111,6 +112,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('invitations/{invitation}/accept', [HostInvitationController::class, 'accept'])
             ->name('invitations.accept');
         Route::get('contacts', [HostContactsController::class, 'index'])->name('contacts.index');
+        Route::post('contacts/export', HostContactsExportController::class)->name('contacts.export');
         Route::post('contact-invitations', [HostContactInvitationsController::class, 'store'])->name('contact-invitations.store');
         Route::delete('contact-invitations/{invitation}', [HostContactInvitationsController::class, 'destroy'])->name('contact-invitations.destroy');
         Route::post('contacts/{event}/{user}/archive', [ArchivedHostContactsController::class, 'store'])

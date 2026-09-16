@@ -31,6 +31,6 @@ class MediaItemSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array[]|null Entry references from media_item with {id, title, slug, url, collection} */
+    /** @var EntryReference[]|null */
     public ?array $media_item = null;
 }

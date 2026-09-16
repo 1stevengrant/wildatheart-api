@@ -20,8 +20,12 @@ namespace App\StatamicDTO\Blueprints\Collections\Authors;
 
 use Spatie\LaravelData\Data;
 use App\StatamicDTO\Shared\ImagesGroup;
+use App\StatamicDTO\Shared\AssetReference;
 use App\StatamicDTO\Shared\UpdatesLinksRow;
+use App\StatamicDTO\Shared\BlueprintReference;
+use App\StatamicDTO\Shared\CollectionReference;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class Author extends Data
@@ -30,8 +34,7 @@ class Author extends Data
 
     public string $title;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $image = null;
+    public ?AssetReference $image = null;
 
     public ?string $roles_description = null;
 
@@ -50,14 +53,14 @@ class Author extends Data
 
     public ?string $seo_description = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $seo_image = null;
+    public ?AssetReference $seo_image = null;
 
     public ?bool $hide_from_search_engines = null;
 
     public float $sitemap_priority;
 
     /** @var mixed Unknown field type: trigger_astro_build */
+    #[LiteralTypeScriptType('unknown')]
     public mixed $trigger_astro_build_field;
 
     public ?string $slug = null;
@@ -83,11 +86,9 @@ class Author extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?CollectionReference $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?BlueprintReference $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

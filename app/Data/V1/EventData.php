@@ -23,6 +23,7 @@ class EventData extends Data
         public string $eventGroupType,
         public string $eventTypeImage,
         public string $eventTypeDescription,
+        /** @var string[] Asset paths in the `app` container */
         public array $eventTypePhotos,
         public ?string $scheduledFor,
         public string $hostName,

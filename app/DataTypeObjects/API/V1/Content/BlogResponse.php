@@ -14,9 +14,11 @@ class BlogResponse extends EntryResponse
 
     public string $summary;
 
-    public array|string|null $content;
+    /** Rendered HTML, or the raw string content when the entry is not block based */
+    public ?string $content;
 
-    public array|string|null $featured_image_src;
+    /** Bunny CDN URL of the vertical image */
+    public ?string $featured_image_src;
 
     public string $api_url;
 }

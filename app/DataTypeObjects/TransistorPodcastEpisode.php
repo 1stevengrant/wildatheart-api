@@ -4,6 +4,7 @@ namespace App\DataTypeObjects;
 
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class TransistorPodcastEpisode extends Data
@@ -64,6 +65,8 @@ class Attributes extends Data
 
     public ?string $transcript_url;
 
+    /** @var array<int, array<string, mixed>> Transcript objects from the Transistor API; every fixture and observed payload is empty, so the item shape is unverified */
+    #[LiteralTypeScriptType('Array<Record<string, unknown>>')]
     public array $transcripts;
 
     public string $formatted_summary;

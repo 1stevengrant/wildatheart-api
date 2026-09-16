@@ -20,6 +20,10 @@ namespace App\StatamicDTO\Blueprints\Collections\MediaItem;
 
 use Spatie\LaravelData\Data;
 use App\StatamicDTO\Shared\ImagesGroup;
+use App\StatamicDTO\Shared\TermReference;
+use App\StatamicDTO\Shared\EntryReference;
+use App\StatamicDTO\Shared\BlueprintReference;
+use App\StatamicDTO\Shared\CollectionReference;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -34,7 +38,7 @@ class MediaItem extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var TermReference[]|null */
     public ?array $topics = null;
 
     /** @var 'audio' | 'video' | null */
@@ -44,7 +48,7 @@ class MediaItem extends Data
 
     public ?string $video_source_url = null;
 
-    /** @var array[]|null Entry references from media_series with {id, title, slug, url, collection} */
+    /** @var EntryReference[]|null */
     public ?array $series = null;
 
     public ?string $slug = null;
@@ -54,7 +58,7 @@ class MediaItem extends Data
 
     public ?ImagesGroup $images = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var TermReference[]|null */
     public ?array $content_type = null;
 
     public string $locale = 'default';
@@ -75,11 +79,9 @@ class MediaItem extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $collection = null;
+    public ?CollectionReference $collection = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $blueprint = null;
+    public ?BlueprintReference $blueprint = null;
 
     /** @var string ISO 8601 date/time */
     public ?string $last_modified = null;

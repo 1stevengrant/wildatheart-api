@@ -29,6 +29,6 @@ class GroupFieldGroup extends Data
     /** @var string HTML content */
     public ?string $description = null;
 
-    /** @var array[]|null Term references with {id, title, slug, taxonomy} */
+    /** @var TermReference[]|null */
     public ?array $topics = null;
 }

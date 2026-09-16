@@ -16,6 +16,7 @@ use Saloon\RateLimitPlugin\Traits\HasRateLimits;
 use Saloon\Exceptions\Request\FatalRequestException;
 use Saloon\PaginationPlugin\Contracts\HasPagination;
 use Saloon\RateLimitPlugin\Contracts\RateLimitStore;
+use Saloon\RateLimitPlugin\Helpers\RetryAfterHelper;
 use Saloon\RateLimitPlugin\Stores\LaravelCacheStore;
 
 class TransistorConnector extends Connector implements HasPagination
@@ -44,6 +45,17 @@ class TransistorConnector extends Connector implements HasPagination
     protected function resolveRateLimitStore(): RateLimitStore
     {
         return new LaravelCacheStore(Cache::store(config('services.transistor.rate_limit_cache_store', 'redis')));
+    }
+
+    protected function handleTooManyAttempts(Response $response, Limit $limit): void
+    {
+        if ($response->status() !== 429) {
+            return;
+        }
+
+        $limit->exceeded(
+            releaseInSeconds: max(10, RetryAfterHelper::parse($response->header('Retry-After')) ?? 10),
+        );
     }
 
     /**

@@ -31,14 +31,11 @@ class ImageSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $image = null;
+    public ?AssetReference $image = null;
 
-    /** @var mixed Unknown field type: width */
-    public mixed $small_width;
+    public ?int $small_width = null;
 
-    /** @var mixed Unknown field type: width */
-    public mixed $medium_width;
+    public ?int $medium_width = null;
 
     public ?LinkField $link = null;
 }

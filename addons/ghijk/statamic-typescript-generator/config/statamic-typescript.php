@@ -152,8 +152,8 @@ return [
             'url' => ['type' => 'string', 'nullable' => true],
             'permalink' => ['type' => 'string', 'nullable' => true],
             'api_url' => ['type' => 'string', 'nullable' => true],
-            'collection' => ['type' => 'array', 'nullable' => true, 'docblock' => '/** @var array{handle: string, title: string}|null */'],
-            'blueprint' => ['type' => 'array', 'nullable' => true, 'docblock' => '/** @var array{handle: string, title: string}|null */'],
+            'collection' => ['reference' => 'CollectionReference', 'nullable' => true],
+            'blueprint' => ['reference' => 'BlueprintReference', 'nullable' => true],
             'last_modified' => ['type' => 'string', 'nullable' => true, 'docblock' => '/** @var string ISO 8601 date/time */'],
         ],
         'globals' => [
@@ -166,7 +166,7 @@ return [
             'url' => ['type' => 'string', 'nullable' => true],
             'permalink' => ['type' => 'string', 'nullable' => true],
             'api_url' => ['type' => 'string', 'nullable' => true],
-            'taxonomy' => ['type' => 'array', 'nullable' => true, 'docblock' => '/** @var array{handle: string, title: string}|null */'],
+            'taxonomy' => ['reference' => 'TaxonomyReference', 'nullable' => true],
         ],
     ],
 
