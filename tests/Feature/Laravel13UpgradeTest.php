@@ -13,6 +13,10 @@ it('disables arbitrary cache class unserialization', function (): void {
     expect(config('cache.serializable_classes'))->not->toBeTrue();
 });
 
+it('disables avatar caching that stores encoded image objects', function (): void {
+    expect(config('laravolt.avatar.cache.enabled'))->toBeFalse();
+});
+
 it('stores home page cache values as primitives', function (): void {
     configureSerializedArrayCache();
 
