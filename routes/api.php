@@ -39,10 +39,12 @@ use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
 use App\Http\Controllers\API\V1\Host\OwnershipTransferController;
 use App\Http\Controllers\API\V1\HostContactInvitationsController;
 use App\Http\Controllers\API\V1\Content\MediaItemOrSeriesController;
+use App\Http\Controllers\API\V1\Host\InvitationAcceptanceController;
 use App\Http\Controllers\API\V1\Content\RecentDailyReadingsController;
 use App\Http\Controllers\API\V1\Host\EventOwnershipTransferController;
 use App\Http\Controllers\API\V1\Content\RefreshDailyReadingsController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\PrayerAudioController;
+use App\Http\Controllers\API\V1\Host\OwnershipTransferAcceptanceController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingsController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\DailyReadingAudioController;
 use App\Http\Controllers\API\V1\Content\SubsplashApp\TodaysDailyReadingController;
@@ -105,12 +107,16 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->name('events.ownershipTransfers.destroy');
         Route::get('ownership-transfers/{transfer}', [OwnershipTransferController::class, 'show'])
             ->name('ownershipTransfers.show');
-        Route::post('ownership-transfers/{transfer}/accept', [OwnershipTransferController::class, 'accept'])
+        Route::post('ownership-transfers/{transfer}/accept', [OwnershipTransferAcceptanceController::class, 'store'])
             ->name('ownershipTransfers.accept');
+        Route::post('ownership-transfers/{transfer}/acceptance', [OwnershipTransferAcceptanceController::class, 'store'])
+            ->name('ownershipTransfers.acceptance.store');
         Route::get('invitations/{invitation}', [HostInvitationController::class, 'show'])
             ->name('invitations.show');
-        Route::post('invitations/{invitation}/accept', [HostInvitationController::class, 'accept'])
+        Route::post('invitations/{invitation}/accept', [InvitationAcceptanceController::class, 'store'])
             ->name('invitations.accept');
+        Route::post('invitations/{invitation}/acceptance', [InvitationAcceptanceController::class, 'store'])
+            ->name('invitations.acceptance.store');
         Route::get('contacts', [HostContactsController::class, 'index'])->name('contacts.index');
         Route::post('contacts/export', HostContactsExportController::class)->name('contacts.export');
         Route::post('contact-invitations', [HostContactInvitationsController::class, 'store'])->name('contact-invitations.store');

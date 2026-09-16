@@ -106,7 +106,7 @@ it('accepts a pending transfer and moves ownership to the new owner', function (
     mockJwtAuthentication($newOwner);
 
     $response = $this->withHeaders(jwtAuthenticationHeaders())
-        ->postJson("/api/v1/host/ownership-transfers/{$transfer->id}/accept");
+        ->postJson("/api/v1/host/ownership-transfers/{$transfer->id}/acceptance");
 
     $response->assertOk()
         ->assertJsonPath('event_id', $event->id);
