@@ -34,8 +34,7 @@ class ColumnSet extends Data
     /** @var array<StyledTextSet|ImageSet|ButtonsSet|ButtonCloudSet|AppPreviewBlockSet>|null */
     public ?array $blocks = null;
 
-    /** @var mixed Unknown field type: width */
-    public mixed $column_width;
+    public ?int $column_width = null;
 
     /** @var '0' | '1' | '2' | null */
     public ?string $horizontal_alignment = null;

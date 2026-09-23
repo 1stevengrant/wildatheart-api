@@ -33,8 +33,7 @@ class VideoBlockSet extends Data
 
     public ?LinkField $preview_video_url = null;
 
-    /** @var array{id: string, url: string, permalink: string, alt: string|null, width: int|null, height: int|null}|null */
-    public ?array $preview_video_image = null;
+    public ?AssetReference $preview_video_image = null;
 
     public ?VideoButtonGroup $video_button = null;
 

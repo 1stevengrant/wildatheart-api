@@ -20,6 +20,7 @@ use App\StatamicDTO\Shared\BentoBlockSet;
 use App\StatamicDTO\Shared\HeroSliderSet;
 use App\StatamicDTO\Shared\StyledTextSet;
 use App\StatamicDTO\Shared\VideoBlockSet;
+use App\StatamicDTO\Shared\AssetReference;
 use App\StatamicDTO\Shared\MediaSliderSet;
 use App\StatamicDTO\Shared\ColumnsBlockSet;
 use App\StatamicDTO\Shared\DividerBlockSet;
@@ -30,6 +31,7 @@ use App\StatamicDTO\Shared\ImageSliderBlockSet;
 use App\StatamicDTO\Shared\TestimonialsBlockSet;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\TypeScriptType;
 
 #[TypeScript]
 class CustomSeries extends Data
@@ -59,6 +61,7 @@ class CustomSeries extends Data
 
     public ?string $seo_description = null;
 
+    #[TypeScriptType('\\' . AssetReference::class . '|null')]
     public ?array $seo_image = null;
 
     public ?string $seo_title = null;

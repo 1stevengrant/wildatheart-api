@@ -19,6 +19,7 @@
 namespace App\StatamicDTO\Blueprints\Taxonomies\Topics;
 
 use Spatie\LaravelData\Data;
+use App\StatamicDTO\Shared\TaxonomyReference;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -40,6 +41,5 @@ class Topic extends Data
 
     public ?string $api_url = null;
 
-    /** @var array{handle: string, title: string}|null */
-    public ?array $taxonomy = null;
+    public ?TaxonomyReference $taxonomy = null;
 }

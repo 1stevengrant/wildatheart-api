@@ -6,8 +6,12 @@ use App\Models\EventType;
 use App\Enums\EventSexEnum;
 use Statamic\Facades\Entry;
 use Spatie\LaravelData\Data;
+use App\Data\EventType\FaqData;
+use App\Data\EventType\KeyDetailData;
 use App\Services\EventResponseBuilder;
 use App\Support\EventTypeDateSelector;
+use App\Data\EventType\ScheduleBlockData;
+use App\Data\Concerns\CollectsNullableData;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 use Spatie\TypeScriptTransformer\Attributes\TypeScriptType;
 use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
@@ -15,6 +19,8 @@ use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
 #[TypeScript]
 class EventTypeData extends Data
 {
+    use CollectsNullableData;
+
     public function __construct(
         public int $id,
         public string $name,
@@ -25,9 +31,12 @@ class EventTypeData extends Data
         public string $group_type,
         public int $order,
         public ?string $description,
+        /** @var KeyDetailData[]|null */
         public ?array $key_details,
         public ?string $card_teaser_text,
+        /** @var FaqData[]|null */
         public ?array $event_faqs,
+        /** @var ScheduleBlockData[]|null */
         public ?array $event_schedule,
         public ?string $registration_before_your_event_text,
         public bool $allow_materials_order,
@@ -56,10 +65,10 @@ class EventTypeData extends Data
             group_type: $eventType->group_type,
             order: $eventType->order ?? 0,
             description: $eventType->description,
-            key_details: $eventType->key_details,
+            key_details: self::collectOrNull(KeyDetailData::class, $eventType->key_details),
             card_teaser_text: $eventType->card_teaser_text,
-            event_faqs: $eventType->event_faqs,
-            event_schedule: $eventType->event_schedule,
+            event_faqs: self::collectOrNull(FaqData::class, $eventType->event_faqs),
+            event_schedule: self::collectOrNull(ScheduleBlockData::class, $eventType->event_schedule),
             registration_before_your_event_text: $eventType->registration_before_your_event_text,
             allow_materials_order: $eventType->allow_materials_order ?? false,
             number_of_items_in_material_order_label: $eventType->number_of_items_in_material_order_label,

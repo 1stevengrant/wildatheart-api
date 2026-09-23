@@ -1,0 +1,36 @@
+title: 'Link Accordion Block'
+fields:
+  -
+    handle: title
+    field:
+      type: text
+      display: Title
+      instructions: 'Label shown on the collapsed accordion (e.g. "International Orders").'
+      validate:
+        - required
+  -
+    handle: links
+    field:
+      type: grid
+      display: Links
+      mode: stacked
+      add_row: 'Add Link'
+      reorderable: true
+      fields:
+        -
+          handle: text
+          field:
+            type: text
+            display: Text
+            width: 50
+            validate:
+              - required
+        -
+          handle: url
+          field:
+            type: text
+            display: URL
+            width: 50
+            instructions: 'Full URL (https://...) or a site path (/about).'
+            validate:
+              - required

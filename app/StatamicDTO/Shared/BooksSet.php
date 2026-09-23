@@ -31,9 +31,8 @@ class BooksSet extends Data
 
     public bool $enabled = true;
 
-    /** @var array{id: string, title: string, slug: string, url: string, collection: string}|null Entry reference from authors */
-    public ?array $author = null;
+    public ?EntryReference $author = null;
 
-    /** @var array[]|null Entry references from books with {id, title, slug, url, collection} */
+    /** @var EntryReference[]|null */
     public ?array $excluded_books = null;
 }

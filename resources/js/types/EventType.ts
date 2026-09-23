@@ -1,13 +1,3 @@
-export interface ContentBlock {
-    type: "body_set" | "video_set" | "image_set" | "accordion_set";
-    enabled: boolean;
-    body?: string;
-    video?: string;
-    image?: string;
-    accordion?: string;
-}
+export type ContentBlock = App.Data.EventType.ContentBlockData;
 
-export interface GuidePage {
-    page_title: string;
-    page_content: Array<ContentBlock>;
-}
+export type GuidePage = App.Data.EventType.GuidePageData;

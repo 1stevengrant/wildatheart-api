@@ -13,7 +13,7 @@ class MediaItemsSlide extends Data
         $this->slides = [];
     }
 
-    public $type = 'media_items_from_series';
+    public string $type = 'media_items_from_series';
 
     /** @var array<int, SlideBlock> */
     public array $slides;

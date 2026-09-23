@@ -154,3 +154,9 @@ fields:
               fields:
                 -
                   import: image_slider_block
+            link_accordion_block:
+              display: 'Link Accordion Block'
+              icon: navigation-menu
+              fields:
+                -
+                  import: link_accordion_block
