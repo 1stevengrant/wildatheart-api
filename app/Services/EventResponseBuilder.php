@@ -24,6 +24,7 @@ class EventResponseBuilder
             $eventResponse = $this->entryBuilder->buildResponseFromEntry($event);
             $response['topics'] = $eventResponse['topics'] ?? [];
             $response['blocks'] = $this->videoStudyBlocks($response, $eventResponse);
+            $response['images'] = $this->videoStudyImages($response, $eventResponse);
         }
 
         if (isset($response['background_video_url']) && is_array($response['background_video_url'])) {
@@ -40,6 +41,29 @@ class EventResponseBuilder
         $response['event_logo'] ??= $response['experience_logo'] ?? null;
 
         return $response;
+    }
+
+    /**
+     * The events entry's own SEO images (wide/square/vertical) describe this listing, so they win
+     * per size; any size it leaves empty falls back to the linked experiences entry's image.
+     */
+    private function videoStudyImages(array $relatedResponse, array $eventResponse): ?array
+    {
+        $related = is_array($relatedResponse['images'] ?? null) ? $relatedResponse['images'] : [];
+        $event = is_array($eventResponse['images'] ?? null) ? $eventResponse['images'] : [];
+
+        if ($related === [] && $event === []) {
+            return $relatedResponse['images'] ?? null;
+        }
+
+        $merged = $related;
+        foreach ($event as $size => $image) {
+            if (! empty($image)) {
+                $merged[$size] = $image;
+            }
+        }
+
+        return $merged;
     }
 
     private function videoStudyBlocks(array $relatedResponse, array $eventResponse): array

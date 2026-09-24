@@ -240,3 +240,53 @@ it('uses parent presentation blocks when related blocks are empty', function () 
 
     expect($response['blocks'])->toBe($parentBlocks);
 });
+
+it('uses the video_study entry\'s own SEO images, falling back to the related entry per size', function () {
+    $linked = landingPage('video_study');
+    $eventWide = ['id' => 's3::events/wah-experience-wide.jpg'];
+    $relatedSquare = ['id' => 's3::experiences/wah-experience-square.jpg'];
+    $relatedWide = ['id' => 's3::experiences/should-be-overridden.jpg'];
+
+    $entryBuilder = Mockery::mock(EntryBuilderService::class);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->related_content->id()))
+        ->andReturn([
+            'title' => 'Linked Experience',
+            'images' => ['wide' => $relatedWide, 'square' => $relatedSquare, 'vertical' => null],
+        ]);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->id()))
+        ->andReturn([
+            'title' => 'Landing Page',
+            'images' => ['wide' => $eventWide, 'square' => null, 'vertical' => null],
+        ]);
+
+    $response = (new EventResponseBuilder($entryBuilder))->build($linked);
+
+    expect($response['images'])->toBe([
+        'wide' => $eventWide,
+        'square' => $relatedSquare,
+        'vertical' => null,
+    ]);
+});
+
+it('keeps the related entry\'s images when the video_study entry has none', function () {
+    $linked = landingPage('video_study');
+    $relatedImages = ['wide' => ['id' => 's3::experiences/wide.jpg'], 'square' => null, 'vertical' => null];
+
+    $entryBuilder = Mockery::mock(EntryBuilderService::class);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->related_content->id()))
+        ->andReturn(['title' => 'Linked Experience', 'images' => $relatedImages]);
+    $entryBuilder->shouldReceive('buildResponseFromEntry')
+        ->once()
+        ->with(Mockery::on(fn ($entry) => $entry->id() === $linked->id()))
+        ->andReturn(['title' => 'Landing Page', 'images' => ['wide' => null, 'square' => null, 'vertical' => null]]);
+
+    $response = (new EventResponseBuilder($entryBuilder))->build($linked);
+
+    expect($response['images'])->toBe($relatedImages);
+});
