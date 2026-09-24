@@ -37,6 +37,7 @@ class ConfirmFireUnpublishedMailable extends BaseMailable implements ShouldQueue
         $subject = str_replace('[event_name]', $this->event->name, $subject);
 
         return new Envelope(
+            from: $this->templateSender(),
             subject: $subject,
         );
     }

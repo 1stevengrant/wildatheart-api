@@ -61,6 +61,7 @@ class NewEventCreatedMailable extends BaseMailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
+            from: $this->templateSender(),
             subject: $this->emailTemplate->subject,
         );
     }
@@ -71,7 +72,7 @@ class NewEventCreatedMailable extends BaseMailable implements ShouldQueue
     public function content(): Content
     {
         $content = $this->emailTemplate->body;
-        $content = str_replace('[event_url]', $this->event->url, $content);
+        $content = str_replace('[event_url]', $this->eventUrl(), $content);
         $content = str_replace('[event_host_name]', $this->event->user->given_name, $content);
 
         $this->emailContent = Str::markdown($content);
@@ -79,6 +80,21 @@ class NewEventCreatedMailable extends BaseMailable implements ShouldQueue
         return new Content(
             markdown: 'emails.events.new-event-created'
         );
+    }
+
+    /**
+     * The listing link. With the new landing pages the event URL is a site-relative path on the
+     * Astro frontend, which a mail client can't resolve, so anchor it to the frontend's origin.
+     */
+    private function eventUrl(): string
+    {
+        $url = $this->event->url;
+
+        if (str_starts_with($url, '/')) {
+            return mb_rtrim((string) config('app.frontend_url'), '/') . $url;
+        }
+
+        return $url;
     }
 
     /**

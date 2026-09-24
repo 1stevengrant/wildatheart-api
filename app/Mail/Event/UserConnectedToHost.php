@@ -37,6 +37,7 @@ class UserConnectedToHost extends Mailable implements ShouldQueue
         $subject = str_replace('[event_title]', $this->event->eventType->name, $subject);
 
         return new Envelope(
+            from: $this->templateSender(),
             subject: $subject,
         );
     }

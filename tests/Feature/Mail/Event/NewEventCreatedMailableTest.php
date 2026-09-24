@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\Event;
+use Laravel\Pennant\Feature;
 use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use App\Features\NewEventLandingFeature;
 use App\Mail\Event\NewEventCreatedMailable;
 
 test('when an event is created, it sends the new event created email', function () {
@@ -26,4 +28,63 @@ test('it does not break link text mid-word', function () {
     $html = (new NewEventCreatedMailable($event))->render();
 
     expect($html)->not->toContain('word-break: break-all');
+});
+
+test('it sends from the sender set on the CMS template', function () {
+    Bus::fake();
+    Mail::fake();
+
+    EmailTemplate::where('slug', 'send-fires-welcome-email')->firstOrFail()->update([
+        'from_name' => 'Wild at Heart Local',
+        'from_email' => 'local@wildatheart.org',
+    ]);
+
+    $mailable = new NewEventCreatedMailable(Event::factory()->fires()->create());
+
+    $mailable->assertFrom('local@wildatheart.org', 'Wild at Heart Local');
+});
+
+test('it falls back to the default sender when the template sets none', function () {
+    Bus::fake();
+    Mail::fake();
+
+    EmailTemplate::where('slug', 'send-fires-welcome-email')->firstOrFail()->update([
+        'from_name' => null,
+        'from_email' => null,
+    ]);
+
+    $mailable = new NewEventCreatedMailable(Event::factory()->fires()->create());
+
+    expect($mailable->envelope()->from)->toBeNull();
+});
+
+test('it loads the header logo from the configured public URL, not APP_URL', function () {
+    Bus::fake();
+    Mail::fake();
+    config([
+        'app.url' => 'local.wildatheart.test',
+        'mail.logo_url' => 'https://cdn.example.test/email-logo.png',
+    ]);
+
+    $html = (new NewEventCreatedMailable(Event::factory()->fires()->create()))->render();
+
+    expect($html)->toContain('src="https://cdn.example.test/email-logo.png"')
+        ->not->toContain('src="http://localhost');
+});
+
+test('it links to the listing on the frontend when landing pages are site-relative', function () {
+    Bus::fake();
+    Mail::fake();
+    config(['app.frontend_url' => 'https://www.wildatheart.org/']);
+    Feature::activate(NewEventLandingFeature::class);
+
+    EmailTemplate::where('slug', 'send-fires-welcome-email')->firstOrFail()->update([
+        'body' => 'Here is [your listing]([event_url]).',
+    ]);
+
+    $event = Event::factory()->fires()->create();
+
+    $html = (new NewEventCreatedMailable($event))->render();
+
+    expect($html)->toContain("https://www.wildatheart.org/events/attend/{$event->id}");
 });

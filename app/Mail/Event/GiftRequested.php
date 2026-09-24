@@ -28,6 +28,7 @@ class GiftRequested extends BaseMailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
+            from: $this->templateSender(),
             subject: $this->emailTemplate->subject,
         );
     }
