@@ -8,11 +8,32 @@ use Illuminate\Support\Facades\Mail;
 use App\Features\NewEventLandingFeature;
 use App\Mail\Event\NewEventCreatedMailable;
 
-test('when an event is created, it sends the new event created email', function () {
+test('when a published event is created, it sends the new event created email', function () {
     Bus::fake();
     Mail::fake();
-    Event::factory()->fires()->create();
+    Event::factory()->fires()->approved()->create();
     Mail::assertQueued(NewEventCreatedMailable::class);
+});
+
+test('a draft gets the welcome email when it is first published, not when it is created', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $event = Event::factory()->fires()->create(['approved_at' => null]);
+    Mail::assertNotQueued(NewEventCreatedMailable::class);
+
+    $event->update(['approved_at' => now()]);
+    Mail::assertQueued(NewEventCreatedMailable::class, 1);
+});
+
+test('re-publishing an event that already got its welcome email does not resend it', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $event = Event::factory()->fires()->create(['approved_at' => null, 'welcome_sent_at' => now()]);
+    $event->update(['approved_at' => now()]);
+
+    Mail::assertNotQueued(NewEventCreatedMailable::class);
 });
 
 test('it does not break link text mid-word', function () {

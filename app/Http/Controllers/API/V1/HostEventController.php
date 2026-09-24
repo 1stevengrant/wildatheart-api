@@ -16,6 +16,7 @@ use App\Support\EventTypeDateSelector;
 use App\Actions\Event\PublishEventDraft;
 use App\Http\Requests\API\V1\CreateEventRequest;
 use App\Http\Requests\API\V1\PublishEventRequest;
+use App\Actions\Event\SendPendingCoHostInvitations;
 use App\Http\Requests\API\V1\SaveEventDraftRequest;
 use App\Http\Requests\API\V1\ApproveHostEventRequest;
 use App\Http\Requests\API\V1\DestroyHostEventRequest;
@@ -156,6 +157,8 @@ class HostEventController extends Controller
     public function approve(ApproveHostEventRequest $request, Event $event): JsonResponse
     {
         ApproveEvent::run($event);
+        // Invites added while it was a draft wait for publishing, same as the wizard's publish.
+        SendPendingCoHostInvitations::run($event->fresh(['pendingManagerInvitations']), auth()->user());
 
         return response()->json([
             'success' => true,

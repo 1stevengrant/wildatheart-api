@@ -892,3 +892,66 @@ it('publishes a complete fire draft from the dashboard', function () {
 
     expect($event->fresh()->approved_at)->not->toBeNull();
 });
+
+it('emails invites added to an unpublished event when it is published through the wizard', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_EXPERIENCE]);
+    $event = Event::withoutEvents(fn () => Event::factory()->for($host)->create([
+        'event_type_id' => $eventType->id,
+        'approved_at' => null,
+        'start_date' => now()->addDays(10),
+        'frequency' => 'weekly',
+    ]));
+
+    mockJwtAuthentication($host);
+
+    $body = publishEventPayload([
+        'event_id' => $event->id,
+        'frequency' => 'weekly',
+        'co_host_emails' => ['cohost@example.test'],
+    ]);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", $body)
+        ->assertOk();
+    Mail::assertNotQueued(HostInvitationMail::class);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/{$event->id}/publish", $body)
+        ->assertOk();
+
+    Mail::assertQueued(HostInvitationMail::class, fn ($mail) => $mail->hasTo('cohost@example.test'));
+});
+
+it('emails invites added to a draft when it is published from the dashboard', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+    $event = Event::withoutEvents(fn () => Event::factory()->for($host)->create([
+        'event_type_id' => $eventType->id,
+        'approved_at' => null,
+        'start_date' => now()->addDays(10),
+        'frequency' => 'weekly',
+    ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $event->id,
+            'co_host_emails' => ['cohost@example.test'],
+        ])
+        ->assertOk();
+    Mail::assertNotQueued(HostInvitationMail::class);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk();
+
+    Mail::assertQueued(HostInvitationMail::class, fn ($mail) => $mail->hasTo('cohost@example.test'));
+});

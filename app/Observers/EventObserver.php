@@ -56,7 +56,7 @@ class EventObserver
 
         SendNewEventSlackAlert::dispatch($event);
 
-        Mail::to($event->user)->send(new NewEventCreatedMailable($event));
+        $this->sendWelcomeEmailWhenLive($event);
 
         if ($event->eventType->wegive_tag) {
             Bus::chain([
@@ -82,6 +82,30 @@ class EventObserver
     public function updated(Event $event): void
     {
         Artisan::call('app:clear-event-cache');
+
+        if ($event->wasChanged('approved_at')) {
+            $this->sendWelcomeEmailWhenLive($event);
+        }
+    }
+
+    /**
+     * The welcome ("… is live" / "Important details about your upcoming …") email goes out the
+     * first time an event is published. Drafts are created long before they're live, so this can't
+     * key off creation; welcome_sent_at (set once the mail sends) stops re-publishing from resending.
+     */
+    protected function sendWelcomeEmailWhenLive(Event $event): void
+    {
+        if ($event->approved_at === null || $event->welcome_sent_at !== null) {
+            return;
+        }
+
+        $eventType = $event->eventType;
+
+        if ($eventType === null || ! NewEventCreatedMailable::hasTemplateFor($eventType->name)) {
+            return;
+        }
+
+        Mail::to($event->user)->send(new NewEventCreatedMailable($event));
     }
 
     public function deleted(Event $event): void
