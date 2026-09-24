@@ -3,7 +3,6 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
-use App\Enums\Event\FrequencyEnum;
 use App\Support\EventTypeDateSelector;
 use App\Http\Requests\Concerns\HasLocationRules;
 use App\Http\Requests\Concerns\HasMaterialOrderValidationAttributes;
@@ -32,7 +31,7 @@ class PublishEventRequest extends SaveEventDraftRequest
     {
         $eventType = $this->route('eventType');
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
-        $frequencyValues = array_map(fn (FrequencyEnum $case) => $case->value, FrequencyEnum::cases());
+        $frequencyValues = EventTypeDateSelector::allowedFrequencies($eventType?->group_type);
 
         $publishRules = [
             'latitude' => ['required', 'numeric'],

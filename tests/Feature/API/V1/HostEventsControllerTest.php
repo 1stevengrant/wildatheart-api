@@ -664,6 +664,9 @@ it('allows an owner to approve an unpublished event', function () {
         ->create([
             'event_type_id' => $eventType->id,
             'approved_at' => null,
+            // Publishing requires a complete event; the factory's fire type needs a frequency.
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
         ]));
 
     mockJwtAuthentication($host);
@@ -689,6 +692,9 @@ it('allows a co-host to approve an unpublished event', function () {
         ->create([
             'event_type_id' => $eventType->id,
             'approved_at' => null,
+            // Publishing requires a complete event; the factory's fire type needs a frequency.
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
         ]));
     $event->managers()->attach($coHost->id);
 
@@ -797,4 +803,92 @@ it('persists expected attendees material order on draft save and returns it on h
 
     expect($draft)->not->toBeNull()
         ->and($draft['number_of_items_in_material_order'])->toBe('2 x 10-pack');
+});
+
+it('stores a course draft\'s weekly frequency', function () {
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_EXPERIENCE]);
+
+    mockJwtAuthentication($host);
+
+    $draftId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => 'Woodland Park, CO',
+            'start_date' => now()->addDays(14)->format('Y-m-d'),
+            'frequency' => 'weekly',
+        ])
+        ->assertOk()
+        ->json('event.id');
+
+    expect(Event::find($draftId)?->frequency?->value)->toBe('weekly');
+});
+
+it('rejects monthly and quarterly frequencies for courses', function (string $frequency) {
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_EXPERIENCE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => 'Woodland Park, CO',
+            'frequency' => $frequency,
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('frequency');
+})->with(['monthly', 'quarterly']);
+
+it('refuses to publish a draft from the dashboard until its required fields are filled', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+            'latitude' => null,
+            'longitude' => null,
+            'start_date' => null,
+            'frequency' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['latitude', 'start_date', 'frequency']);
+
+    expect($event->fresh()->approved_at)->toBeNull();
+});
+
+it('publishes a complete fire draft from the dashboard', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+            'latitude' => 38.9939,
+            'longitude' => -105.0567,
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk();
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
 });

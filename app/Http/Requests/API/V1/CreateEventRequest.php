@@ -3,7 +3,6 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
-use App\Enums\Event\FrequencyEnum;
 use App\Support\EventTypeDateSelector;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasLocationRules;
@@ -31,7 +30,7 @@ class CreateEventRequest extends FormRequest
         ];
 
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
-        $frequencyValues = array_map(fn (FrequencyEnum $case) => $case->value, FrequencyEnum::cases());
+        $frequencyValues = EventTypeDateSelector::allowedFrequencies($eventType?->group_type);
 
         $rules['number_of_items_in_material_order'] = $eventType?->hasMaterialsOrder()
             ? ['required', 'string', 'in:' . implode(',', $validValues)]
