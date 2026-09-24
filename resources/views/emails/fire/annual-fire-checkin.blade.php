@@ -3,7 +3,7 @@
 
 As we begin a new year, we're reaching out to all our Fire hosts to make sure the fires listed on Wild at Heart are still active and welcoming new members.
 
-**Your fire:** {{ $event->name }}
+**Your fire:** {{ $event->emailName() }}
 
 We want to ensure that people searching for community can find fires that are actively meeting. If your fire is still burning, please let us know by clicking the button below.
 

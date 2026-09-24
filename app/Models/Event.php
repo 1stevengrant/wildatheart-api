@@ -151,6 +151,17 @@ class Event extends BaseModel
         return $this->belongsTo(EventType::class);
     }
 
+    /**
+     * The event's name as people know it, for email subjects and copy. A fire's `name` is only the
+     * host's prefix ("Nic's"), displayed as "Nic's Fire"; other events keep their stored name.
+     */
+    public function emailName(): string
+    {
+        $isFire = in_array($this->eventType?->name, [EventType::FIRES, EventType::CAPTIVATING_FIRE], true);
+
+        return $isFire && filled($this->name) ? $this->display_name : (string) $this->name;
+    }
+
     public function eventTypeSingular(): string
     {
         return Str::singular($this->eventType->name);
