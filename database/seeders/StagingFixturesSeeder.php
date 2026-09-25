@@ -1,0 +1,232 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\EventType;
+use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class StagingFixturesSeeder extends Seeder
+{
+    /** @var list<array{email: string, key: string}> */
+    private const array HOSTS = [
+        ['email' => 'jamiemorrison@wildatheart.org', 'key' => 'jamie'],
+        ['email' => 'steven@ghijk.co.uk', 'key' => 'steven'],
+        ['email' => 'wookie@wildatheart.org', 'key' => 'wookie'],
+        ['email' => 'nic@wildatheart.org', 'key' => 'nic'],
+    ];
+
+    /** @var list<array{name: string, sex: string, city: string, state: string, state_code: string, longitude: float, latitude: float}> */
+    private const array EVENT_TYPES = [
+        ['name' => EventType::FIRES, 'sex' => 'men', 'city' => 'Bozeman', 'state' => 'Montana', 'state_code' => 'MT', 'longitude' => -111.0429, 'latitude' => 45.6770],
+        ['name' => EventType::WAH_RETREAT, 'sex' => 'men', 'city' => 'Austin', 'state' => 'Texas', 'state_code' => 'TX', 'longitude' => -97.7431, 'latitude' => 30.2672],
+        ['name' => EventType::CAPTIVATING_EXPERIENCE, 'sex' => 'women', 'city' => 'Nashville', 'state' => 'Tennessee', 'state_code' => 'TN', 'longitude' => -86.7816, 'latitude' => 36.1627],
+    ];
+
+    public function run(): void
+    {
+        $this->seed();
+    }
+
+    /** @return array{hosts: int, events: int, contacts: int, interests: int, attendees: int} */
+    public function seed(bool $dryRun = false): array
+    {
+        if (! in_array(config('app.env'), ['local', 'staging'], true)) {
+            throw new \RuntimeException('Staging fixtures are only allowed in local and staging environments.');
+        }
+
+        if ($dryRun) {
+            return [
+                'hosts' => count(self::HOSTS),
+                'events' => count(self::HOSTS) * count(self::EVENT_TYPES),
+                'contacts' => count(self::HOSTS) * 6,
+                'interests' => count(self::HOSTS) * count(self::EVENT_TYPES) * 6,
+                'attendees' => count(self::HOSTS) * count(self::EVENT_TYPES) * 2,
+            ];
+        }
+
+        $summary = ['hosts' => 0, 'events' => 0, 'contacts' => 0, 'interests' => 0, 'attendees' => 0];
+
+        DB::transaction(function () use (&$summary): void {
+            foreach (self::HOSTS as $hostData) {
+                $host = DB::table('users')->where('email', $hostData['email'])->whereNull('deleted_at')->first();
+
+                if ($host === null) {
+                    throw new \RuntimeException("Staging fixture host not found: {$hostData['email']}");
+                }
+
+                $summary['hosts']++;
+                $contacts = $this->seedContacts($hostData['key']);
+                $summary['contacts'] += count($contacts);
+
+                foreach (self::EVENT_TYPES as $eventTypeData) {
+                    $eventType = DB::table('event_types')
+                        ->where('name', $eventTypeData['name'])
+                        ->where('is_active', true)
+                        ->first();
+
+                    if ($eventType === null) {
+                        throw new \RuntimeException("Active staging fixture event type not found: {$eventTypeData['name']}");
+                    }
+
+                    $eventId = $this->seedEvent((int) $host->id, (int) $eventType->id, $hostData['key'], $eventTypeData);
+                    $summary['events']++;
+                    $summary['interests'] += $this->seedInterests($eventId, $contacts);
+                    $summary['attendees'] += $this->seedAttendees($eventId, $contacts);
+
+                    DB::table('events')->where('id', $eventId)->update([
+                        'attendee_count' => DB::table('attendees')->where('event_id', $eventId)->count(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        });
+
+        return $summary;
+    }
+
+    /** @return array<int, object> */
+    private function seedContacts(string $hostKey): array
+    {
+        $contacts = [];
+
+        for ($contactNumber = 1; $contactNumber <= 6; $contactNumber++) {
+            $email = "test-contact-{$hostKey}-{$contactNumber}@example.test";
+            $contact = DB::table('users')->where('email', $email)->first();
+            $attributes = [
+                'given_name' => 'Test',
+                'family_name' => ucfirst($hostKey) . " Contact {$contactNumber}",
+                'phone' => '+14065550' . mb_str_pad((string) $contactNumber, 3, '0', STR_PAD_LEFT),
+                'country_code' => '1',
+                'city' => 'Testville',
+                'state' => 'Montana',
+                'postal_code' => '59715',
+                'email_verified_at' => now(),
+                'agreed_to_host_agreement_date' => now(),
+                'deleted_at' => null,
+                'updated_at' => now(),
+            ];
+
+            if ($contact === null) {
+                $id = DB::table('users')->insertGetId([
+                    'uuid' => (string) Str::uuid(),
+                    'email' => $email,
+                    'password' => Hash::make('password'),
+                    ...$attributes,
+                    'created_at' => now(),
+                ]);
+                $contact = DB::table('users')->where('id', $id)->first();
+            } else {
+                DB::table('users')->where('id', $contact->id)->update($attributes);
+                $contact = DB::table('users')->where('id', $contact->id)->first();
+            }
+
+            $contacts[$contactNumber] = $contact;
+        }
+
+        return $contacts;
+    }
+
+    /** @param array{name: string, sex: string, city: string, state: string, state_code: string, longitude: float, latitude: float} $eventTypeData */
+    private function seedEvent(int $hostId, int $eventTypeId, string $hostKey, array $eventTypeData): string
+    {
+        $eventName = "[TEST] {$eventTypeData['name']} hosted by {$hostKey}";
+        $event = DB::table('events')->where('user_id', $hostId)->where('name', $eventName)->first();
+        $attributes = [
+            'event_type_id' => $eventTypeId,
+            'sex' => $eventTypeData['sex'],
+            'frequency' => $eventTypeData['name'] === EventType::FIRES ? 'weekly' : null,
+            'start_date' => now()->addDays(14),
+            'end_date' => $eventTypeData['name'] === EventType::WAH_RETREAT ? now()->addDays(17) : null,
+            'approved_at' => now(),
+            'street_address' => '123 Example Street',
+            'city' => $eventTypeData['city'],
+            'state' => $eventTypeData['state'],
+            'state_code' => $eventTypeData['state_code'],
+            'zip' => '59715',
+            'country' => 'US',
+            'longitude' => $eventTypeData['longitude'],
+            'latitude' => $eventTypeData['latitude'],
+            'description' => 'Example fixture event for local and staging UI testing.',
+            'deleted_at' => null,
+            'updated_at' => now(),
+        ];
+
+        if ($event === null) {
+            $eventId = (string) Str::uuid();
+            DB::table('events')->insert([
+                'id' => $eventId,
+                'user_id' => $hostId,
+                'name' => $eventName,
+                ...$attributes,
+                'created_at' => now(),
+            ]);
+
+            return $eventId;
+        }
+
+        DB::table('events')->where('id', $event->id)->update($attributes);
+
+        return (string) $event->id;
+    }
+
+    /** @param array<int, object> $contacts */
+    private function seedInterests(string $eventId, array $contacts): int
+    {
+        $timestamp = now();
+        $rows = [];
+
+        foreach ($contacts as $contactNumber => $contact) {
+            $rows[] = [
+                'user_id' => $contact->id,
+                'event_id' => $eventId,
+                'created_at' => $timestamp->copy()->subDays(7 - $contactNumber),
+                'updated_at' => $timestamp,
+                'archived_at' => $contactNumber === 6 ? $timestamp : null,
+            ];
+        }
+
+        DB::table('event_user_interests')->upsert($rows, ['user_id', 'event_id'], ['updated_at', 'archived_at']);
+
+        return count($rows);
+    }
+
+    /** @param array<int, object> $contacts */
+    private function seedAttendees(string $eventId, array $contacts): int
+    {
+        $timestamp = now();
+
+        foreach ([1, 2] as $contactNumber) {
+            $contact = $contacts[$contactNumber];
+            $existing = DB::table('attendees')->where('event_id', $eventId)->where('email', $contact->email)->first();
+            $attributes = [
+                'user_id' => $contact->id,
+                'given_name' => $contact->given_name,
+                'family_name' => $contact->family_name,
+                'country' => 'US',
+                'country_code' => '1',
+                'phone' => $contact->phone,
+                'city' => $contact->city,
+                'state' => $contact->state,
+                'marketing_updates' => true,
+                'deleted_at' => null,
+                'updated_at' => $timestamp,
+            ];
+
+            if ($existing === null) {
+                DB::table('attendees')->insert([
+                    'event_id' => $eventId,
+                    'email' => $contact->email,
+                    ...$attributes,
+                    'created_at' => $timestamp,
+                ]);
+            } else {
+                DB::table('attendees')->where('id', $existing->id)->update($attributes);
+            }
+        }
+
+        return 2;
+    }
+}
