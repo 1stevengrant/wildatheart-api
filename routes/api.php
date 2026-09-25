@@ -22,6 +22,7 @@ use App\Http\Controllers\API\V1\Navs\AllNavsController;
 use App\Http\Controllers\API\V1\EventInterestController;
 use App\Http\Controllers\API\V1\Navs\MobileNavController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
+use App\Http\Controllers\API\V1\CurrentUserPhotoController;
 use App\Http\Controllers\API\V1\GroupedEventTypeController;
 use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
@@ -68,6 +69,14 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::patch('users/me', [CurrentUserController::class, 'update'])
         ->middleware(['auth0.jwt', 'throttle:userProfile'])
         ->name('users.me.update');
+
+    Route::post('users/me/photo', [CurrentUserPhotoController::class, 'store'])
+        ->middleware(['auth0.jwt', 'throttle:userProfile'])
+        ->name('users.me.photo.store');
+
+    Route::delete('users/me/photo', [CurrentUserPhotoController::class, 'destroy'])
+        ->middleware(['auth0.jwt', 'throttle:userProfile'])
+        ->name('users.me.photo.destroy');
 
     Route::prefix('webhooks')->name('webhooks.')->group(function () {
         Route::post('refresh-daily-readings', RefreshDailyReadingsController::class)->name('refreshDailyReadings');

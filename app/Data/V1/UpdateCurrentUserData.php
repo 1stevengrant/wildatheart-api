@@ -13,11 +13,12 @@ class UpdateCurrentUserData extends Data
     public function __construct(
         public string|Optional $given_name,
         public string|Optional $family_name,
-        public string|Optional|null $phone,
+        public string|Optional $phone,
         public string|Optional $city,
         public string|Optional $state,
         public string|Optional $country_code,
         public string|Optional $postal_code,
+        public bool|Optional $opted_into_marketing,
     ) {}
 
     /**
@@ -26,13 +27,14 @@ class UpdateCurrentUserData extends Data
     public static function rules(): array
     {
         return [
-            'given_name' => ['sometimes', 'string', 'max:100'],
-            'family_name' => ['sometimes', 'string', 'max:100'],
-            'phone' => ['sometimes', 'nullable', 'string', 'max:30'],
+            'given_name' => ['sometimes', 'required', 'string', 'max:100'],
+            'family_name' => ['sometimes', 'required', 'string', 'max:100'],
+            'phone' => ['sometimes', 'required', 'string', 'regex:/^\+[1-9]\d{1,14}$/'],
             'city' => ['sometimes', 'string', 'max:120'],
             'state' => ['sometimes', 'string', 'max:120'],
             'country_code' => ['sometimes', 'string', 'size:2', 'regex:/^[A-Z]{2}$/'],
             'postal_code' => ['sometimes', 'string', 'max:20'],
+            'opted_into_marketing' => ['sometimes', 'boolean'],
         ];
     }
 

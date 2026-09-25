@@ -241,12 +241,18 @@ class User extends Authenticatable
 
     public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'users'): void
     {
+        $previousImage = $this->image;
+
         $this->forceFill([
             'image' => $photo->storePublicly(
                 $storagePath,
                 ['disk' => 's3']
             ),
         ])->save();
+
+        if ($previousImage) {
+            Storage::disk('s3')->delete($previousImage);
+        }
     }
 
     public function newEloquentBuilder($query): UserBuilder

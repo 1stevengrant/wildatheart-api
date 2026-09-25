@@ -20,6 +20,7 @@ class UserData extends Data
         public ?string $country,
         public ?string $country_code,
         public ?string $postal_code,
+        public bool $opted_into_marketing,
     ) {}
 
     public static function fromUser(User $user): self
@@ -35,6 +36,7 @@ class UserData extends Data
             country: $user->country_code ? getCountryName($user->country_code) : null,
             country_code: $user->country_code,
             postal_code: $user->postal_code,
+            opted_into_marketing: (bool) $user->opted_into_marketing,
         );
     }
 }
