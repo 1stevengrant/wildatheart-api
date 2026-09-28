@@ -12,6 +12,16 @@ tabs:
               width: 50
               visibility: read_only
           -
+            handle: is_published
+            field:
+              type: toggle
+              display: Published
+              instructions: 'Sets or clears the approved at date.'
+              width: 50
+              listable: true
+              sortable: false
+              filterable: false
+          -
             handle: name
             field:
               type: text
