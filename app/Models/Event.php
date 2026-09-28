@@ -446,6 +446,18 @@ class Event extends BaseModel
         );
     }
 
+    protected function isPublished(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): bool => $this->isApproved(),
+            set: fn (mixed $value, array $attributes): array => [
+                'approved_at' => $value
+                    ? ($attributes['approved_at'] ?? $this->fromDateTime(now()))
+                    : null,
+            ],
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helper Methods
