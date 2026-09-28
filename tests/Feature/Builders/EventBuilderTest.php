@@ -119,11 +119,13 @@ it('gets retreats that are upcoming', function () {
 
 it('gets inactive events', function () {
     Event::factory()->wahRetreat()->create([
-        'start_date' => now()->subDay(),
+        'start_date' => now()->subDays(4),
+        'end_date' => now()->subDay(),
     ]);
 
     Event::factory()->wahRetreat()->create([
-        'start_date' => now()->subDays(2),
+        'start_date' => now()->subDays(5),
+        'end_date' => now()->subDays(2),
     ]);
 
     $inactiveEvents = Event::query()
@@ -139,7 +141,8 @@ it('gets active events', function () {
     ]);
 
     Event::factory()->wahRetreat()->create([
-        'start_date' => now()->subDay(),
+        'start_date' => now()->subDays(4),
+        'end_date' => now()->subDay(),
     ]);
 
     $activeEvents = Event::query()
@@ -147,6 +150,32 @@ it('gets active events', function () {
         ->get();
 
     expect($activeEvents->count())->toBe(1);
+});
+
+it('keeps multi-day events active until their end date has passed', function () {
+    $this->travelTo(now()->setDate(2026, 9, 18)->setTime(12, 0));
+
+    $inProgress = Event::factory()->wahRetreat()->create([
+        'start_date' => '2026-09-18 00:00:00',
+        'end_date' => '2026-09-21 00:00:00',
+    ]);
+
+    $finished = Event::factory()->wahRetreat()->create([
+        'start_date' => '2026-09-14 00:00:00',
+        'end_date' => '2026-09-17 00:00:00',
+    ]);
+
+    expect(Event::query()->active()->pluck('id')->all())->toBe([$inProgress->id])
+        ->and(Event::query()->inactive()->pluck('id')->all())->toBe([$finished->id]);
+
+    $this->travelTo(now()->setDate(2026, 9, 21)->setTime(23, 0));
+
+    expect(Event::query()->active()->pluck('id')->all())->toBe([$inProgress->id]);
+
+    $this->travelTo(now()->setDate(2026, 9, 22)->setTime(0, 1));
+
+    expect(Event::query()->active()->count())->toBe(0)
+        ->and(Event::query()->inactive()->count())->toBe(2);
 });
 
 it('gets events that were updated this year', function () {

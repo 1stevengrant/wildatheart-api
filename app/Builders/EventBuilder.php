@@ -174,13 +174,13 @@ class EventBuilder extends Builder
                         ->whereNotNull('start_date');
                 })
                 ->orWhere(function ($subQuery) use ($alwaysActiveWithStartDate) {
-                    // For normal event types: active if start_date is in the future
+                    // For normal event types: active until the event has finished
                     $subQuery->whereNotIn('event_type_id', function ($eventTypeQuery) use ($alwaysActiveWithStartDate) {
                         $eventTypeQuery->select('id')
                             ->from('event_types')
                             ->whereIn('name', $alwaysActiveWithStartDate);
                     })
-                        ->where('start_date', '>=', now());
+                        ->notFinished();
                 });
         }
         );
@@ -188,7 +188,23 @@ class EventBuilder extends Builder
 
     public function inactive(): EventBuilder
     {
-        return $this->where('start_date', '<', now());
+        return $this->where('start_date', '<', now())
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                    ->orWhere('end_date', '<', now()->startOfDay());
+            });
+    }
+
+    /**
+     * An event is not finished while its start date is in the future, or
+     * while today falls on or before its end date (multi-day events).
+     */
+    public function notFinished(): EventBuilder
+    {
+        return $this->where(function ($query) {
+            $query->where('start_date', '>=', now())
+                ->orWhere('end_date', '>=', now()->startOfDay());
+        });
     }
 
     public function belongsToUser(int $userId): EventBuilder
