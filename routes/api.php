@@ -20,6 +20,7 @@ use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\V1\HostContactsController;
 use App\Http\Controllers\API\V1\Navs\AllNavsController;
 use App\Http\Controllers\API\V1\EventInterestController;
+use App\Http\Controllers\API\V1\HostAgreementController;
 use App\Http\Controllers\API\V1\Navs\MobileNavController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\CurrentUserPhotoController;
@@ -77,6 +78,13 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::delete('users/me/photo', [CurrentUserPhotoController::class, 'destroy'])
         ->middleware(['auth0.jwt', 'throttle:userProfile'])
         ->name('users.me.photo.destroy');
+
+    Route::get('host-agreement', [HostAgreementController::class, 'show'])
+        ->name('host-agreement.show');
+
+    Route::post('host-agreement', [HostAgreementController::class, 'store'])
+        ->middleware(['auth0.jwt', 'throttle:userProfile'])
+        ->name('host-agreement.store');
 
     Route::prefix('webhooks')->name('webhooks.')->group(function () {
         Route::post('refresh-daily-readings', RefreshDailyReadingsController::class)->name('refreshDailyReadings');
