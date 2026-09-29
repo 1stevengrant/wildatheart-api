@@ -188,7 +188,7 @@ class EventBuilder extends Builder
 
     public function inactive(): EventBuilder
     {
-        return $this->where('start_date', '<', now())
+        return $this->where('start_date', '<', now()->startOfDay())
             ->where(function ($query) {
                 $query->whereNull('end_date')
                     ->orWhere('end_date', '<', now()->startOfDay());
@@ -196,14 +196,18 @@ class EventBuilder extends Builder
     }
 
     /**
-     * An event is not finished while its start date is in the future, or
-     * while today falls on or before its end date (multi-day events).
+     * An event is not finished while today falls on or before its start date,
+     * or on or before its end date (multi-day events). The explicit null check
+     * keeps the condition from evaluating to NULL, so whereNot() still matches.
      */
     public function notFinished(): EventBuilder
     {
         return $this->where(function ($query) {
-            $query->where('start_date', '>=', now())
-                ->orWhere('end_date', '>=', now()->startOfDay());
+            $query->where('start_date', '>=', now()->startOfDay())
+                ->orWhere(function ($query) {
+                    $query->whereNotNull('end_date')
+                        ->where('end_date', '>=', now()->startOfDay());
+                });
         });
     }
 

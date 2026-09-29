@@ -178,6 +178,24 @@ it('keeps multi-day events active until their end date has passed', function () 
         ->and(Event::query()->inactive()->count())->toBe(2);
 });
 
+it('keeps events without an end date active for the whole of their start day', function () {
+    $this->travelTo(now()->setDate(2026, 9, 18)->setTime(12, 0));
+
+    $today = Event::factory()->wahRetreat()->create([
+        'start_date' => '2026-09-18 00:00:00',
+        'end_date' => null,
+    ]);
+
+    $yesterday = Event::factory()->wahRetreat()->create([
+        'start_date' => '2026-09-17 00:00:00',
+        'end_date' => null,
+    ]);
+
+    expect(Event::query()->active()->pluck('id')->all())->toBe([$today->id])
+        ->and(Event::query()->inactive()->pluck('id')->all())->toBe([$yesterday->id])
+        ->and(Event::query()->whereNot(fn ($query) => $query->active())->pluck('id')->all())->toBe([$yesterday->id]);
+});
+
 it('gets events that were updated this year', function () {
     $now = now();
 
