@@ -34,7 +34,7 @@ class HostInvitationMail extends BaseMailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "You've been invited to host {$this->event->emailName()}",
+            subject: "You've been invited to host {$this->event->name}",
         );
     }
 

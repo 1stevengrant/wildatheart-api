@@ -5,7 +5,7 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventOwnershipTransfer;
-use App\Mail\OwnershipTransferInvitationMail;
+use App\Mail\V1\OwnershipTransferInvitationMail;
 
 beforeEach(function () {
     Bus::fake();

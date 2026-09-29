@@ -7,7 +7,7 @@ use App\Models\Attendee;
 use App\Models\EventType;
 use App\Jobs\PostToZapier;
 use Carbon\CarbonInterface;
-use App\Mail\HostInvitationMail;
+use App\Mail\V1\HostInvitationMail;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventManagerInvitation;

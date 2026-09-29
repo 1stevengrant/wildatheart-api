@@ -3,7 +3,8 @@
 use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\OwnershipTransferInvitationMail;
+use App\Models\EventOwnershipTransfer;
+use App\Mail\V1\OwnershipTransferInvitationMail;
 
 beforeEach(function () {
     Bus::fake();
@@ -23,7 +24,12 @@ it('keeps the stored name for other event types', function () {
 
 it('puts the full fire name in the ownership transfer subject', function () {
     $event = Event::factory()->fires()->create(['name' => "Test's"]);
+    $transfer = EventOwnershipTransfer::create([
+        'event_id' => $event->id,
+        'email' => 'owner@example.test',
+        'transferred_by_user_id' => $event->user_id,
+    ]);
 
-    expect((new OwnershipTransferInvitationMail($event, 'Nic Bovee'))->envelope()->subject)
+    expect((new OwnershipTransferInvitationMail($event, 'Nic Bovee', $transfer))->envelope()->subject)
         ->toBe("You've been invited to take ownership of Test's Fire");
 });

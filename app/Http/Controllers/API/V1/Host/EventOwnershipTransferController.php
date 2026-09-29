@@ -7,7 +7,9 @@ use App\Models\Event;
 use App\Data\EventData;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Data\V1\InitiateOwnershipTransferData;
+use App\Mail\V1\OwnershipTransferInvitationMail;
 use App\Actions\Event\CancelEventOwnershipTransfer;
 use App\Actions\Event\InitiateEventOwnershipTransfer;
 
@@ -17,7 +19,11 @@ class EventOwnershipTransferController extends Controller
     {
         $this->authorize('transferOwnership', $event);
         $newOwner = User::findOrFail($data->user_id);
-        InitiateEventOwnershipTransfer::run($event, $newOwner, auth()->user());
+        $transfer = InitiateEventOwnershipTransfer::run($event, $newOwner, auth()->user());
+
+        Mail::to($newOwner->email)->send(
+            new OwnershipTransferInvitationMail($event->fresh(), auth()->user()->fullname, $transfer)
+        );
 
         return response()->json([
             'success' => true,

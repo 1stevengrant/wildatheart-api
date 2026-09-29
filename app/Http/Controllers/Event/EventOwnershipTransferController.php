@@ -6,7 +6,9 @@ use App\Models\User;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Data\EventOwnershipTransferData;
+use App\Mail\OwnershipTransferInvitationMail;
 use Illuminate\Validation\ValidationException;
 use App\Actions\Event\CancelEventOwnershipTransfer;
 use App\Actions\Event\InitiateEventOwnershipTransfer;
@@ -52,7 +54,7 @@ class EventOwnershipTransferController extends Controller
         }
 
         try {
-            InitiateEventOwnershipTransfer::run($event, $user, auth()->user());
+            $transfer = InitiateEventOwnershipTransfer::run($event, $user, auth()->user());
         } catch (ValidationException $exception) {
             return back()->with([
                 'notifications' => [
@@ -61,6 +63,9 @@ class EventOwnershipTransferController extends Controller
                 ],
             ]);
         }
+
+        // Send transfer notification email
+        Mail::to($email)->send(new OwnershipTransferInvitationMail($event, auth()->user()->fullname, $transfer, true));
 
         return back()->with([
             'notifications' => [

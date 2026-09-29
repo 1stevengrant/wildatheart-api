@@ -6,19 +6,21 @@ use App\Models\User;
 use App\Models\Event;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Mail;
 use App\Models\EventOwnershipTransfer;
 use Lorisleiva\Actions\Concerns\AsAction;
-use App\Mail\OwnershipTransferInvitationMail;
 use Illuminate\Validation\ValidationException;
 
 class InitiateEventOwnershipTransfer
 {
     use AsAction;
 
+    /**
+     * Creates the pending transfer. The caller sends the invitation email, since the legacy
+     * dashboard and the v1 API link to different acceptance pages.
+     */
     public function handle(Event $event, User $newOwner, User $actor): EventOwnershipTransfer
     {
-        $transfer = DB::transaction(function () use ($event, $newOwner, $actor): EventOwnershipTransfer {
+        return DB::transaction(function () use ($event, $newOwner, $actor): EventOwnershipTransfer {
             $event = Event::query()->lockForUpdate()->findOrFail($event->id);
 
             Gate::forUser($actor)->authorize('transferOwnership', $event);
@@ -45,13 +47,5 @@ class InitiateEventOwnershipTransfer
                 'transferred_by_user_id' => $actor->id,
             ]);
         });
-
-        DB::afterCommit(function () use ($event, $newOwner, $actor, $transfer): void {
-            Mail::to($newOwner->email)->send(
-                new OwnershipTransferInvitationMail($event->fresh(), $actor->fullname, $transfer, true)
-            );
-        });
-
-        return $transfer;
     }
 }

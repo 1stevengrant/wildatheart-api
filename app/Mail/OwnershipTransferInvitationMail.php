@@ -35,7 +35,7 @@ class OwnershipTransferInvitationMail extends BaseMailable implements ShouldQueu
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "You've been invited to take ownership of {$this->event->emailName()}",
+            subject: "You've been invited to take ownership of {$this->event->name}",
         );
     }
 

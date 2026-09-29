@@ -4,8 +4,8 @@ namespace App\Actions\Event;
 
 use App\Models\User;
 use App\Models\Event;
-use App\Mail\HostInvitationMail;
 use Illuminate\Support\Collection;
+use App\Mail\V1\HostInvitationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventManagerInvitation;
 use Lorisleiva\Actions\Concerns\AsAction;
