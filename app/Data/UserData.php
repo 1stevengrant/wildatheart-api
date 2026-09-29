@@ -22,6 +22,7 @@ class UserData extends Data
         public ?string $city,
         public ?string $state,
         public ?string $postal_code,
+        public bool $has_agreed_to_host_agreement,
     ) {}
 
     public static function fromModel(User $user): self
@@ -39,6 +40,7 @@ class UserData extends Data
             city: $user->city,
             state: $user->state,
             postal_code: $user->postal_code,
+            has_agreed_to_host_agreement: $user->hasAgreedToHostAgreement(),
         );
     }
 }
