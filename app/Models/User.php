@@ -2,16 +2,11 @@
 
 namespace App\Models;
 
-use Throwable;
-use Stringable;
-use ReflectionClass;
-use RuntimeException;
 use App\Builders\UserBuilder;
 use App\Observers\UserObserver;
 use Illuminate\Http\UploadedFile;
 use Spatie\Activitylog\LogOptions;
 use Database\Factories\UserFactory;
-use Illuminate\Support\Facades\Cache;
 use Laravolt\Avatar\Facade as Avatar;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
@@ -69,10 +64,6 @@ class User extends Authenticatable
     use HasFactory, HasRoles, HasRunwayResource, LogsActivity, Notifiable, SoftDeletes;
 
     public const int PROFILE_COMPLETE = 2;
-
-    private const string GENERATED_AVATAR_CACHE_PREFIX = 'user_avatar_v2:';
-
-    private const int GENERATED_AVATAR_CACHE_TTL_SECONDS = 86400;
 
     /**
      * @return array<string, string>
@@ -250,12 +241,18 @@ class User extends Authenticatable
 
     public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'users'): void
     {
+        $previousImage = $this->image;
+
         $this->forceFill([
             'image' => $photo->storePublicly(
                 $storagePath,
                 ['disk' => 's3']
             ),
         ])->save();
+
+        if ($previousImage) {
+            Storage::disk('s3')->delete($previousImage);
+        }
     }
 
     public function newEloquentBuilder($query): UserBuilder
