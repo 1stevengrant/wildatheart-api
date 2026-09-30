@@ -44,6 +44,7 @@ class Event extends BaseModel
     {
         return [
             'approved_at' => 'datetime',
+            'is_draft' => 'boolean',
             'deleted_at' => 'datetime',
             'legacy_drupal_location' => 'array',
             'longitude' => 'float',
@@ -149,6 +150,17 @@ class Event extends BaseModel
     public function eventType(): BelongsTo
     {
         return $this->belongsTo(EventType::class);
+    }
+
+    /**
+     * The event's name as people know it, for email subjects and copy. A fire's `name` is only the
+     * host's prefix ("Nic's"), displayed as "Nic's Fire"; other events keep their stored name.
+     */
+    public function emailName(): string
+    {
+        $isFire = in_array($this->eventType?->name, [EventType::FIRES, EventType::CAPTIVATING_FIRE], true);
+
+        return $isFire && filled($this->name) ? $this->display_name : (string) $this->name;
     }
 
     public function eventTypeSingular(): string

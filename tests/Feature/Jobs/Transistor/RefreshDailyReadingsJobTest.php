@@ -36,7 +36,7 @@ it('does not trigger an astro build by default', function () {
 it('triggers an astro build when asked to', function () {
     RefreshDailyReadingsJob::dispatchSync(rebuildAstro: true);
 
-    Bus::assertDispatched(TriggerAstroBuildJob::class);
+    Bus::assertDispatched(TriggerAstroBuildJob::class, fn (TriggerAstroBuildJob $job) => $job->source === TriggerAstroBuildJob::DAILY_READINGS);
 });
 
 it('refreshes a single status through the transistor service', function () {

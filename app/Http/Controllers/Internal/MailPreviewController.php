@@ -30,6 +30,8 @@ use App\Mail\OwnershipTransferCompletedMail;
 use App\Mail\OwnershipTransferInvitationMail;
 use App\Mail\Fire\ConfirmFireUnpublishedMailable;
 use App\Mail\Fire\MonthlyFireCleanupEmailToHostMailable;
+use App\Mail\V1\HostInvitationMail as V1HostInvitationMail;
+use App\Mail\V1\OwnershipTransferInvitationMail as V1OwnershipTransferInvitationMail;
 
 /**
  * Renders every mailable in the browser so the theme can be reviewed without
@@ -126,6 +128,11 @@ class MailPreviewController extends Controller
                 'group' => 'Hosts',
                 'make' => fn (): Mailable => new HostInvitationMail($this->sampleEvent(), 'Morgan'),
             ],
+            'v1-host-invitation' => [
+                'label' => 'Host invitation (v1 API, Astro link)',
+                'group' => 'Hosts',
+                'make' => fn (): Mailable => new V1HostInvitationMail($this->sampleEvent(), 'Morgan', $this->sampleInvitation()),
+            ],
             'host-added' => [
                 'label' => 'Host added',
                 'group' => 'Hosts',
@@ -141,6 +148,11 @@ class MailPreviewController extends Controller
                 'label' => 'Ownership transfer invitation',
                 'group' => 'Ownership transfers',
                 'make' => fn (): Mailable => new OwnershipTransferInvitationMail($this->sampleEvent(), 'Morgan', $this->sampleOwnershipTransfer()),
+            ],
+            'v1-ownership-transfer-invitation' => [
+                'label' => 'Ownership transfer invitation (v1 API, Astro link)',
+                'group' => 'Ownership transfers',
+                'make' => fn (): Mailable => new V1OwnershipTransferInvitationMail($this->sampleEvent(), 'Morgan', $this->sampleOwnershipTransfer()),
             ],
             'ownership-transfer-completed--new-owner' => [
                 'label' => 'Ownership transfer completed (to new owner)',

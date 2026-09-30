@@ -5,7 +5,7 @@ Hello {{ $host->fullname }},
 
 **{{ $removedBy->fullname }}** has removed you as a host from their event:
 
-## {{ $event->name }}
+## {{ $event->emailName() }}
 
 **Location:** {{ $event->location }}
 @if($event->formatted_start_date)

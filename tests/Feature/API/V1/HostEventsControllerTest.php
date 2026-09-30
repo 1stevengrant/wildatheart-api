@@ -7,10 +7,12 @@ use App\Models\Attendee;
 use App\Models\EventType;
 use App\Jobs\PostToZapier;
 use Carbon\CarbonInterface;
-use App\Mail\HostInvitationMail;
+use App\Mail\V1\HostInvitationMail;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventManagerInvitation;
+use App\Jobs\Event\SendNewEventSlackAlert;
+use App\Mail\Event\NewEventCreatedMailable;
 
 /**
  * @return array<string, mixed>
@@ -203,6 +205,62 @@ it('syncs co-host invitations when updating a draft', function () {
     expect($emails)->toEqual(['new@wildatheart.org']);
 });
 
+it('immediately sends a co-host invitation email when inviting to an already published event', function () {
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+
+    $publishedEvent = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $publishedEvent->id,
+            'co_host_emails' => ['cohost@wildatheart.org'],
+        ])
+        ->assertOk();
+
+    Mail::assertQueued(HostInvitationMail::class, 1);
+});
+
+it('does not resend a co-host invitation email for an already-pending invitation on a published event', function () {
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+
+    $publishedEvent = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => now(),
+        ]));
+
+    EventManagerInvitation::create([
+        'event_id' => $publishedEvent->id,
+        'email' => 'cohost@wildatheart.org',
+        'invited_by_user_id' => $host->id,
+    ]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $publishedEvent->id,
+            'co_host_emails' => ['cohost@wildatheart.org'],
+        ])
+        ->assertOk();
+
+    Mail::assertNotQueued(HostInvitationMail::class);
+});
+
 it('publishes a draft and moves it to the listed bucket', function () {
     Mail::fake();
     Bus::fake();
@@ -329,6 +387,47 @@ it('returns validation errors when publishing without required fields and does n
 
     expect($draft->fresh()->approved_at)->toBeNull();
     Mail::assertNothingQueued();
+});
+
+it('uses the expected attendees label when materials order is missing on publish', function () {
+    $host = User::factory()->create([
+        'email' => 'host@wildatheart.org',
+        'provider_id' => 'auth0|host-materials-label',
+        'provider' => 'auth0',
+    ]);
+    Address::factory()->create([
+        'user_id' => $host->id,
+        'is_primary' => true,
+    ]);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'number_of_items_in_material_order_label' => 'Expected number of attendees',
+        'group_type' => 'retreat',
+    ]);
+
+    $draft = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload();
+    unset($payload['number_of_items_in_material_order']);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$draft->id}/publish",
+            $payload,
+        )
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['number_of_items_in_material_order'])
+        ->assertJsonPath(
+            'errors.number_of_items_in_material_order.0',
+            'The expected number of attendees field is required.',
+        );
 });
 
 it('dispatches zapier when materials order applies on publish', function () {
@@ -567,6 +666,9 @@ it('allows an owner to approve an unpublished event', function () {
         ->create([
             'event_type_id' => $eventType->id,
             'approved_at' => null,
+            // Publishing requires a complete event; the factory's fire type needs a frequency.
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
         ]));
 
     mockJwtAuthentication($host);
@@ -592,6 +694,9 @@ it('allows a co-host to approve an unpublished event', function () {
         ->create([
             'event_type_id' => $eventType->id,
             'approved_at' => null,
+            // Publishing requires a complete event; the factory's fire type needs a frequency.
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
         ]));
     $event->managers()->attach($coHost->id);
 
@@ -662,4 +767,237 @@ it('allows an owner to update a published event draft fields', function () {
 
     expect($event->fresh()->name)->toBe('Updated Listed Event');
     expect($event->fresh()->approved_at)->not->toBeNull();
+});
+
+it('persists expected attendees material order on draft save and returns it on host events index', function () {
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'number_of_items_in_material_order_label' => 'Expected number of attendees',
+    ]);
+
+    mockJwtAuthentication($host);
+
+    $saveResponse = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => 'Woodland Park, CO',
+            'latitude' => 38.9939,
+            'longitude' => -105.0567,
+            'start_date' => now()->addDays(14)->format('Y-m-d'),
+            'number_of_items_in_material_order' => '2 x 10-pack',
+            'expected_attendees' => '11-20',
+        ])
+        ->assertOk()
+        ->assertJsonPath('success', true);
+
+    $draftId = $saveResponse->json('event.id');
+
+    expect($draftId)->not->toBeNull();
+    expect(Event::find($draftId)?->number_of_items_in_material_order)->toBe('2 x 10-pack');
+
+    $indexResponse = $this->withHeaders(jwtAuthenticationHeaders())
+        ->getJson('/api/v1/host/events')
+        ->assertOk();
+
+    $draft = collect($indexResponse->json('drafts'))->firstWhere('id', $draftId);
+
+    expect($draft)->not->toBeNull()
+        ->and($draft['number_of_items_in_material_order'])->toBe('2 x 10-pack');
+});
+
+it('stores a course draft\'s weekly frequency', function () {
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_EXPERIENCE]);
+
+    mockJwtAuthentication($host);
+
+    $draftId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => 'Woodland Park, CO',
+            'start_date' => now()->addDays(14)->format('Y-m-d'),
+            'frequency' => 'weekly',
+        ])
+        ->assertOk()
+        ->json('event.id');
+
+    expect(Event::find($draftId)?->frequency?->value)->toBe('weekly');
+});
+
+it('rejects monthly and quarterly frequencies for courses', function (string $frequency) {
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_EXPERIENCE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => 'Woodland Park, CO',
+            'frequency' => $frequency,
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('frequency');
+})->with(['monthly', 'quarterly']);
+
+it('refuses to publish a draft from the dashboard until its required fields are filled', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+            'latitude' => null,
+            'longitude' => null,
+            'start_date' => null,
+            'frequency' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['latitude', 'start_date', 'frequency']);
+
+    expect($event->fresh()->approved_at)->toBeNull();
+});
+
+it('publishes a complete fire draft from the dashboard', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+            'latitude' => 38.9939,
+            'longitude' => -105.0567,
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk();
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
+});
+
+it('emails invites added to an unpublished event when it is published through the wizard', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_EXPERIENCE]);
+    $event = Event::withoutEvents(fn () => Event::factory()->for($host)->create([
+        'event_type_id' => $eventType->id,
+        'approved_at' => null,
+        'start_date' => now()->addDays(10),
+        'frequency' => 'weekly',
+    ]));
+
+    mockJwtAuthentication($host);
+
+    $body = publishEventPayload([
+        'event_id' => $event->id,
+        'frequency' => 'weekly',
+        'co_host_emails' => ['cohost@example.test'],
+    ]);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", $body)
+        ->assertOk();
+    Mail::assertNotQueued(HostInvitationMail::class);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/{$event->id}/publish", $body)
+        ->assertOk();
+
+    Mail::assertQueued(HostInvitationMail::class, fn ($mail) => $mail->hasTo('cohost@example.test'));
+});
+
+it('emails invites added to a draft when it is published from the dashboard', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+    $event = Event::withoutEvents(fn () => Event::factory()->for($host)->create([
+        'event_type_id' => $eventType->id,
+        'approved_at' => null,
+        'start_date' => now()->addDays(10),
+        'frequency' => 'weekly',
+    ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $event->id,
+            'co_host_emails' => ['cohost@example.test'],
+        ])
+        ->assertOk();
+    Mail::assertNotQueued(HostInvitationMail::class);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk();
+
+    Mail::assertQueued(HostInvitationMail::class, fn ($mail) => $mail->hasTo('cohost@example.test'));
+});
+
+it('saves a new wizard event as a draft without announcing it', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::where('name', EventType::FIRES)->firstOrFail();
+
+    mockJwtAuthentication($host);
+
+    $eventId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", ['name' => "Test's"])
+        ->assertOk()
+        ->json('event.id');
+
+    expect(Event::findOrFail($eventId)->is_draft)->toBeTrue();
+    Bus::assertNotDispatched(SendNewEventSlackAlert::class);
+    Mail::assertNotQueued(NewEventCreatedMailable::class);
+});
+
+it('announces a wizard draft when it is published', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::where('name', EventType::FIRES)->firstOrFail();
+
+    mockJwtAuthentication($host);
+
+    $eventId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", ['name' => "Test's"])
+        ->json('event.id');
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$eventId}/publish",
+            publishEventPayload(['event_id' => $eventId, 'frequency' => 'weekly']),
+        )
+        ->assertOk();
+
+    expect(Event::findOrFail($eventId)->is_draft)->toBeFalse();
+    Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
+    Mail::assertQueued(NewEventCreatedMailable::class, fn ($mail) => $mail->hasTo($host->email));
 });

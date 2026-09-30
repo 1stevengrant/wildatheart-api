@@ -5,9 +5,12 @@ namespace App\Http\Requests;
 use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\Http\Requests\Concerns\HasMaterialOrderValidationAttributes;
 
 class EventRequest extends FormRequest
 {
+    use HasMaterialOrderValidationAttributes;
+
     /**
      * Determine if the user is authorized to make this request.
      */

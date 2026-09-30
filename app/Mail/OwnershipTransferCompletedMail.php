@@ -35,8 +35,8 @@ class OwnershipTransferCompletedMail extends BaseMailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $subject = $this->isForNewOwner
-            ? "You are now the owner of {$this->event->name}"
-            : "Ownership of {$this->event->name} has been transferred";
+            ? "You are now the owner of {$this->event->emailName()}"
+            : "Ownership of {$this->event->emailName()} has been transferred";
 
         return new Envelope(
             subject: $subject,

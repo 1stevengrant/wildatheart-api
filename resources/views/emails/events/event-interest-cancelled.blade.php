@@ -3,7 +3,7 @@
 
 Hello {{ $hostNames }},
 
-{{ $user->fullname }} has cancelled their interest in {{ $event->name }}.
+{{ $user->fullname }} has cancelled their interest in {{ $event->emailName() }}.
 
 Their contact has been removed from your event contacts dashboard. No action is required from you.
 

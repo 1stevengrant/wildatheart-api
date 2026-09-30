@@ -32,7 +32,7 @@ class EventInterestCancelled extends BaseMailable implements ShouldQueue
     {
         return new Envelope(
             replyTo: $this->user->email,
-            subject: "{$this->user->fullname} cancelled their interest in {$this->event->name}",
+            subject: "{$this->user->fullname} cancelled their interest in {$this->event->emailName()}",
         );
     }
 

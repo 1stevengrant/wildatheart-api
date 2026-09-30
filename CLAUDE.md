@@ -72,6 +72,8 @@ php artisan migrate:fresh --seed    # Reset database with seeds
 php artisan db:production-sync      # Sync production database (requires SSH config)
 ```
 
+> **Before running tests after a sync:** make sure `bootstrap/cache/` has no cached `config.php`, `routes-*.php` or `events.php` (`php artisan config:clear && php artisan route:clear && php artisan event:clear`). A cached config pins the local environment, so tests skip `.env.testing` and `LazilyRefreshDatabase` wipes `wah_local` instead of `wahlocal_test`. You can confirm the target with `php artisan tinker --env=testing --execute 'echo DB::connection()->getDatabaseName();'`.
+
 ### Cache Management
 
 ```bash

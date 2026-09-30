@@ -25,7 +25,11 @@ class SaveEventDraft
         }
 
         if ($request->has('co_host_emails')) {
-            SyncCoHostInvitations::run($event, $request->validated('co_host_emails') ?? [], $host);
+            $newInvitations = SyncCoHostInvitations::run($event, $request->validated('co_host_emails') ?? [], $host);
+
+            if ($event->approved_at !== null && $newInvitations->isNotEmpty()) {
+                SendCoHostInvitationEmails::run($newInvitations, $event, $host);
+            }
         }
 
         return $event;
@@ -71,6 +75,7 @@ class SaveEventDraft
                     'event_type_id' => $eventType->id,
                     'sex' => $eventType->sex,
                     'approved_at' => null,
+                    'is_draft' => true,
                 ]
             )
         );

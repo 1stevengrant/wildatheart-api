@@ -34,7 +34,7 @@ class HostRemovedMail extends BaseMailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "You've been removed as a host from {$this->event->name}",
+            subject: "You've been removed as a host from {$this->event->emailName()}",
         );
     }
 

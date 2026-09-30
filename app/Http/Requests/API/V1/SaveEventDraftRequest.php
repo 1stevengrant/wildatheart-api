@@ -3,7 +3,7 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
-use App\Enums\Event\FrequencyEnum;
+use App\Support\EventTypeDateSelector;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveEventDraftRequest extends FormRequest
@@ -25,7 +25,7 @@ class SaveEventDraftRequest extends FormRequest
     public function rules(): array
     {
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
-        $frequencyValues = array_map(fn (FrequencyEnum $case) => $case->value, FrequencyEnum::cases());
+        $frequencyValues = EventTypeDateSelector::allowedFrequencies($this->route('eventType')?->group_type);
 
         return [
             'event_id' => ['nullable', 'string', 'uuid'],

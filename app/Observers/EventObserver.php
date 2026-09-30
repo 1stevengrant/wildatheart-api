@@ -42,6 +42,30 @@ class EventObserver
     {
         Artisan::call('app:clear-event-cache');
 
+        // Drafts from the v1 host wizard aren't live yet; they're announced when first published.
+        if ($event->is_draft) {
+            return;
+        }
+
+        $this->announceNewEvent($event);
+    }
+
+    public function updated(Event $event): void
+    {
+        Artisan::call('app:clear-event-cache');
+
+        if ($event->is_draft && $event->approved_at !== null) {
+            $event->updateQuietly(['is_draft' => false]);
+
+            $this->announceNewEvent($event);
+        }
+    }
+
+    /**
+     * The Slack alert, welcome email and WeGive tagging for a newly live event.
+     */
+    protected function announceNewEvent(Event $event): void
+    {
         if ($event->eventType === null) {
             LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
@@ -77,11 +101,6 @@ class EventObserver
                 performedOn: $event,
             );
         }
-    }
-
-    public function updated(Event $event): void
-    {
-        Artisan::call('app:clear-event-cache');
     }
 
     public function deleted(Event $event): void

@@ -34,7 +34,7 @@ class HostAddedMail extends BaseMailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "You've been added as a host for {$this->event->name}",
+            subject: "You've been added as a host for {$this->event->emailName()}",
         );
     }
 

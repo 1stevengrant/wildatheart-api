@@ -32,7 +32,7 @@ class RefreshDailyReadingsJob implements ShouldQueue
 
         if ($this->rebuildAstro) {
             // Dispatch the Cloudflare webhook after 1 hour
-            TriggerAstroBuildJob::dispatch()->delay(now()->addHour());
+            TriggerAstroBuildJob::dispatch(TriggerAstroBuildJob::DAILY_READINGS)->delay(now()->addHour());
         }
     }
 }

@@ -16,6 +16,7 @@ use App\Support\EventTypeDateSelector;
 use App\Actions\Event\PublishEventDraft;
 use App\Http\Requests\API\V1\CreateEventRequest;
 use App\Http\Requests\API\V1\PublishEventRequest;
+use App\Actions\Event\SendPendingCoHostInvitations;
 use App\Http\Requests\API\V1\SaveEventDraftRequest;
 use App\Http\Requests\API\V1\ApproveHostEventRequest;
 use App\Http\Requests\API\V1\DestroyHostEventRequest;
@@ -28,7 +29,7 @@ class HostEventController extends Controller
     {
         $baseQuery = Event::query()
             ->controllableByUser(auth()->user())
-            ->with(['user', 'eventType', 'managers', 'pendingManagerInvitations'])
+            ->with(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])
             ->orderByRaw('start_date < NOW()')
             ->orderBy('start_date');
 
@@ -120,7 +121,7 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => $event->fresh(['managers', 'pendingManagerInvitations']),
+            'event' => $event->fresh(['managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser']),
         ]);
     }
 
@@ -149,17 +150,19 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations'])),
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
         ]);
     }
 
     public function approve(ApproveHostEventRequest $request, Event $event): JsonResponse
     {
         ApproveEvent::run($event);
+        // Invites added while it was a draft wait for publishing, same as the wizard's publish.
+        SendPendingCoHostInvitations::run($event->fresh(['pendingManagerInvitations']), auth()->user());
 
         return response()->json([
             'success' => true,
-            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations'])),
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
         ]);
     }
 }

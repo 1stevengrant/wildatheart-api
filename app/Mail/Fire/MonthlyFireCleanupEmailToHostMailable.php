@@ -42,6 +42,7 @@ class MonthlyFireCleanupEmailToHostMailable extends BaseMailable implements Shou
         $subject = str_replace('[event_name]', $this->event->name, $subject);
 
         return new Envelope(
+            from: $this->templateSender(),
             subject: $subject,
         );
     }

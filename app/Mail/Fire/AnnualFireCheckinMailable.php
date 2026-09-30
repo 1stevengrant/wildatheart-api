@@ -28,7 +28,7 @@ class AnnualFireCheckinMailable extends BaseMailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Is your fire still burning? {$this->event->name}",
+            subject: "Is your fire still burning? {$this->event->emailName()}",
         );
     }
 

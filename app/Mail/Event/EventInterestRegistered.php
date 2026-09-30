@@ -37,6 +37,7 @@ class EventInterestRegistered extends Mailable implements ShouldQueue
         $subject = str_replace('[attendee_name]', $this->user->fullname, $subject);
 
         return new Envelope(
+            from: $this->templateSender(),
             replyTo: $this->user->email,
             subject: $subject,
         );

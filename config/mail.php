@@ -121,6 +121,19 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Email Logo URL
+    |--------------------------------------------------------------------------
+    |
+    | Absolute URL for the header logo in transactional email. It must be
+    | reachable by the recipient's mail client, so it doesn't follow APP_URL
+    | (a local or scheme-less APP_URL made queued mail point at localhost).
+    |
+    */
+
+    'logo_url' => env('MAIL_LOGO_URL', 'https://local.wildatheart.org/img/email-logo.png'),
+
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),

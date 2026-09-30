@@ -41,4 +41,12 @@ class EventPolicy
         return $event->isOwnedOrManagedBy($user)
             || $user->hasRole(UserRoleEnum::Admin);
     }
+
+    /**
+     * Only the event's owner may start or cancel an ownership transfer; admins can't.
+     */
+    public function transferOwnership(User $user, Event $event): bool
+    {
+        return $user->id === $event->user_id;
+    }
 }

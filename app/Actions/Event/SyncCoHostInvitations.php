@@ -4,6 +4,7 @@ namespace App\Actions\Event;
 
 use App\Models\User;
 use App\Models\Event;
+use Illuminate\Support\Collection;
 use App\Models\EventManagerInvitation;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -11,8 +12,11 @@ class SyncCoHostInvitations
 {
     use AsAction;
 
-    /** @param array<int, string> $emails */
-    public function handle(Event $event, array $emails, User $invitedBy): void
+    /**
+     * @param  array<int, string>  $emails
+     * @return Collection<int, EventManagerInvitation> Newly created invitations.
+     */
+    public function handle(Event $event, array $emails, User $invitedBy): Collection
     {
         $candidateEmails = collect($emails)
             ->map(fn (string $email) => mb_strtolower(mb_trim($email)))
@@ -47,16 +51,20 @@ class SyncCoHostInvitations
 
         $staleInvitations->get()->each(fn (EventManagerInvitation $invitation) => $invitation->delete());
 
+        $newInvitations = new Collection;
+
         foreach ($validEmails as $email) {
             if ($event->pendingManagerInvitations()->where('email', $email)->exists()) {
                 continue;
             }
 
-            EventManagerInvitation::create([
+            $newInvitations->push(EventManagerInvitation::create([
                 'event_id' => $event->id,
                 'email' => $email,
                 'invited_by_user_id' => $invitedBy->id,
-            ]);
+            ]));
         }
+
+        return $newInvitations;
     }
 }

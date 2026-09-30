@@ -43,6 +43,7 @@ class AttendeeRegistered extends BaseMailable implements ShouldQueue
         $subject = str_replace('[attendee_name]', $this->attendee->fullname, $subject);
 
         return new Envelope(
+            from: $this->templateSender(),
             replyTo: $this->attendee->email,
             subject: $subject,
         );
