@@ -73,6 +73,8 @@ class EventType extends BaseModel
             'before_event_nav_text_override' => 'string',
             'schedule_nav_text_override' => 'string',
             'faq_nav_text_override' => 'string',
+            'page_topics' => 'array',
+            'page_hero_title' => 'array',
             'type' => EventTypeEnum::class,
             'sex' => EventSexEnum::class,
         ];
@@ -134,6 +136,22 @@ class EventType extends BaseModel
     {
         return Attribute::make(
             get: fn (): string => Str::camel($this->name)
+        );
+    }
+
+    /**
+     * The V1 API description as plain text, for places that can't render HTML
+     * such as link previews and event cards.
+     */
+    protected function pageDescriptionText(): Attribute
+    {
+        return Attribute::make(
+            get: function (): ?string {
+                $html = str_replace(['</p>', '</h2>', '</h3>', '</li>', '<br>'], ' ', (string) $this->page_description);
+                $text = Str::of(html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5))->squish()->toString();
+
+                return $text === '' ? null : $text;
+            }
         );
     }
 }

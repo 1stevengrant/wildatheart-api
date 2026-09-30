@@ -51,6 +51,7 @@ class EventTypeData extends Data
         public ?string $summary_link,
         #[TypeScriptType('\\' . EventsShowResponse::class . '|null')]
         public ?array $landing_page,
+        public EventTypePageData $page,
     ) {}
 
     public static function fromEventType(EventType $eventType): self
@@ -64,7 +65,7 @@ class EventTypeData extends Data
             image: $eventType->image,
             group_type: $eventType->group_type,
             order: $eventType->order ?? 0,
-            description: $eventType->description,
+            description: $eventType->page_description_text,
             key_details: self::collectOrNull(KeyDetailData::class, $eventType->key_details),
             card_teaser_text: $eventType->card_teaser_text,
             event_faqs: self::collectOrNull(FaqData::class, $eventType->event_faqs),
@@ -81,6 +82,7 @@ class EventTypeData extends Data
             summary: $eventType->summary,
             summary_link: $eventType->summary_link,
             landing_page: self::landingPage($eventType),
+            page: EventTypePageData::fromEventType($eventType),
         );
     }
 

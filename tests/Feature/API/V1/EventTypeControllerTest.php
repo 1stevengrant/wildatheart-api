@@ -7,7 +7,7 @@ use App\Services\EventResponseBuilder;
 
 beforeEach(function () {
     EventType::truncate();
-    cache()->forget('eventTypesWithCounts.serialised.v2');
+    cache()->forget('eventTypesWithCounts.serialised.v3');
 
     if (! Collection::handleExists('pages')) {
         Collection::make('pages')->save();
@@ -16,7 +16,7 @@ beforeEach(function () {
 
 afterEach(function () {
     EventType::truncate();
-    cache()->forget('eventTypesWithCounts.serialised.v2');
+    cache()->forget('eventTypesWithCounts.serialised.v3');
 });
 
 it('includes related landing page data on event types', function () {

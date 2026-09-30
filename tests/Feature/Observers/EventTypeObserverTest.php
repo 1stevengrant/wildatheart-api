@@ -7,7 +7,7 @@ $cacheKeys = [
     'experienceTypes.v2',
     'retreatTypes.v2',
     'fireTypes.v2',
-    'eventTypesGroupedByType.v2',
+    'eventTypesGroupedByType.v3',
     'event_types.v2',
     'event_types_list.v2',
 ];
