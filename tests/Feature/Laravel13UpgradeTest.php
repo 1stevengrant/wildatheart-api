@@ -9,6 +9,14 @@ it('uses the Laravel 13 request forgery middleware', function (): void {
     expect($middleware)->toContain(PreventRequestForgery::class);
 });
 
+it('exempts webhook and connect routes from request forgery checks', function (): void {
+    expect(app(PreventRequestForgery::class)->getExcludedPaths())->toContain(
+        'webhooks/sendgrid',
+        'api/v1/webhooks/*',
+        'api/v1/events/*/connect',
+    );
+});
+
 it('disables arbitrary cache class unserialization', function (): void {
     expect(config('cache.serializable_classes'))->not->toBeTrue();
 });
