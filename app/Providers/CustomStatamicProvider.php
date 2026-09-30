@@ -38,7 +38,7 @@ class CustomStatamicProvider extends ServiceProvider
 
         LaravelEvent::listen(function (EntrySaved $event): void {
             if ($event->entry->collection->handle === 'prayers') {
-                TriggerAstroBuildJob::dispatch();
+                TriggerAstroBuildJob::dispatch(TriggerAstroBuildJob::CONTENT);
             }
         });
 
