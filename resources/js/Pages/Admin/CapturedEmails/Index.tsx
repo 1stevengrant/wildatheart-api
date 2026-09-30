@@ -26,22 +26,40 @@ type PageProps = {
     mailableClasses: string[];
     filters: {
         search?: string;
-        mailable?: string;
+        mailable_class?: string;
         from?: string;
         to?: string;
     };
+    mailConfig: {
+        mailer: string;
+        transport: string | null;
+        captures: boolean;
+    };
+    testResult: {
+        status: "captured" | "not_captured" | "failed";
+        message: string;
+        uuid?: string;
+    } | null;
+};
+
+const testResultStyles = {
+    captured: "bg-green-50 border-green-200 text-green-800",
+    not_captured: "bg-yellow-50 border-yellow-200 text-yellow-800",
+    failed: "bg-red-50 border-red-200 text-red-800",
 };
 
 const Index = () => {
-    const { emails, mailableClasses, filters } = usePage<PageProps>().props;
+    const { emails, mailableClasses, filters, mailConfig, testResult } =
+        usePage<PageProps>().props;
     const [search, setSearch] = useState(filters.search || "");
-    const [mailable, setMailable] = useState(filters.mailable || "");
+    const [mailable, setMailable] = useState(filters.mailable_class || "");
     const [deleting, setDeleting] = useState<string | null>(null);
+    const [sendingTest, setSendingTest] = useState(false);
 
     const handleSearch = () => {
         router.get(
             "/internal/emails",
-            { search, mailable },
+            { search, mailable_class: mailable },
             { preserveState: true, preserveScroll: true }
         );
     };
@@ -59,6 +77,15 @@ const Index = () => {
                 onFinish: () => setDeleting(null),
             });
         }
+    };
+
+    const handleSendTest = () => {
+        setSendingTest(true);
+        router.post(
+            "/internal/emails/test",
+            {},
+            { preserveScroll: true, onFinish: () => setSendingTest(false) }
+        );
     };
 
     const handleClearAll = () => {
@@ -80,15 +107,63 @@ const Index = () => {
                             <h1 className="text-2xl font-bold text-gray-900">
                                 Captured Emails
                             </h1>
-                            {emails.total > 0 && (
+                            <div className="flex gap-2">
                                 <button
-                                    onClick={handleClearAll}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
+                                    onClick={handleSendTest}
+                                    disabled={sendingTest}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm disabled:opacity-50"
                                 >
-                                    Clear All ({emails.total})
+                                    {sendingTest
+                                        ? "Sending..."
+                                        : "Send Test Email"}
                                 </button>
-                            )}
+                                {emails.total > 0 && (
+                                    <button
+                                        onClick={handleClearAll}
+                                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
+                                    >
+                                        Clear All ({emails.total})
+                                    </button>
+                                )}
+                            </div>
                         </div>
+
+                        <p className="mb-4 text-sm text-gray-600">
+                            Mailer:{" "}
+                            <span className="font-mono text-gray-900">
+                                {mailConfig.mailer}
+                            </span>{" "}
+                            ({mailConfig.transport ?? "unknown"} transport)
+                            {" · "}
+                            {mailConfig.captures ? (
+                                <span className="text-green-700">
+                                    emails are being captured here
+                                </span>
+                            ) : (
+                                <span className="text-yellow-700">
+                                    emails are delivered, not captured
+                                </span>
+                            )}
+                        </p>
+
+                        {testResult && (
+                            <div
+                                className={`mb-4 px-4 py-3 border rounded-lg text-sm ${testResultStyles[testResult.status]}`}
+                            >
+                                {testResult.message}
+                                {testResult.uuid && (
+                                    <>
+                                        {" "}
+                                        <a
+                                            href={`/internal/emails/${testResult.uuid}`}
+                                            className="underline font-medium"
+                                        >
+                                            View it
+                                        </a>
+                                    </>
+                                )}
+                            </div>
+                        )}
 
                         <div className="flex gap-4">
                             <input
@@ -99,13 +174,13 @@ const Index = () => {
                                 onKeyDown={(e) =>
                                     e.key === "Enter" && handleSearch()
                                 }
-                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="flex-1 px-4 py-2 bg-white text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
 
                             <select
                                 value={mailable}
                                 onChange={(e) => setMailable(e.target.value)}
-                                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="">All Types</option>
                                 {mailableClasses.map((className) => (
@@ -247,7 +322,7 @@ const Index = () => {
                                             link.active
                                                 ? "bg-blue-600 text-white"
                                                 : link.url
-                                                  ? "bg-gray-200 hover:bg-gray-300"
+                                                  ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
                                                   : "bg-gray-100 text-gray-400 cursor-not-allowed"
                                         }`}
                                         dangerouslySetInnerHTML={{

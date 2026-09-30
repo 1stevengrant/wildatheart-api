@@ -14,6 +14,7 @@ Route::prefix($config['prefix'])
     ->name($config['name'] . '.')
     ->group(function () {
         Route::get('/', [CapturedEmailsController::class, 'index'])->name('index');
+        Route::post('/test', [CapturedEmailsController::class, 'sendTest'])->name('test');
         Route::get('/{uuid}', [CapturedEmailsController::class, 'show'])->name('show');
         Route::delete('/{uuid}', [CapturedEmailsController::class, 'destroy'])->name('destroy');
         Route::delete('/', [CapturedEmailsController::class, 'clear'])->name('clear');
