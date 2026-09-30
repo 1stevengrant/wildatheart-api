@@ -5,7 +5,7 @@ use App\Enums\EventTypeEnum;
 
 beforeEach(function () {
     EventType::truncate();
-    cache()->forget('eventTypesGroupedByType.v2');
+    cache()->forget('eventTypesGroupedByType.v3');
 });
 
 afterEach(function () {

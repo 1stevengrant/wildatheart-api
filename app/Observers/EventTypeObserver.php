@@ -11,8 +11,8 @@ class EventTypeObserver
         'experienceTypes.v2',
         'retreatTypes.v2',
         'fireTypes.v2',
-        'eventTypesGroupedByType.v2',
-        'eventTypesWithCounts.serialised.v2',
+        'eventTypesGroupedByType.v3',
+        'eventTypesWithCounts.serialised.v3',
         'event_types.v2',
         'event_types_list.v2',
     ];

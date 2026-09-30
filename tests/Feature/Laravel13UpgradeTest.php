@@ -35,5 +35,5 @@ it('stores grouped event type cache values as primitives', function (): void {
     $this->getJson(route('v1.events.types.grouped'))->assertSuccessful();
     $this->getJson(route('v1.events.types.grouped'))->assertSuccessful();
 
-    expectCacheValueToContainOnlyPrimitives(Cache::get('eventTypesGroupedByType.v2'));
+    expectCacheValueToContainOnlyPrimitives(Cache::get('eventTypesGroupedByType.v3'));
 });

@@ -49,7 +49,7 @@ tabs:
                 - link
               type: markdown
               display: Description
-              instructions: 'The general description of the event'
+              instructions: 'The general description of the event, used by the Local Platform. Event pages on wildatheart.org use the Description on the V1 API tab.'
           -
             handle: card_teaser_text
             field:
@@ -527,4 +527,111 @@ tabs:
               validate:
                 - required
                 - image
+      -
+        display: 'Event Page: Hero'
+        instructions: 'The top of every event detail page for this Event Type on wildatheart.org'
+        fields:
+          -
+            handle: page_logo
+            field:
+              max_files: 1
+              container: s3
+              type: assets
+              display: Logo
+              instructions: 'Shown in place of the Event Type name'
+          -
+            handle: page_background_video_url
+            field:
+              input_type: url
+              type: text
+              display: 'Background Video URL'
+              instructions: 'A direct link to a video file (e.g. a Vimeo .mp4 link) that plays behind the hero'
+          -
+            handle: page_background_image
+            field:
+              max_files: 1
+              container: s3
+              type: assets
+              display: 'Background Image'
+              instructions: 'Shown behind the hero while the video loads, or when there is no video'
+          -
+            handle: page_topics
+            field:
+              taxonomies:
+                - topics
+              type: terms
+              display: Topics
+              instructions: 'Shown as badges under the event details'
+      -
+        display: 'Event Page: Topic'
+        fields:
+          -
+            handle: page_leader_text
+            field:
+              type: text
+              display: 'Leader Text'
+              instructions: 'The small heading above the title lines'
+          -
+            handle: page_hero_title
+            field:
+              mode: stacked
+              add_row: 'Add Line'
+              fields:
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: Text
+                    validate:
+                      - required
+                -
+                  handle: text_style
+                  field:
+                    options:
+                      solid: 'Hero 1 Solid'
+                      hollow: 'Hero 1 Hollow'
+                      hollow-italic: 'Hero 1 Hollow Italic'
+                      hero2: 'Hero 2'
+                      leader: Leader
+                      body-large: 'Body Large'
+                    default: solid
+                    type: select
+                    display: 'Text Style'
+              type: grid
+              display: 'Title Lines'
+          -
+            handle: page_hero_subtitle
+            field:
+              type: textarea
+              display: Subtitle
+          -
+            handle: page_featured_video_url
+            field:
+              type: video
+              display: 'Featured Video'
+          -
+            handle: page_featured_video_fallback_image
+            field:
+              max_files: 1
+              container: s3
+              type: assets
+              display: 'Featured Video Fallback Image'
+      -
+        display: 'Event Page: Description'
+        fields:
+          -
+            handle: page_description
+            field:
+              save_html: true
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - anchor
+              type: bard
+              display: Description
+              instructions: 'The event page body on wildatheart.org, also used as plain text for link previews and cards. The Description on the Main tab is only used by the Local Platform.'
 title: 'Event Type'

@@ -30,6 +30,7 @@ class EventData extends Data
         public ?string $hostAvatar,
         #[TypeScriptType('\\' . EventsShowResponse::class . '|null')]
         public ?array $landingPage,
+        public EventTypePageData $eventTypePage,
         public string $connect_url,
     ) {}
 
@@ -45,12 +46,13 @@ class EventData extends Data
             eventType: $event->eventType->name,
             eventGroupType: $event->eventType->group_type,
             eventTypeImage: $event->eventType->image,
-            eventTypeDescription: $event->eventType->description,
+            eventTypeDescription: $event->eventType->page_description_text ?? '',
             eventTypePhotos: $event->eventType->photos ?? [],
             scheduledFor: $event->badge_display,
             hostName: $event->user->fullname ?? '',
             hostAvatar: $event->user->profilePhoto(),
             landingPage: null,
+            eventTypePage: EventTypePageData::fromEventType($event->eventType),
             connect_url: $event->connect_url,
         );
     }
