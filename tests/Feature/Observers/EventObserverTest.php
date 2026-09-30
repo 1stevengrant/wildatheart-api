@@ -6,6 +6,8 @@ use App\Jobs\LogActivityJob;
 use App\Jobs\WeGive\TagDonorJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\Event\SendNewEventSlackAlert;
+use App\Mail\Event\NewEventCreatedMailable;
 use App\Http\Integrations\WeGive\WeGiveConnector;
 
 beforeEach(function () {
@@ -69,4 +71,41 @@ it('does not crash and logs when an event is created without an event type', fun
     });
 
     Bus::assertNotDispatched(TagDonorJob::class);
+});
+
+it('holds the Slack alert, welcome email and WeGive tagging while an event is a draft', function () {
+    Event::factory()->fires()->create(['approved_at' => null, 'is_draft' => true]);
+
+    Bus::assertNotDispatched(SendNewEventSlackAlert::class);
+    Bus::assertNotDispatched(TagDonorJob::class);
+    Mail::assertNotQueued(NewEventCreatedMailable::class);
+});
+
+it('announces a draft once when it is first published', function () {
+    $event = Event::factory()->fires()->create(['approved_at' => null, 'is_draft' => true]);
+
+    $event->update(['approved_at' => now()]);
+
+    expect($event->fresh()->is_draft)->toBeFalse();
+    Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
+    Bus::assertDispatched(TagDonorJob::class);
+    Mail::assertQueued(NewEventCreatedMailable::class, 1);
+
+    $event->update(['approved_at' => null]);
+    $event->update(['approved_at' => now()]);
+
+    Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
+    Mail::assertQueued(NewEventCreatedMailable::class, 1);
+});
+
+it('keeps announcing non-draft events when they are created, and not again when republished', function () {
+    $event = Event::factory()->fires()->create(['approved_at' => null]);
+
+    Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
+    Mail::assertQueued(NewEventCreatedMailable::class, 1);
+
+    $event->update(['approved_at' => now()]);
+
+    Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
+    Mail::assertQueued(NewEventCreatedMailable::class, 1);
 });

@@ -44,6 +44,7 @@ class Event extends BaseModel
     {
         return [
             'approved_at' => 'datetime',
+            'is_draft' => 'boolean',
             'deleted_at' => 'datetime',
             'legacy_drupal_location' => 'array',
             'longitude' => 'float',

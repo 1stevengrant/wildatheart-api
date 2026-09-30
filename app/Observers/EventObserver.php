@@ -42,6 +42,30 @@ class EventObserver
     {
         Artisan::call('app:clear-event-cache');
 
+        // Drafts from the v1 host wizard aren't live yet; they're announced when first published.
+        if ($event->is_draft) {
+            return;
+        }
+
+        $this->announceNewEvent($event);
+    }
+
+    public function updated(Event $event): void
+    {
+        Artisan::call('app:clear-event-cache');
+
+        if ($event->is_draft && $event->approved_at !== null) {
+            $event->updateQuietly(['is_draft' => false]);
+
+            $this->announceNewEvent($event);
+        }
+    }
+
+    /**
+     * The Slack alert, welcome email and WeGive tagging for a newly live event.
+     */
+    protected function announceNewEvent(Event $event): void
+    {
         if ($event->eventType === null) {
             LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
@@ -56,7 +80,7 @@ class EventObserver
 
         SendNewEventSlackAlert::dispatch($event);
 
-        $this->sendWelcomeEmailWhenLive($event);
+        Mail::to($event->user)->send(new NewEventCreatedMailable($event));
 
         if ($event->eventType->wegive_tag) {
             Bus::chain([
@@ -77,35 +101,6 @@ class EventObserver
                 performedOn: $event,
             );
         }
-    }
-
-    public function updated(Event $event): void
-    {
-        Artisan::call('app:clear-event-cache');
-
-        if ($event->wasChanged('approved_at')) {
-            $this->sendWelcomeEmailWhenLive($event);
-        }
-    }
-
-    /**
-     * The welcome ("… is live" / "Important details about your upcoming …") email goes out the
-     * first time an event is published. Drafts are created long before they're live, so this can't
-     * key off creation; welcome_sent_at (set once the mail sends) stops re-publishing from resending.
-     */
-    protected function sendWelcomeEmailWhenLive(Event $event): void
-    {
-        if ($event->approved_at === null || $event->welcome_sent_at !== null) {
-            return;
-        }
-
-        $eventType = $event->eventType;
-
-        if ($eventType === null || ! NewEventCreatedMailable::hasTemplateFor($eventType->name)) {
-            return;
-        }
-
-        Mail::to($event->user)->send(new NewEventCreatedMailable($event));
     }
 
     public function deleted(Event $event): void

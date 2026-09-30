@@ -75,6 +75,7 @@ class SaveEventDraft
                     'event_type_id' => $eventType->id,
                     'sex' => $eventType->sex,
                     'approved_at' => null,
+                    'is_draft' => true,
                 ]
             )
         );

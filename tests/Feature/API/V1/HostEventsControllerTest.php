@@ -11,6 +11,8 @@ use App\Mail\V1\HostInvitationMail;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventManagerInvitation;
+use App\Jobs\Event\SendNewEventSlackAlert;
+use App\Mail\Event\NewEventCreatedMailable;
 
 /**
  * @return array<string, mixed>
@@ -954,4 +956,48 @@ it('emails invites added to a draft when it is published from the dashboard', fu
         ->assertOk();
 
     Mail::assertQueued(HostInvitationMail::class, fn ($mail) => $mail->hasTo('cohost@example.test'));
+});
+
+it('saves a new wizard event as a draft without announcing it', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::where('name', EventType::FIRES)->firstOrFail();
+
+    mockJwtAuthentication($host);
+
+    $eventId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", ['name' => "Test's"])
+        ->assertOk()
+        ->json('event.id');
+
+    expect(Event::findOrFail($eventId)->is_draft)->toBeTrue();
+    Bus::assertNotDispatched(SendNewEventSlackAlert::class);
+    Mail::assertNotQueued(NewEventCreatedMailable::class);
+});
+
+it('announces a wizard draft when it is published', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::where('name', EventType::FIRES)->firstOrFail();
+
+    mockJwtAuthentication($host);
+
+    $eventId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", ['name' => "Test's"])
+        ->json('event.id');
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$eventId}/publish",
+            publishEventPayload(['event_id' => $eventId, 'frequency' => 'weekly']),
+        )
+        ->assertOk();
+
+    expect(Event::findOrFail($eventId)->is_draft)->toBeFalse();
+    Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
+    Mail::assertQueued(NewEventCreatedMailable::class, fn ($mail) => $mail->hasTo($host->email));
 });
