@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Event;
+use App\Enums\UserRoleEnum;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventOwnershipTransfer;
@@ -33,6 +34,47 @@ it('forbids a co-host from initiating a transfer', function () {
         ->assertForbidden();
 
     Mail::assertNothingSent();
+});
+
+it('forbids an admin who is not the owner from initiating a transfer', function () {
+    $owner = User::factory()->create();
+    $admin = User::factory()->create();
+    $admin->assignRole(UserRoleEnum::Admin->value);
+    $coHost = User::factory()->create();
+    $event = Event::factory()->fires()->approved()->for($owner)->create();
+    $event->managers()->attach($coHost->id);
+
+    mockJwtAuthentication($admin);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/ownership-transfers", ['user_id' => $coHost->id])
+        ->assertForbidden();
+
+    expect(EventOwnershipTransfer::where('event_id', $event->id)->exists())->toBeFalse();
+    Mail::assertNothingSent();
+});
+
+it('forbids an admin who is not the owner from cancelling a transfer', function () {
+    $owner = User::factory()->create();
+    $admin = User::factory()->create();
+    $admin->assignRole(UserRoleEnum::Admin->value);
+    $coHost = User::factory()->create();
+    $event = Event::factory()->fires()->approved()->for($owner)->create();
+    $event->managers()->attach($coHost->id);
+
+    EventOwnershipTransfer::create([
+        'event_id' => $event->id,
+        'email' => $coHost->email,
+        'transferred_by_user_id' => $owner->id,
+    ]);
+
+    mockJwtAuthentication($admin);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->deleteJson("/api/v1/host/events/{$event->id}/ownership-transfers")
+        ->assertForbidden();
+
+    expect(EventOwnershipTransfer::where('event_id', $event->id)->exists())->toBeTrue();
 });
 
 it('rejects a transfer to a user who is not a co-host', function () {
