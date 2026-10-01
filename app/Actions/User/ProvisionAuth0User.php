@@ -2,10 +2,12 @@
 
 namespace App\Actions\User;
 
+use Throwable;
 use App\Models\User;
 use App\Services\Auth0\UserinfoClient;
 use App\DataTransferObjects\Auth0Profile;
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\Jobs\User\UpdateProfileFromAuth0Job;
 use App\Exceptions\UserProvisioningException;
 use Illuminate\Database\UniqueConstraintViolationException;
 
@@ -91,7 +93,7 @@ class ProvisionAuth0User
     private function createUser(string $sub, Auth0Profile $profile): User
     {
         try {
-            return User::create([
+            $user = User::create([
                 'provider_id' => $sub,
                 'provider' => 'auth0',
                 'email' => $profile->email,
@@ -100,6 +102,25 @@ class ProvisionAuth0User
             ]);
         } catch (UniqueConstraintViolationException) {
             return $this->resolveRacedUser($sub, $profile);
+        }
+
+        $this->syncProfileFromAuth0($user);
+
+        return $user;
+    }
+
+    /**
+     * Copy the phone number collected at Auth0 signup onto a new user right away,
+     * so the next screen (e.g. accepting a host invitation) doesn't ask for it again.
+     * A failure here must not block sign-in.
+     */
+    private function syncProfileFromAuth0(User $user): void
+    {
+        try {
+            // Run inline on this instance so the request that provisioned the user already sees the phone.
+            (new UpdateProfileFromAuth0Job($user))->handle();
+        } catch (Throwable $exception) {
+            report($exception);
         }
     }
 
