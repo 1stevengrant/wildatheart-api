@@ -50,7 +50,7 @@ it('generates a join-as-host link for the event owner and reuses it', function (
         ->assertJsonPath('url', $url);
 });
 
-it('lets a co-host copy the invite link', function () {
+it('forbids a co-host from getting the invite link', function () {
     $owner = User::factory()->create();
     $coHost = User::factory()->create();
     $event = Event::factory()->fires()->approved()->for($owner)->create();
@@ -60,8 +60,9 @@ it('lets a co-host copy the invite link', function () {
 
     $this->withHeaders(jwtAuthenticationHeaders())
         ->getJson("/api/v1/host/events/{$event->id}/invite-link")
-        ->assertOk()
-        ->assertJsonStructure(['url']);
+        ->assertForbidden();
+
+    expect($event->fresh()->host_invite_token)->toBeNull();
 });
 
 it('forbids the invite link for users who do not host the event', function () {

@@ -205,6 +205,45 @@ it('syncs co-host invitations when updating a draft', function () {
     expect($emails)->toEqual(['new@wildatheart.org']);
 });
 
+it('lets a co-host edit an event without changing its hosts', function () {
+    Mail::fake();
+
+    $owner = User::factory()->create();
+    $coHost = User::factory()->create();
+    $eventType = EventType::factory()->create();
+
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->approved()
+        ->create([
+            'event_type_id' => $eventType->id,
+            'name' => 'Original name',
+        ]));
+    $event->managers()->attach($coHost->id);
+
+    EventManagerInvitation::create([
+        'event_id' => $event->id,
+        'email' => 'pending@wildatheart.org',
+        'invited_by_user_id' => $owner->id,
+    ]);
+
+    mockJwtAuthentication($coHost);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'event_id' => $event->id,
+            'name' => 'Renamed by co-host',
+            'co_host_emails' => ['added-by-cohost@wildatheart.org'],
+        ])
+        ->assertOk();
+
+    expect($event->fresh()->name)->toBe('Renamed by co-host')
+        ->and(EventManagerInvitation::where('event_id', $event->id)->pluck('email')->all())
+        ->toEqual(['pending@wildatheart.org']);
+
+    Mail::assertNotQueued(HostInvitationMail::class);
+});
+
 it('immediately sends a co-host invitation email when inviting to an already published event', function () {
     Mail::fake();
 

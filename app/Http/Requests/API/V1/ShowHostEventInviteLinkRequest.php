@@ -7,12 +7,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ShowHostEventInviteLinkRequest extends FormRequest
 {
+    /**
+     * The link lets anyone join as a host, so only the event's owner can get it.
+     */
     public function authorize(): bool
     {
         $event = $this->route('event');
 
         return $event instanceof Event
-            && $event->isOwnedOrManagedBy($this->user());
+            && $event->user_id === $this->user()->id;
     }
 
     /**
