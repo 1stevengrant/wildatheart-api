@@ -8,7 +8,6 @@ use Statamic\Facades\Term;
 use Statamic\Facades\Entry;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
-use Statamic\Facades\AssetContainer;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Subsplash\SubsplashApiClient;
@@ -32,11 +31,7 @@ beforeEach(function () {
         $this->seriesImporter,
     );
 
-    // Setup S3 asset container for testing
-    Storage::fake('s3');
-    $container = AssetContainer::make('s3')
-        ->disk('s3')
-        ->save();
+    Storage::fake('wordpress');
 });
 
 afterEach(function () {
