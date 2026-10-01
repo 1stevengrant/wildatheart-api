@@ -139,14 +139,17 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->middleware('throttle:connect')
             ->name('connect.store');
 
-        Route::middleware(['auth0.jwt', 'throttle:interests'])->group(function () {
+        Route::middleware('auth0.jwt')->group(function () {
             Route::get('{event}/interests/me', [EventInterestController::class, 'show'])
+                ->middleware('throttle:interestsRead')
                 ->where('event', '[0-9a-fA-F-]{36}')
                 ->name('interests.show');
             Route::post('{event}/interests', [EventInterestController::class, 'store'])
+                ->middleware('throttle:interestsWrite')
                 ->where('event', '[0-9a-fA-F-]{36}')
                 ->name('interests.store');
             Route::delete('{event}/interests/me', [EventInterestController::class, 'destroy'])
+                ->middleware('throttle:interestsWrite')
                 ->where('event', '[0-9a-fA-F-]{36}')
                 ->name('interests.destroy');
         });

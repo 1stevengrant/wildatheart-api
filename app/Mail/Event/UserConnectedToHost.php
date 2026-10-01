@@ -46,14 +46,14 @@ class UserConnectedToHost extends Mailable implements ShouldQueue
         $content = $this->emailTemplate->body;
         $eventName = $this->event->eventType->name;
         $content = str_replace('[host_name]', e($this->getAllHostNames()), $content);
-        $link = route('view.event', $this->event);
+        $link = $this->event->attend_url;
         if ($eventName === EventType::FIRES) {
             $eventName = '<a href="' . $link . '">' . e($this->event->name) . ' Fire</a>';
         } else {
             $eventName = '<a href="' . $link . '">' . e($this->event->eventType->name) . '</a>';
         }
         $content = str_replace('[event_title]', $eventName, $content);
-        $content = str_replace('[attendee_name]', e($this->user->given_name), $content);
+        $content = str_replace('[attendee_name]', e($this->user->given_name ?: 'Friend'), $content);
         $this->emailContent = $content;
 
         return new Content(
