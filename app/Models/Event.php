@@ -40,6 +40,10 @@ class Event extends BaseModel
 
     protected $with = ['eventType'];
 
+    protected $hidden = [
+        'host_invite_token',
+    ];
+
     protected function casts(): array
     {
         return [

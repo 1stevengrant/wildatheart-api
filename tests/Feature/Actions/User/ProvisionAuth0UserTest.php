@@ -2,10 +2,13 @@
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use Saloon\Http\Faking\MockClient;
 use Illuminate\Support\Facades\Http;
+use Saloon\Http\Faking\MockResponse;
 use App\Actions\User\ProvisionAuth0User;
 use App\DataTransferObjects\Auth0Profile;
 use App\Exceptions\UserProvisioningException;
+use App\Http\Integrations\Auth0\Requests\GetUserProfileRequest;
 
 beforeEach(function () {
     $this->sub = 'email|' . Str::random(24);
@@ -51,6 +54,53 @@ it('creates a new user from a verified profile', function () {
         ->and($user->email)->toBe('provision.test@example.test')
         ->and($user->given_name)->toBe('Provision')
         ->and($user->family_name)->toBe('Test');
+});
+
+it('copies the Auth0 signup phone number onto a new user', function () {
+    config([
+        'auth0.management.endpoint' => 'https://auth0.test/oauth/token',
+        'auth0.management.audience' => 'https://auth0.test/api/v2/',
+    ]);
+    Http::fake(['auth0.test/oauth/token' => Http::response(['access_token' => 'management-token'])]);
+    $mockClient = MockClient::global([
+        GetUserProfileRequest::class => MockResponse::make([
+            'user_metadata' => ['unverified_phone_number' => '+17195550123'],
+        ]),
+    ]);
+
+    $user = ProvisionAuth0User::run($this->sub, verifiedProfile(), 'fake.jwt.token');
+
+    expect($user->phone)->toBe('+17195550123')
+        ->and($user->fresh()->phone)->toBe('+17195550123');
+    $mockClient->assertSent(GetUserProfileRequest::class);
+
+    MockClient::destroyGlobal();
+});
+
+it('still provisions a new user when the Auth0 profile lookup fails', function () {
+    config([
+        'auth0.management.endpoint' => 'https://auth0.test/oauth/token',
+        'auth0.management.audience' => 'https://auth0.test/api/v2/',
+    ]);
+    Http::fake(['auth0.test/oauth/token' => Http::response(['error' => 'access_denied'], 401)]);
+
+    $user = ProvisionAuth0User::run($this->sub, verifiedProfile(), 'fake.jwt.token');
+
+    expect($user->exists)->toBeTrue()
+        ->and($user->phone)->toBeNull();
+});
+
+it('does not look up the Auth0 profile for an existing user', function () {
+    $mockClient = MockClient::global([
+        GetUserProfileRequest::class => MockResponse::make(['user_metadata' => []]),
+    ]);
+    User::factory()->create(['provider_id' => $this->sub, 'provider' => 'auth0']);
+
+    ProvisionAuth0User::run($this->sub, verifiedProfile(), 'fake.jwt.token');
+
+    $mockClient->assertNothingSent();
+
+    MockClient::destroyGlobal();
 });
 
 it('links an existing active user matched by verified email', function () {

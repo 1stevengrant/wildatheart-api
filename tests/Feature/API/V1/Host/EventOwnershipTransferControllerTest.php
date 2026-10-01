@@ -181,3 +181,27 @@ it('cancels a pending ownership transfer', function () {
 
     expect(EventOwnershipTransfer::withoutGlobalScope('pending')->find($transfer->id))->toBeNull();
 });
+
+it('keeps the co-host on the event after cancelling their ownership transfer', function () {
+    $owner = User::factory()->create();
+    $coHost = User::factory()->create();
+    $event = Event::factory()->fires()->approved()->for($owner)->create();
+    $event->managers()->attach($coHost->id);
+
+    EventOwnershipTransfer::create([
+        'event_id' => $event->id,
+        'email' => $coHost->email,
+        'transferred_by_user_id' => $owner->id,
+    ]);
+
+    mockJwtAuthentication($owner);
+
+    $response = $this->withHeaders(jwtAuthenticationHeaders())
+        ->deleteJson("/api/v1/host/events/{$event->id}/ownership-transfers");
+
+    $response->assertOk();
+
+    expect($event->managers()->whereKey($coHost->id)->exists())->toBeTrue()
+        ->and(collect($response->json('event.managers'))->pluck('id')->map(fn ($id) => (string) $id)->all())
+        ->toContain((string) $coHost->id);
+});

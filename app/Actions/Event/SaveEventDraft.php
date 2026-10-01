@@ -24,7 +24,8 @@ class SaveEventDraft
             $event = $this->createNewDraft($request, $eventType, $host);
         }
 
-        if ($request->has('co_host_emails')) {
+        // Co-hosts can edit the event, but only its owner adds or removes hosts.
+        if ($request->has('co_host_emails') && $event->user_id === $host->id) {
             $newInvitations = SyncCoHostInvitations::run($event, $request->validated('co_host_emails') ?? [], $host);
 
             if ($event->approved_at !== null && $newInvitations->isNotEmpty()) {
