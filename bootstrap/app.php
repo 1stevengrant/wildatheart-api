@@ -13,6 +13,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Spatie\Permission\Middleware\PermissionMiddleware;
@@ -51,6 +52,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(HandleInertiaRequests::class);
 
         $middleware->throttleApi();
+
+        // Resolve the JWT user before throttling so per-user limiters key by
+        // user id instead of always falling back to the IP.
+        $middleware->prependToPriorityList(
+            before: ThrottleRequests::class,
+            prepend: Auth0JwtMiddleware::class,
+        );
 
         $middleware->group('non-inertia', [
             EncryptCookies::class,

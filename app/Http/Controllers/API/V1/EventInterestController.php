@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Data\V1\EventInterestData;
 use App\Http\Controllers\Controller;
 use App\Actions\Event\RemoveEventInterest;
+use App\Data\V1\RegisterEventInterestData;
 use App\Actions\Event\RegisterEventInterest;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -23,9 +24,9 @@ class EventInterestController extends Controller
         return response()->json(EventInterestData::fromPivot($interest));
     }
 
-    public function store(string $event): JsonResponse
+    public function store(string $event, RegisterEventInterestData $data): JsonResponse
     {
-        $interest = RegisterEventInterest::run($this->user(), $event);
+        $interest = RegisterEventInterest::run($this->user(), $event, $data);
 
         return response()->json(EventInterestData::fromPivot($interest));
     }

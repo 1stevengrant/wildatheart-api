@@ -287,6 +287,13 @@ class Event extends BaseModel
         );
     }
 
+    protected function attendUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => mb_rtrim(config('app.frontend_url'), '/') . "/events/attend/{$this->id}",
+        );
+    }
+
     protected function connectUrl(): Attribute
     {
         return Attribute::make(

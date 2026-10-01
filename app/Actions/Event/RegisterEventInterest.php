@@ -7,20 +7,25 @@ use App\Models\Event;
 use Illuminate\Support\Carbon;
 use App\Models\EventUserInterest;
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\Data\V1\RegisterEventInterestData;
 
 class RegisterEventInterest
 {
     use AsAction;
 
-    public function handle(User $user, string $eventId): EventUserInterest
+    public function handle(User $user, string $eventId, ?RegisterEventInterestData $profile = null): EventUserInterest
     {
+        $event = Event::with(['user', 'managers', 'eventType'])->findOrFail($eventId);
+
+        if ($profile) {
+            $user->fill($profile->profileAttributes())->save();
+        }
+
         $existing = $user->interestIn($eventId);
 
         if ($existing) {
             return $existing;
         }
-
-        $event = Event::with(['user', 'managers', 'eventType'])->findOrFail($eventId);
 
         $now = Carbon::now();
         $user->interestedEvents()->newPivotStatement()->insert([

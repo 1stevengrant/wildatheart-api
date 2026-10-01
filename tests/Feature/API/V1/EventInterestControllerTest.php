@@ -13,7 +13,6 @@ use App\Mail\Event\UserConnectedToHost;
 use App\Jobs\WeGive\FindOrCreateDonorJob;
 use App\Mail\Event\EventInterestCancelled;
 use App\Mail\Event\EventInterestRegistered;
-use Illuminate\Support\Facades\RateLimiter;
 use App\Jobs\Admin\PostUserInterestToSlackJob;
 use App\Services\Auth0\JwtAccessTokenVerifier;
 use Auth0\SDK\Exception\InvalidTokenException;
@@ -627,17 +626,78 @@ it('does not notify anyone when cancelling without an existing interest', functi
     Mail::assertNotQueued(EventInterestCancelled::class);
 });
 
-it('rate-limits the interests endpoints per authenticated user', function () {
-    RateLimiter::clear('interests');
-
-    $statuses = [];
-    for ($i = 0; $i < 12; $i++) {
-        $statuses[] = $this->withHeaders(bearer())
+it('rate-limits interest reads at 60 requests a minute per user', function () {
+    for ($i = 0; $i < 60; $i++) {
+        $this->withHeaders(bearer())
             ->getJson("/api/v1/events/{$this->eventId}/interests/me")
-            ->status();
+            ->assertNotFound();
     }
 
-    expect($statuses)->toContain(429);
+    $this->withHeaders(bearer())
+        ->getJson("/api/v1/events/{$this->eventId}/interests/me")
+        ->assertTooManyRequests();
+});
+
+it('rate-limits interest writes at 10 requests a minute per user across POST and DELETE', function () {
+    for ($i = 0; $i < 5; $i++) {
+        $this->withHeaders(bearer())
+            ->postJson("/api/v1/events/{$this->eventId}/interests")
+            ->assertOk();
+
+        $this->withHeaders(bearer())
+            ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
+            ->assertNoContent();
+    }
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests")
+        ->assertTooManyRequests();
+
+    $this->withHeaders(bearer())
+        ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
+        ->assertTooManyRequests();
+});
+
+it('keys interest limits by user so users on the same IP do not share a bucket', function () {
+    for ($i = 0; $i < 5; $i++) {
+        $this->withHeaders(bearer())
+            ->postJson("/api/v1/events/{$this->eventId}/interests")
+            ->assertOk();
+
+        $this->withHeaders(bearer())
+            ->deleteJson("/api/v1/events/{$this->eventId}/interests/me")
+            ->assertNoContent();
+    }
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests")
+        ->assertTooManyRequests();
+
+    Mockery::resetContainer();
+
+    $this->mock(JwtAccessTokenVerifier::class)
+        ->shouldReceive('verify')
+        ->andReturn([
+            'sub' => 'email|' . Str::random(24),
+            'email' => 'second.user@example.test',
+            'email_verified' => true,
+        ]);
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests")
+        ->assertOk();
+});
+
+it('does not let a burst of interest reads block registering interest', function () {
+    for ($i = 0; $i < 30; $i++) {
+        $this->withHeaders(bearer())
+            ->getJson("/api/v1/events/{$this->eventId}/interests/me")
+            ->assertNotFound();
+    }
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests")
+        ->assertOk();
 });
 
 it('fires side effects again after a delete + re-create cycle', function () {
@@ -656,4 +716,205 @@ it('fires side effects again after a delete + re-create cycle', function () {
     Mail::assertQueued(EventInterestRegistered::class, 2);
     Mail::assertQueued(UserConnectedToHost::class, 2);
     Bus::assertDispatchedTimes(PostUserInterestToSlackJob::class, 2);
+});
+
+function seedInterestEmailTemplates(): void
+{
+    EmailTemplate::query()->updateOrCreate(
+        ['slug' => 'attendee-connected-to-host'],
+        [
+            'name' => 'Attendee Connected To Host',
+            'subject' => 'We sent your info to the host of [event_title]',
+            'body' => "[attendee_name],\n\nThanks for your interest in [event_title].",
+        ],
+    );
+
+    EmailTemplate::query()->updateOrCreate(
+        ['slug' => 'attendee-registered'],
+        [
+            'name' => 'Attendee Registered',
+            'subject' => '[attendee_name] has expressed interest in your event.',
+            'body' => "[host_name],\n\n[attendee_fullname] ([attendee_name]) is interested in [event_name].\n- [attendee_phone]\n- [attendee_city], [attendee_state]",
+        ],
+    );
+}
+
+it('saves the submitted profile on the user before sending the notifications', function () {
+    seedInterestEmailTemplates();
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests", [
+            'given_name' => 'Steven',
+            'family_name' => 'Grant',
+            'phone' => '+15551234567',
+            'city' => 'Maldon',
+            'state' => 'Victoria',
+            'country_code' => 'AU',
+            'postal_code' => '3463',
+        ])
+        ->assertOk()
+        ->assertJsonStructure(['event_id', 'user_id', 'created_at']);
+
+    $user = User::where('provider_id', $this->sub)->first();
+
+    expect($user->given_name)->toBe('Steven')
+        ->and($user->family_name)->toBe('Grant')
+        ->and($user->phone)->toBe('+15551234567')
+        ->and($user->city)->toBe('Maldon')
+        ->and($user->state)->toBe('Victoria')
+        ->and($user->country_code)->toBe('AU')
+        ->and($user->postal_code)->toBe('3463');
+
+    Mail::assertQueued(UserConnectedToHost::class, function (UserConnectedToHost $mail) {
+        $mail->content();
+
+        return str_starts_with($mail->emailContent, 'Steven,');
+    });
+
+    Mail::assertQueued(EventInterestRegistered::class, function (EventInterestRegistered $mail) {
+        $mail->content();
+
+        return str_contains($mail->emailContent, 'Steven Grant (Steven) is interested')
+            && str_contains($mail->emailContent, '+15551234567')
+            && str_contains($mail->emailContent, 'Maldon, Victoria')
+            && $mail->envelope()->subject === 'Steven Grant has expressed interest in your event.';
+    });
+});
+
+it('registers interest without a body and leaves the profile untouched', function () {
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests")
+        ->assertOk();
+
+    $user = User::where('provider_id', $this->sub)->first();
+
+    expect($user->given_name)->toBe('Jwt')
+        ->and($user->family_name)->toBe('User');
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests", [])
+        ->assertOk();
+
+    expect($user->fresh()->given_name)->toBe('Jwt');
+});
+
+it('only updates the profile fields that are present', function () {
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests", [
+            'given_name' => 'Steven',
+            'city' => 'Maldon',
+        ])
+        ->assertOk();
+
+    $user = User::where('provider_id', $this->sub)->first();
+
+    expect($user->given_name)->toBe('Steven')
+        ->and($user->family_name)->toBe('User')
+        ->and($user->city)->toBe('Maldon')
+        ->and($user->state)->toBeNull();
+});
+
+it('never overwrites existing profile fields with null or empty values', function () {
+    User::factory()->create([
+        'provider_id' => $this->sub,
+        'provider' => 'auth0',
+        'email' => 'jwt.user@example.test',
+        'given_name' => 'Steven',
+        'family_name' => 'Grant',
+        'phone' => '+15551234567',
+        'city' => 'Maldon',
+    ]);
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests", [
+            'given_name' => null,
+            'family_name' => '',
+            'phone' => null,
+            'city' => null,
+            'state' => 'Victoria',
+        ])
+        ->assertOk();
+
+    $user = User::where('provider_id', $this->sub)->first();
+
+    expect($user->given_name)->toBe('Steven')
+        ->and($user->family_name)->toBe('Grant')
+        ->and($user->phone)->toBe('+15551234567')
+        ->and($user->city)->toBe('Maldon')
+        ->and($user->state)->toBe('Victoria');
+});
+
+it('rejects invalid profile fields without registering interest', function () {
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests", [
+            'given_name' => 'Steven',
+            'phone' => '0400 000 000',
+            'country_code' => 'aus',
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['phone', 'country_code']);
+
+    $user = User::where('provider_id', $this->sub)->first();
+
+    expect($user->given_name)->toBe('Jwt')
+        ->and(DB::table('event_user_interests')->where('user_id', $user->id)->exists())->toBeFalse();
+
+    Mail::assertNotQueued(EventInterestRegistered::class);
+    Mail::assertNotQueued(UserConnectedToHost::class);
+});
+
+it('uses neutral name fallbacks when the user has no name', function () {
+    seedInterestEmailTemplates();
+
+    Mockery::resetContainer();
+
+    $sub = 'email|' . Str::random(24);
+
+    $this->mock(JwtAccessTokenVerifier::class)
+        ->shouldReceive('verify')
+        ->andReturn([
+            'sub' => $sub,
+            'email' => 'nameless@example.test',
+            'email_verified' => true,
+        ]);
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests")
+        ->assertOk();
+
+    Mail::assertQueued(UserConnectedToHost::class, function (UserConnectedToHost $mail) {
+        $mail->content();
+
+        return str_starts_with($mail->emailContent, 'Friend,');
+    });
+
+    Mail::assertQueued(EventInterestRegistered::class, function (EventInterestRegistered $mail) {
+        $mail->content();
+
+        return str_contains($mail->emailContent, 'Member (Member) is interested');
+    });
+});
+
+it('links the interest emails to the frontend attend page', function () {
+    seedInterestEmailTemplates();
+
+    config(['app.frontend_url' => 'https://wildatheart.test/']);
+
+    $this->withHeaders(bearer())
+        ->postJson("/api/v1/events/{$this->eventId}/interests")
+        ->assertOk();
+
+    $expectedUrl = "https://wildatheart.test/events/attend/{$this->eventId}";
+
+    Mail::assertQueued(UserConnectedToHost::class, function (UserConnectedToHost $mail) use ($expectedUrl) {
+        $mail->content();
+
+        return str_contains($mail->emailContent, "href=\"{$expectedUrl}\"");
+    });
+
+    Mail::assertQueued(EventInterestRegistered::class, function (EventInterestRegistered $mail) use ($expectedUrl) {
+        $mail->content();
+
+        return str_contains($mail->emailContent, "href=\"{$expectedUrl}\"");
+    });
 });

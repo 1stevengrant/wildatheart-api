@@ -47,15 +47,15 @@ class EventInterestRegistered extends Mailable implements ShouldQueue
     {
         $content = $this->emailTemplate->body;
         $content = str_replace('[host_name]', e($this->getAllHostNames()), $content);
-        $content = str_replace('[attendee_fullname]', e($this->user->given_name), $content);
-        $content = str_replace('[attendee_name]', e($this->user->given_name), $content);
+        $content = str_replace('[attendee_fullname]', e($this->user->fullname), $content);
+        $content = str_replace('[attendee_name]', e($this->user->given_name ?: $this->user->fullname), $content);
         $content = str_replace('[attendee_email]', e($this->user->email), $content);
         $content = str_replace('[attendee_phone]', e($this->user->phone ?? 'no phone number'), $content);
         $content = str_replace('[attendee_city]', e($this->user->city ?? ''), $content);
         $content = str_replace('[attendee_state]', e($this->user->state ?? 'no state'), $content);
 
         $eventName = $this->event->eventType->name;
-        $link = route('view.event', $this->event);
+        $link = $this->event->attend_url;
         if ($eventName === EventType::FIRES) {
             $eventName = 'Fire (<a href="' . $link . '">' . e($this->event->name) . ' Fire</a>)';
         } else {
