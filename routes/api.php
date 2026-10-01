@@ -22,6 +22,7 @@ use App\Http\Controllers\API\V1\Navs\AllNavsController;
 use App\Http\Controllers\API\V1\EventInterestController;
 use App\Http\Controllers\API\V1\HostAgreementController;
 use App\Http\Controllers\API\V1\Navs\MobileNavController;
+use App\Http\Controllers\API\V1\Host\JoinAsHostController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\CurrentUserPhotoController;
 use App\Http\Controllers\API\V1\GroupedEventTypeController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\API\V1\Content\EventsEntryController;
 use App\Http\Controllers\API\V1\ArchivedHostContactsController;
 use App\Http\Controllers\API\V1\Content\DailyReadingController;
 use App\Http\Controllers\API\V1\Content\PrayersEntryController;
+use App\Http\Controllers\API\V1\Host\EventInviteLinkController;
 use App\Http\Controllers\API\Media\MediaItemsBySeriesController;
 use App\Http\Controllers\API\Media\SubsplashMediaItemController;
 use App\Http\Controllers\API\V1\Content\MediaItemEntryController;
@@ -128,6 +130,13 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->name('ownershipTransfers.accept');
         Route::post('ownership-transfers/{transfer}/acceptance', [OwnershipTransferAcceptanceController::class, 'store'])
             ->name('ownershipTransfers.acceptance.store');
+        Route::get('events/{event}/invite-link', [EventInviteLinkController::class, 'show'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.inviteLink.show');
+        Route::get('join-as-host/{token}', [JoinAsHostController::class, 'show'])
+            ->name('joinAsHost.show');
+        Route::post('join-as-host/{token}/accept', [JoinAsHostController::class, 'store'])
+            ->name('joinAsHost.accept');
         Route::get('invitations/{invitation}', [HostInvitationController::class, 'show'])
             ->name('invitations.show');
         Route::post('invitations/{invitation}/accept', [InvitationAcceptanceController::class, 'store'])
