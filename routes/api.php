@@ -26,6 +26,7 @@ use App\Http\Controllers\API\V1\Host\JoinAsHostController;
 use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\CurrentUserPhotoController;
 use App\Http\Controllers\API\V1\GroupedEventTypeController;
+use App\Http\Controllers\API\V1\HostEventManagerController;
 use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\ContactInvitationsController;
@@ -130,6 +131,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->name('ownershipTransfers.accept');
         Route::post('ownership-transfers/{transfer}/acceptance', [OwnershipTransferAcceptanceController::class, 'store'])
             ->name('ownershipTransfers.acceptance.store');
+        Route::delete('events/{event}/managers/{manager}', [HostEventManagerController::class, 'destroy'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.managers.destroy');
         Route::get('events/{event}/invite-link', [EventInviteLinkController::class, 'show'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('events.inviteLink.show');
