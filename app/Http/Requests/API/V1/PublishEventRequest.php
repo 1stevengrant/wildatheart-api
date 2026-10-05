@@ -37,7 +37,7 @@ class PublishEventRequest extends SaveEventDraftRequest
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
             'start_date' => ['required', 'date'],
-            'number_of_items_in_material_order' => $eventType?->hasMaterialsOrder()
+            'number_of_items_in_material_order' => $eventType?->requiresMaterialOrderQuantity()
                 ? ['required', 'string', 'in:' . implode(',', $validValues)]
                 : ['nullable', 'string', 'in:' . implode(',', $validValues)],
             'frequency' => $eventType && EventTypeDateSelector::requiresFrequency($eventType->group_type)

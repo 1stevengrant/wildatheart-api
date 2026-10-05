@@ -120,6 +120,27 @@ class EventType extends BaseModel
         return $this->allow_materials_order;
     }
 
+    /**
+     * Whether the host app asks hosts how many items to ship. Fires always ship a single kit,
+     * as the legacy gift flow does, so they skip the count.
+     */
+    public function requiresMaterialOrderQuantity(): bool
+    {
+        return $this->hasMaterialsOrder() && $this->group_type !== self::TYPE_FIRE;
+    }
+
+    /**
+     * The quantity to send with the host app's materials order: the host's choice, or one kit for fires.
+     */
+    public function materialOrderQuantity(?string $requestedQuantity): ?string
+    {
+        if ($this->hasMaterialsOrder() && ! $this->requiresMaterialOrderQuantity()) {
+            return '1';
+        }
+
+        return $requestedQuantity;
+    }
+
     protected function wegiveTag(): Attribute
     {
         return Attribute::make(

@@ -33,7 +33,7 @@ class PublishEventDraft
             event: $event,
             eventType: $eventType,
             user: $host,
-            quantity: $request->input('number_of_items_in_material_order'),
+            quantity: $eventType->materialOrderQuantity($request->input('number_of_items_in_material_order')),
         );
 
         SendPendingCoHostInvitations::run($event->fresh(['pendingManagerInvitations']), $host);

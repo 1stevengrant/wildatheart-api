@@ -503,6 +503,109 @@ it('dispatches zapier when materials order applies on publish', function () {
     Bus::assertDispatched(PostToZapier::class);
 });
 
+it('publishes a fire without an expected attendees count and orders one kit', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    Address::factory()->create([
+        'user_id' => $host->id,
+        'is_primary' => true,
+    ]);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'zapier_webhook_url' => 'https://hooks.zapier.com/test',
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+
+    $draft = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload(['frequency' => 'weekly']);
+    unset($payload['number_of_items_in_material_order']);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$draft->id}/publish",
+            $payload,
+        )
+        ->assertOk();
+
+    Bus::assertDispatched(
+        PostToZapier::class,
+        fn (PostToZapier $job) => $job->dataTransferObject->quantity === '1',
+    );
+});
+
+it('publishes a fire without ordering a kit when the host has no mailing address', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'zapier_webhook_url' => 'https://hooks.zapier.com/test',
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+
+    $draft = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload(['frequency' => 'weekly']);
+    unset($payload['number_of_items_in_material_order']);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$draft->id}/publish",
+            $payload,
+        )
+        ->assertOk();
+
+    Bus::assertNotDispatched(PostToZapier::class);
+});
+
+it('publishes a fire draft with materials orders from the dashboard without an expected attendees count', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+            'latitude' => 38.9939,
+            'longitude' => -105.0567,
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
+            'number_of_items_in_material_order' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk();
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
+});
+
 it('sends co-host invitation emails when publishing', function () {
     Mail::fake();
     Bus::fake();

@@ -84,11 +84,12 @@ class HostEventController extends Controller
         ]);
 
         $mailingAddress = auth()->user()->primaryAddress();
+        $materialOrderQuantity = $eventType->materialOrderQuantity($request->number_of_items_in_material_order);
 
         if (
             $eventType->hasZapier() &&
             $eventType->hasMaterialsOrder() &&
-            $request->number_of_items_in_material_order != '0' &&
+            $materialOrderQuantity != '0' &&
             $mailingAddress
         ) {
             PostToZapier::dispatch(new GoogleSheetDataTransferObject(
@@ -96,7 +97,7 @@ class HostEventController extends Controller
                 eventId: $event->id,
                 eventType: $eventType->name,
                 email: auth()->user()->email,
-                quantity: $request->number_of_items_in_material_order,
+                quantity: $materialOrderQuantity,
                 first_name: auth()->user()->given_name,
                 last_name: auth()->user()->family_name,
                 address_1: $mailingAddress->street_address,

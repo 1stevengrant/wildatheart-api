@@ -32,7 +32,7 @@ class CreateEventRequest extends FormRequest
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
         $frequencyValues = EventTypeDateSelector::allowedFrequencies($eventType?->group_type);
 
-        $rules['number_of_items_in_material_order'] = $eventType?->hasMaterialsOrder()
+        $rules['number_of_items_in_material_order'] = $eventType?->requiresMaterialOrderQuantity()
             ? ['required', 'string', 'in:' . implode(',', $validValues)]
             : ['nullable', 'string', 'in:' . implode(',', $validValues)];
 
