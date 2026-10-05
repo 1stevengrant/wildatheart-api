@@ -55,5 +55,10 @@ class SendMaterialsOrderToZapier
         );
 
         PostToZapier::dispatch($dataTransferObject);
+
+        // Fires get the same single kit the legacy gift page sends, so mark it requested there.
+        if (! $eventType->requiresMaterialOrderQuantity()) {
+            UpdateEvent::run(data: ['gift_requested' => true], event: $event);
+        }
     }
 }

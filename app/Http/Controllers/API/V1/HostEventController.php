@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\Event;
 use App\Data\EventData;
 use App\Models\EventType;
-use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
 use Illuminate\Http\JsonResponse;
 use App\Actions\Event\DeleteEvent;
@@ -15,13 +14,13 @@ use App\Actions\Event\SaveEventDraft;
 use App\Support\EventTypeDateSelector;
 use App\Actions\Event\PublishEventDraft;
 use App\Http\Requests\API\V1\CreateEventRequest;
+use App\Actions\Event\SendMaterialsOrderToZapier;
 use App\Http\Requests\API\V1\PublishEventRequest;
 use App\Actions\Event\SendPendingCoHostInvitations;
 use App\Http\Requests\API\V1\SaveEventDraftRequest;
 use App\Http\Requests\API\V1\ApproveHostEventRequest;
 use App\Http\Requests\API\V1\DestroyHostEventRequest;
 use App\Http\Requests\API\V1\UnpublishHostEventRequest;
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
 
 class HostEventController extends Controller
 {
@@ -83,32 +82,12 @@ class HostEventController extends Controller
             'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
         ]);
 
-        $mailingAddress = auth()->user()->primaryAddress();
-        $materialOrderQuantity = $eventType->materialOrderQuantity($request->number_of_items_in_material_order);
-
-        if (
-            $eventType->hasZapier() &&
-            $eventType->hasMaterialsOrder() &&
-            $materialOrderQuantity != '0' &&
-            $mailingAddress
-        ) {
-            PostToZapier::dispatch(new GoogleSheetDataTransferObject(
-                webhookUrl: $eventType->zapier_webhook_url,
-                eventId: $event->id,
-                eventType: $eventType->name,
-                email: auth()->user()->email,
-                quantity: $materialOrderQuantity,
-                first_name: auth()->user()->given_name,
-                last_name: auth()->user()->family_name,
-                address_1: $mailingAddress->street_address,
-                address_2: $mailingAddress->address2,
-                city: $mailingAddress->city,
-                state: $mailingAddress->state,
-                zip: $mailingAddress->zip,
-                country: $mailingAddress->country,
-                date: now()->toDateTimeString(),
-            ));
-        }
+        SendMaterialsOrderToZapier::run(
+            event: $event,
+            eventType: $eventType,
+            user: auth()->user(),
+            quantity: $eventType->materialOrderQuantity($request->number_of_items_in_material_order),
+        );
 
         return response()->json([
             'success' => true,

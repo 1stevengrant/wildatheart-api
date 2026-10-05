@@ -501,6 +501,7 @@ it('dispatches zapier when materials order applies on publish', function () {
         ->assertOk();
 
     Bus::assertDispatched(PostToZapier::class);
+    expect($draft->fresh()->gift_requested)->toBeFalse();
 });
 
 it('publishes a fire without an expected attendees count and orders one kit', function () {
@@ -541,6 +542,39 @@ it('publishes a fire without an expected attendees count and orders one kit', fu
         PostToZapier::class,
         fn (PostToZapier $job) => $job->dataTransferObject->quantity === '1',
     );
+    expect($draft->fresh()->gift_requested)->toBeTrue();
+});
+
+it('creates a fire without an expected attendees count and orders one kit', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    Address::factory()->create([
+        'user_id' => $host->id,
+        'is_primary' => true,
+    ]);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'zapier_webhook_url' => 'https://hooks.zapier.com/test',
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload(['frequency' => 'weekly']);
+    unset($payload['number_of_items_in_material_order']);
+
+    $eventId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events", $payload)
+        ->assertOk()
+        ->json('event.id');
+
+    Bus::assertDispatched(
+        PostToZapier::class,
+        fn (PostToZapier $job) => $job->dataTransferObject->quantity === '1',
+    );
+    expect(Event::find($eventId)->gift_requested)->toBeTrue();
 });
 
 it('publishes a fire without ordering a kit when the host has no mailing address', function () {
@@ -574,6 +608,7 @@ it('publishes a fire without ordering a kit when the host has no mailing address
         ->assertOk();
 
     Bus::assertNotDispatched(PostToZapier::class);
+    expect($draft->fresh()->gift_requested)->toBeFalse();
 });
 
 it('publishes a fire draft with materials orders from the dashboard without an expected attendees count', function () {
