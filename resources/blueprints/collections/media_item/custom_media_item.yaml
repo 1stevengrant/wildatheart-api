@@ -53,6 +53,7 @@ tabs:
               type: text
               display: 'Media Type'
               instructions: 'How you want this item to be labeled. (i.e. "Episode", "Session", etc.)'
+              listable: false
   sidebar:
     display: Sidebar
     sections:
