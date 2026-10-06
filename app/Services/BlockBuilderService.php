@@ -151,11 +151,15 @@ class BlockBuilderService
         $seriesId = $slide->media_items_from_series->id;
         $statamicSeries = $this->seriesImporter->findInStatamic($seriesId);
 
+        $subsplashSeriesId = $statamicSeries->subsplash_media_series_id ?: $statamicSeries->id;
+
         $mediaItemsFromSeries = EntryQueryBuilder::mediaItems()
             ->published()
-            ->inSeries($statamicSeries->id)
+            ->inSeries($subsplashSeriesId)
             ->oldestFirst()
             ->get();
+
+        $mediaItemsFromSeries = $this->sortBySubsplashPosition($mediaItemsFromSeries, $subsplashSeriesId);
 
         foreach ($mediaItemsFromSeries as $mediaItem) {
             $preview = $this->previewBuilder->build($mediaItem);
@@ -191,6 +195,34 @@ class BlockBuilderService
         }
 
         return $mediaItemsFromSeriesSlide;
+    }
+
+    /**
+     * Order media items to match the series order in Subsplash, where a higher
+     * position appears first. Items Subsplash doesn't know about keep their
+     * existing (date) order after the rest.
+     */
+    private function sortBySubsplashPosition($mediaItems, string $subsplashSeriesId)
+    {
+        try {
+            $subsplashItems = $this->apiClient->getAllRelatedMediaItems($subsplashSeriesId) ?? [];
+        } catch (\Throwable $e) {
+            report($e);
+
+            return $mediaItems;
+        }
+
+        $positions = collect($subsplashItems)->pluck('position', 'id');
+
+        if ($positions->isEmpty()) {
+            return $mediaItems;
+        }
+
+        return $mediaItems->sortBy(function ($mediaItem) use ($positions) {
+            $position = $positions->get($mediaItem->get('subsplash_media_item_id') ?? $mediaItem->id());
+
+            return $position === null ? PHP_INT_MAX : -$position;
+        })->values();
     }
 
     public function buildSubsplashSlide(&$slide): MediaItemsSlide
