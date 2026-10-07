@@ -21,6 +21,7 @@ use App\Http\Requests\API\V1\SaveEventDraftRequest;
 use App\Http\Requests\API\V1\ApproveHostEventRequest;
 use App\Http\Requests\API\V1\DestroyHostEventRequest;
 use App\Http\Requests\API\V1\UnpublishHostEventRequest;
+use App\Http\Requests\API\V1\UpdateHostEventVisibilityRequest;
 
 class HostEventController extends Controller
 {
@@ -139,6 +140,17 @@ class HostEventController extends Controller
         ApproveEvent::run($event);
         // Invites added while it was a draft wait for publishing, same as the wizard's publish.
         SendPendingCoHostInvitations::run($event->fresh(['pendingManagerInvitations']), auth()->user());
+
+        return response()->json([
+            'success' => true,
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
+        ]);
+    }
+
+    public function updateVisibility(UpdateHostEventVisibilityRequest $request, Event $event): JsonResponse
+    {
+        $event->is_private = $request->boolean('is_private');
+        $event->save();
 
         return response()->json([
             'success' => true,

@@ -919,6 +919,91 @@ it('returns 401 when unpublishing an event without authentication', function () 
         ->assertUnauthorized();
 });
 
+it('allows an owner to make a public event private', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'is_private' => false,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => true])
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('event.id', $event->id)
+        ->assertJsonPath('event.is_private', true);
+
+    expect($event->fresh()->is_private)->toBeTrue();
+});
+
+it('allows a co-host to make a private event public', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $coHost = User::factory()->create(['email' => 'cohost@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'is_private' => true,
+        ]));
+    $event->managers()->attach($coHost->id);
+
+    mockJwtAuthentication($coHost);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => false])
+        ->assertOk()
+        ->assertJsonPath('event.is_private', false);
+
+    expect($event->fresh()->is_private)->toBeFalse();
+});
+
+it('requires is_private when changing event visibility', function () {
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $event = Event::withoutEvents(fn () => Event::factory()->for($host)->create());
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", [])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('is_private');
+});
+
+it('returns 403 when another user tries to change event visibility', function () {
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $otherUser = User::factory()->create(['email' => 'other@wildatheart.org']);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create(['is_private' => false]));
+
+    mockJwtAuthentication($otherUser);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => true])
+        ->assertForbidden();
+
+    expect($event->fresh()->is_private)->toBeFalse();
+});
+
+it('returns 401 when changing event visibility without authentication', function () {
+    $event = Event::withoutEvents(fn () => Event::factory()->create());
+
+    $this->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => true])
+        ->assertUnauthorized();
+});
+
 it('allows an owner to update a published event draft fields', function () {
     Mail::fake();
 

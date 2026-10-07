@@ -119,6 +119,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('events/{event}/publish', [HostEventController::class, 'approve'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('events.approve');
+        Route::patch('events/{event}/visibility', [HostEventController::class, 'updateVisibility'])
+            ->where('event', '[0-9a-fA-F-]{36}')
+            ->name('events.visibility.update');
         Route::post('events/{event}/ownership-transfers', [EventOwnershipTransferController::class, 'store'])
             ->where('event', '[0-9a-fA-F-]{36}')
             ->name('events.ownershipTransfers.store');
