@@ -1263,3 +1263,65 @@ it('announces a wizard draft when it is published', function () {
     Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
     Mail::assertQueued(NewEventCreatedMailable::class, fn ($mail) => $mail->hasTo($host->email));
 });
+
+it('rejects a fire draft name longer than the fire name limit', function () {
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH + 1),
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('name');
+});
+
+it('saves a fire draft name at the fire name limit', function () {
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH),
+        ])
+        ->assertOk();
+});
+
+it('rejects creating a fire with a name longer than the fire name limit', function () {
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events",
+            publishEventPayload([
+                'frequency' => 'weekly',
+                'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH + 1),
+            ]),
+        )
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('name');
+});
+
+it('keeps the longer name limit for non-fire drafts named after their location', function () {
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_RETREAT]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH + 1),
+        ])
+        ->assertOk();
+});

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\EventType;
 use App\Data\FireEventData;
 use Illuminate\Support\Facades\Validator;
 
@@ -84,4 +85,16 @@ it('accepts is_private boolean', function () {
     ], FireEventData::rules());
 
     expect($validator->passes())->toBeTrue();
+});
+
+it('fails validation when name is longer than the fire name limit', function () {
+    $validator = Validator::make([
+        'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH + 1),
+        'country' => 'USA',
+        'latitude' => '40.7128',
+        'longitude' => '-74.0060',
+        'frequency' => 'Weekly',
+    ], FireEventData::rules());
+
+    expect($validator->errors()->has('name'))->toBeTrue();
 });

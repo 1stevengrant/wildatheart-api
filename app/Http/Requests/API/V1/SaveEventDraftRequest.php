@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
+use App\Models\EventType;
 use App\Support\EventTypeDateSelector;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -33,7 +34,7 @@ class SaveEventDraftRequest extends FormRequest
             'location.address' => ['nullable', 'string'],
             'location.latitude' => ['nullable', 'numeric'],
             'location.longitude' => ['nullable', 'numeric'],
-            'name' => ['nullable', 'string', 'max:255'],
+            'name' => ['nullable', 'string', 'max:' . ($this->route('eventType')?->maxEventNameLength() ?? EventType::MAX_EVENT_NAME_LENGTH)],
             'latitude' => ['nullable', 'numeric'],
             'longitude' => ['nullable', 'numeric'],
             'start_date' => ['nullable', 'date'],
