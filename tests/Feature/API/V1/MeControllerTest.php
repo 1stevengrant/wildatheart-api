@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use App\Services\Auth0\JwtAccessTokenVerifier;
@@ -74,6 +75,39 @@ it('handles users with null optional fields', function () {
             'profile_step' => null,
         ]);
 });
+
+it('reports whether the user is a host', function (Closure $makeUser, bool $isHost) {
+    $user = $makeUser();
+
+    mockJwtAuthentication($user);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->getJson('/api/v1/me')
+        ->assertOk()
+        ->assertJsonPath('is_host', $isHost);
+})->with([
+    'a signed-in user with no events' => [
+        fn () => User::factory()->create(['agreed_to_host_agreement_date' => null]),
+        false,
+    ],
+    'a user who agreed to the host agreement' => [
+        fn () => User::factory()->create(['agreed_to_host_agreement_date' => now()]),
+        true,
+    ],
+    'a user who owns an event' => [function () {
+        $owner = User::factory()->create(['agreed_to_host_agreement_date' => null]);
+        Event::withoutEvents(fn () => Event::factory()->fires()->for($owner)->create());
+
+        return $owner;
+    }, true],
+    'a co-host of an event' => [function () {
+        $coHost = User::factory()->create(['agreed_to_host_agreement_date' => null]);
+        $event = Event::withoutEvents(fn () => Event::factory()->fires()->create());
+        $event->managers()->attach($coHost->id);
+
+        return $coHost;
+    }, true],
+]);
 
 it('returns 401 without a bearer token', function () {
     $this->getJson('/api/v1/me')

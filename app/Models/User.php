@@ -270,6 +270,16 @@ class User extends Authenticatable
         return $this->agreed_to_host_agreement_date !== null;
     }
 
+    /**
+     * A host has agreed to the host agreement or owns or co-hosts at least one event (drafts included).
+     */
+    public function isHost(): bool
+    {
+        return $this->hasAgreedToHostAgreement()
+            || $this->events()->exists()
+            || $this->managedEvents()->exists();
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->super;
