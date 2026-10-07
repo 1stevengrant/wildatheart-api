@@ -93,7 +93,7 @@ class SubsplashMediaItemResponseBuilder
             }
 
             $mediaItemEntries = EntryQueryBuilder::mediaItems()
-                ->inSeries($seriesEntry->id)
+                ->inSeries($seriesId)
                 ->published()
                 ->pastPublishDate()
                 ->recentFirst()
