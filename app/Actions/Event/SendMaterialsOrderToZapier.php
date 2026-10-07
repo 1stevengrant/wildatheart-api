@@ -33,6 +33,10 @@ class SendMaterialsOrderToZapier
 
         $mailingAddress = $user->primaryAddress;
 
+        if (! $mailingAddress) {
+            return;
+        }
+
         $dataTransferObject = new GoogleSheetDataTransferObject(
             webhookUrl: $eventType->zapier_webhook_url,
             eventId: $event->id,
@@ -51,5 +55,10 @@ class SendMaterialsOrderToZapier
         );
 
         PostToZapier::dispatch($dataTransferObject);
+
+        // Fires get the same single kit the legacy gift page sends, so mark it requested there.
+        if (! $eventType->requiresMaterialOrderQuantity()) {
+            UpdateEvent::run(data: ['gift_requested' => true], event: $event);
+        }
     }
 }

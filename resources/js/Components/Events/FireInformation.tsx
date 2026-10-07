@@ -21,6 +21,7 @@ import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { EventTypeCaptivatingFires } from "@/helpers/eventNames";
 import { LOCATION_TBC } from "@/helpers/locationTbc";
+import { MAX_FIRE_NAME_LENGTH } from "@/helpers/maxFireNameLength";
 import { scrollToError } from "@/helpers/scrollToError";
 import { useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
@@ -99,6 +100,7 @@ export const FireInformation = ({ user }: any) => {
                                 id="name"
                                 name="name"
                                 value={data.name}
+                                maxLength={MAX_FIRE_NAME_LENGTH}
                                 autoComplete="off"
                                 isFocused={true}
                                 onChange={(e) => {

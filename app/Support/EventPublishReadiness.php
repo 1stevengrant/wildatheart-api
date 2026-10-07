@@ -37,7 +37,7 @@ class EventPublishReadiness
             'frequency' => EventTypeDateSelector::requiresFrequency($groupType)
                 ? ['required', Rule::in(EventTypeDateSelector::allowedFrequencies($groupType))]
                 : ['nullable'],
-            'number_of_items_in_material_order' => $eventType?->hasMaterialsOrder()
+            'number_of_items_in_material_order' => $eventType?->requiresMaterialOrderQuantity()
                 ? ['required']
                 : ['nullable'],
         ];

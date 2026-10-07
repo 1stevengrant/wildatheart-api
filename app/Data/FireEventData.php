@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Models\EventType;
 use Spatie\LaravelData\Data;
 use App\Rules\DoesntContainEmojis;
 use App\Rules\ShouldNotEndWithFire;
@@ -39,7 +40,7 @@ class FireEventData extends Data
                 'required',
                 'string',
                 'min:2',
-                'max:255',
+                'max:' . EventType::MAX_FIRE_NAME_LENGTH,
                 new ShouldNotEndWithFire,
                 new DoesntContainEmojis,
             ],

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
+use App\Models\EventType;
 use App\Support\EventTypeDateSelector;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Concerns\HasLocationRules;
@@ -26,13 +27,13 @@ class CreateEventRequest extends FormRequest
             'longitude' => ['required', 'numeric'],
             'start_date' => ['required', 'date'],
             'is_private' => ['nullable', 'boolean'],
-            'name' => ['nullable', 'string', 'max:255'],
+            'name' => ['nullable', 'string', 'max:' . ($eventType?->maxEventNameLength() ?? EventType::MAX_EVENT_NAME_LENGTH)],
         ];
 
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
         $frequencyValues = EventTypeDateSelector::allowedFrequencies($eventType?->group_type);
 
-        $rules['number_of_items_in_material_order'] = $eventType?->hasMaterialsOrder()
+        $rules['number_of_items_in_material_order'] = $eventType?->requiresMaterialOrderQuantity()
             ? ['required', 'string', 'in:' . implode(',', $validValues)]
             : ['nullable', 'string', 'in:' . implode(',', $validValues)];
 

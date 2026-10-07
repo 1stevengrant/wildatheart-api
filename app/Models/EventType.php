@@ -46,6 +46,10 @@ class EventType extends BaseModel
 
     public const string TYPE_FIRE = 'fire';
 
+    public const int MAX_FIRE_NAME_LENGTH = 50;
+
+    public const int MAX_EVENT_NAME_LENGTH = 255;
+
     protected static function boot(): void
     {
         parent::boot();
@@ -118,6 +122,36 @@ class EventType extends BaseModel
     public function hasMaterialsOrder(): bool
     {
         return $this->allow_materials_order;
+    }
+
+    /**
+     * The longest name a host may give an event of this type. Fire names are shown as headings
+     * ("Nic's Fire"), so they're kept short; other types are named after their location.
+     */
+    public function maxEventNameLength(): int
+    {
+        return $this->group_type === self::TYPE_FIRE ? self::MAX_FIRE_NAME_LENGTH : self::MAX_EVENT_NAME_LENGTH;
+    }
+
+    /**
+     * Whether the host app asks hosts how many items to ship. Fires always ship a single kit,
+     * as the legacy gift flow does, so they skip the count.
+     */
+    public function requiresMaterialOrderQuantity(): bool
+    {
+        return $this->hasMaterialsOrder() && $this->group_type !== self::TYPE_FIRE;
+    }
+
+    /**
+     * The quantity to send with the host app's materials order: the host's choice, or one kit for fires.
+     */
+    public function materialOrderQuantity(?string $requestedQuantity): ?string
+    {
+        if ($this->hasMaterialsOrder() && ! $this->requiresMaterialOrderQuantity()) {
+            return '1';
+        }
+
+        return $requestedQuantity;
     }
 
     protected function wegiveTag(): Attribute

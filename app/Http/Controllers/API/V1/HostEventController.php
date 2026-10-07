@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\Event;
 use App\Data\EventData;
 use App\Models\EventType;
-use App\Jobs\PostToZapier;
 use App\Support\EventDateHelper;
 use Illuminate\Http\JsonResponse;
 use App\Actions\Event\DeleteEvent;
@@ -15,13 +14,14 @@ use App\Actions\Event\SaveEventDraft;
 use App\Support\EventTypeDateSelector;
 use App\Actions\Event\PublishEventDraft;
 use App\Http\Requests\API\V1\CreateEventRequest;
+use App\Actions\Event\SendMaterialsOrderToZapier;
 use App\Http\Requests\API\V1\PublishEventRequest;
 use App\Actions\Event\SendPendingCoHostInvitations;
 use App\Http\Requests\API\V1\SaveEventDraftRequest;
 use App\Http\Requests\API\V1\ApproveHostEventRequest;
 use App\Http\Requests\API\V1\DestroyHostEventRequest;
 use App\Http\Requests\API\V1\UnpublishHostEventRequest;
-use App\DataTransferObjects\GoogleSheetDataTransferObject;
+use App\Http\Requests\API\V1\UpdateHostEventVisibilityRequest;
 
 class HostEventController extends Controller
 {
@@ -83,31 +83,12 @@ class HostEventController extends Controller
             'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
         ]);
 
-        $mailingAddress = auth()->user()->primaryAddress();
-
-        if (
-            $eventType->hasZapier() &&
-            $eventType->hasMaterialsOrder() &&
-            $request->number_of_items_in_material_order != '0' &&
-            $mailingAddress
-        ) {
-            PostToZapier::dispatch(new GoogleSheetDataTransferObject(
-                webhookUrl: $eventType->zapier_webhook_url,
-                eventId: $event->id,
-                eventType: $eventType->name,
-                email: auth()->user()->email,
-                quantity: $request->number_of_items_in_material_order,
-                first_name: auth()->user()->given_name,
-                last_name: auth()->user()->family_name,
-                address_1: $mailingAddress->street_address,
-                address_2: $mailingAddress->address2,
-                city: $mailingAddress->city,
-                state: $mailingAddress->state,
-                zip: $mailingAddress->zip,
-                country: $mailingAddress->country,
-                date: now()->toDateTimeString(),
-            ));
-        }
+        SendMaterialsOrderToZapier::run(
+            event: $event,
+            eventType: $eventType,
+            user: auth()->user(),
+            quantity: $eventType->materialOrderQuantity($request->number_of_items_in_material_order),
+        );
 
         return response()->json([
             'success' => true,
@@ -159,6 +140,17 @@ class HostEventController extends Controller
         ApproveEvent::run($event);
         // Invites added while it was a draft wait for publishing, same as the wizard's publish.
         SendPendingCoHostInvitations::run($event->fresh(['pendingManagerInvitations']), auth()->user());
+
+        return response()->json([
+            'success' => true,
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
+        ]);
+    }
+
+    public function updateVisibility(UpdateHostEventVisibilityRequest $request, Event $event): JsonResponse
+    {
+        $event->is_private = $request->boolean('is_private');
+        $event->save();
 
         return response()->json([
             'success' => true,

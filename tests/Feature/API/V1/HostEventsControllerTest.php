@@ -501,6 +501,144 @@ it('dispatches zapier when materials order applies on publish', function () {
         ->assertOk();
 
     Bus::assertDispatched(PostToZapier::class);
+    expect($draft->fresh()->gift_requested)->toBeFalse();
+});
+
+it('publishes a fire without an expected attendees count and orders one kit', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    Address::factory()->create([
+        'user_id' => $host->id,
+        'is_primary' => true,
+    ]);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'zapier_webhook_url' => 'https://hooks.zapier.com/test',
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+
+    $draft = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload(['frequency' => 'weekly']);
+    unset($payload['number_of_items_in_material_order']);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$draft->id}/publish",
+            $payload,
+        )
+        ->assertOk();
+
+    Bus::assertDispatched(
+        PostToZapier::class,
+        fn (PostToZapier $job) => $job->dataTransferObject->quantity === '1',
+    );
+    expect($draft->fresh()->gift_requested)->toBeTrue();
+});
+
+it('creates a fire without an expected attendees count and orders one kit', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    Address::factory()->create([
+        'user_id' => $host->id,
+        'is_primary' => true,
+    ]);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'zapier_webhook_url' => 'https://hooks.zapier.com/test',
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload(['frequency' => 'weekly']);
+    unset($payload['number_of_items_in_material_order']);
+
+    $eventId = $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events", $payload)
+        ->assertOk()
+        ->json('event.id');
+
+    Bus::assertDispatched(
+        PostToZapier::class,
+        fn (PostToZapier $job) => $job->dataTransferObject->quantity === '1',
+    );
+    expect(Event::find($eventId)->gift_requested)->toBeTrue();
+});
+
+it('publishes a fire without ordering a kit when the host has no mailing address', function () {
+    Mail::fake();
+    Bus::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'zapier_webhook_url' => 'https://hooks.zapier.com/test',
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+
+    $draft = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $payload = publishEventPayload(['frequency' => 'weekly']);
+    unset($payload['number_of_items_in_material_order']);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events/{$draft->id}/publish",
+            $payload,
+        )
+        ->assertOk();
+
+    Bus::assertNotDispatched(PostToZapier::class);
+    expect($draft->fresh()->gift_requested)->toBeFalse();
+});
+
+it('publishes a fire draft with materials orders from the dashboard without an expected attendees count', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create([
+        'allow_materials_order' => true,
+        'group_type' => EventType::TYPE_FIRE,
+    ]);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+            'latitude' => 38.9939,
+            'longitude' => -105.0567,
+            'start_date' => now()->addDays(14),
+            'frequency' => 'weekly',
+            'number_of_items_in_material_order' => null,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk();
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
 });
 
 it('sends co-host invitation emails when publishing', function () {
@@ -781,6 +919,91 @@ it('returns 401 when unpublishing an event without authentication', function () 
         ->assertUnauthorized();
 });
 
+it('allows an owner to make a public event private', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'is_private' => false,
+        ]));
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => true])
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('event.id', $event->id)
+        ->assertJsonPath('event.is_private', true);
+
+    expect($event->fresh()->is_private)->toBeTrue();
+});
+
+it('allows a co-host to make a private event public', function () {
+    Bus::fake();
+    Mail::fake();
+
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $coHost = User::factory()->create(['email' => 'cohost@wildatheart.org']);
+    $eventType = EventType::factory()->create();
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'is_private' => true,
+        ]));
+    $event->managers()->attach($coHost->id);
+
+    mockJwtAuthentication($coHost);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => false])
+        ->assertOk()
+        ->assertJsonPath('event.is_private', false);
+
+    expect($event->fresh()->is_private)->toBeFalse();
+});
+
+it('requires is_private when changing event visibility', function () {
+    $host = User::factory()->create(['email' => 'host@wildatheart.org']);
+    $event = Event::withoutEvents(fn () => Event::factory()->for($host)->create());
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", [])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('is_private');
+});
+
+it('returns 403 when another user tries to change event visibility', function () {
+    $owner = User::factory()->create(['email' => 'owner@wildatheart.org']);
+    $otherUser = User::factory()->create(['email' => 'other@wildatheart.org']);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($owner)
+        ->create(['is_private' => false]));
+
+    mockJwtAuthentication($otherUser);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => true])
+        ->assertForbidden();
+
+    expect($event->fresh()->is_private)->toBeFalse();
+});
+
+it('returns 401 when changing event visibility without authentication', function () {
+    $event = Event::withoutEvents(fn () => Event::factory()->create());
+
+    $this->patchJson("/api/v1/host/events/{$event->id}/visibility", ['is_private' => true])
+        ->assertUnauthorized();
+});
+
 it('allows an owner to update a published event draft fields', function () {
     Mail::fake();
 
@@ -1039,4 +1262,66 @@ it('announces a wizard draft when it is published', function () {
     expect(Event::findOrFail($eventId)->is_draft)->toBeFalse();
     Bus::assertDispatchedTimes(SendNewEventSlackAlert::class, 1);
     Mail::assertQueued(NewEventCreatedMailable::class, fn ($mail) => $mail->hasTo($host->email));
+});
+
+it('rejects a fire draft name longer than the fire name limit', function () {
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH + 1),
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('name');
+});
+
+it('saves a fire draft name at the fire name limit', function () {
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH),
+        ])
+        ->assertOk();
+});
+
+it('rejects creating a fire with a name longer than the fire name limit', function () {
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_FIRE]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson(
+            "/api/v1/host/event-types/{$eventType->slug}/events",
+            publishEventPayload([
+                'frequency' => 'weekly',
+                'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH + 1),
+            ]),
+        )
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('name');
+});
+
+it('keeps the longer name limit for non-fire drafts named after their location', function () {
+    Mail::fake();
+
+    $host = User::factory()->create();
+    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_RETREAT]);
+
+    mockJwtAuthentication($host);
+
+    $this->withHeaders(jwtAuthenticationHeaders())
+        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
+            'name' => str_repeat('a', EventType::MAX_FIRE_NAME_LENGTH + 1),
+        ])
+        ->assertOk();
 });

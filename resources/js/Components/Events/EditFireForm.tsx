@@ -12,6 +12,7 @@ import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import { FrequencyOptions } from "@/Components/FrequencyOptions";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
+import { MAX_FIRE_NAME_LENGTH } from "@/helpers/maxFireNameLength";
 import { useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 
@@ -70,6 +71,7 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
                     id="name"
                     name="name"
                     value={data.name}
+                    maxLength={MAX_FIRE_NAME_LENGTH}
                     autoComplete="off"
                     isFocused={true}
                     onChange={(e) => setData("name", e.target.value)}
