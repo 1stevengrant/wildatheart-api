@@ -19,6 +19,7 @@
         "inertiajs/inertia-laravel": "^2.0",
         "jacksleight/statamic-bard-texstyle": "^4.0",
         "ksubileau/color-thief-php": "^2.0",
+        "laravel/ai": "^1.2",
         "laravel/framework": "^13.0",
         "laravel/horizon": "^5.29",
         "laravel/nightwatch": "^1.7",

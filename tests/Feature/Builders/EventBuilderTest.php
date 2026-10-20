@@ -372,3 +372,25 @@ it('gets events created after', function () {
     expect($events->contains('id', $event->id))->toBeTrue()
         ->and($events->count())->toBe(1);
 });
+
+it('matches events in a state by name or code', function () {
+    $texasByCode = Event::factory()->fires()->create(['state' => 'TX']);
+    $texasByName = Event::factory()->fires()->create(['state' => 'Texas']);
+    Event::factory()->fires()->create(['state' => 'Montana', 'state_code' => 'MT']);
+
+    $ids = Event::query()->inState('texas')->pluck('id');
+
+    expect($ids)->toHaveCount(2)
+        ->toContain($texasByCode->id, $texasByName->id);
+});
+
+it('matches every stored form of a country without substring matches', function () {
+    $byCode = Event::factory()->fires()->create(['country' => 'us']);
+    $byName = Event::factory()->fires()->create(['country' => 'United States']);
+    Event::factory()->fires()->create(['country' => 'Australia']);
+
+    $ids = Event::query()->matchingCountry('US')->pluck('id');
+
+    expect($ids)->toHaveCount(2)
+        ->toContain($byCode->id, $byName->id);
+});

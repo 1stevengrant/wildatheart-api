@@ -39,6 +39,10 @@ return [
 
     'widgets' => [
         //        'getting_started',
+        [
+            'type' => 'ask_platform',
+            'width' => 100,
+        ],
     ],
 
     /*

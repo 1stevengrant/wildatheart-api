@@ -12,6 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
+use Laravel\Ai\Concerns\HasConversations;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -61,7 +62,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, HasRunwayResource, LogsActivity, Notifiable, SoftDeletes;
+    use HasConversations, HasFactory, HasRoles, HasRunwayResource, LogsActivity, Notifiable, SoftDeletes;
 
     public const int PROFILE_COMPLETE = 2;
 

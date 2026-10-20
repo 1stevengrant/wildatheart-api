@@ -5,8 +5,10 @@
         "build": "vite build"
     },
     "dependencies": {
+        "@statamic/cms": "file:./vendor/statamic/cms/resources/dist-package",
         "axios": "^1.11.0",
-        "@statamic/cms": "file:./vendor/statamic/cms/resources/dist-package"
+        "dompurify": "^3.4.17",
+        "marked": "^15.0.12"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^6.0.0",

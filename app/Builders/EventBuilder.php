@@ -3,8 +3,10 @@
 namespace App\Builders;
 
 use App\Models\User;
+use App\Models\State;
 use App\Models\EventType;
 use App\Enums\EventSexEnum;
+use App\Support\CountryNames;
 use Illuminate\Database\Eloquent\Builder;
 
 class EventBuilder extends Builder
@@ -346,6 +348,32 @@ class EventBuilder extends Builder
     {
         return $this->where(function ($query) use ($city) {
             $query->where('city', 'like', "%$city%");
+        });
+    }
+
+    /**
+     * Exact match on every stored form of a country (ISO code or English name).
+     */
+    public function matchingCountry(string $country): EventBuilder
+    {
+        return $this->whereIn('country', CountryNames::variants($country));
+    }
+
+    /**
+     * Exact match on a state's name or code, in either the state or state_code column.
+     */
+    public function inState(string $state): EventBuilder
+    {
+        $match = State::query()
+            ->where('name', $state)
+            ->orWhere('code', $state)
+            ->first();
+
+        $values = $match ? [$match->name, $match->code] : [$state];
+
+        return $this->where(function ($query) use ($values) {
+            $query->whereIn('state', $values)
+                ->orWhereIn('state_code', $values);
         });
     }
 
