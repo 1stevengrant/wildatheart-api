@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\EmailLog;
 use App\Enums\ReportName;
 use Illuminate\Support\Facades\Schedule;
 use App\Jobs\Admin\GenerateAndEmailReport;
@@ -13,6 +14,7 @@ Schedule::command(SendFiresCheckinsEmailCommand::class)->daily();
 Schedule::command(GetLatestSubsplashMedia::class)->everyFifteenMinutes()->environments('production');
 Schedule::command(UpdateDonorIdCommand::class)->daily();
 Schedule::command(CleanupExpiredContactInvitations::class)->hourly()->withoutOverlapping();
+Schedule::command('model:prune', ['--model' => [EmailLog::class]])->daily();
 // Generate the monthly BAKR report and send to Morgan.
 Schedule::job(new GenerateAndEmailReport(
     [

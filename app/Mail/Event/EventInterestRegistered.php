@@ -8,6 +8,7 @@ use App\Models\EventType;
 use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use App\Traits\LogsFailedDelivery;
 use App\Traits\FormatsEventHostNames;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
@@ -18,7 +19,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EventInterestRegistered extends Mailable implements ShouldQueue
 {
-    use FormatsEventHostNames, InteractsWithEmailTemplates, Queueable, SerializesModels;
+    use FormatsEventHostNames, InteractsWithEmailTemplates, LogsFailedDelivery, Queueable, SerializesModels;
 
     public EmailTemplate $emailTemplate;
 

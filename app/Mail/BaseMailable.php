@@ -3,9 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
+use App\Traits\LogsFailedDelivery;
 
 abstract class BaseMailable extends Mailable
 {
+    use LogsFailedDelivery;
+
     public $queue = 'mail';
 
     public int $tries = 3;
