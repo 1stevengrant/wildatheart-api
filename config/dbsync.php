@@ -61,12 +61,12 @@ return [
     /*
      * Sets if the exported SQL file will be imported into the current database connection
      */
-    'importSqlFile' => env('REMOTE_IMPORT_FILE', 'true'),
+    'importSqlFile' => env('REMOTE_IMPORT_FILE', true),
 
     /*
      * Sets if the generated SQL file will be deleted after it has been imported.
      */
-    'removeFileAfterImport' => env('REMOTE_REMOVE_FILE_AFTER_IMPORT', 'true'),
+    'removeFileAfterImport' => env('REMOTE_REMOVE_FILE_AFTER_IMPORT', true),
 
     /*
      * Sets the default name for SQL file if --filename is not provided

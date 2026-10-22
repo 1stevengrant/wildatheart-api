@@ -108,6 +108,13 @@ return [
             'transport' => 'database',
         ],
 
+        'allowlist' => [
+            'transport' => 'allowlist',
+            'domains' => explode(',', env('MAIL_ALLOWED_DOMAINS', 'wildatheart.org')),
+            'deliver' => env('MAIL_ALLOWLIST_DELIVER', 'failover'),
+            'capture' => env('MAIL_ALLOWLIST_CAPTURE', 'database'),
+        ],
+
     ],
 
     /*

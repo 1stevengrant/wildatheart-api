@@ -17,7 +17,7 @@ class DbSyncCommand extends Command
         if (! in_array(config('app.env'), config('dbsync.environments'))) {
             $this->error('DB sync will only run on local and staging environments');
 
-            return self::SUCCESS;
+            return self::FAILURE;
         }
 
         // Get configuration values
@@ -26,7 +26,7 @@ class DbSyncCommand extends Command
         if (empty($config['host']) || empty($config['username']) || empty($config['database'])) {
             $this->error('DB credentials not set, have you published the config and set ENV variables?');
 
-            return self::SUCCESS;
+            return self::FAILURE;
         }
 
         if ($inTest === false) {
@@ -44,6 +44,14 @@ class DbSyncCommand extends Command
             }
 
             $progressBar->advance();
+
+            if ($config['importSqlFile'] === false) {
+                $progressBar->finish();
+                $this->newLine();
+                $this->info("Dump written to {$config['fileName']}, import skipped");
+
+                return self::SUCCESS;
+            }
 
             $importResult = $this->importDatabase($config);
             if ($importResult !== self::SUCCESS) {
@@ -223,17 +231,8 @@ class DbSyncCommand extends Command
      */
     private function executeExport(array $config, string $ignoreString, string $outputFile, string $additionalOptions = ''): int
     {
-        $commonOptions = "--single-transaction --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password={$config['password']} {$config['database']} $ignoreString $additionalOptions";
-
         $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_');
-        $outputFileArg = escapeshellarg($outputFile);
-        $errorFileArg = escapeshellarg($errorFile);
-
-        if ($config['useSsh'] === true) {
-            $command = "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} mysqldump $commonOptions > $outputFileArg 2>$errorFileArg";
-        } else {
-            $command = "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
-        }
+        $command = $this->buildExportCommand($config, $ignoreString, $outputFile, $errorFile, $additionalOptions);
 
         $result = 0;
         exec($command, $output, $result);
@@ -248,15 +247,31 @@ class DbSyncCommand extends Command
     }
 
     /**
+     * Build the mysqldump command, quoting the remote command again when it runs over SSH
+     */
+    private function buildExportCommand(array $config, string $ignoreString, string $outputFile, string $errorFile, string $additionalOptions = ''): string
+    {
+        $password = escapeshellarg($config['password']);
+        $commonOptions = "--single-transaction --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password=$password {$config['database']} $ignoreString $additionalOptions";
+
+        $outputFileArg = escapeshellarg($outputFile);
+        $errorFileArg = escapeshellarg($errorFile);
+
+        if ($config['useSsh'] === true) {
+            $remoteCommand = escapeshellarg("mysqldump $commonOptions");
+
+            return "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} $remoteCommand > $outputFileArg 2>$errorFileArg";
+        }
+
+        return "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
+    }
+
+    /**
      * Import the database
      */
     private function importDatabase(array $config): int
     {
-        $fileNameArg = escapeshellarg($config['fileName']);
-
-        $command = $config['localPassword']
-            ? "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -p{$config['localPassword']} -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1"
-            : "{$config['localMysqlPath']} -u{$config['localUsername']} -h{$config['localHostname']} -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1";
+        $command = $this->buildImportCommand($config);
 
         $result = 0;
         exec($command, $output, $result);
@@ -268,5 +283,17 @@ class DbSyncCommand extends Command
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Build the mysql import command
+     */
+    private function buildImportCommand(array $config): string
+    {
+        $mysqlPathArg = escapeshellarg($config['localMysqlPath']);
+        $fileNameArg = escapeshellarg($config['fileName']);
+        $passwordOption = $config['localPassword'] ? ' -p' . escapeshellarg($config['localPassword']) : '';
+
+        return "$mysqlPathArg -u{$config['localUsername']} -h{$config['localHostname']}$passwordOption -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1";
     }
 }

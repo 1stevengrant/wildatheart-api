@@ -10,6 +10,9 @@
 /vendor
 .env
 .env.backup
+.env.backup-*
+.env.cloud
+.env.cloudsync
 .env.testing
 .env.production
 .phpunit.result.cache
