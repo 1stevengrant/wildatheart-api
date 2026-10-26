@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use Statamic\Statamic;
 use Illuminate\Http\Request;
+use Statamic\Facades\Search;
 use Statamic\Events\EntrySaved;
 use Statamic\Facades\Collection;
 use Statamic\Events\AssetUploaded;
 use App\Builders\EntryQueryBuilder;
+use App\Support\Search\DatabaseIndex;
 use App\Exceptions\CpExceptionHandler;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
@@ -30,6 +32,8 @@ class CustomStatamicProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Search::extend('database', fn ($app, array $config, string $name, ?string $locale) => new DatabaseIndex($name, $config, $locale));
+
         LaravelEvent::listen(function (AssetUploaded $event): void {
             if ($event->asset->container->handle === 's3') {
                 GenerateColorPalette::dispatch(asset: $event->asset);

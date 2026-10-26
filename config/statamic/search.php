@@ -21,19 +21,37 @@ return [
     |
     | Here you can define all the available search indexes.
     |
+    | Laravel Cloud sets STATAMIC_SEARCH_DRIVER=database, because a local index
+    | lives on each container's ephemeral disk and is rebuilt from scratch
+    | whenever a worker finds it missing.
+    |
+    | Runway resources are listed explicitly so the activity log, email log
+    | and attendee tables stay out of the indexes.
+    |
     */
 
     'indexes' => [
 
         'default' => [
-            'driver' => 'local',
-            'searchables' => 'content',
+            'driver' => env('STATAMIC_SEARCH_DRIVER', 'local'),
+            'searchables' => ['collection:*', 'taxonomy:*', 'assets:*'],
             'fields' => ['title'],
         ],
 
-        'events' => [
-            'driver' => 'local',
-            'searchables' => 'runway:event',
+        'cp' => [
+            'driver' => env('STATAMIC_SEARCH_DRIVER', 'local'),
+            'searchables' => [
+                'collection:*',
+                'taxonomy:*',
+                'assets:*',
+                'users',
+                'runway:event',
+                'runway:event_type',
+                'runway:user',
+                'runway:page',
+                'runway:email_template',
+                'runway:redirect',
+            ],
             'fields' => ['title'],
         ],
 
