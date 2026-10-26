@@ -25,7 +25,6 @@ export const ConnectWithHost = ({
     const managersArray = Object.values(managers);
     const hasHosts = managersArray.length > 0;
     const connectLabel = hasHosts ? "hosts" : hostName;
-    const pronoun = hasHosts ? "they'll" : "he'll";
 
     return (
         <div className={className + " rounded-lg border border-n400 p-8"}>
@@ -35,8 +34,8 @@ export const ConnectWithHost = ({
                         You have connected with {connectLabel}
                     </PrimaryButton>
                     <p className="mt-2 text-sm">
-                        Thank you! We've forwarded your details to the{" "}
-                        {hasHosts ? "hosts" : hostName} and {pronoun} be in
+                        Thank you! We've forwarded your details to{" "}
+                        {hasHosts ? "the hosts" : hostName} and they'll be in
                         touch directly.
                     </p>
                 </>
