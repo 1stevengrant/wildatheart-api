@@ -28,7 +28,7 @@ it('configures the activity log as a read only runway resource', function () {
         ->and($resource->titleField())->toBe('description')
         ->and($resource->readOnly())->toBeTrue()
         ->and($resource->duplicatable())->toBeFalse()
-        ->and($resource->orderBy())->toBe('created_at')
+        ->and($resource->orderBy())->toBe('id')
         ->and($resource->orderByDirection())->toBe('DESC')
         ->and($resource->blueprint()->fields()->has('properties_json'))->toBeTrue();
 });
