@@ -7,7 +7,6 @@ import {
     UserIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
-import OutsideClickHandler from "react-outside-click-handler";
 import { useRecoilState } from "recoil";
 
 import { EventDeleteModal } from "@/Components/Events/EventAdminCard/Modals/EventDeleteModal";
@@ -20,10 +19,12 @@ import {
     eventAdminActionButtonTextClass,
 } from "@/helpers/eventAdminActionButtonClass";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
+import { useOnClickOutside } from "@/Hooks/useOnClickOutside";
 import { reactNotificationState } from "@/store";
 
 export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
     const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
+    const actionDrawerRef = useOnClickOutside(() => setActionDrawerOpen(false));
     const [reactNotifications, setReactNotifications] = useRecoilState(
         reactNotificationState
     );
@@ -72,9 +73,7 @@ export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
                 <span>Options</span>
             </button>
 
-            <OutsideClickHandler
-                onOutsideClick={() => setActionDrawerOpen(false)}
-            >
+            <div ref={actionDrawerRef}>
                 <div
                     className={`border-black border bg-n900 p-4 rounded-lg z-20 w-[200px] shadow-lg absolute right-0 space-y-1.5 ${event.type_group !== "fire" ? `-bottom-[191px]` : `-bottom-[145px]`} ${actionDrawerOpen ? `block` : `hidden`}`}
                 >
@@ -138,7 +137,7 @@ export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
                         />
                     )}
                 </div>
-            </OutsideClickHandler>
+            </div>
         </div>
     );
 };
