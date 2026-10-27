@@ -24,12 +24,6 @@ return [
         'user' => env('ZENDESK_USERNAME'),
     ],
 
-    'salesforce' => [
-        'callback_uri' => env('SALESFORCE_CALLBACK_URI'),
-        'key' => env('SALESFORCE_KEY'),
-        'secret' => env('SALESFORCE_SECRET'),
-    ],
-
     'slack' => [
         'webhook_url' => env('SLACK_WEBHOOK_URL'),
         'events_webhook_url' => env('SLACK_EVENTS_WEBHOOK_URL'),
