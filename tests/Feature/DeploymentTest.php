@@ -24,20 +24,28 @@ test('deployment artisan commands execute without failure', function () {
         'migrate --force',
     ]);
 
-    foreach ($commands as $command) {
-        try {
-            $commandParts = explode(' ', $command);
-            $baseCommand = $commandParts[0];
-            $arguments = array_slice($commandParts, 1);
+    try {
+        foreach ($commands as $command) {
+            try {
+                $commandParts = explode(' ', $command);
+                $baseCommand = $commandParts[0];
+                $arguments = array_slice($commandParts, 1);
 
-            $exitCode = Artisan::call($baseCommand, $arguments ? [$arguments[0] => true] : []);
+                $exitCode = Artisan::call($baseCommand, $arguments ? [$arguments[0] => true] : []);
 
-            expect($exitCode)->toBe(0)
-                ->and(Artisan::output())->not->toContain('error')
-                ->and(Artisan::output())->not->toContain('Exception');
+                expect($exitCode)->toBe(0)
+                    ->and(Artisan::output())->not->toContain('error')
+                    ->and(Artisan::output())->not->toContain('Exception');
 
-        } catch (Exception $e) {
-            $this->fail("Command '$command' failed: " . $e->getMessage());
+            } catch (Exception $e) {
+                $this->fail("Command '$command' failed: " . $e->getMessage());
+            }
+        }
+    } finally {
+        // The caches are built from the testing environment, so leaving them
+        // behind points the local app at the test database.
+        foreach (['config:clear', 'route:clear', 'event:clear', 'view:clear'] as $command) {
+            Artisan::call($command);
         }
     }
 
