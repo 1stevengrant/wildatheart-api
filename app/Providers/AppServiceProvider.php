@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Models\Event;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
+use App\Support\ReadOnlyMode;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +15,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Services\Subsplash\SubsplashApiClient;
 use App\Mail\Transport\CloudflareFailoverTransport;
+use Illuminate\Database\Events\ConnectionEstablished;
 use App\Services\Subsplash\SubsplashMediaItemImporter;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -44,6 +47,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        foreach (DB::getConnections() as $connection) {
+            ReadOnlyMode::guard($connection);
+        }
+
+        $this->app['events']->listen(
+            ConnectionEstablished::class,
+            fn (ConnectionEstablished $established) => ReadOnlyMode::guard($established->connection),
+        );
+
         Model::preventLazyLoading(! app()->isProduction());
 
         Event::saving(function (Event $event): void {

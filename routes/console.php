@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schedule;
 use App\Jobs\Admin\GenerateAndEmailReport;
 use App\Jobs\Transistor\RefreshDailyReadingsJob;
 use App\Console\Commands\GetLatestSubsplashMedia;
+use App\Console\Commands\ArchiveActivityLogCommand;
 use App\Console\Commands\WeGive\UpdateDonorIdCommand;
 use App\Console\Commands\CleanupExpiredContactInvitations;
 use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
@@ -15,6 +16,7 @@ Schedule::command(GetLatestSubsplashMedia::class)->everyFifteenMinutes()->enviro
 Schedule::command(UpdateDonorIdCommand::class)->daily();
 Schedule::command(CleanupExpiredContactInvitations::class)->hourly()->withoutOverlapping();
 Schedule::command('model:prune', ['--model' => [EmailLog::class]])->daily();
+Schedule::command(ArchiveActivityLogCommand::class)->monthly()->onOneServer()->withoutOverlapping()->runInBackground();
 // Generate the monthly BAKR report and send to Morgan.
 Schedule::job(new GenerateAndEmailReport(
     [

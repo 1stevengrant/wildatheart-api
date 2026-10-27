@@ -6,6 +6,7 @@ use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\Auth0ApiMiddleware;
 use App\Http\Middleware\Auth0JwtMiddleware;
+use App\Http\Middleware\EnforceReadOnlyMode;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Session\Middleware\StartSession;
@@ -42,6 +43,8 @@ return Application::configure(basePath: dirname(__DIR__))
             return route('login');
         });
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
+
+        $middleware->append(EnforceReadOnlyMode::class);
 
         $middleware->preventRequestForgery(except: [
             'webhooks/sendgrid',
