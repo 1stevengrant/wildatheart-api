@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Throwable;
 use Illuminate\Http\Request;
+use App\Support\ReadOnlyMode;
 use App\Actions\User\ProvisionAuth0User;
 use App\DataTransferObjects\Auth0Profile;
 use App\Exceptions\UserProvisioningException;
@@ -55,7 +56,11 @@ class Auth0JwtMiddleware
             return $this->unauthenticated($exception->errorCode);
         }
 
-        auth()->login($user);
+        // login() fires the Login event, whose listeners write the user's last
+        // login, so a frozen database only gets the user set for this request.
+        ReadOnlyMode::isEnabled()
+            ? auth()->setUser($user)
+            : auth()->login($user);
 
         return $next($request);
     }

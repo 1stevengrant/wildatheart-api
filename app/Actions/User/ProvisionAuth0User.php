@@ -3,12 +3,10 @@
 namespace App\Actions\User;
 
 use App\Models\User;
-use App\Support\ReadOnlyMode;
 use App\Services\Auth0\UserinfoClient;
 use App\DataTransferObjects\Auth0Profile;
 use Lorisleiva\Actions\Concerns\AsAction;
 use App\Exceptions\UserProvisioningException;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\UniqueConstraintViolationException;
 
 class ProvisionAuth0User
@@ -79,8 +77,6 @@ class ProvisionAuth0User
             throw UserProvisioningException::accountDisabled();
         }
 
-        $this->ensureWritable();
-
         $existing->update([
             'provider_id' => $sub,
             'provider' => $existing->provider ?? 'auth0',
@@ -94,8 +90,6 @@ class ProvisionAuth0User
      */
     private function createUser(string $sub, Auth0Profile $profile): User
     {
-        $this->ensureWritable();
-
         try {
             return User::create([
                 'provider_id' => $sub,
@@ -139,20 +133,9 @@ class ProvisionAuth0User
     private function ensureActive(User $user): User
     {
         if ($user->trashed()) {
-            $this->ensureWritable();
-
             $user->restore();
         }
 
         return $user;
-    }
-
-    /**
-     * Linking, creating or restoring a user writes to the database, which is
-     * frozen in read only mode. Users that are already linked keep working.
-     */
-    private function ensureWritable(): void
-    {
-        abort_if(ReadOnlyMode::isEnabled(), Response::HTTP_SERVICE_UNAVAILABLE, ReadOnlyMode::MESSAGE, ['Retry-After' => ReadOnlyMode::RETRY_AFTER_SECONDS]);
     }
 }
