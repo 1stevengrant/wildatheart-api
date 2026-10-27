@@ -16,7 +16,7 @@ Schedule::command(GetLatestSubsplashMedia::class)->everyFifteenMinutes()->enviro
 Schedule::command(UpdateDonorIdCommand::class)->daily();
 Schedule::command(CleanupExpiredContactInvitations::class)->hourly()->withoutOverlapping();
 Schedule::command('model:prune', ['--model' => [EmailLog::class]])->daily();
-Schedule::command(ArchiveActivityLogCommand::class)->monthly()->onOneServer()->withoutOverlapping();
+Schedule::command(ArchiveActivityLogCommand::class)->monthly()->onOneServer()->withoutOverlapping()->runInBackground();
 // Generate the monthly BAKR report and send to Morgan.
 Schedule::job(new GenerateAndEmailReport(
     [
