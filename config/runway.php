@@ -28,7 +28,7 @@ return [
             'title_field' => 'description',
             'read_only' => true,
             'duplicatable' => false,
-            'order_by' => 'created_at',
+            'order_by' => 'id',
             'order_by_direction' => 'DESC',
         ],
 
