@@ -39,24 +39,11 @@ function longestJobTimeout(): array
     return $longest;
 }
 
-test('the horizon supervisor timeout covers the longest running job', function () {
+test('retry_after is longer than the longest running job', function () {
     $longest = longestJobTimeout();
 
-    foreach (config('horizon.defaults') as $name => $supervisor) {
-        expect($supervisor['timeout'])->toBeGreaterThanOrEqual(
-            $longest['timeout'],
-            "Horizon supervisor [{$name}] would SIGKILL [{$longest['job']}] mid-run on deploy."
-        );
-    }
-});
-
-test('retry_after is longer than the horizon supervisor timeout', function () {
-    $retryAfter = config('queue.connections.redis.retry_after');
-
-    foreach (config('horizon.defaults') as $name => $supervisor) {
-        expect($retryAfter)->toBeGreaterThan(
-            $supervisor['timeout'],
-            "Redis would re-queue a job still running under supervisor [{$name}]."
-        );
-    }
+    expect(config('queue.connections.redis.retry_after'))->toBeGreaterThan(
+        $longest['timeout'],
+        "Redis would re-queue [{$longest['job']}] while it is still running."
+    );
 });

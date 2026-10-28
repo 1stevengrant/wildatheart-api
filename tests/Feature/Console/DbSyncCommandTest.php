@@ -37,6 +37,7 @@ function dbSyncConfig(array $overrides = []): array
         'localPort' => '3306',
         'localDatabase' => 'main',
         'localMysqlPath' => fakeMysqlBinary(),
+        'localMysqldumpPath' => fakeMysqlBinary(),
         'fileName' => tempnam(sys_get_temp_dir(), 'dbsync_test_'),
     ], $overrides);
 }
@@ -82,10 +83,22 @@ it('passes a password with shell metacharacters to a local mysqldump as a single
     $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
     $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
 
-    $command = invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile);
-    exec(str_replace('mysqldump ', "printf '%s|' ", $command));
+    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
 
     expect(file_get_contents($outputFile))->toContain('|--password=pa$s w;rd\'"`x|');
+});
+
+it('runs a local mysqldump binary whose path contains a space', function () {
+    $config = dbSyncConfig();
+    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+
+    expect($config['localMysqldumpPath'])->toContain(' ');
+
+    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile), result_code: $result);
+
+    expect($result)->toBe(0);
+    expect(file_get_contents($outputFile))->toStartWith('--single-transaction|');
 });
 
 it('keeps the password quoted for the remote shell when exporting over ssh', function () {

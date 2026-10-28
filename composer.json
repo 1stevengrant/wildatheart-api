@@ -20,7 +20,6 @@
         "jacksleight/statamic-bard-texstyle": "^4.0",
         "ksubileau/color-thief-php": "^2.0",
         "laravel/framework": "^13.0",
-        "laravel/horizon": "^5.29",
         "laravel/nightwatch": "^1.7",
         "laravel/pail": "^1.1",
         "laravel/pennant": "^1.19",
@@ -100,7 +99,7 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "@dev:types",
-            "npx concurrently -k -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" -n vite,horizon,logs,scheduler --kill-others \"npm run dev\" \"php artisan horizon\" \"php artisan pail --timeout=0\" \"php artisan schedule:work\""
+            "npx concurrently -k -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" -n vite,queue,logs,scheduler --kill-others \"npm run dev\" \"php artisan queue:listen --queue=default,mail --tries=1 --timeout=150\" \"php artisan pail --timeout=0\" \"php artisan schedule:work\""
         ],
         "pre-update-cmd": [
             "Statamic\\Console\\Composer\\Scripts::preUpdateCmd"

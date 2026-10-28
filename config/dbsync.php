@@ -90,4 +90,8 @@ return [
     ],
 
     'localMysqlPath' => env('LOCAL_MYSQL_PATH', '/usr/local/bin/mysql'),
+    /*
+     * Local mysqldump binary, used when exporting without SSH
+     */
+    'localMysqldumpPath' => env('LOCAL_MYSQLDUMP_PATH', 'mysqldump'),
 ];

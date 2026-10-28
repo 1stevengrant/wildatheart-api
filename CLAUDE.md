@@ -15,7 +15,7 @@ Wild at Heart Local is a Laravel-based platform for connecting Wild at Heart com
 -   **Database**: MySQL 8.0
 -   **CMS**: Statamic v5
 -   **Testing**: PEST Framework
--   **Queue**: Redis/Horizon
+-   **Queue**: Laravel Cloud managed queues (Redis locally)
 
 ## Development Commands
 
@@ -69,7 +69,7 @@ php artisan test             # Run PEST tests directly
 
 ```bash
 php artisan migrate:fresh --seed    # Reset database with seeds
-php artisan db:production-sync      # Sync production database (requires SSH config)
+php artisan db:production-sync      # Sync production database from Laravel Cloud
 ```
 
 ### Cache Management
@@ -94,7 +94,7 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 -   **Data Transfer Objects**: API and form data structures in `app/DataTransferObjects/`
 -   **Builders**: Query builders for complex data retrieval in `app/Builders/`
 -   **Observers**: Model lifecycle hooks in `app/Observers/`
--   **Jobs**: Asynchronous processing with Redis/Horizon
+-   **Jobs**: Asynchronous processing on Laravel Cloud managed queues
 
 ### Frontend Architecture
 
@@ -146,8 +146,8 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 ## Branch Strategy
 
 -   **Feature branches** → `staging` → `prod`
--   **Preview deployments**: Add `[wah]` to PR title for temporary staging URL
--   **Auto-deployment**: GitHub Actions with Laravel Forge
+-   **Preview deployments**: Laravel Cloud preview environments per branch
+-   **Auto-deployment**: Laravel Cloud push-to-deploy
 
 ## Key Dependencies to Know
 
@@ -156,7 +156,6 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 -   **spatie/laravel-activitylog**: Model change tracking
 -   **spatie/laravel-permission**: Role-based access control
 -   **statamic/cms**: Headless CMS
--   **laravel/horizon**: Queue monitoring
 -   **auth0/auth0-php**: Authentication provider
 
 ### Frontend
@@ -170,9 +169,9 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 ## Environment-Specific Notes
 
 -   **Local Development**: Uses Laravel Valet/Herd recommended
--   **Database Sync**: Production sync available via SSH tunnel
+-   **Database Sync**: `db:production-sync` pulls from the Laravel Cloud MySQL public endpoint
 -   **Asset Storage**: S3 integration required for media
--   **Queue Workers**: Horizon for job processing
+-   **Queue Workers**: Laravel Cloud managed queues
 -   **Error Tracking**: Sentry integration in production
 
 ===

@@ -104,6 +104,7 @@ class DbSyncCommand extends Command
             'localPort' => config("database.connections.{$defaultConnection}.port"),
             'localDatabase' => config("database.connections.{$defaultConnection}.database"),
             'localMysqlPath' => config('dbsync.localMysqlPath'),
+            'localMysqldumpPath' => config('dbsync.localMysqldumpPath'),
 
             // File settings
             'importSqlFile' => config('dbsync.importSqlFile'),
@@ -263,7 +264,9 @@ class DbSyncCommand extends Command
             return "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} $remoteCommand > $outputFileArg 2>$errorFileArg";
         }
 
-        return "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
+        $mysqldumpPathArg = escapeshellarg($config['localMysqldumpPath']);
+
+        return "$mysqldumpPathArg $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
     }
 
     /**

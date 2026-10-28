@@ -14,7 +14,7 @@ class LogSentEmailListener
 {
     /**
      * Logging must never throw: the email has already been delivered, so a
-     * failure here would fail the queued mail job and Horizon would retry it,
+     * failure here would fail the queued mail job and the queue would retry it,
      * sending a duplicate.
      */
     public function handle(MessageSent $event): void

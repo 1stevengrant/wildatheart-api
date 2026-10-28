@@ -28,7 +28,7 @@ class BackfillUserNamesCommand extends Command
             BackfillUserNameJob::dispatch($user);
         });
 
-        $this->comment('All jobs dispatched. Monitor progress in Horizon.');
+        $this->comment('All jobs dispatched. Monitor progress in the Cloud Queues dashboard.');
 
         return self::SUCCESS;
     }
