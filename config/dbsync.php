@@ -80,9 +80,13 @@ return [
 
     'mysqldumpSkipTzUtc' => env('REMOTE_MYSQLDUMP_SKIP_TZ_UTC', false),
     /*
-     * mysqldump --ssl-mode for direct (non SSH) exports, e.g. REQUIRED for Laravel Cloud
+     * mysqldump --ssl-mode for direct (non SSH) exports, e.g. VERIFY_IDENTITY for Laravel Cloud
      */
     'sslMode' => env('REMOTE_DATABASE_SSL_MODE'),
+    /*
+     * CA bundle used to verify the server certificate with VERIFY_CA or VERIFY_IDENTITY, /etc/ssl/cert.pem on macOS
+     */
+    'sslCa' => env('REMOTE_DATABASE_SSL_CA'),
 
     /*
     * List all the environment variables that need to be set for the command to work

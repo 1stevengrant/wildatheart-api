@@ -2,10 +2,14 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Process\Pool;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Process;
 
 class DbSyncCommand extends Command
 {
+    private const PARALLEL_TABLE_EXPORTS = 8;
+
     protected $signature = 'db:production-sync {--T|test} {--F|filename=}';
 
     protected $description = 'Sync production database with local';
@@ -30,9 +34,6 @@ class DbSyncCommand extends Command
         }
 
         if ($inTest === false) {
-            $totalSteps = 2;
-            $progressBar = $this->output->createProgressBar($totalSteps);
-
             // Prepare tables for export
             $ignoreTables = explode(',', $config['ignore']);
             $excludeDataTables = ! empty($config['excludeData']) ? explode(',', $config['excludeData']) : [];
@@ -43,23 +44,18 @@ class DbSyncCommand extends Command
                 return $exportResult;
             }
 
-            $progressBar->advance();
-
             if ($config['importSqlFile'] === false) {
-                $progressBar->finish();
-                $this->newLine();
                 $this->info("Dump written to {$config['fileName']}, import skipped");
 
                 return self::SUCCESS;
             }
 
+            $this->info("Importing into {$config['localDatabase']}...");
+
             $importResult = $this->importDatabase($config);
             if ($importResult !== self::SUCCESS) {
                 return $importResult;
             }
-
-            $progressBar->advance();
-            $progressBar->finish();
 
             // Clean up
             if ($config['removeFileAfterImport'] === true) {
@@ -97,6 +93,7 @@ class DbSyncCommand extends Command
             'excludeData' => config('dbsync.excludeData'),
             'mysqldumpSkipTzUtc' => config('dbsync.mysqldumpSkipTzUtc') ? '--skip-tz-utc' : '',
             'sslMode' => config('dbsync.sslMode') ? '--ssl-mode=' . escapeshellarg(config('dbsync.sslMode')) : '',
+            'sslCa' => config('dbsync.sslCa') ? '--ssl-ca=' . escapeshellarg(config('dbsync.sslCa')) : '',
 
             // Local settings
             'localUsername' => config("database.connections.{$defaultConnection}.username"),
@@ -129,20 +126,135 @@ class DbSyncCommand extends Command
     }
 
     /**
-     * Export the database
+     * Export the structure of every table in one dump, then each table's data on its own connection.
+     *
+     * Laravel Cloud's ProxySQL returns a malformed packet partway through a single dump of every
+     * table, while the same tables dump cleanly one connection at a time.
      */
     private function exportDatabase(array $config, array $ignoreTables, array $excludeDataTables): int
     {
-        // Create ignore tables string
+        $structureFile = $this->buildSiblingFileName($config['fileName'], 'structure_');
+        $dataFile = $this->buildSiblingFileName($config['fileName'], 'data_');
+
+        $this->info('Exporting table structure...');
+
         $ignoreString = $this->buildIgnoreString($config['database'], $ignoreTables);
 
-        // Handle structure-only tables
-        if (! empty($excludeDataTables)) {
-            return $this->exportWithStructureOnlyTables($config, $ignoreString, $excludeDataTables);
+        if ($this->executeExport($config, $ignoreString, $structureFile, '--no-data') !== self::SUCCESS) {
+            $this->error('Structure export failed');
+            @unlink($structureFile);
+
+            return self::FAILURE;
         }
 
-        // Simple export without structure-only tables
-        return $this->executeExport($config, $ignoreString, $config['fileName']);
+        $excludeDataTables = array_map('trim', $excludeDataTables);
+
+        $tables = array_values(array_filter(
+            $this->tablesInStructureDump($structureFile),
+            fn (string $table) => ! in_array($table, $excludeDataTables, true)
+        ));
+
+        file_put_contents($dataFile, '');
+
+        foreach (array_chunk($tables, self::PARALLEL_TABLE_EXPORTS) as $batch) {
+            $this->line('Exporting data for ' . implode(', ', $batch) . '...');
+
+            if ($this->exportTableData($config, $batch, $dataFile) !== self::SUCCESS) {
+                @unlink($structureFile);
+                @unlink($dataFile);
+
+                return self::FAILURE;
+            }
+        }
+
+        file_put_contents($config['fileName'], '');
+        $this->appendFile($structureFile, $config['fileName']);
+        $this->appendFile($dataFile, $config['fileName']);
+
+        unlink($structureFile);
+        unlink($dataFile);
+
+        $this->info('Exported ' . count($tables) . ' tables');
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Dump a batch of tables' data in parallel, then append each to the data file in batch order
+     *
+     * @param  array<int, string>  $tables
+     */
+    private function exportTableData(array $config, array $tables, string $dataFile): int
+    {
+        $files = array_map(fn (string $table) => [
+            'output' => tempnam(sys_get_temp_dir(), 'dbsync_table_'),
+            'error' => tempnam(sys_get_temp_dir(), 'dbsync_error_'),
+        ], $tables);
+
+        $results = Process::concurrently(function (Pool $pool) use ($config, $tables, $files) {
+            foreach ($tables as $index => $table) {
+                $pool->as((string) $index)->forever()->command($this->buildExportCommand(
+                    $config,
+                    '',
+                    $files[$index]['output'],
+                    $files[$index]['error'],
+                    '--no-create-info ' . escapeshellarg($table)
+                ));
+            }
+        });
+
+        $failed = false;
+
+        foreach ($tables as $index => $table) {
+            if ($results[(string) $index]->failed()) {
+                $failed = true;
+                $this->error("Data export failed for `{$table}`: " . file_get_contents($files[$index]['error']));
+            }
+
+            if (! $failed) {
+                $this->appendFile($files[$index]['output'], $dataFile);
+            }
+
+            @unlink($files[$index]['output']);
+            @unlink($files[$index]['error']);
+        }
+
+        return $failed ? self::FAILURE : self::SUCCESS;
+    }
+
+    /**
+     * Read the table names from a mysqldump structure dump, in dump order
+     *
+     * @return array<int, string>
+     */
+    private function tablesInStructureDump(string $structureFile): array
+    {
+        $tables = [];
+        $handle = fopen($structureFile, 'r');
+
+        while (($line = fgets($handle)) !== false) {
+            if (preg_match('/^CREATE TABLE `((?:[^`]|``)+)`/', $line, $matches) === 1) {
+                $tables[] = str_replace('``', '`', $matches[1]);
+            }
+        }
+
+        fclose($handle);
+
+        return $tables;
+    }
+
+    /**
+     * Append one file to another without loading either into memory
+     */
+    private function appendFile(string $source, string $destination): void
+    {
+        $from = fopen($source, 'r');
+        $to = fopen($destination, 'a');
+
+        stream_copy_to_stream($from, $to);
+
+        fclose($from);
+        fclose($to);
     }
 
     /**
@@ -158,57 +270,6 @@ class DbSyncCommand extends Command
         }
 
         return $ignoreString;
-    }
-
-    /**
-     * Export database with structure-only tables
-     */
-    private function exportWithStructureOnlyTables(array $config, string $ignoreString, array $excludeDataTables): int
-    {
-        // First export only structure for tables where we want structure but no data
-        $structureOnlyFile = $this->buildSiblingFileName($config['fileName'], 'structure_');
-        $structureOnlyTables = implode(' ', array_map('trim', $excludeDataTables));
-
-        $structureResult = $this->executeExport(
-            $config,
-            '', // No ignore string for structure export
-            $structureOnlyFile,
-            '--no-data ' . $structureOnlyTables
-        );
-
-        if ($structureResult !== self::SUCCESS) {
-            $this->error('Structure export failed');
-
-            return self::FAILURE;
-        }
-
-        // Then export data for all tables excluding both the ignored tables and structure-only tables
-        $dataIgnoreString = $ignoreString;
-        foreach ($excludeDataTables as $name) {
-            if (mb_trim($name) !== '') {
-                $dataIgnoreString .= " --ignore-table={$config['database']}.$name";
-            }
-        }
-
-        $dataOnlyFile = $this->buildSiblingFileName($config['fileName'], 'data_');
-        $dataResult = $this->executeExport($config, $dataIgnoreString, $dataOnlyFile);
-
-        if ($dataResult !== self::SUCCESS) {
-            $this->error('Data export failed');
-
-            return self::FAILURE;
-        }
-
-        // Combine the files
-        $structureOnlyFileArg = escapeshellarg($structureOnlyFile);
-        $dataOnlyFileArg = escapeshellarg($dataOnlyFile);
-        $finalFileArg = escapeshellarg($config['fileName']);
-
-        exec("cat $structureOnlyFileArg $dataOnlyFileArg > $finalFileArg");
-        unlink($structureOnlyFile);
-        unlink($dataOnlyFile);
-
-        return self::SUCCESS;
     }
 
     /**
@@ -254,7 +315,7 @@ class DbSyncCommand extends Command
     private function buildExportCommand(array $config, string $ignoreString, string $outputFile, string $errorFile, string $additionalOptions = ''): string
     {
         $password = escapeshellarg($config['password']);
-        $commonOptions = "--single-transaction --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password=$password {$config['database']} $ignoreString $additionalOptions";
+        $commonOptions = "--single-transaction --max-allowed-packet=1G --no-tablespaces --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password=$password {$config['database']} $ignoreString $additionalOptions";
 
         $outputFileArg = escapeshellarg($outputFile);
         $errorFileArg = escapeshellarg($errorFile);
@@ -267,7 +328,7 @@ class DbSyncCommand extends Command
 
         $mysqldumpPathArg = escapeshellarg($config['localMysqldumpPath']);
 
-        return "$mysqldumpPathArg $commonOptions {$config['mysqldumpSkipTzUtc']} {$config['sslMode']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
+        return "$mysqldumpPathArg $commonOptions {$config['mysqldumpSkipTzUtc']} {$config['sslMode']} {$config['sslCa']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
     }
 
     /**
@@ -298,6 +359,6 @@ class DbSyncCommand extends Command
         $fileNameArg = escapeshellarg($config['fileName']);
         $passwordOption = $config['localPassword'] ? ' -p' . escapeshellarg($config['localPassword']) : '';
 
-        return "$mysqlPathArg -u{$config['localUsername']} -h{$config['localHostname']}$passwordOption -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1";
+        return "$mysqlPathArg --max-allowed-packet=1G -u{$config['localUsername']} -h{$config['localHostname']}$passwordOption -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1";
     }
 }

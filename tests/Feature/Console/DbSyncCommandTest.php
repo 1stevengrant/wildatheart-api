@@ -32,6 +32,7 @@ function dbSyncConfig(array $overrides = []): array
         'password' => 'pa$s w;rd\'"`x',
         'mysqldumpSkipTzUtc' => '',
         'sslMode' => '',
+        'sslCa' => '',
         'localUsername' => 'cloud',
         'localPassword' => 'pa$s w;rd\'"`x',
         'localHostname' => 'cloud.example.com',
@@ -76,7 +77,7 @@ it('omits the password option when the target has no password', function () {
 
     exec(invokeDbSyncMethod('buildImportCommand', $config), $output);
 
-    expect(implode('', $output))->toBe('-ucloud|-hcloud.example.com|-P3306|main|');
+    expect(implode('', $output))->toBe('--max-allowed-packet=1G|-ucloud|-hcloud.example.com|-P3306|main|');
 });
 
 it('passes a password with shell metacharacters to a local mysqldump as a single argument', function () {
@@ -112,6 +113,29 @@ it('requires the configured ssl mode on a local mysqldump', function () {
     expect(file_get_contents($outputFile))->toContain('|--ssl-mode=REQUIRED|');
 });
 
+it('verifies the server certificate against the configured ca bundle', function () {
+    $config = dbSyncConfig([
+        'sslMode' => '--ssl-mode=' . escapeshellarg('VERIFY_IDENTITY'),
+        'sslCa' => '--ssl-ca=' . escapeshellarg('/etc/ssl/cert.pem'),
+    ]);
+    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+
+    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
+
+    expect(file_get_contents($outputFile))->toContain('|--ssl-mode=VERIFY_IDENTITY|--ssl-ca=/etc/ssl/cert.pem|');
+});
+
+it('raises the mysqldump packet limit so large rows export', function () {
+    $config = dbSyncConfig();
+    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+
+    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
+
+    expect(file_get_contents($outputFile))->toContain('|--max-allowed-packet=1G|');
+});
+
 it('keeps the password quoted for the remote shell when exporting over ssh', function () {
     $config = dbSyncConfig(['useSsh' => true]);
     $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
@@ -137,7 +161,7 @@ it('runs a mysql binary whose path contains a space', function () {
     exec(invokeDbSyncMethod('buildImportCommand', $config), $output, $result);
 
     expect($result)->toBe(0);
-    expect(implode('', $output))->toStartWith('-ucloud|');
+    expect(implode('', $output))->toStartWith('--max-allowed-packet=1G|-ucloud|');
 });
 
 it('reports failure when the import fails', function () {
@@ -163,4 +187,74 @@ it('defaults the import and cleanup flags to booleans', function () {
 
     expect($config['importSqlFile'])->toBeTrue();
     expect($config['removeFileAfterImport'])->toBeTrue();
+});
+
+it('exports the structure once and each table\'s data on its own connection', function () {
+    $structure = 'CREATE TABLE `entries` (id int);\nCREATE TABLE `activity_log` (id int);\nCREATE TABLE `users` (id int);';
+
+    $config = dbSyncConfig([
+        'localMysqldumpPath' => fakeMysqlBinary(<<<SH
+            case "\$*" in
+                *--no-data*) printf '{$structure}\n' ;;
+                *) while [ "\$1" != "--no-create-info" ]; do shift; done; printf -- '-- data for %s\n' "\$2" ;;
+            esac
+            SH),
+    ]);
+
+    $result = invokeDbSyncMethod('exportDatabase', $config, [], ['activity_log']);
+
+    expect($result)->toBe(DbSyncCommand::SUCCESS);
+    expect(file_get_contents($config['fileName']))->toBe(
+        "CREATE TABLE `entries` (id int);\nCREATE TABLE `activity_log` (id int);\nCREATE TABLE `users` (id int);\n"
+        . "-- data for entries\n-- data for users\n"
+    );
+});
+
+it('stops and cleans up when a table\'s data export fails', function () {
+    $config = dbSyncConfig([
+        'localMysqldumpPath' => fakeMysqlBinary(<<<'SH'
+            case "$*" in
+                *--no-data*) printf 'CREATE TABLE `entries` (id int);\n' ;;
+                *) exit 2 ;;
+            esac
+            SH),
+    ]);
+
+    $result = invokeDbSyncMethod('exportDatabase', $config, [], []);
+
+    expect($result)->toBe(DbSyncCommand::FAILURE);
+    expect(file_exists(dirname($config['fileName']) . '/structure_' . basename($config['fileName'])))->toBeFalse();
+    expect(file_exists(dirname($config['fileName']) . '/data_' . basename($config['fileName'])))->toBeFalse();
+});
+
+it('reads table names from a structure dump, including escaped backticks', function () {
+    $file = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+    file_put_contents($file, "-- comment\nCREATE TABLE `entries` (\n  `id` int\n);\nCREATE TABLE `odd``name` (id int);\n/*!50001 CREATE VIEW `v` AS SELECT 1 */;\n");
+
+    expect(invokeDbSyncMethod('tablesInStructureDump', $file))->toBe(['entries', 'odd`name']);
+});
+
+it('keeps table order across parallel batches even when tables finish out of order', function () {
+    $tables = array_map(fn (int $number) => "table_{$number}", range(1, 10));
+    $structure = implode('\n', array_map(fn (string $table) => "CREATE TABLE `{$table}` (id int);", $tables));
+
+    $config = dbSyncConfig([
+        'localMysqldumpPath' => fakeMysqlBinary(<<<SH
+            case "\$*" in
+                *--no-data*) printf '{$structure}\n' ;;
+                *) while [ "\$1" != "--no-create-info" ]; do shift; done
+                   [ "\$2" = "table_1" ] && sleep 0.3
+                   printf -- '-- data for %s\n' "\$2" ;;
+            esac
+            SH),
+    ]);
+
+    expect(invokeDbSyncMethod('exportDatabase', $config, [], []))->toBe(DbSyncCommand::SUCCESS);
+
+    $dataLines = array_values(array_filter(
+        explode("\n", file_get_contents($config['fileName'])),
+        fn (string $line) => str_starts_with($line, '-- data for ')
+    ));
+
+    expect($dataLines)->toBe(array_map(fn (string $table) => "-- data for {$table}", $tables));
 });
