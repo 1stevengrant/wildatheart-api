@@ -56,3 +56,4 @@ resources/users/roles.yaml
 !resources/blueprints/vendor/
 !resources/blueprints/vendor/runway/
 !resources/blueprints/vendor/runway/*.yaml
+/.cloud
