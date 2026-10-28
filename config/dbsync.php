@@ -79,6 +79,10 @@ return [
     'targetConnection' => env('LOCAL_TARGET_CONNECTION', 'mysql'),
 
     'mysqldumpSkipTzUtc' => env('REMOTE_MYSQLDUMP_SKIP_TZ_UTC', false),
+    /*
+     * mysqldump --ssl-mode for direct (non SSH) exports, e.g. REQUIRED for Laravel Cloud
+     */
+    'sslMode' => env('REMOTE_DATABASE_SSL_MODE'),
 
     /*
     * List all the environment variables that need to be set for the command to work

@@ -31,6 +31,7 @@ function dbSyncConfig(array $overrides = []): array
         'port' => '3306',
         'password' => 'pa$s w;rd\'"`x',
         'mysqldumpSkipTzUtc' => '',
+        'sslMode' => '',
         'localUsername' => 'cloud',
         'localPassword' => 'pa$s w;rd\'"`x',
         'localHostname' => 'cloud.example.com',
@@ -99,6 +100,16 @@ it('runs a local mysqldump binary whose path contains a space', function () {
 
     expect($result)->toBe(0);
     expect(file_get_contents($outputFile))->toStartWith('--single-transaction|');
+});
+
+it('requires the configured ssl mode on a local mysqldump', function () {
+    $config = dbSyncConfig(['sslMode' => '--ssl-mode=' . escapeshellarg('REQUIRED')]);
+    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+
+    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
+
+    expect(file_get_contents($outputFile))->toContain('|--ssl-mode=REQUIRED|');
 });
 
 it('keeps the password quoted for the remote shell when exporting over ssh', function () {

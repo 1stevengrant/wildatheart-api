@@ -96,6 +96,7 @@ class DbSyncCommand extends Command
             'ignore' => config('dbsync.ignore'),
             'excludeData' => config('dbsync.excludeData'),
             'mysqldumpSkipTzUtc' => config('dbsync.mysqldumpSkipTzUtc') ? '--skip-tz-utc' : '',
+            'sslMode' => config('dbsync.sslMode') ? '--ssl-mode=' . escapeshellarg(config('dbsync.sslMode')) : '',
 
             // Local settings
             'localUsername' => config("database.connections.{$defaultConnection}.username"),
@@ -266,7 +267,7 @@ class DbSyncCommand extends Command
 
         $mysqldumpPathArg = escapeshellarg($config['localMysqldumpPath']);
 
-        return "$mysqldumpPathArg $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
+        return "$mysqldumpPathArg $commonOptions {$config['mysqldumpSkipTzUtc']} {$config['sslMode']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
     }
 
     /**
