@@ -13,6 +13,7 @@
         "ext-libxml": "*",
         "artesaos/seotools": "^1.3",
         "auth0/auth0-php": "^8.17",
+        "aws/aws-sdk-php": "^3.398",
         "fakerphp/faker": "^1.23",
         "ghijk/laravel-email-preview": "^1.0",
         "ghijk/statamic-typescript-generator": "*@dev",
