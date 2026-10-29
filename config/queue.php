@@ -67,6 +67,8 @@ return [
             'driver' => 'redis',
             'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
             'queue' => env('REDIS_QUEUE', 'default'),
+            // Local Redis only (Laravel Cloud managed queues extend visibility on their own). Must stay above
+            // the longest $timeout on any job, otherwise Redis re-queues running jobs and they hit MaxAttemptsExceededException.
             'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 180),
             'block_for' => null,
             'after_commit' => false,

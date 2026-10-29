@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
-    'frontend_url' => env('FRONTEND_URL', env('APP_URL', 'http://localhost')),
+    'name' => env('APP_NAME', 'Wild at Heart Local'),
+
+    'frontend_url' => env('FRONTEND_URL', 'https://wildatheart.org/'),
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,

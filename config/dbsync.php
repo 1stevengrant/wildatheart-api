@@ -19,7 +19,7 @@ return [
     /*
      * Set the database name
      */
-    'database' => env('REMOTE_DATABASE_NAME', ''),
+    'database' => env('REMOTE_DATABASE_NAME', 'production'),
 
     /*
      * Set the database password
@@ -35,7 +35,7 @@ return [
      * provide a comma separated list of tables to exclude data from, but include structure
      * these tables will have their structure exported but not their data
      */
-    'excludeData' => env('REMOTE_DATABASE_EXCLUDE_DATA', ''),
+    'excludeData' => env('REMOTE_DATABASE_EXCLUDE_DATA', 'activity_log,failed_jobs,issues'),
 
     /*
      * Set true to dump TIMESTAMP values in the server's time zone instead of UTC
@@ -45,12 +45,12 @@ return [
     /*
      * TLS mode for the production connection, VERIFY_IDENTITY for Laravel Cloud
      */
-    'sslMode' => env('REMOTE_DATABASE_SSL_MODE'),
+    'sslMode' => env('REMOTE_DATABASE_SSL_MODE', 'VERIFY_IDENTITY'),
 
     /*
      * CA bundle used to verify the server certificate with VERIFY_IDENTITY, /etc/ssl/cert.pem on macOS
      */
-    'sslCa' => env('REMOTE_DATABASE_SSL_CA'),
+    'sslCa' => env('REMOTE_DATABASE_SSL_CA', '/etc/ssl/cert.pem'),
 
     /*
      * Number of parallel threads mydumper and myloader use
