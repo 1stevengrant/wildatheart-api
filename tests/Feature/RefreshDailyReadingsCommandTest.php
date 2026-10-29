@@ -46,3 +46,17 @@ test('command dispatches job with both rebuild astro and delay options', functio
         return $job->rebuildAstro === true;
     });
 });
+
+test('command clamps the delay to the sqs maximum of 900 seconds', function () {
+    $this->freezeTime();
+
+    $this->artisan('daily-readings:refresh --delay=3600')
+        ->assertSuccessful()
+        ->expectsOutput('Delay of 3600 seconds exceeds the queue maximum, using 900 seconds instead.')
+        ->expectsOutput('Daily readings refresh job dispatched with 900 second delay.');
+
+    Queue::assertPushed(
+        RefreshDailyReadingsJob::class,
+        fn (RefreshDailyReadingsJob $job) => now()->diffInSeconds($job->delay) === 900.0
+    );
+});

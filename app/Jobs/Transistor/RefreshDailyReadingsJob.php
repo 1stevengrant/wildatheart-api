@@ -14,6 +14,9 @@ class RefreshDailyReadingsJob implements ShouldQueue
 
     public const STATUSES = ['published', 'scheduled', 'draft'];
 
+    /** SQS rejects a DelaySeconds above 900. */
+    public const ASTRO_BUILD_DELAY_SECONDS = 900;
+
     public int $timeout = 60;
 
     public int $tries = 3;
@@ -31,8 +34,7 @@ class RefreshDailyReadingsJob implements ShouldQueue
         }
 
         if ($this->rebuildAstro) {
-            // Dispatch the Cloudflare webhook after 1 hour
-            TriggerAstroBuildJob::dispatch()->delay(now()->addHour());
+            TriggerAstroBuildJob::dispatch()->delay(now()->addSeconds(self::ASTRO_BUILD_DELAY_SECONDS));
         }
     }
 }
