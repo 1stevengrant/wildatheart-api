@@ -1,6 +1,7 @@
 export const config = (key: string): string | undefined => {
     const configs: { [key: string]: string | undefined } = {
-        "services.bunny.api_url": import.meta.env.VITE_BUNNY_CDN_URL,
+        "services.bunny.api_url":
+            import.meta.env.VITE_BUNNY_CDN_URL ?? "https://fires.b-cdn.net",
         "services.mapbox.api_url":
             "https://api.mapbox.com/geocoding/v5/mapbox.places/",
         "services.mapbox.token": import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN,

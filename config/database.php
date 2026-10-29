@@ -4,12 +4,14 @@ use Illuminate\Support\Str;
 
 return [
 
+    'default' => env('DB_CONNECTION', 'mysql'),
+
     'connections' => [
         'drupal' => [
             'driver' => 'mysql',
             'host' => env('DRUPAL_DB_HOST', '127.0.0.1'),
             'port' => env('DRUPAL_DB_PORT', '3307'),
-            'database' => env('DRUPAL_DB_DATABASE', 'drupal'),
+            'database' => env('DRUPAL_DB_DATABASE', 'pantheon'),
             'username' => env('DRUPAL_DB_USERNAME', 'drupal'),
             'password' => env('DRUPAL_DB_PASSWORD', ''),
             'charset' => 'utf8mb4',
@@ -43,7 +45,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel'), '_') . '_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'Wild at Heart Local'), '_') . '_database_'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
