@@ -39,6 +39,17 @@ it('triggers an astro build when asked to', function () {
     Bus::assertDispatched(TriggerAstroBuildJob::class);
 });
 
+it('delays the astro build within the sqs maximum of 900 seconds', function () {
+    $this->freezeTime();
+
+    RefreshDailyReadingsJob::dispatchSync(rebuildAstro: true);
+
+    Bus::assertDispatched(
+        TriggerAstroBuildJob::class,
+        fn (TriggerAstroBuildJob $job) => now()->diffInSeconds($job->delay) === 900.0
+    );
+});
+
 it('refreshes a single status through the transistor service', function () {
     $service = Mockery::mock(TransistorService::class);
     $service->shouldReceive('refreshEpisodeList')
