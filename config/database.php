@@ -1,30 +1,10 @@
 <?php
 
-use Pdo\Mysql;
 use Illuminate\Support\Str;
 
 return [
 
     'connections' => [
-        'production' => [
-            'driver' => 'mysql',
-            'url' => env('PRODUCTION_DATABASE_URL'),
-            'host' => env('PRODUCTION_DB_HOST', '127.0.0.1'),
-            'port' => env('PRODUCTION_DB_PORT', '3306'),
-            'database' => env('PRODUCTION_DB_DATABASE', 'forge'),
-            'username' => env('PRODUCTION_DB_USERNAME', 'forge'),
-            'password' => env('PRODUCTION_DB_PASSWORD', ''),
-            'unix_socket' => env('PRODUCTION_DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
-        ],
         'drupal' => [
             'driver' => 'mysql',
             'host' => env('DRUPAL_DB_HOST', '127.0.0.1'),

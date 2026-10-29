@@ -19,7 +19,6 @@ test('deployment artisan commands execute without failure', function () {
         'event:cache',
         'route:clear',
         'route:cache',
-        $redisAvailable ? 'horizon:terminate' : null,
         $redisAvailable ? 'queue:restart' : null,
         'migrate --force',
     ]);

@@ -2,8 +2,6 @@
 <p align="center"><a href="https://local.wildatheart.org" target="_blank"><img src="public/favicon.svg" alt="Wild at 
 Heart Fires Logo"></a></p>
 
-[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2Fa72658a2-4156-4bbb-bdd7-69082094396d%3Fdate%3D1%26label%3D1&style=for-the-badge)](https://forge.laravel.com/servers/830827/sites/2459991)
-
 # Wild at Heart Local
 
 A Laravel-based platform for connecting like-hearted friends of Wild at Heart to events around the world via a map-based interface. Local also includes a headless CMS that powers the main Wild at Heart website.
@@ -25,6 +23,7 @@ To run this locally you will need to make sure you have a SQL db and PHP running
 You will also need to make sure you have the following tools installed:
 
 -   [Composer](https://getcomposer.org/) for dependency management (included with Herd)
+-   [mydumper](https://github.com/mydumper/mydumper) for copying the production database with `php artisan db:production-sync`. Install it with `brew install mydumper`, which also installs `myloader`. It replaces `mysqldump` because Laravel Cloud's database proxy breaks single connection dumps, and MySQL 9 clients can no longer log in to Cloud. See the [database](docs/database.md) docs.
 
 ## Installation
 
@@ -65,7 +64,7 @@ Make sure your server meets the minimum requirements before you start. [Official
 
     These commands set the database back up to a default state with a few sample events to work with.
 
-11. optionally, you might want to grab a production database backup. For that, see the [database](docs/database.md) docs.
+11. optionally, you might want to grab a copy of the production database with `php artisan db:production-sync` (needs mydumper). For that, see the [database](docs/database.md) docs.
 12. run the development server `php artisan serve` if not using something like Laravel Valet, Sail or Herd.
 
 ## Running tests

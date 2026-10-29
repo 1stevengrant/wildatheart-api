@@ -3,24 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 
 class DbSyncCommand extends Command
 {
-    protected $signature = 'db:production-sync {--T|test} {--F|filename=}';
+    protected $signature = 'db:production-sync {--T|test} {--D|directory=}';
 
-    protected $description = 'Sync production database with local';
+    protected $description = 'Sync production database with local using mydumper and myloader';
 
     public function handle(): int
     {
-        $inTest = $this->option('test');
-
         if (! in_array(config('app.env'), config('dbsync.environments'))) {
             $this->error('DB sync will only run on local and staging environments');
 
             return self::FAILURE;
         }
 
-        // Get configuration values
         $config = $this->getConfiguration();
 
         if (empty($config['host']) || empty($config['username']) || empty($config['database'])) {
@@ -29,45 +28,30 @@ class DbSyncCommand extends Command
             return self::FAILURE;
         }
 
-        if ($inTest === false) {
-            $totalSteps = 2;
-            $progressBar = $this->output->createProgressBar($totalSteps);
+        if ($this->option('test')) {
+            $this->info('DB Synced');
 
-            // Prepare tables for export
-            $ignoreTables = explode(',', $config['ignore']);
-            $excludeDataTables = ! empty($config['excludeData']) ? explode(',', $config['excludeData']) : [];
-
-            // Export and import the database
-            $exportResult = $this->exportDatabase($config, $ignoreTables, $excludeDataTables);
-            if ($exportResult !== self::SUCCESS) {
-                return $exportResult;
-            }
-
-            $progressBar->advance();
-
-            if ($config['importSqlFile'] === false) {
-                $progressBar->finish();
-                $this->newLine();
-                $this->info("Dump written to {$config['fileName']}, import skipped");
-
-                return self::SUCCESS;
-            }
-
-            $importResult = $this->importDatabase($config);
-            if ($importResult !== self::SUCCESS) {
-                return $importResult;
-            }
-
-            $progressBar->advance();
-            $progressBar->finish();
-
-            // Clean up
-            if ($config['removeFileAfterImport'] === true) {
-                unlink($config['fileName']);
-            }
+            return self::SUCCESS;
         }
 
-        $this->newLine();
+        if ($this->exportDatabase($config) !== self::SUCCESS) {
+            return self::FAILURE;
+        }
+
+        if ($config['importDump'] === false) {
+            $this->info("Dump written to {$config['directory']}, import skipped");
+
+            return self::SUCCESS;
+        }
+
+        if ($this->importDatabase($config) !== self::SUCCESS) {
+            return self::FAILURE;
+        }
+
+        if ($config['removeDumpAfterImport'] === true) {
+            File::deleteDirectory($config['directory']);
+        }
+
         $this->info('DB Synced');
 
         return self::SUCCESS;
@@ -84,18 +68,18 @@ class DbSyncCommand extends Command
 
         return [
             // Remote connection settings
-            'useSsh' => config('dbsync.useSsh'),
-            'sshUsername' => config('dbsync.sshUsername'),
-            'sshPort' => config('dbsync.sshPort'),
             'host' => config('dbsync.host'),
-            'mysqlHostName' => config('dbsync.mysqlHostName'),
-            'username' => config('dbsync.username'),
-            'database' => config('dbsync.database'),
             'port' => config('dbsync.port'),
+            'username' => config('dbsync.username'),
             'password' => config('dbsync.password'),
-            'ignore' => config('dbsync.ignore'),
-            'excludeData' => config('dbsync.excludeData'),
-            'mysqldumpSkipTzUtc' => config('dbsync.mysqldumpSkipTzUtc') ? '--skip-tz-utc' : '',
+            'database' => config('dbsync.database'),
+            'ignore' => $this->tableList(config('dbsync.ignore')),
+            'excludeData' => $this->tableList(config('dbsync.excludeData')),
+            'skipTzUtc' => (bool) config('dbsync.skipTzUtc'),
+            'sslMode' => config('dbsync.sslMode'),
+            'sslCa' => config('dbsync.sslCa'),
+            'threads' => config('dbsync.threads'),
+            'mydumperPath' => config('dbsync.mydumperPath'),
 
             // Local settings
             'localUsername' => config("database.connections.{$defaultConnection}.username"),
@@ -103,181 +87,158 @@ class DbSyncCommand extends Command
             'localHostname' => config("database.connections.{$defaultConnection}.host"),
             'localPort' => config("database.connections.{$defaultConnection}.port"),
             'localDatabase' => config("database.connections.{$defaultConnection}.database"),
-            'localMysqlPath' => config('dbsync.localMysqlPath'),
+            'myloaderPath' => config('dbsync.myloaderPath'),
 
-            // File settings
-            'importSqlFile' => config('dbsync.importSqlFile'),
-            'removeFileAfterImport' => config('dbsync.removeFileAfterImport'),
-            'fileName' => $this->resolveFileName(),
+            // Dump settings
+            'importDump' => config('dbsync.importDump'),
+            'removeDumpAfterImport' => config('dbsync.removeDumpAfterImport'),
+            'directory' => $this->resolveDirectory(),
         ];
     }
 
     /**
-     * Resolve the SQL dump filename to an absolute path.
+     * Split a comma separated list of table names
+     *
+     * @return array<int, string>
      */
-    private function resolveFileName(): string
+    private function tableList(?string $tables): array
     {
-        $fileName = $this->option('filename') ?? config('dbsync.defaultFileName');
-
-        if (! str_starts_with($fileName, '/')) {
-            $fileName = sys_get_temp_dir() . '/' . $fileName;
-        }
-
-        return $fileName;
+        return array_values(array_filter(array_map('trim', explode(',', $tables ?? ''))));
     }
 
     /**
-     * Export the database
+     * Resolve the dump directory to an absolute path.
      */
-    private function exportDatabase(array $config, array $ignoreTables, array $excludeDataTables): int
+    private function resolveDirectory(): string
     {
-        // Create ignore tables string
-        $ignoreString = $this->buildIgnoreString($config['database'], $ignoreTables);
+        $directory = $this->option('directory') ?? config('dbsync.defaultDirectory');
 
-        // Handle structure-only tables
-        if (! empty($excludeDataTables)) {
-            return $this->exportWithStructureOnlyTables($config, $ignoreString, $excludeDataTables);
+        if (! str_starts_with($directory, '/')) {
+            $directory = sys_get_temp_dir() . '/' . $directory;
         }
 
-        // Simple export without structure-only tables
-        return $this->executeExport($config, $ignoreString, $config['fileName']);
+        return $directory;
     }
 
     /**
-     * Build the ignore tables string
+     * Dump the production database in parallel with mydumper
      */
-    private function buildIgnoreString(string $database, array $tables): string
+    private function exportDatabase(array $config): int
     {
-        $ignoreString = '';
-        foreach ($tables as $name) {
-            if (mb_trim($name) !== '') {
-                $ignoreString .= " --ignore-table=$database.$name";
+        $defaultsFile = $this->writeDefaultsFile($this->exportDefaults($config));
+        $omitFile = $this->writeOmitFile($config);
+
+        $this->info("Exporting {$config['database']} with {$config['threads']} threads...");
+
+        try {
+            $result = Process::forever()->run($this->buildExportCommand($config, $defaultsFile, $omitFile));
+        } finally {
+            unlink($defaultsFile);
+
+            if ($omitFile !== null) {
+                unlink($omitFile);
             }
         }
 
-        return $ignoreString;
-    }
-
-    /**
-     * Export database with structure-only tables
-     */
-    private function exportWithStructureOnlyTables(array $config, string $ignoreString, array $excludeDataTables): int
-    {
-        // First export only structure for tables where we want structure but no data
-        $structureOnlyFile = $this->buildSiblingFileName($config['fileName'], 'structure_');
-        $structureOnlyTables = implode(' ', array_map('trim', $excludeDataTables));
-
-        $structureResult = $this->executeExport(
-            $config,
-            '', // No ignore string for structure export
-            $structureOnlyFile,
-            '--no-data ' . $structureOnlyTables
-        );
-
-        if ($structureResult !== self::SUCCESS) {
-            $this->error('Structure export failed');
+        if ($result->failed()) {
+            $this->error('Export failed: ' . mb_trim($result->errorOutput() ?: $result->output()));
 
             return self::FAILURE;
         }
-
-        // Then export data for all tables excluding both the ignored tables and structure-only tables
-        $dataIgnoreString = $ignoreString;
-        foreach ($excludeDataTables as $name) {
-            if (mb_trim($name) !== '') {
-                $dataIgnoreString .= " --ignore-table={$config['database']}.$name";
-            }
-        }
-
-        $dataOnlyFile = $this->buildSiblingFileName($config['fileName'], 'data_');
-        $dataResult = $this->executeExport($config, $dataIgnoreString, $dataOnlyFile);
-
-        if ($dataResult !== self::SUCCESS) {
-            $this->error('Data export failed');
-
-            return self::FAILURE;
-        }
-
-        // Combine the files
-        $structureOnlyFileArg = escapeshellarg($structureOnlyFile);
-        $dataOnlyFileArg = escapeshellarg($dataOnlyFile);
-        $finalFileArg = escapeshellarg($config['fileName']);
-
-        exec("cat $structureOnlyFileArg $dataOnlyFileArg > $finalFileArg");
-        unlink($structureOnlyFile);
-        unlink($dataOnlyFile);
 
         return self::SUCCESS;
     }
 
     /**
-     * Build a sibling filename next to $fileName with a prefix.
+     * Build the mydumper command, connection settings stay in the defaults file so the password is not visible in the process list
      *
-     * Example: /tmp/file.sql + structure_ => /tmp/structure_file.sql
+     * @return array<int, string>
      */
-    private function buildSiblingFileName(string $fileName, string $prefix): string
+    private function buildExportCommand(array $config, string $defaultsFile, ?string $omitFile): array
     {
-        $directory = dirname($fileName);
-        $baseName = basename($fileName);
-
-        if ($baseName === '' || $baseName === '.' || $baseName === DIRECTORY_SEPARATOR) {
-            $baseName = 'file.sql';
-        }
-
-        return mb_rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $prefix . $baseName;
+        return array_values(array_filter([
+            $config['mydumperPath'],
+            "--defaults-extra-file={$defaultsFile}",
+            "--database={$config['database']}",
+            "--outputdir={$config['directory']}",
+            '--clear',
+            "--threads={$config['threads']}",
+            '--sync-thread-lock-mode=NO_LOCK',
+            '--triggers',
+            $omitFile !== null ? "--omit-from-file={$omitFile}" : null,
+            $config['skipTzUtc'] ? '--skip-tz-utc' : null,
+            '--verbose=1',
+        ]));
     }
 
     /**
-     * Execute mysqldump export
+     * Connection settings for mydumper, plus an empty WHERE for tables that only need their structure
+     *
+     * @return array<string, array<string, string>>
      */
-    private function executeExport(array $config, string $ignoreString, string $outputFile, string $additionalOptions = ''): int
+    private function exportDefaults(array $config): array
     {
-        $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_');
-        $command = $this->buildExportCommand($config, $ignoreString, $outputFile, $errorFile, $additionalOptions);
+        $defaults = [
+            'mydumper' => array_filter([
+                'host' => $config['host'],
+                'port' => (string) $config['port'],
+                'user' => $config['username'],
+                'password' => $config['password'],
+                'ssl-mode' => $config['sslMode'],
+                'ca' => $config['sslCa'],
+            ], fn (?string $value) => filled($value)),
+        ];
 
-        $result = 0;
-        exec($command, $output, $result);
-
-        if ($result !== 0) {
-            $this->error('Export failed: ' . file_get_contents($errorFile));
+        foreach ($config['excludeData'] as $table) {
+            $defaults["`{$config['database']}`.`{$table}`"] = ['where' => '1=0'];
         }
 
-        @unlink($errorFile);
-
-        return $result === 0 ? self::SUCCESS : self::FAILURE;
+        return $defaults;
     }
 
     /**
-     * Build the mysqldump command, quoting the remote command again when it runs over SSH
+     * Write the tables to skip entirely, or return null when there are none
      */
-    private function buildExportCommand(array $config, string $ignoreString, string $outputFile, string $errorFile, string $additionalOptions = ''): string
+    private function writeOmitFile(array $config): ?string
     {
-        $password = escapeshellarg($config['password']);
-        $commonOptions = "--single-transaction --set-gtid-purged=OFF --port={$config['port']} --host={$config['mysqlHostName']} --user={$config['username']} --password=$password {$config['database']} $ignoreString $additionalOptions";
-
-        $outputFileArg = escapeshellarg($outputFile);
-        $errorFileArg = escapeshellarg($errorFile);
-
-        if ($config['useSsh'] === true) {
-            $remoteCommand = escapeshellarg("mysqldump $commonOptions");
-
-            return "ssh {$config['sshUsername']}@{$config['host']} -p{$config['sshPort']} $remoteCommand > $outputFileArg 2>$errorFileArg";
+        if ($config['ignore'] === []) {
+            return null;
         }
 
-        return "mysqldump $commonOptions {$config['mysqldumpSkipTzUtc']} --column-statistics=0 > $outputFileArg 2>$errorFileArg";
+        $omitFile = tempnam(sys_get_temp_dir(), 'dbsync_omit_');
+
+        file_put_contents($omitFile, implode("\n", array_map(
+            fn (string $table) => "{$config['database']}.{$table}",
+            $config['ignore']
+        )) . "\n");
+
+        return $omitFile;
     }
 
     /**
-     * Import the database
+     * Load the dump into the local database in parallel with myloader, replacing tables that already exist
      */
     private function importDatabase(array $config): int
     {
-        $command = $this->buildImportCommand($config);
+        $defaultsFile = $this->writeDefaultsFile([
+            'myloader' => array_filter([
+                'host' => $config['localHostname'],
+                'port' => (string) $config['localPort'],
+                'user' => $config['localUsername'],
+                'password' => $config['localPassword'],
+            ], fn (?string $value) => filled($value)),
+        ]);
 
-        $result = 0;
-        exec($command, $output, $result);
+        $this->info("Importing into {$config['localDatabase']} with {$config['threads']} threads...");
 
-        if ($result !== 0) {
-            $this->error('Import failed: ' . implode("\n", $output));
+        try {
+            $result = Process::forever()->run($this->buildImportCommand($config, $defaultsFile));
+        } finally {
+            unlink($defaultsFile);
+        }
+
+        if ($result->failed()) {
+            $this->error('Import failed: ' . mb_trim($result->errorOutput() ?: $result->output()));
 
             return self::FAILURE;
         }
@@ -286,14 +247,56 @@ class DbSyncCommand extends Command
     }
 
     /**
-     * Build the mysql import command
+     * Build the myloader command
+     *
+     * @return array<int, string>
      */
-    private function buildImportCommand(array $config): string
+    private function buildImportCommand(array $config, string $defaultsFile): array
     {
-        $mysqlPathArg = escapeshellarg($config['localMysqlPath']);
-        $fileNameArg = escapeshellarg($config['fileName']);
-        $passwordOption = $config['localPassword'] ? ' -p' . escapeshellarg($config['localPassword']) : '';
+        return [
+            $config['myloaderPath'],
+            "--defaults-extra-file={$defaultsFile}",
+            "--directory={$config['directory']}",
+            "--database={$config['localDatabase']}",
+            '--drop-table=DROP',
+            "--threads={$config['threads']}",
+            '--verbose=1',
+        ];
+    }
 
-        return "$mysqlPathArg -u{$config['localUsername']} -h{$config['localHostname']}$passwordOption -P{$config['localPort']} {$config['localDatabase']} < $fileNameArg 2>&1";
+    /**
+     * Write a private GKeyFile style defaults file, which mydumper and myloader read their options from
+     *
+     * @param  array<string, array<string, string>>  $groups
+     */
+    private function writeDefaultsFile(array $groups): string
+    {
+        $defaultsFile = tempnam(sys_get_temp_dir(), 'dbsync_defaults_');
+
+        $contents = '';
+
+        foreach ($groups as $group => $values) {
+            $contents .= "[{$group}]\n";
+
+            foreach ($values as $key => $value) {
+                $contents .= "{$key} = {$this->escapeDefaultsValue($value)}\n";
+            }
+        }
+
+        file_put_contents($defaultsFile, $contents);
+
+        return $defaultsFile;
+    }
+
+    /**
+     * Escape a value the way GLib's key file parser expects
+     */
+    private function escapeDefaultsValue(string $value): string
+    {
+        $escaped = str_replace(['\\', "\n", "\r", "\t"], ['\\\\', '\\n', '\\r', '\\t'], $value);
+
+        return str_starts_with($escaped, ' ')
+            ? '\\s' . mb_substr($escaped, 1)
+            : $escaped;
     }
 }

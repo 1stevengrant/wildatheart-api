@@ -1,41 +1,20 @@
 <?php
 
 return [
-
     /*
-     * Set true to connect over SSH
-     */
-    'useSsh' => env('REMOTE_USE_SSH', false),
-
-    /*
-     * Set the remote host either an IP address or URL
+     * Production database host, e.g. the Laravel Cloud public endpoint
      */
     'host' => env('REMOTE_DATABASE_HOST', ''),
-
-    /*
-     * Set the SSH username
-     */
-    'sshUsername' => env('REMOTE_SSH_USERNAME', ''),
-
-    /*
-     * Set the SSH port number, defaults to 22 when no option provided
-     */
-    'sshPort' => env('REMOTE_SSH_PORT', '22'),
-
-    /*
-     * Database username
-     */
-    'username' => env('REMOTE_DATABASE_USERNAME', ''),
-
-    /*
-     * Database host (optional)
-     */
-    'mysqlHostName' => env('REMOTE_DATABASE_MYSQL_HOSTNAME', '127.0.0.1'),
 
     /*
      * Database port
      */
     'port' => env('REMOTE_DATABASE_PORT', '3306'),
+
+    /*
+     * Database username
+     */
+    'username' => env('REMOTE_DATABASE_USERNAME', ''),
 
     /*
      * Set the database name
@@ -59,26 +38,44 @@ return [
     'excludeData' => env('REMOTE_DATABASE_EXCLUDE_DATA', ''),
 
     /*
-     * Sets if the exported SQL file will be imported into the current database connection
+     * Set true to dump TIMESTAMP values in the server's time zone instead of UTC
      */
-    'importSqlFile' => env('REMOTE_IMPORT_FILE', true),
+    'skipTzUtc' => env('REMOTE_SKIP_TZ_UTC', false),
 
     /*
-     * Sets if the generated SQL file will be deleted after it has been imported.
+     * TLS mode for the production connection, VERIFY_IDENTITY for Laravel Cloud
      */
-    'removeFileAfterImport' => env('REMOTE_REMOVE_FILE_AFTER_IMPORT', true),
+    'sslMode' => env('REMOTE_DATABASE_SSL_MODE'),
 
     /*
-     * Sets the default name for SQL file if --filename is not provided
+     * CA bundle used to verify the server certificate with VERIFY_IDENTITY, /etc/ssl/cert.pem on macOS
      */
-    'defaultFileName' => env('REMOTE_DEFAULT_FILE_NAME', 'file.sql'),
+    'sslCa' => env('REMOTE_DATABASE_SSL_CA'),
+
+    /*
+     * Number of parallel threads mydumper and myloader use
+     */
+    'threads' => (int) env('REMOTE_DATABASE_THREADS', 8),
+
+    /*
+     * Sets if the exported dump will be imported into the current database connection
+     */
+    'importDump' => env('REMOTE_IMPORT_FILE', true),
+
+    /*
+     * Sets if the dump directory will be deleted after it has been imported.
+     */
+    'removeDumpAfterImport' => env('REMOTE_REMOVE_FILE_AFTER_IMPORT', true),
+
+    /*
+     * Sets the default dump directory if --directory is not provided, relative paths are created in the system temp directory
+     */
+    'defaultDirectory' => env('REMOTE_DEFAULT_DIRECTORY', 'dbsync'),
 
     /*
      * Sets the target database connection
      */
     'targetConnection' => env('LOCAL_TARGET_CONNECTION', 'mysql'),
-
-    'mysqldumpSkipTzUtc' => env('REMOTE_MYSQLDUMP_SKIP_TZ_UTC', false),
 
     /*
     * List all the environment variables that need to be set for the command to work
@@ -89,5 +86,10 @@ return [
         'testing',
     ],
 
-    'localMysqlPath' => env('LOCAL_MYSQL_PATH', '/usr/local/bin/mysql'),
+    /*
+     * mydumper and myloader binaries, install with `brew install mydumper`
+     */
+    'mydumperPath' => env('MYDUMPER_PATH', 'mydumper'),
+
+    'myloaderPath' => env('MYLOADER_PATH', 'myloader'),
 ];

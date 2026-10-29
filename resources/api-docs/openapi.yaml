@@ -7,8 +7,6 @@ info:
 servers:
   - url: https://local.wildatheart.org/api/v1
     description: Production server
-  - url: https://local-staging.wildatheart.org/api/v1
-    description: Staging server
   - url: https://wahfires.test/api/v1
     description: Local development server
 
