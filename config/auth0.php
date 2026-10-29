@@ -3,7 +3,7 @@
 return [
     'client_id' => env('AUTH0_CLIENT_ID'),
     'client_secret' => env('AUTH0_CLIENT_SECRET'),
-    'redirect' => env('AUTH0_REDIRECT_URI', 'https://local.wildatheart.org/callback'),
+    'redirect' => env('AUTH0_REDIRECT_URI', mb_rtrim((string) env('APP_URL'), '/') . '/callback'),
     'base_url' => env('AUTH0_DOMAIN', 'https://auth.wildatheart.org'),
     'cookie_secret' => 'c1XhulxTocmsvHIQ1tBOp7McazNhkZVO',
     'audience' => env('AUTH0_AUDIENCE', 'https://local.wildatheart.org'),
