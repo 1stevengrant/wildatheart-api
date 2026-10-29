@@ -2,14 +2,14 @@
 
 ## Context
 
-The project has 4 existing workflows (preview-provision, preview-teardown, test-staging, sync-types) but **no PR quality checks** and **no automated production deployment**. This plan adds fast PR feedback, automated deploys with tagging, and a PR template.
+Production runs on Laravel Cloud, which creates preview environments per branch. The project has 2 workflows (tests, sync-types). `tests.yml` runs Pest and the production parity tests on PRs, and deploys `prod` to Cloud once they pass. There are still **no style, static analysis or type checks** and **no record of what was deployed when**. This plan adds those quality gates, a deploy tag after each successful deployment, and a PR template.
 
 ## Overview
 
 | File | Action | Purpose |
 |------|--------|---------|
 | `.github/workflows/pr.yml` | Create | PR quality gates |
-| `.github/workflows/deploy.yml` | Create | Auto-deploy + tagging on merge to prod |
+| `.github/workflows/tests.yml` | Done | Deploys `prod` to Cloud after the tests pass (tagging still to add) |
 | `.github/pull_request_template.md` | Create | Standardized PR descriptions |
 | `phpstan.neon` | Create | PHPStan/Larastan config |
 | `phpstan-baseline.neon` | Generate | Baseline for existing violations |
@@ -183,83 +183,17 @@ jobs:
 
 ---
 
-## 4. Production Deploy Workflow
+## 4. Production Deploys
 
-### `.github/workflows/deploy.yml`
+**Done.** Production no longer uses Cloud's push to deploy. The `deploy` job in `.github/workflows/tests.yml` runs after the tests pass on `prod`, calls the Cloud deploy hook with the tested commit, and (with `LARAVEL_CLOUD_TOKEN` set) waits for that deployment to succeed. See [deployment](deployment.md) for the settings it relies on.
 
-Triggers on push to `prod` (i.e., merged PRs). Migrations run inside Forge's deploy script, not via SSH from GitHub Actions.
+Still to do from the original plan: tag each successful deploy. Add a step to the end of that job, after the wait step:
 
 ```yaml
-name: Deploy to Production
-
-on:
-  push:
-    branches: [prod]
-
-jobs:
-  deploy:
-    name: Deploy & Tag
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Trigger Forge deployment
-        run: |
-          RESPONSE=$(curl -X POST "${{ secrets.FORGE_PRODUCTION_TRIGGER_URL }}" \
-            -H "Authorization: Bearer ${{ secrets.FORGE_API_TOKEN }}" \
-            -H "Accept: application/json" \
-            -s -w "\n%{http_code}")
-          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$ d')
-
-          echo "Status Code: $HTTP_STATUS"
-          echo "API Response: $BODY"
-
-          if [ "$HTTP_STATUS" -ne 200 ]; then
-            echo "Error: API request failed with status $HTTP_STATUS"
-            echo "Response: $BODY"
-            exit 1
-          fi
-
-      - name: Wait for deployment to complete
-        run: |
-          STATUS="pending"
-          MAX_ATTEMPTS=120
-          ATTEMPT=0
-
-          while [ "$STATUS" != "finished" ]; do
-            if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
-              echo "Error: Deployment timed out after 20 minutes"
-              exit 1
-            fi
-
-            RESPONSE=$(curl -X GET "https://forge.laravel.com/api/v1/servers/${{ secrets.FORGE_SERVER_ID }}/sites/${{ secrets.FORGE_PRODUCTION_SITE_ID }}/deployment-history" \
-              -H "Authorization: Bearer ${{ secrets.FORGE_API_TOKEN }}" \
-              -H "Accept: application/json" \
-              -s)
-
-            if ! STATUS=$(echo $RESPONSE | jq -r '.deployments[0].status'); then
-              echo "Error: Failed to parse status from response"
-              echo "Response: $RESPONSE"
-              exit 1
-            fi
-
-            echo "Current status: $STATUS (attempt $ATTEMPT)"
-
-            if [ "$STATUS" = "failed" ]; then
-              echo "Error: Deployment failed"
-              exit 1
-            fi
-
-            ATTEMPT=$((ATTEMPT + 1))
-            sleep 10
-          done
-
-          echo "Deployment finished successfully"
 
       - name: Create deploy tag
         run: |
@@ -273,6 +207,8 @@ jobs:
 
           echo "Tagged: $TAG"
 ```
+
+The job needs `permissions: contents: write` to push the tag, and the tag only means "deployed" when the wait step ran, so add it once `LARAVEL_CLOUD_TOKEN` is set.
 
 ---
 
@@ -299,25 +235,27 @@ jobs:
 
 | Secret | Source | Notes |
 |--------|--------|-------|
-| `FORGE_PRODUCTION_TRIGGER_URL` | Forge → Sites → Production → Deployment Trigger URL | **New — must add** |
-| `FORGE_PRODUCTION_SITE_ID` | Forge → Sites → Production → numeric site ID in URL | **New — must add** |
-| `FORGE_API_TOKEN` | Already exists | Used by preview + staging workflows |
-| `FORGE_SERVER_ID` | Already exists | Used by preview + staging workflows |
+| `LARAVEL_CLOUD_DEPLOY_HOOK` | Cloud production environment, **Settings > Deployments > Deploy hook** | **New, must add**. Used by the deploy job in `tests.yml` |
+| `LARAVEL_CLOUD_TOKEN` | Cloud **Organization settings > API tokens** | **New, optional**. Lets the deploy job wait for the deployment to finish |
+| `REMOTE_DATABASE_HOST`, `REMOTE_DATABASE_USERNAME`, `REMOTE_DATABASE_NAME`, `REMOTE_DATABASE_PASSWORD` | `cloud database-cluster:list --json --show-sensitive -n` | Already exist, but **must be updated** to the Cloud database. `tests.yml` uses them for the parity tests |
+
+The Forge secrets (`FORGE_API_TOKEN`, `FORGE_SERVER_ID`, `FORGE_SSH_PRIVATE_KEY` and the Forge trigger URLs) are no longer used by `tests.yml` or this plan. Staging has been retired, so `FORGE_API_TOKEN`, `FORGE_SERVER_ID` and `FORGE_STAGING_TRIGGER_URL` can go too.
 
 ## 7. GitHub Settings (Manual, After Merge)
 
 - **Branch protection on `prod`**: Require 1 approval + require `quality` status check to pass + no direct pushes
-- **Staging branch**: Leave as-is for now, deprecate later
+- **Staging branch**: retired, along with the local-staging site
 
-## 8. Existing Workflows — No Changes
+## 8. Existing Workflows
 
-- `sync-types.yml` — Keep as-is, PR workflow adds a "types freshness" check separately
-- `test-staging.yml` — Keep as-is, Playwright E2E tests are too expensive for PR workflow (~20+ min). Future: convert to post-deploy validation when staging is deprecated
+- `tests.yml`: keeps running Pest and the production parity tests. The parity tests sync production with mydumper over the Cloud public endpoint (no SSH), so the runner installs mydumper first.
+- `sync-types.yml`: keep as is. The PR workflow adds a "types freshness" check separately.
+- `test-staging.yml`: removed with staging. Its Playwright integration tests (from `wildatheart.org-astro`) have no target until they are pointed at a Cloud preview environment or production.
 
 ## 9. Verification Steps
 
 1. Install larastan, generate baseline, verify `phpstan analyse` passes
 2. Create a feature branch, push a PR to `prod`
 3. Verify all PR checks run and pass (target: < 10 minutes)
-4. Merge to `prod`, verify deploy workflow triggers, creates tag, deploys via Forge
+4. Merge to `prod`, verify the deploy job only runs after Pest passes and that Cloud deploys that commit
 5. Check GitHub tags for `deploy-YYYY-MM-DD-1` format

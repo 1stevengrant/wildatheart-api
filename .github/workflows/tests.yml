@@ -4,7 +4,7 @@ on:
   push:
     branches: [prod]
   pull_request:
-    branches: [staging, prod]
+    branches: [prod]
 
 jobs:
   tests:
@@ -50,12 +50,11 @@ jobs:
       - name: Create parity database
         run: mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS wahlocal_parity;"
 
-      - name: Configure SSH for production sync
+      - name: Install mydumper for production sync
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.FORGE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.REMOTE_DATABASE_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          curl -fsSL -o /tmp/mydumper.deb "https://github.com/mydumper/mydumper/releases/download/v1.0.11-1/mydumper_1.0.11-1.$(lsb_release -cs)_amd64.deb"
+          sudo apt-get install -y /tmp/mydumper.deb
+          mydumper --version
 
       - name: Run migrations
         run: php artisan migrate --force
@@ -85,13 +84,13 @@ jobs:
           DB_DATABASE_PARITY: wahlocal_parity
           DB_USERNAME: root
           DB_PASSWORD: password
-          REMOTE_USE_SSH: true
-          REMOTE_SSH_USERNAME: forge
           REMOTE_DATABASE_HOST: ${{ secrets.REMOTE_DATABASE_HOST }}
           REMOTE_DATABASE_USERNAME: ${{ secrets.REMOTE_DATABASE_USERNAME }}
           REMOTE_DATABASE_NAME: ${{ secrets.REMOTE_DATABASE_NAME }}
           REMOTE_DATABASE_PASSWORD: ${{ secrets.REMOTE_DATABASE_PASSWORD }}
           REMOTE_DATABASE_EXCLUDE_DATA: activity_log,failed_jobs,issues
+          REMOTE_DATABASE_SSL_MODE: VERIFY_IDENTITY
+          REMOTE_DATABASE_SSL_CA: /etc/ssl/certs/ca-certificates.crt
 
       - name: Cleanup test databases
         if: always()
@@ -102,3 +101,50 @@ jobs:
           DB_DATABASE: wahlocal_test
           DB_USERNAME: root
           DB_PASSWORD: password
+
+  deploy:
+    name: "Deploy to Laravel Cloud"
+    needs: tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    concurrency:
+      group: production-deploy
+      cancel-in-progress: false
+    env:
+      CLOUD_ENVIRONMENT_ID: env-a30928a3-7914-470a-9299-fa68ac370a51
+      LARAVEL_CLOUD_TOKEN: ${{ secrets.LARAVEL_CLOUD_TOKEN }}
+
+    steps:
+      - name: Trigger the deploy hook for this commit
+        run: curl -fsS -X POST "${{ secrets.LARAVEL_CLOUD_DEPLOY_HOOK }}?commit_hash=${{ github.sha }}"
+
+      - name: Setup PHP for the Laravel Cloud CLI
+        if: env.LARAVEL_CLOUD_TOKEN != ''
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      - name: Wait for the deployment of this commit to finish
+        if: env.LARAVEL_CLOUD_TOKEN != ''
+        run: |
+          composer global require laravel/cloud-cli --no-interaction --quiet
+          CLOUD="$(composer global config bin-dir --absolute)/cloud"
+
+          for attempt in $(seq 1 180); do
+            STATUS=$("$CLOUD" deployment:list "$CLOUD_ENVIRONMENT_ID" --json -n \
+              | jq -r --arg sha "${{ github.sha }}" 'map(select(.commitHash == $sha)) | .[0].status // "not-started"')
+
+            echo "Deployment status: $STATUS (check $attempt)"
+
+            case "$STATUS" in
+              deployment.succeeded) exit 0 ;;
+              *fail*|*cancel*) echo "::error::Laravel Cloud deployment of ${{ github.sha }} ended with $STATUS"; exit 1 ;;
+            esac
+
+            sleep 10
+          done
+
+          echo "::error::Timed out waiting for the Laravel Cloud deployment of ${{ github.sha }}"
+          exit 1

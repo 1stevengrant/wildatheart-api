@@ -51,7 +51,6 @@
         "statamic/eloquent-driver": "^5.0",
         "stevebauman/purify": "^6.2",
         "symfony/http-client": "^7.0",
-        "symfony/postmark-mailer": "^7.0",
         "tightenco/ziggy": "^2.6",
         "toitzi/laravel-cloudflare-mail": "^1.0",
         "wild-at-heart/command-center": "*@dev"

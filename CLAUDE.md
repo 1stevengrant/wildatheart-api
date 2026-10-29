@@ -69,7 +69,7 @@ php artisan test             # Run PEST tests directly
 
 ```bash
 php artisan migrate:fresh --seed    # Reset database with seeds
-php artisan db:production-sync      # Sync production database from Laravel Cloud
+php artisan db:production-sync      # Sync production database from Laravel Cloud (needs `brew install mydumper`)
 ```
 
 ### Cache Management
@@ -110,7 +110,7 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 -   **Statamic CMS**: Eloquent backed content managed entries via Runway addon
 -   **Mapbox**: Interactive maps for event discovery
 -   **AWS S3**: Asset storage
--   **Mailgun/Postmark**: Email delivery
+-   **Cloudflare Email / SendGrid**: Email delivery (`failover` mailer: Cloudflare first, SendGrid SMTP if it fails)
 -   **Sentry**: Error tracking
 -   **Slack**: Admin notifications
 
@@ -145,7 +145,7 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 
 ## Branch Strategy
 
--   **Feature branches** → `staging` → `prod`
+-   **Feature branches** → PR into `prod`, which deploys to Laravel Cloud once the Tests workflow passes
 -   **Preview deployments**: Laravel Cloud preview environments per branch
 -   **Auto-deployment**: Laravel Cloud push-to-deploy
 
@@ -168,8 +168,8 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 
 ## Environment-Specific Notes
 
--   **Local Development**: Uses Laravel Valet/Herd recommended
--   **Database Sync**: `db:production-sync` pulls from the Laravel Cloud MySQL public endpoint
+-   **Local Development**: Flock serves the site at https://wahfires.test (MySQL, Valkey, mail catcher)
+-   **Database Sync**: `db:production-sync` pulls from the Laravel Cloud MySQL public endpoint with mydumper/myloader (single connection mysqldump fails through Cloud's proxy; see docs/database.md)
 -   **Asset Storage**: S3 integration required for media
 -   **Queue Workers**: Laravel Cloud managed queues
 -   **Error Tracking**: Sentry integration in production

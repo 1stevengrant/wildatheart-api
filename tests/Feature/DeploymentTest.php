@@ -48,9 +48,6 @@ test('deployment artisan commands execute without failure', function () {
         }
     }
 
-    // Cleanup - drop the cached config, routes, events and views so later commands read .env again
-    Artisan::call('optimize:clear');
-
     // Cleanup - restore original maintenance mode state if needed
     if ($originalMaintenanceMode !== app()->isDownForMaintenance()) {
         Artisan::call($originalMaintenanceMode ? 'down' : 'up');

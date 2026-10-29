@@ -1,179 +1,167 @@
 <?php
 
-use Illuminate\Console\OutputStyle;
+use Illuminate\Process\PendingProcess;
 use App\Console\Commands\DbSyncCommand;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
+use Illuminate\Support\Facades\Process;
 
-it('builds structure and data dump filenames next to target file', function () {
-    $command = new DbSyncCommand;
-
-    $method = new ReflectionMethod($command, 'buildSiblingFileName');
-    $method->setAccessible(true);
-
-    $structure = $method->invoke($command, '/tmp/file.sql', 'structure_');
-    $data = $method->invoke($command, '/tmp/file.sql', 'data_');
-
-    expect($structure)->toBe('/tmp/structure_file.sql');
-    expect($data)->toBe('/tmp/data_file.sql');
-});
-
-function dbSyncConfig(array $overrides = []): array
-{
-    return array_merge([
-        'useSsh' => false,
-        'sshUsername' => 'forge',
-        'sshPort' => '22',
-        'host' => 'db.example.com',
-        'mysqlHostName' => '127.0.0.1',
-        'username' => 'forge',
-        'database' => 'production',
-        'port' => '3306',
-        'password' => 'pa$s w;rd\'"`x',
-        'mysqldumpSkipTzUtc' => '',
-        'sslMode' => '',
-        'sslCa' => '',
-        'localUsername' => 'cloud',
-        'localPassword' => 'pa$s w;rd\'"`x',
-        'localHostname' => 'cloud.example.com',
-        'localPort' => '3306',
-        'localDatabase' => 'main',
-        'localMysqlPath' => fakeMysqlBinary(),
-        'localMysqldumpPath' => fakeMysqlBinary(),
-        'fileName' => tempnam(sys_get_temp_dir(), 'dbsync_test_'),
-    ], $overrides);
-}
-
-function fakeMysqlBinary(string $script = 'printf \'%s|\' "$@"'): string
-{
-    $directory = sys_get_temp_dir() . '/dbsync test ' . uniqid();
-    mkdir($directory);
-
-    $path = "$directory/mysql";
-    file_put_contents($path, "#!/bin/sh\n$script\n");
-    chmod($path, 0755);
-
-    return $path;
-}
-
-function invokeDbSyncMethod(string $name, mixed ...$arguments): mixed
-{
-    $command = new DbSyncCommand;
-    $command->setOutput(new OutputStyle(new ArrayInput([]), new BufferedOutput));
-
-    return (new ReflectionMethod($command, $name))->invoke($command, ...$arguments);
-}
-
-it('passes a password with shell metacharacters to mysql as a single argument', function () {
-    $config = dbSyncConfig();
-
-    exec(invokeDbSyncMethod('buildImportCommand', $config), $output);
-
-    expect(implode('', $output))->toContain('|-ppa$s w;rd\'"`x|');
-});
-
-it('omits the password option when the target has no password', function () {
-    $config = dbSyncConfig(['localPassword' => '']);
-
-    exec(invokeDbSyncMethod('buildImportCommand', $config), $output);
-
-    expect(implode('', $output))->toBe('--max-allowed-packet=1G|-ucloud|-hcloud.example.com|-P3306|main|');
-});
-
-it('passes a password with shell metacharacters to a local mysqldump as a single argument', function () {
-    $config = dbSyncConfig();
-    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-
-    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
-
-    expect(file_get_contents($outputFile))->toContain('|--password=pa$s w;rd\'"`x|');
-});
-
-it('runs a local mysqldump binary whose path contains a space', function () {
-    $config = dbSyncConfig();
-    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-
-    expect($config['localMysqldumpPath'])->toContain(' ');
-
-    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile), result_code: $result);
-
-    expect($result)->toBe(0);
-    expect(file_get_contents($outputFile))->toStartWith('--single-transaction|');
-});
-
-it('requires the configured ssl mode on a local mysqldump', function () {
-    $config = dbSyncConfig(['sslMode' => '--ssl-mode=' . escapeshellarg('REQUIRED')]);
-    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-
-    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
-
-    expect(file_get_contents($outputFile))->toContain('|--ssl-mode=REQUIRED|');
-});
-
-it('verifies the server certificate against the configured ca bundle', function () {
-    $config = dbSyncConfig([
-        'sslMode' => '--ssl-mode=' . escapeshellarg('VERIFY_IDENTITY'),
-        'sslCa' => '--ssl-ca=' . escapeshellarg('/etc/ssl/cert.pem'),
+beforeEach(function () {
+    config([
+        'dbsync.host' => 'db.example.com',
+        'dbsync.port' => '3306',
+        'dbsync.username' => 'cloud',
+        'dbsync.password' => 'pa$s w;rd\'"`x',
+        'dbsync.database' => 'production',
+        'dbsync.ignore' => '',
+        'dbsync.excludeData' => 'activity_log, failed_jobs',
+        'dbsync.sslMode' => 'VERIFY_IDENTITY',
+        'dbsync.sslCa' => '/etc/ssl/cert.pem',
+        'dbsync.threads' => 8,
+        'dbsync.mydumperPath' => 'mydumper',
+        'dbsync.myloaderPath' => 'myloader',
+        'dbsync.importDump' => true,
+        'dbsync.removeDumpAfterImport' => true,
+        'dbsync.defaultDirectory' => 'dbsync_test_' . uniqid(),
     ]);
-    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-
-    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
-
-    expect(file_get_contents($outputFile))->toContain('|--ssl-mode=VERIFY_IDENTITY|--ssl-ca=/etc/ssl/cert.pem|');
 });
 
-it('raises the mysqldump packet limit so large rows export', function () {
-    $config = dbSyncConfig();
-    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+/**
+ * Fake both binaries, keeping each command and the files it was given before the command deletes them
+ *
+ * @return ArrayObject<string, array{command: array<int, string>, files: array<string, string>}>
+ */
+function fakeDumpTools(int $mydumperExitCode = 0, int $myloaderExitCode = 0): ArrayObject
+{
+    $runs = new ArrayObject;
 
-    exec(invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile));
+    Process::fake(function (PendingProcess $process) use ($runs, $mydumperExitCode, $myloaderExitCode) {
+        $binary = basename($process->command[0]);
+        $files = [];
 
-    expect(file_get_contents($outputFile))->toContain('|--max-allowed-packet=1G|');
+        foreach ($process->command as $argument) {
+            if (preg_match('/^--(defaults-extra-file|omit-from-file)=(.+)$/', $argument, $matches) === 1) {
+                $files[$matches[1]] = file_get_contents($matches[2]);
+            }
+        }
+
+        $runs[$binary] = ['command' => $process->command, 'files' => $files];
+
+        $exitCode = $binary === 'mydumper' ? $mydumperExitCode : $myloaderExitCode;
+
+        return Process::result(errorOutput: $exitCode === 0 ? '' : "{$binary} broke", exitCode: $exitCode);
+    });
+
+    return $runs;
+}
+
+function defaultsFilesLeftBehind(): array
+{
+    return glob(sys_get_temp_dir() . '/dbsync_defaults_*') ?: [];
+}
+
+it('dumps with mydumper and keeps the password out of the command line', function () {
+    $runs = fakeDumpTools();
+
+    $this->artisan('db:production-sync')->assertSuccessful();
+
+    $command = $runs['mydumper']['command'];
+
+    expect($command)
+        ->toContain('--database=production', '--threads=8', '--clear', '--sync-thread-lock-mode=NO_LOCK', '--triggers')
+        ->and(implode(' ', $command))->not->toContain('pa$s');
+
+    expect($runs['mydumper']['files']['defaults-extra-file'])->toBe(implode("\n", [
+        '[mydumper]',
+        'host = db.example.com',
+        'port = 3306',
+        'user = cloud',
+        'password = pa$s w;rd\'"`x',
+        'ssl-mode = VERIFY_IDENTITY',
+        'ca = /etc/ssl/cert.pem',
+        '[`production`.`activity_log`]',
+        'where = 1=0',
+        '[`production`.`failed_jobs`]',
+        'where = 1=0',
+        '',
+    ]));
 });
 
-it('keeps the password quoted for the remote shell when exporting over ssh', function () {
-    $config = dbSyncConfig(['useSsh' => true]);
-    $outputFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-    $errorFile = tempnam(sys_get_temp_dir(), 'dbsync_test_');
+it('skips ignored tables entirely', function () {
+    config(['dbsync.ignore' => 'sessions,cache']);
+    $runs = fakeDumpTools();
 
-    $command = invokeDbSyncMethod('buildExportCommand', $config, '', $outputFile, $errorFile);
+    $this->artisan('db:production-sync')->assertSuccessful();
 
-    expect($command)->toStartWith('ssh forge@db.example.com -p22 ');
-
-    exec(str_replace('ssh forge@db.example.com -p22 ', "printf '%s' ", $command));
-    $remoteCommand = file_get_contents($outputFile);
-
-    exec(str_replace('mysqldump ', "printf '%s|' ", $remoteCommand), $remoteArguments);
-
-    expect(implode('', $remoteArguments))->toContain('|--password=pa$s w;rd\'"`x|');
+    expect($runs['mydumper']['files']['omit-from-file'])->toBe("production.sessions\nproduction.cache\n");
 });
 
-it('runs a mysql binary whose path contains a space', function () {
-    $config = dbSyncConfig();
+it('passes no omit file when nothing is ignored', function () {
+    $runs = fakeDumpTools();
 
-    expect($config['localMysqlPath'])->toContain(' ');
+    $this->artisan('db:production-sync')->assertSuccessful();
 
-    exec(invokeDbSyncMethod('buildImportCommand', $config), $output, $result);
+    expect($runs['mydumper']['files'])->not->toHaveKey('omit-from-file');
+});
 
-    expect($result)->toBe(0);
-    expect(implode('', $output))->toStartWith('--max-allowed-packet=1G|-ucloud|');
+it('loads the dump with myloader into the target database, replacing existing tables', function () {
+    config([
+        'database.connections.mysql.host' => '127.0.0.1',
+        'database.connections.mysql.port' => '3306',
+        'database.connections.mysql.username' => 'root',
+        'database.connections.mysql.password' => '',
+        'database.connections.mysql.database' => 'wahlocal',
+    ]);
+    $runs = fakeDumpTools();
+
+    $this->artisan('db:production-sync')->assertSuccessful();
+
+    expect($runs['myloader']['command'])->toContain('--database=wahlocal', '--drop-table=DROP', '--threads=8')
+        ->and($runs['myloader']['files']['defaults-extra-file'])->toBe("[myloader]\nhost = 127.0.0.1\nport = 3306\nuser = root\n");
+});
+
+it('removes the files holding credentials once it is done', function () {
+    $before = defaultsFilesLeftBehind();
+    fakeDumpTools();
+
+    $this->artisan('db:production-sync')->assertSuccessful();
+
+    expect(defaultsFilesLeftBehind())->toBe($before);
+});
+
+it('does not import when the export fails', function () {
+    $before = defaultsFilesLeftBehind();
+    $runs = fakeDumpTools(mydumperExitCode: 2);
+
+    $this->artisan('db:production-sync')
+        ->expectsOutputToContain('Export failed: mydumper broke')
+        ->assertFailed();
+
+    expect($runs)->not->toHaveKey('myloader')
+        ->and(defaultsFilesLeftBehind())->toBe($before);
 });
 
 it('reports failure when the import fails', function () {
-    $config = dbSyncConfig(['localMysqlPath' => fakeMysqlBinary('exit 1')]);
+    fakeDumpTools(myloaderExitCode: 1);
 
-    expect(invokeDbSyncMethod('importDatabase', $config))->toBe(DbSyncCommand::FAILURE);
+    $this->artisan('db:production-sync')
+        ->expectsOutputToContain('Import failed: myloader broke')
+        ->assertFailed();
 });
 
-it('reports failure when the mysql binary does not exist', function () {
-    $config = dbSyncConfig(['localMysqlPath' => '/nonexistent/mysql']);
+it('leaves the dump in place when import is disabled', function () {
+    config(['dbsync.importDump' => false]);
+    $runs = fakeDumpTools();
 
-    expect(invokeDbSyncMethod('importDatabase', $config))->toBe(DbSyncCommand::FAILURE);
+    $this->artisan('db:production-sync --directory=/tmp/dbsync_kept')
+        ->expectsOutputToContain('Dump written to /tmp/dbsync_kept, import skipped')
+        ->assertSuccessful();
+
+    expect($runs)->not->toHaveKey('myloader');
+});
+
+it('escapes defaults file values for the GLib key file parser', function () {
+    $escape = new ReflectionMethod(DbSyncCommand::class, 'escapeDefaultsValue');
+
+    expect($escape->invoke(new DbSyncCommand, " lead\\ing\nline"))->toBe('\\slead\\\\ing\\nline');
 });
 
 it('exits with a failure code outside the allowed environments', function () {
@@ -185,76 +173,15 @@ it('exits with a failure code outside the allowed environments', function () {
 it('defaults the import and cleanup flags to booleans', function () {
     $config = require base_path('config/dbsync.php');
 
-    expect($config['importSqlFile'])->toBeTrue();
-    expect($config['removeFileAfterImport'])->toBeTrue();
+    expect($config['importDump'])->toBeTrue();
+    expect($config['removeDumpAfterImport'])->toBeTrue();
 });
 
-it('exports the structure once and each table\'s data on its own connection', function () {
-    $structure = 'CREATE TABLE `entries` (id int);\nCREATE TABLE `activity_log` (id int);\nCREATE TABLE `users` (id int);';
+it('removes the files holding credentials even when running a tool throws', function () {
+    $before = defaultsFilesLeftBehind();
+    Process::fake(fn () => throw new RuntimeException('mydumper vanished'));
 
-    $config = dbSyncConfig([
-        'localMysqldumpPath' => fakeMysqlBinary(<<<SH
-            case "\$*" in
-                *--no-data*) printf '{$structure}\n' ;;
-                *) while [ "\$1" != "--no-create-info" ]; do shift; done; printf -- '-- data for %s\n' "\$2" ;;
-            esac
-            SH),
-    ]);
+    expect(fn () => $this->artisan('db:production-sync')->run())->toThrow(RuntimeException::class, 'mydumper vanished');
 
-    $result = invokeDbSyncMethod('exportDatabase', $config, [], ['activity_log']);
-
-    expect($result)->toBe(DbSyncCommand::SUCCESS);
-    expect(file_get_contents($config['fileName']))->toBe(
-        "CREATE TABLE `entries` (id int);\nCREATE TABLE `activity_log` (id int);\nCREATE TABLE `users` (id int);\n"
-        . "-- data for entries\n-- data for users\n"
-    );
-});
-
-it('stops and cleans up when a table\'s data export fails', function () {
-    $config = dbSyncConfig([
-        'localMysqldumpPath' => fakeMysqlBinary(<<<'SH'
-            case "$*" in
-                *--no-data*) printf 'CREATE TABLE `entries` (id int);\n' ;;
-                *) exit 2 ;;
-            esac
-            SH),
-    ]);
-
-    $result = invokeDbSyncMethod('exportDatabase', $config, [], []);
-
-    expect($result)->toBe(DbSyncCommand::FAILURE);
-    expect(file_exists(dirname($config['fileName']) . '/structure_' . basename($config['fileName'])))->toBeFalse();
-    expect(file_exists(dirname($config['fileName']) . '/data_' . basename($config['fileName'])))->toBeFalse();
-});
-
-it('reads table names from a structure dump, including escaped backticks', function () {
-    $file = tempnam(sys_get_temp_dir(), 'dbsync_test_');
-    file_put_contents($file, "-- comment\nCREATE TABLE `entries` (\n  `id` int\n);\nCREATE TABLE `odd``name` (id int);\n/*!50001 CREATE VIEW `v` AS SELECT 1 */;\n");
-
-    expect(invokeDbSyncMethod('tablesInStructureDump', $file))->toBe(['entries', 'odd`name']);
-});
-
-it('keeps table order across parallel batches even when tables finish out of order', function () {
-    $tables = array_map(fn (int $number) => "table_{$number}", range(1, 10));
-    $structure = implode('\n', array_map(fn (string $table) => "CREATE TABLE `{$table}` (id int);", $tables));
-
-    $config = dbSyncConfig([
-        'localMysqldumpPath' => fakeMysqlBinary(<<<SH
-            case "\$*" in
-                *--no-data*) printf '{$structure}\n' ;;
-                *) while [ "\$1" != "--no-create-info" ]; do shift; done
-                   [ "\$2" = "table_1" ] && sleep 0.3
-                   printf -- '-- data for %s\n' "\$2" ;;
-            esac
-            SH),
-    ]);
-
-    expect(invokeDbSyncMethod('exportDatabase', $config, [], []))->toBe(DbSyncCommand::SUCCESS);
-
-    $dataLines = array_values(array_filter(
-        explode("\n", file_get_contents($config['fileName'])),
-        fn (string $line) => str_starts_with($line, '-- data for ')
-    ));
-
-    expect($dataLines)->toBe(array_map(fn (string $table) => "-- data for {$table}", $tables));
+    expect(defaultsFilesLeftBehind())->toBe($before);
 });
