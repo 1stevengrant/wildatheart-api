@@ -1,14 +1,14 @@
 <?php
 
 use Spatie\FailedJobMonitor\Notifiable;
-use Spatie\FailedJobMonitor\Notification;
+use App\Notifications\FailedJobNotification;
 
 return [
 
     /*
      * The notification that will be sent when a job fails.
      */
-    'notification' => Notification::class,
+    'notification' => FailedJobNotification::class,
 
     /*
      * The notifiable to which the notification will be sent. The default
