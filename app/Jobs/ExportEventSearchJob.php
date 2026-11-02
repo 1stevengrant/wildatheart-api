@@ -5,8 +5,8 @@ namespace App\Jobs;
 use App\Models\User;
 use App\Models\Event;
 use App\Mail\ReportMailable;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Facades\Storage;
 use App\Enums\Internal\EventSearchField;
 use Illuminate\Foundation\Queue\Queueable;
@@ -16,6 +16,10 @@ use App\Enums\Internal\EventVisibilityFilter;
 class ExportEventSearchJob implements ShouldQueue
 {
     use Queueable;
+
+    public int $tries = 1;
+
+    public int $timeout = 300;
 
     /**
      * @param  array<int, int>  $eventTypeIds
@@ -39,51 +43,45 @@ class ExportEventSearchJob implements ShouldQueue
     {
         $filePath = $this->generateCsv();
 
-        Mail::to($this->user->email)->send(
-            new ReportMailable(
-                date: now()->format('F j, Y'),
-                filePath: Storage::disk('local')->path($filePath),
-                reportName: 'Event Search Export'
-            )
-        );
-
-        Storage::disk('local')->delete($filePath);
+        try {
+            Mail::to($this->user->email)->send(
+                new ReportMailable(
+                    date: now()->format('F j, Y'),
+                    filePath: Storage::disk('local')->path($filePath),
+                    reportName: 'Event Search Export'
+                )
+            );
+        } finally {
+            Storage::disk('local')->delete($filePath);
+        }
     }
 
     private function generateCsv(): string
     {
         Storage::disk('local')->makeDirectory('exports');
 
-        $events = $this->searchEvents();
         $fileName = 'exports/event-search-' . now()->timestamp . '.csv';
+        $fields = collect($this->fields)
+            ->map(fn (string $field) => EventSearchField::tryFrom($field))
+            ->filter();
 
-        $handle = fopen('php://temp', 'w');
+        $handle = fopen(Storage::disk('local')->path($fileName), 'w');
 
-        $headerRow = [];
-        foreach ($this->fields as $field) {
-            $enumField = EventSearchField::tryFrom($field);
-            if ($enumField) {
-                $headerRow[] = $enumField->label();
-            }
+        try {
+            fputcsv($handle, $fields->map->label()->all(), ',', '"', '');
+
+            $this->searchEvents()->each(function (Event $event) use ($handle, $fields) {
+                fputcsv(
+                    $handle,
+                    $fields->map(fn (EventSearchField $field) => $this->sanitizeCsvValue($field->getValue($event)))->all(),
+                    ',',
+                    '"',
+                    ''
+                );
+            });
+        } finally {
+            fclose($handle);
         }
-        fputcsv($handle, $headerRow, ',', '"', '');
-
-        foreach ($events as $event) {
-            $row = [];
-            foreach ($this->fields as $field) {
-                $enumField = EventSearchField::tryFrom($field);
-                if ($enumField) {
-                    $row[] = $this->sanitizeCsvValue($enumField->getValue($event));
-                }
-            }
-            fputcsv($handle, $row, ',', '"', '');
-        }
-
-        rewind($handle);
-        $content = stream_get_contents($handle);
-        fclose($handle);
-
-        Storage::disk('local')->put($fileName, $content);
 
         return $fileName;
     }
@@ -106,7 +104,8 @@ class ExportEventSearchJob implements ShouldQueue
         return $value;
     }
 
-    private function searchEvents(): Collection
+    /** @return LazyCollection<int, Event> */
+    private function searchEvents(): LazyCollection
     {
         $query = Event::query()->with(['user.primaryAddress', 'eventType']);
 
@@ -136,6 +135,6 @@ class ExportEventSearchJob implements ShouldQueue
             $query->where('created_at', '<=', "{$this->createdTo} 23:59:59");
         }
 
-        return $query->get();
+        return $query->orderBy('events.id')->lazy();
     }
 }
