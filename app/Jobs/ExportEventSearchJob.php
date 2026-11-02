@@ -19,7 +19,7 @@ class ExportEventSearchJob implements ShouldQueue
 
     public int $tries = 1;
 
-    public int $timeout = 300;
+    public int $timeout = 120;
 
     /**
      * @param  array<int, int>  $eventTypeIds
