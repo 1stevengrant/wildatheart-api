@@ -16,6 +16,7 @@ beforeEach(function () {
         'dbsync.sslMode' => 'VERIFY_IDENTITY',
         'dbsync.sslCa' => '/etc/ssl/cert.pem',
         'dbsync.threads' => 8,
+        'dbsync.verbosity' => 1,
         'dbsync.mydumperPath' => 'mydumper',
         'dbsync.myloaderPath' => 'myloader',
         'dbsync.importDump' => true,
@@ -57,6 +58,17 @@ function defaultsFilesLeftBehind(): array
 {
     return glob(sys_get_temp_dir() . '/dbsync_defaults_*') ?: [];
 }
+
+it('passes the configured log level to mydumper and myloader', function () {
+    config(['dbsync.verbosity' => 3]);
+
+    $runs = fakeDumpTools();
+
+    $this->artisan('db:production-sync')->assertSuccessful();
+
+    expect($runs['mydumper']['command'])->toContain('--verbose=3')
+        ->and($runs['myloader']['command'])->toContain('--verbose=3');
+});
 
 it('dumps with mydumper and keeps the password out of the command line', function () {
     $runs = fakeDumpTools();

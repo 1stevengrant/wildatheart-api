@@ -240,6 +240,8 @@ jobs:
             cache,cache_locks,search_documents,search_indexes
           REMOTE_DATABASE_SSL_MODE: VERIFY_IDENTITY
           REMOTE_DATABASE_SSL_CA: /etc/ssl/certs/ca-certificates.crt
+          # mydumper logs some failures below error level, which level 1 hides.
+          REMOTE_DATABASE_VERBOSITY: 3
         run: |
           CONNECTION=$(cloud database-cluster:get "$CLUSTER_ID" --json --fields=connection --show-sensitive -n | jq -c '.connection')
 

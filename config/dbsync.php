@@ -58,6 +58,11 @@ return [
     'threads' => (int) env('REMOTE_DATABASE_THREADS', 8),
 
     /*
+     * mydumper and myloader log level, from 0 (silent) to 3 (info). Some failures are only logged at 2 or above
+     */
+    'verbosity' => (int) env('REMOTE_DATABASE_VERBOSITY', 1),
+
+    /*
      * Sets if the exported dump will be imported into the current database connection
      */
     'importDump' => env('REMOTE_IMPORT_FILE', true),

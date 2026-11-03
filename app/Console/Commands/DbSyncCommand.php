@@ -79,6 +79,7 @@ class DbSyncCommand extends Command
             'sslMode' => config('dbsync.sslMode'),
             'sslCa' => config('dbsync.sslCa'),
             'threads' => config('dbsync.threads'),
+            'verbosity' => config('dbsync.verbosity'),
             'mydumperPath' => config('dbsync.mydumperPath'),
 
             // Local settings
@@ -167,7 +168,7 @@ class DbSyncCommand extends Command
             '--triggers',
             $omitFile !== null ? "--omit-from-file={$omitFile}" : null,
             $config['skipTzUtc'] ? '--skip-tz-utc' : null,
-            '--verbose=1',
+            "--verbose={$config['verbosity']}",
         ]));
     }
 
@@ -260,7 +261,7 @@ class DbSyncCommand extends Command
             "--database={$config['localDatabase']}",
             '--drop-table=DROP',
             "--threads={$config['threads']}",
-            '--verbose=1',
+            "--verbose={$config['verbosity']}",
         ];
     }
 
