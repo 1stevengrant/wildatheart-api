@@ -184,6 +184,22 @@ jobs:
           composer install --no-interaction --prefer-dist
           php artisan key:generate --no-interaction
 
+      # mydumper exits without saying why when it cannot connect, so check the
+      # production connection first and let the mysql client report the reason.
+      - name: Check the production database connection
+        if: steps.content.outputs.loaded == 'false'
+        env:
+          MYSQL_PWD: ${{ secrets.REMOTE_DATABASE_PASSWORD }}
+          REMOTE_DATABASE_HOST: ${{ secrets.REMOTE_DATABASE_HOST }}
+          REMOTE_DATABASE_USERNAME: ${{ secrets.REMOTE_DATABASE_USERNAME }}
+          REMOTE_DATABASE_NAME: ${{ secrets.REMOTE_DATABASE_NAME }}
+        run: |
+          mysql --host="$REMOTE_DATABASE_HOST" --port=3306 \
+            --user="$REMOTE_DATABASE_USERNAME" \
+            --ssl-mode=VERIFY_IDENTITY --ssl-ca=/etc/ssl/certs/ca-certificates.crt \
+            --connect-timeout=20 \
+            --execute="SELECT COUNT(*) AS tables_in_database FROM information_schema.tables WHERE table_schema = '$REMOTE_DATABASE_NAME'"
+
       # Content tables come across whole. User, event and other personal data
       # tables keep their structure but no rows, and the migrations table comes
       # across so the next step only runs this PR's migrations. The preview's
