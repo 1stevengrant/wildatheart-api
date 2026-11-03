@@ -3,7 +3,6 @@
 namespace App\Services\Subsplash;
 
 use Statamic\Entries\Entry;
-use Illuminate\Http\JsonResponse;
 use App\Builders\EntryQueryBuilder;
 use Statamic\Eloquent\Entries\UuidEntryModel;
 
@@ -14,7 +13,7 @@ class SubsplashMediaItemResponseBuilder
         private readonly SubsplashMediaSeriesImporter $seriesImporter,
     ) {}
 
-    public function build(Entry|UuidEntryModel $mediaItem): array|JsonResponse
+    public function build(Entry|UuidEntryModel $mediaItem): array
     {
         $responseData = [];
 
@@ -27,11 +26,18 @@ class SubsplashMediaItemResponseBuilder
 
         $subsplashMediaItem = $this->apiClient->getMediaItem($mediaItemId);
 
-        $responseData['date'] = data_get($subsplashMediaItem, 'date');
-
-        if (isset($subsplashMediaItem['errors']) && $subsplashMediaItem['errors'][0]['code'] === 'resource_not_found') {
-            return response()->json($mediaItem);
+        if ($subsplashMediaItem === null || data_get($subsplashMediaItem, 'errors.0.code') === 'resource_not_found') {
+            return [
+                ...$responseData,
+                'title' => $mediaItem->title,
+                'date' => $mediaItem->date,
+                'summary' => $mediaItem->description,
+                'is_vertical_video' => $mediaItem->is_vertical_video,
+                'images' => $mediaItem->images,
+            ];
         }
+
+        $responseData['date'] = data_get($subsplashMediaItem, 'date');
 
         $responseData['title'] = $subsplashMediaItem['title'];
         $shortCode = data_get($subsplashMediaItem, 'short_code');
