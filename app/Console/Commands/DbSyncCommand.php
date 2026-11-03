@@ -165,6 +165,8 @@ class DbSyncCommand extends Command
             '--clear',
             "--threads={$config['threads']}",
             '--sync-thread-lock-mode=NO_LOCK',
+            // Laravel Cloud's user cannot read the binlog position (error 1227), which is only needed for replication
+            '--ignore-errors=1227',
             '--triggers',
             $omitFile !== null ? "--omit-from-file={$omitFile}" : null,
             $config['skipTzUtc'] ? '--skip-tz-utc' : null,

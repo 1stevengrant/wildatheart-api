@@ -78,7 +78,7 @@ it('dumps with mydumper and keeps the password out of the command line', functio
     $command = $runs['mydumper']['command'];
 
     expect($command)
-        ->toContain('--database=production', '--threads=8', '--clear', '--sync-thread-lock-mode=NO_LOCK', '--triggers')
+        ->toContain('--database=production', '--threads=8', '--clear', '--sync-thread-lock-mode=NO_LOCK', '--ignore-errors=1227', '--triggers')
         ->and(implode(' ', $command))->not->toContain('pa$s');
 
     expect($runs['mydumper']['files']['defaults-extra-file'])->toBe(implode("\n", [
