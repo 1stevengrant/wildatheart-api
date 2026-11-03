@@ -68,11 +68,17 @@ jobs:
 
       # Cloud creates the preview shortly after the PR opens, then deploys
       # each pushed commit. Wait for this commit's deployment to succeed.
+      # Previews copy production's settings, and production has push to deploy
+      # off, so Cloud only deploys a preview by itself when it creates it. For
+      # later pushes this starts the deploy, which builds the branch's latest
+      # commit (a newer push cancels this run anyway).
       - name: Wait for the preview deployment of this commit
         id: preview
         run: |
+          DEPLOY_STARTED=false
+
           for attempt in $(seq 1 180); do
-            ENVIRONMENT=$(cloud environment:list "$CLOUD_APPLICATION_ID" --json --fields=id,branch,url,createdFromAutomation -n \
+            ENVIRONMENT=$(cloud environment:list "$CLOUD_APPLICATION_ID" --json --fields=id,name,branch,url,createdFromAutomation -n \
               | jq -c --arg branch "$BRANCH" 'map(select(.createdFromAutomation and .branch == $branch)) | .[0] // empty')
 
             if [ -z "$ENVIRONMENT" ]; then
@@ -82,8 +88,16 @@ jobs:
             fi
 
             ENVIRONMENT_ID=$(printf '%s' "$ENVIRONMENT" | jq -r '.id')
-            STATUS=$(cloud deployment:list "$ENVIRONMENT_ID" --json -n \
+            DEPLOYMENTS=$(cloud deployment:list "$ENVIRONMENT_ID" --json -n)
+            STATUS=$(printf '%s' "$DEPLOYMENTS" \
               | jq -r --arg sha "$COMMIT" 'map(select(.commitHash == $sha)) | .[0].status // "not-started"')
+
+            if [ "$STATUS" = "not-started" ] && [ "$DEPLOY_STARTED" = "false" ] \
+              && [ "$(printf '%s' "$DEPLOYMENTS" | jq 'length')" -gt 0 ]; then
+              echo "Starting a deployment of $BRANCH"
+              cloud deploy "$CLOUD_APPLICATION_ID" "$(printf '%s' "$ENVIRONMENT" | jq -r '.name')" --no-wait -n > /dev/null
+              DEPLOY_STARTED=true
+            fi
 
             echo "Deployment status: $STATUS (check $attempt)"
 
