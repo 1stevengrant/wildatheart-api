@@ -6,8 +6,8 @@ name: Preview environment
 #   1. copies production's tables into the preview database (once per
 #      preview), leaving user and event data out,
 #   2. runs the PR's migrations and seeds a few test hosts and events,
-#   3. builds a frontend preview against it in wildatheart.org-astro, and
-#      links it on the PR.
+#   3. builds a frontend preview of FRONTEND_PREVIEW_REF against it in
+#      wildatheart.org-astro, and links it on the PR.
 #
 # SETUP:
 # - Laravel Cloud preview automation on the production environment, with
@@ -20,6 +20,9 @@ name: Preview environment
 # - FRONTEND_PREVIEW_HOST (variable, optional): the staging Worker's
 #   workers.dev host, e.g. staging-astro.<subdomain>.workers.dev, so the PR
 #   comment can link the frontend preview directly.
+# - FRONTEND_PREVIEW_REF (variable, optional): the wildatheart.org-astro
+#   branch to build, normally the current release branch. Defaults to develop.
+#   That branch's ci.yml must have the workflow_dispatch trigger.
 
 on:
   pull_request:
@@ -43,6 +46,7 @@ jobs:
     env:
       CLOUD_APPLICATION_ID: app-a30928a0-2f87-43a7-ad83-720ac5c21d51
       FRONTEND_REPO: wild-at-heart/wildatheart.org-astro
+      FRONTEND_REF: ${{ vars.FRONTEND_PREVIEW_REF || 'develop' }}
       LARAVEL_CLOUD_TOKEN: ${{ secrets.LARAVEL_CLOUD_TOKEN }}
       BRANCH: ${{ github.head_ref }}
       COMMIT: ${{ github.event.pull_request.head.sha }}
@@ -284,7 +288,7 @@ jobs:
             | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' \
             | cut -c1-40)
 
-          gh workflow run ci.yml --repo "$FRONTEND_REPO" --ref develop \
+          gh workflow run ci.yml --repo "$FRONTEND_REPO" --ref "$FRONTEND_REF" \
             -f api_preview="$API_URL" \
             -f alias="$ALIAS"
 
@@ -308,7 +312,7 @@ jobs:
           | | URL |
           | --- | --- |
           | API | $API_URL |
-          | Frontend (develop) | $FRONTEND |
+          | Frontend (\`$FRONTEND_REF\`) | $FRONTEND |
 
           The frontend is building in [$FRONTEND_REPO](https://github.com/$FRONTEND_REPO/actions/workflows/ci.yml?query=event%3Aworkflow_dispatch) and is live once that run finishes. Test hosts from \`StagingFixturesSeeder\` can log in; content is a copy of production.
 
