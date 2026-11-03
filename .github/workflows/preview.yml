@@ -1,0 +1,320 @@
+name: Preview environment
+
+# Laravel Cloud creates a preview environment for every PR into prod (see
+# docs/deployment.md). Its database starts empty, and the frontend build needs
+# production content, so once Cloud has deployed the preview this workflow:
+#   1. copies production's tables into the preview database (once per
+#      preview), leaving user and event data out,
+#   2. runs the PR's migrations and seeds a few test hosts and events,
+#   3. builds a frontend preview against it in wildatheart.org-astro, and
+#      links it on the PR.
+#
+# SETUP:
+# - Laravel Cloud preview automation on the production environment, with
+#   APP_ENV=staging so StagingFixturesSeeder is allowed to run.
+# - LARAVEL_CLOUD_TOKEN: needs to read environments and deployments, update
+#   database clusters and run commands.
+# - REMOTE_DATABASE_*: the production credentials the parity tests already use.
+# - GH_APP_ID / GH_APP_PRIVATE_KEY: the types sync app, which also needs
+#   Actions: Read & Write on wildatheart.org-astro to start its CI.
+# - FRONTEND_PREVIEW_HOST (variable, optional): the staging Worker's
+#   workers.dev host, e.g. staging-astro.<subdomain>.workers.dev, so the PR
+#   comment can link the frontend preview directly.
+
+on:
+  pull_request:
+    branches: [prod]
+    types: [opened, reopened, synchronize]
+
+concurrency:
+  group: preview-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: "Load content and build the frontend preview"
+    # Cloud does not create previews for PRs from forks.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      CLOUD_APPLICATION_ID: app-a30928a0-2f87-43a7-ad83-720ac5c21d51
+      FRONTEND_REPO: wild-at-heart/wildatheart.org-astro
+      LARAVEL_CLOUD_TOKEN: ${{ secrets.LARAVEL_CLOUD_TOKEN }}
+      BRANCH: ${{ github.head_ref }}
+      COMMIT: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, mysql, xml, curl
+          coverage: none
+
+      - name: Install the Laravel Cloud CLI
+        run: |
+          composer global require laravel/cloud-cli --no-interaction --quiet
+          echo "$(composer global config bin-dir --absolute 2>/dev/null)" >> "$GITHUB_PATH"
+
+      # Cloud creates the preview shortly after the PR opens, then deploys
+      # each pushed commit. Wait for this commit's deployment to succeed.
+      - name: Wait for the preview deployment of this commit
+        id: preview
+        run: |
+          for attempt in $(seq 1 180); do
+            ENVIRONMENT=$(cloud environment:list "$CLOUD_APPLICATION_ID" --json --fields=id,branch,url,createdFromAutomation -n \
+              | jq -c --arg branch "$BRANCH" 'map(select(.createdFromAutomation and .branch == $branch)) | .[0] // empty')
+
+            if [ -z "$ENVIRONMENT" ]; then
+              echo "Waiting for Cloud to create the preview for $BRANCH (check $attempt)"
+              sleep 10
+              continue
+            fi
+
+            ENVIRONMENT_ID=$(printf '%s' "$ENVIRONMENT" | jq -r '.id')
+            STATUS=$(cloud deployment:list "$ENVIRONMENT_ID" --json -n \
+              | jq -r --arg sha "$COMMIT" 'map(select(.commitHash == $sha)) | .[0].status // "not-started"')
+
+            echo "Deployment status: $STATUS (check $attempt)"
+
+            case "$STATUS" in
+              deployment.succeeded)
+                echo "id=$ENVIRONMENT_ID" >> "$GITHUB_OUTPUT"
+                echo "url=$(printf '%s' "$ENVIRONMENT" | jq -r '.url | rtrimstr("/")')" >> "$GITHUB_OUTPUT"
+                exit 0
+                ;;
+              *fail*|*cancel*)
+                echo "::error::The preview deployment of $COMMIT ended with $STATUS"
+                exit 1
+                ;;
+            esac
+
+            sleep 10
+          done
+
+          echo "::error::Timed out waiting for the preview deployment of $COMMIT"
+          exit 1
+
+      # A preview only needs production's content once; later pushes just
+      # migrate on deploy. Re-running after a failed import loads it again.
+      - name: Check whether the preview already has content
+        id: content
+        env:
+          ENVIRONMENT_ID: ${{ steps.preview.outputs.id }}
+        run: |
+          OUTPUT=$(cloud tinker "$ENVIRONMENT_ID" --code='echo "entries=" . \Statamic\Facades\Entry::query()->count();' --timeout=120 -n)
+          ENTRIES=$(printf '%s' "$OUTPUT" | grep -oE 'entries=[0-9]+' | tail -n1 | cut -d= -f2)
+
+          if [ -z "$ENTRIES" ]; then
+            echo "::error::Could not count the preview's entries. Tinker output:"
+            printf '%s\n' "$OUTPUT"
+            exit 1
+          fi
+
+          echo "The preview has $ENTRIES entries"
+          echo "loaded=$([ "$ENTRIES" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      # Each preview gets its own database cluster. The import runs from this
+      # runner, so the cluster's public endpoint is opened for the duration.
+      - name: Find the preview database
+        id: database
+        if: steps.content.outputs.loaded == 'false'
+        env:
+          ENVIRONMENT_ID: ${{ steps.preview.outputs.id }}
+        run: |
+          SCHEMA_ID=$(cloud environment:get "$ENVIRONMENT_ID" --json --fields=databaseSchemaId -n | jq -r '.databaseSchemaId // empty')
+
+          if [ -z "$SCHEMA_ID" ]; then
+            echo "::error::The preview has no database attached"
+            exit 1
+          fi
+
+          CLUSTER=$(cloud database-cluster:list --json --fields=id,config,schemas -n \
+            | jq -c --arg schema "$SCHEMA_ID" 'map(select(any(.schemas[]?; .id == $schema))) | .[0] // empty')
+
+          if [ -z "$CLUSTER" ]; then
+            echo "::error::Could not find the database cluster for schema $SCHEMA_ID"
+            exit 1
+          fi
+
+          echo "cluster=$(printf '%s' "$CLUSTER" | jq -r '.id')" >> "$GITHUB_OUTPUT"
+          echo "schema=$(printf '%s' "$CLUSTER" | jq -r --arg schema "$SCHEMA_ID" '.schemas[] | select(.id == $schema) | .name')" >> "$GITHUB_OUTPUT"
+          echo "was_public=$(printf '%s' "$CLUSTER" | jq -r '.config.is_public // false')" >> "$GITHUB_OUTPUT"
+
+      - name: Open the preview database's public endpoint
+        if: steps.content.outputs.loaded == 'false' && steps.database.outputs.was_public != 'true'
+        env:
+          CLUSTER_ID: ${{ steps.database.outputs.cluster }}
+        run: |
+          cloud database-cluster:update "$CLUSTER_ID" --is-public=true --json -n --force > /dev/null
+
+          for attempt in $(seq 1 60); do
+            CLUSTER=$(cloud database-cluster:get "$CLUSTER_ID" --json --fields=status,config -n)
+            if [ "$(printf '%s' "$CLUSTER" | jq -r '.config.is_public')" = "true" ] && [ "$(printf '%s' "$CLUSTER" | jq -r '.status')" = "available" ]; then
+              exit 0
+            fi
+            echo "Waiting for the public endpoint (check $attempt)"
+            sleep 10
+          done
+
+          echo "::error::The preview database's public endpoint never became available"
+          exit 1
+
+      - name: Install mydumper
+        if: steps.content.outputs.loaded == 'false'
+        run: |
+          curl -fsSL -o /tmp/mydumper.deb "https://github.com/mydumper/mydumper/releases/download/v1.0.11-1/mydumper_1.0.11-1.$(lsb_release -cs)_amd64.deb"
+          sudo apt-get install -y /tmp/mydumper.deb
+          mydumper --version
+
+      - name: Prepare the application
+        if: steps.content.outputs.loaded == 'false'
+        run: |
+          cp .env.testing.example .env
+          composer install --no-interaction --prefer-dist
+          php artisan key:generate --no-interaction
+
+      # Content tables come across whole. User, event and other personal data
+      # tables keep their structure but no rows, and the migrations table comes
+      # across so the next step only runs this PR's migrations. The preview's
+      # database scales to zero, so the first attempt may hit it waking up.
+      - name: Copy production into the preview database
+        if: steps.content.outputs.loaded == 'false'
+        env:
+          CLUSTER_ID: ${{ steps.database.outputs.cluster }}
+          DB_DATABASE: ${{ steps.database.outputs.schema }}
+          REMOTE_DATABASE_HOST: ${{ secrets.REMOTE_DATABASE_HOST }}
+          REMOTE_DATABASE_USERNAME: ${{ secrets.REMOTE_DATABASE_USERNAME }}
+          REMOTE_DATABASE_NAME: ${{ secrets.REMOTE_DATABASE_NAME }}
+          REMOTE_DATABASE_PASSWORD: ${{ secrets.REMOTE_DATABASE_PASSWORD }}
+          REMOTE_DATABASE_EXCLUDE_DATA: >-
+            users,addresses,attendees,book_shipments,campfires,events,
+            captured_emails,contact_invitation_event,contact_invitations,
+            email_logs,email_verifies,event_manager_invitations,
+            event_ownership_transfers,event_user,event_user_interests,
+            group_user,model_has_permissions,model_has_roles,role_user,
+            password_activation_tokens,password_reset_tokens,webauthn,photos,
+            form_submissions,activity_log,failed_jobs,issues,jobs,sessions,
+            cache,cache_locks
+          REMOTE_DATABASE_SSL_MODE: VERIFY_IDENTITY
+          REMOTE_DATABASE_SSL_CA: /etc/ssl/certs/ca-certificates.crt
+        run: |
+          CONNECTION=$(cloud database-cluster:get "$CLUSTER_ID" --json --fields=connection --show-sensitive -n | jq -c '.connection')
+
+          DB_HOST=$(printf '%s' "$CONNECTION" | jq -r '.hostname')
+          DB_PORT=$(printf '%s' "$CONNECTION" | jq -r '.port')
+          DB_USERNAME=$(printf '%s' "$CONNECTION" | jq -r '.username')
+          DB_PASSWORD=$(printf '%s' "$CONNECTION" | jq -r '.password')
+          echo "::add-mask::$DB_HOST"
+          echo "::add-mask::$DB_PASSWORD"
+          export DB_HOST DB_PORT DB_USERNAME DB_PASSWORD
+
+          # The folded list above has spaces after its line breaks.
+          export REMOTE_DATABASE_EXCLUDE_DATA="${REMOTE_DATABASE_EXCLUDE_DATA// /}"
+
+          for attempt in 1 2 3; do
+            if php artisan db:production-sync; then
+              exit 0
+            fi
+            echo "Sync attempt $attempt failed; retrying in 30s..."
+            sleep 30
+          done
+
+          echo "::error::Could not copy production into the preview database"
+          exit 1
+
+      - name: Close the preview database's public endpoint
+        if: always() && steps.database.outputs.cluster != '' && steps.database.outputs.was_public != 'true'
+        env:
+          CLUSTER_ID: ${{ steps.database.outputs.cluster }}
+        run: cloud database-cluster:update "$CLUSTER_ID" --is-public=false --json -n --force > /dev/null
+
+      # The import replaced the tables the first deploy migrated, so migrate
+      # again for this PR's migrations, then add the test hosts and events.
+      - name: Migrate and seed the preview
+        if: steps.content.outputs.loaded == 'false'
+        env:
+          ENVIRONMENT_ID: ${{ steps.preview.outputs.id }}
+        run: |
+          COMMAND_ID=$(cloud command:run "$ENVIRONMENT_ID" \
+            --cmd='php artisan migrate --force && php artisan db:seed --class=StagingFixturesSeeder --force && php artisan cache:clear' \
+            --no-monitor --json -n | jq -r '.id')
+
+          for attempt in $(seq 1 60); do
+            RESULT=$(cloud command:get "$COMMAND_ID" --json --fields=status,exitCode,output,finishedAt -n)
+
+            if [ "$(printf '%s' "$RESULT" | jq -r '.finishedAt // empty')" != "" ]; then
+              printf '%s' "$RESULT" | jq -r '.output // ""'
+              [ "$(printf '%s' "$RESULT" | jq -r '.exitCode')" = "0" ] && exit 0
+              echo "::error::Migrating and seeding the preview failed"
+              exit 1
+            fi
+
+            echo "Waiting for the command to finish (check $attempt)"
+            sleep 10
+          done
+
+          echo "::error::Timed out waiting for the preview to migrate and seed"
+          exit 1
+
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: wild-at-heart
+          repositories: wildatheart.org-astro
+
+      # The frontend sanitises the alias the same way into a DNS label.
+      - name: Build the frontend preview
+        id: frontend
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          API_URL: ${{ steps.preview.outputs.url }}
+        run: |
+          ALIAS=$(printf 'api-%s' "$BRANCH" \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' \
+            | cut -c1-40)
+
+          gh workflow run ci.yml --repo "$FRONTEND_REPO" --ref develop \
+            -f api_preview="$API_URL" \
+            -f alias="$ALIAS"
+
+          echo "alias=$ALIAS" >> "$GITHUB_OUTPUT"
+
+      - name: Link the previews on the PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          API_URL: ${{ steps.preview.outputs.url }}
+          ALIAS: ${{ steps.frontend.outputs.alias }}
+          FRONTEND_PREVIEW_HOST: ${{ vars.FRONTEND_PREVIEW_HOST }}
+        run: |
+          FRONTEND="the \`$ALIAS\` alias of the staging Worker"
+          if [ -n "$FRONTEND_PREVIEW_HOST" ]; then
+            FRONTEND="https://${ALIAS}-${FRONTEND_PREVIEW_HOST}"
+          fi
+
+          BODY=$(cat <<EOF
+          🚀 **Preview environment ready**
+
+          | | URL |
+          | --- | --- |
+          | API | $API_URL |
+          | Frontend (develop) | $FRONTEND |
+
+          The frontend is building in [$FRONTEND_REPO](https://github.com/$FRONTEND_REPO/actions/workflows/ci.yml?query=event%3Aworkflow_dispatch) and is live once that run finishes. Test hosts from \`StagingFixturesSeeder\` can log in; content is a copy of production.
+
+          _Commit ${COMMIT}_
+          EOF
+          )
+
+          gh pr comment "${{ github.event.pull_request.number }}" --repo "$GITHUB_REPOSITORY" \
+            --edit-last --create-if-none --body "$BODY"
