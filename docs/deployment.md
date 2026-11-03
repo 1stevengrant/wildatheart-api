@@ -35,7 +35,7 @@ Laravel Cloud creates a preview environment for every PR into `prod`, so there i
 A preview's database starts empty, but the frontend cannot build without content, so the **Preview environment** workflow (`.github/workflows/preview.yml`) runs on every PR into `prod`. Once Cloud has deployed the PR's commit it:
 
 1. Copies production into the preview database with `db:production-sync`, the first time only. Content tables come across whole. User, event and other personal data tables keep their structure but no rows.
-2. Runs the PR's migrations and `StagingFixturesSeeder`, so a few test hosts and events exist.
+2. Runs the PR's migrations and `StagingFixturesSeeder`, so a few test hosts and events exist, then rebuilds the search index (it is not copied from production).
 3. Starts the frontend CI in `wildatheart.org-astro`, which builds the branch named in the `FRONTEND_PREVIEW_REF` variable (normally the current release branch) against the preview under the alias `api-<branch>`, and comments both URLs on the PR.
 
 A frontend PR can also use the preview, by naming the branch in an `API-Preview:` line in its description or by sharing the ClickUp task ID in its branch name. See "Pairing with an API preview" in that repo's `docs/deployment.md`.
@@ -44,7 +44,7 @@ This relies on the following being set up:
 
 | Where | Setting |
 |---|---|
-| Laravel Cloud, production environment, **Settings > Preview environments** | An automation with **Delete on merge or close** on, new resources for compute, database and bucket, and `APP_ENV=staging` so the fixtures seeder runs. Previews do not inherit production's variables, so set the rest there too. Use `MAIL_MAILER=log`, and do not link secrets for anything that writes to a real system (the Auth0 Management client in particular) |
+| Laravel Cloud, production environment, **Settings > Preview environments** | An automation with **Delete on merge or close** on, new resources for compute, database and bucket, `APP_ENV=staging` so the fixtures seeder runs, and `STATAMIC_SEARCH_DRIVER=database` as on production. Previews do not inherit production's variables, so set the rest there too. Use `MAIL_MAILER=log`, and do not link secrets for anything that writes to a real system (the Auth0 Management client in particular) |
 | GitHub secret `LARAVEL_CLOUD_TOKEN` | Must be able to read environments and deployments, update database clusters and run commands, not just view production deployments |
 | GitHub secrets `REMOTE_DATABASE_*` | The production database credentials the parity tests also use. Production's public endpoint must be on, because the runner connects from outside Cloud |
 | GitHub App (`GH_APP_ID`, `GH_APP_PRIVATE_KEY`) | The types sync app, which also needs **Actions: Read & Write** on `wildatheart.org-astro`, accepted on the org installation |

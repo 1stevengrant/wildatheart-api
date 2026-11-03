@@ -215,7 +215,9 @@ jobs:
             --execute="SELECT COUNT(*) AS tables_in_database FROM information_schema.tables WHERE table_schema = '$REMOTE_DATABASE_NAME'"
 
       # Content tables come across whole. User, event and other personal data
-      # tables keep their structure but no rows, and the migrations table comes
+      # tables keep their structure but no rows, and so does the search index,
+      # which is rebuilt on the preview (copying it broke mydumper with a
+      # "Malformed packet" partway through). The migrations table comes
       # across so the next step only runs this PR's migrations. The preview's
       # database scales to zero, so the first attempt may hit it waking up.
       - name: Copy production into the preview database
@@ -235,7 +237,7 @@ jobs:
             group_user,model_has_permissions,model_has_roles,role_user,
             password_activation_tokens,password_reset_tokens,webauthn,photos,
             form_submissions,activity_log,failed_jobs,issues,jobs,sessions,
-            cache,cache_locks
+            cache,cache_locks,search_documents,search_indexes
           REMOTE_DATABASE_SSL_MODE: VERIFY_IDENTITY
           REMOTE_DATABASE_SSL_CA: /etc/ssl/certs/ca-certificates.crt
         run: |
@@ -271,22 +273,22 @@ jobs:
 
       # The import replaced the tables the first deploy migrated, so migrate
       # again for this PR's migrations, then add the test hosts and events.
-      - name: Migrate and seed the preview
+      - name: Migrate, seed and index the preview
         if: steps.content.outputs.loaded == 'false'
         env:
           ENVIRONMENT_ID: ${{ steps.preview.outputs.id }}
         run: |
           COMMAND_ID=$(cloud command:run "$ENVIRONMENT_ID" \
-            --cmd='php artisan migrate --force && php artisan db:seed --class=StagingFixturesSeeder --force && php artisan cache:clear' \
+            --cmd='php artisan migrate --force && php artisan db:seed --class=StagingFixturesSeeder --force && php artisan statamic:search:update --all && php artisan cache:clear' \
             --no-monitor --json -n | jq -r '.id')
 
-          for attempt in $(seq 1 60); do
+          for attempt in $(seq 1 90); do
             RESULT=$(cloud command:get "$COMMAND_ID" --json --fields=status,exitCode,output,finishedAt -n)
 
             if [ "$(printf '%s' "$RESULT" | jq -r '.finishedAt // empty')" != "" ]; then
               printf '%s' "$RESULT" | jq -r '.output // ""'
               [ "$(printf '%s' "$RESULT" | jq -r '.exitCode')" = "0" ] && exit 0
-              echo "::error::Migrating and seeding the preview failed"
+              echo "::error::Migrating, seeding or indexing the preview failed"
               exit 1
             fi
 
@@ -294,7 +296,7 @@ jobs:
             sleep 10
           done
 
-          echo "::error::Timed out waiting for the preview to migrate and seed"
+          echo "::error::Timed out waiting for the preview to migrate, seed and index"
           exit 1
 
       - name: Generate GitHub App token
