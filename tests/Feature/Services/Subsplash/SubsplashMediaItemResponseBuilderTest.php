@@ -106,3 +106,42 @@ it('skips related media items whose Subsplash lookup returns null', function () 
         ->and($response['mediaItems'][0]['id'])->toBe('child-ok')
         ->and($response['mediaItems'][0]['slug'])->toBe('child-ok');
 });
+
+it('falls back to public CMS fields when the Subsplash item is missing', function (?array $subsplashResponse) {
+    $entry = Entry::make()
+        ->collection('media_item')
+        ->blueprint('subsplash_media_item')
+        ->id('deleted-id')
+        ->slug('deleted-item')
+        ->date(now()->subDay());
+    $entry->set('subsplash_media_item_id', 'deleted-id');
+    $entry->set('title', 'Deleted Item');
+    $entry->set('description', 'Still in the CMS');
+    $entry->save();
+
+    $this->apiClient->shouldReceive('getMediaItem')
+        ->with('deleted-id')
+        ->andReturn($subsplashResponse);
+
+    $response = json_decode(json_encode($this->builder->build($entry)), true);
+
+    expect(array_keys($response))->toEqualCanonicalizing([
+        'id',
+        'slug',
+        'uri',
+        'blueprint',
+        'title',
+        'date',
+        'summary',
+        'is_vertical_video',
+        'images',
+    ])
+        ->and($response['slug'])->toBe('deleted-item')
+        ->and($response['title'])->toBe('Deleted Item')
+        ->and($response['summary'])->toBe('Still in the CMS')
+        ->and($response['date'])->not->toBeNull()
+        ->and($response['blueprint']['handle'])->toBe('subsplash_media_item');
+})->with([
+    'a 404 from Subsplash' => [null],
+    'a resource_not_found payload' => [['errors' => [['code' => 'resource_not_found']]]],
+]);
