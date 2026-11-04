@@ -6,6 +6,7 @@ use Illuminate\Mail\MailManager;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Ghijk\EmailPreview\Mail\Transport\DatabaseTransport;
+use Ghijk\EmailPreview\Mail\Transport\AllowlistTransport;
 use Ghijk\EmailPreview\Console\Commands\CleanupCapturedEmails;
 
 class EmailPreviewServiceProvider extends ServiceProvider
@@ -53,6 +54,16 @@ class EmailPreviewServiceProvider extends ServiceProvider
         $this->app->extend('mail.manager', function (MailManager $manager) {
             $manager->extend('database', function () {
                 return new DatabaseTransport;
+            });
+
+            $manager->extend('allowlist', function (array $config) use ($manager) {
+                $mailers = config('mail.mailers');
+
+                return new AllowlistTransport(
+                    $config['domains'] ?? [],
+                    $manager->createSymfonyTransport($mailers[$config['deliver'] ?? 'smtp']),
+                    $manager->createSymfonyTransport($mailers[$config['capture'] ?? 'database']),
+                );
             });
 
             return $manager;

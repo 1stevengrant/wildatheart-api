@@ -225,7 +225,7 @@ it('skips /userinfo when the JWT already carries email', function () {
         ->postJson("/api/v1/events/{$this->eventId}/interests")
         ->assertOk();
 
-    Http::assertNothingSent();
+    Http::assertNotSent(fn ($request) => $request->url() === config('auth0.api.userinfo_url'));
 });
 
 it('skips /userinfo on subsequent requests for the same sub', function () {

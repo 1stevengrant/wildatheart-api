@@ -62,14 +62,6 @@ return [
             'transport' => 'ses',
         ],
 
-        'postmark' => [
-            'transport' => 'postmark',
-            // 'message_stream_id' => env('POSTMARK_MESSAGE_STREAM_ID'),
-            // 'client' => [
-            //     'timeout' => 5,
-            // ],
-        ],
-
         'resend' => [
             'transport' => 'resend',
         ],
@@ -96,16 +88,15 @@ return [
             ],
         ],
 
-        'roundrobin' => [
-            'transport' => 'roundrobin',
-            'mailers' => [
-                'ses',
-                'postmark',
-            ],
-        ],
-
         'database' => [
             'transport' => 'database',
+        ],
+
+        'allowlist' => [
+            'transport' => 'allowlist',
+            'domains' => explode(',', env('MAIL_ALLOWED_DOMAINS', 'wildatheart.org')),
+            'deliver' => env('MAIL_ALLOWLIST_DELIVER', 'failover'),
+            'capture' => env('MAIL_ALLOWLIST_CAPTURE', 'database'),
         ],
 
     ],
@@ -135,8 +126,8 @@ return [
     'logo_url' => env('MAIL_LOGO_URL', 'https://local.wildatheart.org/img/email-logo.png'),
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'no-reply@mail.wildatheart.org'),
+        'name' => env('MAIL_FROM_NAME', 'Wild at Heart'),
     ],
 
     /*

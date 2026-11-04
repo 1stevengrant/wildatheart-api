@@ -15,7 +15,7 @@ Wild at Heart Local is a Laravel-based platform for connecting Wild at Heart com
 -   **Database**: MySQL 8.0
 -   **CMS**: Statamic v5
 -   **Testing**: PEST Framework
--   **Queue**: Redis/Horizon
+-   **Queue**: Laravel Cloud managed queues (Redis locally)
 
 ## Development Commands
 
@@ -69,7 +69,7 @@ php artisan test             # Run PEST tests directly
 
 ```bash
 php artisan migrate:fresh --seed    # Reset database with seeds
-php artisan db:production-sync      # Sync production database (requires SSH config)
+php artisan db:production-sync      # Sync production database from Laravel Cloud (needs `brew install mydumper`)
 ```
 
 > **Before running tests after a sync:** make sure `bootstrap/cache/` has no cached `config.php`, `routes-*.php` or `events.php` (`php artisan config:clear && php artisan route:clear && php artisan event:clear`). A cached config pins the local environment, so tests skip `.env.testing` and `LazilyRefreshDatabase` wipes `wah_local` instead of `wahlocal_test`. You can confirm the target with `php artisan tinker --env=testing --execute 'echo DB::connection()->getDatabaseName();'`.
@@ -96,7 +96,7 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 -   **Data Transfer Objects**: API and form data structures in `app/DataTransferObjects/`
 -   **Builders**: Query builders for complex data retrieval in `app/Builders/`
 -   **Observers**: Model lifecycle hooks in `app/Observers/`
--   **Jobs**: Asynchronous processing with Redis/Horizon
+-   **Jobs**: Asynchronous processing on Laravel Cloud managed queues
 
 ### Frontend Architecture
 
@@ -112,7 +112,7 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 -   **Statamic CMS**: Eloquent backed content managed entries via Runway addon
 -   **Mapbox**: Interactive maps for event discovery
 -   **AWS S3**: Asset storage
--   **Mailgun/Postmark**: Email delivery
+-   **Cloudflare Email / SendGrid**: Email delivery (`failover` mailer: Cloudflare first, SendGrid SMTP if it fails)
 -   **Sentry**: Error tracking
 -   **Slack**: Admin notifications
 
@@ -147,9 +147,9 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 
 ## Branch Strategy
 
--   **Feature branches** → `staging` → `prod`
--   **Preview deployments**: Add `[wah]` to PR title for temporary staging URL
--   **Auto-deployment**: GitHub Actions with Laravel Forge
+-   **Feature branches** → PR into `prod`, which deploys to Laravel Cloud once the Tests workflow passes
+-   **Preview deployments**: Laravel Cloud preview environments per branch
+-   **Auto-deployment**: Laravel Cloud push-to-deploy
 
 ## Key Dependencies to Know
 
@@ -158,7 +158,6 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 -   **spatie/laravel-activitylog**: Model change tracking
 -   **spatie/laravel-permission**: Role-based access control
 -   **statamic/cms**: Headless CMS
--   **laravel/horizon**: Queue monitoring
 -   **auth0/auth0-php**: Authentication provider
 
 ### Frontend
@@ -171,10 +170,10 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 
 ## Environment-Specific Notes
 
--   **Local Development**: Uses Laravel Valet/Herd recommended
--   **Database Sync**: Production sync available via SSH tunnel
+-   **Local Development**: Flock serves the site at https://wahfires.test (MySQL, Valkey, mail catcher)
+-   **Database Sync**: `db:production-sync` pulls from the Laravel Cloud MySQL public endpoint with mydumper/myloader (single connection mysqldump fails through Cloud's proxy; see docs/database.md)
 -   **Asset Storage**: S3 integration required for media
--   **Queue Workers**: Horizon for job processing
+-   **Queue Workers**: Laravel Cloud managed queues
 -   **Error Tracking**: Sentry integration in production
 
 ===
@@ -193,7 +192,6 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - php - 8.4
 - inertiajs/inertia-laravel (INERTIA_LARAVEL) - v2
 - laravel/framework (LARAVEL) - v12
-- laravel/horizon (HORIZON) - v5
 - laravel/nightwatch (NIGHTWATCH) - v1
 - laravel/pail (PAIL) - v1
 - laravel/pennant (PENNANT) - v1

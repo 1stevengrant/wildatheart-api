@@ -27,7 +27,7 @@ File: `.github/workflows/sync-types.yml`
 |---------|-------|
 | Target repo | `wild-at-heart/wildatheart.org-astro` |
 | Target path | `src/types/` |
-| Trigger branches | `main`, `prod`, `staging` |
+| Trigger branches | `main`, `prod` |
 | PR base branch | `develop` |
 
 **Key workflow decisions:**

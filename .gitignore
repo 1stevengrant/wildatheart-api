@@ -10,6 +10,9 @@
 /vendor
 .env
 .env.backup
+.env.backup-*
+.env.cloud
+.env.cloudsync
 .env.testing
 .env.production
 .phpunit.result.cache
@@ -54,3 +57,4 @@ resources/users/roles.yaml
 !resources/blueprints/vendor/runway/
 !resources/blueprints/vendor/runway/*.yaml
 .claude/worktrees/
+/.cloud

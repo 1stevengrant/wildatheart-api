@@ -69,7 +69,7 @@ class SendAnnualFireCheckinsCommand extends Command
             return $limitInt === null || $count < $limitInt;
         });
 
-        $this->info("Queued {$count} annual check-in emails. Horizon will process them.");
+        $this->info("Queued {$count} annual check-in emails. The queue will process them.");
 
         return self::SUCCESS;
     }

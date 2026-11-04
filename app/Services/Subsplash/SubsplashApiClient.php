@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\ConnectionException;
 
 class SubsplashApiClient
 {
@@ -59,7 +61,9 @@ class SubsplashApiClient
 
         $response = Http::retry(
             [100, 500, 1000],
-            when: fn ($exception, $request) => $exception->response->status() >= 500,
+            when: fn ($exception) => $exception instanceof RequestException
+                ? $exception->response->serverError()
+                : $exception instanceof ConnectionException,
             throw: false,
         )->withHeaders([
             'Accept' => 'application/vnd.api+json',

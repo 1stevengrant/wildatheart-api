@@ -160,7 +160,7 @@ return [
     */
 
     'impersonate' => [
-        'enabled' => env('STATAMIC_IMPERSONATE_ENABLED', false),
+        'enabled' => env('STATAMIC_IMPERSONATE_ENABLED', true),
         'redirect' => env('STATAMIC_IMPERSONATE_REDIRECT', null),
     ],
 

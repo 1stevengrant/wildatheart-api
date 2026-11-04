@@ -1,6 +1,6 @@
 <?php
 
-use Spatie\FailedJobMonitor\Notifiable;
+use App\Support\FailedJobNotifiable;
 use Spatie\FailedJobMonitor\Notification;
 
 return [
@@ -15,7 +15,7 @@ return [
      * notifiable will use the mail and slack configuration specified
      * in this config file.
      */
-    'notifiable' => Notifiable::class,
+    'notifiable' => FailedJobNotifiable::class,
 
     /*
      * By default notifications are sent for all failures. You can pass a callable to filter

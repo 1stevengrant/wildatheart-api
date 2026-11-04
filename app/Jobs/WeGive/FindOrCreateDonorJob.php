@@ -80,16 +80,6 @@ class FindOrCreateDonorJob implements ShouldQueue
             $donorId = $this->findOrCreateDonor($weGiveConnector);
 
             if (! $donorId) {
-                LogActivityJob::dispatch(
-                    logName: WeGiveConnector::ERROR_LOG_NAME,
-                    description: 'Donor not found or created',
-                    properties: [
-                        'donor_model_id' => $this->donorModel->id,
-                    ],
-                    causedBy: $this->donorModel,
-                    performedOn: $this->donorModel,
-                );
-
                 return;
             }
 
@@ -143,22 +133,7 @@ class FindOrCreateDonorJob implements ShouldQueue
         $findOrCreateDonorRequest = new FindOrCreateDonorsRequest(...$requestData);
 
         try {
-            $response = $connector->send($findOrCreateDonorRequest);
-
-            LogActivityJob::dispatch(
-                logName: WeGiveConnector::INFO_LOG_NAME,
-                description: 'Created donor',
-                properties: [
-                    'donor' => $response->json()['data']['id'] ?? null,
-                    'response' => $response->json() && method_exists($response, 'json') ?
-                        ($response->json() ?? 'Invalid JSON') :
-                        null,
-                ],
-                causedBy: $this->donorModel,
-                performedOn: $this->donorModel,
-            );
-
-            return $response->json()['data']['id'] ?? null;
+            $response = $connector->send($findOrCreateDonorRequest)->throw();
         } catch (FatalRequestException|RequestException $e) {
             LogActivityJob::dispatch(
                 logName: WeGiveConnector::ERROR_LOG_NAME,
@@ -166,9 +141,31 @@ class FindOrCreateDonorJob implements ShouldQueue
                 properties: [
                     'donor_model_id' => $this->donorModel->id,
                     'error' => $e->getMessage(),
-                    'response' => $e->getResponse() && method_exists($e->getResponse(), 'json') ?
-                        ($e->getResponse()->json() ?? 'Invalid JSON') :
+                    'response' => $e instanceof RequestException ?
+                        WeGiveConnector::loggableBody($e->getResponse()->body()) :
                         null,
+                ],
+                causedBy: $this->donorModel,
+                performedOn: $this->donorModel,
+            );
+
+            if (WeGiveConnector::isPermanentFailure($e)) {
+                $this->fail($e);
+            }
+
+            throw $e;
+        }
+
+        try {
+            $donorId = $response->json('data.id');
+        } catch (JsonException $e) {
+            LogActivityJob::dispatch(
+                logName: WeGiveConnector::ERROR_LOG_NAME,
+                description: 'Invalid JSON response when creating donor',
+                properties: [
+                    'donor_model_id' => $this->donorModel->id,
+                    'error' => $e->getMessage(),
+                    'response' => WeGiveConnector::loggableBody($response->body()),
                 ],
                 causedBy: $this->donorModel,
                 performedOn: $this->donorModel,
@@ -176,5 +173,33 @@ class FindOrCreateDonorJob implements ShouldQueue
 
             throw $e;
         }
+
+        if (! $donorId) {
+            LogActivityJob::dispatch(
+                logName: WeGiveConnector::ERROR_LOG_NAME,
+                description: 'Donor not found or created',
+                properties: [
+                    'donor_model_id' => $this->donorModel->id,
+                    'response' => WeGiveConnector::loggableBody($response->body()),
+                ],
+                causedBy: $this->donorModel,
+                performedOn: $this->donorModel,
+            );
+
+            return null;
+        }
+
+        LogActivityJob::dispatch(
+            logName: WeGiveConnector::INFO_LOG_NAME,
+            description: 'Created donor',
+            properties: [
+                'donor' => $donorId,
+                'response' => $response->json(),
+            ],
+            causedBy: $this->donorModel,
+            performedOn: $this->donorModel,
+        );
+
+        return $donorId;
     }
 }

@@ -14,7 +14,6 @@ use App\Http\Controllers\API\V1\HostEventController;
 use App\Http\Controllers\API\AllExperiencesController;
 use App\Http\Controllers\API\ExperienceDataController;
 use App\Http\Controllers\API\V1\CurrentUserController;
-use App\Http\Controllers\API\Media\MediaItemController;
 use App\Http\Controllers\API\MediaSeriesDataController;
 use App\Http\Controllers\API\SearchForEventsController;
 use App\Http\Controllers\API\V1\HostContactsController;
@@ -201,7 +200,6 @@ Route::prefix('content')->group(function () {
 
         Route::get('/media-by-series-id/{slug}', [MediaItemsBySeriesController::class, 'show'])->name('media.bySeriesId');
         Route::get('/media/redirects', [MediaRedirectsController::class, 'index'])->name('media.getRedirects');
-        Route::get('/media/{slug}', [MediaItemController::class, 'show'])->name('media');
         Route::get('/subsplash/{any}', SubsplashController::class)->name('subsplash.getProxy')->where('any', '.*');
         Route::get('/subsplash-media/{slug}', [SubsplashMediaItemController::class, 'show'])->name('media.show');
         Route::get('/experiences/all', AllExperiencesController::class)->name('experience.all');

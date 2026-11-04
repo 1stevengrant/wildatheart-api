@@ -19,15 +19,9 @@ return [
     ],
 
     'zendesk' => [
-        'ticket_api' => 'https://' . env('ZENDESK_SUBDOMAIN') . '.zendesk.com/api/v2/tickets.json',
+        'ticket_api' => 'https://' . env('ZENDESK_SUBDOMAIN', 'ransomedheart') . '.zendesk.com/api/v2/tickets.json',
         'token' => env('ZENDESK_TOKEN'),
         'user' => env('ZENDESK_USERNAME'),
-    ],
-
-    'salesforce' => [
-        'callback_uri' => env('SALESFORCE_CALLBACK_URI'),
-        'key' => env('SALESFORCE_KEY'),
-        'secret' => env('SALESFORCE_SECRET'),
     ],
 
     'slack' => [
@@ -36,8 +30,8 @@ return [
     ],
 
     'bunny' => [
-        's3_cdn_url' => env('BUNNY_S3_CDN_URL'),
-        'api_url' => env('BUNNY_CDN_URL'),
+        's3_cdn_url' => env('BUNNY_S3_CDN_URL', 'https://b-cdn.wildatheart.org'),
+        'api_url' => env('BUNNY_CDN_URL', 'https://fires.b-cdn.net'),
     ],
 
     'zapier' => [
@@ -52,21 +46,21 @@ return [
         'base_url' => env('SUBSPLASH_BASE_URL', 'https://core.subsplash.com'),
         'client_id' => env('SUBSPLASH_CLIENT_ID'),
         'client_secret' => env('SUBSPLASH_CLIENT_SECRET'),
-        'scope' => env('SUBSPLASH_SCOPE'),
-        'authentication_token_url' => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL'),
-        'cache_duration' => env('SUBSPLASH_CACHE_DURATION'),
+        'scope' => env('SUBSPLASH_SCOPE', '5289PV'),
+        'authentication_token_url' => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL', 'https://core.subsplash.com/tokens/v1/token'),
+        'cache_duration' => env('SUBSPLASH_CACHE_DURATION', 600),
     ],
 
     'transistor' => [
         'api_key' => env('TRANSISTOR_API_KEY'),
-        'api_url' => env('TRANSISTOR_API_URL'),
-        'cache_duration' => env('TRANSISTOR_CACHE_DURATION'),
+        'api_url' => env('TRANSISTOR_API_URL', 'https://api.transistor.fm/v1/'),
+        'cache_duration' => env('TRANSISTOR_CACHE_DURATION', 600),
     ],
 
     'wegive' => [
         'api_key' => env('WEGIVE_API_KEY'),
         // Attendee tag found at https://dashboard.wegive.com/data/tags
-        'attendee_tag_id' => env('WEGIVE_ATTENDEE_TAG_ID', 330),
+        'attendee_tag_id' => env('WEGIVE_ATTENDEE_TAG_ID', 331),
         // Weekly email & updates list at https://dashboard.wegive.com/engagement/communication-lists
         'marketing_list_id' => env('WEGIVE_MARKETING_LIST_ID', 'xxx'),
         // Event type tag IDs found at https://dashboard.wegive.com/data/tags/

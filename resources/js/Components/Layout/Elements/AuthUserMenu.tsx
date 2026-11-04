@@ -1,19 +1,20 @@
 import { useState } from "react";
 
 import { Menu } from "@headlessui/react";
-import OutsideClickHandler from "react-outside-click-handler";
 
 import { SidebarUserMenuItems } from "@/Components/Layout/Navs/SidebarUserMenuItems";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
+import { useOnClickOutside } from "@/Hooks/useOnClickOutside";
 
 export const AuthUserMenu = ({ auth }: { auth: any }) => {
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const ref = useOnClickOutside(() => setShowUserMenu(false));
     const toggleMenu = () => {
         setShowUserMenu(!showUserMenu);
     };
     return (
         <li className="relative -mx-6 mt-auto">
-            <OutsideClickHandler onOutsideClick={() => setShowUserMenu(false)}>
+            <div ref={ref}>
                 {showUserMenu && (
                     <div className={`absolute left-6 -top-40 space-y-4`}>
                         <Menu>
@@ -30,7 +31,7 @@ export const AuthUserMenu = ({ auth }: { auth: any }) => {
                     <span className="sr-only">Your profile</span>
                     <span aria-hidden="true">{auth.user.fullname}</span>
                 </button>
-            </OutsideClickHandler>
+            </div>
         </li>
     );
 };

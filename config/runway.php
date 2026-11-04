@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Activity;
 use App\Models\Attendee;
+use App\Models\EmailLog;
 use App\Models\Redirect;
 use App\Models\EventType;
 use App\Models\EmailTemplate;
@@ -25,6 +26,16 @@ return [
             'name' => 'Activity Log',
             'cp_icon' => 'history',
             'title_field' => 'description',
+            'read_only' => true,
+            'duplicatable' => false,
+            'order_by' => 'id',
+            'order_by_direction' => 'DESC',
+        ],
+
+        EmailLog::class => [
+            'name' => 'Email Log',
+            'cp_icon' => 'mail-check',
+            'title_field' => 'subject',
             'read_only' => true,
             'duplicatable' => false,
             'order_by' => 'created_at',

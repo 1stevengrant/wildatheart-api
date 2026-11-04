@@ -1,0 +1,108 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: subject
+            field:
+              type: text
+              display: Subject
+              listable: true
+              default_visibility: true
+          -
+            handle: to
+            field:
+              type: text
+              display: To
+              listable: true
+              default_visibility: true
+          -
+            handle: from
+            field:
+              type: text
+              display: From
+              width: 50
+          -
+            handle: cc
+            field:
+              type: text
+              display: CC
+              width: 50
+          -
+            handle: bcc
+            field:
+              type: text
+              display: BCC
+              width: 50
+          -
+            handle: attachments_summary
+            field:
+              type: text
+              display: Attachments
+              width: 50
+              visibility: computed
+          -
+            handle: error
+            field:
+              type: textarea
+              display: Error
+              if:
+                delivery_status: 'equals failed'
+          -
+            handle: html_body
+            field:
+              type: email_html_preview
+              display: Email
+              visibility: computed
+              listable: false
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: delivery_status
+            field:
+              type: email_log_status
+              display: Status
+              listable: true
+              default_visibility: true
+          -
+            handle: mailable
+            field:
+              type: text
+              display: Mailable
+              listable: true
+              default_visibility: true
+          -
+            handle: mailer
+            field:
+              type: text
+              display: Mailer
+          -
+            handle: message_id
+            field:
+              type: text
+              display: 'Message ID'
+          -
+            handle: event_id
+            field:
+              type: text
+              display: 'Event ID'
+          -
+            handle: id
+            field:
+              type: text
+              display: ID
+              visibility: read_only
+          -
+            handle: created_at
+            field:
+              type: date
+              display: 'Sent At'
+              time_enabled: true
+              listable: true
+              default_visibility: true
+title: 'Email Log'

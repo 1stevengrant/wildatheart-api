@@ -130,6 +130,11 @@ class TransistorService
                 ->block(self::REFRESH_LOCK_WAIT, function () use ($showId, $status) {
                     $this->performRefresh($showId, $status);
                 });
+        } catch (LockTimeoutException $e) {
+            Log::warning('Transistor refresh lock timeout; keeping existing cache.', [
+                'show_id' => $showId,
+                'status' => $status,
+            ]);
         } catch (ServerException|FatalRequestException $e) {
             Log::warning('Transistor API unreachable during refresh; keeping existing cache.', [
                 'show_id' => $showId,

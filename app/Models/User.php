@@ -45,8 +45,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
     'email_verified_at',
     'password',
     'last_login_at',
-    'salesforce_id',
-    'salesforce_contact_id',
     'wegive_donor_id',
     'profile_step',
     'opted_into_marketing',

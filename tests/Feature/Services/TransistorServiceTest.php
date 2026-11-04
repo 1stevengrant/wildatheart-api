@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Services;
 
+use Illuminate\Support\Sleep;
 use Saloon\RateLimitPlugin\Limit;
 use Saloon\Http\Faking\MockClient;
 use App\Services\TransistorService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Saloon\Http\Faking\MockResponse;
 use Illuminate\Support\Facades\Cache;
@@ -266,6 +268,37 @@ it('serializes concurrent refreshes using a cache lock', function () {
 
     expect($result)->toBe($episodes);
     $mockClient->assertSentCount(0, GetEpisodesRequest::class);
+});
+
+it('keeps the cached episodes when a refresh cannot acquire the lock in time', function () {
+    Sleep::fake(syncWithCarbon: true);
+    Log::spy();
+
+    $showId = 'contended-show';
+    $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';
+    $cached = [['id' => 'cached-episode']];
+    Cache::forever($url, $cached);
+
+    $lock = Cache::lock("transistor-refresh:{$showId}:published", 60);
+    $lock->get();
+
+    $mockClient = MockClient::global([
+        GetEpisodesRequest::class => MockResponse::make([
+            'data' => [],
+            'meta' => ['currentPage' => 1, 'totalPages' => 1],
+        ]),
+    ]);
+
+    $this->transistorService->refreshEpisodeList($showId);
+
+    expect(Cache::get($url))->toBe($cached);
+    $mockClient->assertSentCount(0, GetEpisodesRequest::class);
+    Log::shouldHaveReceived('warning')->once()->with(
+        'Transistor refresh lock timeout; keeping existing cache.',
+        ['show_id' => $showId, 'status' => 'published'],
+    );
+
+    $lock->release();
 });
 
 it('preserves cached episodes and shares the API cooldown after a 429', function (?string $retryAfter, int $cooldown) {
