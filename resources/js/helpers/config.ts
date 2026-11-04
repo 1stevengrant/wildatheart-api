@@ -5,7 +5,7 @@ export const config = (key: string): string | undefined => {
         "services.mapbox.api_url":
             "https://api.mapbox.com/geocoding/v5/mapbox.places/",
         "services.mapbox.token": import.meta.env.VITE_REACT_APP_MAPBOX_TOKEN,
-        "services.mapbox.style": "mapbox://styles/mapbox/navigation-day-v1",
+        "services.mapbox.style": "mapbox://styles/mapbox/streets-v11",
     };
 
     return configs[key];

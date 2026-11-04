@@ -48,6 +48,10 @@ export const StaticMap = ({
         });
 
         new mapboxgl.Marker(el).setLngLat([lng, lat]).addTo(map);
+
+        return () => {
+            map.remove();
+        };
     }, []);
 
     return (
