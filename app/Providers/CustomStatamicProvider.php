@@ -13,7 +13,10 @@ use App\Support\Search\DatabaseIndex;
 use App\Exceptions\CpExceptionHandler;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
+use Statamic\Http\Resources\API\Resource;
+use App\Http\Resources\PublicEntryResource;
 use App\Jobs\Cloudflare\TriggerAstroBuildJob;
+use Statamic\Http\Resources\API\EntryResource;
 use Illuminate\Support\Facades\Event as LaravelEvent;
 use Statamic\Exceptions\ControlPanelExceptionHandler;
 
@@ -32,6 +35,8 @@ class CustomStatamicProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Resource::map([EntryResource::class => PublicEntryResource::class]);
+
         Search::extend('database', fn ($app, array $config, string $name, ?string $locale) => new DatabaseIndex($name, $config, $locale));
 
         LaravelEvent::listen(function (AssetUploaded $event): void {
