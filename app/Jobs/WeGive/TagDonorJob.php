@@ -2,7 +2,6 @@
 
 namespace App\Jobs\WeGive;
 
-use JsonException;
 use App\Models\User;
 use App\Models\Attendee;
 use App\Jobs\LogActivityJob;
@@ -38,7 +37,6 @@ class TagDonorJob implements ShouldQueue
     /**
      * @throws FatalRequestException
      * @throws RequestException
-     * @throws JsonException
      */
     public function handle(): void
     {
@@ -57,33 +55,12 @@ class TagDonorJob implements ShouldQueue
             return;
         }
 
-        $weGiveConnector = new WeGiveConnector;
-
-        try {
-            $this->tagDonor($weGiveConnector, $this->taggable->wegive_donor_id);
-        } catch (FatalRequestException|RequestException $e) {
-            LogActivityJob::dispatch(
-                logName: WeGiveConnector::ERROR_LOG_NAME,
-                description: 'Unhandled exception in TagWeGiveDonorJob',
-                properties: [
-                    'taggable_id' => $this->taggable->id,
-                    'error' => $e->getMessage(),
-                    'response' => $e->getResponse() && method_exists($e->getResponse(), 'json') ?
-                        ($e->getResponse()->json() ?? 'Invalid JSON') :
-                        null,
-                ],
-                causedBy: $this->taggable,
-                performedOn: $this->taggable,
-            );
-
-            throw $e;
-        }
+        $this->tagDonor(new WeGiveConnector, $this->taggable->wegive_donor_id);
     }
 
     /**
      * @throws FatalRequestException
      * @throws RequestException
-     * @throws JsonException
      */
     private function tagDonor(WeGiveConnector $connector, string $donorId): void
     {
@@ -93,7 +70,7 @@ class TagDonorJob implements ShouldQueue
         );
 
         try {
-            $response = $connector->send($tagDonorsRequest);
+            $response = $connector->send($tagDonorsRequest)->throw();
 
             LogActivityJob::dispatch(
                 logName: WeGiveConnector::INFO_LOG_NAME,
@@ -101,9 +78,7 @@ class TagDonorJob implements ShouldQueue
                 properties: [
                     'tag' => $this->weGiveTagId,
                     'donor' => $donorId,
-                    'response' => $response->json() && method_exists($response, 'json') ?
-                        ($response->json() ?? 'Invalid JSON') :
-                        null,
+                    'response' => WeGiveConnector::loggableBody($response->body()),
                 ],
                 causedBy: $this->taggable,
                 performedOn: $this->taggable,
@@ -116,13 +91,17 @@ class TagDonorJob implements ShouldQueue
                     'tag' => $this->weGiveTagId,
                     'donor' => $donorId,
                     'error' => $e->getMessage(),
-                    'response' => $e->getResponse() && method_exists($e->getResponse(), 'json') ?
-                        ($e->getResponse()->json() ?? 'Invalid JSON') :
+                    'response' => $e instanceof RequestException ?
+                        WeGiveConnector::loggableBody($e->getResponse()->body()) :
                         null,
                 ],
                 causedBy: $this->taggable,
                 performedOn: $this->taggable,
             );
+
+            if (WeGiveConnector::isPermanentFailure($e)) {
+                $this->fail($e);
+            }
 
             throw $e;
         }
