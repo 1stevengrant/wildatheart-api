@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Media;
 use Illuminate\Http\JsonResponse;
 use App\Builders\EntryQueryBuilder;
 use App\Http\Controllers\Controller;
+use App\Support\PublicMediaSeriesItem;
 
 class MediaItemsBySeriesController extends Controller
 {
@@ -15,6 +16,6 @@ class MediaItemsBySeriesController extends Controller
             ->orderBy('data->position', 'asc')
             ->get();
 
-        return response()->json($mediaItemsInSeries);
+        return response()->json($mediaItemsInSeries->map(PublicMediaSeriesItem::fromEntry(...))->values());
     }
 }
