@@ -1,5 +1,4 @@
 import { EventCard } from "@/Components/Events/EventCard";
-import { UpcomingEventsNav } from "@/Components/Nav/UpcomingEventsNav";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { AppLayout } from "@/Layouts/AppLayout";
 
@@ -11,7 +10,6 @@ const UpcomingEventsPage = ({
     return (
         <AppLayout title={"Upcoming Events"}>
             <div className={`p-4`}>
-                <UpcomingEventsNav />
                 <HeadingOne className={`mb-4`}>Upcoming Events</HeadingOne>
 
                 {Object.entries(upcomingEvents).map(([monthYear, events]) => (
