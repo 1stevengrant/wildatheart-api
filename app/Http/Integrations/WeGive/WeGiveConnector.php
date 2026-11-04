@@ -4,7 +4,10 @@ namespace App\Http\Integrations\WeGive;
 
 use RuntimeException;
 use Saloon\Http\Connector;
+use Illuminate\Support\Str;
 use Saloon\Http\Auth\TokenAuthenticator;
+use Saloon\Exceptions\Request\RequestException;
+use Saloon\Exceptions\Request\FatalRequestException;
 
 class WeGiveConnector extends Connector
 {
@@ -14,7 +17,27 @@ class WeGiveConnector extends Connector
 
     public const INFO_LOG_NAME = 'wegive';
 
+    public const LOGGED_RESPONSE_LENGTH = 2000;
+
     public ?int $tries = 1;
+
+    public static function isPermanentFailure(FatalRequestException|RequestException $exception): bool
+    {
+        if (! $exception instanceof RequestException) {
+            return false;
+        }
+
+        if (in_array($exception->getStatus(), [408, 429], true)) {
+            return false;
+        }
+
+        return $exception->getResponse()->clientError();
+    }
+
+    public static function loggableBody(string $body): string
+    {
+        return Str::limit($body, self::LOGGED_RESPONSE_LENGTH);
+    }
 
     protected function defaultAuth(): TokenAuthenticator
     {
