@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
@@ -36,6 +37,14 @@ it('makes a connection between the anonymous user and host', function () {
 
     Mail::assertQueued(AttendeeRegistered::class);
     Mail::assertQueued(AttendeeConnectedToHost::class);
+});
+
+it('logs the connection without copying the event or attendee', function () {
+    $this->post(route('connect.store', $this->event), $this->attributes);
+
+    Bus::assertDispatched(LogActivityJob::class, fn (LogActivityJob $job): bool => $job->description === 'Connected with Host'
+        && $job->properties === []
+        && $job->causedBy->is($this->event));
 });
 
 it('allows an anonymous user to see the form to connect with an event host', function () {

@@ -30,7 +30,6 @@ class ViewEventListingController extends Controller
         LogActivityJob::dispatch(
             logName: 'events',
             description: 'Viewed event listing',
-            properties: ['event' => $event, 'user' => auth()->user() ?? null],
             causedBy: auth()->user() ?? null,
             performedOn: $event,
         );

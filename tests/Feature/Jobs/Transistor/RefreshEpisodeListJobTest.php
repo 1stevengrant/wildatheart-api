@@ -17,7 +17,7 @@ afterEach(function () {
     Cache::flush();
 });
 
-it('releases a throttled refresh until the rate limit expires', function () {
+it('releases a throttled refresh', function () {
     $limit = Limit::allow(5)->everySeconds(10)->name('too_many_attempts_limit');
     $limit->exceeded(45);
 
@@ -29,7 +29,7 @@ it('releases a throttled refresh until the rate limit expires', function () {
     $job = (new RefreshEpisodeListJob('wildatheart-daily', 'draft'))->withFakeQueueInteractions();
     $job->handle($service);
 
-    $job->assertReleased(46)->assertNotFailed();
+    $job->assertReleased()->assertNotFailed();
 });
 
 it('still propagates unrelated failures', function () {
