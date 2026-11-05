@@ -89,7 +89,7 @@ class TransistorConnector extends Connector implements HasPagination
 
             protected function applyPagination(Request $request): Request
             {
-                $request->query()->add('pagination[page]', $this->currentPage);
+                $request->query()->add('pagination[page]', $this->currentPage + 1);
 
                 if (isset($this->perPageLimit)) {
                     $request->query()->add('pagination[per]', $this->perPageLimit);
