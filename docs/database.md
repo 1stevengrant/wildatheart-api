@@ -34,6 +34,14 @@ php artisan db:production-sync
 
 It replaces the tables in your local database with production's. Tables listed in `REMOTE_DATABASE_EXCLUDE_DATA` keep their structure but come across empty.
 
+## Staging content
+
+Staging keeps a copy of production's CMS content. `php artisan staging:sync-content` runs hourly on the staging environment and copies the tables listed in `contentTables` in `config/dbsync.php` from the `production` schema, which sits on the same database cluster.
+
+The list is an allowlist, so users, attendees, events, addresses and form submissions stay out of staging. Check a table for personal data before adding it.
+
+A table is only copied when its row count or latest `updated_at` differs from production's. Any edits made to these tables on staging are replaced at the next copy, and `--force` copies every table regardless.
+
 ## Why mydumper
 
 A single `mysqldump` of every table through Laravel Cloud's database proxy fails partway through with `Error 2027: Malformed packet`. Dumping one table at a time over a fresh connection works, and mydumper does that in parallel threads.
