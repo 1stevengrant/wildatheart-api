@@ -12,12 +12,10 @@ import {
     quickFilterButtonClasses,
 } from "@/helpers/quickFilterButtonClasses";
 import { useDates } from "@/Hooks/useDates";
-import { usePopupInfo } from "@/Hooks/usePopupInfo";
 import { useSex } from "@/Hooks/useSex";
 import { useTypeGroup } from "@/Hooks/useTypeGroup";
 
 export const ToggleTypeGroups = () => {
-    const { setPopupInfo } = usePopupInfo();
     const { setCurrentSex } = useSex();
     const { typeGroup, setTypeGroup } = useTypeGroup();
     const { resetAllDates } = useDates();
@@ -26,7 +24,6 @@ export const ToggleTypeGroups = () => {
 
     const handleTypeGroup = (group: any) => {
         resetAllDates();
-        setPopupInfo(null);
         setCurrentSex("");
         if (typeGroup === group) {
             setTypeGroup("");
