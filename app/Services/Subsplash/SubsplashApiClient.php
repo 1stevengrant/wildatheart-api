@@ -11,6 +11,8 @@ use Illuminate\Http\Client\ConnectionException;
 
 class SubsplashApiClient
 {
+    private const int REFRESH_LOCK_SECONDS = 30;
+
     private string $baseUrl;
 
     public function __construct()
@@ -49,14 +51,22 @@ class SubsplashApiClient
 
     public function fetch(string $url, int $timeout = 5): ?array
     {
-        $cacheDuration = config('services.subsplash.cache_duration');
+        $cacheDuration = (int) config('services.subsplash.cache_duration');
 
-        $cacheKey = md5($url);
-        $cached = Cache::get($cacheKey);
-        if ($cached !== null) {
-            return $cached;
+        if ($cacheDuration <= 0) {
+            return $this->fetchFresh($url, $timeout);
         }
 
+        return Cache::flexible(
+            md5($url),
+            [$cacheDuration, (int) config('services.subsplash.stale_duration')],
+            fn () => $this->fetchFresh($url, $timeout),
+            ['seconds' => self::REFRESH_LOCK_SECONDS],
+        );
+    }
+
+    public function fetchFresh(string $url, int $timeout = 5): ?array
+    {
         $accessToken = $this->getAccessToken();
 
         $response = Http::connectTimeout(2)->timeout($timeout)->retry(
@@ -88,10 +98,7 @@ class SubsplashApiClient
         }
 
         if ($response->successful()) {
-            $json = $response->json();
-            Cache::put($cacheKey, $json, (int) $cacheDuration);
-
-            return $json;
+            return $response->json();
         }
 
         if ($response->notFound()) {
@@ -104,6 +111,11 @@ class SubsplashApiClient
     public function getMediaItem(string $mediaItemId): ?array
     {
         return $this->fetch("{$this->baseUrl}/media/v1/media-items/{$mediaItemId}");
+    }
+
+    public function getFreshMediaItem(string $mediaItemId): ?array
+    {
+        return $this->fetchFresh("{$this->baseUrl}/media/v1/media-items/{$mediaItemId}");
     }
 
     public function findMediaItemByTitle(string $title): ?array

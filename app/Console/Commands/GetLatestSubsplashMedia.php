@@ -64,7 +64,7 @@ class GetLatestSubsplashMedia extends Command
     private function updateOrCreateEntries(&$nextPage, $totalMediaItems)
     {
         // Retrieve items on current page.
-        $subsplashResponse = $this->apiClient->fetch($nextPage, timeout: 30);
+        $subsplashResponse = $this->apiClient->fetchFresh($nextPage, timeout: 30);
         $mediaItemsInResponse = data_get($subsplashResponse, '_embedded.media-items', []);
 
         // Update next page if available.
@@ -97,7 +97,7 @@ class GetLatestSubsplashMedia extends Command
             // Optional: Display current item in progress bar
             $bar->setMessage("Processing: {$item['title']}");
 
-            $item = $this->apiClient->getMediaItem($item['id']);
+            $item = $this->apiClient->getFreshMediaItem($item['id']);
 
             $this->importer->import($item, false, $this->option('force'), function ($status, $title, $currentUpdated, $lastUpdated) {
                 if ($status === 'skipped') {
@@ -123,7 +123,7 @@ class GetLatestSubsplashMedia extends Command
             $this->info("Fetching media item with ID: {$mediaItemId}");
 
             // Fetch the specific media item from Subsplash
-            $mediaItem = $this->apiClient->getMediaItem($mediaItemId);
+            $mediaItem = $this->apiClient->getFreshMediaItem($mediaItemId);
 
             if (isset($mediaItem['errors'])) {
                 $this->error('Error fetching media item:');

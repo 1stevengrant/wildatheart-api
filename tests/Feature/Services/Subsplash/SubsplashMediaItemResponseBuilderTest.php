@@ -79,10 +79,7 @@ it('skips related media items whose Subsplash lookup returns null', function () 
         ->with('primary-id')
         ->andReturn($primarySubsplashResponse);
 
-    $this->apiClient->shouldReceive('fetch')
-        ->andReturn([
-            '_embedded' => ['media-items' => []],
-        ]);
+    $this->apiClient->shouldReceive('fetch')->never();
 
     $this->apiClient->shouldReceive('getMediaItem')
         ->with('child-ok')

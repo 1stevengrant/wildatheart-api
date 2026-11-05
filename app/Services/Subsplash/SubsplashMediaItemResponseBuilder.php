@@ -87,16 +87,6 @@ class SubsplashMediaItemResponseBuilder
             $seriesEntry = $this->seriesImporter->findInStatamic($seriesId);
 
             $responseData['series']['uri'] = $seriesEntry->uri;
-            $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
-
-            $subsplashMediaItems = $this->apiClient->fetch($relatedMediaItemsUrl . '&filter[status]=published');
-
-            $subsplashMediaItemMap = [];
-
-            foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
-                $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
-                $this->apiClient->getMediaItem(data_get($mediaItem, 'id'));
-            }
 
             $mediaItemEntries = EntryQueryBuilder::mediaItems()
                 ->inSeries($seriesId)
@@ -109,21 +99,14 @@ class SubsplashMediaItemResponseBuilder
             $responseData['mediaItems'] = [];
 
             foreach ($mediaItemEntries as $mediaItemEntry) {
-                $mediaItemId = $mediaItemEntry->data()->get('subsplash_media_item_id');
-                if (! isset($subsplashMediaItemMap[$mediaItemId])) {
-                    $mediaItem = $this->apiClient->getMediaItem($mediaItemId);
-                    if ($mediaItem !== null) {
-                        $subsplashMediaItemMap[$mediaItemId] = $mediaItem;
-                    }
-                }
+                $relatedMediaItem = $this->apiClient->getMediaItem($mediaItemEntry->subsplash_media_item_id);
 
-                $subsplashMediaItem = $this->apiClient->getMediaItem($mediaItemEntry->subsplash_media_item_id);
-                if ($subsplashMediaItem === null) {
+                if ($relatedMediaItem === null) {
                     continue;
                 }
 
                 $responseData['mediaItems'][] = [
-                    ...$subsplashMediaItem,
+                    ...$relatedMediaItem,
                     'slug' => $mediaItemEntry->slug,
                     'uri' => $mediaItemEntry->uri,
                 ];

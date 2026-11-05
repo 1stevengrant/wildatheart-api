@@ -3,8 +3,10 @@
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Exceptions;
 use App\Services\Subsplash\SubsplashApiClient;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Defer\DeferredCallbackCollection;
 
 beforeEach(function () {
     Sleep::fake();
@@ -79,7 +81,7 @@ it('reports the final 503 after three attempts without caching the failure', fun
     Http::assertSentCount(4);
 });
 
-it('reuses successful responses until the configured cache expires', function () {
+it('serves the stale response and refreshes it after the configured cache expires', function () {
     $this->freezeTime();
     Http::fake([
         $this->url => Http::sequence()->push(['title' => 'Original'])->push(['title' => 'Updated']),
@@ -88,9 +90,110 @@ it('reuses successful responses until the configured cache expires', function ()
     expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
     $this->travel(299)->seconds();
     expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    expect(app(DeferredCallbackCollection::class))->toHaveCount(0);
     Http::assertSentCount(1);
+
     $this->travel(2)->seconds();
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    Http::assertSentCount(1);
+
+    app(DeferredCallbackCollection::class)->invoke();
+
+    Http::assertSentCount(2);
     expect($this->client->fetch($this->url))->toBe(['title' => 'Updated']);
+    Http::assertSentCount(2);
+});
+
+it('keeps serving the stale response and reports the failure when a refresh cannot connect', function () {
+    Exceptions::fake();
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()
+            ->push(['title' => 'Original'])
+            ->pushFailedConnection()
+            ->pushFailedConnection()
+            ->pushFailedConnection(),
+    ]);
+
+    $this->client->fetch($this->url);
+    $this->travel(301)->seconds();
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+
+    app(DeferredCallbackCollection::class)->invoke();
+
+    Exceptions::assertReported(ConnectionException::class);
+    Http::assertSentCount(4);
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+});
+
+it('releases the refresh lock after a failed refresh so the next request can retry', function () {
+    Exceptions::fake();
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()
+            ->push(['title' => 'Original'])
+            ->pushFailedConnection()
+            ->pushFailedConnection()
+            ->pushFailedConnection()
+            ->push(['title' => 'Recovered']),
+    ]);
+
+    $this->client->fetch($this->url);
+    $this->travel(301)->seconds();
+
+    $this->client->fetch($this->url);
+    app(DeferredCallbackCollection::class)->invoke();
+
+    $this->client->fetch($this->url);
+    app(DeferredCallbackCollection::class)->invoke();
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Recovered']);
+});
+
+it('surfaces the connection failure once the stale response has expired', function () {
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()
+            ->push(['title' => 'Original'])
+            ->pushFailedConnection()
+            ->pushFailedConnection()
+            ->pushFailedConnection(),
+    ]);
+
+    $this->client->fetch($this->url);
+    $this->travel(86401)->seconds();
+    Cache::put('test-client', 'test-token', 3600);
+
+    expect(fn () => $this->client->fetch($this->url))->toThrow(ConnectionException::class);
+});
+
+it('stops serving the stale response once Subsplash reports the item as missing', function () {
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()->push(['title' => 'Original'])->push([], 404)->push([], 404),
+    ]);
+
+    $this->client->fetch($this->url);
+    $this->travel(301)->seconds();
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+
+    app(DeferredCallbackCollection::class)->invoke();
+
+    expect($this->client->fetch($this->url))->toBeNull();
+    Http::assertSentCount(3);
+});
+
+it('reads past the cache without changing it when fetching fresh', function () {
+    Http::fake([
+        $this->url => Http::sequence()->push(['title' => 'Original'])->push(['title' => 'Updated']),
+    ]);
+
+    $this->client->fetch($this->url);
+
+    expect($this->client->fetchFresh($this->url))->toBe(['title' => 'Updated']);
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
     Http::assertSentCount(2);
 });
 

@@ -9,7 +9,7 @@ it('handles null media items in response without throwing', function () {
         ->once()
         ->andReturn('https://core.subsplash.com/media/v1/media-items?filter=test');
 
-    $apiClient->shouldReceive('fetch')
+    $apiClient->shouldReceive('fetchFresh')
         ->with('https://core.subsplash.com/media/v1/media-items?filter=test', 30)
         ->once()
         ->andReturn([
@@ -17,7 +17,7 @@ it('handles null media items in response without throwing', function () {
             '_links' => [],
         ]);
 
-    $apiClient->shouldReceive('getMediaItem')->never();
+    $apiClient->shouldReceive('getFreshMediaItem')->never();
 
     $this->app->instance(SubsplashApiClient::class, $apiClient);
 

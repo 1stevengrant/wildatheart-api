@@ -49,6 +49,7 @@ return [
         'scope' => env('SUBSPLASH_SCOPE', '5289PV'),
         'authentication_token_url' => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL', 'https://core.subsplash.com/tokens/v1/token'),
         'cache_duration' => env('SUBSPLASH_CACHE_DURATION', 300),
+        'stale_duration' => env('SUBSPLASH_STALE_DURATION', 86400),
     ],
 
     'transistor' => [
