@@ -78,6 +78,24 @@ return [
     'targetConnection' => env('LOCAL_TARGET_CONNECTION', 'mysql'),
 
     /*
+     * The schema staging:sync-content reads from, on the same database cluster as staging
+     */
+    'contentSource' => env('STAGING_CONTENT_SOURCE', 'production'),
+
+    /*
+     * The only tables staging:sync-content copies. Never add tables that hold
+     * personal data, such as users, attendees, events, addresses or form submissions.
+     */
+    'contentTables' => [
+        'entries',
+        'taxonomy_terms',
+        'trees',
+        'global_set_variables',
+        'assets_meta',
+        'redirects',
+    ],
+
+    /*
     * List all the environment variables that need to be set for the command to work
     */
     'environments' => [

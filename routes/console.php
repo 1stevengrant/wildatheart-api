@@ -7,16 +7,17 @@ use App\Jobs\Admin\GenerateAndEmailReport;
 use App\Jobs\Transistor\RefreshDailyReadingsJob;
 use App\Console\Commands\GetLatestSubsplashMedia;
 use App\Console\Commands\ArchiveActivityLogCommand;
+use App\Console\Commands\SyncStagingContentCommand;
 use App\Console\Commands\WeGive\UpdateDonorIdCommand;
 use App\Console\Commands\CleanupExpiredContactInvitations;
 use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
 
-Schedule::command(SendFiresCheckinsEmailCommand::class)->daily();
+Schedule::command(SendFiresCheckinsEmailCommand::class)->daily()->environments('production');
 Schedule::command(GetLatestSubsplashMedia::class)->everyFifteenMinutes()->environments('production');
-Schedule::command(UpdateDonorIdCommand::class)->daily();
+Schedule::command(UpdateDonorIdCommand::class)->daily()->environments('production');
 Schedule::command(CleanupExpiredContactInvitations::class)->hourly()->withoutOverlapping();
 Schedule::command('model:prune', ['--model' => [EmailLog::class]])->daily();
-Schedule::command(ArchiveActivityLogCommand::class)->monthly()->onOneServer()->withoutOverlapping()->runInBackground();
+Schedule::command(ArchiveActivityLogCommand::class)->monthly()->onOneServer()->withoutOverlapping()->runInBackground()->environments('production');
 // Generate the monthly BAKR report and send to Morgan.
 Schedule::job(new GenerateAndEmailReport(
     [
@@ -25,6 +26,7 @@ Schedule::job(new GenerateAndEmailReport(
     ],
     ReportName::BAKR_HOSTS,
     'Becoming A King Retreat Hosts'
-))->monthly();
+))->monthly()->environments('production');
 
 Schedule::job(new RefreshDailyReadingsJob)->everyThirtyMinutes()->environments('production');
+Schedule::command(SyncStagingContentCommand::class)->hourly()->onOneServer()->withoutOverlapping()->environments('staging');
