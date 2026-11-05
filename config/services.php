@@ -48,7 +48,7 @@ return [
         'client_secret' => env('SUBSPLASH_CLIENT_SECRET'),
         'scope' => env('SUBSPLASH_SCOPE', '5289PV'),
         'authentication_token_url' => env('SUBSPLASH_AUTHENTICATION_TOKEN_URL', 'https://core.subsplash.com/tokens/v1/token'),
-        'cache_duration' => env('SUBSPLASH_CACHE_DURATION', 600),
+        'cache_duration' => env('SUBSPLASH_CACHE_DURATION', 300),
     ],
 
     'transistor' => [

@@ -30,7 +30,7 @@ class SubsplashApiClient
             return $cached;
         }
 
-        $response = Http::asForm()->post($tokenUrl, [
+        $response = Http::connectTimeout(2)->timeout(5)->asForm()->post($tokenUrl, [
             'grant_type' => 'client_credentials',
             'client_id' => $clientId,
             'client_secret' => $clientSecret,
@@ -47,7 +47,7 @@ class SubsplashApiClient
         throw new Exception('Failed to fetch access token');
     }
 
-    public function fetch(string $url): ?array
+    public function fetch(string $url, int $timeout = 5): ?array
     {
         $cacheDuration = config('services.subsplash.cache_duration');
 
@@ -59,8 +59,8 @@ class SubsplashApiClient
 
         $accessToken = $this->getAccessToken();
 
-        $response = Http::retry(
-            [100, 500, 1000],
+        $response = Http::connectTimeout(2)->timeout($timeout)->retry(
+            [100, 500],
             when: fn ($exception) => $exception instanceof RequestException
                 ? $exception->response->serverError()
                 : $exception instanceof ConnectionException,
@@ -79,7 +79,7 @@ class SubsplashApiClient
             Cache::forget(config('services.subsplash.client_id'));
             $accessToken = $this->getAccessToken();
 
-            $response = Http::withHeaders([
+            $response = Http::connectTimeout(2)->timeout($timeout)->withHeaders([
                 'Accept' => 'application/vnd.api+json',
                 'Accept-Language' => 'en-US,en;q=0.9',
                 'Authorization' => "Bearer {$accessToken}",
@@ -98,7 +98,7 @@ class SubsplashApiClient
             return null;
         }
 
-        throw new Exception("Request to Subsplash API failed with {$response->status()} after three attempts: {$url}");
+        throw new Exception("Request to Subsplash API failed with {$response->status()}: {$url}");
     }
 
     public function getMediaItem(string $mediaItemId): ?array
