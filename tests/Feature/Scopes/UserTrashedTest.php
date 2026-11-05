@@ -3,11 +3,9 @@
 use App\Models\User;
 use App\Scopes\UserTrashed;
 use Illuminate\Support\Facades\Bus;
-use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {
     Bus::fake();
-    $this->seed(DatabaseSeeder::class);
 
     $this->active = User::factory()->create(['email' => 'active@wildatheart.org']);
     $this->trashed = User::factory()->create(['email' => 'trashed@wildatheart.org']);

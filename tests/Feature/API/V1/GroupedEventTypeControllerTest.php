@@ -4,12 +4,8 @@ use App\Models\EventType;
 use App\Enums\EventTypeEnum;
 
 beforeEach(function () {
-    EventType::truncate();
+    EventType::query()->delete();
     cache()->forget('eventTypesGroupedByType.v3');
-});
-
-afterEach(function () {
-    EventType::truncate();
 });
 
 it('returns event types grouped by type', function () {

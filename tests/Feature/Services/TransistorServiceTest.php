@@ -20,6 +20,7 @@ beforeEach(function () {
         'services.transistor.api_key' => 'test-api-key',
         'services.transistor.api_url' => 'https://api.transistor.fm/v1/',
         'services.transistor.cache_duration' => 3600,
+        'services.transistor.retry_interval' => 0,
         'services.transistor.rate_limit_cache_store' => 'array',
     ]);
 

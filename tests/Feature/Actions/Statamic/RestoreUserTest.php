@@ -2,12 +2,10 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Bus;
-use Database\Seeders\DatabaseSeeder;
 use App\Actions\Statamic\RestoreUser;
 
 beforeEach(function () {
     Bus::fake();
-    $this->seed(DatabaseSeeder::class);
 });
 
 it('is only visible for trashed users', function () {

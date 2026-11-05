@@ -25,9 +25,14 @@ class TransistorConnector extends Connector implements HasPagination
 
     public ?int $tries = 3;
 
-    public ?int $retryInterval = 1000;
+    public ?int $retryInterval;
 
     public ?bool $useExponentialBackoff = true;
+
+    public function __construct()
+    {
+        $this->retryInterval = config('services.transistor.retry_interval');
+    }
 
     public function handleRetry(FatalRequestException|RequestException $exception, Request $request): bool
     {

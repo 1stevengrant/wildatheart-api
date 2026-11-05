@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 
 test('deployment artisan commands execute without failure', function () {
@@ -7,6 +8,22 @@ test('deployment artisan commands execute without failure', function () {
     $originalMaintenanceMode = app()->isDownForMaintenance();
 
     $redisAvailable = rescue(fn () => app('redis')->connection()->ping(), false, false);
+
+    // Parallel workers boot from bootstrap/cache and the compiled view directory,
+    // so the caches built here must stay private to this test.
+    $cacheDirectory = sys_get_temp_dir() . '/deployment-test-' . getmypid();
+    $cachePaths = [
+        'APP_CONFIG_CACHE' => "{$cacheDirectory}/config.php",
+        'APP_ROUTES_CACHE' => "{$cacheDirectory}/routes.php",
+        'APP_EVENTS_CACHE' => "{$cacheDirectory}/events.php",
+    ];
+
+    File::ensureDirectoryExists("{$cacheDirectory}/views");
+    config(['view.compiled' => "{$cacheDirectory}/views"]);
+
+    foreach ($cachePaths as $key => $path) {
+        $_ENV[$key] = $path;
+    }
 
     // Array of commands to test
     $commands = array_filter([
@@ -40,12 +57,16 @@ test('deployment artisan commands execute without failure', function () {
                 $this->fail("Command '$command' failed: " . $e->getMessage());
             }
         }
-    } finally {
-        // The caches are built from the testing environment, so leaving them
-        // behind points the local app at the test database.
-        foreach (['config:clear', 'route:clear', 'event:clear', 'view:clear'] as $command) {
-            Artisan::call($command);
+
+        foreach ($cachePaths as $path) {
+            expect($path)->toBeFile();
         }
+    } finally {
+        foreach (array_keys($cachePaths) as $key) {
+            unset($_ENV[$key]);
+        }
+
+        File::deleteDirectory($cacheDirectory);
     }
 
     // Cleanup - restore original maintenance mode state if needed

@@ -106,29 +106,29 @@
         ],
         "test": [
             "php artisan config:clear",
-            "pest --parallel --processes=8 --exclude-group=comparison",
+            "pest --parallel --processes=8",
             "php artisan test:cleanup-databases --force"
         ],
         "test:sequential": [
             "php artisan config:clear",
-            "pest --exclude-group=comparison",
+            "pest",
             "php artisan test:cleanup-databases --force"
         ],
         "test:fast": [
             "php artisan config:clear",
             "php artisan route:clear",
-            "pest --parallel --processes=8 --no-coverage --exclude-group=comparison",
+            "pest --parallel --processes=8 --no-coverage",
             "php artisan test:cleanup-databases --force"
         ],
         "test:comparison": [
             "php artisan config:clear",
-            "pest --group=comparison"
+            "pest tests/Parity --group=comparison"
         ],
         "test:unit": [
             "pest tests/Unit"
         ],
         "test:feature": [
-            "pest tests/Feature --parallel --processes=4 --exclude-group=comparison",
+            "pest tests/Feature --parallel --processes=4",
             "php artisan test:cleanup-databases --force"
         ],
         "dev:types": [

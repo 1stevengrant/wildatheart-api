@@ -55,6 +55,7 @@ return [
         'api_key' => env('TRANSISTOR_API_KEY'),
         'api_url' => env('TRANSISTOR_API_URL', 'https://api.transistor.fm/v1/'),
         'cache_duration' => env('TRANSISTOR_CACHE_DURATION', 600),
+        'retry_interval' => env('TRANSISTOR_RETRY_INTERVAL', 1000),
     ],
 
     'wegive' => [
