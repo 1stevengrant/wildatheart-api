@@ -168,7 +168,7 @@ php artisan cache:clear && php artisan config:clear && php artisan view:clear &&
 
 ## Environment-Specific Notes
 
--   **Local Development**: Flock serves the site at https://wahfires.test (MySQL, Valkey, mail catcher)
+-   **Local Development**: Kiln serves the site at https://wahfires.test (MySQL, Valkey, mail catcher)
 -   **Database Sync**: `db:production-sync` pulls from the Laravel Cloud MySQL public endpoint with mydumper/myloader (single connection mysqldump fails through Cloud's proxy; see docs/database.md)
 -   **Asset Storage**: S3 integration required for media
 -   **Queue Workers**: Laravel Cloud managed queues
