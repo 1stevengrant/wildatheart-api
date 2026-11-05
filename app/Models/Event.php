@@ -73,6 +73,7 @@ class Event extends BaseModel
         return LogOptions::defaults()
             ->logAll()
             ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly([self::COUNT_TYPE_VIEW, self::COUNT_TYPE_ATTENDEE, self::UPDATED_AT])
             ->dontSubmitEmptyLogs()
             ->useLogName('events')
             ->setDescriptionForEvent(function (string $eventName) {
