@@ -21,6 +21,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
+          --tmpfs /var/lib/mysql
           --health-cmd="mysqladmin ping -h 127.0.0.1"
           --health-interval=10s
           --health-timeout=5s
@@ -66,7 +67,7 @@ jobs:
           DB_PASSWORD: password
 
       - name: Run tests
-        run: ./vendor/bin/pest --parallel --profile --exclude-group=comparison,production-parity
+        run: ./vendor/bin/pest --parallel --profile
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
@@ -76,7 +77,7 @@ jobs:
           DB_PASSWORD: password
 
       - name: Run parity tests
-        run: ./vendor/bin/pest --group=production-parity
+        run: ./vendor/bin/pest tests/Parity --group=production-parity
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306

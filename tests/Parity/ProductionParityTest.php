@@ -9,7 +9,7 @@
  * Uses the local dev database (not wahlocal_test) so real Statamic content
  * and database-stored globals are available.
  *
- * Usage: php artisan test --group=production-parity
+ * Usage: php artisan test tests/Parity --group=production-parity
  */
 
 use Tests\ProductionParityTestCase;

@@ -6,7 +6,7 @@ use Statamic\Facades\Collection;
 use App\Services\EventResponseBuilder;
 
 beforeEach(function () {
-    EventType::truncate();
+    EventType::query()->delete();
     cache()->forget('eventTypesWithCounts.serialised.v3');
 
     if (! Collection::handleExists('pages')) {
@@ -15,7 +15,6 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    EventType::truncate();
     cache()->forget('eventTypesWithCounts.serialised.v3');
 });
 
