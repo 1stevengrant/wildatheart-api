@@ -3,7 +3,6 @@
 namespace App\Jobs\Event;
 
 use App\Models\Event;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -18,6 +17,6 @@ class IncreaseEventCountsJob implements ShouldQueue
 
     public function handle(): void
     {
-        DB::transaction(fn () => $this->event->increment($this->countType));
+        $this->event->incrementQuietly($this->countType);
     }
 }
