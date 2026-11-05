@@ -8,7 +8,6 @@ import {
     fireTypeGroup,
     retreatTypeGroup,
 } from "@/helpers/eventTypeGroups";
-import { usePopupInfo } from "@/Hooks/usePopupInfo";
 import { currentEventState } from "@/store/eventsAtom";
 
 const generalEventClasses = `w-8 h-8  flex items-center justify-center rounded-full hover:bg-p200 hover:stroke-white shadow-xl hover:shadow-none transition duration-150 ease-in-out`;
@@ -19,16 +18,11 @@ export const EventMarkerButton = ({
 }: {
     event: App.Data.EventMapData;
 }) => {
-    const { setPopupInfo } = usePopupInfo();
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
 
     return (
         <button
-            onMouseEnter={() => setPopupInfo(event)}
-            onClick={() => {
-                setPopupInfo(event);
-                setCurrentEvent(event);
-            }}
+            onClick={() => setCurrentEvent(event)}
             className={`${generalEventClasses} ${
                 currentEvent?.id === event.id
                     ? activeEventClasses

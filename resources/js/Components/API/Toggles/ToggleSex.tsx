@@ -9,7 +9,6 @@ import {
     quickFilterButtonClasses,
 } from "@/helpers/quickFilterButtonClasses";
 import { useDates } from "@/Hooks/useDates";
-import { usePopupInfo } from "@/Hooks/usePopupInfo";
 import { useSex } from "@/Hooks/useSex";
 import { useTypeGroup } from "@/Hooks/useTypeGroup";
 import { useTypes } from "@/Hooks/useTypes";
@@ -17,13 +16,11 @@ import { useTypes } from "@/Hooks/useTypes";
 export const ToggleSex = () => {
     const { setTypesTo, mensEventTypeIds, womensEventTypeIds } = useTypes();
     const { resetAllDates } = useDates();
-    const { setPopupInfo } = usePopupInfo();
     const { setTypeGroup } = useTypeGroup();
     const { setCurrentSex, currentSex, sexes } = useSex();
 
     const handleSexChange = (sex: string) => {
         resetAllDates();
-        setPopupInfo(null);
         setTypeGroup("");
 
         if (currentSex === sex) {

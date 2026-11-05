@@ -6,7 +6,6 @@ import {
     experienceTypeGroup,
     retreatTypeGroup,
 } from "@/helpers/eventTypeGroups";
-import { usePopupInfo } from "@/Hooks/usePopupInfo";
 import { typesState } from "@/store/filtersAtom";
 
 interface Props {
@@ -14,11 +13,9 @@ interface Props {
 }
 
 export const useTypes = () => {
-    const { setPopupInfo } = usePopupInfo();
     const [types, setTypes] = useRecoilState(typesState);
 
     const handleTypesChange = (eventTypeId: number) => {
-        setPopupInfo(null);
         if (types.includes(eventTypeId)) {
             setTypes(types.filter((id: number) => id !== eventTypeId));
         } else {

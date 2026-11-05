@@ -4,12 +4,10 @@ import { useRecoilState } from "recoil";
 
 import { EventCard } from "@/Components/Events/EventCard";
 import { EventMarkerButton } from "@/Components/Events/EventMarkerButton";
-import { usePopupInfo } from "@/Hooks/usePopupInfo";
 import { eventsListState } from "@/store/eventsAtom";
 
 export const LocalMapMarkers = () => {
     const [events] = useRecoilState(eventsListState);
-    const { setPopupInfo } = usePopupInfo();
     return (
         <>
             {events.length > 0 &&
@@ -21,7 +19,6 @@ export const LocalMapMarkers = () => {
                         anchor="bottom"
                         onClick={(e) => {
                             e.originalEvent.stopPropagation();
-                            setPopupInfo(event);
                         }}
                     >
                         <div className={`hidden lg:block`}>
