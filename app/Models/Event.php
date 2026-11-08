@@ -513,6 +513,17 @@ class Event extends BaseModel
         return (bool) $this->gift_requested;
     }
 
+    /**
+     * The host form, opened at the schedule section. Hosts sign in with Auth0, so the
+     * link is not signed.
+     */
+    public function scheduleEditUrl(): string
+    {
+        $frontendUrl = mb_rtrim(config('app.frontend_url'), '/');
+
+        return "{$frontendUrl}/host/events/{$this->eventType->slug}/create?draftEventId={$this->id}&returnTo=/host/dashboard&returnLabel=Dashboard#schedule";
+    }
+
     public function isFire(): bool
     {
         return $this->eventType->group_type === EventType::TYPE_FIRE;

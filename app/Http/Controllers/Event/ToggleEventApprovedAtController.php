@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Event;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use App\Http\Controllers\Controller;
+use App\Actions\Event\CatchUpEventSchedule;
 use App\Http\Requests\ToggleEventApprovedAtRequest;
 
 class ToggleEventApprovedAtController extends Controller
@@ -12,6 +13,10 @@ class ToggleEventApprovedAtController extends Controller
     public function __invoke(ToggleEventApprovedAtRequest $request, Event $event)
     {
         $event->toggleApprovedAt();
+
+        if ($event->approved_at !== null) {
+            CatchUpEventSchedule::run($event);
+        }
 
         LogActivityJob::dispatch(
             description: 'Toggle Event Approved At',

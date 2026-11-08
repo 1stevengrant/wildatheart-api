@@ -13,6 +13,10 @@ class UpdateEvent
         array $data,
         Event $event
     ): void {
+        if ($event->schedule()->exists()) {
+            unset($data['frequency'], $data['start_date'], $data['end_date']);
+        }
+
         $event->update($data);
     }
 }

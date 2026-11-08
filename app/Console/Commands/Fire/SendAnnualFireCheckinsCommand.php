@@ -26,6 +26,7 @@ class SendAnnualFireCheckinsCommand extends Command
         $query = Event::query()
             ->with(['user', 'managers'])
             ->allFires()
+            ->withoutSchedule()
             ->published()
             ->where(function ($query) use ($thirtyDaysAgo) {
                 $query->whereNull('last_checkin_confirmed_at')
