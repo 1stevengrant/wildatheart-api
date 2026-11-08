@@ -24,6 +24,12 @@ class SaveEventDraft
             $event = $this->createNewDraft($request, $eventType, $host);
         }
 
+        $scheduleInput = $request->scheduleInput();
+
+        if ($scheduleInput) {
+            SyncEventSchedule::run($event, $scheduleInput);
+        }
+
         if ($request->has('co_host_emails')) {
             SyncCoHostInvitations::run($event, $request->validated('co_host_emails') ?? [], $host);
         }
@@ -47,7 +53,13 @@ class SaveEventDraft
             );
         }
 
-        $event->fill($this->buildPayload($request, $eventType));
+        $payload = $this->buildPayload($request, $eventType);
+
+        if ($event->schedule()->exists()) {
+            unset($payload['start_date'], $payload['end_date'], $payload['frequency']);
+        }
+
+        $event->fill($payload);
         $event->save();
 
         return $event;

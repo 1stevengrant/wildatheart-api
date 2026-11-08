@@ -195,6 +195,32 @@ class Event extends BaseModel
         return $this->hasOne(EventOwnershipTransfer::class);
     }
 
+    public function schedule(): HasOne
+    {
+        return $this->hasOne(EventSchedule::class);
+    }
+
+    public function scheduleDates(): HasMany
+    {
+        return $this->hasMany(EventScheduleDate::class)->orderBy('date');
+    }
+
+    /**
+     * Dates from two days ago onwards, which covers "today" in every timezone.
+     * Callers filter to the Fire's own local today.
+     */
+    public function recentScheduleDates(): HasMany
+    {
+        return $this->hasMany(EventScheduleDate::class)
+            ->where('date', '>=', now()->subDays(2)->toDateString())
+            ->orderBy('date');
+    }
+
+    public function scheduleNotifications(): HasMany
+    {
+        return $this->hasMany(EventScheduleNotification::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Accessors & Mutators

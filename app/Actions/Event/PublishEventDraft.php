@@ -38,6 +38,6 @@ class PublishEventDraft
 
         SendPendingCoHostInvitations::run($event->fresh(['pendingManagerInvitations']), $host);
 
-        return $event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations']);
+        return $event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'schedule', 'recentScheduleDates']);
     }
 }

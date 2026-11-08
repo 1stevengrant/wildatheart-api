@@ -4,10 +4,14 @@ namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
 use App\Enums\Event\FrequencyEnum;
+use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Concerns\ValidatesEventSchedule;
 
 class SaveEventDraftRequest extends FormRequest
 {
+    use ValidatesEventSchedule;
+
     public function authorize(): bool
     {
         $eventId = $this->input('event_id');
@@ -27,7 +31,7 @@ class SaveEventDraftRequest extends FormRequest
         $validValues = array_column(Event::MATERIAL_ORDER_ITEMS, 'value');
         $frequencyValues = array_map(fn (FrequencyEnum $case) => $case->value, FrequencyEnum::cases());
 
-        return [
+        return array_merge([
             'event_id' => ['nullable', 'string', 'uuid'],
             'location' => ['nullable', 'array'],
             'location.address' => ['nullable', 'string'],
@@ -59,7 +63,33 @@ class SaveEventDraftRequest extends FormRequest
             'city' => ['nullable', 'string', 'max:255'],
             'zip' => ['nullable', 'string', 'max:20'],
             'state' => ['nullable', 'string', 'max:255'],
+        ], $this->scheduleRules());
+    }
+
+    /**
+     * @return array<int, callable>
+     */
+    public function after(): array
+    {
+        return [
+            fn (Validator $validator) => $this->validateScheduleDates($validator),
         ];
+    }
+
+    public function existingEvent(): ?Event
+    {
+        $eventId = $this->input('event_id');
+
+        if (! $eventId) {
+            return null;
+        }
+
+        return Event::find($eventId);
+    }
+
+    protected function scheduleMustHaveUpcomingDate(): bool
+    {
+        return $this->existingEvent()?->approved_at !== null;
     }
 
     /**
