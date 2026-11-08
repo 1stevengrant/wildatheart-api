@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API\V1;
 
 use App\Models\Event;
+use Illuminate\Validation\Validator;
 use App\Support\EventTypeDateSelector;
 use App\Http\Requests\Concerns\HasLocationRules;
 use App\Http\Requests\Concerns\HasMaterialOrderValidationAttributes;
@@ -36,12 +37,12 @@ class PublishEventRequest extends SaveEventDraftRequest
         $publishRules = [
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
-            'start_date' => ['required', 'date'],
+            'start_date' => [$this->presenceRuleForLegacyDateFields($this->existingEvent()), 'date'],
             'number_of_items_in_material_order' => $eventType?->requiresMaterialOrderQuantity()
                 ? ['required', 'string', 'in:' . implode(',', $validValues)]
                 : ['nullable', 'string', 'in:' . implode(',', $validValues)],
             'frequency' => $eventType && EventTypeDateSelector::requiresFrequency($eventType->group_type)
-                ? ['required', 'string', 'in:' . implode(',', $frequencyValues)]
+                ? [$this->presenceRuleForLegacyDateFields($this->existingEvent()), 'string', 'in:' . implode(',', $frequencyValues)]
                 : ['nullable', 'string', 'in:' . implode(',', $frequencyValues)],
         ];
 
@@ -50,6 +51,22 @@ class PublishEventRequest extends SaveEventDraftRequest
             parent::rules(),
             $publishRules,
         );
+    }
+
+    /**
+     * @return array<int, callable>
+     */
+    public function after(): array
+    {
+        return [
+            fn (Validator $validator) => $this->validateScheduleDates($validator),
+            fn (Validator $validator) => $this->validateStoredSchedule($validator, $this->existingEvent()),
+        ];
+    }
+
+    protected function scheduleMustHaveUpcomingDate(): bool
+    {
+        return true;
     }
 
     protected function prepareForValidation(): void

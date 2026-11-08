@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, RefObject } from "react";
 
 import { router } from "@inertiajs/react";
 import mapboxgl from "mapbox-gl";
@@ -6,6 +6,7 @@ import Map, {
     GeolocateControl,
     NavigationControl,
     LngLatBounds,
+    MapRef,
 } from "react-map-gl";
 import { useRecoilState } from "recoil";
 
@@ -29,15 +30,20 @@ import {
     getUserZoom,
     setUserZoom,
 } from "@/lib/localStorage";
-import { latitudeState, longitudeState } from "@/store/coordinatesAtom";
 import { featuredContentState } from "@/store/featuredContentAtom";
 
-export const LocalMap = () => {
+type LocalMapProps = {
+    mapRef: RefObject<MapRef | null>;
+    onUserLocated: (latitude: number, longitude: number) => void;
+};
+
+export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
     const { getEvents, showLoading, setZoomingComplete } = useEvents();
-    const { mapRef, selectedPlace } = useMapData();
-    const [latitude, setLatitude] = useRecoilState(latitudeState);
-    const [longitude, setLongitude] = useRecoilState(longitudeState);
-    const [zoom, setZoom] = useState<number | null>(null);
+    const { selectedPlace } = useMapData();
+    const [initialViewState] = useState(() => ({
+        ...(getUserLocation() ?? defaultLatLng),
+        zoom: getUserZoom() ?? 3,
+    }));
 
     const [bounds, setBounds] = useState<LngLatBounds | null>(null);
     const [featuredContent] = useRecoilState(featuredContentState);
@@ -46,7 +52,6 @@ export const LocalMap = () => {
     const { types, setTypesTo } = useTypes();
     const { startDateString, endDateString } = useDates();
 
-    const initialFlyToDone = useRef(false);
     const [hasSupport, setHasSupport] = useState(true);
     const abortControllerRef = useRef<AbortController | null>(null);
     const initialLoadDone = useRef(false);
@@ -107,45 +112,7 @@ export const LocalMap = () => {
         if (!mapboxgl.supported()) {
             setHasSupport(false);
         }
-
-        const storedLocation = getUserLocation();
-        const storedZoom = getUserZoom();
-
-        if (storedLocation && !initialFlyToDone.current) {
-            setLatitude(storedLocation.latitude);
-            setLongitude(storedLocation.longitude);
-        }
-
-        if (storedZoom !== null) {
-            setZoom(storedZoom);
-        }
-
-        return;
     }, []);
-
-    useEffect(() => {
-        if (
-            mapRef.current &&
-            latitude !== null &&
-            longitude !== null &&
-            zoom !== null &&
-            !initialFlyToDone.current
-        ) {
-            console.log(
-                "Flying to location:",
-                latitude,
-                longitude,
-                "with zoom:",
-                zoom
-            );
-            mapRef.current.getMap().flyTo({
-                center: [longitude, latitude],
-                zoom: zoom,
-                essential: true,
-            });
-            initialFlyToDone.current = true;
-        }
-    }, [latitude, longitude, zoom, mapRef.current]);
 
     useEffect(() => {
         if (!mapRef.current || !selectedPlace) return;
@@ -170,9 +137,6 @@ export const LocalMap = () => {
         const newZoom = map.getZoom();
         console.log("Map moved to:", center.lat, center.lng, "Zoom:", newZoom);
         setUserLocation(center.lat, center.lng);
-        setLatitude(center.lat);
-        setLongitude(center.lng);
-        setZoom(newZoom);
         setUserZoom(newZoom);
         setZoomingComplete(); // Mark any zoom operation as complete
     }, []);
@@ -225,27 +189,18 @@ export const LocalMap = () => {
         };
     }, [bounds, currentSex, typeGroup, types, startDateString, endDateString]);
 
-    const handleGeolocate = useCallback((e: GeolocationPosition) => {
-        const { latitude, longitude } = e.coords;
-        setLatitude(latitude);
-        setLongitude(longitude);
-        setUserLocation(latitude, longitude);
-        mapRef.current?.getMap().flyTo({
-            center: [longitude, latitude],
-            zoom: 4,
-            essential: true,
-        });
-    }, []);
+    const handleGeolocate = useCallback(
+        (e: GeolocationPosition) => {
+            onUserLocated(e.coords.latitude, e.coords.longitude);
+        },
+        [onUserLocated]
+    );
 
     if (!hasSupport) return <NoWebGLSupport />;
 
     return (
         <Map
-            initialViewState={{
-                latitude: latitude ?? defaultLatLng.latitude,
-                longitude: longitude ?? defaultLatLng.longitude,
-                zoom: zoom ?? 3,
-            }}
+            initialViewState={initialViewState}
             {...commonMapProps}
             ref={mapRef}
             onMoveEnd={handleOnMapMoveEnd}

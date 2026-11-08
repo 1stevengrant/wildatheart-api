@@ -5,6 +5,7 @@ namespace App\Data\V1;
 use App\Models\Event;
 use App\Models\EventType;
 use Spatie\LaravelData\Data;
+use App\Support\Schedule\PublicScheduleDates;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
@@ -26,6 +27,7 @@ class EventCollectionData extends Data
         public ?string $newCardHeading,
         public ?float $distance,
         public ?string $url = null,
+        public ?NextEventDateData $nextDate = null,
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -46,6 +48,7 @@ class EventCollectionData extends Data
             newCardHeading: $event->eventType->card_description,
             distance: $event->distance ? round((float) $event->distance) : null,
             url: $event->url,
+            nextDate: PublicScheduleDates::next($event),
         );
     }
 }

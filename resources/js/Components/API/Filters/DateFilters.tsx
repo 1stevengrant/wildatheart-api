@@ -2,7 +2,6 @@ import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
 
 import { useDates } from "@/Hooks/useDates";
-import { usePopupInfo } from "@/Hooks/usePopupInfo";
 
 export const DateFilters = () => {
     const { maxDate } = useDates();
@@ -16,14 +15,11 @@ export const DateFilters = () => {
         resetAllDates,
     } = useDates();
 
-    const { setPopupInfo } = usePopupInfo();
-
     const formatDateString = (date: any) => {
         return dayjs(date).format("YYYY-MM-DD");
     };
 
     const handleDateChange = (value: Date | null, type = "start") => {
-        setPopupInfo(null);
         if (type === "start") {
             setStartDate(value);
             if (value) {

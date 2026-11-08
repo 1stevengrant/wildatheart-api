@@ -3,7 +3,7 @@
 use App\Models\EventType;
 
 beforeEach(function () {
-    EventType::truncate();
+    EventType::query()->delete();
 });
 
 it('only gets active event types', function () {

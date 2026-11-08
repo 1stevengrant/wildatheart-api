@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Event;
+use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -34,4 +35,16 @@ test('when viewing an event as a logged in user, I can view the event', function
         ->assertInertia(fn (Assert $page) => $page
             ->component('ViewEventPage')
         );
+});
+
+test('viewing an event logs who viewed it without copying the event or user', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('view.event', $this->event))
+        ->assertStatus(200);
+
+    Bus::assertDispatched(LogActivityJob::class, fn (LogActivityJob $job): bool => $job->properties === []
+        && $job->performedOn->is($this->event)
+        && $job->causedBy->is($user));
 });

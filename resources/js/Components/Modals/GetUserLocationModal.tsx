@@ -10,16 +10,15 @@ import { Modal } from "@/Components/Ui/Modal";
 import { ModalActions } from "@/Components/Ui/ModalActions";
 import { Spinner } from "@/Components/Ui/Spinner";
 import { defaultLatLng } from "@/helpers/defaultLatLng";
-import { useMapData } from "@/Hooks/useMapData";
-import {
-    setUserLocation,
-    setModalDismissed,
-    shouldShowModal,
-    getUserLocation,
-} from "@/lib/localStorage";
+import { setModalDismissed, shouldShowModal } from "@/lib/localStorage";
 
-export const GetUserLocationModal = () => {
-    const { setLatitude, setLongitude } = useMapData();
+type GetUserLocationModalProps = {
+    onLocationFound: (latitude: number, longitude: number) => void;
+};
+
+export const GetUserLocationModal = ({
+    onLocationFound,
+}: GetUserLocationModalProps) => {
     const [open, setOpen] = useState(false);
     const [gettingLocation, setGettingLocation] = useState(false);
     const [positionError, setPositionError] =
@@ -34,15 +33,7 @@ export const GetUserLocationModal = () => {
     const handleModalClose = () => {
         console.log("Modal closed");
         setModalDismissed();
-        setToDefaultLocation();
         setOpen(false);
-    };
-
-    const setToDefaultLocation = () => {
-        console.log("Setting to default location");
-        setLatitude(defaultLatLng.latitude);
-        setLongitude(defaultLatLng.longitude);
-        setUserLocation(defaultLatLng.latitude, defaultLatLng.longitude);
     };
 
     const handleUseMyLocation = () => {
@@ -52,15 +43,9 @@ export const GetUserLocationModal = () => {
             console.log("Geolocation success:", position);
             const { latitude, longitude } = position.coords;
 
-            setLatitude(latitude);
-            setLongitude(longitude);
-            setUserLocation(latitude, longitude);
+            onLocationFound(latitude, longitude);
             setModalDismissed();
             setOpen(false);
-
-            // Verify that the location was saved
-            const savedLocation = getUserLocation();
-            console.log("Saved location after setting:", savedLocation);
         };
         const positionError = (error: GeolocationPositionError) => {
             console.log("Geolocation error:", error);

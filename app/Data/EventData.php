@@ -74,6 +74,7 @@ class EventData extends Data
         public int $managers_count = 0,
         public ?string $number_of_items_in_material_order = null,
         public ?EventOwnershipTransferData $pending_ownership_transfer = null,
+        public ?EventScheduleData $schedule = null,
     ) {}
 
     public static function fromModel(Event $event): self
@@ -130,6 +131,9 @@ class EventData extends Data
             managers_count: $event->managers?->count() ?? 0,
             number_of_items_in_material_order: $event->number_of_items_in_material_order,
             pending_ownership_transfer: self::assemblePendingOwnershipTransfer($event),
+            schedule: $event->isFire() && $event->relationLoaded('schedule')
+                ? EventScheduleData::fromEvent($event)
+                : null,
         );
     }
 

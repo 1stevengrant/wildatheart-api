@@ -12,7 +12,7 @@ beforeEach(function () {
     Mail::fake();
     Activity::disableLogging();
     // Skip seeder as it has outdated schema
-    EventType::truncate();
+    EventType::query()->delete();
 });
 
 it('gets a list of active event types', function () {

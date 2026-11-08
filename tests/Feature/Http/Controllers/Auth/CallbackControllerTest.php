@@ -3,12 +3,10 @@
 use App\Models\User;
 use App\Models\Event;
 use Illuminate\Support\Facades\Bus;
-use Database\Seeders\DatabaseSeeder;
 use App\Http\Controllers\Auth\CallbackController;
 
 beforeEach(function () {
     Bus::fake();
-    $this->seed(DatabaseSeeder::class);
 });
 
 function invokeFindOrCreateUser(array $auth0User): User

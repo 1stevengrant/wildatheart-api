@@ -30,22 +30,28 @@ it('increases the view count for the event', function () {
     expect($this->event->refresh()->view_count)->toBe(1);
 });
 
-it('does not count twice when the activity log write fails and the job is retried', function () {
-    $job = new IncreaseEventCountsJob($this->event, Event::COUNT_TYPE_ATTENDEE);
-    $shouldFailActivityLogWrite = true;
+it('increases a count without logging activity or clearing the event cache', function (string $countType) {
+    $activityCountBefore = Activity::query()->count();
+    cache()->put('events', 'cached');
 
-    Activity::creating(function () use (&$shouldFailActivityLogWrite): void {
-        if ($shouldFailActivityLogWrite) {
-            throw new RuntimeException('Activity log write failed');
-        }
-    });
+    (new IncreaseEventCountsJob($this->event, $countType))->handle();
 
-    expect(fn () => $job->handle())->toThrow(RuntimeException::class, 'Activity log write failed')
-        ->and($this->event->refresh()->attendee_count)->toBe(0);
+    expect($this->event->refresh()->{$countType})->toBe(1)
+        ->and(Activity::query()->count())->toBe($activityCountBefore)
+        ->and(cache()->get('events'))->toBe('cached');
+})->with([
+    Event::COUNT_TYPE_VIEW,
+    Event::COUNT_TYPE_ATTENDEE,
+]);
 
-    $shouldFailActivityLogWrite = false;
+it('still logs event edits', function () {
+    $this->event->update(['name' => 'A renamed event']);
 
-    $job->handle();
+    $activity = Activity::query()
+        ->where('subject_id', $this->event->id)
+        ->where('event', 'updated')
+        ->latest('id')
+        ->first();
 
-    expect($this->event->refresh()->attendee_count)->toBe(1);
+    expect($activity->properties['attributes']['name'])->toBe('A renamed event');
 });

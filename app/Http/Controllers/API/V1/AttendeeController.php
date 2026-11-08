@@ -30,7 +30,6 @@ class AttendeeController extends Controller
 
         LogActivityJob::dispatch(
             description: 'Connected with Host',
-            properties: ['attendee' => $attendee, 'event' => $event],
             causedBy: $event,
             performedOn: $attendee,
         );

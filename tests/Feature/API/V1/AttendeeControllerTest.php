@@ -85,6 +85,17 @@ it('dispatches all required jobs when attendee opts into marketing', function ()
     Queue::assertPushed(PostAttendeeContactToSlackJob::class);
 });
 
+it('logs the connection without copying the event or attendee', function () {
+    $this->postJson(
+        route('v1.events.connect.store', $this->event),
+        $this->validData
+    );
+
+    Queue::assertPushed(LogActivityJob::class, fn (LogActivityJob $job): bool => $job->description === 'Connected with Host'
+        && $job->properties === []
+        && $job->causedBy->is($this->event));
+});
+
 it('does not dispatch marketing job when attendee opts out of marketing', function () {
     $data = array_merge($this->validData, ['opted_into_marketing' => false]);
 
