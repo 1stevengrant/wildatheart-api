@@ -37,25 +37,16 @@ class EventTypeDateSelector
 
     public static function requiresFrequency(?string $groupType): bool
     {
-        return in_array($groupType, [EventType::TYPE_FIRE, EventType::TYPE_EXPERIENCE], true);
+        return $groupType === EventType::TYPE_FIRE;
     }
 
     /**
-     * Frequencies a host may pick for this group. Courses meet weekly, every other week, or on a
-     * custom schedule ("varies"); monthly/quarterly cadences don't fit a multi-session course.
+     * Frequencies a host may pick. Only Fires have a frequency; other groups save none.
      *
      * @return list<string>
      */
     public static function allowedFrequencies(?string $groupType): array
     {
-        if ($groupType === EventType::TYPE_EXPERIENCE) {
-            return [
-                FrequencyEnum::WEEKLY->value,
-                FrequencyEnum::BIWEEKLY->value,
-                FrequencyEnum::VARIES->value,
-            ];
-        }
-
         return array_map(fn (FrequencyEnum $case) => $case->value, FrequencyEnum::cases());
     }
 

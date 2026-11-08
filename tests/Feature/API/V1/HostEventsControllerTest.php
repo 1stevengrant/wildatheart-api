@@ -1069,7 +1069,7 @@ it('persists expected attendees material order on draft save and returns it on h
         ->and($draft['number_of_items_in_material_order'])->toBe('2 x 10-pack');
 });
 
-it('stores a course draft\'s weekly frequency', function () {
+it('saves no frequency on a course draft', function (string $frequency) {
     Mail::fake();
 
     $host = User::factory()->create();
@@ -1081,28 +1081,40 @@ it('stores a course draft\'s weekly frequency', function () {
         ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
             'name' => 'Woodland Park, CO',
             'start_date' => now()->addDays(14)->format('Y-m-d'),
-            'frequency' => 'weekly',
+            'frequency' => $frequency,
         ])
         ->assertOk()
         ->json('event.id');
 
-    expect(Event::find($draftId)?->frequency?->value)->toBe('weekly');
-});
+    expect(Event::find($draftId)?->frequency)->toBeNull();
+})->with(['weekly', 'monthly']);
 
-it('rejects monthly and quarterly frequencies for courses', function (string $frequency) {
+it('publishes a course from the dashboard without a frequency', function () {
+    Bus::fake();
+    Mail::fake();
+
     $host = User::factory()->create();
-    $eventType = EventType::factory()->create(['group_type' => EventType::TYPE_EXPERIENCE]);
+    $eventType = EventType::factory()->create([
+        'group_type' => EventType::TYPE_EXPERIENCE,
+        'allow_materials_order' => false,
+    ]);
+    $event = Event::withoutEvents(fn () => Event::factory()
+        ->for($host)
+        ->create([
+            'event_type_id' => $eventType->id,
+            'approved_at' => null,
+            'start_date' => now()->addDays(14),
+            'frequency' => null,
+        ]));
 
     mockJwtAuthentication($host);
 
     $this->withHeaders(jwtAuthenticationHeaders())
-        ->postJson("/api/v1/host/event-types/{$eventType->slug}/events/draft", [
-            'name' => 'Woodland Park, CO',
-            'frequency' => $frequency,
-        ])
-        ->assertUnprocessable()
-        ->assertJsonValidationErrors('frequency');
-})->with(['monthly', 'quarterly']);
+        ->postJson("/api/v1/host/events/{$event->id}/publish")
+        ->assertOk();
+
+    expect($event->fresh()->approved_at)->not->toBeNull();
+});
 
 it('refuses to publish a draft from the dashboard until its required fields are filled', function () {
     Bus::fake();

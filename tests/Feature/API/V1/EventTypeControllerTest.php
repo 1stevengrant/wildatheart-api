@@ -83,6 +83,17 @@ it('includes date selector metadata for fire event types', function () {
         ->assertJsonPath('0.requires_frequency', true);
 });
 
+it('does not require a frequency for courses', function () {
+    EventType::factory()->create([
+        'name' => EventType::WAH_EXPERIENCE,
+        'group_type' => EventType::TYPE_EXPERIENCE,
+    ]);
+
+    $this->getJson('/api/v1/events/types')
+        ->assertSuccessful()
+        ->assertJsonPath('0.requires_frequency', false);
+});
+
 it('includes one-day duration metadata for one-day captivating retreat', function () {
     EventType::factory()->create([
         'name' => EventType::CAPTIVATING_CORE_RETREAT_1_DAY,
