@@ -7,12 +7,18 @@ use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
+use App\Actions\Event\CatchUpEventSchedule;
+use App\Support\Schedule\ScheduleReadiness;
 use App\Mail\Fire\ConfirmFireUnpublishedMailable;
 
 class HandleMonthlyHostFireEmailController extends Controller
 {
     public function update(Event $event)
     {
+        if (! ScheduleReadiness::canPublish($event)) {
+            return redirect()->away($event->scheduleEditUrl());
+        }
+
         $event->update([
             'last_checkin_confirmed_at' => now(),
             'last_checkin_email_sent_at' => now(),
@@ -21,6 +27,8 @@ class HandleMonthlyHostFireEmailController extends Controller
             'auto_unpublished_at' => null,
             'approved_at' => now(),
         ]);
+
+        CatchUpEventSchedule::run($event);
 
         LogActivityJob::dispatch(
             description: 'Fire published',

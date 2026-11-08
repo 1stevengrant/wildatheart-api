@@ -25,6 +25,21 @@ class ExtendEventSchedule
      */
     public function handle(EventSchedule $schedule): Collection
     {
+        $dates = $this->nextDates($schedule);
+
+        ScheduleDateWriter::write(
+            $schedule,
+            $dates->map(fn (CarbonImmutable $date) => new EventScheduleDateInputData($date->toDateString())),
+        );
+
+        return $dates;
+    }
+
+    /**
+     * @return Collection<int, CarbonImmutable>
+     */
+    public function nextDates(EventSchedule $schedule): Collection
+    {
         if (! $schedule->autoRenews() || ! $schedule->anchor_date) {
             return collect();
         }
@@ -35,13 +50,6 @@ class ExtendEventSchedule
             ? CarbonImmutable::parse($lastDate)
             : $yesterday;
 
-        $dates = ScheduleDateGenerator::datesAfter($schedule->frequency, $schedule->anchor_date, $after);
-
-        ScheduleDateWriter::write(
-            $schedule,
-            $dates->map(fn (CarbonImmutable $date) => new EventScheduleDateInputData($date->toDateString())),
-        );
-
-        return $dates;
+        return ScheduleDateGenerator::datesAfter($schedule->frequency, $schedule->anchor_date, $after);
     }
 }

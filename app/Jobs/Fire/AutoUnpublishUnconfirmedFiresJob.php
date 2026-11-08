@@ -37,6 +37,7 @@ class AutoUnpublishUnconfirmedFiresJob implements ShouldBeUnique, ShouldQueue
         Event::query()
             ->with(['user', 'managers'])
             ->allFires()
+            ->withoutSchedule()
             ->lastCheckinReminderSent()
             ->where('last_checkin_reminder_sent_at', '<=', $threeDaysAfterReminder)
             // Only unpublish if initial email was sent within last 90 days

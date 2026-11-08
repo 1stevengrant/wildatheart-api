@@ -36,9 +36,13 @@ class EventSchedule extends BaseModel
         return $this->frequency->autoRenews();
     }
 
+    /**
+     * The Fire's local calendar date as a plain date (midnight UTC), so it compares
+     * directly with the date columns, which are cast the same way.
+     */
     public function localToday(): CarbonImmutable
     {
-        return CarbonImmutable::now($this->timezone)->startOfDay();
+        return CarbonImmutable::parse(CarbonImmutable::now($this->timezone)->toDateString());
     }
 
     public function defaultStartTime(): string

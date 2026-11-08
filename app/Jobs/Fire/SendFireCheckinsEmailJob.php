@@ -36,6 +36,7 @@ class SendFireCheckinsEmailJob implements ShouldBeUnique, ShouldQueue
         Event::query()
             ->with(['user', 'managers'])
             ->allFires()
+            ->withoutSchedule()
             ->published()
             ->where(function ($query) use ($ninetyDaysAgo) {
                 $query->whereNull('last_checkin_email_sent_at')

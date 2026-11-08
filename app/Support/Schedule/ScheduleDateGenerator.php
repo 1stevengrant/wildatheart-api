@@ -28,8 +28,8 @@ class ScheduleDateGenerator
         CarbonImmutable $after,
         int $count = self::RENEWAL_COUNT,
     ): Collection {
-        $anchor = $anchor->startOfDay();
-        $after = $after->startOfDay();
+        $anchor = CarbonImmutable::parse($anchor->toDateString());
+        $after = CarbonImmutable::parse($after->toDateString());
 
         return match ($frequency) {
             FrequencyEnum::WEEKLY => self::weeklyDatesAfter($anchor, $after, $count),
