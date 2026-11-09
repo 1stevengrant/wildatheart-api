@@ -3,6 +3,7 @@
 namespace Tests\Feature\Services;
 
 use Illuminate\Support\Sleep;
+use Saloon\Http\PendingRequest;
 use Saloon\RateLimitPlugin\Limit;
 use Saloon\Http\Faking\MockClient;
 use App\Services\TransistorService;
@@ -129,6 +130,27 @@ it('paginates through all pages', function () {
     expect($result)->toHaveCount(4);
     expect($result[0]['id'])->toBe('1');
     expect($result[3]['id'])->toBe('4');
+});
+
+it('requests each page exactly once starting from page one', function () {
+    $requestedPages = [];
+
+    MockClient::global([
+        GetEpisodesRequest::class => function (PendingRequest $pendingRequest) use (&$requestedPages) {
+            $page = $pendingRequest->query()->get('pagination[page]');
+            $requestedPages[] = $page;
+
+            return MockResponse::make([
+                'data' => [['id' => (string) $page]],
+                'meta' => ['currentPage' => $page, 'totalPages' => 3],
+            ]);
+        },
+    ]);
+
+    $result = $this->transistorService->getAll('12345');
+
+    expect($requestedPages)->toBe([1, 2, 3]);
+    expect(array_column($result, 'id'))->toBe(['1', '2', '3']);
 });
 
 it('updates an episode successfully', function () {
