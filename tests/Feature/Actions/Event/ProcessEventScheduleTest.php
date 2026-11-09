@@ -2,13 +2,18 @@
 
 use App\Models\User;
 use App\Models\Event;
+use App\Models\EventType;
+use Carbon\CarbonImmutable;
+use Illuminate\Mail\Mailable;
 use App\Actions\Event\UpdateEvent;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\URL;
 use App\Data\EventScheduleInputData;
 use Illuminate\Support\Facades\Mail;
+use App\Models\EventManagerInvitation;
 use App\Actions\Event\SyncEventSchedule;
 use App\Jobs\Fire\ProcessFireScheduleJob;
+use App\Models\EventScheduleNotification;
 use App\Actions\Event\ProcessEventSchedule;
 use App\Jobs\Fire\SendFireCheckinsEmailJob;
 use App\Enums\Event\ScheduleNotificationKind;
@@ -167,14 +172,16 @@ it('starts a fresh reminder cycle when the host adds dates', function () {
     Mail::assertQueued(FireScheduleLastDateMailable::class, 2);
 });
 
-it('dispatches a job per published scheduled fire from the command', function () {
+it('dispatches a job per published scheduled fire from the command, captivating fires included', function () {
     Bus::fake();
-    $scheduled = scheduledFire([]);
+    $fire = scheduledFire([]);
+    $captivatingFire = scheduledFire([], ['event_type_id' => EventType::where('name', EventType::CAPTIVATING_FIRE)->value('id')]);
     Event::withoutEvents(fn () => Event::factory()->fires()->approved()->create());
 
     $this->artisan('fire:process-schedules')->assertSuccessful();
 
-    Bus::assertDispatchedTimes(ProcessFireScheduleJob::class, 1);
+    Bus::assertDispatchedTimes(ProcessFireScheduleJob::class, 2);
+    Bus::assertDispatched(ProcessFireScheduleJob::class, fn (ProcessFireScheduleJob $job) => $job->event->is($captivatingFire));
 });
 
 it('leaves scheduled fires out of the 90 day check-in', function () {
@@ -236,3 +243,113 @@ it('refuses to republish a lapsed custom fire from the old dashboard toggle', fu
 
     expect($event->fresh()->approved_at)->toBeNull();
 });
+
+it('renews a monthly fire on the same weekday position a week before its last date', function () {
+    // Second Tuesday: 8 December, 12 January, 9 February, 9 March.
+    $event = scheduledFire(['frequency' => 'monthly', 'anchor_date' => '2026-12-08']);
+
+    $this->travelTo(CarbonImmutable::parse('2027-03-01 18:00', 'UTC'));
+    expect(ProcessEventSchedule::run($event->fresh()))->toBeNull();
+
+    $this->travelTo(CarbonImmutable::parse('2027-03-02 18:00', 'UTC'));
+    expect(ProcessEventSchedule::run($event->fresh()))->toBe(ScheduleNotificationKind::DatesAdded)
+        ->and(storedDates($event))->toBe([
+            '2026-12-08', '2027-01-12', '2027-02-09', '2027-03-09',
+            '2027-04-13', '2027-05-11', '2027-06-08', '2027-07-13',
+        ]);
+});
+
+it('renews a fifth weekday monthly fire on the last weekday of each month', function () {
+    // 29 December is the fifth Tuesday, so the series is the last Tuesday of each month.
+    $event = scheduledFire(['frequency' => 'monthly', 'anchor_date' => '2026-12-29']);
+
+    expect(storedDates($event))->toBe(['2026-12-29', '2027-01-26', '2027-02-23', '2027-03-30']);
+
+    $this->travelTo(CarbonImmutable::parse('2027-03-23 18:00', 'UTC'));
+    expect(ProcessEventSchedule::run($event->fresh()))->toBe(ScheduleNotificationKind::DatesAdded)
+        ->and(array_slice(storedDates($event), 4))->toBe(['2027-04-27', '2027-05-25', '2027-06-29', '2027-07-27']);
+
+    Mail::assertQueued(FireScheduleDatesAddedMailable::class, function (FireScheduleDatesAddedMailable $mail) {
+        return $mail->dateLines[0] === 'Tuesday, April 27, 7:00 PM to 9:00 PM MDT';
+    });
+});
+
+dataset('schedule emails', [
+    'weekly renewal' => [fn (array $attributes) => scheduledFire([], $attributes), 14, FireScheduleDatesAddedMailable::class],
+    'monthly renewal' => [fn (array $attributes) => scheduledFire(['frequency' => 'monthly'], $attributes), 84, FireScheduleDatesAddedMailable::class],
+    'custom two week reminder' => [fn (array $attributes) => customFire(['2026-12-20'], $attributes), 5, FireScheduleAddMoreDatesMailable::class],
+    'custom final reminder' => [fn (array $attributes) => customFire(['2026-12-05'], $attributes), 0, FireScheduleLastDateMailable::class],
+    'custom unpublish' => [fn (array $attributes) => customFire(['2026-12-03'], $attributes), 3, FireScheduleUnpublishedMailable::class],
+]);
+
+dataset('fire types', [
+    'Fires' => [EventType::FIRES],
+    'Captivating Fires' => [EventType::CAPTIVATING_FIRE],
+]);
+
+it('sends each schedule email once to the owner, CCs co-hosts and leaves out pending invitees', function (Closure $makeFire, int $daysLater, string $mailable, string $eventTypeName) {
+    $event = $makeFire(['event_type_id' => EventType::where('name', $eventTypeName)->value('id')]);
+    $coHost = User::factory()->create();
+    $event->managers()->attach($coHost);
+    EventManagerInvitation::create([
+        'event_id' => $event->id,
+        'email' => 'pending-invitee@example.com',
+        'invited_by_user_id' => $event->user_id,
+    ]);
+    $datesBefore = count(storedDates($event));
+
+    $this->travelTo(now()->addDays($daysLater));
+    ProcessFireScheduleJob::dispatchSync($event->fresh());
+    ProcessFireScheduleJob::dispatchSync($event->fresh());
+
+    Mail::assertQueuedCount(1);
+    Mail::assertQueued($mailable, function (Mailable $mail) use ($event, $coHost) {
+        return $mail->hasTo($event->user->email)
+            && $mail->hasCc($coHost->email)
+            && ! $mail->hasCc('pending-invitee@example.com')
+            && ! $mail->hasTo('pending-invitee@example.com');
+    });
+
+    $addedDates = $mailable === FireScheduleDatesAddedMailable::class ? 4 : 0;
+
+    expect(count(storedDates($event)))->toBe($datesBefore + $addedDates)
+        ->and(EventScheduleNotification::where('event_id', $event->id)->count())->toBe(1);
+})->with('schedule emails')->with('fire types');
+
+dataset('fire timezones', [
+    // 15:00 UTC is 04:00 the next day in Auckland, so it acts a day before UTC would.
+    'Auckland custom' => ['Pacific/Auckland', 'varies', [
+        ['2026-12-08 15:00', ScheduleNotificationKind::AddMoreDates],
+        ['2026-12-09 15:00', ScheduleNotificationKind::LastDate],
+        ['2026-12-16 15:00', null],
+        ['2026-12-17 15:00', ScheduleNotificationKind::Unpublished],
+    ]],
+    'Auckland weekly' => ['Pacific/Auckland', 'weekly', [
+        ['2026-12-20 15:00', null],
+        ['2026-12-21 15:00', ScheduleNotificationKind::DatesAdded],
+    ]],
+    // 15:00 UTC is 05:00 the same day in Honolulu.
+    'Honolulu custom' => ['Pacific/Honolulu', 'varies', [
+        ['2026-12-09 15:00', ScheduleNotificationKind::AddMoreDates],
+        ['2026-12-10 15:00', ScheduleNotificationKind::LastDate],
+        ['2026-12-17 15:00', null],
+        ['2026-12-18 15:00', ScheduleNotificationKind::Unpublished],
+    ]],
+    'Honolulu weekly' => ['Pacific/Honolulu', 'weekly', [
+        ['2026-12-21 15:00', null],
+        ['2026-12-22 15:00', ScheduleNotificationKind::DatesAdded],
+    ]],
+]);
+
+it('judges reminders, renewals and lapses by the fire\'s own calendar day at 15:00 UTC', function (string $timezone, string $frequency, array $runs) {
+    // Weekly: 8, 15, 22 and 29 December. Custom: a single last date of 17 December.
+    $event = scheduledFire($frequency === 'weekly'
+        ? ['timezone' => $timezone, 'anchor_date' => '2026-12-08']
+        : ['timezone' => $timezone, 'frequency' => 'varies', 'anchor_date' => null, 'dates' => [['date' => '2026-12-17']]]);
+
+    foreach ($runs as [$utc, $expected]) {
+        $this->travelTo(CarbonImmutable::parse($utc, 'UTC'));
+
+        expect(ProcessEventSchedule::run($event->fresh()))->toBe($expected, "Run at {$utc} UTC");
+    }
+})->with('fire timezones');
