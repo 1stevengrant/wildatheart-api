@@ -8,6 +8,7 @@ use App\Models\EventSchedule;
 use App\Models\EventScheduleDate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Services\EventCacheService;
 use App\Data\EventScheduleInputData;
 use App\Data\EventScheduleDateInputData;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -57,6 +58,8 @@ class SyncEventSchedule
                 ->delete();
 
             ScheduleDateWriter::write($schedule, $upcomingDates);
+
+            app(EventCacheService::class)->flush();
 
             return $schedule->fresh();
         });

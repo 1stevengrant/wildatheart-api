@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\Event;
 use App\Data\V1\EventData;
 use Statamic\Facades\Entry;
+use App\Services\EventCacheService;
 use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
 use App\Services\EventResponseBuilder;
@@ -12,11 +13,14 @@ use App\Support\Schedule\PublicScheduleDates;
 
 class EventController extends Controller
 {
-    public function __construct(private readonly EventResponseBuilder $eventResponseBuilder) {}
+    public function __construct(
+        private readonly EventResponseBuilder $eventResponseBuilder,
+        private readonly EventCacheService $eventCacheService,
+    ) {}
 
     public function index()
     {
-        return cache()->remember('events_collection.v3', now()->addHour(), function (): array {
+        return cache()->remember($this->eventCacheService->collectionCacheKey(), now()->addHour(), function (): array {
             return EventCollectionData::collect(
                 Event::query()
                     ->published()

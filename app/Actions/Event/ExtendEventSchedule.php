@@ -5,6 +5,7 @@ namespace App\Actions\Event;
 use Carbon\CarbonImmutable;
 use App\Models\EventSchedule;
 use Illuminate\Support\Collection;
+use App\Services\EventCacheService;
 use App\Data\EventScheduleDateInputData;
 use Lorisleiva\Actions\Concerns\AsAction;
 use App\Support\Schedule\ScheduleDateWriter;
@@ -31,6 +32,8 @@ class ExtendEventSchedule
             $schedule,
             $dates->map(fn (CarbonImmutable $date) => new EventScheduleDateInputData($date->toDateString())),
         );
+
+        app(EventCacheService::class)->flush();
 
         return $dates;
     }
