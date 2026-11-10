@@ -36,7 +36,7 @@ It replaces the tables in your local database with production's. Tables listed i
 
 ## Staging content
 
-Staging keeps a copy of production's CMS content. `php artisan staging:sync-content` runs hourly on the staging environment and copies the tables listed in `contentTables` in `config/dbsync.php` from the `production` schema, which sits on the same database cluster.
+Staging keeps a copy of production's CMS content. `php artisan staging:sync-content` runs as a deploy command on the staging environment in Laravel Cloud, so every push or merge to `staging` refreshes it. It copies the tables listed in `contentTables` in `config/dbsync.php` from the `production` schema, which sits on the same database cluster. Content edited in production between deploys reaches staging at the next deploy, or straight away if you run the command by hand.
 
 The list is an allowlist, so users, attendees, events, addresses and form submissions stay out of staging. Check a table for personal data before adding it.
 

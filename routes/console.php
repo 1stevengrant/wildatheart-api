@@ -7,7 +7,6 @@ use App\Jobs\Admin\GenerateAndEmailReport;
 use App\Jobs\Transistor\RefreshDailyReadingsJob;
 use App\Console\Commands\GetLatestSubsplashMedia;
 use App\Console\Commands\ArchiveActivityLogCommand;
-use App\Console\Commands\SyncStagingContentCommand;
 use App\Console\Commands\WeGive\UpdateDonorIdCommand;
 use App\Console\Commands\CleanupExpiredContactInvitations;
 use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
@@ -29,4 +28,3 @@ Schedule::job(new GenerateAndEmailReport(
 ))->monthly()->environments('production');
 
 Schedule::job(new RefreshDailyReadingsJob)->everyThirtyMinutes()->environments('production');
-Schedule::command(SyncStagingContentCommand::class)->hourly()->onOneServer()->withoutOverlapping()->environments('staging');
