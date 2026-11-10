@@ -9,7 +9,7 @@ use App\Console\Commands\ArchiveActivityLogCommand;
 use App\Console\Commands\WeGive\UpdateDonorIdCommand;
 use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
 
-function scheduledEvent(string $name): Event
+function scheduledEvent(string $name): ?Event
 {
     return collect(app(Schedule::class)->events())
         ->first(fn (Event $event): bool => str_contains("{$event->command} {$event->description}", $name));
@@ -146,11 +146,8 @@ it('only allows content tables to be copied', function (): void {
     ]);
 });
 
-it('runs the sync hourly on staging only', function (): void {
-    $event = scheduledEvent('staging:sync-content');
-
-    expect($event->environments)->toBe(['staging'])
-        ->and($event->expression)->toBe('0 * * * *');
+it('leaves the sync to staging deploys rather than the scheduler', function (): void {
+    expect(scheduledEvent('staging:sync-content'))->toBeNull();
 });
 
 it('keeps tasks with outside effects off staging', function (string $name): void {
