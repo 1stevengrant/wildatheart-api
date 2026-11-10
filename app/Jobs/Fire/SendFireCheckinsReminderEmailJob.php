@@ -37,6 +37,7 @@ class SendFireCheckinsReminderEmailJob implements ShouldBeUnique, ShouldQueue
         Event::query()
             ->with(['user', 'managers'])
             ->allFires()
+            ->withoutSchedule()
             ->lastCheckinReminderNotSent()
             // Only target events that got initial email between 7-90 days ago
             // Events with email 90+ days ago will get a fresh initial email instead

@@ -64,7 +64,7 @@ class GetLatestSubsplashMedia extends Command
     private function updateOrCreateEntries(&$nextPage, $totalMediaItems)
     {
         // Retrieve items on current page.
-        $subsplashResponse = $this->apiClient->fetch($nextPage);
+        $subsplashResponse = $this->apiClient->fetch($nextPage, timeout: 30);
         $mediaItemsInResponse = data_get($subsplashResponse, '_embedded.media-items', []);
 
         // Update next page if available.

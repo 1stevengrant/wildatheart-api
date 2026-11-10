@@ -28,6 +28,21 @@ enum FrequencyEnum: string
     }
 
     /**
+     * The frequencies a Fire schedule can use. `varies` is shown to hosts as Custom.
+     *
+     * @return array<int, self>
+     */
+    public static function scheduleCases(): array
+    {
+        return [self::WEEKLY, self::MONTHLY, self::VARIES];
+    }
+
+    public function autoRenews(): bool
+    {
+        return $this === self::WEEKLY || $this === self::MONTHLY;
+    }
+
+    /**
      * Get all frequency options as key-value pairs
      */
     public static function options(): array

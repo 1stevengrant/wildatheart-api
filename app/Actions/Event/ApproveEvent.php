@@ -16,6 +16,9 @@ class ApproveEvent
         $event->update([
             'approved_at' => now(),
         ]);
+
+        CatchUpEventSchedule::run($event);
+
         LogActivityJob::dispatch(
             description: 'Event approved',
             performedOn: $event,

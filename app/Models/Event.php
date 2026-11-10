@@ -211,6 +211,32 @@ class Event extends BaseModel
         return $this->hasOne(EventOwnershipTransfer::class);
     }
 
+    public function schedule(): HasOne
+    {
+        return $this->hasOne(EventSchedule::class);
+    }
+
+    public function scheduleDates(): HasMany
+    {
+        return $this->hasMany(EventScheduleDate::class)->orderBy('date');
+    }
+
+    /**
+     * Dates from two days ago onwards, which covers "today" in every timezone.
+     * Callers filter to the Fire's own local today.
+     */
+    public function recentScheduleDates(): HasMany
+    {
+        return $this->hasMany(EventScheduleDate::class)
+            ->where('date', '>=', now()->subDays(2)->toDateString())
+            ->orderBy('date');
+    }
+
+    public function scheduleNotifications(): HasMany
+    {
+        return $this->hasMany(EventScheduleNotification::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Accessors & Mutators
@@ -501,6 +527,17 @@ class Event extends BaseModel
     public function hasRequestedGift(): bool
     {
         return (bool) $this->gift_requested;
+    }
+
+    /**
+     * The host form, opened at the schedule section. Hosts sign in with Auth0, so the
+     * link is not signed.
+     */
+    public function scheduleEditUrl(): string
+    {
+        $frontendUrl = mb_rtrim(config('app.frontend_url'), '/');
+
+        return "{$frontendUrl}/host/events/{$this->eventType->slug}/create?draftEventId={$this->id}&returnTo=/host/dashboard&returnLabel=Dashboard#schedule";
     }
 
     public function isFire(): bool

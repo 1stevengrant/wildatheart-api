@@ -3,12 +3,10 @@
 use App\Models\User;
 use App\Models\EventType;
 use Illuminate\Support\Facades\Bus;
-use Database\Seeders\DatabaseSeeder;
 
 beforeEach(function () {
     Bus::fake();
 
-    $this->seed(DatabaseSeeder::class);
     $this->eventType = EventType::first();
 });
 

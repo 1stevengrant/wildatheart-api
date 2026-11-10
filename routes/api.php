@@ -26,6 +26,7 @@ use App\Http\Controllers\API\V1\Navs\DesktopNavController;
 use App\Http\Controllers\API\V1\CurrentUserPhotoController;
 use App\Http\Controllers\API\V1\GroupedEventTypeController;
 use App\Http\Controllers\API\V1\HostEventManagerController;
+use App\Http\Controllers\API\V1\SchedulePreviewsController;
 use App\Http\Controllers\API\Media\MediaRedirectsController;
 use App\Http\Controllers\API\V1\Content\PageEntryController;
 use App\Http\Controllers\API\V1\ContactInvitationsController;
@@ -106,6 +107,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::prefix('host')->name('host.')->middleware('auth0.jwt')->group(function () {
         Route::get('events', [HostEventController::class, 'index'])->name('events.index');
         Route::post('mailing-address', [HostMailingAddressController::class, 'store'])->name('mailing-address.store');
+        Route::post('schedule-previews', [SchedulePreviewsController::class, 'store'])->name('schedule-previews.store');
         Route::post('event-types/{eventType}/events', [HostEventController::class, 'store'])->name('event-types.events.store');
         Route::post('event-types/{eventType}/events/draft', [HostEventController::class, 'storeDraft'])->name('event-types.events.draft');
         Route::post('event-types/{eventType}/events/{event}/publish', [HostEventController::class, 'publish'])->name('event-types.events.publish');

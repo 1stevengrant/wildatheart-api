@@ -15,6 +15,14 @@ class EmailTemplate extends BaseModel
 
     public const FIRE_MADE_INACTIVE = 'fire-made-inactive';
 
+    public const string FIRE_SCHEDULE_DATES_ADDED = 'fire-schedule-dates-added';
+
+    public const string FIRE_SCHEDULE_ADD_MORE_DATES = 'fire-schedule-add-more-dates';
+
+    public const string FIRE_SCHEDULE_LAST_DATE = 'fire-schedule-last-date';
+
+    public const string FIRE_SCHEDULE_UNPUBLISHED = 'fire-schedule-unpublished';
+
     protected function casts(): array
     {
         return [

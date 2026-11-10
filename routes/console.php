@@ -9,9 +9,13 @@ use App\Console\Commands\GetLatestSubsplashMedia;
 use App\Console\Commands\ArchiveActivityLogCommand;
 use App\Console\Commands\WeGive\UpdateDonorIdCommand;
 use App\Console\Commands\CleanupExpiredContactInvitations;
+use App\Console\Commands\Fire\ProcessFireSchedulesCommand;
 use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
 
 Schedule::command(SendFiresCheckinsEmailCommand::class)->daily()->environments('production');
+// 15:00 UTC is morning across the US, where most Fires are. Production only, so
+// staging never emails hosts about schedules created from previews.
+Schedule::command(ProcessFireSchedulesCommand::class)->dailyAt('15:00')->onOneServer()->withoutOverlapping()->environments('production');
 Schedule::command(GetLatestSubsplashMedia::class)->everyFifteenMinutes()->environments('production');
 Schedule::command(UpdateDonorIdCommand::class)->daily()->environments('production');
 Schedule::command(CleanupExpiredContactInvitations::class)->hourly()->withoutOverlapping();

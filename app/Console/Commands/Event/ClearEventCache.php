@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Event;
 
 use Illuminate\Console\Command;
+use App\Services\EventCacheService;
 
 class ClearEventCache extends Command
 {
@@ -23,9 +24,9 @@ class ClearEventCache extends Command
      */
     protected $description = 'Clears the API event cache';
 
-    public function handle(): void
+    public function handle(EventCacheService $eventCacheService): void
     {
-        cache()->forget('events');
+        $eventCacheService->flush();
 
         $this->info('Event cache cleared!');
     }

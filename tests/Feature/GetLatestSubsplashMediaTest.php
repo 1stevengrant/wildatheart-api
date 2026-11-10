@@ -10,6 +10,7 @@ it('handles null media items in response without throwing', function () {
         ->andReturn('https://core.subsplash.com/media/v1/media-items?filter=test');
 
     $apiClient->shouldReceive('fetch')
+        ->with('https://core.subsplash.com/media/v1/media-items?filter=test', 30)
         ->once()
         ->andReturn([
             '_embedded' => [],

@@ -353,6 +353,16 @@ class EventBuilder extends Builder
         });
     }
 
+    public function withoutSchedule(): EventBuilder
+    {
+        return $this->whereDoesntHave('schedule');
+    }
+
+    public function withSchedule(): EventBuilder
+    {
+        return $this->whereHas('schedule');
+    }
+
     public function notAutoUnpublished(): EventBuilder
     {
         return $this->where('auto_unpublished', false);

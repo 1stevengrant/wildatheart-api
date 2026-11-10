@@ -5,14 +5,17 @@ namespace App\Http\Controllers\API\V1;
 use App\Models\Event;
 use App\Data\EventData;
 use App\Models\EventType;
+use App\Data\EventScheduleData;
 use App\Support\EventDateHelper;
 use Illuminate\Http\JsonResponse;
 use App\Actions\Event\DeleteEvent;
+use Illuminate\Support\Facades\DB;
 use App\Actions\Event\ApproveEvent;
 use App\Http\Controllers\Controller;
 use App\Actions\Event\SaveEventDraft;
 use App\Support\EventTypeDateSelector;
 use App\Actions\Event\PublishEventDraft;
+use App\Actions\Event\SyncEventSchedule;
 use App\Http\Requests\API\V1\CreateEventRequest;
 use App\Actions\Event\SendMaterialsOrderToZapier;
 use App\Http\Requests\API\V1\PublishEventRequest;
@@ -29,7 +32,7 @@ class HostEventController extends Controller
     {
         $baseQuery = Event::query()
             ->controllableByUser(auth()->user())
-            ->with(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])
+            ->with(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser', 'schedule', 'recentScheduleDates'])
             ->orderByRaw('start_date < NOW()')
             ->orderBy('start_date');
 
@@ -59,29 +62,39 @@ class HostEventController extends Controller
             eventTypeName: $eventType->name,
         );
 
-        $event = auth()->user()->events()->create([
-            'event_type_id' => $eventType->id,
-            'name' => $request->name,
-            'city' => $request->city,
-            'zip' => $request->zip,
-            'country' => $request->country,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'region' => $request->region,
-            'district' => $request->district,
-            'locality' => $request->locality,
-            'neighborhood' => $request->neighborhood,
-            'street_address' => $request->street_address,
-            'is_private' => $request->is_private,
-            'state' => $request->state,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'frequency' => EventTypeDateSelector::requiresFrequency($eventType->group_type)
-                ? $request->frequency
-                : null,
-            'sex' => $eventType->sex,
-            'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
-        ]);
+        $event = DB::transaction(function () use ($request, $eventType) {
+            $event = auth()->user()->events()->create([
+                'event_type_id' => $eventType->id,
+                'name' => $request->name,
+                'city' => $request->city,
+                'zip' => $request->zip,
+                'country' => $request->country,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'region' => $request->region,
+                'district' => $request->district,
+                'locality' => $request->locality,
+                'neighborhood' => $request->neighborhood,
+                'street_address' => $request->street_address,
+                'is_private' => $request->is_private,
+                'state' => $request->state,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'frequency' => EventTypeDateSelector::requiresFrequency($eventType->group_type)
+                    ? $request->frequency
+                    : null,
+                'sex' => $eventType->sex,
+                'number_of_items_in_material_order' => $request->number_of_items_in_material_order,
+            ]);
+
+            $scheduleInput = $request->scheduleInput();
+
+            if ($scheduleInput) {
+                SyncEventSchedule::run($event, $scheduleInput);
+            }
+
+            return $event;
+        });
 
         SendMaterialsOrderToZapier::run(
             event: $event,
@@ -92,7 +105,10 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => $event,
+            'event' => [
+                ...$event->toArray(),
+                'schedule' => EventScheduleData::fromEvent($event->load(['schedule', 'recentScheduleDates'])),
+            ],
         ]);
     }
 
@@ -100,9 +116,14 @@ class HostEventController extends Controller
     {
         $event = SaveEventDraft::run($request, $eventType, auth()->user());
 
+        $event = $event->fresh(['managers', 'pendingManagerInvitations']);
+
         return response()->json([
             'success' => true,
-            'event' => $event->fresh(['managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser']),
+            'event' => [
+                ...$event->fresh(['managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])->toArray(),
+                'schedule' => EventScheduleData::fromEvent($event->load(['schedule', 'recentScheduleDates'])),
+            ],
         ]);
     }
 
@@ -131,7 +152,7 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser', 'schedule', 'recentScheduleDates'])),
         ]);
     }
 
@@ -143,7 +164,7 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser', 'schedule', 'recentScheduleDates'])),
         ]);
     }
 
@@ -154,7 +175,7 @@ class HostEventController extends Controller
 
         return response()->json([
             'success' => true,
-            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser'])),
+            'event' => EventData::fromModel($event->fresh(['user', 'eventType', 'managers', 'pendingManagerInvitations', 'pendingOwnershipTransfer.transferredByUser', 'schedule', 'recentScheduleDates'])),
         ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Data\V1;
 use App\Models\Event;
 use App\Models\EventType;
 use Spatie\LaravelData\Data;
+use App\Support\Schedule\PublicScheduleDates;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 use Spatie\TypeScriptTransformer\Attributes\TypeScriptType;
 use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
@@ -32,6 +33,9 @@ class EventData extends Data
         public ?array $landingPage,
         public EventTypePageData $eventTypePage,
         public string $connect_url,
+        public ?NextEventDateData $nextDate = null,
+        /** @var array<int, NextEventDateData> */
+        public array $upcomingDates = [],
     ) {}
 
     public static function fromEvent(Event $event): self
@@ -54,6 +58,8 @@ class EventData extends Data
             landingPage: null,
             eventTypePage: EventTypePageData::fromEventType($event->eventType),
             connect_url: $event->connect_url,
+            nextDate: PublicScheduleDates::next($event),
+            upcomingDates: PublicScheduleDates::upcoming($event) ?? [],
         );
     }
 }

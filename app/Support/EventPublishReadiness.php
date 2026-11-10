@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Event;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use App\Support\Schedule\ScheduleReadiness;
 
 /**
  * Whether a saved event has everything publishing requires — the same requirements the publish
@@ -51,8 +52,21 @@ class EventPublishReadiness
             'number_of_items_in_material_order.required' => 'Choose the expected number of attendees before publishing.',
         ];
 
-        return collect(Validator::make($data, $rules, $messages)->errors()->messages())
+        // A scheduled Fire's dates and frequency live on its schedule, not on the event.
+        $hasSchedule = $event->isFire() && $event->schedule()->exists();
+
+        if ($hasSchedule) {
+            unset($rules['start_date'], $rules['frequency']);
+        }
+
+        $errors = collect(Validator::make($data, $rules, $messages)->errors()->messages())
             ->map(fn (array $fieldMessages) => $fieldMessages[0])
             ->all();
+
+        if ($hasSchedule && ! ScheduleReadiness::canPublish($event)) {
+            $errors['schedule'] = ScheduleReadiness::MISSING_DATE_MESSAGE;
+        }
+
+        return $errors;
     }
 }

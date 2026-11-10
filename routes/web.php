@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\APIDocsController;
 use App\Http\Controllers\ApiSpecController;
-use App\Http\Controllers\FiresPageController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\UpcomingEventsController;
 use App\Http\Controllers\CreateSupportTicketController;
@@ -77,7 +76,6 @@ Route::prefix('drupal')->name('drupal.')->group(function () {
 
 Route::name('upcoming.')->group(function () {
     Route::get('upcoming', UpcomingEventsController::class)->name('events');
-    Route::get('fires', FiresPageController::class)->name('fires');
 });
 
 Route::middleware(['super_admin', 'auth'])->group(function () {

@@ -14,6 +14,7 @@ use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
 use Illuminate\Database\Eloquent\Collection;
+use App\Support\Schedule\PublicScheduleDates;
 
 class SearchForEventsController extends Controller
 {
@@ -54,7 +55,7 @@ class SearchForEventsController extends Controller
     {
         $events = $this->filteredQuery($data)
             ->nearestTo($data->latitude, $data->longitude, $data->nearestLimit())
-            ->with(['eventType', 'user'])
+            ->with(['eventType', 'user', ...PublicScheduleDates::RELATIONS])
             ->get();
 
         return [
@@ -81,7 +82,7 @@ class SearchForEventsController extends Controller
             $query->withinRadius($data->latitude, $data->longitude, $radius);
         }
 
-        $query->with(['eventType', 'user']);
+        $query->with(['eventType', 'user', ...PublicScheduleDates::RELATIONS]);
 
         if (! $data->isPaginated()) {
             $events = $query->get();
@@ -128,7 +129,7 @@ class SearchForEventsController extends Controller
                 $data->ne_longitude
             )
             ->orderBy('start_date')
-            ->with(['eventType', 'user'])
+            ->with(['eventType', 'user', ...PublicScheduleDates::RELATIONS])
             ->get();
 
         return [
