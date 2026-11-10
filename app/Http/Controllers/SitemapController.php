@@ -3,28 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use App\Builders\EntryQueryBuilder;
+use App\Queries\SitemapPagesQuery;
 use Illuminate\Support\Facades\Cache;
 
 class SitemapController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(SitemapPagesQuery $sitemapPages): JsonResponse
     {
-        $pages = Cache::remember('sitemap_pages.v2', 900, function (): array {
-            return EntryQueryBuilder::query()
-                ->where('collection', '!=', 'alerts')
-                ->where('uri', '!=', null)
-                ->where(function ($query) {
-                    $query->where('hide_from_search_engines', false)->orWhereNull('hide_from_search_engines');
-                })
-                ->get()->map(function ($entry): array {
-                    return [
-                        'loc' => $entry->uri,
-                        'lastmod' => $entry->last_modified->format('Y-m-d'),
-                        'priority' => $entry->sitemap_priority ?? 0.5,
-                    ];
-                })->toArray();
-        });
+        $pages = Cache::flexible('sitemap_pages.v3', [900, 86400], fn (): array => $sitemapPages->get());
 
         return response()->json($pages);
     }
