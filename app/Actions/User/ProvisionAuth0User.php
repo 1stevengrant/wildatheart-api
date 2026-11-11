@@ -28,9 +28,24 @@ class ProvisionAuth0User
      * requires email_verified=true: an unverified Auth0 signup with a
      * victim's email must not link to or create the victim's local account.
      *
+     * On staging, a verified staff address also makes the user a super admin, checked on
+     * every request so someone who verifies after their first sign in is picked up too.
+     *
      * @throws UserProvisioningException
      */
     public function handle(string $sub, Auth0Profile $profile, string $accessToken): User
+    {
+        $user = $this->resolveUser($sub, $profile, $accessToken);
+
+        GrantStaffSuperAdmin::run($user, $profile->emailVerified ? $profile->email : null);
+
+        return $user;
+    }
+
+    /**
+     * @throws UserProvisioningException
+     */
+    private function resolveUser(string $sub, Auth0Profile &$profile, string $accessToken): User
     {
         // withTrashed: soft-deleted rows still hold the unique email index, so
         // resurrecting one is the only safe path. The host app uses SoftDeletes

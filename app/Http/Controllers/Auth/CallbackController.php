@@ -10,6 +10,7 @@ use Auth0\SDK\Auth0 as Auth0SDK;
 use App\Http\Controllers\Controller;
 use Auth0\SDK\Exception\StateException;
 use Illuminate\Support\Facades\Session;
+use App\Actions\User\GrantStaffSuperAdmin;
 use App\Jobs\User\UpdateProfileFromAuth0Job;
 
 class CallbackController extends Controller
@@ -134,6 +135,16 @@ class CallbackController extends Controller
     }
 
     private function findOrCreateUser(array $auth0User): User
+    {
+        $user = $this->resolveUser($auth0User);
+        $isEmailVerified = ($auth0User['email_verified'] ?? null) === true;
+
+        GrantStaffSuperAdmin::run($user, $isEmailVerified ? $auth0User['email'] : null);
+
+        return $user;
+    }
+
+    private function resolveUser(array $auth0User): User
     {
         $user = User::withTrashed()->byEmail($auth0User['email'])->first();
 
