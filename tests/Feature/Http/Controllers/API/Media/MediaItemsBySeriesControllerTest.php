@@ -52,6 +52,24 @@ it('returns only public fields for the items in a series', function () {
     ]);
 });
 
+it('includes the uri and leaves out fields the item blueprint does not have', function () {
+    Entry::make()
+        ->collection('media_item')
+        ->blueprint('subsplash_media_item')
+        ->id('id-subsplash')
+        ->slug('subsplash-item')
+        ->date(now()->subDay())
+        ->data(['title' => 'Subsplash item', 'series' => 'entry::series-1'])
+        ->save();
+
+    $response = $this->getJson(route('content.media.bySeriesId', ['slug' => 'series-1']));
+
+    $response->assertOk()
+        ->assertJsonPath('0.uri', Entry::find('id-subsplash')->uri())
+        ->assertJsonMissingPath('0.position')
+        ->assertJsonMissingPath('0.is_coming_soon');
+});
+
 it('orders items by position and leaves out other series', function () {
     ($this->makeMediaItem)('second', 2);
     ($this->makeMediaItem)('first', 1);

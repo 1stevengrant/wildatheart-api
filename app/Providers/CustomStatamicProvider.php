@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use Statamic\Facades\Search;
 use Statamic\Events\EntrySaved;
 use Statamic\Facades\Collection;
+use Statamic\Events\EntryDeleted;
 use Statamic\Events\AssetUploaded;
-use App\Builders\EntryQueryBuilder;
 use App\Support\Search\DatabaseIndex;
 use App\Exceptions\CpExceptionHandler;
+use App\Support\MediaItemRouteLookups;
 use Illuminate\Support\ServiceProvider;
 use App\Jobs\Assets\GenerateColorPalette;
 use Statamic\Http\Resources\API\Resource;
+use Illuminate\Queue\Events\JobProcessing;
 use App\Http\Resources\PublicEntryResource;
 use App\Jobs\Cloudflare\TriggerAstroBuildJob;
 use Statamic\Http\Resources\API\EntryResource;
@@ -51,25 +53,26 @@ class CustomStatamicProvider extends ServiceProvider
             }
         });
 
+        LaravelEvent::listen([EntrySaved::class, EntryDeleted::class], function (EntrySaved|EntryDeleted $event): void {
+            if (in_array($event->entry->collectionHandle(), ['experiences', 'podcasts', 'media_item'])) {
+                MediaItemRouteLookups::flush();
+            }
+        });
+
+        LaravelEvent::listen(JobProcessing::class, fn () => MediaItemRouteLookups::flush());
+
         Collection::computed('media_item', 'custom_url', function ($entry, $value) {
             /**
              * Experience Sessions are presented sequentially in this format:
              * /experience/{EXPERIENCE_SLUG}/session-{POSITION_OF_ITEM_IN_EXPERIENCE}
              */
             if ($entry->blueprint->handle === 'experience_session') {
-                $experience = EntryQueryBuilder::experiences()
-                    ->where(function ($query) use ($entry) {
-                        $query->whereJsonContains('data->sessions', $entry->id);
-                    })
-                    ->first();
+                $experience = MediaItemRouteLookups::experienceForSession($entry->id());
 
                 if ($experience) {
-                    $sessionIndex = $experience->sessions->search(function ($session) use ($entry) {
-                        return $session->id === $entry->id;
-                    });
-                    $sessionIndexPlusOne = $sessionIndex + 1;
+                    $sessionNumber = MediaItemRouteLookups::sessionNumber($experience, $entry->id());
 
-                    return $experience->uri() . '/session-' . $sessionIndexPlusOne;
+                    return "{$experience->uri()}/session-{$sessionNumber}";
                 }
             }
 
@@ -77,9 +80,7 @@ class CustomStatamicProvider extends ServiceProvider
                 $series = $entry->series->value();
 
                 if ($series) {
-                    $podcast = EntryQueryBuilder::podcasts()
-                        ->where('data->subsplash_series_id', $series->id)
-                        ->first();
+                    $podcast = MediaItemRouteLookups::podcastForSeries($series->id());
 
                     if ($podcast) {
                         return $podcast->uri() . '/' . $entry->slug;
