@@ -26,7 +26,13 @@ The deployment workflow is as follows:
 
 -   feature branch is pull requested against `prod`
 -   the PR needs passing tests and approval before it can be merged
--   to try a branch on real infrastructure first, use its Laravel Cloud preview environment (there is no separate staging site any more)
+-   to try a branch on real infrastructure first, use its Laravel Cloud preview environment, or merge it into `staging`
+
+## Staging
+
+The `staging` branch deploys to the Laravel Cloud `staging` environment, which serves `local-staging.wildatheart.org`. It holds work that isn't released yet, and the Astro site's preview builds read its API. Push to deploy is on, so every push or merge to `staging` deploys straight away, without the test gate production has. Merge `prod` into `staging` to bring it up to date. Never reset `staging` to `prod`, because that would drop the unreleased work.
+
+Staging has its own `staging` schema on the same MySQL cluster as production, and its own cache. Its users, events and Fire schedules are its own and survive deploys. Deploys don't copy production's database. The only production data staging takes is CMS content, which `php artisan staging:sync-content` copies (see `docs/database.md` on the `staging` branch). `php artisan staging:seed-fixtures` creates or resets the `[TEST]` events and contacts. Run it by hand, not as a deploy command, because every run resets the test Fires and it fails when one of its four host users is missing.
 
 ## Feature branch previews
 
