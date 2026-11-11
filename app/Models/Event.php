@@ -59,6 +59,7 @@ class Event extends BaseModel
             'is_private' => 'boolean',
             'frequency' => FrequencyEnum::class,
             'last_checkin_email_sent_at' => 'datetime',
+            'post_event_email_sent_at' => 'datetime',
             'last_checkin_reminder_sent_at' => 'datetime',
             'last_checkin_confirmed_at' => 'datetime',
             'auto_unpublished' => 'boolean',

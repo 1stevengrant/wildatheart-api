@@ -161,6 +161,13 @@ tabs:
               display: 'Last Checkin Email Sent At'
               width: 33
           -
+            handle: post_event_email_sent_at
+            field:
+              type: date
+              display: 'Post Event Email Sent At'
+              width: 33
+              visibility: read_only
+          -
             handle: start_date
             field:
               type: date

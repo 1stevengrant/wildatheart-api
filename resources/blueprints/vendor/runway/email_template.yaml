@@ -16,6 +16,12 @@ tabs:
               type: toggle
               display: 'Is Active'
           -
+            handle: cc_co_hosts
+            field:
+              type: toggle
+              display: 'CC Co-hosts'
+              instructions: 'Send a copy of this email to the event co-hosts. Only applies to emails sent to event hosts.'
+          -
             handle: from_name
             field:
               type: text

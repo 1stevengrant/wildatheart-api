@@ -132,6 +132,19 @@ class EventBuilder extends Builder
         return $this->where('start_date', '>=', now());
     }
 
+    public function endedWithinTheLastDays(int $days): EventBuilder
+    {
+        return $this
+            ->where('end_date', '>=', today()->subDays($days))
+            ->where('end_date', '<', today());
+    }
+
+    /** @param array<int, string> $eventTypeNames */
+    public function ofEventTypes(array $eventTypeNames): EventBuilder
+    {
+        return $this->whereIn('event_type_id', EventType::whereIn('name', $eventTypeNames)->select('id'));
+    }
+
     public function startedInTheLastYear(): EventBuilder
     {
         return $this->whereBetween('start_date', [now()->subYear(), now()]);

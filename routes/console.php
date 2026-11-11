@@ -10,8 +10,10 @@ use App\Console\Commands\ArchiveActivityLogCommand;
 use App\Console\Commands\WeGive\UpdateDonorIdCommand;
 use App\Console\Commands\CleanupExpiredContactInvitations;
 use App\Console\Commands\Fire\SendFiresCheckinsEmailCommand;
+use App\Console\Commands\Event\SendRetreatThankYouEmailsCommand;
 
 Schedule::command(SendFiresCheckinsEmailCommand::class)->daily();
+Schedule::command(SendRetreatThankYouEmailsCommand::class)->dailyAt('15:00');
 Schedule::command(GetLatestSubsplashMedia::class)->everyFifteenMinutes()->environments('production');
 Schedule::command(UpdateDonorIdCommand::class)->daily();
 Schedule::command(CleanupExpiredContactInvitations::class)->hourly()->withoutOverlapping();

@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS `email_templates`;
 CREATE TABLE `email_templates` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `is_active` tinyint(1) DEFAULT '1',
+  `cc_co_hosts` tinyint(1) NOT NULL DEFAULT '0',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `from_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'Wild at Heart',

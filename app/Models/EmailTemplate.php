@@ -19,6 +19,7 @@ class EmailTemplate extends BaseModel
     {
         return [
             'is_active' => 'boolean',
+            'cc_co_hosts' => 'boolean',
         ];
     }
 

@@ -16,6 +16,8 @@ class EmailTemplateSeeder extends Seeder
         $sql = file_get_contents(database_path('seeders/email_templates.sql'));
         \DB::unprepared($sql);
 
+        $this->call(RetreatThankYouEmailTemplateSeeder::class);
+
         EmailTemplate::all()->each(function (EmailTemplate $emailTemplate) {
             $emailTemplate->update([
                 'last_updated_by' => User::first()->id,
