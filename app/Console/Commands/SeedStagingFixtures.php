@@ -36,12 +36,13 @@ class SeedStagingFixtures extends Command
         }
 
         $this->line($dryRun ? 'Dry run. No fixture records were changed.' : 'Staging fixtures seeded successfully.');
-        $this->table(['Hosts', 'Events', 'Contacts', 'Interests', 'Attendees'], [[
+        $this->table(['Hosts', 'Events', 'Contacts', 'Interests', 'Attendees', 'Scheduled Fires'], [[
             $summary['hosts'],
             $summary['events'],
             $summary['contacts'],
             $summary['interests'],
             $summary['attendees'],
+            $summary['scheduledFires'],
         ]]);
 
         return self::SUCCESS;
