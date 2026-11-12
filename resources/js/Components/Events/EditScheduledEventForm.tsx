@@ -19,7 +19,10 @@ interface EditScheduledEventFormProps {
     user: App.Data.UserData;
 }
 
-export const EditScheduledEventForm = ({ event, user }: EditScheduledEventFormProps) => {
+export const EditScheduledEventForm = ({
+    event,
+    user,
+}: EditScheduledEventFormProps) => {
     const { startDate, maxDate, handleStartDateChange, setStartDate } =
         useDates();
     const eventTypeName = event.event_type_data.name;
