@@ -11,6 +11,7 @@ import { showFilterPanelState } from "@/store";
 import {
     eventsListState,
     eventsListLoadingState,
+    eventsSearchFailedState,
     currentEventState,
 } from "@/store/eventsAtom";
 import { featuredContentState } from "@/store/featuredContentAtom";
@@ -18,6 +19,7 @@ import { featuredContentState } from "@/store/featuredContentAtom";
 export const SearchSidebar = () => {
     const [events] = useRecoilState(eventsListState);
     const [isLoading] = useRecoilState(eventsListLoadingState);
+    const [searchFailed] = useRecoilState(eventsSearchFailedState);
     const [currentEvent, setCurrentEvent] = useRecoilState(currentEventState);
     const [showFilterPanel] = useRecoilState(showFilterPanelState);
     const [featuredContent] = useRecoilState(featuredContentState);
@@ -40,6 +42,11 @@ export const SearchSidebar = () => {
                                 className={`py-8`}
                                 text={`Loading Events`}
                             />
+                        ) : searchFailed ? (
+                            <p className="py-8 text-center text-white">
+                                We couldn&apos;t load events. Please try again
+                                in a moment.
+                            </p>
                         ) : events.length === 0 ? (
                             <NoSearchResults />
                         ) : (
