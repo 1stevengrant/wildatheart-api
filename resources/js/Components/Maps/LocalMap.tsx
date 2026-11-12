@@ -37,8 +37,11 @@ type LocalMapProps = {
     onUserLocated: (latitude: number, longitude: number) => void;
 };
 
+const MAX_ZOOM_OUT_ATTEMPTS = 5;
+
 export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
-    const { getEvents, showLoading, setZoomingComplete } = useEvents();
+    const { searchEvents, showLoading } = useEvents();
+    const zoomOutAttemptsRef = useRef(0);
     const { selectedPlace } = useMapData();
     const [initialViewState] = useState(() => ({
         ...(getUserLocation() ?? defaultLatLng),
@@ -53,7 +56,6 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
     const { startDateString, endDateString } = useDates();
 
     const [hasSupport, setHasSupport] = useState(true);
-    const abortControllerRef = useRef<AbortController | null>(null);
     const initialLoadDone = useRef(false);
 
     useEffect(() => {
@@ -138,7 +140,6 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
         console.log("Map moved to:", center.lat, center.lng, "Zoom:", newZoom);
         setUserLocation(center.lat, center.lng);
         setUserZoom(newZoom);
-        setZoomingComplete(); // Mark any zoom operation as complete
     }, []);
 
     const onMapLoad = useCallback(() => {
@@ -147,46 +148,39 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
     }, [handleOnMapMoveEnd]);
 
     useEffect(() => {
-        if (bounds) {
-            const fetchEvents = async () => {
-                if (abortControllerRef.current) {
-                    abortControllerRef.current.abort();
-                }
-
-                abortControllerRef.current = new AbortController();
-
-                try {
-                    const result = await getEvents(
-                        bounds,
-                        currentSex,
-                        types,
-                        typeGroup,
-                        startDateString,
-                        endDateString,
-                        abortControllerRef.current.signal
-                    );
-
-                    if (result.shouldZoomOut && mapRef.current) {
-                        const currentZoom = mapRef.current.getMap().getZoom();
-                        // Zoom out by 2 levels at a time for faster coverage
-                        mapRef.current.getMap().zoomTo(currentZoom - 2);
-                    }
-                } catch (error: any) {
-                    if (error.name === "AbortError") {
-                        console.log("Fetch aborted");
-                    } else {
-                        console.error("Fetch error:", error);
-                    }
-                }
-            };
-            fetchEvents();
+        if (!bounds) {
+            return;
         }
 
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
+        const controller = new AbortController();
+
+        searchEvents(
+            bounds,
+            { currentSex, types, typeGroup, startDateString, endDateString },
+            controller.signal
+        ).then((eventCount) => {
+            if (eventCount === null) {
+                return;
             }
-        };
+
+            if (
+                eventCount > 0 ||
+                zoomOutAttemptsRef.current >= MAX_ZOOM_OUT_ATTEMPTS
+            ) {
+                zoomOutAttemptsRef.current = 0;
+
+                return;
+            }
+
+            zoomOutAttemptsRef.current += 1;
+
+            const map = mapRef.current?.getMap();
+
+            // Zooming out ends with moveend, which searches the wider area.
+            map?.zoomTo(map.getZoom() - 2);
+        });
+
+        return () => controller.abort();
     }, [bounds, currentSex, typeGroup, types, startDateString, endDateString]);
 
     const handleGeolocate = useCallback(

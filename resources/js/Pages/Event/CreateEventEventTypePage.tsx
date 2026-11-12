@@ -18,10 +18,14 @@ import { ConfirmEventDetailsModal } from "@/Components/Modals/ConfirmEventDetail
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { Spinner } from "@/Components/Ui/Spinner";
+import {
+    fromCalendarDate,
+    latestEventStartDate,
+    toCalendarDate,
+} from "@/helpers/calendarDate";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { LOCATION_TBC } from "@/helpers/locationTbc";
 import { scrollToError } from "@/helpers/scrollToError";
-import { useDates } from "@/Hooks/useDates";
 import { useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import { useEventModal } from "@/Hooks/useEventModal";
@@ -51,7 +55,7 @@ const CreateEventEventTypePage = () => {
         setData,
     } = useEventForm({ user, eventType });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({
             onLocationChange: (locationData) => {
                 updateLocationData(locationData);
@@ -65,8 +69,6 @@ const CreateEventEventTypePage = () => {
         openConfirmModal,
         closeConfirmModal,
     } = useEventModal();
-
-    const { startDate, handleStartDateChange, maxDate } = useDates();
 
     const confirmSubmit = () => {
         closeConfirmModal();
@@ -117,7 +119,10 @@ const CreateEventEventTypePage = () => {
                         </p>
 
                         <form>
-                            <MapboxSearch className="mt-4" />
+                            <MapboxSearch
+                                className="mt-4"
+                                onSelect={selectPlace}
+                            />
 
                             <EventMap
                                 mapRef={mapRef}
@@ -137,12 +142,15 @@ const CreateEventEventTypePage = () => {
                                     label="Start date"
                                     placeholder="Select start date"
                                     minDate={new Date()}
-                                    value={startDate}
-                                    maxDate={maxDate}
+                                    value={fromCalendarDate(data.start_date)}
+                                    maxDate={latestEventStartDate()}
                                     clearable
                                     required
                                     onChange={(date) =>
-                                        handleStartDateChange(date, setData)
+                                        setData(
+                                            "start_date",
+                                            toCalendarDate(date)
+                                        )
                                     }
                                 />
                                 <InputError message={errors.start_date} />

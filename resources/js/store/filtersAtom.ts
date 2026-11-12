@@ -13,29 +13,13 @@ const sexState = atom({
     default: <string>"",
 });
 
-const startDateState = atom({
+const startDateState = atom<Date | null>({
     key: "StartDate",
-    default: <Date | null | string | any>null,
+    default: null,
 });
-const endDateState = atom({
+const endDateState = atom<Date | null>({
     key: "EndDate",
-    default: <Date | null | string>null,
-});
-const startDateStringState = atom({
-    key: "StartDateString",
-    default: <string>"",
-});
-const endDateStringState = atom({
-    key: "EndDateString",
-    default: <string>"",
+    default: null,
 });
 
-export {
-    typeGroupState,
-    typesState,
-    sexState,
-    startDateState,
-    endDateState,
-    startDateStringState,
-    endDateStringState,
-};
+export { typeGroupState, typesState, sexState, startDateState, endDateState };

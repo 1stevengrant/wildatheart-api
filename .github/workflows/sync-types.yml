@@ -73,8 +73,8 @@ jobs:
             - name: Generate TypeScript definitions
               run: php artisan typescript:transform
 
-            - name: Lint generated types
-              run: npm run lint
+            - name: Format generated types
+              run: npx prettier --ignore-path= --write ${{ env.SOURCE_TYPES_PATH }}/generated.d.ts ${{ env.SOURCE_TYPES_PATH }}/statamic.d.ts
 
             - name: Validate TypeScript compilation
               run: npm run types

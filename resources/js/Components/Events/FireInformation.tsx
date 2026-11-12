@@ -42,7 +42,7 @@ export const FireInformation = ({ user }: any) => {
     const { data, setData, post, processing, errors, updateLocationData } =
         useEventForm({ user, eventType });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({
             onLocationChange: (locationData) => {
                 updateLocationData(locationData);
@@ -149,7 +149,7 @@ export const FireInformation = ({ user }: any) => {
                             frequency={data.frequency}
                         />
 
-                        <MapboxSearch className="mt-4" />
+                        <MapboxSearch className="mt-4" onSelect={selectPlace} />
 
                         <EventMap
                             mapRef={mapRef}

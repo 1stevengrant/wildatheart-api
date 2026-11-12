@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Link } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
-import dayjs from "dayjs";
 import { singular } from "pluralize";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
@@ -10,7 +9,11 @@ import { EventMap } from "@/Components/EventMap";
 import { InputError } from "@/Components/Forms/InputError";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
-import { useDates } from "@/Hooks/useDates";
+import {
+    fromCalendarDate,
+    latestEventStartDate,
+    toCalendarDate,
+} from "@/helpers/calendarDate";
 import { useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import type { SharedUser } from "@/types";
@@ -24,11 +27,10 @@ export const EditScheduledEventForm = ({
     event,
     user,
 }: EditScheduledEventFormProps) => {
-    const { startDate, maxDate, handleStartDateChange, setStartDate } =
-        useDates();
     const eventTypeName = event.event_type_data.name;
 
     const {
+        data,
         errors,
         put,
         isPrivate,
@@ -49,12 +51,12 @@ export const EditScheduledEventForm = ({
             city: event.city,
             zip: event.zip,
             is_private: event.is_private ?? undefined,
-            start_date: event.start_date ?? undefined,
+            start_date: event.start_date?.split("T")[0],
         },
         user,
     });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({
             initialLocation: {
                 latitude: event.latitude,
@@ -62,12 +64,6 @@ export const EditScheduledEventForm = ({
             },
             onLocationChange: updateLocationData,
         });
-
-    useEffect(() => {
-        if (dayjs(event.start_date).isValid()) {
-            setStartDate(dayjs(event.start_date?.split("T")[0]).toDate());
-        }
-    }, [event.start_date, setStartDate]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -81,16 +77,18 @@ export const EditScheduledEventForm = ({
                     label="Start date"
                     placeholder="Select start date"
                     minDate={new Date()}
-                    value={startDate}
-                    maxDate={maxDate}
+                    value={fromCalendarDate(data.start_date)}
+                    maxDate={latestEventStartDate()}
                     clearable
                     required
-                    onChange={(date) => handleStartDateChange(date, setData)}
+                    onChange={(date) =>
+                        setData("start_date", toCalendarDate(date) ?? "")
+                    }
                 />
                 <InputError message={errors.start_date} />
             </div>
 
-            <MapboxSearch className="mt-4" />
+            <MapboxSearch className="mt-4" onSelect={selectPlace} />
 
             <EventMap
                 mapRef={mapRef}
