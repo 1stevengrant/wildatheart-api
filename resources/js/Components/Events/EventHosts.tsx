@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { XMarkIcon, StarIcon } from "@heroicons/react/24/outline";
-import { router } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { InputError } from "@/Components/Forms/InputError";
@@ -22,30 +22,15 @@ export const EventHosts = ({
     pendingTransfer,
     isOwner = false,
 }: EventHostsProps) => {
-    const [email, setEmail] = useState("");
-    const [processing, setProcessing] = useState(false);
-    const [errors, setErrors] = useState<{ email?: string }>({});
+    const invite = useForm({ email: "" });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setProcessing(true);
-        setErrors({});
 
-        router.post(
-            route("events.managers.store", eventId),
-            { email },
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    setEmail("");
-                    setProcessing(false);
-                },
-                onError: (errors) => {
-                    setErrors(errors);
-                    setProcessing(false);
-                },
-            }
-        );
+        invite.post(route("events.managers.store", eventId), {
+            preserveScroll: true,
+            onSuccess: () => invite.reset("email"),
+        });
     };
 
     const handleRemove = (managerId: string, managerName: string) => {
@@ -236,15 +221,17 @@ export const EventHosts = ({
                             id="host-email"
                             name="email"
                             type="email"
-                            value={email}
+                            value={invite.data.email}
                             placeholder="host@example.com"
-                            onChange={(e) => setEmail(e.target.value)}
-                            disabled={processing}
+                            onChange={(e) =>
+                                invite.setData("email", e.target.value)
+                            }
+                            disabled={invite.processing}
                         />
-                        <InputError message={errors.email} />
+                        <InputError message={invite.errors.email} />
                     </div>
-                    <PrimaryButton disabled={processing}>
-                        {processing ? "Inviting..." : "Invite Host"}
+                    <PrimaryButton disabled={invite.processing}>
+                        {invite.processing ? "Inviting..." : "Invite Host"}
                     </PrimaryButton>
                 </div>
                 <Instruction>
