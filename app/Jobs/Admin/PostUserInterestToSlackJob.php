@@ -4,8 +4,8 @@ namespace App\Jobs\Admin;
 
 use App\Models\User;
 use App\Models\Event;
-use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
+use App\Support\EventSlackMessage;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Spatie\SlackAlerts\Facades\SlackAlert;
@@ -24,13 +24,6 @@ class PostUserInterestToSlackJob implements ShouldQueue
             return;
         }
 
-        SlackAlert::to('events')
-            ->message(
-                (app()->isProduction() ? '' : '🚧 [TEST] ') .
-                $this->user->fullname . ' contacted ' .
-                $this->event->user->fullname . ' about their ' .
-                Str::singular($this->event->eventType->name) . ' in ' .
-                $this->event->location . ' !'
-            );
+        SlackAlert::to('events')->blocks(EventSlackMessage::userInterest($this->user, $this->event));
     }
 }
