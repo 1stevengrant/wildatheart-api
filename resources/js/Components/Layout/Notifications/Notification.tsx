@@ -4,6 +4,7 @@ import { Transition } from "@headlessui/react";
 import {
     CheckCircleIcon,
     ExclamationCircleIcon,
+    InformationCircleIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useSetRecoilState } from "recoil";
@@ -16,7 +17,7 @@ export const Notification = ({
     duration = 2500,
 }: {
     message: string;
-    type?: "success" | "error";
+    type?: "success" | "error" | "info";
     duration?: number;
 }) => {
     const [show, setShow] = useState(true);
@@ -30,16 +31,24 @@ export const Notification = ({
         return () => clearTimeout(timer);
     }, [duration, setReactNotifications]);
 
-    const icon =
-        type === "success" ? (
+    const icon = {
+        success: (
             <CheckCircleIcon className="h-6 w-6 text-g250" aria-hidden="true" />
-        ) : (
+        ),
+        error: (
             <ExclamationCircleIcon
                 className="h-6 w-6 text-r200"
                 aria-hidden="true"
             />
-        );
-    const backgroundColor = type === "success" ? "bg-white" : "bg-r50";
+        ),
+        info: (
+            <InformationCircleIcon
+                className="h-6 w-6 text-n400"
+                aria-hidden="true"
+            />
+        ),
+    }[type];
+    const backgroundColor = type === "error" ? "bg-r50" : "bg-white";
 
     return (
         <>

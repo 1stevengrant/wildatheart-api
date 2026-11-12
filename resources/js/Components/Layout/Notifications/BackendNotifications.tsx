@@ -10,7 +10,10 @@ export const BackendNotifications = () => {
         <>
             {notifications && (
                 <NotificationWrapper>
-                    <Notification message={notifications.message} />
+                    <Notification
+                        message={notifications.message}
+                        type={notifications.type}
+                    />
                 </NotificationWrapper>
             )}
         </>

@@ -26,7 +26,12 @@ export const TwoColumnWrapper = ({
             >
                 {children}
             </div>
-            {notifications && <Notification message={notifications.message} />}
+            {notifications && (
+                <Notification
+                    message={notifications.message}
+                    type={notifications.type}
+                />
+            )}
             {reactNotifications &&
                 reactNotifications.map((notification, index) => (
                     <Notification
