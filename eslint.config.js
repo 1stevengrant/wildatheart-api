@@ -15,7 +15,8 @@ export default [
             'vendor/**',
             'public/build/**',
             'resources/js/cp.js',
-            'resources/js/types/generated.d.ts'
+            'resources/js/types/generated.d.ts',
+            'resources/js/types/statamic.d.ts'
         ]
     },
     js.configs.recommended,
