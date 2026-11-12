@@ -75,6 +75,8 @@ jobs:
 
       - name: Install Playwright Chromium
         run: npx playwright install chromium
+        env:
+          PLAYWRIGHT_HOST_PLATFORM_OVERRIDE: ubuntu24.04-x64
 
       - name: Create parity database
         run: mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS wahlocal_parity;"
@@ -107,6 +109,7 @@ jobs:
       - name: Run browser smoke tests
         run: ./vendor/bin/pest tests/Browser/Smoke
         env:
+          PLAYWRIGHT_HOST_PLATFORM_OVERRIDE: ubuntu24.04-x64
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_DATABASE: wahlocal_test
