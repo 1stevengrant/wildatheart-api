@@ -24,9 +24,7 @@ export const EventPublicPrivateModal = ({
     open: boolean;
     setOpen: (open: boolean) => void;
 }) => {
-    const form = useForm({
-        is_private: event.is_private,
-    });
+    const form = useForm({});
 
     const toggleContent = useMemo(() => {
         return {
@@ -37,8 +35,7 @@ export const EventPublicPrivateModal = ({
         };
     }, [event.is_private, event.name]);
 
-    const toggleEventPrivacy = async () => {
-        form.setData("is_private", !form.data.is_private);
+    const toggleEventPrivacy = () => {
         form.put(route("toggle-event-privacy", [event]), {
             preserveScroll: true,
             preserveState: false,

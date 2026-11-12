@@ -21,11 +21,9 @@ export const EventUnpublishModal = ({
     setOpen: (open: boolean) => void;
     event: App.Data.EventData;
 }) => {
-    const form = useForm({
-        approved_at: null,
-    });
+    const form = useForm({});
 
-    const unpublishEvent = async () => {
+    const unpublishEvent = () => {
         form.put(route("toggle-event-approved-at", [event]), {
             preserveScroll: true,
             preserveState: false,
@@ -61,7 +59,10 @@ export const EventUnpublishModal = ({
                     <SecondaryButton onClick={() => setOpen(false)}>
                         Cancel
                     </SecondaryButton>
-                    <PrimaryButton onClick={unpublishEvent}>
+                    <PrimaryButton
+                        onClick={unpublishEvent}
+                        disabled={form.processing}
+                    >
                         Unpublish
                     </PrimaryButton>
                 </ModalActions>
