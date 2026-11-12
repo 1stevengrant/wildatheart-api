@@ -6,12 +6,18 @@ import { MapPinIcon } from "@heroicons/react/24/outline";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
-import { useMapData } from "@/Hooks/useMapData";
 import { MapboxPlace } from "@/types/MapboxPlace";
 
-export const MapboxSearch = ({ className = "" }: { className?: string }) => {
+interface MapboxSearchProps {
+    className?: string;
+    onSelect: (place: MapboxPlace) => void;
+}
+
+export const MapboxSearch = ({
+    className = "",
+    onSelect,
+}: MapboxSearchProps) => {
     const [selected, setSelected] = useState<MapboxPlace | null>(null);
-    const { setSelectedPlace } = useMapData();
 
     const { queryMapbox, query, setQuery, results, isLoading, error } =
         useMapboxSearch();
@@ -30,10 +36,10 @@ export const MapboxSearch = ({ className = "" }: { className?: string }) => {
     const handleSelect = useCallback(
         (place: MapboxPlace) => {
             setSelected(place);
-            setSelectedPlace(place);
+            onSelect(place);
             setQuery(place.place_name);
         },
-        [setSelected, setSelectedPlace, setQuery]
+        [setSelected, onSelect, setQuery]
     );
 
     const inputClassName = useMemo(() => {

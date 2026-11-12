@@ -1,41 +1,21 @@
 import { DatePickerInput } from "@mantine/dates";
 import dayjs from "dayjs";
 
+import { latestEventStartDate } from "@/helpers/calendarDate";
 import { useDates } from "@/Hooks/useDates";
 
 export const DateFilters = () => {
-    const { maxDate } = useDates();
-    const {
-        startDate,
-        setStartDate,
-        setStartDateString,
-        endDate,
-        setEndDate,
-        setEndDateString,
-        resetAllDates,
-    } = useDates();
+    const { startDate, setStartDate, endDate, setEndDate, resetAllDates } =
+        useDates();
 
-    const formatDateString = (date: any) => {
-        return dayjs(date).format("YYYY-MM-DD");
-    };
+    const handleStartDateChange = (value: Date | null) => {
+        if (!value) {
+            resetAllDates();
 
-    const handleDateChange = (value: Date | null, type = "start") => {
-        if (type === "start") {
-            setStartDate(value);
-            if (value) {
-                setStartDateString(formatDateString(value));
-            } else {
-                resetAllDates();
-            }
-        } else {
-            setEndDate(value);
-            if (value) {
-                setEndDateString(formatDateString(value));
-            } else {
-                setEndDateString("");
-                setEndDate(null);
-            }
+            return;
         }
+
+        setStartDate(value);
     };
     return (
         <div className={`flex flex-col space-y-4`}>
@@ -45,9 +25,9 @@ export const DateFilters = () => {
                     placeholder="Select start date"
                     minDate={new Date()}
                     value={startDate}
-                    maxDate={maxDate}
+                    maxDate={latestEventStartDate()}
                     clearable
-                    onChange={(value) => handleDateChange(value)}
+                    onChange={handleStartDateChange}
                 />
             </div>
             <div>
@@ -56,10 +36,10 @@ export const DateFilters = () => {
                         label="End date"
                         placeholder="Select end date"
                         minDate={dayjs(startDate).add(1, "day").toDate()}
-                        value={endDate ? new Date(endDate) : null}
+                        value={endDate}
                         maxDate={new Date(2100, 11, 31)}
                         clearable
-                        onChange={(value) => handleDateChange(value, "end")}
+                        onChange={setEndDate}
                     />
                 )}
             </div>
