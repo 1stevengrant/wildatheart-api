@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 
-import { useRecoilState } from "recoil";
-
 import { lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
 import { useMapData } from "@/Hooks/useMapData";
-import { selectedPlaceState } from "@/store/mapAtom";
+import { MapboxPlace } from "@/types/MapboxPlace";
 
 interface LocationData {
     country?: string;
@@ -37,7 +35,6 @@ export const useEventLocation = ({
     onLocationChange,
 }: UseEventLocationProps = {}) => {
     const mapRef = useRef<any>(null);
-    const [selectedPlace] = useRecoilState(selectedPlaceState);
     const [marker, setMarker] = useState<any>(
         initialLocation
             ? {
@@ -208,15 +205,12 @@ export const useEventLocation = ({
         addEvent(lng, lat);
     };
 
-    // Handle selected place from search
-    useEffect(() => {
-        if (selectedPlace) {
-            flyTo(selectedPlace.center, 2000, 6);
-            const latitude = selectedPlace.center[1];
-            const longitude = selectedPlace.center[0];
-            addEvent(longitude, latitude);
-        }
-    }, [selectedPlace]);
+    const selectPlace = (place: MapboxPlace) => {
+        const [longitude, latitude] = place.center;
+
+        flyTo([longitude, latitude], 2000, 6);
+        addEvent(longitude, latitude);
+    };
 
     // Initialize location on mount
     useEffect(() => {
@@ -239,6 +233,7 @@ export const useEventLocation = ({
         flyTo,
         handleMapClick,
         handleUserLevelZoom,
+        selectPlace,
         addEvent,
         lookupCurrentLocation,
     };

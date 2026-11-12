@@ -40,10 +40,11 @@ npm run dev           # Frontend development server with hot reload
 ### Building
 
 ```bash
-npm run build         # Production build (includes TypeScript compilation)
+npm run build         # Production build (vite build, no type checking)
+npm run types         # TypeScript check (tsc --noEmit)
 npm run lint          # ESLint check
 npm run lint:fix      # ESLint auto-fix
-npm run format        # Format with Prettier + ESLint
+npm run format        # Format with Prettier
 ```
 
 ### Testing
@@ -55,7 +56,10 @@ composer test:fast           # Run without coverage (excludes comparison tests)
 composer test:comparison     # Pre-rollout comparison tests (requires db:production-sync)
 php artisan test             # Run PEST tests directly
 ./vendor/bin/pest            # Alternative test command
+./vendor/bin/pest tests/Browser/Smoke   # Browser smoke test of public pages (needs npm run build)
 ```
+
+> **Note:** CI runs `npm run types`, `npm run lint`, `npm run build` and the browser smoke test alongside Pest. The other files in `tests/Browser` drive the local site at https://wahfires.test against the local database, so they only run locally.
 
 > **Note:** Comparison tests (`--group=comparison`) make real HTTP requests to compare local vs production API responses. They require a production DB sync (`php artisan db:production-sync`) and are excluded from the default test suite. Run them separately before deploying upgrades.
 

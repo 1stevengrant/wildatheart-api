@@ -98,20 +98,23 @@ export const useEvents = () => {
                 source.cancel("Operation canceled by the user.");
             });
 
-            const response = await axios.get(route("api.events.search.legacy"), {
-                params: {
-                    sw_latitude: sw.lat,
-                    sw_longitude: sw.lng,
-                    ne_latitude: ne.lat,
-                    ne_longitude: ne.lng,
-                    sex: currentSex,
-                    types: types.join(","),
-                    type_group: typeGroup,
-                    start_date: startDateString,
-                    end_date: endDateString,
-                },
-                cancelToken: source.token,
-            });
+            const response = await axios.get(
+                route("api.events.search.legacy"),
+                {
+                    params: {
+                        sw_latitude: sw.lat,
+                        sw_longitude: sw.lng,
+                        ne_latitude: ne.lat,
+                        ne_longitude: ne.lng,
+                        sex: currentSex,
+                        types: types.join(","),
+                        type_group: typeGroup,
+                        start_date: startDateString,
+                        end_date: endDateString,
+                    },
+                    cancelToken: source.token,
+                }
+            );
 
             // Handle new response structure with events and featuredContent
             const responseData = response.data;

@@ -44,7 +44,7 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
             user,
         });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({
             initialLocation: {
                 latitude: event.latitude,
@@ -102,7 +102,7 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
                 <InputError message={errors.frequency} />
             </div>
 
-            <MapboxSearch className="mt-4" />
+            <MapboxSearch className="mt-4" onSelect={selectPlace} />
 
             <EventMap
                 mapRef={mapRef}

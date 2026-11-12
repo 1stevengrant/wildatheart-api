@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EventType;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
+use App\Queries\MapEventTypesQuery;
 
 class HomeController extends Controller
 {
@@ -19,19 +19,6 @@ class HomeController extends Controller
             url: url()->current()
         );
 
-        return inertia('HomePage', [
-            'allEventTypes' => cache()->remember('allEventTypes.v2', now()->addDay(), function (): array {
-                return EventType::query()->active()->orderBy('order')->get()->toArray();
-            }),
-            'experienceTypes' => cache()->remember('experienceTypes.v2', now()->addDay(), function (): array {
-                return EventType::query()->slug('%experience%')->active()->orderBy('order')->get()->toArray();
-            }),
-            'retreatTypes' => cache()->remember('retreatTypes.v2', now()->addDay(), function (): array {
-                return EventType::query()->slug('%retreat%')->active()->orderBy('order')->get()->toArray();
-            }),
-            'fireTypes' => cache()->remember('fireTypes.v2', now()->addDay(), function (): array {
-                return EventType::query()->slug('%fire%')->active()->orderBy('order')->get()->toArray();
-            }),
-        ]);
+        return inertia('HomePage', MapEventTypesQuery::get());
     }
 }

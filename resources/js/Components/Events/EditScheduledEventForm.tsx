@@ -55,7 +55,7 @@ export const EditScheduledEventForm = ({
         user,
     });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({
             initialLocation: {
                 latitude: event.latitude,
@@ -87,7 +87,7 @@ export const EditScheduledEventForm = ({
                 <InputError message={errors.start_date} />
             </div>
 
-            <MapboxSearch className="mt-4" />
+            <MapboxSearch className="mt-4" onSelect={selectPlace} />
 
             <EventMap
                 mapRef={mapRef}
