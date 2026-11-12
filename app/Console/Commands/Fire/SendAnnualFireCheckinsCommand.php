@@ -44,7 +44,7 @@ class SendAnnualFireCheckinsCommand extends Command
             if ($limitInt) {
                 $query->limit($limitInt);
             }
-            $events = $limitInt ? $query->get() : $query->cursor();
+            $events = $limitInt ? $query->get() : $query->lazy();
 
             foreach ($events as $event) {
                 $count++;
