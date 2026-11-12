@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import classNames from "classnames";
+import { clsx } from "clsx";
 
 interface PaginationProps {
     links: PaginationItemProps[];
@@ -35,7 +35,7 @@ interface PaginationItemProps {
 }
 
 function PaginationItem({ active, label, url }: PaginationItemProps) {
-    const className = classNames(
+    const className = clsx(
         [
             "mr-1 mb-1",
             "px-4 py-3",
@@ -64,7 +64,7 @@ function PaginationItem({ active, label, url }: PaginationItemProps) {
 }
 
 function PageInactive({ label }: Pick<PaginationItemProps, "label">) {
-    const className = classNames(
+    const className = clsx(
         "mr-1 mb-1 px-4 py-3 text-sm font-semibold border-2 rounded border-n400 text-n400 cursor-not-allowed"
     );
 

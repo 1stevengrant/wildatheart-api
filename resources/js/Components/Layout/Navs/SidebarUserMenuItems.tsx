@@ -6,7 +6,7 @@ import {
     UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { useSetRecoilState } from "recoil";
 
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
@@ -46,7 +46,7 @@ export const SidebarUserMenuItems = () => {
             <Menu.Item>
                 <button
                     onClick={() => setLogoutModalOpen(true)}
-                    className={classNames(
+                    className={clsx(
                         `flex items-center space-x-3 hover:text-p200`,
                         `w-full`
                     )}
