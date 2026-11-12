@@ -191,18 +191,15 @@ const EventSearchPage = () => {
             {
                 lat: filters.lat,
                 lng: filters.lng,
-                radius: filters.lat && filters.lng ? radius : null,
-                active_only: activeOnly,
-                include_deleted: includeDeleted,
-                privacy: privacy,
-                event_type_ids: selectedEventTypeIds,
-                fields: selectedFields,
-                created_from: createdFrom
-                    ? createdFrom.toISOString().split("T")[0]
-                    : null,
-                created_to: createdTo
-                    ? createdTo.toISOString().split("T")[0]
-                    : null,
+                radius: filters.radius,
+                active_only: filters.active_only,
+                include_deleted: filters.include_deleted,
+                privacy: filters.privacy,
+                event_type_ids: filters.event_type_ids,
+                fields:
+                    filters.fields.length > 0 ? filters.fields : selectedFields,
+                created_from: filters.created_from,
+                created_to: filters.created_to,
             },
             {
                 preserveState: true,
