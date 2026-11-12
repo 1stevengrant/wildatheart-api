@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Link, useForm } from "@inertiajs/react";
@@ -33,7 +33,6 @@ const MailingAddressEventTypePage = () => {
     const eventType = page.props.eventType as any;
     const phoneNumber = auth.user?.phone?.replace(/\s/g, "") ?? "";
 
-    const [phone, setPhone] = useState(phoneNumber);
     const { data, setData, post, processing, errors } = useForm<{
         given_name: string;
         family_name: string;
@@ -79,7 +78,9 @@ const MailingAddressEventTypePage = () => {
                         </Link>
                         <PrimaryButton
                             onClick={handleSubmit}
-                            disabled={!isValidPhoneNumber(phone) || processing}
+                            disabled={
+                                !isValidPhoneNumber(data.phone) || processing
+                            }
                         >
                             Save Mailing Address
                             <ArrowRightIcon className="ml-2 h-4 w-4" />
@@ -276,9 +277,8 @@ const MailingAddressEventTypePage = () => {
                                     <PhoneInput
                                         defaultCountry="us"
                                         countries={sortedCountries}
-                                        value={phone}
+                                        value={data.phone}
                                         onChange={(phone) => {
-                                            setPhone(phone);
                                             setData("phone", phone);
                                         }}
                                     />
