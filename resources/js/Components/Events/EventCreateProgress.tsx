@@ -1,10 +1,10 @@
 import React from "react";
 
-import { usePage } from "@inertiajs/react";
 import pluralize from "pluralize";
 
 import { CircleIcon } from "@/Components/Icons/CircleIcon";
 import { Image } from "@/Components/Image";
+import useTypedPage from "@/Hooks/useTypedPage";
 
 const EventStep = ({ step }: { step: number }) => {
     return <div className={`text-xxs text-n40`}>Step {step}</div>;
@@ -37,7 +37,7 @@ const EventListItem = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const EventCreateProgress = () => {
-    const { eventType, eventSteps } = usePage<{
+    const { eventType, eventSteps } = useTypedPage<{
         eventType: App.Data.EventTypeData;
         eventSteps: {
             guide: {

@@ -18,7 +18,7 @@ import { showFilterPanelState } from "@/store";
 import { searchResultsState } from "@/store/searchResultsAtom";
 
 export const Footer = ({ showFooter = true }: { showFooter?: boolean }) => {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage().props;
     const [open, setOpen] = useState(false);
     const [searchResults] = useRecoilState(searchResultsState);
     const [showFilterPanel] = useRecoilState(showFilterPanelState);

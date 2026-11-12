@@ -1,18 +1,17 @@
 import React from "react";
 
-import { usePage } from "@inertiajs/react";
-
 import { FilterTypeWrapper } from "@/Components/API/Filters/FilterTypeWrapper";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
 import { SwitchComponentWrapper } from "@/Components/Forms/SwitchComponentWrapper";
 import { FiresIcon } from "@/Components/Icons/FiresIcon";
 import { fireTypeDescription } from "@/helpers/eventTypes";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { useTypes } from "@/Hooks/useTypes";
 import { FiresFilterProps } from "@/types/FiresFilterProps";
 
 export const FiresFilter = () => {
     const { handleTypesChange, types } = useTypes();
-    const props = usePage<FiresFilterProps>().props;
+    const props = useTypedPage<FiresFilterProps>().props;
     const fireTypes = props.fireTypes;
 
     return (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
 
@@ -19,13 +19,13 @@ import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper"
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { PageProps } from "@/types";
 
 const ConnectWithHostPage = () => {
-    const page = usePage();
-    const event = page.props.event as App.Data.EventData;
-    const { auth } = page.props as unknown as PageProps;
+    const { auth, event } = useTypedPage<{
+        event: App.Data.EventData;
+    }>().props;
     const [processing, setProcessing] = useState(false);
     const form = useForm({
         _method: "POST",
@@ -34,7 +34,7 @@ const ConnectWithHostPage = () => {
         phone: auth.user?.phone ?? "",
         email: auth.user?.email ?? "",
         confirm_email: auth.user?.email ?? "",
-        city: auth.user?.city ?? "",
+        city: "",
         state: "",
         country: "",
         opted_into_marketing: true as boolean,

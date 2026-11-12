@@ -13,13 +13,17 @@ import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { useDates } from "@/Hooks/useDates";
 import { useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
+import type { SharedUser } from "@/types";
 
 interface EditScheduledEventFormProps {
     event: App.Data.EventData;
-    user: App.Data.UserData;
+    user: SharedUser;
 }
 
-export const EditScheduledEventForm = ({ event, user }: EditScheduledEventFormProps) => {
+export const EditScheduledEventForm = ({
+    event,
+    user,
+}: EditScheduledEventFormProps) => {
     const { startDate, maxDate, handleStartDateChange, setStartDate } =
         useDates();
     const eventTypeName = event.event_type_data.name;

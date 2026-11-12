@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import { singular } from "pluralize";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
@@ -20,30 +20,28 @@ import { priorityCountries } from "@/helpers/priorityCountries";
 import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
 import { imageGenerator } from "@/helpers/user";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
-import { PageProps } from "@/types";
 
 const SendGiftPage = () => {
-    const page = usePage();
-    const { auth } = page.props as unknown as PageProps;
-    const event = page.props.event as App.Data.EventData;
+    const { auth, event } = useTypedPage<{
+        event: App.Data.EventData;
+    }>().props;
 
-    const phoneNumber = auth.user.phone
-        ? auth.user.phone.replace(/\s/g, "")
-        : "";
+    const phoneNumber = auth.user?.phone?.replace(/\s/g, "") ?? "";
 
     const [phone, setPhone] = useState(phoneNumber);
     const { data, setData, post, processing, errors } = useForm({
-        given_name: auth.user.given_name ?? "",
-        family_name: auth.user.family_name ?? "",
+        given_name: auth.user?.given_name ?? "",
+        family_name: auth.user?.family_name ?? "",
         company: "",
         street_address: "",
         address2: "",
-        city: auth.user.city ?? "",
-        state: auth.user.state ?? "",
+        city: "",
+        state: "",
         country: "",
         phone: phoneNumber,
-        zip: auth.user.postal_code ?? "",
+        zip: "",
     });
 
     const handleSubmit = (e: React.FormEvent) => {

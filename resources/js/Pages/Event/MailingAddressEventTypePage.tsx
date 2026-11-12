@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import { singular } from "pluralize";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
@@ -21,19 +21,17 @@ import { sortedCountries } from "@/helpers/countryList";
 import { priorityCountries } from "@/helpers/priorityCountries";
 import { scrollToError } from "@/helpers/scrollToError";
 import { selectClasses } from "@/helpers/selectClasses";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
-import { PageProps } from "@/types";
 
 const MailingAddressEventTypePage = () => {
-    const page = usePage();
-    const { auth } = page.props as unknown as PageProps;
+    const page = useTypedPage();
+    const { auth } = page.props;
     const { address } = page.props as any;
 
     const eventType = page.props.eventType as any;
-    const phoneNumber = auth.user.phone
-        ? auth.user.phone.replace(/\s/g, "")
-        : "";
+    const phoneNumber = auth.user?.phone?.replace(/\s/g, "") ?? "";
 
     const [phone, setPhone] = useState(phoneNumber);
     const { data, setData, post, processing, errors } = useForm<{
@@ -48,16 +46,16 @@ const MailingAddressEventTypePage = () => {
         phone: string;
         zip: string;
     }>({
-        given_name: auth.user.given_name ?? "",
-        family_name: auth.user.family_name ?? "",
+        given_name: auth.user?.given_name ?? "",
+        family_name: auth.user?.family_name ?? "",
         company: "",
         street_address: address?.street_address ?? "",
         address2: address?.address2 ?? "",
-        city: auth.user.city ?? address?.city ?? "",
-        state: auth.user.state ?? address?.state ?? "",
+        city: address?.city ?? "",
+        state: address?.state ?? "",
         country: address?.country ?? "US",
         phone: phoneNumber,
-        zip: auth.user.postal_code ?? address?.zip ?? "",
+        zip: address?.zip ?? "",
     });
 
     const handleSubmit = (e: React.FormEvent) => {

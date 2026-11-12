@@ -21,7 +21,7 @@ export const SupportModal = ({
     open: boolean;
     setOpen: (open: boolean) => void;
 }) => {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { data, setData, post, errors, reset } = useForm<{

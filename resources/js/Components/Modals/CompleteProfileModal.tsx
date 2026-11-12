@@ -27,7 +27,7 @@ export const CompleteProfileModal = ({
     title?: string;
     description?: string;
 }) => {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage().props;
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { data, setData, post, errors } = useForm<{

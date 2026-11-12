@@ -14,10 +14,11 @@ import { FrequencyOptions } from "@/Components/FrequencyOptions";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
 import { useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
+import type { SharedUser } from "@/types";
 
 interface EditFireFormProps {
     event: App.Data.EventData;
-    user: App.Data.UserData;
+    user: SharedUser;
 }
 
 export const EditFireForm = ({ event, user }: EditFireFormProps) => {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { router, usePage } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import { Trash2 } from "lucide-react";
 
 import { FilterBar } from "@/Components/FilterBar";
@@ -8,11 +8,12 @@ import Pagination from "@/Components/Pagination";
 import Table from "@/Components/Table";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 import { PaginatedData } from "@/types";
 
 const MyContactsPage = () => {
-    const { attendees } = usePage<{
+    const { attendees } = useTypedPage<{
         attendees: PaginatedData<App.Data.AttendeeData>;
     }>().props;
 

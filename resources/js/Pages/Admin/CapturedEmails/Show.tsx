@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-import { router, usePage } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import { format } from "date-fns";
 
+import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 type CapturedEmail = {
@@ -27,12 +28,12 @@ type CapturedEmail = {
     created_at: string;
 };
 
-type PageProps = {
+type Props = {
     email: CapturedEmail;
 };
 
 const Show = () => {
-    const { email } = usePage<PageProps>().props;
+    const { email } = useTypedPage<Props>().props;
     const [viewMode, setViewMode] = useState<"html" | "text">(
         email.html_body ? "html" : "text"
     );
