@@ -19,7 +19,10 @@ interface EditScheduledEventFormProps {
     user: App.Data.UserData;
 }
 
-export const EditScheduledEventForm = ({ event, user }: EditScheduledEventFormProps) => {
+export const EditScheduledEventForm = ({
+    event,
+    user,
+}: EditScheduledEventFormProps) => {
     const { startDate, maxDate, handleStartDateChange, setStartDate } =
         useDates();
     const eventTypeName = event.event_type_data.name;
@@ -50,7 +53,7 @@ export const EditScheduledEventForm = ({ event, user }: EditScheduledEventFormPr
         user,
     });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({
             initialLocation: {
                 latitude: event.latitude,
@@ -86,7 +89,7 @@ export const EditScheduledEventForm = ({ event, user }: EditScheduledEventFormPr
                 <InputError message={errors.start_date} />
             </div>
 
-            <MapboxSearch className="mt-4" />
+            <MapboxSearch className="mt-4" onSelect={selectPlace} />
 
             <EventMap
                 mapRef={mapRef}

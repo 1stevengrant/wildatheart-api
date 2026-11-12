@@ -51,7 +51,7 @@ const CreateEventEventTypePage = () => {
         setData,
     } = useEventForm({ user, eventType });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom } =
+    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({
             onLocationChange: (locationData) => {
                 updateLocationData(locationData);
@@ -117,7 +117,10 @@ const CreateEventEventTypePage = () => {
                         </p>
 
                         <form>
-                            <MapboxSearch className="mt-4" />
+                            <MapboxSearch
+                                className="mt-4"
+                                onSelect={selectPlace}
+                            />
 
                             <EventMap
                                 mapRef={mapRef}
