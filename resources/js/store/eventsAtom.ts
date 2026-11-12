@@ -10,6 +10,11 @@ const eventsListLoadingState = atom({
     default: true,
 });
 
+const eventsSearchFailedState = atom({
+    key: "EventsSearchFailed",
+    default: false,
+});
+
 const selectedEventTypeState = atom({
     key: "SelectedEventType",
     default: null as App.Data.EventTypeData | null,
@@ -23,6 +28,7 @@ const currentEventState = atom<App.Data.EventMapData | null | undefined>({
 export {
     eventsListState,
     eventsListLoadingState,
+    eventsSearchFailedState,
     selectedEventTypeState,
     currentEventState,
 };
