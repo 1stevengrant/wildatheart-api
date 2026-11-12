@@ -5,6 +5,7 @@ import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import-x';
 import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 
 export default [
@@ -13,7 +14,9 @@ export default [
             'node_modules/**',
             'vendor/**',
             'public/build/**',
-            'resources/js/cp.js'
+            'resources/js/cp.js',
+            'resources/js/types/generated.d.ts',
+            'resources/js/types/statamic.d.ts'
         ]
     },
     js.configs.recommended,
@@ -42,7 +45,8 @@ export default [
             '@typescript-eslint': tsPlugin,
             'prettier': prettierPlugin,
             'import-x': importPlugin,
-            'react': reactPlugin
+            'react': reactPlugin,
+            'react-hooks': reactHooksPlugin
         },
         settings: {
             react: {
@@ -56,6 +60,8 @@ export default [
             '@typescript-eslint/no-unused-vars': 'warn',
             '@typescript-eslint/ban-ts-comment': 'warn',
             'prefer-const': 'warn',
+            'react-hooks/rules-of-hooks': 'warn',
+            'react-hooks/exhaustive-deps': 'warn',
             'no-case-declarations': 'off',
             'prettier/prettier': 'error',
             'import-x/order': ['error', {
