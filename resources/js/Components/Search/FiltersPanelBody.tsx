@@ -6,8 +6,11 @@ import { ToggleSex } from "@/Components/API/Toggles/ToggleSex";
 import { ToggleTypeGroups } from "@/Components/API/Toggles/ToggleTypeGroups";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
+import { useMapData } from "@/Hooks/useMapData";
 
 export const FiltersPanelBody = () => {
+    const { setSelectedPlace } = useMapData();
+
     return (
         <div className={`overflow-y-scroll px-4 flex-1`}>
             <div className={`mt-2`}>
@@ -19,7 +22,7 @@ export const FiltersPanelBody = () => {
             </div>
 
             <div className={`mt-4 flex flex-col space-y-4`}>
-                <MapboxSearch />
+                <MapboxSearch onSelect={setSelectedPlace} />
                 <DateFilters />
                 <div className={`space-y-4`}>
                     <InputLabel>Event Types</InputLabel>
