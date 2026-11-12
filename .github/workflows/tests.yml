@@ -74,7 +74,7 @@ jobs:
           VITE_REACT_APP_MAPBOX_TOKEN: pk.ci-placeholder
 
       - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       - name: Create parity database
         run: mysql -h 127.0.0.1 -u root -ppassword -e "CREATE DATABASE IF NOT EXISTS wahlocal_parity;"
