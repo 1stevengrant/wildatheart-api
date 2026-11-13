@@ -40,7 +40,7 @@ class EventTypeBuilder extends Builder
                     $query->whereNotNull('approved_at')
                         ->where('is_private', false)
                         ->where(function (Builder $query): void {
-                            $query->where('start_date', '>=', now())
+                            $query->where('start_date', '>=', now()->toDateString())
                                 ->orWhereNull('start_date');
                         });
                 },

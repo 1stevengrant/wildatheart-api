@@ -66,6 +66,17 @@ describe('withPublicListingCounts', function () {
             ->and($eventType->countries_count)->toBe(0);
     });
 
+    it('counts events starting today in both counts', function () use ($counts) {
+        $this->travelTo(now()->setTime(15, 0));
+
+        Event::factory()->approved()->createQuietly(['event_type_id' => $this->eventType->id, 'start_date' => now()->toDateString()]);
+
+        $eventType = $counts($this->eventType);
+
+        expect($eventType->listings_count)->toBe(1)
+            ->and($eventType->countries_count)->toBe(1);
+    });
+
     it('counts undated events', function () use ($counts) {
         Event::factory()->approved()->createQuietly(['event_type_id' => $this->eventType->id, 'start_date' => null]);
 
