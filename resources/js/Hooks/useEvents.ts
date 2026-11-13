@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import axios from "axios";
 import { LngLatBounds } from "react-map-gl";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -35,53 +37,56 @@ export const useEvents = () => {
      * was aborted or failed. An aborted request has been replaced by a newer
      * one, so it leaves the results and the spinner alone.
      */
-    const searchEvents = async (
-        bounds: LngLatBounds,
-        filters: EventSearchFilters,
-        signal: AbortSignal
-    ): Promise<number | null> => {
-        const ne = bounds.getNorthEast();
-        const sw = bounds.getSouthWest();
+    const searchEvents = useCallback(
+        async (
+            bounds: LngLatBounds,
+            filters: EventSearchFilters,
+            signal: AbortSignal
+        ): Promise<number | null> => {
+            const ne = bounds.getNorthEast();
+            const sw = bounds.getSouthWest();
 
-        setShowLoading(true);
+            setShowLoading(true);
 
-        try {
-            const { data } = await axios.get<EventSearchResponse>(
-                route("api.events.search.legacy"),
-                {
-                    params: {
-                        sw_latitude: sw.lat,
-                        sw_longitude: sw.lng,
-                        ne_latitude: ne.lat,
-                        ne_longitude: ne.lng,
-                        sex: filters.currentSex,
-                        types: filters.types.join(","),
-                        type_group: filters.typeGroup,
-                        start_date: filters.startDateString,
-                        end_date: filters.endDateString,
-                    },
-                    signal,
+            try {
+                const { data } = await axios.get<EventSearchResponse>(
+                    route("api.events.search.legacy"),
+                    {
+                        params: {
+                            sw_latitude: sw.lat,
+                            sw_longitude: sw.lng,
+                            ne_latitude: ne.lat,
+                            ne_longitude: ne.lng,
+                            sex: filters.currentSex,
+                            types: filters.types.join(","),
+                            type_group: filters.typeGroup,
+                            start_date: filters.startDateString,
+                            end_date: filters.endDateString,
+                        },
+                        signal,
+                    }
+                );
+
+                setEvents(data.events);
+                setFeaturedContent(data.featuredContent);
+                setSearchFailed(false);
+                setShowLoading(false);
+
+                return data.events.length;
+            } catch (error) {
+                if (axios.isCancel(error)) {
+                    return null;
                 }
-            );
 
-            setEvents(data.events);
-            setFeaturedContent(data.featuredContent);
-            setSearchFailed(false);
-            setShowLoading(false);
+                setEvents([]);
+                setSearchFailed(true);
+                setShowLoading(false);
 
-            return data.events.length;
-        } catch (error) {
-            if (axios.isCancel(error)) {
                 return null;
             }
-
-            setEvents([]);
-            setSearchFailed(true);
-            setShowLoading(false);
-
-            return null;
-        }
-    };
+        },
+        [setShowLoading, setEvents, setFeaturedContent, setSearchFailed]
+    );
 
     return { searchEvents, showLoading };
 };

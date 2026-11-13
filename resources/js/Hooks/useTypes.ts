@@ -24,7 +24,7 @@ export const useTypes = () => {
     };
     const resetTypes = () => setTypes([]);
 
-    const setTypesTo = (eventTypeId: number[]) => setTypes(eventTypeId);
+    const setTypesTo = setTypes;
 
     const props = useTypedPage<Props>().props;
     const experienceTypes = props.experienceTypes;
