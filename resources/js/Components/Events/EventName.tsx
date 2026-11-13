@@ -1,3 +1,3 @@
-export const EventName = ({ name }: { name: string | undefined | null }) => {
-    return <p className="font-semibold text-white">{name} Fire</p>;
+export const EventName = ({ name }: { name: string }) => {
+    return <p className="font-semibold text-white">{name}</p>;
 };

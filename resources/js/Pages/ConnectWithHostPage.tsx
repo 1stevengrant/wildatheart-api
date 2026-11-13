@@ -279,7 +279,12 @@ const ConnectWithHostPage = () => {
                         className={
                             "max-w-[350px] md:max-w-[400px] mx-auto hidden lg:flex"
                         }
-                        event={event}
+                        image={event.event_type_image}
+                        name={event.display_name ?? event.event_type_name ?? ""}
+                        badge={event.badge_display}
+                        location={event.location}
+                        hostName={event.host}
+                        hostPhoto={event.host_photo}
                     />
                 </RightColumn>
             </TwoColumnWrapper>
