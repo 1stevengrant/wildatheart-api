@@ -39,6 +39,34 @@ type LocalMapProps = {
 
 const MAX_ZOOM_OUT_ATTEMPTS = 5;
 
+const replaceTypesInUrl = (newTypes: number[]) => {
+    const currentUrl = new URL(window.location.href);
+    const currentTypesParam = currentUrl.searchParams.get("types");
+    const newTypesParam = newTypes.length > 0 ? newTypes.join(",") : null;
+
+    if (currentTypesParam === newTypesParam) {
+        return;
+    }
+
+    const params = new URLSearchParams(currentUrl.search);
+
+    if (newTypesParam) {
+        params.set("types", newTypesParam);
+    } else {
+        params.delete("types");
+    }
+
+    const query = params.toString();
+
+    router.replace({
+        url: query
+            ? `${window.location.pathname}?${query}`
+            : window.location.pathname,
+        preserveState: true,
+        preserveScroll: true,
+    });
+};
+
 export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
     const { searchEvents, showLoading } = useEvents();
     const zoomOutAttemptsRef = useRef(0);
@@ -69,38 +97,12 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
             }
             initialLoadDone.current = true;
         }
-    }, []);
-
-    const debouncedUpdateUrl = useCallback((newTypes: number[]) => {
-        const currentUrl = new URL(window.location.href);
-        const currentTypesParam = currentUrl.searchParams.get("types");
-        const newTypesParam = newTypes.length > 0 ? newTypes.join(",") : null;
-
-        if (currentTypesParam !== newTypesParam) {
-            const params = new URLSearchParams(currentUrl.search);
-
-            if (newTypes.length > 0) {
-                params.set("types", newTypes.join(","));
-            } else {
-                params.delete("types");
-            }
-
-            const query = params.toString();
-
-            router.replace({
-                url: query
-                    ? `${window.location.pathname}?${query}`
-                    : window.location.pathname,
-                preserveState: true,
-                preserveScroll: true,
-            });
-        }
-    }, []);
+    }, [setTypesTo]);
 
     useEffect(() => {
         if (initialLoadDone.current) {
             const timeoutId = setTimeout(() => {
-                debouncedUpdateUrl(types);
+                replaceTypesInUrl(types);
             }, 300);
 
             return () => clearTimeout(timeoutId);
@@ -127,7 +129,7 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
             zoom: 7,
             essential: true,
         });
-    }, [selectedPlace]);
+    }, [mapRef, selectedPlace]);
 
     const handleOnMapMoveEnd = useCallback(() => {
         if (!mapRef.current) return;
@@ -139,7 +141,7 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
         console.log("Map moved to:", center.lat, center.lng, "Zoom:", newZoom);
         setUserLocation(center.lat, center.lng);
         setUserZoom(newZoom);
-    }, []);
+    }, [mapRef]);
 
     const onMapLoad = useCallback(() => {
         console.log("Map loaded");
@@ -180,7 +182,16 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
         });
 
         return () => controller.abort();
-    }, [bounds, currentSex, typeGroup, types, startDateString, endDateString]);
+    }, [
+        bounds,
+        currentSex,
+        typeGroup,
+        types,
+        startDateString,
+        endDateString,
+        mapRef,
+        searchEvents,
+    ]);
 
     const handleGeolocate = useCallback(
         (e: GeolocationPosition) => {
