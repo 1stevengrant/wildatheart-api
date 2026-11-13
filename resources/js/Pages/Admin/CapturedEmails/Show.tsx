@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { router } from "@inertiajs/react";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
@@ -152,9 +152,8 @@ const Show = () => {
                                     Sent:
                                 </span>
                                 <span className="text-gray-900">
-                                    {format(
-                                        new Date(email.created_at),
-                                        "MMMM d, yyyy 'at' h:mm:ss a"
+                                    {dayjs(email.created_at).format(
+                                        "MMMM D, YYYY [at] h:mm:ss A"
                                     )}
                                 </span>
                             </div>

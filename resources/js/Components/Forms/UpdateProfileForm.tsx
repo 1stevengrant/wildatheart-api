@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 
 import { Link, router, useForm } from "@inertiajs/react";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { PhoneInput } from "react-international-phone";
-import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { InputError } from "@/Components/Forms/InputError";

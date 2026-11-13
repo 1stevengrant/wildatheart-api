@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Link, useForm } from "@inertiajs/react";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { singular } from "pluralize";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
-import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FormGrid } from "@/Components/Forms/FormGrid";
