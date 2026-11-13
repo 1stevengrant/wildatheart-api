@@ -56,10 +56,16 @@ const CreateEventEventTypePage = () => {
         number_of_items_in_material_order: null,
     });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            onLocationChange: updateLocationData,
-        });
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        onLocationChange: updateLocationData,
+    });
 
     const hasLocation = data.latitude !== null;
 
@@ -134,6 +140,7 @@ const CreateEventEventTypePage = () => {
                                 className="mt-4"
                                 height="h-[300px] md:h-[40vh]"
                             />
+                            <InputError message={locationError ?? undefined} />
 
                             <div className="mt-4">
                                 <DatePickerInput

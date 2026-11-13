@@ -32,14 +32,20 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
             is_private: event.is_private,
         });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            initialLocation: {
-                latitude: event.latitude,
-                longitude: event.longitude,
-            },
-            onLocationChange: updateLocationData,
-        });
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        initialLocation: {
+            latitude: event.latitude,
+            longitude: event.longitude,
+        },
+        onLocationChange: updateLocationData,
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -102,6 +108,7 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
                 eventTypeSlug={event.event_type_slug}
                 className="mt-4"
             />
+            <InputError message={locationError ?? undefined} />
 
             <div className="mt-4 space-x-4">
                 <PrimaryButton>

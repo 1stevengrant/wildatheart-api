@@ -40,10 +40,16 @@ export const FireInformation = ({ user }: any) => {
             is_private: false,
         });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            onLocationChange: updateLocationData,
-        });
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        onLocationChange: updateLocationData,
+    });
 
     const hasLocation = data.latitude !== null;
     const eventLocation = data.city || LOCATION_TBC;
@@ -164,6 +170,7 @@ export const FireInformation = ({ user }: any) => {
                             eventTypeSlug={eventType.slug}
                             className="mt-4"
                         />
+                        <InputError message={locationError ?? undefined} />
 
                         <div className="mt-4 space-y-4">
                             <PrimaryButton
