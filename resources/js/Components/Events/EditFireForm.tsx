@@ -105,7 +105,7 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
                 onZoomEnd={() =>
                     handleUserLevelZoom(mapRef.current?.getZoom() || 6)
                 }
-                eventTypeSlug={event.event_type_slug}
+                isFire
                 className="mt-4"
             />
             <InputError message={locationError ?? undefined} />

@@ -15,6 +15,7 @@ use App\Data\Concerns\CollectsNullableData;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 use Spatie\TypeScriptTransformer\Attributes\TypeScriptType;
 use App\DataTypeObjects\API\V1\Content\Events\EventsShowResponse;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class EventTypeData extends Data
@@ -28,6 +29,7 @@ class EventTypeData extends Data
         public string $slug,
         public EventSexEnum $sex,
         public string $image,
+        #[LiteralTypeScriptType("'fire' | 'retreat' | 'experience'")]
         public string $group_type,
         public int $order,
         public ?string $description,

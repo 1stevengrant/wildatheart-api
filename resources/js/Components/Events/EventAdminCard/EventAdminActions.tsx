@@ -75,7 +75,7 @@ export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
 
             <div ref={actionDrawerRef}>
                 <div
-                    className={`border-black border bg-n900 p-4 rounded-lg z-20 w-[200px] shadow-lg absolute right-0 space-y-1.5 ${event.type_group !== "fire" ? `-bottom-[191px]` : `-bottom-[145px]`} ${actionDrawerOpen ? `block` : `hidden`}`}
+                    className={`border-black border bg-n900 p-4 rounded-lg z-20 w-[200px] shadow-lg absolute right-0 space-y-1.5 ${event.type_group !== fireTypeGroup ? `-bottom-[191px]` : `-bottom-[145px]`} ${actionDrawerOpen ? `block` : `hidden`}`}
                 >
                     {event.approved_at ? (
                         <EventUnpublishModal

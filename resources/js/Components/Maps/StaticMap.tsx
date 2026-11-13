@@ -4,6 +4,10 @@ import mapboxgl from "mapbox-gl";
 
 import { NoWebGLSupport } from "@/Components/Maps/NoWebGLSupport";
 import { config } from "@/helpers/config";
+import {
+    experienceTypeGroup,
+    retreatTypeGroup,
+} from "@/helpers/eventTypeGroups";
 
 export const StaticMap = ({
     lat,
@@ -25,9 +29,9 @@ export const StaticMap = ({
         }
         let mapMarkerUrl;
         console.log(event);
-        if (event?.event_type.group_type.includes("retreat")) {
+        if (event?.event_type.group_type === retreatTypeGroup) {
             mapMarkerUrl = "/svgs/map-marker-retreat.svg";
-        } else if (event?.event_type.group_type.includes("experience")) {
+        } else if (event?.event_type.group_type === experienceTypeGroup) {
             mapMarkerUrl = "/svgs/map-marker-experience.svg";
         } else {
             mapMarkerUrl = "/svgs/map-marker-fire.svg";

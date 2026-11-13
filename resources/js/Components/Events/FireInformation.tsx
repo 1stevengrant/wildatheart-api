@@ -167,7 +167,7 @@ export const FireInformation = ({ user }: any) => {
                                     mapRef.current?.getZoom() || 6
                                 )
                             }
-                            eventTypeSlug={eventType.slug}
+                            isFire
                             className="mt-4"
                         />
                         <InputError message={locationError ?? undefined} />
