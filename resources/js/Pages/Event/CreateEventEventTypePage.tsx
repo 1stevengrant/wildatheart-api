@@ -26,7 +26,7 @@ import {
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { LOCATION_TBC } from "@/helpers/locationTbc";
 import { scrollToError } from "@/helpers/scrollToError";
-import { useEventForm } from "@/Hooks/useEventForm";
+import { emptyEventLocation, useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import { useEventModal } from "@/Hooks/useEventModal";
 import useTypedPage from "@/Hooks/useTypedPage";
@@ -46,7 +46,15 @@ const CreateEventEventTypePage = () => {
         handlePrivacyToggle,
         updateLocationData,
         setData,
-    } = useEventForm({ user, eventType });
+    } = useEventForm<App.Data.EventFormData & { place: string | null }>({
+        ...emptyEventLocation,
+        name: `${user.given_name}'s`,
+        frequency: "monthly",
+        is_private: false,
+        start_date: null,
+        end_date: null,
+        number_of_items_in_material_order: null,
+    });
 
     const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({

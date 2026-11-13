@@ -4,7 +4,6 @@ import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { Modal } from "@/Components/Ui/Modal";
 import { Spinner } from "@/Components/Ui/Spinner";
-import { formatDate } from "@/helpers/formatDate";
 
 export const FireConfirmationModal = ({
     open,
@@ -16,7 +15,7 @@ export const FireConfirmationModal = ({
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
-    data: App.Data.EventFormData;
+    data: App.Data.FireEventData;
     eventLocation: string;
     processing: boolean;
     onConfirm: () => void;
@@ -51,12 +50,6 @@ export const FireConfirmationModal = ({
                             <li>
                                 <span className="font-medium">Country:</span>{" "}
                                 {data.country}
-                            </li>
-                        )}
-                        {data.start_date && (
-                            <li>
-                                <span className="font-medium">Start Date:</span>{" "}
-                                {formatDate(data.start_date)}
                             </li>
                         )}
                         {data.frequency && (

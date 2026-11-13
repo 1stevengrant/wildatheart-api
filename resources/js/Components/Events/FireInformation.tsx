@@ -22,7 +22,7 @@ import { Spinner } from "@/Components/Ui/Spinner";
 import { EventTypeCaptivatingFires } from "@/helpers/eventNames";
 import { LOCATION_TBC } from "@/helpers/locationTbc";
 import { scrollToError } from "@/helpers/scrollToError";
-import { useEventForm } from "@/Hooks/useEventForm";
+import { emptyEventLocation, useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import { useEventModal } from "@/Hooks/useEventModal";
 import useTypedPage from "@/Hooks/useTypedPage";
@@ -33,7 +33,12 @@ export const FireInformation = ({ user }: any) => {
     const eventType = page.props.eventType as any;
 
     const { data, setData, post, processing, errors, updateLocationData } =
-        useEventForm({ user, eventType });
+        useEventForm<App.Data.FireEventData>({
+            ...emptyEventLocation,
+            name: `${user.given_name}'s`,
+            frequency: "monthly",
+            is_private: false,
+        });
 
     const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
         useEventLocation({

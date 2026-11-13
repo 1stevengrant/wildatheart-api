@@ -1,73 +1,84 @@
-import { useState } from "react";
-
-import type { FormDataKeys } from "@inertiajs/core";
+import type { FormDataType } from "@inertiajs/core";
 import { useForm } from "@inertiajs/react";
 
-interface UseEventFormProps<T> {
-    initialData?: Partial<T> & Partial<App.Data.EventFormData>;
-    user: any;
-    eventType?: any;
-}
+import type { LocationData } from "@/Hooks/useEventLocation";
 
-export const useEventForm = <
-    T extends Record<string, any> = App.Data.EventFormData,
->({
-    initialData,
-    user,
-}: UseEventFormProps<T>) => {
-    const seed = (initialData ?? {}) as Partial<App.Data.EventFormData>;
+export type EventLocationFields = Pick<
+    App.Data.FireEventData,
+    | "latitude"
+    | "longitude"
+    | "country"
+    | "region"
+    | "district"
+    | "locality"
+    | "neighborhood"
+    | "street_address"
+    | "poi"
+    | "city"
+    | "zip"
+    | "state"
+    | "place"
+>;
 
-    const [isPrivate, setIsPrivate] = useState(seed.is_private || false);
+export const emptyEventLocation: EventLocationFields = {
+    latitude: null,
+    longitude: null,
+    country: null,
+    region: null,
+    district: null,
+    locality: null,
+    neighborhood: null,
+    street_address: null,
+    poi: null,
+    city: null,
+    zip: null,
+    state: null,
+    place: null,
+};
 
-    const { data, setData, post, put, processing, errors } = useForm<T>({
-        name: seed.name || `${user.given_name}'s`,
-        state: seed.state || "",
-        city: seed.city || "",
-        zip: seed.zip || "",
-        country: seed.country || "",
-        latitude: seed.latitude || null,
-        longitude: seed.longitude || null,
-        region: seed.region || "",
-        district: seed.district || "",
-        locality: seed.locality || "",
-        neighborhood: seed.neighborhood || "",
-        street_address: seed.street_address || "",
-        poi: seed.poi || "",
-        is_private: seed.is_private || false,
-        start_date: seed.start_date || null,
-        end_date: seed.end_date || null,
-        frequency: seed.frequency || "monthly",
-        number_of_items_in_material_order:
-            seed.number_of_items_in_material_order || null,
-        ...initialData,
-    } as unknown as T);
+export const eventLocationFrom = (
+    location: Partial<EventLocationFields>
+): EventLocationFields => ({
+    latitude: location.latitude ?? null,
+    longitude: location.longitude ?? null,
+    country: location.country ?? null,
+    region: location.region ?? null,
+    district: location.district ?? null,
+    locality: location.locality ?? null,
+    neighborhood: location.neighborhood ?? null,
+    street_address: location.street_address ?? null,
+    poi: location.poi ?? null,
+    city: location.city ?? null,
+    zip: location.zip ?? null,
+    state: location.state ?? null,
+    place: location.place ?? null,
+});
 
-    const updateLocationData = (locationData: any) => {
-        // Update all location fields, clearing old values when new location doesn't have them
-        Object.keys(locationData).forEach((key) => {
-            const value = locationData[key];
-            // Keep null for coordinates, empty string for text fields
-            const defaultValue =
-                key === "latitude" || key === "longitude" ? null : "";
-            setData(key as FormDataKeys<T>, (value ?? defaultValue) as never);
-        });
+type EventFormFields = EventLocationFields & {
+    is_private?: boolean | null;
+};
+
+export const useEventForm = <T extends EventFormFields & FormDataType<T>>(
+    initialData: T
+) => {
+    const form = useForm<T>(initialData);
+
+    const updateLocationData = (locationData: LocationData) => {
+        form.setData((data) => ({
+            ...data,
+            ...eventLocationFrom(locationData),
+        }));
     };
 
+    const isPrivate = Boolean(form.data.is_private);
+
     const handlePrivacyToggle = () => {
-        const next = !isPrivate;
-        setIsPrivate(next);
-        setData("is_private" as FormDataKeys<T>, next as never);
+        form.setData((data) => ({ ...data, is_private: !data.is_private }));
     };
 
     return {
-        data,
-        setData,
-        post,
-        put,
-        processing,
-        errors,
+        ...form,
         isPrivate,
-        setIsPrivate,
         handlePrivacyToggle,
         updateLocationData,
     };

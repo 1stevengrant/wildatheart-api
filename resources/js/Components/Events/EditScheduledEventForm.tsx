@@ -14,7 +14,7 @@ import {
     latestEventStartDate,
     toCalendarDate,
 } from "@/helpers/calendarDate";
-import { useEventForm } from "@/Hooks/useEventForm";
+import { eventLocationFrom, useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import type { SharedUser } from "@/types";
 
@@ -38,22 +38,10 @@ export const EditScheduledEventForm = ({
         updateLocationData,
         setData,
     } = useEventForm<App.Data.UpdateEventData>({
-        initialData: {
-            state: event.state,
-            latitude: event.latitude,
-            longitude: event.longitude,
-            country: event.country,
-            region: event.region,
-            district: event.district,
-            locality: event.locality,
-            neighborhood: event.neighborhood,
-            street_address: event.street_address,
-            city: event.city,
-            zip: event.zip,
-            is_private: event.is_private ?? undefined,
-            start_date: event.start_date?.split("T")[0],
-        },
-        user,
+        ...eventLocationFrom(event),
+        is_private: event.is_private,
+        start_date: event.start_date?.split("T")[0] ?? "",
+        end_date: null,
     });
 
     const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
