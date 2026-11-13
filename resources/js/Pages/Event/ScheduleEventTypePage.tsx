@@ -10,7 +10,6 @@ import { MailingAddressLink } from "@/Components/Links/MailingAddressLink";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { eventTypeHasFaqs } from "@/helpers/eventTypeHasFaqs";
-import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
@@ -46,9 +45,16 @@ const ScheduleEventTypePage = () => {
                     <PageContainer>
                         {eventTypeSchedule &&
                             eventTypeSchedule.map(
-                                (schedule: FlattenedType, index: number) => {
+                                (
+                                    schedule: App.Data.EventType.ScheduleBlockData,
+                                    index: number
+                                ) => {
                                     switch (schedule.type) {
                                         case "video":
+                                            if (!schedule.video_url) {
+                                                return null;
+                                            }
+
                                             return (
                                                 <Vimeo
                                                     key={index}
