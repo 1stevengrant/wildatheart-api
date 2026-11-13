@@ -65,7 +65,7 @@ export const GetUserLocationModal = ({
     return (
         <Modal open={open} setOpen={setOpen}>
             <div className={"flex justify-end"}>
-                <button onClick={handleModalClose}>
+                <button onClick={handleModalClose} aria-label="Close modal">
                     <XMarkIcon className={"w-6 h-6 text-white"} />
                 </button>
             </div>

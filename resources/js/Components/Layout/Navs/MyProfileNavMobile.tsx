@@ -15,7 +15,11 @@ export const MyProfileNavMobile = ({
     const [menuOpen, setMenuOpen] = useState(false);
     return (
         <div className={`${className} z-50 md:hidden`}>
-            <button onClick={() => setMenuOpen(!menuOpen)}>
+            <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+            >
                 {menuOpen ? (
                     <XMarkIcon className={`w-8 h-8`} />
                 ) : (

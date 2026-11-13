@@ -46,7 +46,10 @@ export const EventDeleteModal = ({
             </button>
             <Modal open={open} setOpen={setOpen}>
                 <div className={"flex justify-end"}>
-                    <button onClick={() => setOpen(false)}>
+                    <button
+                        onClick={() => setOpen(false)}
+                        aria-label="Close modal"
+                    >
                         <XMarkIcon className={"w-6 h-6 text-white"} />
                     </button>
                 </div>
