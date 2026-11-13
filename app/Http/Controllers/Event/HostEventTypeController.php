@@ -18,7 +18,7 @@ class HostEventTypeController extends Controller
 
         return inertia('Event/WelcomeEventTypePage', [
             'eventType' => $eventType,
-            'eventSteps' => session('event_steps'),
+            'eventSteps' => $this->eventCreationStepHandlerService->eventSteps(),
         ]);
     }
 }

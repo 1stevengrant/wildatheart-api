@@ -18,14 +18,14 @@ class HostEventTypeMailingAddressController extends Controller
      */
     public function index(EventType $eventType)
     {
-        $this->eventCreationStepHandlerService->markStepComplete('guide', 'faqs');
+        $this->eventCreationStepHandlerService->markStepComplete('guide.faqs');
 
         return inertia('Event/MailingAddressEventTypePage', [
             'eventType' => $eventType,
             'address' => auth()->user()->addresses()
                 ->where('is_primary', true)
                 ->first(),
-            'eventSteps' => session('event_steps'),
+            'eventSteps' => $this->eventCreationStepHandlerService->eventSteps(),
         ]);
     }
 

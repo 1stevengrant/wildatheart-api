@@ -32,7 +32,7 @@ class HostEventTypeCreateEventController extends Controller
 
         return inertia('Event/CreateEventEventTypePage', [
             'eventType' => $eventType,
-            'eventSteps' => session('event_steps'),
+            'eventSteps' => $this->eventCreationStepHandlerService->eventSteps(),
             'materialOrderItems' => Event::MATERIAL_ORDER_ITEMS,
         ]);
     }

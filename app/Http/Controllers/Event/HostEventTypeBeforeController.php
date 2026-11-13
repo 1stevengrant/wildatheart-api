@@ -14,11 +14,11 @@ class HostEventTypeBeforeController extends Controller
 
     public function __invoke(EventType $eventType)
     {
-        $this->eventCreationStepHandlerService->markStepComplete('guide', 'welcome');
+        $this->eventCreationStepHandlerService->markStepComplete('guide.welcome');
 
         return inertia('Event/BeforeEventTypePage', [
             'eventType' => $eventType,
-            'eventSteps' => session('event_steps'),
+            'eventSteps' => $this->eventCreationStepHandlerService->eventSteps(),
         ]);
     }
 }

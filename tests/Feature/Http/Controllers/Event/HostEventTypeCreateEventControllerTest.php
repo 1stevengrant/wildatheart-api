@@ -8,6 +8,7 @@ use App\Jobs\PostToZapier;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Testing\AssertableInertia;
 
 beforeEach(function () {
     Bus::fake();
@@ -465,6 +466,59 @@ test('other event types do not redirect and use complex flow normally', function
         ->component('Event/CreateEventEventTypePage')
         ->has('eventType')
         ->has('materialOrderItems')
+    );
+});
+
+test('the create page has complete event steps when opened without going through the guide', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
+
+    $response = $this->get(route('host.eventType.create', $eventType));
+
+    $response->assertOk();
+    $response->assertInertia(fn (AssertableInertia $page) => $page
+        ->component('Event/CreateEventEventTypePage')
+        ->where('eventSteps', [
+            'guide' => [
+                'welcome' => false,
+                'before' => false,
+                'schedule' => false,
+                'faqs' => false,
+            ],
+            'mailingAddress' => true,
+            'eventRegistration' => false,
+        ])
+    );
+});
+
+test('the create page fills in event steps missing from an older session', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
+
+    $response = $this->withSession(['event_steps' => ['mailing_address' => true]])
+        ->get(route('host.eventType.create', $eventType));
+
+    $response->assertOk();
+    $response->assertInertia(fn (AssertableInertia $page) => $page
+        ->where('eventSteps.guide.welcome', false)
+        ->where('eventSteps.guide.faqs', false)
+        ->where('eventSteps.eventRegistration', false)
+    );
+});
+
+test('the create page keeps guide progress from earlier steps', function () {
+    $this->actingAs($this->user);
+    $eventType = EventType::query()->slug(Str::slug(EventType::WAH_RETREAT))->first();
+
+    $this->get(route('host.eventType.index', $eventType))->assertOk();
+    $this->get(route('host.eventType.before', $eventType))->assertOk();
+
+    $response = $this->get(route('host.eventType.create', $eventType));
+
+    $response->assertInertia(fn (AssertableInertia $page) => $page
+        ->where('eventSteps.guide.welcome', true)
+        ->where('eventSteps.guide.before', false)
+        ->where('eventSteps.mailingAddress', true)
     );
 });
 
