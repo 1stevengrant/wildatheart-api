@@ -44,14 +44,20 @@ export const EditScheduledEventForm = ({
         end_date: null,
     });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            initialLocation: {
-                latitude: event.latitude,
-                longitude: event.longitude,
-            },
-            onLocationChange: updateLocationData,
-        });
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        initialLocation: {
+            latitude: event.latitude,
+            longitude: event.longitude,
+        },
+        onLocationChange: updateLocationData,
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -88,6 +94,7 @@ export const EditScheduledEventForm = ({
                 eventTypeSlug={event.event_type_slug}
                 className="mt-4"
             />
+            <InputError message={locationError ?? undefined} />
 
             <div className="mt-4">
                 <label className="flex items-center space-x-4 hover:cursor-pointer">
