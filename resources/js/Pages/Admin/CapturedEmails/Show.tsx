@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { router } from "@inertiajs/react";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
@@ -41,9 +41,13 @@ const Show = () => {
 
     const handleDelete = () => {
         if (confirm("Are you sure you want to delete this email?")) {
-            router.delete(`/internal/emails/${email.uuid}`, {
-                onSuccess: () => router.visit("/internal/emails"),
-            });
+            router.delete(
+                route("internal.captured-emails.destroy", email.uuid),
+                {
+                    onSuccess: () =>
+                        router.visit(route("internal.captured-emails.index")),
+                }
+            );
         }
     };
 
@@ -71,7 +75,7 @@ const Show = () => {
             <div className="p-8">
                 <div className="mb-4 flex justify-between items-center">
                     <a
-                        href="/internal/emails"
+                        href={route("internal.captured-emails.index")}
                         className="text-blue-600 hover:text-blue-900"
                     >
                         ← Back to Emails
@@ -148,9 +152,8 @@ const Show = () => {
                                     Sent:
                                 </span>
                                 <span className="text-gray-900">
-                                    {format(
-                                        new Date(email.created_at),
-                                        "MMMM d, yyyy 'at' h:mm:ss a"
+                                    {dayjs(email.created_at).format(
+                                        "MMMM D, YYYY [at] h:mm:ss A"
                                     )}
                                 </span>
                             </div>

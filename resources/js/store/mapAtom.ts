@@ -1,8 +1,10 @@
 import { atom } from "recoil";
 
-const selectedPlaceState = atom<any | undefined>({
+import { MapboxPlace } from "@/types/MapboxPlace";
+
+const selectedPlaceState = atom<MapboxPlace | null>({
     key: "selectedPlace",
-    default: undefined,
+    default: null,
 });
 
 const zoomState = atom<number>({

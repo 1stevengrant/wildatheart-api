@@ -39,16 +39,7 @@ const EventListItem = ({ children }: { children: React.ReactNode }) => {
 export const EventCreateProgress = () => {
     const { eventType, eventSteps } = useTypedPage<{
         eventType: App.Data.EventTypeData;
-        eventSteps: {
-            guide: {
-                welcome: boolean;
-                before: boolean;
-                schedule: boolean;
-                faqs: boolean;
-            };
-            mailing_address: boolean;
-            event_registration: boolean;
-        };
+        eventSteps: App.Data.EventStepsData;
     }>().props;
 
     const isEventGuideStep =
@@ -59,7 +50,7 @@ export const EventCreateProgress = () => {
     const isMailingAddressStep = route().current("host.eventType.mailing");
     const isEventRegistrationStep = route().current("host.eventType.create");
 
-    const isGuideComplete = (guide: any) => {
+    const isGuideComplete = (guide: App.Data.EventGuideStepsData) => {
         return guide.welcome && guide.before && guide.schedule && guide.faqs;
     };
 
@@ -168,7 +159,7 @@ export const EventCreateProgress = () => {
                         <li className={`flex`}>
                             <EventStepBar
                                 isActive={isMailingAddressStep}
-                                isComplete={eventSteps.mailing_address}
+                                isComplete={eventSteps.mailingAddress}
                             />
                             <div className={`ml-6`}>
                                 <EventStep step={2} />
@@ -178,7 +169,7 @@ export const EventCreateProgress = () => {
                         <li className={`flex`}>
                             <EventStepBar
                                 isActive={isEventRegistrationStep}
-                                isComplete={eventSteps.event_registration}
+                                isComplete={eventSteps.eventRegistration}
                             />
                             <div className="ml-6">
                                 <EventStep step={3} />

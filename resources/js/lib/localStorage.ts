@@ -43,11 +43,9 @@ export const shouldShowModal = (): boolean => {
 
 export const getUserZoom = (): number | null => {
     const zoom = localStorage.getItem("userZoom");
-    console.log("Getting zoom", zoom);
     return zoom ? parseFloat(zoom) : null;
 };
 
 export const setUserZoom = (zoom: number): void => {
-    console.log("Setting zoom to", zoom);
     localStorage.setItem("userZoom", zoom.toString());
 };

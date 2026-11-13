@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 
+import * as Sentry from "@sentry/react";
 import axios from "axios";
 
 import { MapboxPlace } from "@/types/MapboxPlace";
@@ -49,7 +50,7 @@ export const useMapboxSearch = () => {
                 return [];
             }
         } catch (error) {
-            console.error("Error querying Mapbox", error);
+            Sentry.captureException(error);
             setError("Failed to fetch results. Please try again.");
             setResults([]);
             return [];

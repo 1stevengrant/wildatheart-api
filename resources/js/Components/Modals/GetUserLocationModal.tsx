@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -19,19 +19,12 @@ type GetUserLocationModalProps = {
 export const GetUserLocationModal = ({
     onLocationFound,
 }: GetUserLocationModalProps) => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(shouldShowModal);
     const [gettingLocation, setGettingLocation] = useState(false);
     const [positionError, setPositionError] =
         useState<GeolocationPositionError | null>(null);
 
-    useEffect(() => {
-        const shouldShow = shouldShowModal();
-        console.log("Should show modal:", shouldShow);
-        setOpen(shouldShow);
-    }, []);
-
     const handleModalClose = () => {
-        console.log("Modal closed");
         setModalDismissed();
         setOpen(false);
     };
@@ -40,7 +33,6 @@ export const GetUserLocationModal = ({
         setGettingLocation(true);
 
         const positionSuccess = (position: GeolocationPosition) => {
-            console.log("Geolocation success:", position);
             const { latitude, longitude } = position.coords;
 
             onLocationFound(latitude, longitude);
@@ -48,7 +40,6 @@ export const GetUserLocationModal = ({
             setOpen(false);
         };
         const positionError = (error: GeolocationPositionError) => {
-            console.log("Geolocation error:", error);
             setPositionError(error);
 
             setTimeout(() => {
@@ -65,7 +56,7 @@ export const GetUserLocationModal = ({
     return (
         <Modal open={open} setOpen={setOpen}>
             <div className={"flex justify-end"}>
-                <button onClick={handleModalClose}>
+                <button onClick={handleModalClose} aria-label="Close modal">
                     <XMarkIcon className={"w-6 h-6 text-white"} />
                 </button>
             </div>

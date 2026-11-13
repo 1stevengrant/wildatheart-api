@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { router } from "@inertiajs/react";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
@@ -41,7 +41,7 @@ const Index = () => {
 
     const handleSearch = () => {
         router.get(
-            "/internal/emails",
+            route("internal.captured-emails.index"),
             { search, mailable },
             { preserveState: true, preserveScroll: true }
         );
@@ -50,13 +50,13 @@ const Index = () => {
     const handleClearFilters = () => {
         setSearch("");
         setMailable("");
-        router.get("/internal/emails");
+        router.get(route("internal.captured-emails.index"));
     };
 
     const handleDelete = (uuid: string) => {
         if (confirm("Are you sure you want to delete this email?")) {
             setDeleting(uuid);
-            router.delete(`/internal/emails/${uuid}`, {
+            router.delete(route("internal.captured-emails.destroy", uuid), {
                 onFinish: () => setDeleting(null),
             });
         }
@@ -68,7 +68,7 @@ const Index = () => {
                 `Are you sure you want to delete all ${emails.total} captured emails? This cannot be undone.`
             )
         ) {
-            router.delete("/internal/emails");
+            router.delete(route("internal.captured-emails.clear"));
         }
     };
 
@@ -190,14 +190,16 @@ const Index = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {format(
-                                                    new Date(email.created_at),
-                                                    "MMM d, yyyy h:mm a"
+                                                {dayjs(email.created_at).format(
+                                                    "MMM D, YYYY h:mm A"
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <a
-                                                    href={`/internal/emails/${email.uuid}`}
+                                                    href={route(
+                                                        "internal.captured-emails.show",
+                                                        email.uuid
+                                                    )}
                                                     className="text-blue-600 hover:text-blue-900 mr-4"
                                                 >
                                                     View

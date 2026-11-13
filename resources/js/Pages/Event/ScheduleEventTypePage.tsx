@@ -10,7 +10,6 @@ import { MailingAddressLink } from "@/Components/Links/MailingAddressLink";
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { eventTypeHasFaqs } from "@/helpers/eventTypeHasFaqs";
-import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
@@ -35,16 +34,7 @@ const ScheduleEventTypePageFooter = ({ eventType }: { eventType: any }) => {
 const ScheduleEventTypePage = () => {
     const page = usePage();
     const eventType = page.props.eventType as any;
-    let eventTypeSchedule;
-    try {
-        eventTypeSchedule =
-            typeof eventType.event_schedule === "string"
-                ? JSON.parse(eventType.event_schedule)
-                : eventType.event_schedule;
-    } catch (error) {
-        console.error("Error parsing event_schedule:", error);
-        eventTypeSchedule = [];
-    }
+    const eventTypeSchedule = eventType.event_schedule;
 
     return (
         <EmptyLayout title={`Event Schedule`}>
@@ -55,9 +45,16 @@ const ScheduleEventTypePage = () => {
                     <PageContainer>
                         {eventTypeSchedule &&
                             eventTypeSchedule.map(
-                                (schedule: FlattenedType, index: number) => {
+                                (
+                                    schedule: App.Data.EventType.ScheduleBlockData,
+                                    index: number
+                                ) => {
                                     switch (schedule.type) {
                                         case "video":
+                                            if (!schedule.video_url) {
+                                                return null;
+                                            }
+
                                             return (
                                                 <Vimeo
                                                     key={index}

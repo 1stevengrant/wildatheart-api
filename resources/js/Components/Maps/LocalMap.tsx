@@ -33,7 +33,7 @@ import {
 import { featuredContentState } from "@/store/featuredContentAtom";
 
 type LocalMapProps = {
-    mapRef: RefObject<MapRef | null>;
+    mapRef: RefObject<MapRef>;
     onUserLocated: (latitude: number, longitude: number) => void;
 };
 
@@ -119,11 +119,6 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
 
     useEffect(() => {
         if (!mapRef.current || !selectedPlace) return;
-        console.log(
-            "Flying to selected place:",
-            selectedPlace.center[0],
-            selectedPlace.center[1]
-        );
         mapRef.current.getMap().flyTo({
             center: selectedPlace.center,
             zoom: 7,
@@ -138,13 +133,11 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
         setBounds(newBounds);
         const center = map.getCenter();
         const newZoom = map.getZoom();
-        console.log("Map moved to:", center.lat, center.lng, "Zoom:", newZoom);
         setUserLocation(center.lat, center.lng);
         setUserZoom(newZoom);
     }, [mapRef]);
 
     const onMapLoad = useCallback(() => {
-        console.log("Map loaded");
         handleOnMapMoveEnd();
     }, [handleOnMapMoveEnd]);
 

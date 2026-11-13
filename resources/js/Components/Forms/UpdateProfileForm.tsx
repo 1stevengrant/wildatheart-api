@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 
 import { Link, router, useForm } from "@inertiajs/react";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { PhoneInput } from "react-international-phone";
-import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { InputError } from "@/Components/Forms/InputError";
@@ -16,12 +16,7 @@ import { scrollToError } from "@/helpers/scrollToError";
 
 const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-p200 hover:text-p200 transition ease-in-out duration-100 font-semibold text-sm`;
 
-export const UpdateProfileForm = ({
-    user,
-    className,
-    redirectTo,
-    buttonText,
-}: any) => {
+export const UpdateProfileForm = ({ user, className, buttonText }: any) => {
     const form = useForm<{
         _method: string;
         given_name: string;
@@ -51,10 +46,7 @@ export const UpdateProfileForm = ({
 
         form.post(route("user.profile"), {
             preserveScroll: "errors",
-            onSuccess: () => {
-                clearPhotoFileInput();
-                router.get(redirectTo);
-            },
+            onSuccess: () => clearPhotoFileInput(),
             onError: () => scrollToError(),
         });
     };
@@ -115,7 +107,7 @@ export const UpdateProfileForm = ({
                         id="given_name"
                         name="given_name"
                         value={form.data.given_name}
-                        autoComplete="given_name"
+                        autoComplete="given-name"
                         isFocused={true}
                         onChange={(e) =>
                             form.setData("given_name", e.target.value)
@@ -134,7 +126,7 @@ export const UpdateProfileForm = ({
                         id="family_name"
                         name="family_name"
                         value={form.data.family_name}
-                        autoComplete="family_name"
+                        autoComplete="family-name"
                         isFocused={true}
                         onChange={(e) =>
                             form.setData("family_name", e.target.value)

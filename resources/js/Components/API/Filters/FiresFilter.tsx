@@ -21,7 +21,7 @@ export const FiresFilter = () => {
                 title={`Fires`}
                 text={fireTypeDescription}
             />
-            {fireTypes.map((eventType: any, index: number) => {
+            {fireTypes.map((eventType, index) => {
                 return (
                     <SwitchComponentWrapper key={index}>
                         <span>{eventType.filter_name ?? eventType.name}</span>

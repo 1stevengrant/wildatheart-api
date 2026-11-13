@@ -19,9 +19,13 @@ const HostAgreementPage = () => {
     const { hostAgreement } = usePage().props as any;
     const handleAgree = (event: React.FormEvent) => {
         event.preventDefault();
-        router.post(route("host.agreement.store"), {
-            preserveScroll: true,
-        });
+        router.post(
+            route("host.agreement.store"),
+            {},
+            {
+                preserveScroll: true,
+            }
+        );
     };
 
     const [hasAgreed, setHasAgreed] = useState(false);

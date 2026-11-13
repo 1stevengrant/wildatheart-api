@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
     ClipboardDocumentCheckIcon,
@@ -29,16 +29,12 @@ export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
     const [openEventDeleteModal, setOpenEventDeleteModal] = useState(false);
     const [openEventUnpublishModal, setOpenEvenUnpublishModal] =
         useState(false);
-    const [openEventPublishModal, setOpenEventPublishModal] = useState(false);
+    const [openEventPublishModal, setOpenEventPublishModal] = useState(
+        () => route().params?.event === event.id
+    );
     const [openEventPublicPrivateModal, setOpenEventPublicPrivateModal] =
         useState(false);
 
-    useEffect(() => {
-        const params = route().params;
-        if (params && params.event === event.id) {
-            setOpenEventPublishModal(true);
-        }
-    }, [event]);
     return (
         <div className={`relative z-50 flex items-center justify-center `}>
             <button

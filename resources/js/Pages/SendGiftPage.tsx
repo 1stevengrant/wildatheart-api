@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Link, useForm } from "@inertiajs/react";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { singular } from "pluralize";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { PhoneInput } from "react-international-phone";
-import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FormGrid } from "@/Components/Forms/FormGrid";
@@ -83,7 +83,7 @@ const SendGiftPage = () => {
                                         id="given_name"
                                         name="given_name"
                                         value={data.given_name}
-                                        autoComplete="given_name"
+                                        autoComplete="given-name"
                                         isFocused={true}
                                         onChange={(e) =>
                                             setData(
@@ -105,7 +105,7 @@ const SendGiftPage = () => {
                                         id="family_name"
                                         name="family_name"
                                         value={data.family_name}
-                                        autoComplete="family_name"
+                                        autoComplete="family-name"
                                         onChange={(e) =>
                                             setData(
                                                 "family_name",
@@ -177,6 +177,8 @@ const SendGiftPage = () => {
                                         required
                                     />
                                     <CountryDropdown
+                                        id="country"
+                                        name="country"
                                         priorityOptions={priorityCountries}
                                         value={data.country}
                                         className={selectClasses}
@@ -211,6 +213,8 @@ const SendGiftPage = () => {
                                             required
                                         />
                                         <RegionDropdown
+                                            id="state"
+                                            name="state"
                                             className={selectClasses}
                                             country={data.country}
                                             value={data.state}
