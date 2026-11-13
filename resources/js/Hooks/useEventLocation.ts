@@ -6,7 +6,7 @@ import { oneHour } from "@/helpers/timeConstants";
 import { useMapData } from "@/Hooks/useMapData";
 import { MapboxPlace } from "@/types/MapboxPlace";
 
-interface LocationData {
+export interface LocationData {
     country?: string;
     region?: string;
     state?: string;
