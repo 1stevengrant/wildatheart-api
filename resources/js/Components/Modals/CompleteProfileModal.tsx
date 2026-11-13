@@ -2,8 +2,8 @@ import { FormEventHandler } from "react";
 
 import { Dialog } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { PhoneInput } from "react-international-phone";
-import { isValidPhoneNumber } from "react-phone-number-input";
 
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { FormFieldsWrapper } from "@/Components/Forms/FormFieldsWrapper";

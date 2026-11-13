@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { router } from "@inertiajs/react";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
@@ -190,9 +190,8 @@ const Index = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {format(
-                                                    new Date(email.created_at),
-                                                    "MMM d, yyyy h:mm a"
+                                                {dayjs(email.created_at).format(
+                                                    "MMM D, YYYY h:mm A"
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

@@ -1,7 +1,7 @@
 import React from "react";
 
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
-import { Trash2 } from "lucide-react";
 
 import { FilterBar } from "@/Components/FilterBar";
 import Pagination from "@/Components/Pagination";
@@ -118,7 +118,7 @@ const MyContactsPage = () => {
                                     onClick={() => deleteContact(row.id)}
                                     className="bg-red-600 hover:bg-red-500 transition-all ease-in-out duration-100 text-white rounded-md p-2"
                                 >
-                                    <Trash2 size={16} />
+                                    <TrashIcon className="size-4" />
                                 </button>
                             </>
                         ),
