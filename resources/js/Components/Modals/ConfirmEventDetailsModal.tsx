@@ -3,6 +3,7 @@ import { Dialog } from "@headlessui/react";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { Modal } from "@/Components/Ui/Modal";
 import { Spinner } from "@/Components/Ui/Spinner";
+import { formatDate } from "@/helpers/formatDate";
 
 export const ConfirmEventDetailsModal = ({
     open,
@@ -44,7 +45,7 @@ export const ConfirmEventDetailsModal = ({
                         {data.start_date && (
                             <li>
                                 <span className="font-medium">Start Date:</span>{" "}
-                                {new Date(data.start_date).toLocaleDateString()}
+                                {formatDate(data.start_date)}
                             </li>
                         )}
                         <li>
