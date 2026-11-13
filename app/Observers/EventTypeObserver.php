@@ -8,8 +8,6 @@ class EventTypeObserver
 {
     public const array CACHE_KEYS = [
         'allEventTypes.v2',
-        'experienceTypes.v2',
-        'retreatTypes.v2',
         'fireTypes.v2',
         'eventTypesGroupedByType.v3',
         'eventTypesWithCounts.serialised.v3',

@@ -34,3 +34,14 @@ test('home page event types are ordered by their model order column', function (
     expect(array_search($earlierRetreat->id, $retreatIds, true))
         ->toBeLessThan(array_search($laterRetreat->id, $retreatIds, true));
 });
+
+test('home page only sends the event type props the map reads', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('HomePage')
+            ->has('allEventTypes')
+            ->has('fireTypes')
+            ->missing('experienceTypes')
+            ->missing('retreatTypes'));
+});

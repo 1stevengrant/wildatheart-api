@@ -4,8 +4,6 @@ use App\Models\EventType;
 
 $cacheKeys = [
     'allEventTypes.v2',
-    'experienceTypes.v2',
-    'retreatTypes.v2',
     'fireTypes.v2',
     'eventTypesGroupedByType.v3',
     'event_types.v2',

@@ -27,14 +27,6 @@ export const useTypes = () => {
     const setTypesTo = (eventTypeId: number[]) => setTypes(eventTypeId);
 
     const props = useTypedPage<Props>().props;
-    const experienceTypes = props.experienceTypes;
-    const retreatTypes = props.retreatTypes;
-    const fireTypes = props.fireTypes;
-
-    const experienceTypeIds = experienceTypes.map((type: any) => type.id);
-    const retreatTypeIds = retreatTypes.map((type: any) => type.id);
-    const fireTypeIds = fireTypes.map((type: any) => type.id);
-
     const experienceEventTypes = props.allEventTypes.filter(
         (eventType: any) => {
             return eventType.name.toLowerCase().includes(experienceTypeGroup);
@@ -71,9 +63,6 @@ export const useTypes = () => {
         handleTypesChange,
         resetTypes,
         setTypesTo,
-        experienceTypeIds,
-        retreatTypeIds,
-        fireTypeIds,
         experienceEventTypes,
         retreatEventTypes,
         womensEventTypeIds,
