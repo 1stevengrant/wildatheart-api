@@ -24,6 +24,7 @@ type EventTypeObject = {
 type Props = {
     eventStats: EventStats;
     date: string;
+    year: number;
     yearStats: EventStats;
 };
 

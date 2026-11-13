@@ -1,3 +1,3 @@
 export type FiresFilterProps = {
-    [key: string]: any;
+    fireTypes: App.Data.EventTypeData[];
 };

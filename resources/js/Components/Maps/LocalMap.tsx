@@ -33,7 +33,7 @@ import {
 import { featuredContentState } from "@/store/featuredContentAtom";
 
 type LocalMapProps = {
-    mapRef: RefObject<MapRef | null>;
+    mapRef: RefObject<MapRef>;
     onUserLocated: (latitude: number, longitude: number) => void;
 };
 

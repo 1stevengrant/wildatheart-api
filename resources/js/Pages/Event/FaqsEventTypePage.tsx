@@ -10,7 +10,6 @@ import { EmptyLayoutFooter } from "@/Components/Layout/Elements/EmptyLayoutFoote
 import { PageContainer } from "@/Components/Pages/Event/PageContainer";
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { primaryButtonClasses } from "@/helpers/primaryButtonClasses";
-import { FlattenedType } from "@/interfaces/FlattenedType";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
@@ -49,7 +48,10 @@ const FaqsEventTypePage = () => {
                     <PageContainer>
                         {eventType.event_faqs &&
                             eventType.event_faqs.map(
-                                (faq: FlattenedType, index: number) => {
+                                (
+                                    faq: App.Data.EventType.FaqData,
+                                    index: number
+                                ) => {
                                     return (
                                         <Disclosure key={index}>
                                             {({ open }) => (
