@@ -85,16 +85,15 @@ export const LocalMap = ({ mapRef, onUserLocated }: LocalMapProps) => {
                 params.delete("types");
             }
 
-            router.get(
-                `${window.location.pathname}?${params.toString()}`,
-                {},
-                {
-                    preserveState: true,
-                    preserveScroll: true,
-                    replace: true,
-                    only: [],
-                }
-            );
+            const query = params.toString();
+
+            router.replace({
+                url: query
+                    ? `${window.location.pathname}?${query}`
+                    : window.location.pathname,
+                preserveState: true,
+                preserveScroll: true,
+            });
         }
     }, []);
 
