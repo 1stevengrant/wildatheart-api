@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 
 import { Menu, Transition } from "@headlessui/react";
 import { usePage } from "@inertiajs/react";
-import classNames from "classnames";
+import { clsx } from "clsx";
 
 import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
@@ -37,7 +37,7 @@ export const AuthNav = () => {
                                 {({ active }) => (
                                     <a
                                         href={route("my.profile")}
-                                        className={classNames(
+                                        className={clsx(
                                             active ? "bg-grey-lighter" : "",
                                             "block px-4 py-2" + " text-black"
                                         )}
@@ -51,7 +51,7 @@ export const AuthNav = () => {
                                     <>
                                         <button
                                             onClick={() => setOpen(true)}
-                                            className={classNames(
+                                            className={clsx(
                                                 active ? "bg-grey-lighter" : "",
                                                 `block px-4 py-2 text-black hover:bg-grey-lighter w-full text-left`
                                             )}

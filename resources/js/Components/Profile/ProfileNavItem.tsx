@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Link } from "@inertiajs/react";
-import classNames from "classnames";
+import { clsx } from "clsx";
 
 import { profileNavItemClasses } from "@/helpers/profileNavItemClasses";
 
@@ -16,7 +16,7 @@ export const ProfileNavItem = ({
 }) => {
     const isActive = route().current(link + "*");
 
-    const textClasses = classNames({
+    const textClasses = clsx({
         "text-p200 bg-grey-darkest": isActive,
         "text-white group-hover:text-white": !isActive,
     });

@@ -11,7 +11,7 @@ import {
     XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Head, Link, usePage } from "@inertiajs/react";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { useRecoilState } from "recoil";
 
 import { AuthUserMenu } from "@/Components/Layout/Elements/AuthUserMenu";
@@ -182,13 +182,13 @@ export const HostDashboardLayout = ({
                                                                             onClick={
                                                                                 item.action
                                                                             }
-                                                                            className={classNames(
+                                                                            className={clsx(
                                                                                 "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
                                                                                 "hover:text-white hover:bg-n800"
                                                                             )}
                                                                         >
                                                                             <item.icon
-                                                                                className={classNames(
+                                                                                className={clsx(
                                                                                     "text-white group-hover:text-white",
                                                                                     "h-6 w-6 shrink-0"
                                                                                 )}
@@ -204,7 +204,7 @@ export const HostDashboardLayout = ({
                                                                             href={
                                                                                 item.href
                                                                             }
-                                                                            className={classNames(
+                                                                            className={clsx(
                                                                                 item.current
                                                                                     ? "bg-n800 text-white"
                                                                                     : "hover:text-white hover:bg-n800",
@@ -212,7 +212,7 @@ export const HostDashboardLayout = ({
                                                                             )}
                                                                         >
                                                                             <item.icon
-                                                                                className={classNames(
+                                                                                className={clsx(
                                                                                     item.current
                                                                                         ? "text-white"
                                                                                         : "text-white group-hover:text-white",
@@ -264,7 +264,7 @@ export const HostDashboardLayout = ({
                                                 {item.action && (
                                                     <button
                                                         onClick={item.action}
-                                                        className={classNames(
+                                                        className={clsx(
                                                             item.current
                                                                 ? " bg-n800 text-white"
                                                                 : "hover:text-white hover:bg-n800",
@@ -272,7 +272,7 @@ export const HostDashboardLayout = ({
                                                         )}
                                                     >
                                                         <item.icon
-                                                            className={classNames(
+                                                            className={clsx(
                                                                 item.current
                                                                     ? "text-white"
                                                                     : "group-hover:text-white",
@@ -286,7 +286,7 @@ export const HostDashboardLayout = ({
                                                 {item.href && (
                                                     <Link
                                                         href={item.href}
-                                                        className={classNames(
+                                                        className={clsx(
                                                             item.current
                                                                 ? "bg-n800 text-white"
                                                                 : "hover:text-white hover:bg-n800",
@@ -294,7 +294,7 @@ export const HostDashboardLayout = ({
                                                         )}
                                                     >
                                                         <item.icon
-                                                            className={classNames(
+                                                            className={clsx(
                                                                 item.current
                                                                     ? "text-white"
                                                                     : "group-hover:text-white",
