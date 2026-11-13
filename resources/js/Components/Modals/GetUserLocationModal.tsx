@@ -25,13 +25,10 @@ export const GetUserLocationModal = ({
         useState<GeolocationPositionError | null>(null);
 
     useEffect(() => {
-        const shouldShow = shouldShowModal();
-        console.log("Should show modal:", shouldShow);
-        setOpen(shouldShow);
+        setOpen(shouldShowModal());
     }, []);
 
     const handleModalClose = () => {
-        console.log("Modal closed");
         setModalDismissed();
         setOpen(false);
     };
@@ -40,7 +37,6 @@ export const GetUserLocationModal = ({
         setGettingLocation(true);
 
         const positionSuccess = (position: GeolocationPosition) => {
-            console.log("Geolocation success:", position);
             const { latitude, longitude } = position.coords;
 
             onLocationFound(latitude, longitude);
@@ -48,7 +44,6 @@ export const GetUserLocationModal = ({
             setOpen(false);
         };
         const positionError = (error: GeolocationPositionError) => {
-            console.log("Geolocation error:", error);
             setPositionError(error);
 
             setTimeout(() => {

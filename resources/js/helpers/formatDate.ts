@@ -32,8 +32,7 @@ export const formatDate = (dateString: string | null | undefined): string => {
         return dateYear === currentYear
             ? formattedDate
             : `${formattedDate}, ${dateYear}`;
-    } catch (error) {
-        console.error(error);
+    } catch {
         return dateString;
     }
 };

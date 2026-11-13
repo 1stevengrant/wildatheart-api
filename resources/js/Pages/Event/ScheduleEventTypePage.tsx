@@ -1,5 +1,6 @@
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
+import * as Sentry from "@sentry/react";
 import Vimeo from "@u-wave/react-vimeo";
 
 import { CustomMarkdown } from "@/Components/CustomMarkdown";
@@ -42,7 +43,7 @@ const ScheduleEventTypePage = () => {
                 ? JSON.parse(eventType.event_schedule)
                 : eventType.event_schedule;
     } catch (error) {
-        console.error("Error parsing event_schedule:", error);
+        Sentry.captureException(error);
         eventTypeSchedule = [];
     }
 

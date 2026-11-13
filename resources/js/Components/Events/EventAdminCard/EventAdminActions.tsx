@@ -37,8 +37,7 @@ export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
                 type: "success",
             };
             setReactNotifications([...reactNotifications, newNotification]);
-        } catch (error) {
-            console.error(error);
+        } catch {
             const newErrorNotification = {
                 message: "Oops, unable to copy",
                 type: "error",

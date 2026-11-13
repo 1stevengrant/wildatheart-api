@@ -115,8 +115,7 @@ export const useEventLocation = ({
         addEvent(position.coords.longitude, position.coords.latitude);
     };
 
-    const getLocationError = (error: GeolocationPositionError) => {
-        console.log(error);
+    const getLocationError = () => {
         flyTo([0, 0], undefined, initialLocation ? 6 : 1);
     };
 
