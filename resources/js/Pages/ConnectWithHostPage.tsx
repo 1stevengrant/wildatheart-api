@@ -81,7 +81,7 @@ const ConnectWithHostPage = () => {
                                         id="given_name"
                                         name="given_name"
                                         value={form.data.given_name}
-                                        autoComplete="given_name"
+                                        autoComplete="given-name"
                                         isFocused={true}
                                         onChange={(e) =>
                                             form.setData(
@@ -105,7 +105,7 @@ const ConnectWithHostPage = () => {
                                         id="family_name"
                                         name="family_name"
                                         value={form.data.family_name}
-                                        autoComplete="family_name"
+                                        autoComplete="family-name"
                                         onChange={(e) =>
                                             form.setData(
                                                 "family_name",
@@ -150,7 +150,7 @@ const ConnectWithHostPage = () => {
                                         id="confirm_email"
                                         name="confirm_email"
                                         value={form.data.confirm_email}
-                                        autoComplete="confirm_email"
+                                        autoComplete="email"
                                         type={"email"}
                                         onPaste={handleConfirmEmailPaste}
                                         onChange={(e) =>
@@ -189,6 +189,8 @@ const ConnectWithHostPage = () => {
                                         required
                                     />
                                     <CountryDropdown
+                                        id="country"
+                                        name="country"
                                         value={form.data.country}
                                         className={selectClasses}
                                         onChange={(val) =>
@@ -205,6 +207,8 @@ const ConnectWithHostPage = () => {
                                         required
                                     />
                                     <RegionDropdown
+                                        id="state"
+                                        name="state"
                                         className={selectClasses}
                                         country={form.data.country}
                                         value={form.data.state}

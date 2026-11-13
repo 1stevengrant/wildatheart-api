@@ -118,7 +118,10 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
             <Modal open={isOpen} setOpen={setOpen}>
                 <div className={"flex justify-between mb-6"}>
                     <p className={`font-bold`}>Share Event</p>
-                    <button onClick={() => setOpen(false)}>
+                    <button
+                        onClick={() => setOpen(false)}
+                        aria-label="Close modal"
+                    >
                         <XMarkIcon className={"w-6 h-6 text-white"} />
                     </button>
                 </div>

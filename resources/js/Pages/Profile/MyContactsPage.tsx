@@ -116,6 +116,7 @@ const MyContactsPage = () => {
                             <>
                                 <button
                                     onClick={() => deleteContact(row.id)}
+                                    aria-label={`Delete ${row.fullname}`}
                                     className="bg-red-600 hover:bg-red-500 transition-all ease-in-out duration-100 text-white rounded-md p-2"
                                 >
                                     <Trash2 size={16} />
