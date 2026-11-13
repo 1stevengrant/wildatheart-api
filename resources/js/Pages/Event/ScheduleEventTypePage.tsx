@@ -35,16 +35,7 @@ const ScheduleEventTypePageFooter = ({ eventType }: { eventType: any }) => {
 const ScheduleEventTypePage = () => {
     const page = usePage();
     const eventType = page.props.eventType as any;
-    let eventTypeSchedule;
-    try {
-        eventTypeSchedule =
-            typeof eventType.event_schedule === "string"
-                ? JSON.parse(eventType.event_schedule)
-                : eventType.event_schedule;
-    } catch (error) {
-        console.error("Error parsing event_schedule:", error);
-        eventTypeSchedule = [];
-    }
+    const eventTypeSchedule = eventType.event_schedule;
 
     return (
         <EmptyLayout title={`Event Schedule`}>
