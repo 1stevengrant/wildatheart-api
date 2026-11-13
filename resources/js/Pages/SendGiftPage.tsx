@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Link, useForm } from "@inertiajs/react";
 import { singular } from "pluralize";
@@ -30,7 +30,6 @@ const SendGiftPage = () => {
 
     const phoneNumber = auth.user?.phone?.replace(/\s/g, "") ?? "";
 
-    const [phone, setPhone] = useState(phoneNumber);
     const { data, setData, post, processing, errors } = useForm({
         given_name: auth.user?.given_name ?? "",
         family_name: auth.user?.family_name ?? "",
@@ -252,9 +251,8 @@ const SendGiftPage = () => {
                                     <PhoneInput
                                         defaultCountry="us"
                                         countries={sortedCountries}
-                                        value={phone}
+                                        value={data.phone}
                                         onChange={(phone) => {
-                                            setPhone(phone);
                                             setData("phone", phone);
                                         }}
                                     />
@@ -266,7 +264,8 @@ const SendGiftPage = () => {
                                 <PrimaryButton
                                     className={"w-full"}
                                     disabled={
-                                        !isValidPhoneNumber(phone) || processing
+                                        !isValidPhoneNumber(data.phone) ||
+                                        processing
                                     }
                                 >
                                     Send Me My Gift

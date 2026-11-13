@@ -1,4 +1,4 @@
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler } from "react";
 
 import { Dialog } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
@@ -22,9 +22,7 @@ export const SupportModal = ({
     setOpen: (open: boolean) => void;
 }) => {
     const { auth } = usePage().props;
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const { data, setData, post, errors, reset } = useForm<{
+    const { data, setData, post, processing, errors, reset } = useForm<{
         given_name: string;
         family_name: string;
         email: string;
@@ -38,28 +36,25 @@ export const SupportModal = ({
         description: "",
     });
 
-    const submit: FormEventHandler = async (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        if (isSubmitting) return;
 
-        setIsSubmitting(true);
+        if (processing) {
+            return;
+        }
 
         post(route("support.store"), {
             preserveScroll: true,
             onSuccess: () => {
                 reset();
-                setIsSubmitting(false);
                 setOpen(false);
             },
-            onError: () => {
-                setIsSubmitting(false);
-                scrollToError();
-            },
+            onError: () => scrollToError(),
         });
     };
 
     const handleCancel = () => {
-        if (!isSubmitting) {
+        if (!processing) {
             setOpen(false);
         }
     };
@@ -85,7 +80,7 @@ export const SupportModal = ({
                                 className="mt-1 block w-full"
                                 autoComplete="given-name"
                                 isFocused={true}
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(e) =>
                                     setData("given_name", e.target.value)
                                 }
@@ -104,7 +99,7 @@ export const SupportModal = ({
                                 value={data.family_name}
                                 className="mt-1 block w-full"
                                 autoComplete="family-name"
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(e) =>
                                     setData("family_name", e.target.value)
                                 }
@@ -123,7 +118,7 @@ export const SupportModal = ({
                                 value={data.email}
                                 className="mt-1 block w-full"
                                 autoComplete="email"
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(e) =>
                                     setData("email", e.target.value)
                                 }
@@ -142,7 +137,7 @@ export const SupportModal = ({
                                 value={data.subject}
                                 className="mt-1 block w-full"
                                 autoComplete="subject"
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(e) =>
                                     setData("subject", e.target.value)
                                 }
@@ -159,7 +154,7 @@ export const SupportModal = ({
                                 id="description"
                                 name="description"
                                 value={data.description}
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(e) =>
                                     setData("description", e.target.value)
                                 }
@@ -171,13 +166,13 @@ export const SupportModal = ({
                 <ModalActions>
                     <SecondaryButton
                         type="button"
-                        disabled={isSubmitting}
+                        disabled={processing}
                         onClick={handleCancel}
                     >
                         Cancel
                     </SecondaryButton>
-                    <PrimaryButton type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : "Submit"}
+                    <PrimaryButton type="submit" disabled={processing}>
+                        {processing ? "Submitting..." : "Submit"}
                     </PrimaryButton>
                 </ModalActions>
             </form>

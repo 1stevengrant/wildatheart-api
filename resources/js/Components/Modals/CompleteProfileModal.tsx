@@ -1,4 +1,4 @@
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler } from "react";
 
 import { Dialog } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/react";
@@ -28,9 +28,7 @@ export const CompleteProfileModal = ({
     description?: string;
 }) => {
     const { auth } = usePage().props;
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const { data, setData, post, errors } = useForm<{
+    const { data, setData, post, processing, errors } = useForm<{
         _method: string;
         given_name: string;
         family_name: string;
@@ -46,23 +44,20 @@ export const CompleteProfileModal = ({
         opted_into_marketing: Boolean(auth.user?.opted_into_marketing),
     });
 
-    const submit: FormEventHandler = async (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        if (isSubmitting) return;
 
-        setIsSubmitting(true);
+        if (processing) {
+            return;
+        }
 
         post(route("user.profile"), {
             preserveScroll: true,
             onSuccess: () => {
-                setIsSubmitting(false);
                 setOpen(false);
                 onSuccess?.();
             },
-            onError: () => {
-                setIsSubmitting(false);
-                scrollToError();
-            },
+            onError: () => scrollToError(),
         });
     };
 
@@ -91,7 +86,7 @@ export const CompleteProfileModal = ({
                                 className="mt-1 block w-full"
                                 autoComplete="given-name"
                                 isFocused={true}
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(e) =>
                                     setData("given_name", e.target.value)
                                 }
@@ -110,7 +105,7 @@ export const CompleteProfileModal = ({
                                 value={data.family_name}
                                 className="mt-1 block w-full"
                                 autoComplete="family-name"
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(e) =>
                                     setData("family_name", e.target.value)
                                 }
@@ -126,7 +121,7 @@ export const CompleteProfileModal = ({
                             <PhoneInput
                                 value={data.phone ?? ""}
                                 defaultCountry={"us"}
-                                disabled={isSubmitting}
+                                disabled={processing}
                                 onChange={(phone) =>
                                     setData(
                                         "phone",
@@ -145,13 +140,13 @@ export const CompleteProfileModal = ({
                     <PrimaryButton
                         type="submit"
                         disabled={
-                            isSubmitting ||
+                            processing ||
                             !data.given_name.trim() ||
                             !data.family_name.trim() ||
                             !isValidPhoneNumber(data.phone)
                         }
                     >
-                        {isSubmitting ? "Saving..." : "Save & Continue"}
+                        {processing ? "Saving..." : "Save & Continue"}
                     </PrimaryButton>
                 </ModalActions>
             </form>

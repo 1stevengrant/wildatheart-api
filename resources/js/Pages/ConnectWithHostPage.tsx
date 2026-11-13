@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, useForm } from "@inertiajs/react";
@@ -26,7 +26,6 @@ const ConnectWithHostPage = () => {
     const { auth, event } = useTypedPage<{
         event: App.Data.EventData;
     }>().props;
-    const [processing, setProcessing] = useState(false);
     const form = useForm({
         _method: "POST",
         given_name: auth.user?.given_name ?? "",
@@ -47,17 +46,10 @@ const ConnectWithHostPage = () => {
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        setProcessing(true);
         e.preventDefault();
         form.post(route("connect.store", event.id), {
             preserveScroll: "errors",
-            onFinish: () => {
-                setProcessing(false);
-            },
-            onError: () => {
-                scrollToError();
-                setProcessing(false);
-            },
+            onError: () => scrollToError(),
         });
     };
     return (
@@ -273,7 +265,7 @@ const ConnectWithHostPage = () => {
                             </FormGrid>
                             <div className="mt-12">
                                 <PrimaryButton
-                                    disabled={processing}
+                                    disabled={form.processing}
                                     className={"w-full"}
                                 >
                                     Connect with {event.host}
