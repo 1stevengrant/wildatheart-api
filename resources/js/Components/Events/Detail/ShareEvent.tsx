@@ -92,8 +92,7 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
                 },
             ]);
             setOpen(false);
-        } catch (error) {
-            console.error(error);
+        } catch {
             setReactNotifications((prevState) => [
                 ...prevState,
                 {

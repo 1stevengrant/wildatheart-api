@@ -28,7 +28,6 @@ export const StaticMap = ({
             return;
         }
         let mapMarkerUrl;
-        console.log(event);
         if (event?.event_type.group_type === retreatTypeGroup) {
             mapMarkerUrl = "/svgs/map-marker-retreat.svg";
         } else if (event?.event_type.group_type === experienceTypeGroup) {

@@ -63,6 +63,7 @@ export default [
             'react-hooks/rules-of-hooks': 'warn',
             'react-hooks/exhaustive-deps': 'warn',
             'no-case-declarations': 'off',
+            'no-console': 'error',
             'prettier/prettier': 'error',
             'import-x/order': ['error', {
                 'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
