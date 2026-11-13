@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-import { router, usePage } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import { format } from "date-fns";
 
+import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 type CapturedEmail = {
@@ -14,7 +15,7 @@ type CapturedEmail = {
     created_at: string;
 };
 
-type PageProps = {
+type Props = {
     emails: {
         data: CapturedEmail[];
         links: any[];
@@ -33,7 +34,7 @@ type PageProps = {
 };
 
 const Index = () => {
-    const { emails, mailableClasses, filters } = usePage<PageProps>().props;
+    const { emails, mailableClasses, filters } = useTypedPage<Props>().props;
     const [search, setSearch] = useState(filters.search || "");
     const [mailable, setMailable] = useState(filters.mailable || "");
     const [deleting, setDeleting] = useState<string | null>(null);

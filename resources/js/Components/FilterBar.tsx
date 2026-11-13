@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { usePage, router } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import pickBy from "lodash/pickBy";
 
 import SelectInput from "@/Components/Forms/SelectInput";
+import useTypedPage from "@/Hooks/useTypedPage";
 
 function usePrevious<T>(value: T): T | undefined {
     const ref = useRef<T | undefined>(undefined);
@@ -14,7 +15,7 @@ function usePrevious<T>(value: T): T | undefined {
 }
 
 export const FilterBar = () => {
-    const { filters, myEvents } = usePage<{
+    const { filters, myEvents } = useTypedPage<{
         filters: { event_id?: string; search?: string; trashed?: string };
         myEvents: { id: string; name: string }[];
     }>().props;

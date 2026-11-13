@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-import { usePage, router } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 
+import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
 type EventStats = {
@@ -19,7 +20,7 @@ type EventTypeObject = {
     hosts: number;
 };
 
-type PageProps = {
+type Props = {
     eventStats: EventStats;
     date: string;
     yearStats: EventStats;
@@ -69,7 +70,7 @@ const StatCard = ({
 };
 
 const ReportingPage = () => {
-    const { eventStats, date, yearStats, year } = usePage<PageProps>().props;
+    const { eventStats, date, yearStats, year } = useTypedPage<Props>().props;
     const [reportDate, setReportDate] = useState(new Date(date));
 
     const handleReportDateChange = (value: Date | null) => {

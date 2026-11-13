@@ -11,7 +11,7 @@ import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
 const AcceptHostInvitation = () => {
     const page = useTypedPage();
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage().props;
 
     const invitation = page.props
         .invitation as App.Data.EventManagerInvitationWithEventData;

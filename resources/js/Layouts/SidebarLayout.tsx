@@ -15,7 +15,7 @@ export const SidebarLayout = ({
     footer: React.ReactNode;
 }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage().props;
 
     return (
         <>

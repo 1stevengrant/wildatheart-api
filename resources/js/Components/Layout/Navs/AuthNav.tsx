@@ -9,7 +9,7 @@ import { AuthUserAvatar } from "@/Components/Ui/AuthUserAvatar";
 import { linkClass } from "@/helpers/linkClass";
 
 export const AuthNav = () => {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage().props;
     const [open, setOpen] = useState(false);
     return (
         <>

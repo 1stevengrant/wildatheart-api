@@ -4,7 +4,7 @@ import { Notification } from "@/Components/Layout/Notifications/Notification";
 import { NotificationWrapper } from "@/Components/Layout/Notifications/NotificationWrapper";
 
 export const BackendNotifications = () => {
-    const { notifications } = usePage<any>().props;
+    const { notifications } = usePage().props;
 
     return (
         <>

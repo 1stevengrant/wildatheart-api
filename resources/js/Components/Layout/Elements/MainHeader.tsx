@@ -8,7 +8,7 @@ import { blackButtonClasses } from "@/helpers/blackButtonClasses";
 import { wahWebsiteUrl } from "@/helpers/wahWebsiteUrl";
 
 export const MainHeader = () => {
-    const { auth } = usePage<any>().props;
+    const { auth } = usePage().props;
     const url = route().current();
     const shouldDisplayMenu = () => {
         return url

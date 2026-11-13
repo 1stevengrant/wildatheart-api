@@ -1,4 +1,3 @@
-import { usePage } from "@inertiajs/react";
 import { useRecoilState } from "recoil";
 
 import { EVENT_FOR_MEN, EVENT_FOR_WOMEN } from "@/helpers/eventSex";
@@ -6,6 +5,7 @@ import {
     experienceTypeGroup,
     retreatTypeGroup,
 } from "@/helpers/eventTypeGroups";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { typesState } from "@/store/filtersAtom";
 
 interface Props {
@@ -26,7 +26,7 @@ export const useTypes = () => {
 
     const setTypesTo = (eventTypeId: number[]) => setTypes(eventTypeId);
 
-    const props = usePage<Props>().props;
+    const props = useTypedPage<Props>().props;
     const experienceTypes = props.experienceTypes;
     const retreatTypes = props.retreatTypes;
     const fireTypes = props.fireTypes;

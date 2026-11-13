@@ -33,7 +33,7 @@ export const HostDashboardLayout = ({
 }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [openSupportModal, setOpenSupportModal] = useState(false);
-    const { auth, show_profile_nudge } = usePage<any>().props;
+    const { auth, show_profile_nudge } = usePage().props;
 
     const [showProfileNudge, setShowProfileNudge] = useState(
         Boolean(show_profile_nudge)

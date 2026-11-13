@@ -13,7 +13,7 @@ export const TwoColumnWrapper = ({
     className?: string;
     children: React.ReactNode;
 }) => {
-    const { notifications } = usePage<any>().props;
+    const { notifications } = usePage().props;
     const [reactNotifications] = useRecoilState(reactNotificationState);
     return (
         <>

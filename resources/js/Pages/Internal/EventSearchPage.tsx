@@ -2,12 +2,13 @@ import React, { useState, useCallback } from "react";
 
 import { Combobox } from "@headlessui/react";
 import { MapPinIcon } from "@heroicons/react/24/outline";
-import { router, usePage } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 
 import Pagination from "@/Components/Pagination";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
+import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PaginatedData } from "@/types";
 import { MapboxPlace } from "@/types/MapboxPlace";
@@ -25,7 +26,7 @@ type EventType = {
     name: string;
 };
 
-type PageProps = {
+type Props = {
     results: PaginatedData<EventSearchResult>;
     filters: App.Data.InternalEventSearchFiltersData;
     availableFields: AvailableField[];
@@ -34,7 +35,7 @@ type PageProps = {
 
 const EventSearchPage = () => {
     const { results, filters, availableFields, eventTypes } =
-        usePage<PageProps>().props;
+        useTypedPage<Props>().props;
 
     const [selectedPlace, setSelectedPlace] = useState<MapboxPlace | null>(
         null
