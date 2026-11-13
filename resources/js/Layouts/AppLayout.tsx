@@ -4,8 +4,7 @@ import { Head } from "@inertiajs/react";
 
 import { Footer } from "@/Components/Layout/Elements/Footer";
 import { MainHeader } from "@/Components/Layout/Elements/MainHeader";
-import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
-import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
+import { Notifications } from "@/Components/Layout/Notifications/Notifications";
 
 export const AppLayout = ({
     title,
@@ -27,8 +26,7 @@ export const AppLayout = ({
                 {children}
             </main>
             <Footer showFooter={showFooter} />
-            <BackendNotifications />
-            <ReactNotifications />
+            <Notifications />
         </div>
     );
 };

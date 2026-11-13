@@ -5,10 +5,12 @@ import { MapPinIcon } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 
+import { Notifications } from "@/Components/Layout/Notifications/Notifications";
 import Pagination from "@/Components/Pagination";
 import { fromCalendarDate, toCalendarDate } from "@/helpers/calendarDate";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
+import { useNotify } from "@/Hooks/useNotify";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 import { PaginatedData } from "@/types";
@@ -69,10 +71,7 @@ const EventSearchPage = () => {
     );
     const [isSearching, setIsSearching] = useState(false);
     const [searchError, setSearchError] = useState<string | null>(null);
-    const [toast, setToast] = useState<{
-        message: string;
-        type: "success" | "error";
-    } | null>(null);
+    const notify = useNotify();
 
     const {
         queryMapbox,
@@ -176,11 +175,6 @@ const EventSearchPage = () => {
         });
     };
 
-    const showToast = (message: string, type: "success" | "error") => {
-        setToast({ message, type });
-        setTimeout(() => setToast(null), 5000);
-    };
-
     const handleExport = () => {
         router.get(
             "/internal/event-search/export",
@@ -201,13 +195,13 @@ const EventSearchPage = () => {
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: () => {
-                    showToast(
+                    notify(
                         "Your export is being generated. You will receive an email shortly.",
                         "success"
                     );
                 },
                 onError: () => {
-                    showToast(
+                    notify(
                         "Failed to start export. Please try again.",
                         "error"
                     );
@@ -232,69 +226,7 @@ const EventSearchPage = () => {
 
     return (
         <EmptyLayout title="Event Search">
-            {/* Toast Notification */}
-            {toast && (
-                <div className="fixed top-4 right-4 z-50 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div
-                        className={`px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 ${
-                            toast.type === "success"
-                                ? "bg-green-600 text-white"
-                                : "bg-red-600 text-white"
-                        }`}
-                    >
-                        {toast.type === "success" ? (
-                            <svg
-                                className="h-5 w-5 flex-shrink-0"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 13l4 4L19 7"
-                                />
-                            </svg>
-                        ) : (
-                            <svg
-                                className="h-5 w-5 flex-shrink-0"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        )}
-                        <span className="text-sm font-medium">
-                            {toast.message}
-                        </span>
-                        <button
-                            onClick={() => setToast(null)}
-                            className="ml-2 hover:opacity-80"
-                        >
-                            <svg
-                                className="h-4 w-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            )}
+            <Notifications />
 
             <div className="p-4 max-w-7xl mx-auto">
                 <h1 className="text-2xl font-bold text-white mb-6">

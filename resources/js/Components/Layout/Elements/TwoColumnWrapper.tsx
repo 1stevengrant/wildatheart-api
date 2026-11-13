@@ -1,10 +1,6 @@
 import React from "react";
 
-import { usePage } from "@inertiajs/react";
-import { useRecoilState } from "recoil";
-
-import { Notification } from "@/Components/Layout/Notifications/Notification";
-import { reactNotificationState } from "@/store";
+import { Notifications } from "@/Components/Layout/Notifications/Notifications";
 
 export const TwoColumnWrapper = ({
     className = "",
@@ -13,8 +9,6 @@ export const TwoColumnWrapper = ({
     className?: string;
     children: React.ReactNode;
 }) => {
-    const { notifications } = usePage().props;
-    const [reactNotifications] = useRecoilState(reactNotificationState);
     return (
         <>
             <div
@@ -26,15 +20,7 @@ export const TwoColumnWrapper = ({
             >
                 {children}
             </div>
-            {notifications && <Notification message={notifications.message} />}
-            {reactNotifications &&
-                reactNotifications.map((notification, index) => (
-                    <Notification
-                        key={index}
-                        message={notification.message}
-                        type={notification.type}
-                    />
-                ))}
+            <Notifications />
         </>
     );
 };
