@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -19,16 +19,10 @@ type GetUserLocationModalProps = {
 export const GetUserLocationModal = ({
     onLocationFound,
 }: GetUserLocationModalProps) => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(shouldShowModal);
     const [gettingLocation, setGettingLocation] = useState(false);
     const [positionError, setPositionError] =
         useState<GeolocationPositionError | null>(null);
-
-    useEffect(() => {
-        const shouldShow = shouldShowModal();
-        console.log("Should show modal:", shouldShow);
-        setOpen(shouldShow);
-    }, []);
 
     const handleModalClose = () => {
         console.log("Modal closed");
