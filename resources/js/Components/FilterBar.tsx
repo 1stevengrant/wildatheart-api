@@ -1,18 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 
 import { router } from "@inertiajs/react";
 import pickBy from "lodash/pickBy";
 
 import SelectInput from "@/Components/Forms/SelectInput";
 import useTypedPage from "@/Hooks/useTypedPage";
-
-function usePrevious<T>(value: T): T | undefined {
-    const ref = useRef<T | undefined>(undefined);
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-}
 
 export const FilterBar = () => {
     const { filters, myEvents } = useTypedPage<{
@@ -30,37 +22,28 @@ export const FilterBar = () => {
         event_id: filters.event_id || "",
     });
 
-    const prevValues = usePrevious(values);
+    const updateValues = (nextValues: typeof values) => {
+        setValues(nextValues);
+
+        router.get(route(route().current() as string), pickBy(nextValues), {
+            replace: true,
+            preserveState: true,
+        });
+    };
 
     const reset = () => {
-        setValues({
+        updateValues({
             event_id: "",
         });
     };
 
-    useEffect(() => {
-        if (prevValues) {
-            const query = Object.keys(pickBy(values)).length
-                ? pickBy(values)
-                : {};
-
-            router.get(route(route().current() as string), query, {
-                replace: true,
-                preserveState: true,
-            });
-        }
-    }, [values]);
-
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
-        const name = e.target.name;
-        const value = e.target.value;
-
-        setValues((values) => ({
+        updateValues({
             ...values,
-            [name]: value,
-        }));
+            [e.target.name]: e.target.value,
+        });
     };
 
     return (

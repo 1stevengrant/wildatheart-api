@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -13,37 +13,28 @@ export const FeaturedContentCard = ({
     featuredContent,
     position = "map-bottom",
 }: FeaturedContentCardProps) => {
-    const [dismissed, setDismissed] = useState(false);
+    const [dismissedUrl, setDismissedUrl] = useState<string | null>(null);
     const [imageError, setImageError] = useState(false);
 
-    // Check if this content was already dismissed in this session
-    useEffect(() => {
-        if (featuredContent?.featured_content_url) {
-            const dismissedKey = `featured_content_dismissed_${featuredContent.featured_content_url}`;
-            const wasDismissed = sessionStorage.getItem(dismissedKey);
-            setDismissed(!!wasDismissed);
-        }
-    }, [featuredContent]);
-
-    const handleDismiss = useCallback(() => {
-        setDismissed(true);
-
-        // Store dismissal in session storage
-        if (featuredContent?.featured_content_url) {
-            const dismissedKey = `featured_content_dismissed_${featuredContent.featured_content_url}`;
-            sessionStorage.setItem(dismissedKey, "true");
-        }
-    }, [featuredContent]);
-
-    // Don't render if no content, dismissed, or missing required fields
     if (
         !featuredContent ||
-        dismissed ||
         !featuredContent.featured_content_text ||
         !featuredContent.featured_content_url
     ) {
         return null;
     }
+
+    const url = featuredContent.featured_content_url;
+    const dismissedKey = `featured_content_dismissed_${url}`;
+
+    if (dismissedUrl === url || sessionStorage.getItem(dismissedKey)) {
+        return null;
+    }
+
+    const handleDismiss = () => {
+        sessionStorage.setItem(dismissedKey, "true");
+        setDismissedUrl(url);
+    };
 
     // Position classes based on where it's rendered
     const positionClasses = {

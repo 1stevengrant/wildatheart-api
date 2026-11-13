@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -35,15 +35,8 @@ export const HostDashboardLayout = ({
     const [openSupportModal, setOpenSupportModal] = useState(false);
     const { auth, show_profile_nudge } = usePage().props;
 
-    const [showProfileNudge, setShowProfileNudge] = useState(
-        Boolean(show_profile_nudge)
-    );
-
-    useEffect(() => {
-        if (show_profile_nudge) {
-            setShowProfileNudge(true);
-        }
-    }, [show_profile_nudge]);
+    const [isProfileNudgeDismissed, setIsProfileNudgeDismissed] =
+        useState(false);
 
     const navigation = [
         {
@@ -95,8 +88,10 @@ export const HostDashboardLayout = ({
                     setOpen={setIsLogoutModalOpen}
                 />
                 <CompleteProfileModal
-                    open={showProfileNudge}
-                    setOpen={setShowProfileNudge}
+                    open={
+                        Boolean(show_profile_nudge) && !isProfileNudgeDismissed
+                    }
+                    setOpen={(open) => setIsProfileNudgeDismissed(!open)}
                     title="Finish setting up your profile"
                 />
                 <Transition show={sidebarOpen}>
