@@ -11,6 +11,7 @@ use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 #[TypeScript]
 class EventData extends Data
@@ -36,6 +37,7 @@ class EventData extends Data
         public ?string $event_type_name,
         public EventTypeData $event_type,
         public string $event_type_image,
+        #[LiteralTypeScriptType("'fire' | 'retreat' | 'experience' | null")]
         public ?string $type_group,
         public string $location,
         public ?string $city,

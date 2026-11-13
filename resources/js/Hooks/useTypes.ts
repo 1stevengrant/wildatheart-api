@@ -36,18 +36,11 @@ export const useTypes = () => {
     const fireTypeIds = fireTypes.map((type: any) => type.id);
 
     const experienceEventTypes = props.allEventTypes.filter(
-        (eventType: any) => {
-            return eventType.name.toLowerCase().includes(experienceTypeGroup);
-        }
+        (eventType: any) => eventType.group_type === experienceTypeGroup
     );
 
     const retreatEventTypes = props.allEventTypes
-        .filter((eventType: any) => {
-            return (
-                eventType.name.toLowerCase().includes(retreatTypeGroup) ||
-                eventType.name.toLowerCase().includes("school")
-            );
-        })
+        .filter((eventType: any) => eventType.group_type === retreatTypeGroup)
         .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
 
     const mensEventTypeIds = props.allEventTypes

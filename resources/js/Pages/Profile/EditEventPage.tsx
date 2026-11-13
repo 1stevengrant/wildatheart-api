@@ -4,7 +4,7 @@ import { EditFireForm } from "@/Components/Events/EditFireForm";
 import { EditScheduledEventForm } from "@/Components/Events/EditScheduledEventForm";
 import { EventHosts } from "@/Components/Events/EventHosts";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
-import { eventIsAFire } from "@/helpers/eventIsAFire";
+import { fireTypeGroup } from "@/helpers/eventTypeGroups";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
@@ -18,7 +18,7 @@ const EditEventPage = () => {
         .pendingTransfer as App.Data.EventOwnershipTransferData | null;
     const isOwner = page.props.isOwner as boolean;
     const pageTitle = `Editing ${event.name}`;
-    const isFire = eventIsAFire(event.event_type_slug);
+    const isFire = event.type_group === fireTypeGroup;
 
     useEffect(() => {
         // Handle hash-based scrolling for Inertia navigation

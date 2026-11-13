@@ -5,6 +5,7 @@ namespace App\Data;
 use App\Models\Event;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 
 /**
  * Lightweight DTO for map marker display.
@@ -18,6 +19,7 @@ class EventMapData extends Data
         public ?string $name,
         public float $display_longitude,
         public float $display_latitude,
+        #[LiteralTypeScriptType("'fire' | 'retreat' | 'experience' | '' | null")]
         public ?string $type_group,
         public string $url,
         public string $event_type_image,

@@ -97,7 +97,6 @@ export const EditScheduledEventForm = ({
                 onZoomEnd={() =>
                     handleUserLevelZoom(mapRef.current?.getZoom() || 6)
                 }
-                eventTypeSlug={event.event_type_slug}
                 className="mt-4"
             />
 

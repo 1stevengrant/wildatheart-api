@@ -24,6 +24,7 @@ class EventTypeData extends Data
         public int $id,
         public readonly bool $allow_materials_order,
         public readonly ?string $number_of_items_in_material_order_label,
+        #[LiteralTypeScriptType("'fire' | 'retreat' | 'experience'")]
         public readonly string $group_type,
         public readonly ?EventTypeEnum $type,
         public readonly string $name,

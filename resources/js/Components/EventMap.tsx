@@ -5,14 +5,13 @@ import Map, { GeolocateControl, NavigationControl, Marker } from "react-map-gl";
 
 import { FireMarker } from "@/Components/Icons/FireMarker";
 import { commonMapProps } from "@/helpers/commonMapboxMapProps";
-import { eventIsAFire } from "@/helpers/eventIsAFire";
 
 interface EventMapProps {
     mapRef: React.RefObject<any>;
     marker: any;
     onMapClick: (event: any) => void;
     onZoomEnd: () => void;
-    eventTypeSlug?: string;
+    isFire?: boolean;
     className?: string;
     height?: string;
 }
@@ -22,12 +21,10 @@ export const EventMap: React.FC<EventMapProps> = ({
     marker,
     onMapClick,
     onZoomEnd,
-    eventTypeSlug,
+    isFire = false,
     className = "",
     height = "h-[300px] md:h-[600px]",
 }) => {
-    const isFireEvent = eventTypeSlug ? eventIsAFire(eventTypeSlug) : false;
-
     return (
         <div className={`w-full ${height} ${className}`}>
             <Map
@@ -43,9 +40,9 @@ export const EventMap: React.FC<EventMapProps> = ({
                     <Marker
                         longitude={marker.lng}
                         latitude={marker.lat}
-                        anchor={isFireEvent ? undefined : "bottom"}
+                        anchor={isFire ? undefined : "bottom"}
                     >
-                        {isFireEvent ? (
+                        {isFire ? (
                             <FireMarker className="w-10 h-10" />
                         ) : (
                             <MapPinIcon className="w-10 h-10 text-p200" />

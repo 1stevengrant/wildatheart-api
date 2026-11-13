@@ -25,7 +25,7 @@ class MapEventTypesQuery
                 return EventType::query()->slug('%retreat%')->active()->orderBy('order')->get()->toArray();
             }),
             'fireTypes' => cache()->remember('fireTypes.v2', now()->addDay(), function (): array {
-                return EventType::query()->slug('%fire%')->active()->orderBy('order')->get()->toArray();
+                return EventType::query()->where('group_type', EventType::TYPE_FIRE)->active()->orderBy('order')->get()->toArray();
             }),
         ];
     }
