@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -19,14 +19,10 @@ type GetUserLocationModalProps = {
 export const GetUserLocationModal = ({
     onLocationFound,
 }: GetUserLocationModalProps) => {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(shouldShowModal);
     const [gettingLocation, setGettingLocation] = useState(false);
     const [positionError, setPositionError] =
         useState<GeolocationPositionError | null>(null);
-
-    useEffect(() => {
-        setOpen(shouldShowModal());
-    }, []);
 
     const handleModalClose = () => {
         setModalDismissed();
@@ -60,7 +56,7 @@ export const GetUserLocationModal = ({
     return (
         <Modal open={open} setOpen={setOpen}>
             <div className={"flex justify-end"}>
-                <button onClick={handleModalClose}>
+                <button onClick={handleModalClose} aria-label="Close modal">
                     <XMarkIcon className={"w-6 h-6 text-white"} />
                 </button>
             </div>

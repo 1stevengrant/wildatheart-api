@@ -115,7 +115,7 @@ export const UpdateProfileForm = ({
                         id="given_name"
                         name="given_name"
                         value={form.data.given_name}
-                        autoComplete="given_name"
+                        autoComplete="given-name"
                         isFocused={true}
                         onChange={(e) =>
                             form.setData("given_name", e.target.value)
@@ -134,7 +134,7 @@ export const UpdateProfileForm = ({
                         id="family_name"
                         name="family_name"
                         value={form.data.family_name}
-                        autoComplete="family_name"
+                        autoComplete="family-name"
                         isFocused={true}
                         onChange={(e) =>
                             form.setData("family_name", e.target.value)

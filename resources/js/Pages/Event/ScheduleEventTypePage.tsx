@@ -1,6 +1,5 @@
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/react";
-import * as Sentry from "@sentry/react";
 import Vimeo from "@u-wave/react-vimeo";
 
 import { CustomMarkdown } from "@/Components/CustomMarkdown";
@@ -36,16 +35,7 @@ const ScheduleEventTypePageFooter = ({ eventType }: { eventType: any }) => {
 const ScheduleEventTypePage = () => {
     const page = usePage();
     const eventType = page.props.eventType as any;
-    let eventTypeSchedule;
-    try {
-        eventTypeSchedule =
-            typeof eventType.event_schedule === "string"
-                ? JSON.parse(eventType.event_schedule)
-                : eventType.event_schedule;
-    } catch (error) {
-        Sentry.captureException(error);
-        eventTypeSchedule = [];
-    }
+    const eventTypeSchedule = eventType.event_schedule;
 
     return (
         <EmptyLayout title={`Event Schedule`}>

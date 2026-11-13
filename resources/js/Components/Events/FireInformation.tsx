@@ -83,7 +83,7 @@ export const FireInformation = ({ user }: any) => {
     };
 
     useEffect(() => {
-        const startDateElement = document.getElementById("frequency");
+        const startDateElement = document.getElementById("frequency-field");
         if (startDateElement) {
             const rect = startDateElement.getBoundingClientRect();
             setStartDatePosition(rect.top);
@@ -104,7 +104,7 @@ export const FireInformation = ({ user }: any) => {
 
                         <div>
                             <InputLabel
-                                htmlFor="fire_name"
+                                htmlFor="name"
                                 value="Name Your Fire"
                                 required
                             />
@@ -127,7 +127,7 @@ export const FireInformation = ({ user }: any) => {
 
                         <FireNamingGuidelines />
 
-                        <div className="mt-4" id="frequency">
+                        <div className="mt-4" id="frequency-field">
                             <InputLabel
                                 htmlFor="frequency"
                                 value={singular(eventType.name) + " frequency"}

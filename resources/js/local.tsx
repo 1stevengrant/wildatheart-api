@@ -12,7 +12,6 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 import { RecoilRoot } from "recoil";
 
-import { RouteContext } from "@/Hooks/useRoute";
 import { initSentry } from "@/lib/sentry";
 import { syncSocialMeta } from "@/lib/socialMeta";
 import { mantineTheme } from "@/mantineTheme";
@@ -42,11 +41,9 @@ createInertiaApp({
 
         root.render(
             <RecoilRoot>
-                <RouteContext.Provider value={(window as any).route}>
-                    <MantineProvider theme={mantineTheme}>
-                        <App {...props} />
-                    </MantineProvider>
-                </RouteContext.Provider>
+                <MantineProvider theme={mantineTheme}>
+                    <App {...props} />
+                </MantineProvider>
             </RecoilRoot>
         );
     },
