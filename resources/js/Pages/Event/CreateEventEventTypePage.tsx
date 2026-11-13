@@ -118,7 +118,7 @@ const CreateEventEventTypePage = () => {
                             more info.
                         </p>
 
-                        <form>
+                        <form onSubmit={(event) => event.preventDefault()}>
                             <MapboxSearch
                                 className="mt-4"
                                 onSelect={selectPlace}
