@@ -15,11 +15,11 @@ class HostEventTypeFaqsController extends Controller
 
     public function __invoke(EventType $eventType, Request $request)
     {
-        $this->eventCreationStepHandlerService->markStepComplete('guide', 'schedule');
+        $this->eventCreationStepHandlerService->markStepComplete('guide.schedule');
 
         return inertia('Event/FaqsEventTypePage', [
             'eventType' => $eventType,
-            'eventSteps' => session('event_steps'),
+            'eventSteps' => $this->eventCreationStepHandlerService->eventSteps(),
         ]);
     }
 }
