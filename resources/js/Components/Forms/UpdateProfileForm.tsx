@@ -16,12 +16,7 @@ import { scrollToError } from "@/helpers/scrollToError";
 
 const photoButtonClass = `px-4 py-2 border-2 border-white hover:border-p200 hover:text-p200 transition ease-in-out duration-100 font-semibold text-sm`;
 
-export const UpdateProfileForm = ({
-    user,
-    className,
-    redirectTo,
-    buttonText,
-}: any) => {
+export const UpdateProfileForm = ({ user, className, buttonText }: any) => {
     const form = useForm<{
         _method: string;
         given_name: string;
@@ -51,10 +46,7 @@ export const UpdateProfileForm = ({
 
         form.post(route("user.profile"), {
             preserveScroll: "errors",
-            onSuccess: () => {
-                clearPhotoFileInput();
-                router.get(redirectTo);
-            },
+            onSuccess: () => clearPhotoFileInput(),
             onError: () => scrollToError(),
         });
     };

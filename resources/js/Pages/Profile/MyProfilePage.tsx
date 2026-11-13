@@ -13,7 +13,6 @@ const MyProfilePage = () => {
             <HeadingOne>{pageTitle}</HeadingOne>
             <UpdateProfileForm
                 user={page.props.auth.user!}
-                redirectTo={route("my.profile")}
                 buttonText={"Save"}
                 className={`max-w-2xl`}
             />
