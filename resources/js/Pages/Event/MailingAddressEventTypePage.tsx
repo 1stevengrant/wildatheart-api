@@ -52,7 +52,10 @@ const MailingAddressEventTypePage = () => {
         address2: address?.address2 ?? "",
         city: address?.city ?? "",
         state: address?.state ?? "",
-        country: address?.country ?? "US",
+        country:
+            !address?.country || address.country === "US"
+                ? "United States"
+                : address.country,
         phone: phoneNumber,
         zip: address?.zip ?? "",
     });
