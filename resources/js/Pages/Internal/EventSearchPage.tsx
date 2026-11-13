@@ -124,7 +124,7 @@ const EventSearchPage = () => {
         setIsSearching(true);
         setSearchError(null);
         router.get(
-            "/internal/event-search",
+            route("internal.event-search"),
             {
                 lat: selectedPlace?.center[1] ?? null,
                 lng: selectedPlace?.center[0] ?? null,
@@ -170,7 +170,7 @@ const EventSearchPage = () => {
         setCreatedTo(null);
         setSearchError(null);
         setHasSearched(false);
-        router.visit("/internal/event-search", {
+        router.visit(route("internal.event-search"), {
             preserveState: false,
             replace: true,
         });
@@ -183,7 +183,7 @@ const EventSearchPage = () => {
 
     const handleExport = () => {
         router.get(
-            "/internal/event-search/export",
+            route("internal.event-search.export"),
             {
                 lat: filters.lat,
                 lng: filters.lng,

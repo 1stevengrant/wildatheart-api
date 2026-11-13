@@ -78,7 +78,7 @@ const ReportingPage = () => {
         if (value) {
             setReportDate(value);
             router.get(
-                "/internal/reporting",
+                route("internal.reporting"),
                 { date: toCalendarDate(value) },
                 { preserveState: true, preserveScroll: true }
             );

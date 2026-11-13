@@ -54,6 +54,17 @@ it('allows the user to update their profile', function () {
 
 });
 
+it('returns the user to the page the profile was saved from', function () {
+    $this->actingAs($this->user)
+        ->from(route('host.index'))
+        ->put(route('user.profile'), $this->newAttributes)
+        ->assertRedirect(route('host.index'));
+
+    $this->actingAs($this->user->fresh())
+        ->get(route('host.index'))
+        ->assertRedirect(route('host.eventType.select'));
+});
+
 test('updating profile requires first name', function () {
     $this->actingAs($this->user)
         ->put(route('user.profile'), array_merge($this->newAttributes, ['given_name' => '']))

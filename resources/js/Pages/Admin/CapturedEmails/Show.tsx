@@ -41,9 +41,13 @@ const Show = () => {
 
     const handleDelete = () => {
         if (confirm("Are you sure you want to delete this email?")) {
-            router.delete(`/internal/emails/${email.uuid}`, {
-                onSuccess: () => router.visit("/internal/emails"),
-            });
+            router.delete(
+                route("internal.captured-emails.destroy", email.uuid),
+                {
+                    onSuccess: () =>
+                        router.visit(route("internal.captured-emails.index")),
+                }
+            );
         }
     };
 
@@ -71,7 +75,7 @@ const Show = () => {
             <div className="p-8">
                 <div className="mb-4 flex justify-between items-center">
                     <a
-                        href="/internal/emails"
+                        href={route("internal.captured-emails.index")}
                         className="text-blue-600 hover:text-blue-900"
                     >
                         ← Back to Emails

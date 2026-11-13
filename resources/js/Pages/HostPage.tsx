@@ -20,10 +20,7 @@ const HostPage = () => {
                             We're stoked you want to host an event! Just a few
                             questions.
                         </HeadingOne>
-                        <UpdateProfileForm
-                            redirectTo={route("host.eventType.select")}
-                            user={page.props.auth.user!}
-                        />
+                        <UpdateProfileForm user={page.props.auth.user!} />
                     </div>
                 </LeftColumn>
                 <RightColumn className={`bg-campfire bg-cover bg-center`}>
