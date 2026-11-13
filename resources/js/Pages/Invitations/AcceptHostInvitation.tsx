@@ -6,6 +6,7 @@ import { singular } from "pluralize";
 import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
 import { CompleteProfileModal } from "@/Components/Modals/CompleteProfileModal";
 import { HeadingOne } from "@/Components/Type/HeadingOne";
+import { fromCalendarDate } from "@/helpers/calendarDate";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { HostDashboardLayout } from "@/Layouts/HostDashboardLayout";
 
@@ -53,9 +54,9 @@ const AcceptHostInvitation = () => {
                         {invitation.event.start_date && (
                             <p className="text-n40">
                                 <strong>Date:</strong>{" "}
-                                {new Date(
+                                {fromCalendarDate(
                                     invitation.event.start_date
-                                ).toLocaleDateString("en-US", {
+                                )?.toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "long",
                                     day: "numeric",

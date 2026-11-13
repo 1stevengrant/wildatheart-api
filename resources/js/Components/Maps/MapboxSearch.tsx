@@ -42,6 +42,14 @@ export const MapboxSearch = ({
         [setSelected, onSelect, setQuery]
     );
 
+    const preventEnterSubmittingTheForm = (
+        event: React.KeyboardEvent<HTMLDivElement>
+    ) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    };
+
     const inputClassName = useMemo(() => {
         return `w-full border bg-n900 rounded-lg border-transparent py-2 pl-1 md:pl-2 text-sm leading-5 text-white placeholder:text-white focus:ring-0 focus:border-transparent ${
             query.trim().length > 0
@@ -57,7 +65,11 @@ export const MapboxSearch = ({
                 <span className={`text-r200 pl-1`}>*</span>
             </InputLabel>
             <Combobox value={selected} onChange={handleSelect}>
-                <div className="relative">
+                {/* Headless UI handles Enter while the options are open; this stops it submitting the surrounding form when they are closed. */}
+                <div
+                    className="relative"
+                    onKeyDown={preventEnterSubmittingTheForm}
+                >
                     <div className="relative flex w-full cursor-default items-center rounded-lg border bg-n900 overflow-hidden pl-2 md:pl-4 border-n400 focus-within:border-p200">
                         <MapPinIcon className="h-5 w-5 text-white" />
                         <Combobox.Input

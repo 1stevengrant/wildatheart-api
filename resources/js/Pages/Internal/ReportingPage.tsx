@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { router } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 
+import { fromCalendarDate, toCalendarDate } from "@/helpers/calendarDate";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { EmptyLayout } from "@/Layouts/EmptyLayout";
 
@@ -71,15 +72,14 @@ const StatCard = ({
 
 const ReportingPage = () => {
     const { eventStats, date, yearStats, year } = useTypedPage<Props>().props;
-    const [reportDate, setReportDate] = useState(new Date(date));
+    const [reportDate, setReportDate] = useState(fromCalendarDate(date));
 
     const handleReportDateChange = (value: Date | null) => {
         if (value) {
             setReportDate(value);
-            const formattedDate = value.toISOString().split("T")[0];
             router.get(
                 "/internal/reporting",
-                { date: formattedDate },
+                { date: toCalendarDate(value) },
                 { preserveState: true, preserveScroll: true }
             );
         }

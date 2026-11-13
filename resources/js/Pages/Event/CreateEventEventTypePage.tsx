@@ -26,10 +26,9 @@ import {
 import { circularButtonClasses } from "@/helpers/circularButtonClasses";
 import { LOCATION_TBC } from "@/helpers/locationTbc";
 import { scrollToError } from "@/helpers/scrollToError";
-import { useEventForm } from "@/Hooks/useEventForm";
+import { emptyEventLocation, useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import { useEventModal } from "@/Hooks/useEventModal";
-import { useEventState } from "@/Hooks/useEventState";
 import useTypedPage from "@/Hooks/useTypedPage";
 import { SidebarLayout } from "@/Layouts/SidebarLayout";
 
@@ -37,12 +36,6 @@ const CreateEventEventTypePage = () => {
     const page = useTypedPage();
     const { materialOrderItems, eventType } = page.props as any;
     const { user } = page.props.auth as any;
-
-    // Custom hooks
-    const { event, updateEventFromLocation } = useEventState({
-        user,
-        eventType,
-    });
 
     const {
         data,
@@ -53,15 +46,28 @@ const CreateEventEventTypePage = () => {
         handlePrivacyToggle,
         updateLocationData,
         setData,
-    } = useEventForm({ user, eventType });
+    } = useEventForm<App.Data.EventFormData & { place: string | null }>({
+        ...emptyEventLocation,
+        name: `${user.given_name}'s`,
+        frequency: "monthly",
+        is_private: false,
+        start_date: null,
+        end_date: null,
+        number_of_items_in_material_order: null,
+    });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            onLocationChange: (locationData) => {
-                updateLocationData(locationData);
-                updateEventFromLocation(locationData);
-            },
-        });
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        onLocationChange: updateLocationData,
+    });
+
+    const hasLocation = data.latitude !== null;
 
     const {
         confirmModalOpen,
@@ -95,14 +101,12 @@ const CreateEventEventTypePage = () => {
                         </Link>
                         <PrimaryButton
                             onClick={openConfirmModal}
-                            disabled={
-                                processing || event.location === LOCATION_TBC
-                            }
+                            disabled={processing || !hasLocation}
                         >
                             {processing && <Spinner />}
-                            {event.location === LOCATION_TBC
-                                ? "Pick a location to continue"
-                                : "Create Event & See Dashboard"}
+                            {hasLocation
+                                ? "Create Event & See Dashboard"
+                                : "Pick a location to continue"}
                             <ArrowRightIcon className="ml-2 h-4 w-4" />
                         </PrimaryButton>
                     </EmptyLayoutFooter>
@@ -118,7 +122,7 @@ const CreateEventEventTypePage = () => {
                             more info.
                         </p>
 
-                        <form>
+                        <form onSubmit={(event) => event.preventDefault()}>
                             <MapboxSearch
                                 className="mt-4"
                                 onSelect={selectPlace}
@@ -136,6 +140,7 @@ const CreateEventEventTypePage = () => {
                                 className="mt-4"
                                 height="h-[300px] md:h-[40vh]"
                             />
+                            <InputError message={locationError ?? undefined} />
 
                             <div className="mt-4">
                                 <DatePickerInput
@@ -216,7 +221,7 @@ const CreateEventEventTypePage = () => {
                     setOpen={setConfirmModalOpen}
                     data={data}
                     eventTypeName={eventType.name}
-                    eventLocation={event.location}
+                    eventLocation={data.city || LOCATION_TBC}
                     processing={processing}
                     onConfirm={confirmSubmit}
                 />

@@ -14,7 +14,7 @@ import {
     latestEventStartDate,
     toCalendarDate,
 } from "@/helpers/calendarDate";
-import { useEventForm } from "@/Hooks/useEventForm";
+import { eventLocationFrom, useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import type { SharedUser } from "@/types";
 
@@ -38,32 +38,26 @@ export const EditScheduledEventForm = ({
         updateLocationData,
         setData,
     } = useEventForm<App.Data.UpdateEventData>({
-        initialData: {
-            state: event.state,
-            latitude: event.latitude,
-            longitude: event.longitude,
-            country: event.country,
-            region: event.region,
-            district: event.district,
-            locality: event.locality,
-            neighborhood: event.neighborhood,
-            street_address: event.street_address,
-            city: event.city,
-            zip: event.zip,
-            is_private: event.is_private ?? undefined,
-            start_date: event.start_date?.split("T")[0],
-        },
-        user,
+        ...eventLocationFrom(event),
+        is_private: event.is_private,
+        start_date: event.start_date?.split("T")[0] ?? "",
+        end_date: null,
     });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            initialLocation: {
-                latitude: event.latitude,
-                longitude: event.longitude,
-            },
-            onLocationChange: updateLocationData,
-        });
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        initialLocation: {
+            latitude: event.latitude,
+            longitude: event.longitude,
+        },
+        onLocationChange: updateLocationData,
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -99,6 +93,7 @@ export const EditScheduledEventForm = ({
                 }
                 className="mt-4"
             />
+            <InputError message={locationError ?? undefined} />
 
             <div className="mt-4">
                 <label className="flex items-center space-x-4 hover:cursor-pointer">

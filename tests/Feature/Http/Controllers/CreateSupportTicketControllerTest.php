@@ -8,7 +8,7 @@ test('the support page gets the event types the home map needs', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('SupportRequestPage')
             ->has('allEventTypes')
-            ->has('experienceTypes')
-            ->has('retreatTypes')
-            ->has('fireTypes'));
+            ->has('fireTypes')
+            ->missing('experienceTypes')
+            ->missing('retreatTypes'));
 });

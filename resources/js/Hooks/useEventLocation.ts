@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 
-import { lookupLocation } from "@/helpers/lookupLocation";
+import { GeocodedFeature, lookupLocation } from "@/helpers/lookupLocation";
 import { objectIsEmpty } from "@/helpers/objectIsEmpty";
 import { oneHour } from "@/helpers/timeConstants";
 import { useMapData } from "@/Hooks/useMapData";
 import { MapboxPlace } from "@/types/MapboxPlace";
 
-interface LocationData {
+export interface LocationData {
     country?: string;
     region?: string;
     state?: string;
@@ -43,7 +43,11 @@ export const useEventLocation = ({
               }
             : null
     );
+    const [locationError, setLocationError] = useState<string | null>(null);
+    const lookupRef = useRef<AbortController | null>(null);
     const { zoom, handleUserLevelZoom } = useMapData();
+
+    useEffect(() => () => lookupRef.current?.abort(), []);
 
     const flyTo = (
         coordinates: [number, number],
@@ -117,47 +121,62 @@ export const useEventLocation = ({
     };
 
     const addEvent = async (lng: number, lat: number) => {
-        setMarker({ lat, lng });
-        const location = await lookupLocation(lng, lat);
+        lookupRef.current?.abort();
+        const controller = new AbortController();
+        lookupRef.current = controller;
 
-        let country = location.find((feature: { id: string | string[] }) =>
+        const location = await lookupLocation(lng, lat, controller.signal);
+
+        if (controller.signal.aborted) {
+            return;
+        }
+
+        if (!location) {
+            setLocationError(
+                "We couldn't look up that location. Please try again."
+            );
+
+            return;
+        }
+
+        setLocationError(null);
+
+        let country = location.find((feature: GeocodedFeature) =>
             feature.id.includes("country")
         )?.text;
-        const region = location.find((feature: { id: string | string[] }) =>
+        const region = location.find((feature: GeocodedFeature) =>
             feature.id.includes("region")
         )?.text;
-        const postcode = location.find((feature: { id: string | string[] }) =>
+        const postcode = location.find((feature: GeocodedFeature) =>
             feature.id.includes("postcode")
         )?.text;
-        const district = location.find((feature: { id: string | string[] }) =>
+        const district = location.find((feature: GeocodedFeature) =>
             feature.id.includes("district")
         )?.text;
-        const place = location.find((feature: { id: string | string[] }) =>
+        const place = location.find((feature: GeocodedFeature) =>
             feature.id.includes("place")
         )?.text;
-        const locality = location.find((feature: { id: string | string[] }) =>
+        const locality = location.find((feature: GeocodedFeature) =>
             feature.id.includes("locality")
         )?.text;
-        const neighborhood = location.find(
-            (feature: { id: string | string[] }) =>
-                feature.id.includes("neighborhood")
+        const neighborhood = location.find((feature: GeocodedFeature) =>
+            feature.id.includes("neighborhood")
         )?.text;
-        const streetAddress = location.find(
-            (feature: { id: string | string[] }) =>
-                feature.id.includes("address")
+        const streetAddress = location.find((feature: GeocodedFeature) =>
+            feature.id.includes("address")
         )?.text;
-        const poi = location.find((feature: { id: string | string[] }) =>
+        const poi = location.find((feature: GeocodedFeature) =>
             feature.id.includes("poi")
         )?.text;
 
         // Fallback: extract country from feature context (city-states like Singapore)
         if (!country) {
             const featureWithCountryContext = location.find(
-                (feature: { context?: Array<{ id: string; text: string }> }) =>
+                (feature: GeocodedFeature) =>
                     feature.context?.some((ctx) => ctx.id.includes("country"))
             );
-            country = featureWithCountryContext?.context?.find(
-                (ctx: { id: string }) => ctx.id.includes("country")
+            country = featureWithCountryContext?.context?.find((ctx) =>
+                ctx.id.includes("country")
             )?.text;
         }
 
@@ -195,9 +214,8 @@ export const useEventLocation = ({
             zip: postcode,
         };
 
+        setMarker({ lat, lng });
         onLocationChange?.(locationData);
-
-        return locationData;
     };
 
     const handleMapClick = (event: any) => {
@@ -234,7 +252,6 @@ export const useEventLocation = ({
         handleMapClick,
         handleUserLevelZoom,
         selectPlace,
-        addEvent,
-        lookupCurrentLocation,
+        locationError,
     };
 };

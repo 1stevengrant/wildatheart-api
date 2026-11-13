@@ -22,10 +22,9 @@ import { Spinner } from "@/Components/Ui/Spinner";
 import { EventTypeCaptivatingFires } from "@/helpers/eventNames";
 import { LOCATION_TBC } from "@/helpers/locationTbc";
 import { scrollToError } from "@/helpers/scrollToError";
-import { useEventForm } from "@/Hooks/useEventForm";
+import { emptyEventLocation, useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import { useEventModal } from "@/Hooks/useEventModal";
-import { useEventState } from "@/Hooks/useEventState";
 import useTypedPage from "@/Hooks/useTypedPage";
 
 export const FireInformation = ({ user }: any) => {
@@ -33,22 +32,36 @@ export const FireInformation = ({ user }: any) => {
     const page = useTypedPage();
     const eventType = page.props.eventType as any;
 
-    // Custom hooks
-    const { event, updateEvent, updateEventFromLocation } = useEventState({
-        user,
-        eventType,
+    const { data, setData, post, processing, errors, updateLocationData } =
+        useEventForm<App.Data.FireEventData>({
+            ...emptyEventLocation,
+            name: `${user.given_name}'s`,
+            frequency: "monthly",
+            is_private: false,
+        });
+
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        onLocationChange: updateLocationData,
     });
 
-    const { data, setData, post, processing, errors, updateLocationData } =
-        useEventForm({ user, eventType });
+    const hasLocation = data.latitude !== null;
+    const eventLocation = data.city || LOCATION_TBC;
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            onLocationChange: (locationData) => {
-                updateLocationData(locationData);
-                updateEventFromLocation(locationData);
-            },
-        });
+    const preview = {
+        image: eventType.image,
+        name: `${data.name} ${singular(eventType.name)}`,
+        badge: data.frequency,
+        location: eventLocation,
+        hostName: user.fullname,
+        hostPhoto: user.image,
+    };
 
     const {
         confirmModalOpen,
@@ -101,10 +114,9 @@ export const FireInformation = ({ user }: any) => {
                                 value={data.name}
                                 autoComplete="off"
                                 isFocused={true}
-                                onChange={(e) => {
-                                    setData("name", e.target.value);
-                                    updateEvent({ name: e.target.value });
-                                }}
+                                onChange={(e) =>
+                                    setData("name", e.target.value)
+                                }
                             />
                             <Instruction>
                                 This is the name that will be displayed on your
@@ -126,14 +138,13 @@ export const FireInformation = ({ user }: any) => {
                                 name="frequency"
                                 value={data.frequency || ""}
                                 className="select-input"
-                                onChange={(e) => {
+                                onChange={(e) =>
                                     setData(
                                         "frequency",
                                         e.target
                                             .value as App.Enums.Event.FrequencyEnum
-                                    );
-                                    updateEvent({ frequency: e.target.value });
-                                }}
+                                    )
+                                }
                             >
                                 <FrequencyOptions />
                             </select>
@@ -143,11 +154,7 @@ export const FireInformation = ({ user }: any) => {
                             <InputError message={errors.frequency} />
                         </div>
 
-                        <EventDisplay
-                            className="md:hidden mt-4"
-                            event={event}
-                            frequency={data.frequency}
-                        />
+                        <EventDisplay className="md:hidden mt-4" {...preview} />
 
                         <MapboxSearch className="mt-4" onSelect={selectPlace} />
 
@@ -163,20 +170,18 @@ export const FireInformation = ({ user }: any) => {
                             isFire
                             className="mt-4"
                         />
+                        <InputError message={locationError ?? undefined} />
 
                         <div className="mt-4 space-y-4">
                             <PrimaryButton
-                                disabled={
-                                    processing ||
-                                    event.location === LOCATION_TBC
-                                }
+                                disabled={processing || !hasLocation}
                                 className="w-full flex items-center justify-center"
                                 type="submit"
                             >
                                 {processing && <Spinner />}
-                                {event.location === LOCATION_TBC
-                                    ? "Pick a location to continue"
-                                    : "Next"}
+                                {hasLocation
+                                    ? "Next"
+                                    : "Pick a location to continue"}
                             </PrimaryButton>
                             <Link
                                 className="text-n40 w-full inline-block text-center"
@@ -193,8 +198,7 @@ export const FireInformation = ({ user }: any) => {
                         <EventDisplay
                             style={{ marginTop: startDatePosition }}
                             className="max-w-[350px] mx-auto hidden lg:flex"
-                            event={event}
-                            frequency={data.frequency}
+                            {...preview}
                         />
                     </div>
                 </RightColumn>
@@ -204,7 +208,7 @@ export const FireInformation = ({ user }: any) => {
                 open={confirmModalOpen}
                 setOpen={setConfirmModalOpen}
                 data={data}
-                eventLocation={event.location}
+                eventLocation={eventLocation}
                 processing={processing}
                 onConfirm={confirmSubmit}
             />

@@ -12,7 +12,7 @@ import { Instruction } from "@/Components/Forms/Instruction";
 import TextInput from "@/Components/Forms/TextInput";
 import { FrequencyOptions } from "@/Components/FrequencyOptions";
 import { MapboxSearch } from "@/Components/Maps/MapboxSearch";
-import { useEventForm } from "@/Hooks/useEventForm";
+import { eventLocationFrom, useEventForm } from "@/Hooks/useEventForm";
 import { useEventLocation } from "@/Hooks/useEventLocation";
 import type { SharedUser } from "@/types";
 
@@ -26,33 +26,26 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
 
     const { data, errors, put, updateLocationData, setData } =
         useEventForm<App.Data.FireEventData>({
-            initialData: {
-                name: event.name || `${user.given_name}'s`,
-                state: event.state,
-                latitude: event.latitude,
-                longitude: event.longitude,
-                country: event.country,
-                region: event.region,
-                district: event.district,
-                locality: event.locality,
-                neighborhood: event.neighborhood,
-                street_address: event.street_address,
-                city: event.city,
-                zip: event.zip,
-                is_private: event.is_private ?? undefined,
-                frequency: event.frequency ?? undefined,
-            },
-            user,
+            ...eventLocationFrom(event),
+            name: event.name || `${user.given_name}'s`,
+            frequency: event.frequency ?? "monthly",
+            is_private: event.is_private,
         });
 
-    const { mapRef, marker, handleMapClick, handleUserLevelZoom, selectPlace } =
-        useEventLocation({
-            initialLocation: {
-                latitude: event.latitude,
-                longitude: event.longitude,
-            },
-            onLocationChange: updateLocationData,
-        });
+    const {
+        mapRef,
+        marker,
+        handleMapClick,
+        handleUserLevelZoom,
+        selectPlace,
+        locationError,
+    } = useEventLocation({
+        initialLocation: {
+            latitude: event.latitude,
+            longitude: event.longitude,
+        },
+        onLocationChange: updateLocationData,
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -115,6 +108,7 @@ export const EditFireForm = ({ event, user }: EditFireFormProps) => {
                 isFire
                 className="mt-4"
             />
+            <InputError message={locationError ?? undefined} />
 
             <div className="mt-4 space-x-4">
                 <PrimaryButton>

@@ -35,6 +35,17 @@ test('home page event types are ordered by their model order column', function (
         ->toBeLessThan(array_search($laterRetreat->id, $retreatIds, true));
 });
 
+test('home page only sends the event type props the map reads', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('HomePage')
+            ->has('allEventTypes')
+            ->has('fireTypes')
+            ->missing('experienceTypes')
+            ->missing('retreatTypes'));
+});
+
 test('home page fire types are the event types in the fire group', function () {
     cache()->forget('fireTypes.v2');
 
