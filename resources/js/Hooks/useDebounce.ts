@@ -1,8 +1,28 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
-import debounce from "lodash/debounce";
-
-export const useDebounce = (
-    callback: (...args: any[]) => void,
+export const useDebounce = <Args extends unknown[]>(
+    callback: (...args: Args) => void,
     delay: number
-) => useCallback(debounce(callback, delay), []);
+) => {
+    const callbackRef = useRef(callback);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+        undefined
+    );
+
+    useEffect(() => {
+        callbackRef.current = callback;
+    }, [callback]);
+
+    useEffect(() => () => clearTimeout(timeoutRef.current), []);
+
+    return useCallback(
+        (...args: Args) => {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = setTimeout(
+                () => callbackRef.current(...args),
+                delay
+            );
+        },
+        [delay]
+    );
+};

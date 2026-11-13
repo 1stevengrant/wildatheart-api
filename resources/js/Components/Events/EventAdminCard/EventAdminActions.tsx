@@ -7,7 +7,6 @@ import {
     UserIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "@inertiajs/react";
-import { useRecoilState } from "recoil";
 
 import { EventDeleteModal } from "@/Components/Events/EventAdminCard/Modals/EventDeleteModal";
 import { EventPublicPrivateModal } from "@/Components/Events/EventAdminCard/Modals/EventPublicPrivateModal";
@@ -19,35 +18,13 @@ import {
     eventAdminActionButtonTextClass,
 } from "@/helpers/eventAdminActionButtonClass";
 import { fireTypeGroup } from "@/helpers/eventTypeGroups";
+import { useCopyToClipboard } from "@/Hooks/useCopyToClipboard";
 import { useOnClickOutside } from "@/Hooks/useOnClickOutside";
-import { reactNotificationState } from "@/store";
 
 export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
     const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
     const actionDrawerRef = useOnClickOutside(() => setActionDrawerOpen(false));
-    const [reactNotifications, setReactNotifications] = useRecoilState(
-        reactNotificationState
-    );
-
-    const copyToClipboard = async (): Promise<void> => {
-        try {
-            await navigator.clipboard.writeText(event.url);
-            const newNotification = {
-                message: "URL copied to clipboard!",
-                type: "success",
-            };
-            setReactNotifications([...reactNotifications, newNotification]);
-        } catch {
-            const newErrorNotification = {
-                message: "Oops, unable to copy",
-                type: "error",
-            };
-            setReactNotifications([
-                ...reactNotifications,
-                newErrorNotification,
-            ]);
-        }
-    };
+    const copyToClipboard = useCopyToClipboard();
 
     const [openEventDeleteModal, setOpenEventDeleteModal] = useState(false);
     const [openEventUnpublishModal, setOpenEvenUnpublishModal] =
@@ -113,7 +90,7 @@ export const EventAdminActions = ({ event }: { event: App.Data.EventData }) => {
                     <button
                         className={eventAdminActionButtonClass}
                         onClick={() => {
-                            copyToClipboard().then(() => {});
+                            copyToClipboard(event.url);
                             setActionDrawerOpen(false);
                         }}
                     >

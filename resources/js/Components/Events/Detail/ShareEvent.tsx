@@ -3,14 +3,13 @@ import React, { useState } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { usePage } from "@inertiajs/react";
-import { useSetRecoilState } from "recoil";
 
 import { Modal } from "@/Components/Ui/Modal";
-import { reactNotificationState } from "@/store";
+import { useCopyToClipboard } from "@/Hooks/useCopyToClipboard";
 
 export const ShareEvent = ({ className = "" }: { className?: string }) => {
     const [isOpen, setOpen] = useState(false);
-    const setReactNotifications = useSetRecoilState(reactNotificationState);
+    const copyToClipboard = useCopyToClipboard();
     const page = usePage();
     const event = page.props.event as App.Data.EventData;
     const meta = page.props.meta as App.Data.SocialMetaData | null;
@@ -81,25 +80,9 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
         setOpen(false);
     };
 
-    const copyToClipboard = async (): Promise<void> => {
-        try {
-            await navigator.clipboard.writeText(shareUrl);
-            setReactNotifications((prevState) => [
-                ...prevState,
-                {
-                    message: "URL copied to clipboard!",
-                    type: "success",
-                },
-            ]);
+    const copyShareUrl = async (): Promise<void> => {
+        if (await copyToClipboard(shareUrl)) {
             setOpen(false);
-        } catch {
-            setReactNotifications((prevState) => [
-                ...prevState,
-                {
-                    message: "Oops, unable to copy",
-                    type: "error",
-                },
-            ]);
         }
     };
 
@@ -138,7 +121,7 @@ export const ShareEvent = ({ className = "" }: { className?: string }) => {
                     ))}
                     <button
                         className="col-span-2 rounded-lg border px-2 py-1 text-center text-white transition-colors duration-100 ease-in-out border-p200 bg-p200 hover:border-black hover:bg-black"
-                        onClick={copyToClipboard}
+                        onClick={copyShareUrl}
                     >
                         Copy URL to Clipboard
                     </button>

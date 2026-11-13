@@ -15,8 +15,7 @@ import { clsx } from "clsx";
 import { useRecoilState } from "recoil";
 
 import { AuthUserMenu } from "@/Components/Layout/Elements/AuthUserMenu";
-import { BackendNotifications } from "@/Components/Layout/Notifications/BackendNotifications";
-import { ReactNotifications } from "@/Components/Layout/Notifications/ReactNotifications";
+import { Notifications } from "@/Components/Layout/Notifications/Notifications";
 import { CompleteProfileModal } from "@/Components/Modals/CompleteProfileModal";
 import { LogoutModal } from "@/Components/Modals/LogoutModal";
 import { SupportModal } from "@/Components/Modals/SupportModal";
@@ -329,8 +328,7 @@ export const HostDashboardLayout = ({
                     </main>
                 </div>
             </div>
-            <BackendNotifications />
-            <ReactNotifications />
+            <Notifications />
         </>
     );
 };
