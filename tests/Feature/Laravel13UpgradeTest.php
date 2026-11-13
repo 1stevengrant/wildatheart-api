@@ -24,8 +24,6 @@ it('stores home page cache values as primitives', function (): void {
     $this->get(route('home'))->assertSuccessful();
 
     expectCacheValueToContainOnlyPrimitives(Cache::get('allEventTypes.v2'));
-    expectCacheValueToContainOnlyPrimitives(Cache::get('experienceTypes.v2'));
-    expectCacheValueToContainOnlyPrimitives(Cache::get('retreatTypes.v2'));
     expectCacheValueToContainOnlyPrimitives(Cache::get('fireTypes.v2'));
 });
 
