@@ -6,6 +6,7 @@ import { router } from "@inertiajs/react";
 import { DatePickerInput } from "@mantine/dates";
 
 import Pagination from "@/Components/Pagination";
+import { fromCalendarDate, toCalendarDate } from "@/helpers/calendarDate";
 import { useDebounce } from "@/Hooks/useDebounce";
 import { useMapboxSearch } from "@/Hooks/useMapboxSearch";
 import useTypedPage from "@/Hooks/useTypedPage";
@@ -57,12 +58,10 @@ const EventSearchPage = () => {
     const [privacy, setPrivacy] =
         useState<App.Enums.Internal.EventVisibilityFilter>(filters.privacy);
     const [createdFrom, setCreatedFrom] = useState<Date | null>(
-        filters.created_from
-            ? new Date(filters.created_from + "T00:00:00")
-            : null
+        fromCalendarDate(filters.created_from)
     );
     const [createdTo, setCreatedTo] = useState<Date | null>(
-        filters.created_to ? new Date(filters.created_to + "T00:00:00") : null
+        fromCalendarDate(filters.created_to)
     );
 
     const [hasSearched, setHasSearched] = useState(
@@ -136,12 +135,8 @@ const EventSearchPage = () => {
                 active_only: activeOnly,
                 include_deleted: includeDeleted,
                 privacy: privacy,
-                created_from: createdFrom
-                    ? createdFrom.toISOString().split("T")[0]
-                    : null,
-                created_to: createdTo
-                    ? createdTo.toISOString().split("T")[0]
-                    : null,
+                created_from: toCalendarDate(createdFrom),
+                created_to: toCalendarDate(createdTo),
             },
             {
                 preserveState: true,
