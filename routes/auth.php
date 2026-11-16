@@ -55,8 +55,8 @@ Route::middleware(['auth'])->group(function () {
             });
 
             Route::prefix('gift')->name('gift.')->group(function () {
-                Route::get('{event}', [SendGiftController::class, 'index'])->name('index');
-                Route::post('{event}', [SendGiftController::class, 'store'])->name('store');
+                Route::get('{event}', [SendGiftController::class, 'index'])->name('index')->can('requestGift', 'event');
+                Route::post('{event}', [SendGiftController::class, 'store'])->name('store')->can('requestGift', 'event');
             });
 
             Route::prefix('host/{eventType}')->name('host.eventType.')->group(function () {

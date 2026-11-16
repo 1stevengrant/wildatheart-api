@@ -41,4 +41,9 @@ class EventPolicy
         return $event->isOwnedOrManagedBy($user)
             || $user->hasRole(UserRoleEnum::Admin);
     }
+
+    public function requestGift(User $user, Event $event): bool
+    {
+        return $user->id === $event->user_id;
+    }
 }

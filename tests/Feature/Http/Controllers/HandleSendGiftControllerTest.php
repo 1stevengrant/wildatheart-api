@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use App\Models\Event;
+use App\Models\Address;
 use App\Jobs\PostToZapier;
 use App\Mail\Event\GiftRequested;
 use Illuminate\Support\Facades\Bus;
@@ -56,4 +58,41 @@ it('updates zapier about the request', function () {
         ->post(route('gift.store', $this->event), $this->addressData);
 
     Bus::assertDispatched(PostToZapier::class);
+});
+
+it('forbids a user who does not own the event', function () {
+    $this->actingAs(User::factory()->create())
+        ->post(route('gift.store', $this->event), $this->addressData)
+        ->assertForbidden();
+
+    expect($this->event->fresh()->gift_requested)->toBeFalse();
+    $this->assertDatabaseMissing('addresses', ['event_id' => $this->event->id]);
+    Mail::assertNotQueued(GiftRequested::class);
+    Bus::assertNotDispatched(PostToZapier::class);
+});
+
+it('forbids a co-host of the event', function () {
+    $manager = User::factory()->create();
+    $this->event->managers()->attach($manager);
+
+    $this->actingAs($manager)
+        ->post(route('gift.store', $this->event), $this->addressData)
+        ->assertForbidden();
+
+    expect($this->event->fresh()->gift_requested)->toBeFalse();
+});
+
+it('processes a repeated submission only once', function () {
+    $this->actingAs($this->event->user)
+        ->post(route('gift.store', $this->event), $this->addressData)
+        ->assertRedirect(route('my.events.active'))
+        ->assertSessionHas('notifications.message', 'Your free gift has been requested!');
+
+    $this->actingAs($this->event->user)
+        ->post(route('gift.store', $this->event), $this->addressData)
+        ->assertForbidden();
+
+    expect(Address::query()->where('event_id', $this->event->id)->count())->toBe(1);
+    Mail::assertQueued(GiftRequested::class, 1);
+    Bus::assertDispatchedTimes(PostToZapier::class, 1);
 });
