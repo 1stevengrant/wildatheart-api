@@ -52,6 +52,8 @@ class SyncCoHostInvitations
                 continue;
             }
 
+            $event->deleteAcceptedManagerInvitation($email);
+
             EventManagerInvitation::create([
                 'event_id' => $event->id,
                 'email' => $email,

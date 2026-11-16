@@ -13,6 +13,7 @@ use App\Actions\Event\InviteEventManager;
 use App\Actions\Event\RemoveEventManager;
 use App\Exceptions\EventManagerException;
 use App\Jobs\WeGive\FindOrCreateDonorJob;
+use App\Actions\Event\SyncCoHostInvitations;
 use App\Actions\Event\AcceptEventManagerInvitation;
 
 beforeEach(function () {
@@ -70,6 +71,57 @@ describe('inviting a manager', function () {
         'an existing manager' => [fn ($test) => $test->coHost->email, 'This user is already a host for this event.'],
         'an email with a pending invitation' => [fn () => 'PENDING@example.com', 'An invitation has already been sent to this email address.'],
     ]);
+});
+
+describe('re-inviting a removed host', function () {
+    beforeEach(function () {
+        $this->invitee = User::factory()->create();
+        $invitation = inviteToEvent($this->event, $this->invitee->email);
+
+        AcceptEventManagerInvitation::run($invitation, $this->invitee);
+        RemoveEventManager::run($this->event, $this->owner, (string) $this->invitee->id);
+
+        Mail::fake();
+    });
+
+    it('replaces the accepted invitation with a fresh pending one', function () {
+        $result = InviteEventManager::run($this->event, $this->owner, $this->invitee->email);
+
+        $invitations = EventManagerInvitation::query()
+            ->withoutGlobalScope('pending')
+            ->where('event_id', $this->event->id)
+            ->get();
+
+        expect($invitations->modelKeys())->toBe([$result->invitation->id])
+            ->and($result->invitation->isPending())->toBeTrue();
+
+        Mail::assertQueued(HostInvitationMail::class, fn (HostInvitationMail $mail) => $mail->hasTo($this->invitee->email));
+    });
+
+    it('lets the host accept the new invitation', function () {
+        $result = InviteEventManager::run($this->event, $this->owner, $this->invitee->email);
+
+        AcceptEventManagerInvitation::run($result->invitation, $this->invitee);
+
+        expect($this->event->fresh()->managers->contains($this->invitee))->toBeTrue();
+    });
+
+    it('replaces the accepted invitation when co-hosts are synced from the event form', function () {
+        SyncCoHostInvitations::run($this->event, [$this->invitee->email], $this->owner);
+
+        expect($this->event->pendingManagerInvitations()->pluck('email')->all())->toBe([$this->invitee->email])
+            ->and(EventManagerInvitation::query()->withoutGlobalScope('pending')->where('event_id', $this->event->id)->count())->toBe(1);
+    });
+
+    it('keeps accepted invitations for other events', function () {
+        $otherEvent = Event::factory()->fires()->approved()->for($this->owner)->create();
+        $otherInvitation = inviteToEvent($otherEvent, $this->invitee->email);
+        AcceptEventManagerInvitation::run($otherInvitation, $this->invitee);
+
+        InviteEventManager::run($this->event, $this->owner, $this->invitee->email);
+
+        expect($otherInvitation->fresh()->isAccepted())->toBeTrue();
+    });
 });
 
 describe('removing a manager', function () {

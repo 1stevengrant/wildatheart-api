@@ -38,6 +38,8 @@ class InviteEventManager
                 throw EventManagerException::alreadyInvited();
             }
 
+            $lockedEvent->deleteAcceptedManagerInvitation($email);
+
             return EventManagerInvitation::create([
                 'event_id' => $lockedEvent->id,
                 'email' => $email,
