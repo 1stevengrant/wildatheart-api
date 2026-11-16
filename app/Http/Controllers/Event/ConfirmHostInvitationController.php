@@ -2,67 +2,30 @@
 
 namespace App\Http\Controllers\Event;
 
-use App\Mail\HostAddedMail;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Jobs\WeGive\TagDonorJob;
-use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 use App\Models\EventManagerInvitation;
-use App\Jobs\WeGive\FindOrCreateDonorJob;
+use App\Exceptions\EventManagerException;
+use Illuminate\Container\Attributes\CurrentUser;
+use App\Actions\Event\AcceptEventManagerInvitation;
 
 class ConfirmHostInvitationController extends Controller
 {
     /**
      * Process the host invitation acceptance
      */
-    public function __invoke(Request $request, EventManagerInvitation $invitation)
+    public function __invoke(Request $request, EventManagerInvitation $invitation, #[CurrentUser] User $user)
     {
-        // Check if this invitation is for the logged-in user
-        if (auth()->user()->email !== $invitation->email) {
+        try {
+            $event = AcceptEventManagerInvitation::run($invitation, $user);
+        } catch (EventManagerException $exception) {
             return to_route('home')->with([
                 'notifications' => [
-                    'message' => 'This invitation is for a different email address.',
+                    'message' => $exception->getMessage(),
                     'type' => 'error',
                 ],
             ]);
-        }
-
-        $event = $invitation->event;
-
-        if ($event === null) {
-            return to_route('home')->with([
-                'notifications' => [
-                    'message' => 'This event is no longer available.',
-                    'type' => 'error',
-                ],
-            ]);
-        }
-
-        // Activate the invitation
-        if ($invitation->isPending()) {
-            $eventOwner = $event->user;
-
-            $invitation->event->managers()->attach(auth()->id());
-
-            $invitation->markAsAccepted();
-
-            // Send notification to the new host
-            Mail::to(auth()->user()->email)->send(new HostAddedMail($event, auth()->user(), $eventOwner));
-
-            // Send notification to the event owner
-            Mail::to($eventOwner->email)->send(new HostAddedMail($event, auth()->user(), $eventOwner));
-
-            // Tag the new co-host in WeGive
-            Bus::chain([
-                new FindOrCreateDonorJob(
-                    donorModel: auth()->user(),
-                ),
-                new TagDonorJob(
-                    taggable: auth()->user(),
-                    weGiveTagId: $event->eventType->wegive_tag,
-                ),
-            ])->dispatch();
         }
 
         return to_route('my.events.edit', $event)->with([

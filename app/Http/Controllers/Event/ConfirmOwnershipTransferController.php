@@ -2,37 +2,32 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\EventOwnershipTransfer;
-use App\Actions\Event\TransferEventOwnership;
+use Illuminate\Container\Attributes\CurrentUser;
+use App\Actions\Event\AcceptEventOwnershipTransfer;
+use App\Exceptions\EventOwnershipTransferException;
 
 class ConfirmOwnershipTransferController extends Controller
 {
     /**
      * Process the ownership transfer acceptance
      */
-    public function __invoke(Request $request, EventOwnershipTransfer $transfer)
+    public function __invoke(Request $request, EventOwnershipTransfer $transfer, #[CurrentUser] User $user)
     {
-        // Check if this transfer is for the logged-in user
-        if (auth()->user()->email !== $transfer->email) {
+        try {
+            $event = AcceptEventOwnershipTransfer::run($transfer, $user);
+        } catch (EventOwnershipTransferException $exception) {
             return to_route('home')->with([
                 'notifications' => [
-                    'message' => 'This ownership transfer is for a different email address.',
+                    'message' => $exception->getMessage(),
                     'type' => 'error',
                 ],
             ]);
         }
 
-        // Store event reference before transfer (transfer will be deleted)
-        $event = $transfer->event;
-
-        // Transfer ownership
-        if ($transfer->isPending()) {
-            TransferEventOwnership::run($transfer, auth()->user());
-        }
-
-        // Redirect to the event (use stored $event since transfer is deleted)
         return to_route('my.events.edit', $event)->with([
             'notifications' => [
                 'message' => "You are now the owner of {$event->name}!",
