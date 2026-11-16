@@ -12,7 +12,7 @@ import { InputError } from "@/Components/Forms/InputError";
 import { InputLabel } from "@/Components/Forms/InputLabel";
 import { Instruction } from "@/Components/Forms/Instruction";
 import { SwitchComponent } from "@/Components/Forms/SwitchComponent";
-import TextInput from "@/Components/Forms/TextInput";
+import { TextField } from "@/Components/Forms/TextField";
 import { LeftColumn } from "@/Components/Layout/Elements/LeftColumn";
 import { RightColumn } from "@/Components/Layout/Elements/RightColumn";
 import { TwoColumnWrapper } from "@/Components/Layout/Elements/TwoColumnWrapper";
@@ -71,116 +71,71 @@ const ConnectWithHostPage = () => {
 
                         <form onSubmit={handleSubmit} className={"mt-6"}>
                             <FormGrid className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <InputLabel
-                                        htmlFor="given_name"
-                                        value="First Name"
-                                        required
-                                    />
-                                    <TextInput
-                                        id="given_name"
-                                        name="given_name"
-                                        value={form.data.given_name}
-                                        autoComplete="given-name"
-                                        isFocused={true}
-                                        onChange={(e) =>
-                                            form.setData(
-                                                "given_name",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <InputError
-                                        message={form.errors.given_name}
-                                    />
-                                </div>
+                                <TextField
+                                    id="given_name"
+                                    label="First Name"
+                                    required
+                                    value={form.data.given_name}
+                                    autoComplete="given-name"
+                                    isFocused={true}
+                                    onChange={(value) =>
+                                        form.setData("given_name", value)
+                                    }
+                                    error={form.errors.given_name}
+                                />
 
-                                <div>
-                                    <InputLabel
-                                        htmlFor="family_name"
-                                        value="Last Name"
-                                        required
-                                    />
-                                    <TextInput
-                                        id="family_name"
-                                        name="family_name"
-                                        value={form.data.family_name}
-                                        autoComplete="family-name"
-                                        onChange={(e) =>
-                                            form.setData(
-                                                "family_name",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <InputError
-                                        message={form.errors.family_name}
-                                    />
-                                </div>
+                                <TextField
+                                    id="family_name"
+                                    label="Last Name"
+                                    required
+                                    value={form.data.family_name}
+                                    autoComplete="family-name"
+                                    onChange={(value) =>
+                                        form.setData("family_name", value)
+                                    }
+                                    error={form.errors.family_name}
+                                />
 
-                                <div className="col-span-2">
-                                    <InputLabel
-                                        htmlFor="email"
-                                        value="Email"
-                                        required
-                                    />
-                                    <TextInput
-                                        id="email"
-                                        name="email"
-                                        value={form.data.email}
-                                        autoComplete="email"
-                                        type={"email"}
-                                        onChange={(e) =>
-                                            form.setData(
-                                                "email",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <InputError message={form.errors.email} />
-                                </div>
+                                <TextField
+                                    id="email"
+                                    label="Email"
+                                    required
+                                    className="col-span-2"
+                                    type="email"
+                                    value={form.data.email}
+                                    autoComplete="email"
+                                    onChange={(value) =>
+                                        form.setData("email", value)
+                                    }
+                                    error={form.errors.email}
+                                />
 
-                                <div className={`col-span-2`}>
-                                    <InputLabel
-                                        htmlFor="confirm_email"
-                                        value="Confirm Email"
-                                        required
-                                    />
-                                    <TextInput
-                                        id="confirm_email"
-                                        name="confirm_email"
-                                        value={form.data.confirm_email}
-                                        autoComplete="email"
-                                        type={"email"}
-                                        onPaste={handleConfirmEmailPaste}
-                                        onChange={(e) =>
-                                            form.setData(
-                                                "confirm_email",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <InputError
-                                        message={form.errors.confirm_email}
-                                    />
-                                </div>
+                                <TextField
+                                    id="confirm_email"
+                                    label="Confirm Email"
+                                    required
+                                    className="col-span-2"
+                                    type="email"
+                                    value={form.data.confirm_email}
+                                    autoComplete="email"
+                                    onPaste={handleConfirmEmailPaste}
+                                    onChange={(value) =>
+                                        form.setData("confirm_email", value)
+                                    }
+                                    error={form.errors.confirm_email}
+                                />
 
-                                <div className="col-span-2">
-                                    <InputLabel
-                                        htmlFor="city"
-                                        value="City"
-                                        required
-                                    />
-                                    <TextInput
-                                        id="city"
-                                        name="city"
-                                        value={form.data.city}
-                                        onChange={(e) =>
-                                            form.setData("city", e.target.value)
-                                        }
-                                    />
-                                    <InputError message={form.errors.city} />
-                                </div>
+                                <TextField
+                                    id="city"
+                                    label="City"
+                                    required
+                                    className="col-span-2"
+                                    value={form.data.city}
+                                    onChange={(value) =>
+                                        form.setData("city", value)
+                                    }
+                                    error={form.errors.city}
+                                />
 
                                 <div className="col-span-2">
                                     <InputLabel

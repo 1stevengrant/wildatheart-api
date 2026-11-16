@@ -1,19 +1,7 @@
-import { useMemo } from "react";
-
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
-import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useForm } from "@inertiajs/react";
 
-import { PrimaryButton } from "@/Components/Buttons/PrimaryButton";
-import { SecondaryButton } from "@/Components/Buttons/SecondaryButton";
-import { ModalHeading } from "@/Components/Type/ModalHeading";
-import { Modal } from "@/Components/Ui/Modal";
-import { ModalActions } from "@/Components/Ui/ModalActions";
-import { defaultIconSize } from "@/helpers/defaultIconSize";
-import {
-    eventAdminActionButtonClass,
-    eventAdminActionButtonTextClass,
-} from "@/helpers/eventAdminActionButtonClass";
+import { EventAdminActionModal } from "@/Components/Events/EventAdminCard/Modals/EventAdminActionModal";
 
 export const EventPublicPrivateModal = ({
     open,
@@ -26,14 +14,7 @@ export const EventPublicPrivateModal = ({
 }) => {
     const form = useForm({});
 
-    const toggleContent = useMemo(() => {
-        return {
-            buttonText: event.is_private ? "Make Public" : "Make Private",
-            modalText: `Make ${event.name} ${event.is_private ? "Public" : "Private"}`,
-            confirmationText: `Are you sure you want to make this event ${event.is_private ? "public" : "private"}?`,
-            icon: event.is_private ? LockOpenIcon : LockClosedIcon,
-        };
-    }, [event.is_private, event.name]);
+    const visibility = event.is_private ? "Public" : "Private";
 
     const toggleEventPrivacy = () => {
         form.put(route("toggle-event-privacy", [event]), {
@@ -43,46 +24,18 @@ export const EventPublicPrivateModal = ({
         });
     };
 
-    const handleCloseModal = () => setOpen(false);
-
-    // Dynamically determine which icon to use
-    const Icon = toggleContent.icon;
-
     return (
-        <>
-            <button
-                className={eventAdminActionButtonClass}
-                onClick={() => setOpen(true)}
-                aria-label={toggleContent.buttonText}
-            >
-                <Icon className={defaultIconSize} />
-                <span className={eventAdminActionButtonTextClass}>
-                    {toggleContent.buttonText}
-                </span>
-            </button>
-
-            <Modal open={open} setOpen={setOpen}>
-                <div className="flex justify-end">
-                    <button onClick={handleCloseModal} aria-label="Close modal">
-                        <XMarkIcon
-                            className={`${defaultIconSize} text-white`}
-                        />
-                    </button>
-                </div>
-                <ModalHeading>{toggleContent.modalText}</ModalHeading>
-                <p>{toggleContent.confirmationText}</p>
-                <ModalActions>
-                    <SecondaryButton onClick={handleCloseModal}>
-                        Cancel
-                    </SecondaryButton>
-                    <PrimaryButton
-                        onClick={toggleEventPrivacy}
-                        disabled={form.processing}
-                    >
-                        {toggleContent.buttonText}
-                    </PrimaryButton>
-                </ModalActions>
-            </Modal>
-        </>
+        <EventAdminActionModal
+            open={open}
+            setOpen={setOpen}
+            icon={event.is_private ? LockOpenIcon : LockClosedIcon}
+            triggerLabel={`Make ${visibility}`}
+            heading={`Make ${event.name} ${visibility}`}
+            confirmLabel={`Make ${visibility}`}
+            onConfirm={toggleEventPrivacy}
+            processing={form.processing}
+        >
+            Are you sure you want to make this event {visibility.toLowerCase()}?
+        </EventAdminActionModal>
     );
 };
