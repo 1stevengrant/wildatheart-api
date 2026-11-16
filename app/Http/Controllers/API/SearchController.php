@@ -23,10 +23,10 @@ class SearchController extends Controller
         $page = request()->query('page');
 
         // Create a unique cache key based on the query parameters
-        $cacheKey = "search_{$collection}_{$limit}_{$authorSlug}_{$page}";
+        $cacheKey = "search.v2_{$collection}_{$limit}_{$authorSlug}_{$page}";
 
         // Check if the response is already cached
-        $output = Cache::remember($cacheKey, 60, function () use ($collection, $limit, $authorSlug) {
+        $output = Cache::remember($cacheKey, 60, function () use ($collection, $limit, $authorSlug): array {
             $query = EntryQueryBuilder::query()
                 ->inCollection($collection)
                 ->published()
@@ -45,7 +45,9 @@ class SearchController extends Controller
                 return $this->previewService->build($entry);
             })->filter()->values();
 
-            return $output;
+            // The cache refuses to unserialize objects (cache.serializable_classes), so store
+            // the plain JSON shape rather than the EntryCollection and preview objects.
+            return json_decode(json_encode($output), true);
         });
 
         return $output;
