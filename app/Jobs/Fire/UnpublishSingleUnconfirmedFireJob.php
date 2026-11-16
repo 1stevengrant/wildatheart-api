@@ -4,6 +4,7 @@ namespace App\Jobs\Fire;
 
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EventAutoUnpublishedMail;
 use Illuminate\Queue\SerializesModels;
@@ -35,12 +36,27 @@ class UnpublishSingleUnconfirmedFireJob implements ShouldBeUnique, ShouldQueue
      */
     public function handle(): void
     {
-        // Update state FIRST to prevent duplicate emails on retry
-        $this->event->update([
-            'approved_at' => null,
-            'auto_unpublished' => true,
-            'auto_unpublished_at' => now(),
-        ]);
+        $unpublished = DB::transaction(function (): bool {
+            $fire = Event::query()->lockForUpdate()->findOrFail($this->event->getKey());
+
+            if (! $fire->isAwaitingAutoUnpublish()) {
+                return false;
+            }
+
+            $fire->update([
+                'approved_at' => null,
+                'auto_unpublished' => true,
+                'auto_unpublished_at' => now(),
+            ]);
+
+            return true;
+        });
+
+        if (! $unpublished) {
+            return;
+        }
+
+        $this->event->refresh();
 
         activity('fire')
             ->performedOn($this->event)

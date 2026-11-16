@@ -6,27 +6,14 @@ use App\Models\Page;
 use App\Models\Event;
 use App\Jobs\LogActivityJob;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Fire\ConfirmFireUnpublishedMailable;
+use App\Actions\Event\ExtinguishFire;
+use App\Actions\Event\ConfirmFireIsBurning;
 
 class HandleMonthlyHostFireEmailController extends Controller
 {
     public function update(Event $event)
     {
-        $event->update([
-            'last_checkin_confirmed_at' => now(),
-            'last_checkin_email_sent_at' => now(),
-            'last_checkin_reminder_sent_at' => null,
-            'auto_unpublished' => false,
-            'auto_unpublished_at' => null,
-            'approved_at' => now(),
-        ]);
-
-        LogActivityJob::dispatch(
-            description: 'Fire published',
-            causedBy: $event->user,
-            performedOn: $event,
-        );
+        ConfirmFireIsBurning::run($event, $event->user);
 
         return inertia('FireBurningPage', [
             'pageContent' => Page::bySlug('fire-burning-page'),
@@ -50,22 +37,7 @@ class HandleMonthlyHostFireEmailController extends Controller
 
     public function destroy(Event $event)
     {
-        $event->update([
-            'approved_at' => null,
-            'auto_unpublished' => false,
-        ]);
-
-        LogActivityJob::dispatch(
-            description: 'Fire unpublished',
-            causedBy: $event->user,
-            performedOn: $event,
-        );
-
-        $recipients = collect([$event->user])->merge($event->managers);
-
-        $recipients->each(function ($recipient) use ($event) {
-            Mail::to($recipient->email)->send(new ConfirmFireUnpublishedMailable($event));
-        });
+        ExtinguishFire::run($event, $event->user);
 
         return to_route('home')
             ->with(['notifications' => [

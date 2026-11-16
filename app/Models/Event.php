@@ -536,4 +536,47 @@ class Event extends BaseModel
     {
         return (bool) $this->auto_unpublished;
     }
+
+    public function hasConfirmedLatestCheckin(): bool
+    {
+        if ($this->approved_at === null) {
+            return false;
+        }
+
+        if ($this->hasBeenAutoUnpublished()) {
+            return false;
+        }
+
+        if ($this->last_checkin_confirmed_at === null) {
+            return false;
+        }
+
+        if ($this->last_checkin_email_sent_at === null) {
+            return true;
+        }
+
+        return $this->last_checkin_confirmed_at->greaterThanOrEqualTo($this->last_checkin_email_sent_at);
+    }
+
+    public function isAwaitingAutoUnpublish(): bool
+    {
+        if ($this->approved_at === null) {
+            return false;
+        }
+
+        if ($this->hasBeenAutoUnpublished()) {
+            return false;
+        }
+
+        return $this->last_checkin_confirmed_at === null;
+    }
+
+    public function hasBeenExtinguishedByHost(): bool
+    {
+        if ($this->approved_at !== null) {
+            return false;
+        }
+
+        return ! $this->hasBeenAutoUnpublished();
+    }
 }
