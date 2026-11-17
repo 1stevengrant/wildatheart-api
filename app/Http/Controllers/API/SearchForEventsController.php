@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Event;
 use App\Data\EventMapData;
-use Statamic\Facades\GlobalSet;
-use App\Data\FeaturedContentData;
-use App\Services\GeographyService;
+use Illuminate\Http\JsonResponse;
 use App\Services\EventCacheService;
 use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
+use App\Services\PublicEventSearchService;
 use App\Http\Requests\API\SearchForEventsRequest;
 
 class SearchForEventsController extends Controller
@@ -17,24 +15,24 @@ class SearchForEventsController extends Controller
     public function __construct(
         private readonly EventOffsettingService $eventOffsettingService,
         private readonly EventCacheService $eventCacheService,
-        private readonly GeographyService $geographyService
+        private readonly PublicEventSearchService $publicEventSearchService
     ) {}
 
-    public function __invoke(SearchForEventsRequest $request)
+    public function __invoke(SearchForEventsRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
 
-        $cacheKey = $this->eventCacheService->generateSearchCacheKey($validatedData);
+        $cacheKey = $this->eventCacheService->legacySearchCacheKey($validatedData);
 
         $events = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($validatedData): array {
-            $eventModels = Event::query()
-                ->published()
-                ->active()
-                ->public()
-                ->filterBySex($validatedData['sex'] ?? null)
-                ->filterByTypeGroup($validatedData['type_group'] ?? null)
-                ->filterByEventTypes($validatedData['types'] ?? null)
-                ->betweenDates($validatedData['start_date'] ?? null, $validatedData['end_date'] ?? null)
+            $eventModels = $this->publicEventSearchService
+                ->query(
+                    sex: $validatedData['sex'] ?? null,
+                    typeGroup: $validatedData['type_group'] ?? null,
+                    types: $validatedData['types'] ?? null,
+                    startDate: $validatedData['start_date'] ?? null,
+                    endDate: $validatedData['end_date'] ?? null,
+                )
                 ->withinBoundingBox(
                     $validatedData['sw_latitude'],
                     $validatedData['sw_longitude'],
@@ -45,40 +43,19 @@ class SearchForEventsController extends Controller
                 ->orderBy('start_date')
                 ->get();
 
-            $offsetEvents = $this->eventOffsettingService->offsetEvents($eventModels);
-
-            return EventMapData::collect($offsetEvents)->toArray();
+            return EventMapData::collect($this->eventOffsettingService->offsetEvents($eventModels))->toArray();
         });
 
-        // Get featured content if enabled
-        $featuredContent = null;
-        $globalSet = GlobalSet::findByHandle('local_platform');
-        if ($globalSet) {
-            $data = $globalSet->inDefaultSite()->data();
-
-            // Check if featured content is enabled
-            if ($data->get('featured_content_enabled')) {
-                $showInRegions = $data->get('show_in_regions', []);
-
-                // Check if current viewport contains any of the regions
-                $visibleRegions = $this->geographyService->getVisibleRegions(
-                    $validatedData['sw_latitude'],
-                    $validatedData['sw_longitude'],
-                    $validatedData['ne_latitude'],
-                    $validatedData['ne_longitude']
-                );
-
-                // Show featured content if no regions specified or if regions match
-                if (empty($showInRegions) || array_intersect($showInRegions, $visibleRegions)) {
-                    $featuredContent = FeaturedContentData::fromStatamicData($data);
-                }
-            }
-        }
+        $featuredContent = $this->publicEventSearchService->featuredContent(
+            (float) $validatedData['sw_latitude'],
+            (float) $validatedData['sw_longitude'],
+            (float) $validatedData['ne_latitude'],
+            (float) $validatedData['ne_longitude']
+        );
 
         return response()->json([
             'events' => $events,
             'featuredContent' => $featuredContent,
         ]);
-
     }
 }

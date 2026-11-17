@@ -4,15 +4,13 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Models\Event;
 use App\Builders\EventBuilder;
-use Statamic\Facades\GlobalSet;
-use App\Data\FeaturedContentData;
 use App\Data\V1\SearchEventsData;
 use Illuminate\Http\JsonResponse;
-use App\Services\GeographyService;
 use App\Services\EventCacheService;
 use App\Data\V1\EventCollectionData;
 use App\Http\Controllers\Controller;
 use App\Services\EventOffsettingService;
+use App\Services\PublicEventSearchService;
 use Illuminate\Database\Eloquent\Collection;
 
 class SearchForEventsController extends Controller
@@ -25,12 +23,12 @@ class SearchForEventsController extends Controller
     public function __construct(
         private readonly EventOffsettingService $eventOffsettingService,
         private readonly EventCacheService $eventCacheService,
-        private readonly GeographyService $geographyService
+        private readonly PublicEventSearchService $publicEventSearchService
     ) {}
 
     public function __invoke(SearchEventsData $data): JsonResponse
     {
-        $cacheKey = $this->eventCacheService->generateSearchCacheKey($data->toArray());
+        $cacheKey = $this->eventCacheService->v1SearchCacheKey($data->toArray());
 
         $payload = cache()->remember($cacheKey, now()->addMinutes(15), function () use ($data): array {
             if ($data->isNearestMode()) {
@@ -139,14 +137,13 @@ class SearchForEventsController extends Controller
 
     private function filteredQuery(SearchEventsData $data): EventBuilder
     {
-        return Event::query()
-            ->published()
-            ->active()
-            ->public()
-            ->filterBySex($data->sex)
-            ->filterByTypeGroup($data->type_group)
-            ->filterByEventTypes($data->types)
-            ->betweenDates($data->start_date, $data->end_date);
+        return $this->publicEventSearchService->query(
+            sex: $data->sex,
+            typeGroup: $data->type_group,
+            types: $data->types,
+            startDate: $data->start_date,
+            endDate: $data->end_date,
+        );
     }
 
     /**
@@ -178,32 +175,14 @@ class SearchForEventsController extends Controller
 
     private function featuredContentFor(SearchEventsData $data): ?array
     {
-        $globalSet = GlobalSet::findByHandle('local_platform');
-
-        if (! $globalSet) {
-            return null;
-        }
-
-        $siteData = $globalSet->inDefaultSite()->data();
-
-        if (! $siteData->get('featured_content_enabled')) {
-            return null;
-        }
-
-        $showInRegions = $siteData->get('show_in_regions', []);
-
-        $visibleRegions = $this->geographyService->getVisibleRegions(
-            $data->sw_latitude,
-            $data->sw_longitude,
-            $data->ne_latitude,
-            $data->ne_longitude
-        );
-
-        if (! empty($showInRegions) && ! array_intersect($showInRegions, $visibleRegions)) {
-            return null;
-        }
-
-        return FeaturedContentData::fromStatamicData($siteData)->toArray();
+        return $this->publicEventSearchService
+            ->featuredContent(
+                $data->sw_latitude,
+                $data->sw_longitude,
+                $data->ne_latitude,
+                $data->ne_longitude
+            )
+            ?->toArray();
     }
 
     private function cacheableResponse(array $payload): JsonResponse
