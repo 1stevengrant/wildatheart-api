@@ -13,7 +13,6 @@ arch('security presets')
         // md5() of email for Gravatar URL; Gravatar's API requires md5.
         'App\Models\User',
         // md5() used for non-cryptographic cache keys.
-        'App\Http\Controllers\Internal\InternalEventSearchController',
         'App\Services\Subsplash\SubsplashApiClient',
         'App\Services\EventCacheService',
         // uniqid() / mt_rand() used for non-security purposes (UI IDs, map offsets).

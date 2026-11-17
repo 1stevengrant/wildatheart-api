@@ -13,16 +13,8 @@ class InternalExportEventSearch extends Controller
     {
         ExportEventSearchJob::dispatch(
             user: auth()->user(),
-            lat: $request->hasSearchCoordinates() ? $request->lat() : null,
-            lng: $request->hasSearchCoordinates() ? $request->lng() : null,
-            radius: $request->hasSearchCoordinates() ? $request->radius() : null,
-            eventTypeIds: $request->eventTypeIds(),
+            criteria: $request->criteria(),
             fields: $request->fields(),
-            activeOnly: $request->activeOnly(),
-            includeDeleted: $request->includeDeleted(),
-            createdFrom: $request->createdFrom(),
-            createdTo: $request->createdTo(),
-            privacy: $request->privacy(),
         );
 
         return back()->with(['notifications' => [

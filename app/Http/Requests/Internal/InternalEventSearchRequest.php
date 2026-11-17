@@ -5,6 +5,7 @@ namespace App\Http\Requests\Internal;
 use Illuminate\Validation\Rule;
 use App\Enums\Internal\EventSearchField;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Data\InternalEventSearchCriteriaData;
 use App\Enums\Internal\EventVisibilityFilter;
 
 class InternalEventSearchRequest extends FormRequest
@@ -123,5 +124,22 @@ class InternalEventSearchRequest extends FormRequest
         return $this->filled('created_to')
             ? $this->date('created_to')->format('Y-m-d')
             : null;
+    }
+
+    public function criteria(): InternalEventSearchCriteriaData
+    {
+        $hasSearchCoordinates = $this->hasSearchCoordinates();
+
+        return new InternalEventSearchCriteriaData(
+            lat: $hasSearchCoordinates ? $this->lat() : null,
+            lng: $hasSearchCoordinates ? $this->lng() : null,
+            radius: $hasSearchCoordinates ? $this->radius() : null,
+            eventTypeIds: $this->eventTypeIds(),
+            activeOnly: $this->activeOnly(),
+            includeDeleted: $this->includeDeleted(),
+            createdFrom: $this->createdFrom(),
+            createdTo: $this->createdTo(),
+            privacy: $this->privacy(),
+        );
     }
 }

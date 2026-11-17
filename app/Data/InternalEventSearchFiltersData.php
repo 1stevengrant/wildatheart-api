@@ -24,4 +24,24 @@ class InternalEventSearchFiltersData extends Data
         public ?string $created_to,
         public EventVisibilityFilter $privacy,
     ) {}
+
+    /**
+     * @param  array<int, string>  $fields
+     */
+    public static function fromCriteria(InternalEventSearchCriteriaData $criteria, array $fields, string $placeName): self
+    {
+        return new self(
+            lat: $criteria->lat,
+            lng: $criteria->lng,
+            radius: $criteria->radius,
+            event_type_ids: $criteria->eventTypeIds,
+            fields: $fields,
+            place_name: $placeName,
+            active_only: $criteria->activeOnly,
+            include_deleted: $criteria->includeDeleted,
+            created_from: $criteria->createdFrom,
+            created_to: $criteria->createdTo,
+            privacy: $criteria->privacy,
+        );
+    }
 }
