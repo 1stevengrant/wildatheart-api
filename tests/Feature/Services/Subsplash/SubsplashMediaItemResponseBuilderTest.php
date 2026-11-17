@@ -2,7 +2,9 @@
 
 use Statamic\Facades\Entry;
 use Statamic\Facades\Collection;
+use Illuminate\Support\Facades\Exceptions;
 use App\Services\Subsplash\SubsplashApiClient;
+use Illuminate\Http\Client\ConnectionException;
 use App\Services\Subsplash\SubsplashMediaSeriesImporter;
 use App\Services\Subsplash\SubsplashMediaItemResponseBuilder;
 
@@ -145,3 +147,117 @@ it('falls back to public CMS fields when the Subsplash item is missing', functio
     'a 404 from Subsplash' => [null],
     'a resource_not_found payload' => [['errors' => [['code' => 'resource_not_found']]]],
 ]);
+
+function makeSeriesWithChildren(array $childIds): Statamic\Entries\Entry
+{
+    $primaryEntry = Entry::make()
+        ->collection('media_item')
+        ->blueprint('subsplash_media_item')
+        ->id('primary-id')
+        ->slug('primary');
+    $primaryEntry->set('subsplash_media_item_id', 'primary-id');
+    $primaryEntry->save();
+
+    Entry::make()
+        ->collection('media_series')
+        ->blueprint('subsplash_media_series')
+        ->id('series-id')
+        ->slug('the-series')
+        ->save();
+
+    foreach ($childIds as $index => $childId) {
+        $child = Entry::make()
+            ->collection('media_item')
+            ->blueprint('subsplash_media_item')
+            ->id($childId)
+            ->slug($childId);
+        $child->set('subsplash_media_item_id', $childId);
+        $child->set('series', 'entry::series-id');
+        $child->published(true);
+        $child->date(now()->subDays($index + 1));
+        $child->save();
+    }
+
+    return $primaryEntry;
+}
+
+function expectPrimaryItemInSeries(object $test): void
+{
+    $test->apiClient->shouldReceive('getMediaItem')
+        ->with('primary-id')
+        ->once()
+        ->andReturn([
+            'title' => 'Primary',
+            'short_code' => 'abc',
+            '_embedded' => [
+                'media-series' => [
+                    'id' => 'series-id',
+                    '_links' => [
+                        'media-items' => ['href' => 'https://api.subsplash.test/media-items?series=series-id'],
+                    ],
+                ],
+            ],
+        ]);
+
+    $test->seriesImporter->shouldReceive('findInStatamic')
+        ->with('series-id')
+        ->andReturn(Entry::find('series-id'));
+}
+
+it('builds series items from the series listing without fetching each item', function () {
+    $primaryEntry = makeSeriesWithChildren(['child-a', 'child-b']);
+    expectPrimaryItemInSeries($this);
+
+    $this->apiClient->shouldReceive('fetch')
+        ->once()
+        ->with('https://api.subsplash.test/media-items?series=series-id&filter[status]=published')
+        ->andReturn([
+            '_embedded' => ['media-items' => [
+                ['id' => 'child-a', 'title' => 'Child A'],
+                ['id' => 'child-b', 'title' => 'Child B'],
+                ['id' => 'not-in-cms', 'title' => 'Not in the CMS'],
+            ]],
+        ]);
+
+    $this->apiClient->shouldNotReceive('getMediaItem')->with('child-a');
+    $this->apiClient->shouldNotReceive('getMediaItem')->with('child-b');
+    $this->apiClient->shouldNotReceive('getMediaItem')->with('not-in-cms');
+
+    $response = $this->builder->build($primaryEntry);
+
+    expect(collect($response['mediaItems'])->pluck('title')->all())->toBe(['Child A', 'Child B'])
+        ->and($response['mediaItems'][0]['slug'])->toBe('child-a');
+});
+
+it('still returns the media item when Subsplash cannot list the series', function () {
+    $exceptions = Exceptions::fake();
+    $primaryEntry = makeSeriesWithChildren(['child-a']);
+    expectPrimaryItemInSeries($this);
+
+    $this->apiClient->shouldReceive('fetch')
+        ->andThrow(new ConnectionException('cURL error 28: SSL connection timeout'));
+
+    $response = $this->builder->build($primaryEntry);
+
+    expect($response['title'])->toBe('Primary')
+        ->and($response['mediaItems'])->toBe([]);
+    $exceptions->assertReported(ConnectionException::class);
+});
+
+it('skips a series item that Subsplash cannot return', function () {
+    $exceptions = Exceptions::fake();
+    $primaryEntry = makeSeriesWithChildren(['child-a', 'child-b']);
+    expectPrimaryItemInSeries($this);
+
+    $this->apiClient->shouldReceive('fetch')
+        ->andReturn(['_embedded' => ['media-items' => [['id' => 'child-a', 'title' => 'Child A']]]]);
+
+    $this->apiClient->shouldReceive('getMediaItem')
+        ->with('child-b')
+        ->andThrow(new ConnectionException('cURL error 28: SSL connection timeout'));
+
+    $response = $this->builder->build($primaryEntry);
+
+    expect(collect($response['mediaItems'])->pluck('title')->all())->toBe(['Child A']);
+    $exceptions->assertReported(ConnectionException::class);
+});
