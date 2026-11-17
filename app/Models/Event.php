@@ -482,6 +482,20 @@ class Event extends BaseModel
             || $this->managers()->where('user_id', $user->id)->exists();
     }
 
+    /**
+     * Accepted invitations are kept for history only, but the (event_id, email)
+     * unique index would block a fresh invitation to a host who was removed.
+     */
+    public function deleteAcceptedManagerInvitation(string $email): void
+    {
+        EventManagerInvitation::query()
+            ->withoutGlobalScope('pending')
+            ->where('event_id', $this->id)
+            ->where('email', $email)
+            ->whereNotNull('accepted_at')
+            ->delete();
+    }
+
     public function hasRequestedGift(): bool
     {
         return (bool) $this->gift_requested;

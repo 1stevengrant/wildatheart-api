@@ -6,10 +6,11 @@ use App\Models\User;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
-use App\Models\EventOwnershipTransfer;
 use App\Data\EventOwnershipTransferData;
-use App\Mail\OwnershipTransferInvitationMail;
+use Illuminate\Container\Attributes\CurrentUser;
+use App\Actions\Event\CancelEventOwnershipTransfer;
+use App\Exceptions\EventOwnershipTransferException;
+use App\Actions\Event\InitiateEventOwnershipTransfer;
 
 class EventOwnershipTransferController extends Controller
 {
@@ -30,78 +31,26 @@ class EventOwnershipTransferController extends Controller
     /**
      * Initiate an ownership transfer
      */
-    public function store(Request $request, Event $event)
+    public function store(Request $request, Event $event, #[CurrentUser] User $user)
     {
-        // Only the current owner can transfer ownership
-        if (auth()->id() !== $event->user_id) {
-            return back()->with([
-                'notifications' => [
-                    'message' => 'Only the event owner can transfer ownership.',
-                    'type' => 'error',
-                ],
-            ]);
-        }
-
         $request->validate([
             'email' => ['required', 'email'],
         ]);
 
-        $email = mb_strtolower(mb_trim($request->email));
-        $user = User::where('email', $email)->first();
-
-        // Check if user exists
-        if (! $user) {
+        try {
+            $result = InitiateEventOwnershipTransfer::run($event, $user, $request->string('email')->toString());
+        } catch (EventOwnershipTransferException $exception) {
             return back()->with([
                 'notifications' => [
-                    'message' => 'User not found. Only existing hosts can be promoted to owner.',
+                    'message' => $exception->getMessage(),
                     'type' => 'error',
                 ],
             ]);
         }
-
-        // Check if user is trying to transfer to themselves
-        if ($user->id === $event->user_id) {
-            return back()->with([
-                'notifications' => [
-                    'message' => 'You already own this event.',
-                    'type' => 'error',
-                ],
-            ]);
-        }
-
-        // Check if user is a host of this event
-        if (! $event->managers()->where('user_id', $user->id)->exists()) {
-            return back()->with([
-                'notifications' => [
-                    'message' => 'Only existing hosts can be promoted to owner. Please add them as a host first.',
-                    'type' => 'error',
-                ],
-            ]);
-        }
-
-        // Check if there's already a pending transfer
-        if ($event->pendingOwnershipTransfer) {
-            return back()->with([
-                'notifications' => [
-                    'message' => 'There is already a pending ownership transfer for this event.',
-                    'type' => 'error',
-                ],
-            ]);
-        }
-
-        // Create the transfer request
-        $transfer = EventOwnershipTransfer::create([
-            'event_id' => $event->id,
-            'email' => $email,
-            'transferred_by_user_id' => auth()->id(),
-        ]);
-
-        // Send transfer notification email
-        Mail::to($email)->send(new OwnershipTransferInvitationMail($event, auth()->user()->fullname, $transfer, true));
 
         return back()->with([
             'notifications' => [
-                'message' => "Ownership transfer invitation has been sent to {$user->fullname}.",
+                'message' => "Ownership transfer invitation has been sent to {$result->recipient->fullname}.",
                 'type' => 'success',
             ],
         ]);
@@ -110,30 +59,18 @@ class EventOwnershipTransferController extends Controller
     /**
      * Cancel a pending ownership transfer
      */
-    public function destroy(Request $request, Event $event)
+    public function destroy(Request $request, Event $event, #[CurrentUser] User $user)
     {
-        // Only the current owner can cancel a transfer
-        if (auth()->id() !== $event->user_id) {
+        try {
+            $transfer = CancelEventOwnershipTransfer::run($event, $user);
+        } catch (EventOwnershipTransferException $exception) {
             return back()->with([
                 'notifications' => [
-                    'message' => 'Only the event owner can cancel an ownership transfer.',
+                    'message' => $exception->getMessage(),
                     'type' => 'error',
                 ],
             ]);
         }
-
-        $transfer = $event->pendingOwnershipTransfer;
-
-        if (! $transfer) {
-            return back()->with([
-                'notifications' => [
-                    'message' => 'No pending ownership transfer found.',
-                    'type' => 'error',
-                ],
-            ]);
-        }
-
-        $transfer->delete();
 
         return back()->with([
             'notifications' => [
