@@ -24,4 +24,23 @@ class EventDateHelper
             ]);
         }
     }
+
+    public static function endDateForRetreat(
+        ?string $startDate,
+        ?string $endDate,
+        ?string $groupType,
+        ?string $eventTypeName = null,
+    ): ?string {
+        if (blank($startDate)) {
+            return $endDate;
+        }
+
+        $days = EventTypeDateSelector::retreatEndDateOffsetDays($groupType, $eventTypeName);
+
+        if ($days === null) {
+            return $endDate;
+        }
+
+        return Carbon::parse($startDate)->addDays($days)->format('Y-m-d');
+    }
 }

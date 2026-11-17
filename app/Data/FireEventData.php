@@ -3,6 +3,8 @@
 namespace App\Data;
 
 use Spatie\LaravelData\Data;
+use Illuminate\Validation\Rule;
+use App\Enums\Event\FrequencyEnum;
 use App\Rules\DoesntContainEmojis;
 use App\Rules\ShouldNotEndWithFire;
 use App\Data\Concerns\HasLocationRules;
@@ -43,7 +45,7 @@ class FireEventData extends Data
                 new ShouldNotEndWithFire,
                 new DoesntContainEmojis,
             ],
-            'frequency' => ['required', 'string'],
+            'frequency' => ['required', 'string', Rule::enum(FrequencyEnum::class)],
             'is_private' => ['nullable', 'boolean'],
         ]);
     }

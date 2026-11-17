@@ -24,6 +24,7 @@ class CreateEventRequest extends FormRequest
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
             'start_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date'],
             'is_private' => ['nullable', 'boolean'],
             'name' => ['nullable', 'string', 'max:255'],
         ];

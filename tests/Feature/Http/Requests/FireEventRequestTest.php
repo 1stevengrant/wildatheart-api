@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 it('validates valid fire event data', function () {
     $validator = Validator::make([
         'name' => 'Forest Incident',
-        'frequency' => 'Weekly',
+        'frequency' => 'weekly',
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
@@ -21,7 +21,7 @@ it('fails validation when name ends with fire', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'frequency' => 'Weekly',
+        'frequency' => 'weekly',
     ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
@@ -33,7 +33,7 @@ it('fails validation when name contains emoji', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'frequency' => 'Weekly',
+        'frequency' => 'weekly',
     ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
@@ -45,7 +45,7 @@ it('fails validation when name is too short', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'frequency' => 'Weekly',
+        'frequency' => 'weekly',
     ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
@@ -68,7 +68,7 @@ it('fails validation when name is longer than 255 characters', function () {
         'country' => 'USA',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
-        'frequency' => 'Weekly',
+        'frequency' => 'weekly',
     ], FireEventData::rules());
 
     expect($validator->fails())->toBeTrue();
@@ -77,7 +77,7 @@ it('fails validation when name is longer than 255 characters', function () {
 it('accepts is_private boolean', function () {
     $validator = Validator::make([
         'name' => 'Forest Incident',
-        'frequency' => 'Weekly',
+        'frequency' => 'weekly',
         'latitude' => '40.7128',
         'longitude' => '-74.0060',
         'is_private' => true,
