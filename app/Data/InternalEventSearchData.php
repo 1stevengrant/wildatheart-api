@@ -5,6 +5,7 @@ namespace App\Data;
 use App\Models\Event;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 #[TypeScript]
 class InternalEventSearchData extends Data
@@ -58,6 +59,39 @@ class InternalEventSearchData extends Data
             created_at: $event->created_at?->format('Y-m-d'),
             privacy: $event->is_private ? 'Private' : 'Public',
         );
+    }
+
+    /**
+     * @param  LengthAwarePaginator<int, Event>  $paginator
+     * @return array{
+     *     data: array<int, array<string, mixed>>,
+     *     links: array<string, ?string>,
+     *     meta: array<string, mixed>
+     * }
+     */
+    public static function paginatedResults(LengthAwarePaginator $paginator): array
+    {
+        return [
+            'data' => collect($paginator->items())
+                ->map(fn (Event $event) => self::fromModel($event, $event->distance ?? null)->toArray())
+                ->all(),
+            'links' => [
+                'first' => $paginator->url(1),
+                'last' => $paginator->url($paginator->lastPage()),
+                'prev' => $paginator->previousPageUrl(),
+                'next' => $paginator->nextPageUrl(),
+            ],
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'from' => $paginator->firstItem(),
+                'last_page' => $paginator->lastPage(),
+                'path' => $paginator->path(),
+                'per_page' => $paginator->perPage(),
+                'to' => $paginator->lastItem(),
+                'total' => $paginator->total(),
+                'links' => $paginator->linkCollection()->toArray(),
+            ],
+        ];
     }
 
     private static function getEventStatus(Event $event): string

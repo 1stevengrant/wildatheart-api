@@ -5,6 +5,8 @@ use App\Models\Event;
 use App\Jobs\ExportEventSearchJob;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\Storage;
+use App\Data\InternalEventSearchCriteriaData;
+use App\Enums\Internal\EventVisibilityFilter;
 use Illuminate\Support\Facades\Event as EventFacade;
 
 beforeEach(function () {
@@ -21,13 +23,18 @@ function runEventSearchExport(User $user, bool $includeDeleted = false): void
 {
     ExportEventSearchJob::dispatchSync(
         user: $user,
-        lat: null,
-        lng: null,
-        radius: null,
-        eventTypeIds: [],
+        criteria: new InternalEventSearchCriteriaData(
+            lat: null,
+            lng: null,
+            radius: null,
+            eventTypeIds: [],
+            activeOnly: true,
+            includeDeleted: $includeDeleted,
+            createdFrom: null,
+            createdTo: null,
+            privacy: EventVisibilityFilter::All,
+        ),
         fields: ['name', 'status', 'not_a_field'],
-        activeOnly: true,
-        includeDeleted: $includeDeleted,
     );
 }
 
