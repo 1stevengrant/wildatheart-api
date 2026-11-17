@@ -2,6 +2,7 @@
 
 namespace App\Services\Subsplash;
 
+use Exception;
 use Statamic\Entries\Entry;
 use App\Builders\EntryQueryBuilder;
 use Statamic\Eloquent\Entries\UuidEntryModel;
@@ -87,49 +88,57 @@ class SubsplashMediaItemResponseBuilder
             $seriesEntry = $this->seriesImporter->findInStatamic($seriesId);
 
             $responseData['series']['uri'] = $seriesEntry->uri;
-            $relatedMediaItemsUrl = $subsplashSeries['_links']['media-items']['href'];
-
-            $subsplashMediaItems = $this->apiClient->fetch($relatedMediaItemsUrl . '&filter[status]=published');
-
-            $subsplashMediaItemMap = [];
-
-            foreach ($subsplashMediaItems['_embedded']['media-items'] as $mediaItem) {
-                $subsplashMediaItemMap[$mediaItem['id']] = $mediaItem;
-                $this->apiClient->getMediaItem(data_get($mediaItem, 'id'));
-            }
-
-            $mediaItemEntries = EntryQueryBuilder::mediaItems()
-                ->inSeries($seriesId)
-                ->published()
-                ->pastPublishDate()
-                ->recentFirst()
-                ->limit(20)
-                ->get();
-
-            $responseData['mediaItems'] = [];
-
-            foreach ($mediaItemEntries as $mediaItemEntry) {
-                $mediaItemId = $mediaItemEntry->data()->get('subsplash_media_item_id');
-                if (! isset($subsplashMediaItemMap[$mediaItemId])) {
-                    $mediaItem = $this->apiClient->getMediaItem($mediaItemId);
-                    if ($mediaItem !== null) {
-                        $subsplashMediaItemMap[$mediaItemId] = $mediaItem;
-                    }
-                }
-
-                $subsplashMediaItem = $this->apiClient->getMediaItem($mediaItemEntry->subsplash_media_item_id);
-                if ($subsplashMediaItem === null) {
-                    continue;
-                }
-
-                $responseData['mediaItems'][] = [
-                    ...$subsplashMediaItem,
-                    'slug' => $mediaItemEntry->slug,
-                    'uri' => $mediaItemEntry->uri,
-                ];
-            }
+            $responseData['mediaItems'] = $this->seriesMediaItems($seriesId, $subsplashSeries['_links']['media-items']['href']);
         }
 
         return $responseData;
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private function seriesMediaItems(string $seriesId, string $relatedMediaItemsUrl): array
+    {
+        try {
+            $publishedMediaItems = $this->apiClient->fetch("{$relatedMediaItemsUrl}&filter[status]=published");
+        } catch (Exception $exception) {
+            report($exception);
+
+            return [];
+        }
+
+        $subsplashMediaItems = collect(data_get($publishedMediaItems, '_embedded.media-items', []))->keyBy('id');
+
+        $mediaItemEntries = EntryQueryBuilder::mediaItems()
+            ->inSeries($seriesId)
+            ->published()
+            ->pastPublishDate()
+            ->recentFirst()
+            ->limit(20)
+            ->get();
+
+        $mediaItems = [];
+
+        foreach ($mediaItemEntries as $mediaItemEntry) {
+            $mediaItemId = $mediaItemEntry->subsplash_media_item_id;
+
+            try {
+                $subsplashMediaItem = $subsplashMediaItems->get($mediaItemId) ?? $this->apiClient->getMediaItem($mediaItemId);
+            } catch (Exception $exception) {
+                report($exception);
+
+                continue;
+            }
+
+            if ($subsplashMediaItem === null) {
+                continue;
+            }
+
+            $mediaItems[] = [
+                ...$subsplashMediaItem,
+                'slug' => $mediaItemEntry->slug,
+                'uri' => $mediaItemEntry->uri,
+            ];
+        }
+
+        return $mediaItems;
     }
 }

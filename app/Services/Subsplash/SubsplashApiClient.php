@@ -4,6 +4,7 @@ namespace App\Services\Subsplash;
 
 use Exception;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Client\RequestException;
@@ -11,6 +12,8 @@ use Illuminate\Http\Client\ConnectionException;
 
 class SubsplashApiClient
 {
+    private const int STALE_CACHE_DAYS = 7;
+
     private string $baseUrl;
 
     public function __construct()
@@ -49,14 +52,43 @@ class SubsplashApiClient
 
     public function fetch(string $url, int $timeout = 5): ?array
     {
-        $cacheDuration = config('services.subsplash.cache_duration');
-
         $cacheKey = md5($url);
+        $staleCacheKey = "subsplash-stale:{$cacheKey}";
+
         $cached = Cache::get($cacheKey);
         if ($cached !== null) {
             return $cached;
         }
 
+        try {
+            $response = $this->request($url, $timeout);
+        } catch (ConnectionException $exception) {
+            return Cache::get($staleCacheKey) ?? throw $exception;
+        }
+
+        if ($response->successful()) {
+            $json = $response->json();
+            Cache::put($cacheKey, $json, (int) config('services.subsplash.cache_duration'));
+            Cache::put($staleCacheKey, $json, now()->addDays(self::STALE_CACHE_DAYS));
+
+            return $json;
+        }
+
+        if ($response->notFound()) {
+            Cache::forget($staleCacheKey);
+
+            return null;
+        }
+
+        if ($response->serverError() && Cache::has($staleCacheKey)) {
+            return Cache::get($staleCacheKey);
+        }
+
+        throw new Exception("Request to Subsplash API failed with {$response->status()}: {$url}");
+    }
+
+    private function request(string $url, int $timeout): Response
+    {
         $accessToken = $this->getAccessToken();
 
         $response = Http::connectTimeout(2)->timeout($timeout)->retry(
@@ -75,30 +107,19 @@ class SubsplashApiClient
             'credentials' => 'include',
         ])->get($url);
 
-        if ($response->status() === 401) {
-            Cache::forget(config('services.subsplash.client_id'));
-            $accessToken = $this->getAccessToken();
-
-            $response = Http::connectTimeout(2)->timeout($timeout)->withHeaders([
-                'Accept' => 'application/vnd.api+json',
-                'Accept-Language' => 'en-US,en;q=0.9',
-                'Authorization' => "Bearer {$accessToken}",
-                'Cache-Control' => 'no-cache',
-            ])->get($url);
+        if ($response->status() !== 401) {
+            return $response;
         }
 
-        if ($response->successful()) {
-            $json = $response->json();
-            Cache::put($cacheKey, $json, (int) $cacheDuration);
+        Cache::forget(config('services.subsplash.client_id'));
+        $accessToken = $this->getAccessToken();
 
-            return $json;
-        }
-
-        if ($response->notFound()) {
-            return null;
-        }
-
-        throw new Exception("Request to Subsplash API failed with {$response->status()}: {$url}");
+        return Http::connectTimeout(2)->timeout($timeout)->withHeaders([
+            'Accept' => 'application/vnd.api+json',
+            'Accept-Language' => 'en-US,en;q=0.9',
+            'Authorization' => "Bearer {$accessToken}",
+            'Cache-Control' => 'no-cache',
+        ])->get($url);
     }
 
     public function getMediaItem(string $mediaItemId): ?array

@@ -158,3 +158,55 @@ it('uses a five second timeout by default', function () {
     expect($this->client->fetch($this->url))->toBe(['id' => 'abc']);
     Http::assertSentCount(1);
 });
+
+it('serves the last good response when Subsplash cannot be reached', function () {
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()->push(['title' => 'Original'])->pushFailedConnection()->pushFailedConnection()->pushFailedConnection(),
+    ]);
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    $this->travel(301)->seconds();
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    Http::assertSentCount(4);
+});
+
+it('serves the last good response when Subsplash keeps returning server errors', function () {
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()->push(['title' => 'Original'])->push([], 503)->push([], 503)->push([], 503),
+    ]);
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    $this->travel(301)->seconds();
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    Http::assertSentCount(4);
+});
+
+it('stops serving the last good response after seven days', function () {
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()->push(['title' => 'Original'])->pushFailedConnection()->pushFailedConnection()->pushFailedConnection(),
+    ]);
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    $this->travelTo(now()->addDays(7)->addSecond());
+    Cache::put('test-client', 'test-token', 3600);
+
+    expect(fn () => $this->client->fetch($this->url))->toThrow(ConnectionException::class);
+});
+
+it('forgets the last good response once Subsplash reports the item missing', function () {
+    $this->freezeTime();
+    Http::fake([
+        $this->url => Http::sequence()->push(['title' => 'Original'])->push([], 404)->pushFailedConnection()->pushFailedConnection()->pushFailedConnection(),
+    ]);
+
+    expect($this->client->fetch($this->url))->toBe(['title' => 'Original']);
+    $this->travel(301)->seconds();
+    expect($this->client->fetch($this->url))->toBeNull();
+
+    expect(fn () => $this->client->fetch($this->url))->toThrow(ConnectionException::class);
+});
