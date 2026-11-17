@@ -11,6 +11,7 @@ use Saloon\Exceptions\Request\FatalRequestException;
 use App\Http\Integrations\Transistor\TransistorConnector;
 use Saloon\RateLimitPlugin\Exceptions\RateLimitReachedException;
 use App\Http\Integrations\Transistor\Requests\GetEpisodesRequest;
+use App\Http\Integrations\Transistor\Exceptions\InvalidJsonResponseException;
 
 class TransistorService
 {
@@ -109,7 +110,7 @@ class TransistorService
                 'show_id' => $showId,
                 'status' => $status,
             ]);
-        } catch (ServerException|FatalRequestException $e) {
+        } catch (ServerException|FatalRequestException|InvalidJsonResponseException $e) {
             Log::warning('Transistor API unreachable during refresh; serving stale or empty data.', [
                 'show_id' => $showId,
                 'status' => $status,
@@ -135,7 +136,7 @@ class TransistorService
                 'show_id' => $showId,
                 'status' => $status,
             ]);
-        } catch (ServerException|FatalRequestException $e) {
+        } catch (ServerException|FatalRequestException|InvalidJsonResponseException $e) {
             Log::warning('Transistor API unreachable during refresh; keeping existing cache.', [
                 'show_id' => $showId,
                 'status' => $status,

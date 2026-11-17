@@ -230,6 +230,55 @@ it('retries transient 5xx failures and ultimately succeeds', function () {
     expect($result)->toBe($episodes);
 });
 
+it('retries a response with a malformed JSON body and ultimately succeeds', function () {
+    $episodes = [['id' => '7', 'type' => 'episode', 'attributes' => ['title' => 'After Retry']]];
+
+    $mockClient = MockClient::global([
+        MockResponse::make("{\"data\": [{\"id\": \"7\", \"title\": \"Broken\x01\"}]"),
+        MockResponse::make([
+            'data' => $episodes,
+            'meta' => ['currentPage' => 1, 'totalPages' => 1],
+        ]),
+    ]);
+
+    $result = $this->transistorService->getRecent('malformed-show');
+
+    $mockClient->assertSentCount(2, GetEpisodesRequest::class);
+    expect($result)->toBe($episodes);
+});
+
+it('serves stale cache when every response has a malformed JSON body', function () {
+    Log::spy();
+
+    $showId = 'malformed-show';
+    $url = config('services.transistor.api_url') . 'episodes?show_id=' . $showId . '&status=published';
+    $stale = [['id' => 'stale-1']];
+    Cache::forever($url, $stale);
+
+    $mockClient = MockClient::global([
+        MockResponse::make("{\"data\": [\x01"),
+        MockResponse::make("{\"data\": [\x01"),
+        MockResponse::make("{\"data\": [\x01"),
+    ]);
+
+    expect(fn () => $this->transistorService->refreshEpisodeList($showId))
+        ->not->toThrow(\Throwable::class);
+
+    $mockClient->assertSentCount(3, GetEpisodesRequest::class);
+    expect(Cache::get($url))->toBe($stale);
+    Log::shouldHaveReceived('warning')->once();
+});
+
+it('returns an empty list instead of failing when the uncached refresh keeps getting malformed JSON', function () {
+    MockClient::global([
+        MockResponse::make("{\"data\": [\x01"),
+        MockResponse::make("{\"data\": [\x01"),
+        MockResponse::make("{\"data\": [\x01"),
+    ]);
+
+    expect($this->transistorService->getRecent('malformed-show'))->toBe([]);
+});
+
 it('swallows persistent server exceptions on refreshEpisodeList', function () {
     $showId = 'down-show';
 
