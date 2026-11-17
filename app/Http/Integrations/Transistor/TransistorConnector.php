@@ -2,6 +2,7 @@
 
 namespace App\Http\Integrations\Transistor;
 
+use Throwable;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 use Saloon\Http\Connector;
@@ -18,6 +19,7 @@ use Saloon\PaginationPlugin\Contracts\HasPagination;
 use Saloon\RateLimitPlugin\Contracts\RateLimitStore;
 use Saloon\RateLimitPlugin\Helpers\RetryAfterHelper;
 use Saloon\RateLimitPlugin\Stores\LaravelCacheStore;
+use App\Http\Integrations\Transistor\Exceptions\InvalidJsonResponseException;
 
 class TransistorConnector extends Connector implements HasPagination
 {
@@ -37,7 +39,26 @@ class TransistorConnector extends Connector implements HasPagination
     public function handleRetry(FatalRequestException|RequestException $exception, Request $request): bool
     {
         return $exception instanceof FatalRequestException
-            || $exception instanceof ServerException;
+            || $exception instanceof ServerException
+            || $exception instanceof InvalidJsonResponseException;
+    }
+
+    public function hasRequestFailed(Response $response): ?bool
+    {
+        if (! $response->successful()) {
+            return null;
+        }
+
+        return ! json_validate($response->body());
+    }
+
+    public function getRequestException(Response $response, ?Throwable $senderException): ?Throwable
+    {
+        if (! $response->successful()) {
+            return null;
+        }
+
+        return InvalidJsonResponseException::fromResponse($response);
     }
 
     protected function resolveLimits(): array
