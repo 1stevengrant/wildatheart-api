@@ -6,12 +6,14 @@ use App\Models\Event;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Services\Subsplash\SubsplashApiClient;
+use App\Support\Redis\RetryingPhpRedisConnector;
 use App\Mail\Transport\CloudflareFailoverTransport;
 use App\Services\Subsplash\SubsplashMediaItemImporter;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -68,6 +70,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->bootRoute();
         $this->bootMail();
+        $this->bootRedis();
+    }
+
+    public function bootRedis(): void
+    {
+        Redis::extend('phpredis', fn (): RetryingPhpRedisConnector => new RetryingPhpRedisConnector);
     }
 
     public function bootMail(): void

@@ -60,6 +60,10 @@ return [
             'backoff_algorithm' => env('REDIS_BACKOFF_ALGORITHM', 'decorrelated_jitter'),
             'backoff_base' => env('REDIS_BACKOFF_BASE', 100),
             'backoff_cap' => env('REDIS_BACKOFF_CAP', 1000),
+            'timeout' => env('REDIS_TIMEOUT', 2),
+            'read_timeout' => env('REDIS_READ_TIMEOUT', 5),
+            'connect_attempts' => env('REDIS_CONNECT_ATTEMPTS', 2),
+            'connect_retry_delay' => env('REDIS_CONNECT_RETRY_DELAY', 100),
         ],
 
         'cache' => [
@@ -73,6 +77,10 @@ return [
             'backoff_algorithm' => env('REDIS_BACKOFF_ALGORITHM', 'decorrelated_jitter'),
             'backoff_base' => env('REDIS_BACKOFF_BASE', 100),
             'backoff_cap' => env('REDIS_BACKOFF_CAP', 1000),
+            'timeout' => env('REDIS_TIMEOUT', 2),
+            'read_timeout' => env('REDIS_READ_TIMEOUT', 5),
+            'connect_attempts' => env('REDIS_CONNECT_ATTEMPTS', 2),
+            'connect_retry_delay' => env('REDIS_CONNECT_RETRY_DELAY', 100),
         ],
     ],
 
