@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Facades\Artisan;
 
 test('the composer build does not clear the application cache', function () {
@@ -28,10 +30,11 @@ test('database sessions survive clearing the application cache', function () {
 
     Artisan::call('cache:clear');
 
-    $reloaded = app('session')->driver('database');
+    $reloaded = (new SessionManager(app()))->driver('database');
     $reloaded->setId($sessionId);
     $reloaded->start();
 
     expect(Cache::get('some-cached-value'))->toBeNull()
+        ->and(DB::table('sessions')->where('id', $sessionId)->exists())->toBeTrue()
         ->and($reloaded->get('login_web'))->toBe(1);
 });
